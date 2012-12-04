@@ -34,18 +34,21 @@
     
     
     <!-- Welcome screen strings -->
-    <string name="text_welcome_header_title">Welcome</string>
+    <string name="text_welcome_header_title">Neato Smart App</string>
+     <string name="text_robot_connection_status_default">No Robot Associated</string>
     
     <string name="text_btn_find_robots">Discover Nearby Robots</string>
-    <string name="text_btn_close_conn">Close Peer Connection</string>
+    <string name="text_btn_peer_conn">Open Peer Connection</string>
     
     <string name="text_btn_start_peer_conn">Start Cleaning</string>
+    <string name="text_btn_download_map_data">Show Robot Map</string>
     <string name="text_btn_stop_peer_conn">Stop Cleaning</string>
     <string name="text_btn_start_server_conn">Start Cleaning</string>
     <string name="text_btn_stop_server_conn">Stop Cleaning</string>
-    
+    <string name="text_section_associate_robot">Associate Robot :</string>
     <string name="text_section_peer_conn">Peer Connection :</string>
     <string name="text_section_send_server_cmd">Send command via server :</string>
+    <string name="text_section_schedule_robot">Schedule Robot</string>
     
     <!-- Assocaite screen strings -->
     <string name="text_assorobot_header_title">Associate Robot</string>
@@ -54,4 +57,19 @@
     <!-- Menu strings -->
     <string name="text_menu_logout">Logout</string>
     <string name="text_menu_addrobot">Associate Robot</string>
+    <!-- GetMap data activity strings -->    
+    <string name="text_getmap_hdr_title">Map of</string>
+    <string name="text_getmap_hdr_title_default">No Robot associated</string>
+    <string name="text_btn_getmap">Get Map</string>
+    <string name="text_no_updated_map_msg">Robot hasn\'t uploaded the map yet, please try again later</string>
+    <string name="text_getmap_failed_msg">Failed to fetch Robot uploaded map, please try again later</string>
+    
+    
+    
+    <string name="text_robot_schedule_header_title">Schedule Robot</string>
+    <string name="text_set_schedule_weekdays">Mon, Wed, Fri</string>
+    <string name="text_set_schedule_working_couple">Working Couple</string>
+    <string name="text_set_schedule_weekends">Only Weekends</string>
+    <string name="text_set_schedule_babynap">Weekdays (Baby Nap)</string>
+    <string name="text_set_schedule_clear">Clear Schedule</string>
 </resources>

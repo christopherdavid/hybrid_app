@@ -76,10 +76,11 @@
 		<br>
 		<br>
 		<label>Peer Connection</label>
-		<input type="button" id="btnDiscoverRobot" value="Discover Nearby Robots" class="defaultButton" aria-hidden=true></input> 
+		<input type="button" id="btnDiscoverRobot" value="Discover Nearby Robots" class="defaultButton"></input> 
 		<input type="button" id="btnClosePeer" value="Close Peer Connection" class="defaultButton" aria-hidden=true></input> 
 		<input type="button" id="btnGoAssociatePage" value="Associate Robot" class="defaultButton"></input> 
-		<input type="button" id="btnStartStopCleaningPeer" value="Start Cleaning" class="defaultButton" aria-hidden=true></input> 
+		<input type="button" id="btnStartStopCleaningPeer" value="Start Cleaning" class="defaultButton" ></input> 
+		<input type="button" id="btnSendToBase" value="Send To Base" class="defaultButton" ></input> 
 		<br>
 		<br>
 		<label>Send Command via Server</label>
@@ -87,9 +88,15 @@
 		<br>
 		<br>
 		<br>
+		<input type="button" id="btnGoToSchedule" value="Schedule Event" class="defaultButton"></input>
 		<input type="button" id="btnLogout" value="Logout" class="defaultButton"></input>
 		
-		
+		<div id="robotoverlay" aria-hidden=true></div>
+		<div id="robotsFound" aria-hidden=true>
+			
+		</div>
+
+
 	</section>
 	
 		<!-- Associate Robot screen -->
@@ -104,8 +111,37 @@
 		<br>
 		<br>
 		
+	</section>
+	
+	<section id="scheduleRobot"  aria-hidden=true>
+		<div class="defaultSectionHeader">Schedule Event</div>
+		<br>
+		<TR class="schedule">
+			<td><input type="checkbox" value="">Monday 10 - 11am Kitchen</td>
+		</TR>
+		<br>
+		<TR class="schedule">
+			<td><input type="checkbox" value="">Tuesday 10 - 11am Kitchen</td>
+		</TR>
+		<br>
+		<TR class="schedule">
+			<td><input type="checkbox" value="">Monday 10 - 11am Kitchen</td>
+		</TR>
+		<br>
+		<TR class="schedule">
+			<td><input type="checkbox" value="">Monday 10 - 11am Kitchen</td>
+		</TR>
+		<br>
+		<br>
+		<input type="text" id="robotSerialId" placeholder="" class="defaultInputText"></input> 
+		<br>
+		<br>
+		<input type="button" id="btnAssociateRobot" value="Schedule Event" class="defaultButton"></input> 
+		<br>
+		<br>
 		
 	</section>
+
 
 	</body>
 </html>

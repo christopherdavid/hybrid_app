@@ -7,14 +7,13 @@ import com.neatorobotics.android.slide.framework.service.INeatoRobotService;
 
 public class ApplicationConfig {
 
-	private static final String TAG = ApplicationConfig.class.getSimpleName();
+	@SuppressWarnings("unused")
 	private Context mContext;
 	private static ApplicationConfig sApplicationConfig;
 	private static final Object INSTANCE_LOCK = new Object();
 
 	private INeatoRobotService mNeatoRobotService;
 	private NeatoRobotResultReceiver mNeatoRobotResultReceiver;
-//	private InitHelper mInitHelper;
 
 	private ApplicationConfig(Context context)
 	{
@@ -28,7 +27,6 @@ public class ApplicationConfig {
 				sApplicationConfig = new ApplicationConfig(context);
 			}
 		}
-
 		return sApplicationConfig;
 	}
 
@@ -49,12 +47,4 @@ public class ApplicationConfig {
 	public NeatoRobotResultReceiver getRobotResultReceiver() {
 		return mNeatoRobotResultReceiver;
 	}
-	
-//	public InitHelper getinitHelper() {
-//		return mInitHelper;
-//	}
-//	
-//	public void setInitHelper(InitHelper initHelper) {
-//		mInitHelper = initHelper;
-//	}
 }

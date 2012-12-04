@@ -61,4 +61,26 @@ public class RobotItem {
 		return users.size();
 	}
 	
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("******RobotItem******\n");
+		sb.append("id = ");
+		sb.append(id);
+		sb.append("\n");
+		
+		sb.append("name = ");
+		sb.append(name);
+		sb.append("\n");
+		
+		sb.append("serialNumber = ");
+		sb.append(serialNumber);
+		sb.append("\n");
+		
+		sb.append("chatId = ");
+		sb.append(chatId);
+		sb.append("\n");
+		return sb.toString();
+	}
+	
 }

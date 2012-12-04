@@ -66,7 +66,7 @@ public class NeatoSmartAppCreateUserActivity extends Activity{
     	}
     	@Override
     	protected CreateNeatoUserResult doInBackground(Void... params) {
-    		CreateNeatoUserResult result = NeatoUserWebservicesHelper.CreateNeatoUserRequestNative(NeatoSmartAppCreateUserActivity.this, mName, mEmailId, mPassword);
+    		CreateNeatoUserResult result = NeatoUserWebservicesHelper.createNeatoUserRequestNative(NeatoSmartAppCreateUserActivity.this, mName, mEmailId, mPassword);
     		
     		return result;
     	}

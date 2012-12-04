@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"  
+    android:background="@color/default_bg"  
+    android:orientation="vertical" >
+    
+    <TextView
+         android:id="@+id/txt_schedule_robot_page_header_title"
+         style="@style/HeaderStyle"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="@dimen/header_bottom_margin"
+         android:layout_centerInParent="true"
+         android:layout_marginTop="20dp"
+         android:ellipsize="end"
+         android:gravity="center"
+         android:maxLines="1"
+         android:singleLine="true"
+         android:text="@string/text_robot_schedule_header_title" 
+         />
+    
+         
+     <Button 
+         android:id="@+id/btn_set_schedule_weekdays"
+         android:layout_width="@dimen/btn_width"
+         android:layout_height="@dimen/btn_height"
+         style="@style/DefaultButtonStyle"         
+         android:layout_marginTop="5dp"
+         android:text="@string/text_set_schedule_weekdays"/>
+     
+     <Button 
+         android:id="@+id/btn_set_schedule_babynap"
+         android:layout_width="@dimen/btn_width"
+         android:layout_height="@dimen/btn_height"
+         style="@style/DefaultButtonStyle"       
+         android:layout_marginTop="20dp"  
+         android:text="@string/text_set_schedule_babynap"/>
+     
+      <Button 
+         android:id="@+id/btn_set_schedule_weekends"
+         android:layout_width="@dimen/btn_width"
+         android:layout_height="@dimen/btn_height"
+         android:layout_marginTop="20dp"
+         style="@style/DefaultButtonStyle"         
+         android:text="@string/text_set_schedule_weekends"/>
+      
+     <Button 
+         android:id="@+id/btn_set_schedule_working_couple"
+         android:layout_width="@dimen/btn_width"
+         android:layout_height="@dimen/btn_height"
+         android:layout_marginTop="20dp"
+         style="@style/DefaultButtonStyle"         
+         android:text="@string/text_set_schedule_working_couple"/>     
+     
+     <Button 
+         android:id="@+id/btn_set_schedule_clear"
+         android:layout_width="@dimen/btn_width"
+         android:layout_height="@dimen/btn_height"
+         style="@style/DefaultButtonStyle"         
+         android:layout_marginTop="60dp"
+         android:text="@string/text_set_schedule_clear"/>
+     
+        
+    <ProgressBar 
+        android:id="@+id/progress_schedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"/>
+     
+</LinearLayout>

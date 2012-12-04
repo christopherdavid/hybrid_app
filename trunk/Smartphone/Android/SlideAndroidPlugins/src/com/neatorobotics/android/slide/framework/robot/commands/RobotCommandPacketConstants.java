@@ -6,6 +6,7 @@ public class RobotCommandPacketConstants {
 	public static final int COMMAND_ROBOT_START = 101;
 	public static final int COMMAND_ROBOT_STOP = 102;
 	public static final int COMMAND_ROBOT_JABBER_DETAILS = 103;
+	public static final int COMMAND_SEND_BASE = 104;
 
 	
 	

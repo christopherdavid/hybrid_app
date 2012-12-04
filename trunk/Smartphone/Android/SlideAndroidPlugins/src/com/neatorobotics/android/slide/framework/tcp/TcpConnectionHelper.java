@@ -6,23 +6,19 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-
 import android.content.Context;
 import android.os.Handler;
-
 import com.neatorobotics.android.slide.framework.AppConstants;
-import com.neatorobotics.android.slide.framework.NetworkPacketBundle;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.CommandFactory;
-import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandHeader;
-import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
+import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandsGroup;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotDiscoveryPacketHeader;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotPacket;
 import com.neatorobotics.android.slide.framework.transport.Transport;
 import com.neatorobotics.android.slide.framework.transport.TransportFactory;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
-import com.neatorobotics.android.slide.framework.xmpp.XMPPUtils;
+import com.neatorobotics.android.slide.framework.xml.NetworkXmlHelper;
 
 public class TcpConnectionHelper {
 
@@ -33,7 +29,7 @@ public class TcpConnectionHelper {
 	private static final int TCP_ROBOT_SERVER_PORT = AppConstants.TCP_ROBOT_SERVER_SOCKET_PORT;
 	private TcpDataPacketListener mTcpDataPacketListener;
 	private Transport mTransport;
-	
+
 	public TcpConnectionHelper(Context context)
 	{
 		mContext = context.getApplicationContext();
@@ -47,14 +43,14 @@ public class TcpConnectionHelper {
 	{
 		mTcpDataPacketListener = tcpDataPacketListener;
 	}
-	
+
 	private void notifyRobotConnected()
 	{
 		NeatoPrefs.setPeerConnectionStatus(mContext, true);
 		if (mTcpDataPacketListener != null) {
 			if (mHandler != null) {
 				mHandler.post(new Runnable() {
-					
+
 					public void run() {
 						mTcpDataPacketListener.onConnect();
 					}
@@ -65,19 +61,19 @@ public class TcpConnectionHelper {
 			}
 		}
 	}
-	
+
 	private void notifyRobotDisconnected()
 	{
 		NeatoPrefs.setPeerConnectionStatus(mContext, false);
 		if (mTcpDataPacketListener != null) {
 			if (mHandler != null) {
 				mHandler.post(new Runnable() {
-					
+
 					public void run() {
 						mTcpDataPacketListener.onDisconnect();
 					}
 				});
-				
+
 			}
 			else {
 				mTcpDataPacketListener.onDisconnect();
@@ -107,11 +103,12 @@ public class TcpConnectionHelper {
 
 		public void sendRobotJabberDetails() {
 			LogHelper.log(TAG, "Send Jabber details to Robot");
-			RobotPacket jabberDetailsPacket = new RobotPacket(RobotCommandPacketConstants.COMMAND_ROBOT_JABBER_DETAILS);
-			NetworkPacketBundle jabberDetailsBundle = jabberDetailsPacket.getBundle();
-			jabberDetailsBundle.putString(RobotCommandPacketConstants.KEY_ROBOT_JABBER_ID, XMPPUtils.getRobotJabberId(mContext));
-			jabberDetailsBundle.putString(RobotCommandPacketConstants.KEY_ROBOT_JABBER_PWD, XMPPUtils.getRobotJabberPwd(mContext));
-			sendRobotCommand(jabberDetailsPacket, mTransport);
+//			RobotPacket jabberDetailsPacket = new RobotPacket(RobotCommandPacketConstants.COMMAND_ROBOT_JABBER_DETAILS);
+			/*NetworkPacketBundle jabberDetailsBundle = jabberDetailsPacket.getBundle();*/
+	//		RobotPacketBundle jabberDetailsBundle = jabberDetailsPacket.getBundle();
+	//		jabberDetailsBundle.putString(RobotCommandPacketConstants.KEY_ROBOT_JABBER_ID, XMPPUtils.getRobotJabberId(mContext));
+	//		jabberDetailsBundle.putString(RobotCommandPacketConstants.KEY_ROBOT_JABBER_PWD, XMPPUtils.getRobotJabberPwd(mContext));
+	//		sendRobotCommand(jabberDetailsPacket, mTransport);
 		}
 	}
 
@@ -173,9 +170,10 @@ public class TcpConnectionHelper {
 
 			int length = din.readInt();
 			LogHelper.logD(TAG, "length = " + length);	
-			RobotPacket robotPacket = CommandFactory.createCommand(din);
-			if (robotPacket == null) {
-				LogHelper.log(TAG, "robotPacket is null");
+			/*RobotPacket robotPacket = CommandFactory.createCommand(din);*/
+			RobotCommandsGroup robotCommandGroup = CommandFactory.createCommandGroup(din);
+			if (robotCommandGroup == null) {
+				LogHelper.log(TAG, "robotCommandGroup is null");
 				return;
 			}
 			// Processes the robot packet and sends reply if necessary
@@ -189,15 +187,15 @@ public class TcpConnectionHelper {
 
 	public void connectToRobot(final String ipAddress) {
 		Runnable task = new Runnable() {
-			
+
 			public void run() {
 				connectToRobotInternal(ipAddress);
 			}
 		};
-		
+
 		TaskUtils.scheduleTask(task, 0);
 	}
-	
+
 	public void connectToRobotInternal(String ipAddress) {
 		LogHelper.log(TAG, "connectToRobot called");
 		if(!isConnected(ipAddress)) {
@@ -207,19 +205,19 @@ public class TcpConnectionHelper {
 			LogHelper.log(TAG, "Already connected to robot. IpAddress: " + ipAddress);
 		}
 	}
-	
+
 	public void closePeerConnection(final String ipAddress)
 	{
 		Runnable task = new Runnable() {
-			
+
 			public void run() {
 				closePeerConnectionInternal(ipAddress);
 			}
 		};
-		
+
 		TaskUtils.scheduleTask(task, 0);
 	}
-	
+
 	public void closePeerConnectionInternal(String ipAddress)
 	{
 		LogHelper.log(TAG, "closePeerConnection called");
@@ -230,7 +228,7 @@ public class TcpConnectionHelper {
 			}
 		} 
 	}
-	
+
 	public boolean isConnected(String ipAddress) {
 		LogHelper.log(TAG, "isConnected transport = " + mTransport);
 		if (mTransport == null) {
@@ -245,17 +243,16 @@ public class TcpConnectionHelper {
 		byte[] packet = getRobotPacket(robotPacket);
 		sendRobotPacketAsync(transport,packet);
 	}
-	
+
 	private  byte[] getRobotPacket(RobotPacket robotPacket)
 	{
-		
+
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(bos);
+		byte[] packet = NetworkXmlHelper.commandToXml(robotPacket);
 		try {
-			dos.write(RobotCommandHeader.getHeader());
-			byte [] discoveryPacket = robotPacket.getBytes();
-			dos.writeInt(discoveryPacket.length);
-			dos.write(discoveryPacket);
+			dos.writeInt(packet.length);
+			dos.write(packet);
 		}
 		catch (Exception e) {
 			LogHelper.log(TAG, "Exception in getBytes", e);
@@ -263,15 +260,17 @@ public class TcpConnectionHelper {
 		}
 		return bos.toByteArray();
 	}
-	
+
+
+
 	private  void sendRobotPacket(Transport transport,  byte[] Packet )
 	{
-		
+
 		if (Packet == null) {
 			LogHelper.log(TAG, "Packet is null");
 			return;
 		}
-		
+
 		try {
 			transport.send(Packet);
 		}

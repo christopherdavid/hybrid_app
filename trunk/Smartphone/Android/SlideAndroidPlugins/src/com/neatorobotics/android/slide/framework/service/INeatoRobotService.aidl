@@ -10,4 +10,5 @@ interface INeatoRobotService
 	void closePeerConnection(in String ipAddress);
 	void cleanup();
 	void associateRobot(String serialId, String emailId);
+	void loginToXmpp();
 }

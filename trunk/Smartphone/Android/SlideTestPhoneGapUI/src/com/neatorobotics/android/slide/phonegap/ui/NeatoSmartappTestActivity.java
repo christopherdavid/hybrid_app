@@ -9,7 +9,6 @@ import com.neatorobotics.android.slide.framework.plugins.base.SlidePluginBaseAct
 public class NeatoSmartappTestActivity extends SlidePluginBaseActivity {
 	
 	private static final String PHONEGAP_URL = "file:///android_asset/www/neatosmartapp.html";
-
 	
     /** Called when the activity is first created. */
     @Override

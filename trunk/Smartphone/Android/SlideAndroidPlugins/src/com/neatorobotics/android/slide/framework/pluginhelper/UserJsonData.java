@@ -15,18 +15,18 @@ public class UserJsonData {
 
 	private static final String TAG = UserJsonData.class.getSimpleName();
 
-	private JSONArray mdata;
+	private JSONArray mData;
 	private JSONObject mDataObject;
 
 	public UserJsonData(JSONArray data) {
-		mdata = data;
+		mData = data;
 		extractJsonObject();
 	}
 
 
 	private void extractJsonObject() {
 		try {
-			mDataObject = mdata.getJSONObject(0);
+			mDataObject = mData.getJSONObject(0);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			LogHelper.log(TAG, "JSON object is not present");
@@ -35,8 +35,10 @@ public class UserJsonData {
 
 
 	public String getString(String key) {
-		String value = "";
-
+		return getString(key, "");
+	}
+	public String getString(String key, String DefaultStr) {
+		String value = DefaultStr;
 		try {
 			value = mDataObject.getString(key);
 		} catch (JSONException e) {
@@ -44,6 +46,7 @@ public class UserJsonData {
 		}
 		return value;
 	}
+
 
 	//assume default false
 	public boolean getBoolean(String key) {

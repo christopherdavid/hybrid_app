@@ -2,12 +2,8 @@ package com.neatorobotics.android.slide.framework.robot.commands;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.IOException;
-
 import android.content.Context;
-
-import com.neatorobotics.android.slide.framework.NetworkPacketBundle;
-import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.xml.NetworkXmlHelper;
 
 public class CommandFactory {
 	
@@ -17,48 +13,19 @@ public class CommandFactory {
 	{
 		return new RobotDiscoveryCommand();
 	}
-	
-	public static RobotPacket createCommand(byte [] data) 
-	{
-		RobotPacket robotPacket = null;
+
+	public static RobotCommandsGroup createCommandGroup(DataInputStream dis) {
 		
-		if (data == null) {
-			return null;
-		}
+		RobotCommandsGroup commandsGroup = NetworkXmlHelper.readInputStreamXml(dis);
+		return commandsGroup;
+	}
+
+	
+	public static RobotCommandsGroup createCommandGroup(byte [] data) {
 		
 		ByteArrayInputStream bis = new ByteArrayInputStream(data);
 		DataInputStream dis = new DataInputStream(bis);
-		try {
-			int commandId = dis.readInt();
-			NetworkPacketBundle bundle = NetworkPacketBundle.createBundleFromByteArray(dis);
-			
-			robotPacket = new RobotPacket(commandId, bundle);
-		}
-		catch (IOException e) {
-			LogHelper.log(TAG, "Exception in createCommand (byte)", e);
-		}
-		return robotPacket;
+		RobotCommandsGroup commandsGroup = NetworkXmlHelper.readInputStreamXml(dis);
+		return commandsGroup;
 	}
-	
-	public static RobotPacket createCommand(DataInputStream dis) 
-	{
-		RobotPacket robotPacket = null;
-		
-		if (dis == null) {
-			return null;
-		}
-		try {
-			int commandId = dis.readInt();
-			NetworkPacketBundle bundle = NetworkPacketBundle.createBundleFromByteArray(dis);
-			robotPacket = new RobotPacket(commandId, bundle);
-		}
-		catch (IOException e) {
-			LogHelper.log(TAG, "Exception in createCommand (dis)", e);
-		}
-		
-		return robotPacket;
-	}
-	
-	
-
 }

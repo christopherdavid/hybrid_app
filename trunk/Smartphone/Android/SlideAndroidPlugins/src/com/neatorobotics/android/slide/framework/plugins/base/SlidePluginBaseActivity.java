@@ -29,4 +29,9 @@ public class SlidePluginBaseActivity extends DroidGap {
 		
 		super.onDestroy();
 	}
+	// Prevent back button from the activity and implement the behaviour in the UI.
+	@Override
+	public void onBackPressed() {
+		
+	}
 }

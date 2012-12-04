@@ -40,7 +40,15 @@ public class NeatoUserWebServicesAttributes {
 			public static final String EMAIL = "email";
 			public static final String AUTHHENTICATION_TOKEN = "auth_token";
 		}
-		
+	}
+	
+	public static class GetUserAssociatedRobots {
+		public static final String METHOD_NAME = "user.get_associated_robots";
+		public static class Attribute {
+			public static final String API_KEY = "api_key";
+			public static final String EMAIL = "email";
+			public static final String AUTHHENTICATION_TOKEN = "auth_token";
+		}
 	}
 
 

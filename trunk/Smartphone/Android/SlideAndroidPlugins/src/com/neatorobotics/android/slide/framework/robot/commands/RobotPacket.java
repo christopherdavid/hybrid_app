@@ -1,30 +1,36 @@
 package com.neatorobotics.android.slide.framework.robot.commands;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-
-import com.neatorobotics.android.slide.framework.NetworkPacketBundle;
-import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import com.neatorobotics.android.slide.framework.utils.DataConversionUtils;
+import com.neatorobotics.android.slide.framework.xml.NetworkXmlConstants;
 
 public class RobotPacket {
-	
+		
 	private  final String TAG = getClass().getSimpleName();
 	private int mCommandId;
-	protected NetworkPacketBundle mNetworkPacketBundle;
+	protected RobotPacketBundle mRobotPacketBundle;
 	
+	public RobotPacket() {
+		mCommandId = 0; // Default value
+		mRobotPacketBundle = new RobotPacketBundle();
+	}
 	
 	public RobotPacket(int commandId)
 	{
 		mCommandId = commandId;
-		mNetworkPacketBundle = new NetworkPacketBundle();
+		mRobotPacketBundle = new RobotPacketBundle();
 	}
 	
-	public RobotPacket(int commandId, NetworkPacketBundle networkPacketBundle)
+	public RobotPacket(int commandId, RobotPacketBundle robotPacketBundle)
 	{
 		mCommandId = commandId;
-		mNetworkPacketBundle = new NetworkPacketBundle(networkPacketBundle);
+		mRobotPacketBundle = new RobotPacketBundle(robotPacketBundle);
 	}
-
+	
 	public int getCommandId() {
 		return mCommandId;
 	}
@@ -38,25 +44,32 @@ public class RobotPacket {
 	}
 
 	
-	public NetworkPacketBundle getBundle()
+	public RobotPacketBundle getBundle()
 	{
-		return mNetworkPacketBundle;
+		return mRobotPacketBundle;
 	}
-	
-	public byte [] getBytes()
-	{
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(bos);
-		try {
-			dos.writeInt(mCommandId);
-			dos.write(mNetworkPacketBundle.toByteArray());
-		}
-		catch (Exception e) {
-			LogHelper.log(TAG, "Exception in getBytes", e);
-		}
 
-		return bos.toByteArray();
+	//Document where it is added and the parent element of the command xml.
+	public Node robotCommandToXmlNode() {
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = null;
+		try {
+			docBuilder = docFactory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+
+		}
+		Document doc = docBuilder.newDocument();
+		Node command = doc.createElement(NetworkXmlConstants.XML_TAG_COMMAND);
+		Node commadid = doc.createElement(NetworkXmlConstants.XML_TAG_COMMANDID);
+		commadid.appendChild(doc.createTextNode(DataConversionUtils.convertIntToString(getCommandId())));
+		
+		Node commandDataNode = getBundle().bundleToXml();
+		Node impCommandData = doc.adoptNode(commandDataNode);
+		
+		
+		command.appendChild(commadid);
+		command.appendChild(impCommandData);
+		return command;
 	}
-	
 
 }

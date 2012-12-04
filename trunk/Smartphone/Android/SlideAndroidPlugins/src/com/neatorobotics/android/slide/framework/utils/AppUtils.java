@@ -2,6 +2,7 @@ package com.neatorobotics.android.slide.framework.utils;
 
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.util.Base64;
 
 public class AppUtils {
 	
@@ -43,6 +44,12 @@ public class AppUtils {
 			}
 		}
 		return version;
+	}
+	
+	public static String convertToBase64(byte [] data)
+	{
+		String encodedString = Base64.encodeToString(data, Base64.DEFAULT);
+		return encodedString;
 	}
 
 }
