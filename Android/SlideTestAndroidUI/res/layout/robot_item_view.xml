@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+   >
+    
+    <TextView android:id="@+id/robotName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/default_text"
+        android:text="Name"
+    />
+    
+     <TextView android:id="@+id/robotSerialId"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="SerialId"
+        android:layout_below="@+id/robotName"
+        android:textColor="@color/default_text"
+        android:gravity="center"
+        android:layout_marginTop="2dp"
+    />
+
+</RelativeLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+   <dimen name="header_top">42.5dp</dimen>
+   
+   <dimen name="header_bottom_margin">30dp</dimen>
+   
+   <dimen name="btn_width">200dp</dimen>
+   <dimen name="btn_height">50dp</dimen>
+   
+   <dimen name="label_text_size">18sp</dimen>
+   
+   <dimen name="edit_ctrl_left_margin">20dp</dimen>
+   <dimen name="edit_ctrl_right_margin">20dp</dimen>
+ 
+</resources>

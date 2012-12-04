@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:background="@color/default_bg"
+    android:orientation="vertical" >
+    
+    <!-- 
+    <include
+            android:id="@+id/header"
+            layout="@layout/header"
+     />
+     -->
+     
+     <TextView
+         android:id="@+id/txt_login_page_header_title"
+         style="@style/HeaderStyle"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="@dimen/header_bottom_margin"
+         android:layout_marginTop="20dp"         
+         android:layout_centerInParent="true"
+         android:ellipsize="end"
+         android:gravity="center"
+         android:maxLines="1"
+         android:singleLine="true"
+         android:text="@string/text_loginpg_header_title"/>
+    
+    <EditText 
+        android:id="@+id/editUserEmailId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_ctrl_left_margin"      
+        android:layout_marginRight="@dimen/edit_ctrl_right_margin"             
+        android:hint="@string/text_login_email_hint"
+        android:singleLine="true"
+        android:inputType="textEmailAddress"   
+      />
+    
+     <EditText 
+        android:id="@+id/editUserPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"        
+        android:layout_marginLeft="@dimen/edit_ctrl_left_margin"      
+        android:layout_marginRight="@dimen/edit_ctrl_right_margin"
+        android:inputType="textPassword"
+        android:layout_marginTop="10dp"
+        android:singleLine="true"
+        android:hint="@string/text_login_pwd_hint"
+        />
+     
+     <Button 
+        android:id="@+id/btnLogin"
+        android:layout_width="@dimen/btn_width"
+        android:layout_height="@dimen/btn_height"
+        style="@style/DefaultButtonStyle"
+        android:text="@string/text_btn_signin"
+        android:layout_marginTop="20dp"/>     
+	
+      <ProgressBar
+        android:id="@+id/login_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"        
+        android:layout_marginTop="20dp"
+        android:visibility="gone" />
+      
+</LinearLayout>

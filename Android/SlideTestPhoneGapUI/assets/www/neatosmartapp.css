@@ -1,0 +1,54 @@
+
+
+[aria-hidden="true"] {
+	display: none; 
+}
+
+[aria-hidden="false"] {
+	display: block; 
+}
+
+
+ul {
+    list-style:none;
+}
+
+body {
+	background-color:#DBDBDB;
+}
+
+
+#welcomeScreen label {
+	font-size: 12pt;
+	margin-top :5px;
+	margin-bottom: 5px;
+}
+
+.defaultSectionHeader {
+	font-size: 12pt;
+	font-weight: bold;
+	
+}
+
+.defaultInputText {
+	width: 60%;
+	height: 30px;
+	margin-top :5px;
+	margin-bottom: 5px;
+	margin-left: 20%;
+	margin-right: 20%;
+	
+}
+
+.defaultButton {
+	width: 60%;
+	height: 40px;
+	margin-left: 20%;
+	margin-right: 20%;
+	font-size: 12pt;
+	background-color:#44433E;
+	color:#FFFFFF;
+	margin-top: 5px;
+	margin-bottom : 5px;
+	font-weight: normal;
+}
