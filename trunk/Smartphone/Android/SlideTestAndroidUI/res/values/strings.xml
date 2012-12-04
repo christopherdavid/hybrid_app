@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Neato SmartApp</string>
+    <string name="hint_robot_serial_number">Robot Serial Number</string>
+    <string name="btn_txt_associate_robot">Associate Robot</string>
+    
+    <!-- Home screen strings -->
+    <string name="text_homepg_header_title">Welcome to Neato!</string>
+    
+    <string name="text_login_label">Already have a Neato account?</string>
+    <string name="text_btn_login">Log in</string>
+    
+    <string name="text_new_accnt_label">New to Neato?</string>
+    <string name="text_btn_new_accnt">Create New Account</string>
+    
+    <string name="text_demo_label">Just show me the demo</string>
+    <string name="text_btn_demo">Login as Demo1</string>
+    
+    
+    <!-- Login screen strings -->
+    <string name="text_loginpg_header_title">Enter Login Credentials</string>
+    
+    <string name="text_login_email_hint">Email</string>
+    <string name="text_login_pwd_hint">Password</string>
+    
+    <string name="text_btn_signin">Sign In</string>
+    
+    <!-- Create new account screen strings -->
+    <string name="text_createuser_header_title">Register User</string>
+    <string name="text_createuser_name_hint">User Name</string>
+    <string name="text_createuser_email_hint">User Email</string>
+    <string name="text_createuser_password_hint">Password</string>
+    <string name="text_createuser_btn_caption">Create User</string>
+    
+    
+    <!-- Welcome screen strings -->
+    <string name="text_welcome_header_title">Welcome</string>
+    
+    <string name="text_btn_find_robots">Discover Nearby Robots</string>
+    <string name="text_btn_close_conn">Close Peer Connection</string>
+    
+    <string name="text_btn_start_peer_conn">Start Cleaning</string>
+    <string name="text_btn_stop_peer_conn">Stop Cleaning</string>
+    <string name="text_btn_start_server_conn">Start Cleaning</string>
+    <string name="text_btn_stop_server_conn">Stop Cleaning</string>
+    
+    <string name="text_section_peer_conn">Peer Connection :</string>
+    <string name="text_section_send_server_cmd">Send command via server :</string>
+    
+    <!-- Assocaite screen strings -->
+    <string name="text_assorobot_header_title">Associate Robot</string>
+    
+    
+    <!-- Menu strings -->
+    <string name="text_menu_logout">Logout</string>
+    <string name="text_menu_addrobot">Associate Robot</string>
+</resources>

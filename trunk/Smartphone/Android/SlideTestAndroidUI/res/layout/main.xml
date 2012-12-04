@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/default_bg"
+    android:gravity="center_horizontal" >
+
+    <!--
+        <include
+            android:id="@+id/header"
+            layout="@layout/header" />
+    -->
+
+    <TextView
+        android:id="@+id/txt_welcome_page_header_title"
+        style="@style/HeaderStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="@string/text_welcome_header_title" />
+
+    <TextView
+        android:id="@+id/txtConnectionStatus"
+        style="@style/DefaultTextStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_welcome_page_header_title"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="No Robot Connected"
+        android:textSize="14sp"
+        android:textStyle="italic" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtConnectionStatus"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"    
+            style="@style/DefaultTextStyle"  
+            android:layout_gravity="left"   
+            android:paddingLeft="5dp"       
+            android:text="@string/text_section_peer_conn" />
+        
+        <ImageView                
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"                
+            android:background="@color/separator" />
+
+        <Button
+            android:id="@+id/find_robots"
+            style="@style/DefaultButtonStyle"
+            android:layout_width="@dimen/btn_width"
+            android:layout_height="@dimen/btn_height"
+            android:layout_marginBottom="5dp"
+            android:text="@string/text_btn_find_robots" />
+
+        <Button
+            android:id="@+id/close_peer_connection"
+            style="@style/DefaultButtonStyle"
+            android:layout_width="@dimen/btn_width"
+            android:layout_height="@dimen/btn_height"
+            android:layout_marginBottom="5dp"
+            android:text="@string/text_btn_close_conn" />
+        
+        <Button
+            android:id="@+id/btn_associaterobot"
+            style="@style/DefaultButtonStyle"
+            android:layout_width="@dimen/btn_width"
+            android:layout_height="@dimen/btn_height"
+            android:layout_marginBottom="5dp"
+            android:text="@string/text_menu_addrobot" />
+        
+        <Button
+            android:id="@+id/startStopPeerConn"
+            style="@style/DefaultButtonStyle"
+            android:layout_width="@dimen/btn_width"
+            android:layout_height="@dimen/btn_height"
+            android:layout_marginBottom="5dp"
+            android:text="@string/text_btn_start_peer_conn" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"    
+            style="@style/DefaultTextStyle"  
+            android:layout_gravity="left"   
+            android:paddingLeft="5dp"
+            android:layout_marginTop="30dp"       
+            android:text="@string/text_section_send_server_cmd" />
+        
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"            
+            android:background="@color/separator" />        
+
+        <Button
+            android:id="@+id/startStopServer"
+            style="@style/DefaultButtonStyle"
+            android:layout_width="@dimen/btn_width"
+            android:layout_height="@dimen/btn_height"
+            android:layout_marginBottom="5dp"
+            android:text="@string/text_btn_start_server_conn" />
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/separator" />
+
+        <!--
+		     <Button
+		        android:id="@+id/associateRobotConfig"
+		        android:layout_width="@dimen/btn_width"
+		        android:layout_height="wrap_content"
+		        android:layout_marginBottom="5dp"
+		        android:text="Add Robot" />
+        -->
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+    <!--
+    <LinearLayout 
+        android:id="@+id/find_robot_progress"
+	    android:layout_width="@dimen/btn_width"
+	    android:layout_height="wrap_content"
+	    android:visibility="invisible"
+	    android:layout_gravity="center"
+	    android:orientation="vertical" >
+	    
+	    <ProgressBar
+	      android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      />
+	    
+	    <TextView
+	      android:id="@+id/progressTxt"
+	      android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      android:text="Finding Robots"
+	      />
+	</LinearLayout>
+    -->
+
+</RelativeLayout>

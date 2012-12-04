@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="grey">#C2C2C2</color>
+    
+    <color name="default_bg">#DBDBDB</color>
+    
+    <color name="header_text">#000000</color>
+    <color name="default_text">#000000</color>
+        
+    <color name="separator">#000000</color>
+    
+    <!-- Button background -->
+    
+    <color name="button_bg_start">#515256</color>
+    <color name="button_bg_mid">#44433E</color>
+    <color name="button_bg_end">#2D2C27</color>
+    
+</resources>

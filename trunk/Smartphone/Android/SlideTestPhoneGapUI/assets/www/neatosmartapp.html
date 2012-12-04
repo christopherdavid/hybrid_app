@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<title>Neato Smartapp</title>
+<!-- CSS Style -->
+<link rel="stylesheet" href="neatosmartapp.css" />
+
+<!-- Java scripts -->
+<script type="text/javascript" charset="utf-8" src="jquery.js">	
+</script>
+<script type="text/javascript"  src="cordova-2.1.0.js"></script>
+<script type="text/javascript" charset="utf-8" src="neatosmartapphelper.js"></script>
+<script type="text/javascript" charset="utf-8" src="neatosmartapp.js"></script>
+
+</head>
+	<body>     
+	 <!-- Display result. Just for testing purposes. -->
+	<label id="displayResult" aria-hidden=true></label>  
+	
+	<!-- Welcome screen -->
+	<section id="welcomeScreen" aria-hidden=true>
+	<div class="defaultSectionHeader">Welcome to Neato!</div>  
+	<br>
+	<label>Already Have A Neato Account?</label>
+	<br>
+	<input type="button" id="btnGoToLogin" value="Log in" class="defaultButton"></input>
+	<br>
+	<label>New To Neato?</label>
+	<br>
+	<input type="button" id="btnGoToRegister" value="Create New Account" class="defaultButton"></input>
+	<br>
+	<br>
+	<br>
+	<label>Just show me the demo!</label>
+	<br>
+	<input type="button" id="btnDemoLogin" value="Login as Demo1" class="defaultButton"></input>
+	</section>
+	
+	<!-- Login screen -->
+	<section id="loginPage"  aria-hidden=true>
+	<div class="defaultSectionHeader">Enter your login credentials!</div>  
+	<br>
+	<input type="text" id="mailid" placeholder="Email" class="defaultInputText"></input>
+	<br>
+	<input type="password" id="passkey" placeholder="Password" class="defaultInputText"></input>
+	<br>
+	<br>
+	<input type="button" id="loginButton" value="Login" class="defaultButton"></input>
+	</section>
+	
+	<!-- Create user screen -->
+	<section id="registerUserPage"  aria-hidden=true>
+	<div class="defaultSectionHeader">Register for Neato Account!</div>  
+	<br>
+
+	<input type="text" id="regname" placeholder="User Name" class="defaultInputText"></input>
+	<br>
+
+	<input type="text" id="regmailid" placeholder="User Email" class="defaultInputText"></input>
+	<br>
+
+	<input type="password" id="regpasskey" placeholder="Password" class="defaultInputText"></input>
+	<br>
+	<input type="password" id="regpasskeyconfirm" placeholder="Re-Enter Password" class="defaultInputText"></input>
+	<br>
+	<input type="button" id="registerUserButton" value="Register" class="defaultButton"></input> 
+	</section>
+	
+	
+	<!-- User screen -->
+	<section id="userHomePage"  aria-hidden=true>
+		<div class="defaultSectionHeader">Welcome to the Cleaning World!</div>
+		<br>
+		<br>
+		<label>Peer Connection</label>
+		<input type="button" id="btnDiscoverRobot" value="Discover Nearby Robots" class="defaultButton" aria-hidden=true></input> 
+		<input type="button" id="btnClosePeer" value="Close Peer Connection" class="defaultButton" aria-hidden=true></input> 
+		<input type="button" id="btnGoAssociatePage" value="Associate Robot" class="defaultButton"></input> 
+		<input type="button" id="btnStartStopCleaningPeer" value="Start Cleaning" class="defaultButton" aria-hidden=true></input> 
+		<br>
+		<br>
+		<label>Send Command via Server</label>
+		<input type="button" id="btnStartStopCleaningServer" value="" class="defaultButton"></input>
+		<br>
+		<br>
+		<br>
+		<input type="button" id="btnLogout" value="Logout" class="defaultButton"></input>
+		
+		
+	</section>
+	
+		<!-- Associate Robot screen -->
+	<section id="associateRobot"  aria-hidden=true>
+		<div class="defaultSectionHeader">Associate Robot</div>
+		<br>
+		<br>
+		<input type="text" id="robotSerialId" placeholder="Serial Id" class="defaultInputText"></input> 
+		<br>
+		<br>
+		<input type="button" id="btnAssociateRobot" value="Associate Robot" class="defaultButton"></input> 
+		<br>
+		<br>
+		
+		
+	</section>
+
+	</body>
+</html>
