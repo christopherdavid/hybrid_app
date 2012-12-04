@@ -11,20 +11,20 @@ public class RobotDiscoveryCommand extends RobotPacket {
 	}
 	
 	public String getDeviceName() {
-		String deviceName = mNetworkPacketBundle.getString(KEY_DEVICE_ID);
+		String deviceName = mRobotPacketBundle.getString(KEY_DEVICE_ID);
 		return deviceName;
 		
 	}
 	public void setDeviceName(String deviceName) {
-		mNetworkPacketBundle.putString(KEY_DEVICE_NAME, deviceName);
+		mRobotPacketBundle.putString(KEY_DEVICE_NAME, deviceName);
 	}
 	
 	public String getDeviceId() {
-		String deviceId = mNetworkPacketBundle.getString(KEY_DEVICE_ID);
+		String deviceId = mRobotPacketBundle.getString(KEY_DEVICE_ID);
 		return deviceId;
 	}
 	public void setDeviceId(String deviceId) {
-		mNetworkPacketBundle.putString(KEY_DEVICE_ID, deviceId);
+		mRobotPacketBundle.putString(KEY_DEVICE_ID, deviceId);
 	}
 	
 }

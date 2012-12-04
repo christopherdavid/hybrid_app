@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
+import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
 import com.neatorobotics.android.slide.framework.webservice.user.GetNeatoUserDetailsResult;
 import com.neatorobotics.android.slide.framework.webservice.user.LoginNeatoUserTokenResult;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebservicesHelper;
@@ -33,7 +34,7 @@ public class NeatoSmartAppWelcomeScreen extends Activity{
 		setContentView(R.layout.welcomescreen);
 		
 		mProgressView = (ProgressBar)findViewById(R.id.home_progress);
-		
+		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.PROD_SERVER_ID);
 		String emailId = NeatoPrefs.getUserEmailId(this);
         if (!TextUtils.isEmpty(emailId)) {
 			Intent mainActivity = new Intent(NeatoSmartAppWelcomeScreen.this , NeatoSmartAppTestActivity.class);
@@ -109,10 +110,10 @@ public class NeatoSmartAppWelcomeScreen extends Activity{
 		
 		@Override
 		protected GetNeatoUserDetailsResult doInBackground(Void... params) {
-			LoginNeatoUserTokenResult result = NeatoUserWebservicesHelper.LoginNeatoUserToken(NeatoSmartAppWelcomeScreen.this, mEmailId, mPassword);
+			LoginNeatoUserTokenResult result = NeatoUserWebservicesHelper.loginNeatoUserToken(NeatoSmartAppWelcomeScreen.this, mEmailId, mPassword);
 			if (result.success()) {
 				Log.i(TAG, "LoginAsyncTask - Auth Token = " + result.mUserAuthToken);
-				GetNeatoUserDetailsResult userDetailResult = NeatoUserWebservicesHelper.GetNeatoUserDetails(NeatoSmartAppWelcomeScreen.this,
+				GetNeatoUserDetailsResult userDetailResult = NeatoUserWebservicesHelper.getNeatoUserDetails(NeatoSmartAppWelcomeScreen.this,
 															mEmailId, result.mUserAuthToken);
 				return userDetailResult;
 			}
@@ -130,7 +131,8 @@ public class NeatoSmartAppWelcomeScreen extends Activity{
 			if (result.success()) {
 				NeatoPrefs.saveUserEmailId(NeatoSmartAppWelcomeScreen.this, result.mResult.mEmail);
 				// Toast.makeText(NeatoSmartAppWelcomeScreen.this, "Demo user login Successful", Toast.LENGTH_SHORT).show();
-				
+				NeatoPrefs.saveJabberId(NeatoSmartAppWelcomeScreen.this, result.mResult.mChat_id);
+				NeatoPrefs.saveJabberPwd(NeatoSmartAppWelcomeScreen.this, result.mResult.mChat_pwd);
 				Intent createUserIntent = new Intent(NeatoSmartAppWelcomeScreen.this , NeatoSmartAppTestActivity.class);
 				startActivity(createUserIntent);
 				finish();

@@ -14,8 +14,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.ResultReceiver;
-
-import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
@@ -25,6 +23,7 @@ import com.neatorobotics.android.slide.framework.tcp.TcpConnectionHelper;
 import com.neatorobotics.android.slide.framework.tcp.TcpDataPacketListener;
 import com.neatorobotics.android.slide.framework.udp.RobotDiscovery;
 import com.neatorobotics.android.slide.framework.udp.UdpConnectionHelper;
+import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.AssociateNeatoRobotResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebservicesHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
@@ -35,6 +34,7 @@ import com.neatorobotics.android.slide.framework.xmpp.XMPPUtils;
 public class NeatoSmartAppService extends Service {
 
 	public static final String EXTRA_ROBOT_ASSOCIATION_START = "extra.robot.association.start";
+	public static final String EXTRA_ROBOT_ASSOCIATION_STATUS = "extra.robot.association.status";
 	public static final String EXTRA_RESULT_RECEIVER = "extra.result_receiver";
 	public static final String DISCOVERY_ROBOT_INFO = "robot.info";
 	public static final String NEATO_RESULT_RECEIVER_ACTION = "com.neato.simulator.result_receiver.action";
@@ -43,8 +43,6 @@ public class NeatoSmartAppService extends Service {
 	private UdpConnectionHelper mUdpConnectionHelper;
 	private TcpConnectionHelper mTcpConnectionHelper;
 	private XMPPConnectionHelper mXMPPConnectionHelper;
-
-	private WifiManager mWifiManager;
 
 	private Handler mHandler = new Handler();
 	private ResultReceiver mResultReceiver;
@@ -105,30 +103,12 @@ public class NeatoSmartAppService extends Service {
 		sendBroadcast(robotAssociationStartIntent);
 	}
 
-	private void robotAssociationFinished()
+	private void robotAssociationFinished(int statuscode)
 	{
 		Intent robotAssociationFinishIntent = new Intent(NEATO_UI_UPDATE_ACTION);
 		robotAssociationFinishIntent.putExtra(EXTRA_ROBOT_ASSOCIATION_START, false);
+		robotAssociationFinishIntent.putExtra(EXTRA_ROBOT_ASSOCIATION_STATUS, statuscode);
 		sendBroadcast(robotAssociationFinishIntent);
-	}
-
-
-	// TODO: Used for sending messages to robot jabber account. 
-	//WARNING: Duplicate code is there while sendning jabber account detaisl via TCP packet in tcp connection helper.
-
-	private static String getJabberChatId(Context context)
-	{
-		RobotItem robotItem = NeatoPrefs.getRobotItem(context);
-		if (robotItem == null) {
-			String chatId = AppConstants.JABBER_ROBOT_ID + AppConstants.JABBER_ID_DOMAIN;
-			LogHelper.log(TAG, "Hardcoded Robot Chat id = " + chatId);
-			return chatId;
-		}
-		else {
-			String chatId = robotItem.getChatId();
-			LogHelper.log(TAG, "Robot Chat id = " + chatId);
-			return chatId;
-		}
 	}
 
 
@@ -214,11 +194,29 @@ public class NeatoSmartAppService extends Service {
 
 		public void associateRobot(String serialId, String emailId)
 				throws RemoteException {
-		//	CreateRobotIfRequiredAndAssociateToUser associateRobotTask = new CreateRobotIfRequiredAndAssociateToUser(serialId, emailId);
-		//	associateRobotTask.execute();
-			CreateRobotIfRequiredAndAssociateToUserThread associateRobotTask = new CreateRobotIfRequiredAndAssociateToUserThread(serialId, emailId);
+			CreateRobotIfRequiredAndAssociateToUser associateRobotTask = new CreateRobotIfRequiredAndAssociateToUser(serialId, emailId);
+			associateRobotTask.execute();
+			/*CreateRobotIfRequiredAndAssociateToUserThread associateRobotTask = new CreateRobotIfRequiredAndAssociateToUserThread(serialId, emailId);
 			Thread t = new Thread(associateRobotTask);
-			t.start();
+			t.start();*/
+		}
+
+		@Override
+		public void loginToXmpp() throws RemoteException {
+			if(mXMPPConnectionHelper != null) {
+				Runnable task = new Runnable() {
+					
+					@Override
+					public void run() {
+						//mXMPPConnectionHelper.disconnectXmppConnection();
+						//TaskUtils.sleep(1000);
+						mXMPPConnectionHelper.JabberUserLogin();
+						
+					}
+				};
+				TaskUtils.scheduleTask(task, 0);
+			}
+			
 		}
 	};
 
@@ -265,7 +263,7 @@ public class NeatoSmartAppService extends Service {
 		mTcpConnectionHelper.setHandler(mHandler);
 		mTcpConnectionHelper.setTcpConnectionListener(mTcpDataPacketListener);
 		mXMPPConnectionHelper =  XMPPConnectionHelper.getInstance(this);
-		mWifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+
 		if (isConnectedToWifiNetwork()) {
 			mXMPPConnectionHelper.JabberUserLogin();
 		}
@@ -343,9 +341,11 @@ public class NeatoSmartAppService extends Service {
 			RobotManager robotManager = RobotManager.getInstance(getApplicationContext());
 			RobotItem robotItem = robotManager.getRobotDetail(mRobotSerialId);
 			LogHelper.log(TAG, "RobotItem = " + robotItem);
+			
 			if (robotItem != null) {
 				NeatoPrefs.saveRobotInformation(getApplicationContext(), robotItem);
-				AssociateNeatoRobotResult associationResult =  NeatoRobotWebservicesHelper.AssociateNeatoRobotRequest(NeatoSmartAppService.this, 
+				LogHelper.log(TAG, "Saving robot information");
+				AssociateNeatoRobotResult associationResult =  NeatoRobotWebservicesHelper.associateNeatoRobotRequest(NeatoSmartAppService.this, 
 						mEmailId, mRobotSerialId);
 				return associationResult;
 			}
@@ -359,52 +359,18 @@ public class NeatoSmartAppService extends Service {
 			super.onPostExecute(result);
 			if (result == null) {
 				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED, null);
-
+				robotAssociationFinished(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED);
 			} 
 			else if (!result.isCompleted()) {
 				Bundle resultData = new Bundle();
 				resultData.putString(NeatoRobotResultReceiverConstants.RESULT_ASSOCIATION_ERROR_MESSAGE, result.mMessage);
 				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED, resultData);
-			}
-			robotAssociationFinished();
-		}
-
-	}
-
-	private class CreateRobotIfRequiredAndAssociateToUserThread implements Runnable {
-		private String mEmailId;
-		private String mRobotSerialId;
-		public CreateRobotIfRequiredAndAssociateToUserThread(String robotSerialId, String emailId)
-		{
-			mRobotSerialId = robotSerialId;
-			mEmailId = emailId;
-		}
-
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			RobotManager robotManager = RobotManager.getInstance(getApplicationContext());
-			RobotItem robotItem = robotManager.getRobotDetail(mRobotSerialId);
-			LogHelper.log(TAG, "RobotItem = " + robotItem);
-			if (robotItem != null) {
-				NeatoPrefs.saveRobotInformation(getApplicationContext(), robotItem);
-				AssociateNeatoRobotResult associationResult =  NeatoRobotWebservicesHelper.AssociateNeatoRobotRequest(NeatoSmartAppService.this, 
-						mEmailId, mRobotSerialId);
-				if(!associationResult.isCompleted()) {
-					Bundle resultData = new Bundle();
-					resultData.putString(NeatoRobotResultReceiverConstants.RESULT_ASSOCIATION_ERROR_MESSAGE, associationResult.mMessage);
-					mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED, resultData);
-					return;
-				}
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_SUCCESS, null);
-
-
+				robotAssociationFinished(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED);
 			} else {
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED, null);
-
+				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_SUCCESS, null);
+				robotAssociationFinished(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_SUCCESS);
+				//TODO : remove broadcast listener and implement RobotAssociationListener in native android code too!
 			}
-
 		}
 
 	}

@@ -3,21 +3,18 @@ package com.neatorobotics.android.slide.framework.xmpp;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
-
 import android.content.Context;
 import android.os.Handler;
-
 import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
-import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandHeader;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotPacket;
+import com.neatorobotics.android.slide.framework.xml.NetworkXmlHelper;
 
 
 public class XMPPConnectionHelper {
@@ -32,13 +29,14 @@ public class XMPPConnectionHelper {
 	private static final int JABBER_SERVER_PORT = AppConstants.JABBER_SERVER_PORT;
 	private JabberLoginAndConnectHelper mJabberLoginAndConnectHelper;
 	private static final String JABBER_PACKET_PROPERTY_KEY = AppConstants.JABBER_PACKET_PROPERTY_KEY;
-	
+
 	private boolean mLoginInProgress = false;
 	private Object mLoginLock = new Object();
 	private static XMPPConnectionHelper sXMPPConnectionHelper;
 	private static Object mObjectCreateLock = new Object();
+	private Object mConnectionObjectLock = new Object();
 
-	
+
 	// TODO: Right now hard-coded. later to be set when retrieved from server using set apis declared.
 
 
@@ -59,7 +57,7 @@ public class XMPPConnectionHelper {
 		return sXMPPConnectionHelper;
 
 	}
-	
+
 	// Unlike TCP IP where multiple transports are needed, Connection object is only one for all communication in XMPP. 
 	public Connection getConnection() {
 		return mConnection;
@@ -90,36 +88,40 @@ public class XMPPConnectionHelper {
 				}
 				mLoginInProgress = true;
 			}
-			// TODO : Don't connect if already connected. Need to see if this can anytime happen
-			if (mConnection == null || !mConnection.isConnected()) {
-				LogHelper.logD(TAG, "formJabberConnection");
-				if(mConnectionConfig == null) {
-					mConnectionConfig = new ConnectionConfiguration(JABBER_SERVER_IP_ADDRESS, JABBER_SERVER_PORT, JABBER_WEB_SERVICE);
+			synchronized (mConnectionObjectLock) {
+				// TODO : Don't connect if already connected. Need to see if this can anytime happen
+				String user_id = getJabberUsername();
+				String user_pwd = getJabberUserPassword();
+
+				if (mConnection == null || !mConnection.isConnected()) {
+
+					LogHelper.logD(TAG, "formJabberConnection");
+					if(mConnectionConfig == null) {
+						mConnectionConfig = new ConnectionConfiguration(JABBER_SERVER_IP_ADDRESS, JABBER_SERVER_PORT, JABBER_WEB_SERVICE);
+					}
+					mConnection = new XMPPConnection(mConnectionConfig);
+					try {
+						mConnection.connect();
+						LogHelper.log(TAG, "Connected to the Jabber Server.");
+					} 
+					catch (XMPPException e) {
+						LogHelper.logD(TAG, "Exception in Jabber Connect", e);
+					}
 				}
-				mConnection = new XMPPConnection(mConnectionConfig);
+				LogHelper.logD(TAG, "Login attempt- User id - " + user_id + " user_pwd - " + user_pwd);
 				try {
-					mConnection.connect();
-					LogHelper.log(TAG, "Connected to the Jabber Server.");
-
+					mConnection.login(user_id, user_pwd);
+					LogHelper.log(TAG, "Jabber Login Successful");
+	
 				} catch (XMPPException e) {
-					LogHelper.logD(TAG, "Exception in Jabber Connect", e);
+					// TODO Auto-generated catch block
+					LogHelper.log(TAG, "Exception in JabberUserLogin: ",e);
 				}
-			}
-			String user_id = getJabberUsername();
-			String user_pwd = getJabberUserPassword();
-			LogHelper.logD(TAG, "Login attempt- User id - " + user_id + " user_pwd - " + user_pwd);
-			try {
-				mConnection.login(user_id, user_pwd);
-				LogHelper.log(TAG, "Jabber Login Successful");
-
-			} catch (XMPPException e) {
-				// TODO Auto-generated catch block
-				LogHelper.log(TAG, "Exception in JabberUserLogin: ",e);
-			}
-			
-			finally {
-				synchronized (mLoginLock) {
-					mLoginInProgress = false;
+	
+				finally {
+					synchronized (mLoginLock) {
+						mLoginInProgress = false;
+					}
 				}
 			}
 		}
@@ -133,18 +135,20 @@ public class XMPPConnectionHelper {
 			//TODO: Need to put code for reconnecting after some fix interval of time if connection fails.
 		}
 	}
-	
+
 	public void disconnectXmppConnection() {
-		
-		if(isJabberConnected()) {
-			LogHelper.logD(TAG, "Jabber is connected. Breaking connection");
-			mConnection.disconnect();		
+		synchronized (mConnectionObjectLock) {
+			if(isJabberConnected()) {
+				LogHelper.logD(TAG, "Jabber is connected. Breaking connection");
+				mConnection.disconnect();
+			}
+			mConnection = null;
 		}
-		mConnection = null;
 	}
 
 	public String getJabberUsername() {
 		String jabberUserId = NeatoPrefs.getJabberId(mContext);
+		jabberUserId = XMPPUtils.removeJabberDomain(jabberUserId);
 		return jabberUserId;
 	}
 	public String getJabberUserPassword() {
@@ -154,14 +158,27 @@ public class XMPPConnectionHelper {
 
 	private  byte[] getRobotPacket(RobotPacket robotPacket)
 	{
-
+		/*
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(bos);
 		try {
 			dos.write(RobotCommandHeader.getHeader());
-			byte [] discoveryPacket = robotPacket.getBytes();
-			dos.writeInt(discoveryPacket.length);
-			dos.write(discoveryPacket);
+			byte [] packet = robotPacket.getBytes();
+			dos.writeInt(packet.length);
+			dos.write(packet);
+		}
+		catch (Exception e) {
+			LogHelper.log(TAG, "Exception in getBytes", e);
+			return null;
+		}
+		return bos.toByteArray();
+		 */
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(bos);
+		byte[] packet = NetworkXmlHelper.commandToXml(robotPacket);
+		try {
+		//	dos.writeInt(packet.length);
+			dos.write(packet);
 		}
 		catch (Exception e) {
 			LogHelper.log(TAG, "Exception in getBytes", e);
@@ -170,14 +187,12 @@ public class XMPPConnectionHelper {
 		return bos.toByteArray();
 	}
 
-
-
 	public void sendRobotCommand(RobotPacket robotPacket, String peerJabberId) {
 
 		byte[] packet = getRobotPacket(robotPacket);
 		sendRobotPacketAsync(packet, peerJabberId);
 	}
-	
+
 	private  void sendRobotPacket(byte[] packet , String peerJabberId)
 	{
 		if (packet == null) {
@@ -192,7 +207,7 @@ public class XMPPConnectionHelper {
 		connection.sendPacket(message);
 		LogHelper.logD(TAG, "Command is sent to :" + peerJabberId);
 	}
-	
+
 	private  void sendRobotPacketAsync(final byte[] packet, final String peerJabberId)
 	{
 		Runnable task = new Runnable() {
@@ -205,10 +220,12 @@ public class XMPPConnectionHelper {
 	}
 
 	public boolean isJabberConnected() {
-		if (mConnection == null) {
-			return false;
+		synchronized (mConnectionObjectLock) {
+			if (mConnection == null) {
+				return false;
+			}
+			return (mConnection.isConnected() && mConnection.isAuthenticated());
 		}
-		return (mConnection.isConnected() && mConnection.isAuthenticated());
 	}
 
 

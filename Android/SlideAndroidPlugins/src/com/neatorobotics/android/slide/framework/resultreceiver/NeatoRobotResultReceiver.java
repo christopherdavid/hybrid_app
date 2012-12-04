@@ -8,6 +8,7 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotAssociateListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDiscoveryListener;
+import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
 import com.neatorobotics.android.slide.framework.service.NeatoSmartAppService;
 import com.neatorobotics.android.slide.framework.service.NeatoSmartAppsEventConstants;
 
@@ -16,7 +17,7 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 	private static final String TAG = NeatoRobotResultReceiver.class.getSimpleName();
 	private RobotDiscoveryListener mRobotDiscoveryListener;
 	private RobotAssociateListener mRobotAssociationListener;
-
+	private RobotPeerConnectionListener mRobotPeerConnectionListener;
 	public NeatoRobotResultReceiver(Handler handler) {
 		super(handler);
 	}
@@ -45,9 +46,15 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 			}
 		}
 		else if (NeatoSmartAppsEventConstants.ROBOT_CONNECTED == resultCode) {
+			if (mRobotPeerConnectionListener != null) {
+				mRobotPeerConnectionListener.onRobotConnected();
+			}
 
 		}
 		else if (NeatoSmartAppsEventConstants.ROBOT_DISCONNECTED == resultCode) {
+			if (mRobotPeerConnectionListener != null) {
+				mRobotPeerConnectionListener.onRobotDisconnected();
+			}
 
 		}
 		else if (NeatoSmartAppsEventConstants.ROBOT_DATA_RECEIVED == resultCode) {
@@ -60,11 +67,15 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 					errMessage = resultData.getString(NeatoRobotResultReceiverConstants.RESULT_ASSOCIATION_ERROR_MESSAGE);
 				}
 				mRobotAssociationListener.associationError(errMessage);
+			} else {
+				LogHelper.logD(TAG, "Association Listener is null");
 			}
 		} 
 		else if (NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_SUCCESS == resultCode) {
 			if(mRobotAssociationListener != null) {
 				mRobotAssociationListener.associationSuccess();
+			} else {
+				LogHelper.logD(TAG, "Association Listener is null");
 			}
 		}
 	}
@@ -77,5 +88,7 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 		mRobotAssociationListener = robotAssociationListener;
 	}
 
-
+	public void addPeerConnectionListener(RobotPeerConnectionListener robotPeerConnectionListener) {
+		mRobotPeerConnectionListener = robotPeerConnectionListener;
+	}
 }

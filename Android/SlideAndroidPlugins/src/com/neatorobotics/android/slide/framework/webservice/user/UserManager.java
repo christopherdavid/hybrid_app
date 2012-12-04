@@ -14,14 +14,7 @@ public class UserManager {
 
 	private static UserManager sUserManager;
 	private static final Object INSTANCE_LOCK = new Object();
-	/*private Handler myHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			InitHelper initHelper = new InitHelper(mContext);
-			initHelper.Myinitialize();
-		}
-	};*/
+	
 	private UserManager(Context context)
 	{
 		mContext = context.getApplicationContext();
@@ -47,7 +40,7 @@ public class UserManager {
 		Runnable task = new Runnable() {
 
 			public void run() {
-				GetNeatoUserDetailsResult result = NeatoUserWebservicesHelper.GetNeatoUserDetails(mContext, email , auth_token);
+				GetNeatoUserDetailsResult result = NeatoUserWebservicesHelper.getNeatoUserDetails(mContext, email , auth_token);
 				UserDetailsListener userListener = userDetailListenerWeakRef.get();
 				if (userListener == null) {
 					LogHelper.logD(TAG, "Callback interface is null in getUserDetail");
@@ -77,7 +70,7 @@ public class UserManager {
 
 			public void run() {
 				UserItem userItem = null;
-				LoginNeatoUserTokenResult result = NeatoUserWebservicesHelper.LoginNeatoUserToken(mContext, email, password);
+				LoginNeatoUserTokenResult result = NeatoUserWebservicesHelper.loginNeatoUserToken(mContext, email, password);
 				if (result != null && result.success()) {
 					String auth_token = result.mUserAuthToken;
 					userItem = getUserDetail(email,auth_token);
@@ -112,7 +105,7 @@ public class UserManager {
 	public UserItem getUserDetail(final String email, final String auth_token)
 	{
 		UserItem userItem = null;
-		GetNeatoUserDetailsResult result = NeatoUserWebservicesHelper.GetNeatoUserDetails(mContext, email , auth_token);
+		GetNeatoUserDetailsResult result = NeatoUserWebservicesHelper.getNeatoUserDetails(mContext, email , auth_token);
 		if (result != null && result.success()) {
 			userItem = convertUserDetailResultToUserItem(result);
 		}
@@ -123,7 +116,7 @@ public class UserManager {
 
 	public UserItem loginUser(final String email, final String password) {
 		UserItem userItem = null;
-		LoginNeatoUserTokenResult response = NeatoUserWebservicesHelper.LoginNeatoUserToken(mContext, email, password);
+		LoginNeatoUserTokenResult response = NeatoUserWebservicesHelper.loginNeatoUserToken(mContext, email, password);
 		if (response != null && response.success()) {
 			String auth_token = response.mUserAuthToken;
 			userItem = getUserDetail(email,auth_token);
@@ -139,7 +132,7 @@ public class UserManager {
 
 			public void run() {
 				UserItem userItem = null;
-				CreateNeatoUserResult result = NeatoUserWebservicesHelper.CreateNeatoUserRequestNative(mContext, username, email, password);
+				CreateNeatoUserResult result = NeatoUserWebservicesHelper.createNeatoUserRequestNative(mContext, username, email, password);
 				if (result != null && result.success()) {
 					String auth_token = result.mResult.mUserHandle;
 					userItem = getUserDetail(email,auth_token);
@@ -166,7 +159,7 @@ public class UserManager {
 
 	public UserItem createUser(final String username, final String email, final String password) {
 		UserItem userItem = null;
-		CreateNeatoUserResult result = NeatoUserWebservicesHelper.CreateNeatoUserRequestNative(mContext, username, email, password);
+		CreateNeatoUserResult result = NeatoUserWebservicesHelper.createNeatoUserRequestNative(mContext, username, email, password);
 		if (result != null && result.success()) {
 			String auth_token = result.mResult.mUserHandle;
 			userItem = getUserDetail(email,auth_token);

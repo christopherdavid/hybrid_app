@@ -21,13 +21,13 @@ import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelpe
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.CreateNeatoUser;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.GetNeatoUserDetails;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.LoginNeatoUser;
-
+import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.GetUserAssociatedRobots;
 public class NeatoUserWebservicesHelper {
 
 	private static final String TAG = NeatoUserWebservicesHelper.class.getSimpleName();
 	private static ObjectMapper resultMapper = new ObjectMapper();
 	
-	public static CreateNeatoUserResult CreateNeatoUserRequestNative(Context context, String name, String email, String password) {
+	public static CreateNeatoUserResult createNeatoUserRequestNative(Context context, String name, String email, String password) {
 		CreateNeatoUserResult result = null;
 		Map<String, String> createUserReqParams = new HashMap<String, String>();
 		createUserReqParams.put(CreateNeatoUser.Attribute.ACCOUNT_TYPE, NeatoUserWebServicesAttributes.ACCOUNT_TYPE_NATIVE);
@@ -63,7 +63,7 @@ public class NeatoUserWebservicesHelper {
 		return result;
 	}
 	
-	public static LoginNeatoUserTokenResult LoginNeatoUserToken(Context context, String email, String password) {
+	public static LoginNeatoUserTokenResult loginNeatoUserToken(Context context, String email, String password) {
 		LoginNeatoUserTokenResult result = null;
 		
 		Map<String, String> loginNeatoUserResult = new HashMap<String, String>();
@@ -94,7 +94,7 @@ public class NeatoUserWebservicesHelper {
 		return result;
 	}
 	
-	public static GetNeatoUserDetailsResult GetNeatoUserDetails(Context context, String email, String authToken) { 
+	public static GetNeatoUserDetailsResult getNeatoUserDetails(Context context, String email, String authToken) { 
 		
 		Map<String, String> reqParams = new HashMap<String, String>();
 		reqParams.put(GetNeatoUserDetails.Attribute.EMAIL, email);
@@ -126,6 +126,38 @@ public class NeatoUserWebservicesHelper {
 
 	}
 	
+	public static GetUserAssociatedRobotsResult getUserAssociatedRobots(Context context, String email, String authToken) { 
+		
+		Map<String, String> reqParams = new HashMap<String, String>();
+		reqParams.put(GetUserAssociatedRobots.Attribute.EMAIL, email);
+		reqParams.put(GetUserAssociatedRobots.Attribute.AUTHHENTICATION_TOKEN, authToken);
+		GetUserAssociatedRobotsResult result = null;
+
+		NeatoHttpResponse getUserAssociatedRobotsResponse = NeatoWebserviceHelper.executeHttpPost(context, GetUserAssociatedRobots.METHOD_NAME, reqParams);
+		if (getUserAssociatedRobotsResponse.completed()) { 
+			try {
+				Log.i(TAG, "authkey = " + authToken);
+				String json = convertStreamToString(getUserAssociatedRobotsResponse.mResponseInputStream);
+				Log.i(TAG, "JSON = " + json);
+				result = resultMapper.readValue(json, new TypeReference<GetUserAssociatedRobotsResult>() {});
+			} catch (JsonParseException e) {
+				Log.e(TAG, "Exception in GetUserAssociatedRobotsResult", e);
+				
+			} catch (JsonMappingException e) {
+				Log.e(TAG, "Exception in GetUserAssociatedRobotsResult", e);
+				
+			} catch (IOException e) {
+				Log.e(TAG, "Exception in GetUserAssociatedRobotsResult", e);
+			}
+		}
+		else { 
+			result = new GetUserAssociatedRobotsResult(getUserAssociatedRobotsResponse);
+		}
+		
+		return result;
+
+	}
+
 	 private static String convertStreamToString(InputStream is) {
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 	        StringBuilder sb = new StringBuilder();

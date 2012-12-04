@@ -2,9 +2,12 @@ package com.neatorobotics.android.slide.framework.webservice;
 
 import java.io.InputStream;
 
+import com.neatorobotics.android.slide.framework.logger.LogHelper;
+
 
 public class NeatoHttpResponse {
 
+	private static final String TAG = NeatoHttpResponse.class.getSimpleName();
 	public int mResponse; 
 	public int mServerErrorReason; 
 	public InputStream mResponseInputStream;
@@ -25,6 +28,7 @@ public class NeatoHttpResponse {
 	
 	//response is successful
 	public boolean completed() {
+		LogHelper.log(TAG, "completed called. Response = " + mResponse);
 		return (mResponse == NeatoWebConstants.RESPONSE_SUCCESS);
 	}
 	

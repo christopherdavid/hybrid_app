@@ -6,14 +6,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-
 import android.content.Context;
-
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
@@ -21,11 +18,12 @@ import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebS
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.CreateNeatoRobot;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotDetails;
 
+
 public class NeatoRobotWebservicesHelper {
 	private static final String TAG = NeatoRobotWebservicesHelper.class.getSimpleName();
 	private static ObjectMapper resultMapper = new ObjectMapper();
 	
-	public static CreateNeatoRobotResult CreateNeatoRobotRequest(Context context, String name, String serial_number) {
+	public static CreateNeatoRobotResult createNeatoRobotRequest(Context context, String name, String serial_number) {
 		CreateNeatoRobotResult result = null;
 		Map<String, String> createRobotReqParams = new HashMap<String, String>();
 		createRobotReqParams.put(CreateNeatoRobot.Attribute.NAME, name);
@@ -57,11 +55,7 @@ public class NeatoRobotWebservicesHelper {
 		return result;
 	}
 
-	
-	
-	
-	
-	public static AssociateNeatoRobotResult AssociateNeatoRobotRequest(Context context, String email, String serial_number) {
+	public static AssociateNeatoRobotResult associateNeatoRobotRequest(Context context, String email, String serial_number) {
 		AssociateNeatoRobotResult result = null;
 		Map<String, String> associateRobotReqParams = new HashMap<String, String>();
 		associateRobotReqParams.put(AssociateNeatoRobotToUser.Attribute.EMAIL, email);
@@ -92,6 +86,7 @@ public class NeatoRobotWebservicesHelper {
 		
 		return result;
 	}
+	
 	
 	public static RobotDetailResult getRobotDetail(Context context, String serialNumber) {
 		RobotDetailResult result = null;
@@ -125,6 +120,7 @@ public class NeatoRobotWebservicesHelper {
 		return result;
 	}
 
+	
 	 private static String convertStreamToString(InputStream is) {
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 	        StringBuilder sb = new StringBuilder();

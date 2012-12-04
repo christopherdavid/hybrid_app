@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
-
+import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 
 public class NeatoPrefs {
@@ -22,6 +22,8 @@ public class NeatoPrefs {
 	private static final String KEY_ROBOT_CHAT_PWD = "robot_chat_pwd";
 	private static final String KEY_NEATO_USER_AUTH_TOKEN = "neato_user_auth_token";
 	private static final String PEER_CONNECTION_STATUS = "peer_conn_status";
+	private static final String PEER_IP_ADDRESS = "peer_ip_address";
+	private static final String TAG = NeatoPrefs.class.getSimpleName();
 	
 	private static boolean savePreference(Context context, String preferenceName, String preferenceValue) {
 		SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
@@ -35,6 +37,14 @@ public class NeatoPrefs {
 	private static String getPreferenceStrValue(Context context, String preferenceName) {
 		SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
 		String preferenceValue = preferences.getString(preferenceName, null);
+		
+		return preferenceValue;
+	}
+	
+	@SuppressWarnings("unused")
+	private static String getPreferenceStrValue(Context context, String preferenceName, String defaultValue) {
+		SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
+		String preferenceValue = preferences.getString(preferenceName, defaultValue);
 		
 		return preferenceValue;
 	}
@@ -76,6 +86,8 @@ public class NeatoPrefs {
 	
 	public static void saveRobotInformation(Context context, RobotItem robotItem)
 	{
+		LogHelper.log(TAG, "saveRobotInformation called");
+		LogHelper.log(TAG, "Robot Items = " + robotItem);
 		savePreference(context, KEY_ROBOT_ID, robotItem.getId());
 		savePreference(context, KEY_ROBOT_NAME, robotItem.getName());
 		savePreference(context, KEY_ROBOT_SERIAL_ID, robotItem.getSerialNumber());
@@ -85,7 +97,9 @@ public class NeatoPrefs {
 	
 	public static RobotItem getRobotItem(Context context)
 	{
+		LogHelper.log(TAG, "getRobotItem called");
 		String robotId = getPreferenceStrValue(context, KEY_ROBOT_ID);
+		LogHelper.log(TAG, "robotId = " + robotId);
 		if (TextUtils.isEmpty(robotId)) {
 			return null;
 		}
@@ -95,6 +109,8 @@ public class NeatoPrefs {
 		robotItem.setSerialNumber(getPreferenceStrValue(context, KEY_ROBOT_SERIAL_ID));
 		robotItem.setChatId(getPreferenceStrValue(context, KEY_ROBOT_CHAT_ID));
 		robotItem.setChatPwd(getPreferenceStrValue(context, KEY_ROBOT_CHAT_PWD));
+		
+		LogHelper.log(TAG, "Robot Items = " + robotItem);
 		
 		return robotItem;
 	}
@@ -121,7 +137,14 @@ public class NeatoPrefs {
 		
 		return preferenceValue;
 	}
-	
+
+	public static boolean setPeerIpAddress(Context context, String peer_ip_address) {
+		return savePreference(context, NeatoPrefs.PEER_IP_ADDRESS , peer_ip_address);
+	}
+
+	public static String getPeerIpAddress(Context context) {
+		return getPreferenceStrValue(context, NeatoPrefs.PEER_IP_ADDRESS);
+	}
 
 	public static boolean saveNeatoUserAuthToken(Context context, String authToken) {
 		return savePreference(context, NeatoPrefs.KEY_NEATO_USER_AUTH_TOKEN , authToken);

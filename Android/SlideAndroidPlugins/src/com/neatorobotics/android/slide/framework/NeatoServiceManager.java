@@ -7,9 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.ResultReceiver;
-
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiver;
 import com.neatorobotics.android.slide.framework.service.INeatoRobotService;
 import com.neatorobotics.android.slide.framework.service.NeatoSmartAppService;
@@ -20,7 +18,6 @@ public class NeatoServiceManager {
 	private static final String TAG = NeatoServiceManager.class.getSimpleName();
 	private  INeatoRobotService mNeatoRobotService;
 	private  boolean mServiceBound = false;	
-	private boolean mRobotStarted = false;
 	private   ResultReceiver mResultReciever;
 	private   Handler mHandler = new Handler();
 	private Context mContext;
@@ -60,9 +57,9 @@ public class NeatoServiceManager {
 		mContext.startService(serviceIntent);
 		Intent bindServiceIntent = new Intent(mContext, NeatoSmartAppService.class);
 		bindServiceIntent.putExtra(NeatoSmartAppService.EXTRA_RESULT_RECEIVER, mResultReciever);
-		mServiceBound = mContext.bindService(bindServiceIntent, mNeatoRobotServiceConnection, mContext.BIND_AUTO_CREATE);
-		NeatoPrefs.saveJabberId(mContext, AppConstants.JABBER_USER_ID);
-		NeatoPrefs.saveJabberPwd(mContext, AppConstants.JABBER_CHAT_PASSWORD);
+		mServiceBound = mContext.bindService(bindServiceIntent, mNeatoRobotServiceConnection, Context.BIND_AUTO_CREATE);
+//		NeatoPrefs.saveJabberId(mContext, AppConstants.JABBER_USER_ID);
+//		NeatoPrefs.saveJabberPwd(mContext, AppConstants.JABBER_CHAT_PASSWORD);
 
 	}
 	

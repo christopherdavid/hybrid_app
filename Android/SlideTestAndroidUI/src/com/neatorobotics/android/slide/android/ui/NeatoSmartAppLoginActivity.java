@@ -78,10 +78,10 @@ public class NeatoSmartAppLoginActivity extends Activity{
 		}
 		@Override
 		protected GetNeatoUserDetailsResult doInBackground(Void... params) {
-			LoginNeatoUserTokenResult result = NeatoUserWebservicesHelper.LoginNeatoUserToken(NeatoSmartAppLoginActivity.this, mEmailId, mPassword);
+			LoginNeatoUserTokenResult result = NeatoUserWebservicesHelper.loginNeatoUserToken(NeatoSmartAppLoginActivity.this, mEmailId, mPassword);
 			if (result.success()) {
 				Log.i(TAG, "Auth Token = " + result.mUserAuthToken);
-				GetNeatoUserDetailsResult userDetailResult = NeatoUserWebservicesHelper.GetNeatoUserDetails(NeatoSmartAppLoginActivity.this,
+				GetNeatoUserDetailsResult userDetailResult = NeatoUserWebservicesHelper.getNeatoUserDetails(NeatoSmartAppLoginActivity.this,
 															mEmailId, result.mUserAuthToken);
 				return userDetailResult;
 			}

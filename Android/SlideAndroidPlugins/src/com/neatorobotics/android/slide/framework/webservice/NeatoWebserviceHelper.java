@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -28,9 +27,10 @@ public class NeatoWebserviceHelper {
 	public static NeatoHttpResponse executeHttpPost(Context context, String methodName, Map<String, String> postParams) {
 		NeatoHttpResponse result = null;
 		String url = getUrlFromMethodName(methodName);
-		postParams.put(NeatoWebConstants.QUERY_KEY_APIKEY, NeatoWebConstants.API_KEY);
+		LogHelper.logD(TAG, "Executing URL = " + url);
+		postParams.put(NeatoWebConstants.QUERY_KEY_APIKEY, NeatoWebConstants.getApiKey());
 		HttpPost postHttpRequest = new HttpPost(url);
-
+		
 		final List<NameValuePair> pairs = new ArrayList<NameValuePair>();	
 
 		for (Entry<String, String> params : postParams.entrySet()) {
@@ -77,9 +77,11 @@ public class NeatoWebserviceHelper {
 		}
 		return result;
 	}
+	
 	public static String getUrlFromMethodName(String methodName) {
 
-		String baseUrl = NeatoWebConstants.BASE_JSON_URL;
+		String baseUrl = NeatoWebConstants.getBaseJsonUrl();
+		LogHelper.logD(TAG, "Url Used:  " + baseUrl);
 		String methodParamKey = NeatoWebConstants.QUERY_KEY_METHOD;
 		String methodParamString = String.format("%s=%s", methodParamKey, encodeText(methodName));
 		String url = baseUrl+ "?" + methodParamString;

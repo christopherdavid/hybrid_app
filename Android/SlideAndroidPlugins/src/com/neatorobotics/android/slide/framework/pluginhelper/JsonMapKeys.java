@@ -13,4 +13,16 @@ public class JsonMapKeys {
 	public static final String KEY_COMMAND = "command";
 	public static final String KEY_ROBOT_SERIAL_ID = "serialid";
 	public static final String KEY_USE_XMPP = "useXMPP";
+	public static final String KEY_ROBOT_NAME = "robot_name";
+	public static final String KEY_ROBOT_IP_ADDRESS = "robot_ipaddress";
+	
+	//Used by scheduler
+	public static final String KEY_DAY = "day";
+	public static final String KEY_START_TIME_HRS = "startTimeHrs";
+	public static final String KEY_END_TIME_HRS = "endTimeHrs";
+	public static final String KEY_START_TIME_MINS = "startTimeMins";
+	public static final String KEY_END_TIME_MINS = "endTimeMins";
+	public static final String KEY_EVENT_TYPE = "eventType";
+	public static final String KEY_AREA = "area";
+
 }

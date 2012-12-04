@@ -6,29 +6,27 @@ import org.json.JSONObject;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 
-//Pretty much similar to User data. But this can change with time when complex commands are included.
+// Pretty much similar to User data. But this can change with time when complex commands are included.
 public class RobotJsonData {
 
 
 	private static final String TAG = RobotJsonData.class.getSimpleName();
 
-	private JSONArray mdata;
+	private JSONArray mData;
 	private JSONObject mDataObject;
 
 	public RobotJsonData(JSONArray data) {
-		mdata = data;
+		mData = data;
 		extractJsonObject();
 	}
 
 
 	private void extractJsonObject() {
 		try {
-			if (mdata != null) {
-			mDataObject = mdata.getJSONObject(0);
+			if (mData != null) {
+				mDataObject = mData.getJSONObject(0);
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			
 			LogHelper.log(TAG, "JSON object is not present");
 		}
 	}
@@ -60,8 +58,4 @@ public class RobotJsonData {
 		}
 		return i;
 	}
-	
-	
-	//TODO : write other functions for get like getJsonArray etc
-
 }

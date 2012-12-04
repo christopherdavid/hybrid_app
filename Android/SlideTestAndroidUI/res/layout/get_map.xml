@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_bg" >
+    
+   <TextView
+       android:id="@+id/txt_getmap_hdr"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"   
+       android:layout_alignParentTop="true" 
+       android:layout_centerHorizontal="true"   
+       style="@style/DefaultTextStyle"
+       android:layout_margin="5dp"       
+       android:text="@string/text_getmap_hdr_title" />
+   
+    <Button
+       android:id="@+id/btn_getmap"
+       style="@style/DefaultButtonStyle"
+       android:layout_width="@dimen/btn_width"
+       android:layout_height="@dimen/btn_height"
+       android:layout_below="@id/txt_getmap_hdr"
+       android:layout_centerHorizontal="true"              
+       android:layout_margin="5dp"
+       android:text="@string/text_btn_getmap"/>
+	
+    <ImageView 
+        android:id="@+id/img_divider_btn_img"
+        android:layout_height="1dp"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/btn_getmap"
+        android:layout_margin="2dp"
+        android:background="@color/black"/>
+    
+    <TextView
+       android:id="@+id/txt_map_xml"
+       android:layout_width="fill_parent"
+       android:layout_height="150dp"   
+       android:layout_alignParentBottom="true" 
+       android:layout_centerHorizontal="true"	              
+       style="@style/DefaultTextStyle"
+       android:layout_margin="5dp"       
+       android:scrollbars="vertical" 
+       android:visibility="gone"             
+       />
+    
+    <ImageView 
+        android:id="@+id/img_divider_img_txt"
+        android:layout_height="1dp"
+        android:layout_width="fill_parent"
+        android:layout_above="@id/txt_map_xml"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="2dp"
+        android:background="@color/black"/>
+    
+    <ImageView 
+        android:id="@+id/img_map_image"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"                
+        android:layout_below="@id/img_divider_btn_img"
+        android:layout_above="@id/img_divider_img_txt"       
+        android:layout_margin="5dp"        
+        android:scaleType="centerInside"/>
+    
+    <ProgressBar 
+        android:id="@+id/progress_getMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+    
+</RelativeLayout>
