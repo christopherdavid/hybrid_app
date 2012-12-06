@@ -1,0 +1,210 @@
+//
+// Utility functions
+//
+
+@imgRoot: "../../img/";
+@iconRoot: "@{imgRoot}icons/";
+
+// Gradient definitions
+.gradient-definition(@gradientName: "defaultGradient", @startColor: #ff0000 , @endColor:#00ff00) {  
+  (~".@{gradientName}"){
+    .vertical-gradient(@startColor, @endColor);
+  }
+}
+
+.vertical-gradient(@startColor: #ff0000, @endColor:#00ff00){
+    background: @startColor;
+    background: -moz-linear-gradient(top,  @startColor 0%, @endColor 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0f0f0f), color-stop(100%,@endColor));
+    background: -webkit-linear-gradient(top,  @startColor 0%,@endColor 100%);
+    background: -o-linear-gradient(top,  @startColor 0%,@endColor 100%);
+    background: -ms-linear-gradient(top,  @startColor 0%,@endColor 100%);
+    background: linear-gradient(to bottom,  @startColor 0%,@endColor 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=(~"'@{startColor}'"), endColorstr=(~"'@{endColor}'"),GradientType=0 );
+}
+
+.vertical-gradient25(@startColor: #ff0000, @quarterColor: #00ff00, @endColor:#0000ff){
+  background: @startColor;
+  background: -moz-linear-gradient(top,  @startColor 0%, @quarterColor 25%, @endColor 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@startColor), color-stop(25%,@quarterColor), color-stop(100%,@endColor));
+  background: -webkit-linear-gradient(top,  @startColor 0%,@quarterColor 25%,@endColor 100%);
+  background: -o-linear-gradient(top,  @startColor 0%,@quarterColor 25%,@endColor 100%);
+  background: -ms-linear-gradient(top,  @startColor 0%,@quarterColor 25%,@endColor 100%);
+  background: linear-gradient(to bottom,  @startColor 0%,@quarterColor 25%,@endColor 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=(~"'@{startColor}'"), endColorstr=(~"'@{endColor}'"),GradientType=0 );
+}
+
+// Highres icon definition
+.ui-icon-definition(@iconFile: "dummyIcon", @width: 18 , @height: 18, @fileExtension: "png") {
+    (~".ui-icon-@{iconFile}"){
+        background-image: url("@{iconRoot}@{iconFile}_@{width}x@{height}.@{fileExtension}");
+        background-size: (~"@{width}px @{height}px");
+    }
+
+    @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+                        only screen and (min-resolution: 144dpi) {
+		    @dblwidth : @width * 2;
+        @dblheight : @height * 2;
+        
+        (~".ui-icon-@{iconFile}"){
+            background-image: url("@{iconRoot}@{iconFile}_@{dblwidth}x@{dblheight}.@{fileExtension}");
+        }
+    }
+}
+
+.img-definition(@imgFile: "dummyImg", @width: 18 , @height: 18, @fileExtension: "png") {
+	(~".img-@{imgFile}"){
+        background-image: url("@{iconRoot}@{imgFile}_@{width}x@{height}.@{fileExtension}");
+        width: (~"@{width}px");
+        height: (~"@{height}px");
+        background-repeat: no-repeat;
+    }
+
+    @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+                        only screen and (min-resolution: 144dpi) {
+		@dblwidth : @width * 2;
+        @dblheight : @height * 2;
+        
+        (~".img-@{imgFile}"){
+        background-image: url("@{iconRoot}@{imgFile}_@{dblwidth}x@{dblheight}.@{fileExtension}");
+		}
+    }
+}
+
+/**
+ *  Creates the sprite position offset styles for a specific image
+ *  using the states name supplied.
+ */
+
+.sprite-position-offset(@spriteName, @state, @spriteOffset, @rowOffset){
+
+        (~".@{spriteName}-@{state}"){
+        background-position: (~"-@{spriteOffset}px -@{rowOffset}px");
+       }
+}
+
+/**
+ *   Create a sprite for a certain row with the defined states.
+ *   By default the names for the states are "up", "down", "disabled".
+ *   The name of the states can be set. Currently only three states are available.
+ *   @spriteName: The name for this sprite 
+ *   @width: width of one sprite
+ *   @height: height of one sprite
+ *   @stateAmount: The amount of states within this image
+ *   @state1: The name of the first state (default: up)
+ *   @state2: The name of the second state (default: down)
+ *   @state3: The name of the thrid state (default:disabled)
+ */
+.sprite-definition(@spriteName: "dummySprite",@row: 0, @width: 18, @height:18, @stateAmount: 1, @state1: "up", @state2: "down", @state3: "disabled"){
+  @dblwidth : @width * 2;
+  @rowOffset : @row * @height;
+  @dblRowOffset: @rowOffset * 2;
+    
+  .single-sprite (@index) {
+     
+     .statePositionOffset(@stateIndex){
+     }
+     
+     .statePositionOffset(@stateIndex) when (@stateIndex = 3){
+       .sprite-position-offset(@spriteName, @state1,  @spriteOffset, @rowOffset);
+      }
+     
+     .statePositionOffset(@stateIndex) when (@stateIndex = 2){
+        .sprite-position-offset(@spriteName, @state2, @spriteOffset, @rowOffset);
+     }
+     .statePositionOffset(@stateIndex) when (@stateIndex = 1){
+       .sprite-position-offset(@spriteName, @state3, @spriteOffset, @rowOffset);
+     }
+     
+     @spriteOffset: (@stateAmount - @index) * @width;
+    .statePositionOffset(@index);
+  }
+
+  // helper class, will never show up in resulting css
+  // will be called as long the index is above 0
+  .loopingClass(@index) when (@index > 0) {
+
+  // Call the given function within a loop.
+  .single-sprite(@index);
+  
+  // next iteration
+  .loopingClass(@index - 1);
+  }
+  
+  // end the loop when index is 0
+  .loopingClass (0) {}
+
+  // "call" the loopingClass the first time with highest value
+  .loopingClass (@stateAmount);
+}
+
+.img-fullscreen-definition(@imgFile: "dummyImg", @fileExtension:"png"){
+	
+	(~".img-fullscreen-@{imgFile}"){
+        background-image: url("@{imgRoot}@{imgFile}_1024x768.@{fileExtension}");
+        background-repeat: no-repeat;
+        background-size: cover;
+    	position:absolute; 
+		top:0; 
+		left:0; 
+		right:0;
+		bottom:0;
+    }
+    
+    @media only screen and (orientation: portrait) and (max-device-width:2047px) {
+		(~".img-fullscreen-@{imgFile}"){
+        	background-image: url("@{imgRoot}@{imgFile}_768x1024.@{fileExtension}");
+    	}
+    }
+
+    @media only screen and (device-aspect-ratio: ~'16/9') {
+		(~".img-fullscreen-@{imgFile}"){
+        	background-image: url("@{imgRoot}@{imgFile}_1280x720.@{fileExtension}");
+    	}
+    }
+    
+    @media only screen and (device-aspect-ratio: ~'16/9') and (orientation: portrait) {
+		(~".img-fullscreen-@{imgFile}"){
+        	background-image: url("@{imgRoot}@{imgFile}_720x1280.@{fileExtension}");
+    	}
+    }
+    
+    /* iPhone 5*/
+    @media only screen and (device-aspect-ratio: ~'40/71') {
+		(~".img-fullscreen-@{imgFile}"){
+        	background-image: url("@{imgRoot}@{imgFile}_1280x720.@{fileExtension}");
+    	}
+    }
+    
+    @media only screen and (device-aspect-ratio: ~'40/71') and (orientation: portrait) {
+		(~".img-fullscreen-@{imgFile}"){
+        	background-image: url("@{imgRoot}@{imgFile}_720x1280.@{fileExtension}");
+    	}
+    }
+    
+    @media only screen and (device-aspect-ratio: ~'16/10') {
+		(~".img-fullscreen-@{imgFile}"){
+        	background-image: url("@{imgRoot}@{imgFile}_1920x1200.@{fileExtension}");
+    	}
+    }
+    
+    @media only screen and (device-aspect-ratio: ~'16/10') and (orientation: portrait) {
+		(~".img-fullscreen-@{imgFile}"){
+        	background-image: url("@{imgRoot}@{imgFile}_1200x1920.@{fileExtension}");
+    	}
+    } 
+    
+    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2)
+	{
+		(~".img-fullscreen-@{imgFile}"){
+			background-image: url("@{imgRoot}@{imgFile}_2048x1536.@{fileExtension}");			
+		}        
+    }
+    
+    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)
+	{
+		(~".img-fullscreen-@{imgFile}"){
+			background-image: url("@{imgRoot}@{imgFile}_1536x2048.@{fileExtension}");			
+		}        
+    }
+}

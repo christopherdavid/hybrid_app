@@ -1,0 +1,24 @@
+@import "fonts.less";
+@import "utilities.less";
+
+@color_notficationbar: #009a3d;
+@color_notficationbar_expand: #dd0000;
+@bg_gradient_start: #0f0f0f;
+@bg_gradient_end: #333332;
+
+@s0_btn_gradient_start: #4c4c4c;
+@s0_btn_gradient_end: #1f1f1f;
+@s0_btn_gradient_down_start: @s0_btn_gradient_end;
+@s0_btn_gradient_down_end: @s0_btn_gradient_start;
+
+@s0_btn_gradient_disabled_start: fade(@s0_btn_gradient_end, 30%);
+@s0_btn_gradient_disabled_end: fade(@s0_btn_gradient_start, 30%);
+
+@s0_btn_border_gradient_start: #4c4c4c;
+@s0_btn_border_gradient_end: #403e3e;
+@s0_btn_border_gradient_disabled_start: fade(#808080, 50%);
+@s0_btn_border_gradient_disabled_quarter: fade(#333333, 50%);
+
+// Substitute page and viewport background with gradient
+.gradient-definition("ui-mobile-viewport", @bg_gradient_start, @bg_gradient_end);
+.gradient-definition("ui-page", @bg_gradient_start, @bg_gradient_end);

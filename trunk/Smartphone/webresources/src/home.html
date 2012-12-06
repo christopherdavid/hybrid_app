@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name = "format-detection" content = "telephone=no"/>
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width;" />
+        <title>CleaningRobotApp</title>
+    </head>
+    <body>
+        <div data-role="page" id="s01">
+            <div data-role="content">
+                <ul data-role="listview" data-divider-theme="a" data-inset="true">
+                    <li data-theme="c">
+                        <a href="startup2.html" data-transition="slide" data-i18n="startup.s01.login" data-bind="translate: language">
+                            login!
+                            <span class="ui-li-count" data-i18n="startup.s01.login_question" data-bind="translate: language">
+                                have an account?
+                            </span>
+                        </a>
+                    </li>
+                    <li data-theme="c">
+                        <a href="javascript:void(0);" onclick="testWifi();" data-transition="slide" data-i18n="startup.s01.register" data-bind="translate: language">
+                            register.
+                            <span class="ui-li-count" data-i18n="[html]startup.s01.register_question" data-bind="translate: language">
+                                no account so far?
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div><!-- /content -->
+            
+        </div><!-- /page -->
+        
+    </body>
+</html>

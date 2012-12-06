@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<!--
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+#  KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+-->
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name = "format-detection" content = "telephone=no"/>
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width;" />
+        <link rel="stylesheet"  href="stylesheets/css/themes/default/jquery.mobile-1.2.0.min.css" />
+        <link rel="stylesheet"  href="stylesheets/css/themes/default/jquery-ui-1.9.2.custom.min.css" />
+        <link rel="stylesheet" href="stylesheets/css/fonts.css" />
+        <link rel="stylesheet" href="stylesheets/css/icons.css" />
+        <link rel="stylesheet" href="stylesheets/css/notificationbar.css" />
+        <link rel="stylesheet" href="stylesheets/css/carousel.css" />
+        <link rel="stylesheet" href="stylesheets/css/colors.css" />
+        <link rel="stylesheet" href="stylesheets/css/startscreen.css" />
+        <link rel="stylesheet"  href="stylesheets/css/ios_inspired/styles.css" />
+        
+        <!-- <script type="text/javascript" src="javascript/libs/cordova-2.1.0.js"></script> -->
+        <script type="text/javascript" src="javascript/libs/globalization.js"></script>
+        <script type="text/javascript" src="javascript/libs/jquery-1.8.2.min.js"></script>
+        <script type="text/javascript" src="javascript/utils/handler.js"></script>
+        <script type="text/javascript" src="javascript/utils/resourceHandler.js"></script>
+        
+        <!-- load localization framework -->
+        
+        <script type="text/javascript" src="javascript/libs/i18next-1.5.7.min.js"></script>
+        <!-- load binding script -->
+        <script type="text/javascript" src="javascript/libs/knockout-2.1.0.min.js"></script>
+        <script type="text/javascript" src="javascript/libs/state-machine.min.js"></script>
+        <!--<script type="text/javascript" src="javascript/libs/jquery.touchy.min.js"></script>-->
+        <script type="text/javascript" src="javascript/utils/ko.bindingHandler.js"></script>
+        <script type="text/javascript" src="javascript/libs/jquery-ui-1.9.2.custom.min.js"></script>
+        <script type="text/javascript" src="javascript/libs/jquery.ui.touch-punch.min.js"></script>
+        
+        <!-- load uid application -->
+        <script type="text/javascript" src="javascript/app/enums.js"></script>
+        <script type="text/javascript" src="javascript/app/application.js"></script>
+        <script type="text/javascript" src="javascript/app/application.workflow.js"></script>
+        <script type="text/javascript" src="javascript/app/application.history.js"></script>
+        <script type="text/javascript" src="javascript/app/application.navigator.js"></script>
+        <!--<script type="text/javascript" src="javascript/app/application.notification.js"></script>-->
+        <script type="text/javascript" src="javascript/app/application.dataTemplate.js"></script>
+        
+        <!-- load jQueryMobile -->
+        <script type="text/javascript" src="javascript/libs/jquery.mobile-1.2.0.min.js"></script>
+        <script type="text/javascript" src="javascript/utils/jqm.plugins.js"></script>
+        <script type="text/javascript" src="javascript/libs/iscroll.js"></script>
+        <script type="text/javascript" src="javascript/utils/map.js"></script>
+        <script type="text/javascript" src="javascript/utils/geodata.js"></script>
+        <script type="text/javascript" src="javascript/utils/startAreaControl.js"></script>
+        
+        <title>CleaningRobotApp</title>
+    </head>
+    <body>
+        
+        <div data-role="page" id="splash">
+            <div class="img-fullscreen-splash"></div>
+        </div>
+        <div data-role="page" class="type-home" id="home">
+            <div data-role="header">
+	            <span>Frank's Robot</span>
+	            <span>Dining Room</span>
+            </div>
+            <div data-role="content">
+                <div class="img-startbtn" style="height:158px;width:158px;display:inline-block"></div>
+                <a href="#" data-role="button" data-inline="true">Cleaning</a>
+                <a href="#" data-role="button" data-inline="true">Remote</a>
+                <a href="#" data-role="button" data-inline="true">Schedule</a>
+                <a href="#" data-role="button" data-inline="true">Settings</a>
+                <a href="#" data-role="button" data-inline="true">Start/Stop</a>
+                <a href="#" data-role="button" data-inline="true">Send to base</a>
+                <a href="#" data-role="button" data-inline="true">Logout</a>
+            </div>
+            
+        </div>
+        <div data-role="page" id="nowifi">
+        	<div data-role="content">
+        		<span data-i18n="startup.message.nowifi" data-bind="translate: language"></span>
+        	</div>
+        </div>
+        
+    </body>
+</html>
