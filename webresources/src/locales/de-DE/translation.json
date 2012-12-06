@@ -1,0 +1,75 @@
+{
+	"s0": {
+		"cleaning": "Reinigung",
+		"remote": "Fernbedienung",
+		"schedule": "Wochenplan",
+		"settings": "Einstellungen",
+		"logout": "Abmelden",
+		"send_to_base": "Zur Basis schicken"
+	},
+    "s1-1": {
+        "login": "Bitte einloggen!",
+        "login_question": "Haben Sie schon einen Account?",
+        "register": "Jetzt Registrieren.",
+        "register_question": "Haben Sie bisher noch keinen Account?"
+    },
+    "s1-2-1": {
+        "navi": {
+            "back": "zurück",
+            "title": "Benutzer Account erstellen",
+            "next": "weiter"
+        },
+        "page": {
+            "title": "Willkommen bei der Registrierung.<br/>Zum weiterkommen werden noch ein paar Informationen benötigt.",
+            "name": "Benutzername",
+            "email": "Email Addresse",
+            "password": "Passwort",
+            "password_verify": " Passwort verifizieren"
+        }
+    },
+    "s1-2-2": {
+        "navi": {
+            "title": "Auswahl eines Saugroboters",
+            "logout": "Abmelden"
+        },
+        "page": {
+            "title": "Registrierung abgeschlossen. Willkommen, %s!",
+            "add_robot": "Saugroboter hinzufügen"
+        }
+    },
+    "s1-3-1": {
+        "navi": {
+            "back": "zurück",
+            "title": "Benutzer anmelden",
+            "next": "anmelden"
+        },
+        "page": {
+            "title": "Willkommen bei der Registrierung.<br/>Zum weiterkommen werden noch ein paar Informationen benötigt.",
+            "email": "Email Addresse",
+            "password": "Passwort"
+        }
+    },
+    "s3-2-1": {
+        "navi": {
+            "back": "zurück",
+            "cancel": "abbrechen",
+            "title": "Raum Management",
+            "title_area": "Bereich auswählen",
+            "cut": "teilen",
+            "cut_multiple": "zusammenfügen",
+            "edit": "bearbeiten",
+            "edit_area": "OK"
+        }
+    },
+    "confirm": {
+        "close_app": "Wollen Sie das Programm wirklich beenden ?"
+    },
+    "startup": {
+        "message": {
+            "nowifi": "<h1>Please make sure that your mobile device is connected to your WiFi.<h1>"
+        }
+    },
+    "app": {
+        "name": "i18next DE"
+    }
+}

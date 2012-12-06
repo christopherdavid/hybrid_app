@@ -1,0 +1,75 @@
+{
+	"s0": {
+		"cleaning": "Cleaning",
+		"remote": "Remote",
+		"schedule": "Schedule",
+		"settings": "Settings",
+		"logout": "Logout",
+		"send_to_base": "Send to base"
+	},
+    "s1-1": {
+        "login": "So please login!",
+        "login_question": "You already have an account?",
+        "register": "Register now.",
+        "register_question": "You don't have an account so far?"
+    },
+    "s1-2-1": {
+        "navi": {
+            "back": "back",
+            "title": "Create User Account",
+            "next": "continue"
+        },
+        "page": {
+            "title": "Welcome to the registration.<br/>We need some information to continue",
+            "name": "User Name",
+            "email": "Email Address",
+            "password": "Password",
+            "password_verify": " Password verification"
+        }
+    },
+    "s1-2-2": {
+        "navi": {
+            "title": "Robot Selection",
+            "logout": "logout"
+        },
+        "page": {
+            "title": "Registration completed.</br> Welcome, %s!",
+            "add_robot": "Add a Robot"
+        }
+    },
+    "s1-3-1": {
+        "navi": {
+            "back": "back",
+            "title": "Login User",
+            "next": "login"
+        },
+        "page": {
+            "title": "Welcome to the registration.<br/>We need some information to continue",
+            "email": "Email Address",
+            "password": "Password"
+        }
+    },
+    "s3-2-1": {
+        "navi": {
+            "back": "back",
+            "cancel": "cancel",
+            "title": "Room Management",
+            "title_area": "divide area",
+            "cut": "cut",
+            "cut_multiple": "merge",
+            "edit": "edit",
+            "edit_area": "OK"
+        }
+    },
+    "confirm": {
+        "close_app": "Do you realy want to close the application?"
+    },
+    "startup": {
+        "message": {
+            "nowifi": "<h1>Please make sure that your mobile device is connected to your WiFi.<h1>"
+        }
+    },
+    "app": {
+        "name": "i18next EN"
+    }
+}

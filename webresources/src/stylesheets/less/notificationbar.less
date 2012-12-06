@@ -1,0 +1,23 @@
+//
+// notification bar style for mobile.notificationbar widget
+//
+@import "colors.less";
+
+.ui-notificationbar {
+    border-bottom:4px solid @color_notficationbar_expand;
+    border-right:4px solid @color_notficationbar_expand;
+    &.ui-notificationbar-collapsed {
+        border-bottom:5px solid @color_notficationbar;
+        border-right:0px none;
+    }
+    .ui-notificationbar-content {
+        display:block;
+    }
+    .ui-notificationbar-content-collapsed {
+        display:none;
+    }
+}
+.ui-header-noborder {
+    border-top:0px none;
+    border-bottom:0px none;
+}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Map display</title>
+    </head>
+    <body>
+
+        <div data-role="page" id="s3-2-1">
+            <div data-role="header" data-theme="b" data-position="fixed" data-tap-toggle="false">
+                <div class="ui-btn-left">
+                    <a href="#" data-role="button" data-mini="true" data-inline="true" data-icon="back" data-i18n="s3-2-1.navi.back" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton},visible:isBackVisible, click:back">back</a>
+                    <a href="#" data-role="button" data-mini="true" data-inline="true" data-i18n="s3-2-1.navi.cancel" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton},visible:isCancelVisible, click:cancel">cancel</a>
+                </div>
+                <h1 data-i18n="s1-3-1.navi.title" data-bind="text:labelTitle">Rooms</h1>
+                <div class="ui-btn-right">
+                    <a href="#" data-role="button" data-mini="true" data-inline="true" data-bind="jqLinkButtonText:labelCutMerge,jqLinkButtonEnable: isCutMergeEnabled, visible:isCutMergeVisible, click:cut">cut</a>
+                    <a href="#" data-role="button" data-mini="true" data-inline="true" data-bind="jqLinkButtonText:labelEditOk, jqLinkButtonEnable: isEditOkEnabled, click:edit">edit</a>
+                </div>
+            </div>
+            <div data-role="content">
+                <div id="viewport" style="position:absolute; top:0px; bottom:0px; left:0px; width:100%;overflow:hidden;">
+                    <div id="scroller" style="position:absolute; top:0px; left:0px;height:100% width:100%;padding:10px;">
+                        <canvas style="position:relative; top:0px; left:0px; display:block;cursor:pointer" id="canvasView"></canvas>
+                        <p style="position:absolute; top:10px; left:10px; color:#F00!important;">my Map</p>
+                        <div id="grid" style="position:absolute; top:0; bottom:0; left:0; right:0px; display:none;">
+                            <div id="selection-area" style="position:absolute;border:1px dotted #F22;width:50px;height:50px;background-image:url(img/area.png);background-repeat:repeat;">
+                            </div>
+                        </div>
+                    </div>
+                    <p style="position:absolute; bottom:20px; left:10px; color:#F00!important;">
+                        <a href="#" data-role="button" data-mini="true" data-inline="true" data-bind="click:zoom">zoom</a>
+                        <a href="#" data-role="button" data-mini="true" data-inline="true" data-bind="click:rotate">rotate</a>
+                        <a href="#popupPanel" data-rel="popup" data-transition="slide" data-position-to="window" data-role="button">Open panel</a>
+                    </p>
+                    
+
+                </div>
+            </div>
+                        
+            <div data-role="popup" id="popupPanel" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-tolerance="0,0" style="width:480px;">
+                
+                <div data-role="fieldcontain">
+                <fieldset data-role="controlgroup" data-type="horizontal" >
+                    <input type="radio" name="radio-choice-2" id="radio-choice-21" value="area" checked="checked" />
+                    <label for="radio-choice-21">Area</label>
+                    <input type="radio" name="radio-choice-2" id="radio-choice-22" value="nogo"  />
+                    <label for="radio-choice-22">NoGo</label>
+                </fieldset>
+                </div>
+                <div data-role="fieldcontain">
+                    <input type="text" name="name" id="basic" value=""  />
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="colorScroller">Color</label>
+                    <div id="colorScroller">
+                        
+                    </div>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="categoryScroller">Category</label>
+                    <div id="categoryScroller">
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+    </body>
+</html>

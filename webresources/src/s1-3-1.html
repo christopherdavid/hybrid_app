@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name = "format-detection" content = "telephone=no"/>
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width;" />
+        <style type="text/css">
+        	.ui-li-has-count .ui-li-count { position: absolute; font-size: 11px; font-weight: bold; padding: .2em .5em; top: 25%; margin-top: -.9em; left: 10px; }
+        	.ui-li-has-arrow.ui-li-has-count .ui-li-count { right: auto; }
+        	.ui-btn-text {
+        		padding-top:22px;
+        		padding-bottom:11px;
+        	}
+        </style>
+        <title>CleaningRobotApp</title>
+    </head>
+    <body>
+        <div data-role="page" id="s1-3-1">
+            <div data-role="header" data-position="fixed" data-tap-toggle="false">
+                <div data-role="notificationbar">
+                    <div>notificationbar</div>
+                </div>
+                <div data-role="header">
+                    <a href="#" data-role="button" data-mini="true" data-inline="true" data-icon="back" data-i18n="s1-3-1.navi.back" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+                    <h1 data-i18n="s1-3-1.navi.title" data-bind="translate: language">Create User Account</h1>
+                    <a href="#"  data-role="button" data-mini="true" data-inline="true" data-i18n="s1-3-1.navi.next" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: isFilledOut(), click:next"> continue</a>
+                </div>
+            </div>
+            <div data-role="content">
+                <h2 data-i18n="s1-3-1.page.title" data-bind="translate: language">welcome</h2>
+                <fieldset>
+                    <input type="text" data-i18n="s1-3-1.page.email" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'afterkeydown'"/>
+                    <input type="password" data-i18n="s1-3-1.page.password" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'afterkeydown'"/>
+                </fieldset>
+            </div>
+        </div>
+        
+    </body>
+</html>

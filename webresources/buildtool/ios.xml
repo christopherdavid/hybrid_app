@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<groups xmlns="http://www.isdc.ro/wro">
+    <group name="application">
+      <js>/../../javascript/app/enums.js</js>
+      <js>/../../javascript/app/application.js</js>
+      <js>/../../javascript/app/application.*.js</js>
+    </group>
+    <group name="utils">
+        <js>/../../javascript/utils/resourceHandler.js</js>
+        <js>/../../javascript/utils/ko.bindingHandler.js</js>
+        <js>/../../javascript/utils/map.js</js>
+        <js>/../../javascript/utils/startAreaControl.js</js>
+        <!-- has to be removed when the real geo data is supplied from neato -->
+        <js>/../../javascript/utils/geodata.js</js>
+    </group>
+    <group name="cordova.min">
+      <js>/../../javascript/libs/ios/cordova-2.1.0.js</js>
+    </group>
+    <group name="plugins">
+      <js>/../../javascript/libs/ios/globalization.js</js>
+    </group>
+    <group name="handler">
+      <js>/../../javascript/utils/ios/handler.js</js>
+    </group>
+    <group name="jqm.plugins">
+      <js>/../../javascript/utils/jqm.plugins.js</js>
+      <js>/../../javascript/libs/iscroll.js</js>
+    </group>
+</groups>
