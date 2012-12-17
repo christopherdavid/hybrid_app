@@ -296,10 +296,8 @@ public class RobotManagerPlugin extends Plugin {
 		// TODO - a lot clean up of code needed.
 		private class RobotPluginDiscoveryListener implements RobotDiscoveryListener {
 
-			private static final String ROBOT_ITEM_KEY = "robot";
-			private static final String ROBOTS_LIST_KEY = "robots";
 			private String mCallBackId;
-			private JSONObject jRobotList = new JSONObject();
+			private JSONArray robotList = new JSONArray();
 
 			RobotPluginDiscoveryListener(String callBackId) {
 				mCallBackId = callBackId;
@@ -319,15 +317,8 @@ public class RobotManagerPlugin extends Plugin {
 			@Override
 			public void onDiscoveryFinished() {
 				LogHelper.log(TAG, "Discovery Finished");
-				JSONObject jRobotListResult = new JSONObject();
-				try {
-					//jRobotListResult.put(DISCOVERY_NOTIFICATION_STATE, DISCOVERY_FINISHED);
-					jRobotListResult.put(ROBOTS_LIST_KEY, jRobotList);
-				} catch (JSONException e) {
-					LogHelper.log(TAG, "Exception in onDiscoveryFinished", e);
-				}
 
-				PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, jRobotListResult.toString());
+				PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, robotList);
 				loginUserPluginResult.setKeepCallback(false);
 				success(loginUserPluginResult, mCallBackId);
 
@@ -341,11 +332,7 @@ public class RobotManagerPlugin extends Plugin {
 			}
 
 			public void addRobotToList(RobotInfo robotInfo) {
-				try {
-					jRobotList.put(ROBOT_ITEM_KEY, robotJsonObject(robotInfo));
-				} catch (JSONException e) {
-					LogHelper.log(TAG, "Exception in addRobotToList", e);
-				}
+					robotList.put(robotJsonObject(robotInfo));
 			}
 
 			public JSONObject robotJsonObject(RobotInfo robotInfo) {
