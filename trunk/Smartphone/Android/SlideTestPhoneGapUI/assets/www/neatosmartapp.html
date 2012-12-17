@@ -72,25 +72,28 @@
 	
 	<!-- User screen -->
 	<section id="userHomePage"  aria-hidden=true>
-		<div class="defaultSectionHeader">Welcome to the Cleaning World!</div>
+		<div class="defaultSectionHeader">Neato Smart App</div>
 		<br>
+		<label>Associate Robot</label>
+		<hr>
+			<input type="button" id="btnDiscoverRobot" value="Discover Nearby Robots" class="defaultButton"></input> 
+			<input type="button" id="btnGoAssociatePage" value="Associate Robot" class="defaultButton"></input> 
 		<br>
-		<label>Peer Connection</label>
-		<input type="button" id="btnDiscoverRobot" value="Discover Nearby Robots" class="defaultButton"></input> 
-		<input type="button" id="btnClosePeer" value="Close Peer Connection" class="defaultButton" aria-hidden=true></input> 
-		<input type="button" id="btnGoAssociatePage" value="Associate Robot" class="defaultButton"></input> 
-		<input type="button" id="btnStartStopCleaningPeer" value="Start Cleaning" class="defaultButton" ></input> 
-		<input type="button" id="btnSendToBase" value="Send To Base" class="defaultButton" ></input> 
-		<br>
-		<br>
-		<label>Send Command via Server</label>
-		<input type="button" id="btnStartStopCleaningServer" value="" class="defaultButton"></input>
-		<br>
-		<br>
-		<br>
-		<input type="button" id="btnGoToSchedule" value="Schedule Event" class="defaultButton"></input>
-		<input type="button" id="btnLogout" value="Logout" class="defaultButton"></input>
 		
+		<label>Robot Commands</label>
+		<hr>
+			<input type="button" id="btnClosePeer" value="Close Peer Connection" class="defaultButton" aria-hidden=true></input> 
+			<input type="button" id="btnStartStopCleaningPeer" value="Start Cleaning" class="defaultButton" ></input> 
+		<br>
+		<label>Send command via server</label>
+			<hr>
+			<input type="button" id="btnStartStopCleaningServer" value="" class="defaultButton" aria-hidden=true></input>
+			<input type="button" id="btnGoToRobotMap" value="Show Robot Map" class="defaultButton"></input>
+			<input type="button" id="btnSetMap" value="Set Map" class="defaultButton"></input>
+		<br>
+		<br>
+			<input type="button" id="btnTest" value="Test" class="defaultButton" aria-hidden=true></input>
+		<input type="button" id="btnLogout" value="Logout" class="defaultButton"></input>
 		<div id="robotoverlay" aria-hidden=true></div>
 		<div id="robotsFound" aria-hidden=true>
 			
@@ -104,17 +107,22 @@
 		<div class="defaultSectionHeader">Associate Robot</div>
 		<br>
 		<br>
-		<input type="text" id="robotSerialId" placeholder="Serial Id" class="defaultInputText"></input> 
+		<input type="text" id="robotId" placeholder="Robot Id" class="defaultInputText"></input> 
 		<br>
 		<br>
 		<input type="button" id="btnAssociateRobot" value="Associate Robot" class="defaultButton"></input> 
+		<input type="button" id="btnDisassociateRobot" value="Disassociate Robot" class="defaultButton"></input>
+		<input type="button" id="btnDisassociateAllRobot" value="Disassociate All Robots" class="defaultButton"></input>
+		<input type="button" id="btnGetAssociatedRobots" value="Get Associated Robots" class="defaultButton"></input>
+		
 		<br>
 		<br>
 		
 	</section>
 	
+	<!-- Old schedule section
 	<section id="scheduleRobot"  aria-hidden=true>
-		<div class="defaultSectionHeader">Schedule Event</div>
+		<div class="defaultSectionHeader">Schedule Robot</div>
 		<br>
 		<TR class="schedule">
 			<td><input type="checkbox" value="">Monday 10 - 11am Kitchen</td>
@@ -141,7 +149,42 @@
 		<br>
 		
 	</section>
+ -->
+ 
+ 	<!-- Schedule section -->
+	<section id="scheduleRobot"  aria-hidden=true>
+		<div class="defaultSectionHeader">Schedule Robot</div>
+		<br>
+			<input type="button" id="btnScheduleAlternateWeekdays" value="Mon, Wed, Fri" class="defaultButton"></input> 
+<br>
+			<input type="button" id="btnScheduleBabyNap" value="Weekdays(Baby Nap)" class="defaultButton"></input> 
+<br>
+			<input type="button" id="btnScheduleOnlyWeekends" value="Only Weekends" class="defaultButton"></input> 
+<br>
+			<input type="button" id="btnScheduleWorkingCouple" value="Working Couples" class="defaultButton" ></input> 
+			<br>
+			<br>
+			<input type="button" id="btnScheduleClear" value="Clear Schedule" class="defaultButton" ></input> 
+			<br>
+			<br>
+			<input type="button" id="btnGetSchedule" value="Get Schedule" class="defaultButton" ></input> 
+		<br>
+	</section>
+	
+	<!-- Map section -->
+		<section id="robotMapSection"  aria-hidden=true>
+		<div class="defaultSectionHeader" id="robotSectionHeader">""</div>
+		<input type="button" id="btnGetRobotMap" value="Get Map" class="defaultButton" ></input> 
+		<br>
+		<br>
+		<br>	
+		<div id="robotMap">
+			<img id="robotMapImage"> </img>
+			
+		<div>
+	</section>
 
-
+<label id="responseText"></label>
+<div><center><img src="spinner.gif" id="spinnerImg" style="display:none;" /></center></div>
 	</body>
 </html>

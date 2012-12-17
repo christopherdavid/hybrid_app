@@ -55,8 +55,8 @@ public class NeatoRobotWebservicesHelper {
 		return result;
 	}
 
-	public static AssociateNeatoRobotResult associateNeatoRobotRequest(Context context, String email, String serial_number) {
-		AssociateNeatoRobotResult result = null;
+	public static RobotAssociationDisassociationResult associateNeatoRobotRequest(Context context, String email, String serial_number) {
+		RobotAssociationDisassociationResult result = null;
 		Map<String, String> associateRobotReqParams = new HashMap<String, String>();
 		associateRobotReqParams.put(AssociateNeatoRobotToUser.Attribute.EMAIL, email);
 		associateRobotReqParams.put(AssociateNeatoRobotToUser.Attribute.SERIAL_NUMBER, serial_number);
@@ -66,7 +66,7 @@ public class NeatoRobotWebservicesHelper {
 		if (associateRobotResponse.completed()) { 
 			try {
 				LogHelper.logD(TAG, "Associating Neato Robot completed. Reading response");
-				result = resultMapper.readValue(associateRobotResponse.mResponseInputStream, new TypeReference<AssociateNeatoRobotResult>() {});
+				result = resultMapper.readValue(associateRobotResponse.mResponseInputStream, new TypeReference<RobotAssociationDisassociationResult>() {});
 				LogHelper.log(TAG, "Associating robot completed.");
 			} catch (JsonParseException e) {
 				LogHelper.log(TAG, "Exception in AssociateNeatoRobotRequest" ,e);
@@ -81,7 +81,7 @@ public class NeatoRobotWebservicesHelper {
 		}
 		else { 
 			LogHelper.log(TAG, "Association of  Neato Robot request not completed.");
-			result = new AssociateNeatoRobotResult(associateRobotResponse);
+			result = new RobotAssociationDisassociationResult(associateRobotResponse);
 		}
 		
 		return result;

@@ -6,13 +6,17 @@ import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
+import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 
 public class NeatoPrefs {
 	public static final String PREFERANCE_NAME = "NeatoPref";
-	public static final String JABBER_USER_ID = "user_id";
-	public static final String JABBER_USER_PWD = "user_pwd";
 	
+	private static final String JABBER_USER_ID = "user_chat_id";
+	private static final String JABBER_USER_PWD = "user__chat_pwd";
 	private static final String USER_EMAIL_ID_KEY = "user_email_id";
+	private static final String KEY_NEATO_USER_AUTH_TOKEN = "neato_user_auth_token";
+	private static final String KEY_USER_ID		= "userId";
+	private static final String KEY_USER_NAME		= "userName";
 	
 	
 	private static final String KEY_ROBOT_ID = "robot_id";
@@ -20,9 +24,9 @@ public class NeatoPrefs {
 	private static final String KEY_ROBOT_CHAT_ID = "robot_chat_id";
 	private static final String KEY_ROBOT_SERIAL_ID = "robot_serial_id";
 	private static final String KEY_ROBOT_CHAT_PWD = "robot_chat_pwd";
-	private static final String KEY_NEATO_USER_AUTH_TOKEN = "neato_user_auth_token";
 	private static final String PEER_CONNECTION_STATUS = "peer_conn_status";
 	private static final String PEER_IP_ADDRESS = "peer_ip_address";
+	
 	private static final String TAG = NeatoPrefs.class.getSimpleName();
 	
 	private static boolean savePreference(Context context, String preferenceName, String preferenceValue) {
@@ -79,9 +83,55 @@ public class NeatoPrefs {
 		return getPreferenceStrValue(context, USER_EMAIL_ID_KEY);
 	}
 	
+	public static boolean isUserLoggedIn(Context context)
+	{
+		String emailId = NeatoPrefs.getUserEmailId(context);
+		return ((emailId != null) && (emailId.length() > 0)) ? true:false;
+	}
+	
+	public static UserItem getUserDetail(Context context)
+	{
+		if (isUserLoggedIn(context)) {
+			UserItem userItem = new UserItem();
+			userItem.setEmail(getUserEmailId(context));
+			userItem.setName(getPreferenceStrValue(context, KEY_USER_NAME));
+			userItem.setChatId(getPreferenceStrValue(context, JABBER_USER_ID));
+			userItem.setId(getPreferenceStrValue(context, KEY_USER_ID));
+			userItem.setChatPwd(getPreferenceStrValue(context, JABBER_USER_PWD));
+			
+			return userItem;
+		}
+		else {
+			LogHelper.log(TAG, "User is not logged in");
+		}
+		
+		return null;
+	}
+	
+	
+	public static void saveUserDetail(Context context, UserItem userItem)
+	{
+		savePreference(context, KEY_USER_ID, userItem.getId());
+		savePreference(context, KEY_USER_NAME, userItem.getName());
+		savePreference(context, USER_EMAIL_ID_KEY, userItem.getEmail());
+		savePreference(context, JABBER_USER_ID, userItem.getChatId());
+		savePreference(context, JABBER_USER_PWD, userItem.getChatPwd());
+	}
+	
 	public static void saveUserEmailId(Context context, String emailId)
 	{
 		savePreference(context, USER_EMAIL_ID_KEY, emailId);
+	}
+	
+	public static void logoutUser(Context context)
+	{
+		savePreference(context, USER_EMAIL_ID_KEY, "");
+		savePreference(context, KEY_NEATO_USER_AUTH_TOKEN, "");
+		savePreference(context, KEY_USER_ID, "");
+		savePreference(context, KEY_ROBOT_CHAT_ID, "");
+		savePreference(context, KEY_ROBOT_CHAT_PWD, "");
+		savePreference(context, KEY_USER_NAME, "");
+		
 	}
 	
 	public static void saveRobotInformation(Context context, RobotItem robotItem)

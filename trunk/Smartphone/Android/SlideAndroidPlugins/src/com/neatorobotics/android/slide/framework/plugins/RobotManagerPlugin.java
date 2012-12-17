@@ -1,8 +1,7 @@
 package com.neatorobotics.android.slide.framework.plugins;
 
-import java.util.ArrayList;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
-
 import org.apache.cordova.api.Plugin;
 import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
@@ -10,415 +9,425 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
+
+import com.neatorobotics.android.slide.framework.json.JsonHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
+import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
-import com.neatorobotics.android.slide.framework.pluginhelper.UserJsonData;
-import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
-import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
-import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotAssociateListener;
+import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
+import com.neatorobotics.android.slide.framework.pluginhelper.ScheduleJsonDataHelper;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDiscoveryListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
-import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedRobotSchedule;
-import com.neatorobotics.android.slide.framework.robot.schedule.ScheduleTimeObject;
-import com.neatorobotics.android.slide.framework.robot.schedule.SchedulerConstants;
-import com.neatorobotics.android.slide.framework.robot.schedule.SchedulerConstants.Day;
-import com.neatorobotics.android.slide.framework.robot.schedule.SchedulerConstants.SchedularEvent;
+import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedScheduleGroup;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
+import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapDataDownloadListener;
+import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapWebservicesManager;
+import com.neatorobotics.android.slide.framework.webservice.robot.map.UpdateRobotMapListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.RobotSchedulerManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.ScheduleWebserviceListener;
 
 
 public class RobotManagerPlugin extends Plugin {
-	
+
 	private static final String TAG = RobotManagerPlugin.class.getSimpleName();
-	
-	
+
+	private static final String FILE_PREFIX = "file://";
+
 	private static final HashMap<String, RobotManagerPluginMethods> ACTION_MAP = new HashMap<String, RobotManagerPluginMethods>();
 
 	// If we add more action type, please ensure to add it into the ACTION_MAP
-	private enum RobotManagerPluginMethods { DISCOVER, FORM_PEER_CONNECTION, ASSOCIATE, START_CLEANING, STOP_CLEANING, ROBOTCOMMAND, ADVANCED_SCHEDULE_ROBOT, SEND_BASE_COMMAND};
-	
-	static {
-		ACTION_MAP.put(ActionTypes.DISCOVER, RobotManagerPluginMethods.DISCOVER);
-		ACTION_MAP.put(ActionTypes.FORM_PEER_CONNECTION, RobotManagerPluginMethods.FORM_PEER_CONNECTION);
-		ACTION_MAP.put(ActionTypes.ASSOCIATE, RobotManagerPluginMethods.ASSOCIATE);
-		ACTION_MAP.put(ActionTypes.START_CLEANING_COMMAND, RobotManagerPluginMethods.START_CLEANING);
-		ACTION_MAP.put(ActionTypes.STOP_CLEANING_COMMAND, RobotManagerPluginMethods.STOP_CLEANING);
-		ACTION_MAP.put(ActionTypes.ROBOTCOMMAND, RobotManagerPluginMethods.ROBOTCOMMAND);
-		ACTION_MAP.put(ActionTypes.ADVANCED_SCHEDULE_ROBOT, RobotManagerPluginMethods.ADVANCED_SCHEDULE_ROBOT);
-		ACTION_MAP.put(ActionTypes.SEND_BASE_COMMAND, RobotManagerPluginMethods.SEND_BASE_COMMAND);
-	}
-	
-	private RobotPluginAssociateListener mRobotPluginAssociateListener;
-	private RobotPluginDiscoveryListener mRobotPluginDiscoveryListener;
-	private ScheduleDetailsPluginListener mScheduleDetailsPluginListener;
+	private enum RobotManagerPluginMethods {DISCOVER_NEAR_BY_ROBOTS, TRY_DIRECT_CONNECTION, 
+		SEND_COMMAND_TO_ROBOT, SET_ROBOT_SCHEDULE, 
+		SET_MAP_OVERLAY_DATA, GET_ROBOT_MAP, 
+		GET_ROBOT_SCHEDULE, DISCONNECT_DIRECT_CONNECTION};
 
-	@Override
-	public PluginResult execute(final String action, final JSONArray data, final String callbackId) {
+		static {
+			ACTION_MAP.put(ActionTypes.DISCOVER_NEAR_BY_ROBOTS, RobotManagerPluginMethods.DISCOVER_NEAR_BY_ROBOTS);
+			ACTION_MAP.put(ActionTypes.TRY_DIRECT_CONNECTION, RobotManagerPluginMethods.TRY_DIRECT_CONNECTION);
+			ACTION_MAP.put(ActionTypes.SEND_COMMAND_TO_ROBOT, RobotManagerPluginMethods.SEND_COMMAND_TO_ROBOT);
+			ACTION_MAP.put(ActionTypes.SET_ROBOT_SCHEDULE, RobotManagerPluginMethods.SET_ROBOT_SCHEDULE);
+			ACTION_MAP.put(ActionTypes.SET_MAP_OVERLAY_DATA, RobotManagerPluginMethods.SET_MAP_OVERLAY_DATA);
+			ACTION_MAP.put(ActionTypes.GET_ROBOT_MAP, RobotManagerPluginMethods.GET_ROBOT_MAP);
+			ACTION_MAP.put(ActionTypes.GET_ROBOT_SCHEDULE, RobotManagerPluginMethods.GET_ROBOT_SCHEDULE);
+			ACTION_MAP.put(ActionTypes.DISCONNECT_DIRECT_CONNECTION, RobotManagerPluginMethods.DISCONNECT_DIRECT_CONNECTION);
+		}
 
-		LogHelper.logD(TAG, "RobotManagerPlugin execute with action :" + action);
-		
-		Activity currentActivity = cordova.getActivity();
-		currentActivity.runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				handlePluginExecute(action, data, callbackId);
-			}
-		});
-		
-		PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
-		pluginResult.setKeepCallback(true);
-		return pluginResult;
-	}
+		/*private RobotPluginAssociateListener mRobotPluginAssociateListener;*/
+		private RobotPluginDiscoveryListener mRobotPluginDiscoveryListener;
+		private ScheduleDetailsPluginListener mScheduleDetailsPluginListener;
+
+		@Override
+		public PluginResult execute(final String action, final JSONArray data, final String callbackId) {
+
+			LogHelper.logD(TAG, "RobotManagerPlugin execute with action :" + action);
+
+			// Plugin's execute method gets called in secondary thread. So Async tasks will fail
+			// For now we run the execute commands in the UI thread and each request does its work in background
+			// thread. We need to remove the Async tasks and run these requests in the secondary threads
+			Activity currentActivity = cordova.getActivity();
+			currentActivity.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					handlePluginExecute(action, data, callbackId);
+				}
+			});
+
+			PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+			pluginResult.setKeepCallback(true);
+			return pluginResult;
+		}
 
 
-	private void handlePluginExecute(String action, JSONArray data, String callbackId) {
-		UserJsonData jsonData = new UserJsonData(data);
-		Context context = cordova.getActivity();
+		private void handlePluginExecute(String action, JSONArray data, String callbackId) {
+			RobotJsonData jsonData = new RobotJsonData(data);
+			Context context = cordova.getActivity();
 
-		switch(convertToInternalAction(action)) {
+			switch(convertToInternalAction(action)) {
 
-			case DISCOVER:
+			case DISCOVER_NEAR_BY_ROBOTS:
 				LogHelper.log(TAG, "DISCOVER action initiated");
 				discoverRobot(context, jsonData , callbackId);
 				break;
-			case FORM_PEER_CONNECTION:	
+			case TRY_DIRECT_CONNECTION:	
 				LogHelper.log(TAG, "Form Peer Connection action initiated");
-				formPeerConnection(context, jsonData , callbackId);
+				tryDirectConnection(context, jsonData , callbackId);
 				break;
-			case ASSOCIATE:
-				LogHelper.log(TAG, "ASSOCIATE action initiated");
-				associateRobot(context, jsonData, callbackId);
-				break;
-			case START_CLEANING:
-				LogHelper.log(TAG, "Start cleaning command initiated");
-				startCleaning(context, jsonData, callbackId);
-				break;
-			case STOP_CLEANING:
-				LogHelper.log(TAG, "Stop cleaning command initiated");
-				stopCleaning(context, jsonData, callbackId);
-				break;
-			case ROBOTCOMMAND:
+			case SEND_COMMAND_TO_ROBOT:
 				LogHelper.log(TAG, "ROBOTCOMMAND action initiated");
 				sendCommand(context, jsonData, callbackId);
 				// No need to wait for other callbacks
-				PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
-				pluginResult.setKeepCallback(false);
-				success(pluginResult, callbackId);
 				break;
-			case ADVANCED_SCHEDULE_ROBOT:
+			case SET_ROBOT_SCHEDULE:
 				LogHelper.log(TAG, "ADVANCED_SCHEDULE_ROBOT action initiated");
 				setAdvancedSchedule(context, jsonData, callbackId);
 				// TODO: handle with a listener
-				PluginResult advancedScheduleResult = new PluginResult(PluginResult.Status.OK);
-				advancedScheduleResult.setKeepCallback(false);
-				success(advancedScheduleResult, callbackId);
 				break;
-			case SEND_BASE_COMMAND:
-				LogHelper.log(TAG, "SEND base command initiated");
-				sendToBase(context, jsonData, callbackId);
+			case SET_MAP_OVERLAY_DATA:
+				LogHelper.log(TAG, "UPDATE_ROBOT_MAP action initiated");
+				// TODO: handle with a listener
+				setMapOverlayData(context, jsonData, callbackId);
 				break;
+			case GET_ROBOT_MAP:
 
-		}
-	}
+				LogHelper.log(TAG, "GET_ROBOT_MAP action initiated");
+				// TODO: handle with a listener
+				getRobotMaps(context, jsonData, callbackId);
+				break;
+			case GET_ROBOT_SCHEDULE:
 
-	private void formPeerConnection(Context context, UserJsonData jsonData, String callbackId) {
-		LogHelper.logD(TAG, "Form peer connection action initiated in Robot plugin");
-		// String mSerialId = jsonData.getString(JsonMapKeys.KEY_ROBOT_SERIAL_ID);
-		String ipAddress = jsonData.getString(JsonMapKeys.KEY_ROBOT_IP_ADDRESS);
-		RobotCommandServiceManager.formPeerConnection(context, ipAddress, new RobotPluginPeerConnectionListener(callbackId));
-	}
-	
-	private void sendToBase(Context context, UserJsonData jsonData, String callbackId) {
-		LogHelper.logD(TAG, "sendToBase action initiated in Robot plugin");
-		// String mSerialId = jsonData.getString(JsonMapKeys.KEY_ROBOT_SERIAL_ID);
-		// TODO: remove the useXMpp flag.
-		RobotCommandServiceManager.sendCommand(context, RobotCommandPacketConstants.COMMAND_SEND_BASE, false);
+				LogHelper.log(TAG, "GET_ROBOT_SCHEDULE action initiated");
+				// TODO: handle with a listener
+				getRobotSchedule(context, jsonData, callbackId);
+				break;
+			case DISCONNECT_DIRECT_CONNECTION:
 
-		//TODO: Once we introduce replies from the robot as ACK to commands we will have to put
-		// listeners to send SUCCESS or ERROR plugin result. right now assuming that 
-		// its always success.
-
-		PluginResult pluginStartResult = new PluginResult(PluginResult.Status.OK);
-		pluginStartResult.setKeepCallback(false);
-		success(pluginStartResult,callbackId);
-
-	}
-	
-	private void setAdvancedSchedule(Context context, UserJsonData jsonData, String callbackId) {
-		
-		//TODO : put checks to see if the hrs and mins lie between 0-24 and 0-60 respectively.
-		//TODO: multiple schedules
-		ArrayList<Day> days = new ArrayList<Day>();
-		int day = jsonData.getInt(JsonMapKeys.KEY_DAY);
-	
-		Day dayMap = SchedulerConstants.detrmineDay(day);
-		days.add(dayMap);
-		String serialId = jsonData.getString(JsonMapKeys.KEY_ROBOT_SERIAL_ID);
-		int startHrs = jsonData.getInt(JsonMapKeys.KEY_START_TIME_HRS);
-		int startMins = jsonData.getInt(JsonMapKeys.KEY_START_TIME_MINS);
-		int endHrs = jsonData.getInt(JsonMapKeys.KEY_END_TIME_HRS);
-		int endMins = jsonData.getInt(JsonMapKeys.KEY_END_TIME_MINS);
-		int eventType = jsonData.getInt(JsonMapKeys.KEY_EVENT_TYPE);
-		SchedularEvent event = SchedulerConstants.detrmineEvent(eventType);
-		String area = jsonData.getString(JsonMapKeys.KEY_AREA);
-		ScheduleTimeObject startTime = new ScheduleTimeObject(startHrs, startMins);
-		ScheduleTimeObject endTime = new ScheduleTimeObject(endHrs, endMins);
-		
-		AdvancedRobotSchedule schedule = new AdvancedRobotSchedule(days, startTime, endTime, area, event);
-		
-		RobotSchedulerManager schedulerManager = RobotSchedulerManager.getInstance(context);
-		mScheduleDetailsPluginListener = new ScheduleDetailsPluginListener(callbackId);
-
-		schedulerManager.sendRobotSchedule(schedule, serialId, mScheduleDetailsPluginListener);
-	}
-
-	//TODO : Write listener
-	private void sendCommand(Context context, UserJsonData jsonData, String callbackId) {
-		LogHelper.logD(TAG, "Send command action initiated in Robot plugin");
-		int commandId = jsonData.getInt(JsonMapKeys.KEY_COMMAND);
-		boolean useXmpp = jsonData.getBoolean(JsonMapKeys.KEY_ROBOT_SERIAL_ID);
-		RobotCommandServiceManager.sendCommand(context, commandId, useXmpp);
-	} 
-
-	//TODO : Write listener
-	private void associateRobot(Context context, UserJsonData jsonData, String callbackId) {
-
-		String email = NeatoPrefs.getUserEmailId(context);
-		String serialId = jsonData.getString(JsonMapKeys.KEY_ROBOT_SERIAL_ID);
-		LogHelper.logD(TAG, "Associate action initiated in Robot plugin for serial Id: " + serialId + " and email id: " + email);
-		
-		
-		mRobotPluginAssociateListener = new RobotPluginAssociateListener(callbackId);
-		RobotCommandServiceManager.associateRobot(context, email, serialId, mRobotPluginAssociateListener);
-		
-	}
-
-	private void discoverRobot(Context context, UserJsonData jsonData, String callbackId) {
-		LogHelper.logD(TAG, "Discovery action initiated in Robot plugin");
-		mRobotPluginDiscoveryListener  = new RobotPluginDiscoveryListener(callbackId);
-		RobotCommandServiceManager.discoverRobot(context, mRobotPluginDiscoveryListener);
-	}
-
-	private void startCleaning(Context context, UserJsonData jsonData, String callbackId) {
-		String serialId = jsonData.getString(JsonMapKeys.KEY_ROBOT_SERIAL_ID);
-		boolean useXmppServer = jsonData.getBoolean(JsonMapKeys.KEY_USE_XMPP); 
-		LogHelper.logD(TAG, "Start action - Robot plugin for serial Id: " + serialId + ". Use server: " + useXmppServer);
-		RobotCommandServiceManager.sendCommand(context, RobotCommandPacketConstants.COMMAND_ROBOT_START, useXmppServer);
-
-		//TODO: Once we introduce replies from the robot as ACK to commands we will have to put
-		// listeners to send SUCCESS or ERROR plugin result. right now assuming that 
-		// its always success.
-
-		PluginResult mpluginStartResult = new PluginResult(PluginResult.Status.OK);
-		mpluginStartResult.setKeepCallback(false);
-		success(mpluginStartResult,callbackId);
-
-	}
-
-	private void stopCleaning(Context context, UserJsonData jsonData, String callbackId) {
-		
-		String serialId = jsonData.getString(JsonMapKeys.KEY_ROBOT_SERIAL_ID);
-		boolean useXmppServer = jsonData.getBoolean(JsonMapKeys.KEY_USE_XMPP); 
-		LogHelper.logD(TAG, "Stop action - Robot plugin for serial Id: "+serialId+ ". Use server: " + useXmppServer);
-		RobotCommandServiceManager.sendCommand(context, RobotCommandPacketConstants.COMMAND_ROBOT_STOP, useXmppServer);
-
-		//TODO: Once we introduce replies from the robot as ACK to commands we will have to put
-		// listeners to send SUCCESS or ERROR plugin result. right now assuming that 
-		// its always success.
-
-		PluginResult mpluginStopResult = new PluginResult(PluginResult.Status.OK);
-		mpluginStopResult.setKeepCallback(false);
-		success(mpluginStopResult,callbackId);
-	}
-
-	private RobotManagerPluginMethods convertToInternalAction(String action) {
-		
-		RobotManagerPluginMethods robotManagerPluginMethod = ACTION_MAP.get(action);
-		return robotManagerPluginMethod;
-	}
-
-
-	private static class ActionTypes {
-		public static final String DISCOVER = "discover";
-		public static final String FORM_PEER_CONNECTION = "connectPeer";
-		public static final String ASSOCIATE = "associate";
-		public static final String ROBOTCOMMAND = "robotCommand";
-		public static final String START_CLEANING_COMMAND = "startCleaning";
-		public static final String STOP_CLEANING_COMMAND = "stopCleaning";
-		public static final String SEND_BASE_COMMAND = "sendBase";
-		public static final String ADVANCED_SCHEDULE_ROBOT = "robotAdvancedSchedule";
-	}
-
-	private static class ERROR_TYPES {
-		public static final int ERROR_INVALID_ARGUMENT = 1;
-		public static final int ERROR_INVALID_ACTION = 2;
-
-	}
-
-	// TODO - a lot clean up of code needed.
-	private class RobotPluginDiscoveryListener implements RobotDiscoveryListener {
-
-		private static final String ROBOT_ITEM_KEY = "robot";
-		private static final String ROBOTS_LIST_KEY = "robots";
-		private static final String DISCOVERY_NOTIFICATION_STATE = "notificationType";
-		private static final String DISCOVERY_STARTED = "1";
-		private static final String DISCOVERY_FINISHED = "2";
-		private String mCallBackId;
-		private JSONObject jRobotList = new JSONObject();
-
-		RobotPluginDiscoveryListener(String callBackId) {
-			mCallBackId = callBackId;
-		}
-
-		@Override
-		public void onNewRobotFound(RobotInfo robotInfo) {
-			//Instead of sending notifications for every robot found, we would make a list and send it at one shot.
-			LogHelper.log(TAG, "Robot Found with name: " + robotInfo.getRobotName());
-			addRobotToList(robotInfo);
-		}
-		
-		@Override
-		public void onDiscoveryStarted() {
-			LogHelper.log(TAG, "Discovery started");
-
-			JSONObject jRobotDiscoveryStartedNotification = new JSONObject();
-			
-			try {
-				jRobotDiscoveryStartedNotification.put(DISCOVERY_NOTIFICATION_STATE, DISCOVERY_STARTED);
-			} 
-			catch (JSONException e) {
-				LogHelper.log(TAG, "Exception in onDiscoveryStarted", e);
+				LogHelper.log(TAG, "DISCONNECT_PEER action initiated");
+				disconnectPeerConnection(context, jsonData, callbackId);
 			}
-			
-			PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK,jRobotDiscoveryStartedNotification.toString());
-			loginUserPluginResult.setKeepCallback(true);
-			success(loginUserPluginResult, mCallBackId);
+		}
+
+
+		private void disconnectPeerConnection(Context context,
+				RobotJsonData jsonData, String callbackId) {
+			LogHelper.logD(TAG, "disconnectPeerConnection action initiated in Robot plugin");
+			//TODO	
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			RobotCommandServiceManager.disconnectDirectConnection(context, robotId, new RobotPluginPeerConnectionListener(callbackId));
+			PluginResult pluginLogoutResult = new PluginResult(PluginResult.Status.OK);
+			pluginLogoutResult.setKeepCallback(false);
+			success(pluginLogoutResult, callbackId);
+		}
+
+
+		private void tryDirectConnection(Context context, RobotJsonData jsonData, String callbackId) {
+			LogHelper.logD(TAG, "Try direct connection action initiated in Robot plugin");
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			RobotCommandServiceManager.tryDirectConnection(context, robotId, new RobotPluginPeerConnectionListener(callbackId));	
+		}
+
+
+		private void setAdvancedSchedule(Context context, RobotJsonData jsonData, String callbackId) {
+
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			JSONArray scheduleArray= jsonData.getJsonArray("schedule");
+			AdvancedScheduleGroup schedules = ScheduleJsonDataHelper.jsonToScheduleGroup(scheduleArray);
+			RobotSchedulerManager schedulerManager = RobotSchedulerManager.getInstance(context);
+			mScheduleDetailsPluginListener = new ScheduleDetailsPluginListener(callbackId);
+			schedulerManager.sendRobotSchedule(schedules, robotId, mScheduleDetailsPluginListener);
+		}
+
+		// TODO : Write listener
+		private void sendCommand(Context context, RobotJsonData jsonData, String callbackId) {
+			LogHelper.logD(TAG, "Send command action initiated in Robot plugin");
+			int commandId = jsonData.getInt(JsonMapKeys.KEY_COMMAND_ID);
+			String robot_id = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+
+			JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
+
+			RobotCommandServiceManager.sendCommand(context, robot_id, commandId);
+			//TODO: Success should be send in a thread way.
+			PluginResult mpluginStartResult = new PluginResult(PluginResult.Status.OK);
+			mpluginStartResult.setKeepCallback(false);
+			success(mpluginStartResult,callbackId);
+		} 
+
+
+		private void discoverRobot(Context context, RobotJsonData jsonData, String callbackId) {
+			LogHelper.logD(TAG, "Discovery action initiated in Robot plugin");
+			mRobotPluginDiscoveryListener  = new RobotPluginDiscoveryListener(callbackId);
+			RobotCommandServiceManager.discoverRobot(context, mRobotPluginDiscoveryListener);
+		}
+
+
+		// TODO: re-implement
+		private void getRobotSchedule(Context context, RobotJsonData jsonData,
+				String callbackId) {
+			LogHelper.logD(TAG, "getRobotSchedule action initiated in Robot plugin");
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			//JSONObject result = getTempSchedule();
+			//mFakeListener = new FakeListener(result, callbackId);
+			//fakeNetworkDelay(mFakeListener);
+		}
+
+		private void getRobotMaps(final Context context, final RobotJsonData jsonData, final String callbackId) {
+
+			LogHelper.logD(TAG, "Get robot map action initiated in Robot plugin");
+
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+
+			RobotMapWebservicesManager.getInstance(context).getRobotMapData(robotId, new RobotMapDataDownloadListener() {
+
+				@Override
+				public void onMapDataDownloaded(String robotId, String mapId,
+						String mapOverlay, String mapImage) {
+					JSONObject jGetRobotMapNotification = new JSONObject();
+					// TODO Auto-generated method stub
+					try {
+
+						JSONObject overlayData = JsonHelper.createJsonFromFile(mapOverlay);
+						if (overlayData != null) {
+							jGetRobotMapNotification.put(JsonMapKeys.KEY_ROBOT_MAP_ID, mapId);
+							jGetRobotMapNotification.put(JsonMapKeys.KEY_MAP_OVERLAY_INFO, overlayData);
+							jGetRobotMapNotification.put(JsonMapKeys.KEY_MAP_IMAGE, FILE_PREFIX + mapImage);
+							PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.OK, jGetRobotMapNotification);
+							success(getRobotMapPluginResult, callbackId);
+						} else {
+							JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_TYPE_UNKNOWN, "Invalid JSON file");
+							PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
+							error(getRobotMapPluginResult, callbackId);
+						}
+
+					}
+					catch (JSONException e) {
+						LogHelper.log(TAG, "Exception in getMapDataSuccess", e);
+					}
+
+				}
+
+				@Override
+				public void onMapDataDownloadError(String robotId, String mapId,
+						String errMessage) {
+					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_TYPE_UNKNOWN, errMessage);
+					PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
+					error(getRobotMapPluginResult, callbackId);
+
+				}
+			});
+		}
+
+
+		private void setMapOverlayData(Context context, final RobotJsonData robotParams, final String callbackId) {
+			LogHelper.logD(TAG, "setMapOverlayData action initiated in Robot plugin");
+			LogHelper.logD(TAG, "Input Params = " + robotParams);
+			String robotId = robotParams.getString(JsonMapKeys.KEY_ROBOT_ID);
+			JSONObject overlayData = robotParams.getJsonObject(JsonMapKeys.KEY_MAP_OVERLAY_INFO);
+			String overlayDataStr = overlayData.toString();	
+			RobotMapWebservicesManager.getInstance(context).setRobotOverlayData(robotId, overlayDataStr, new UpdateRobotMapListener() {
+
+				@Override
+				public void onSuccess(String robot_map_id, String map_overlay_version, String map_blob_version) {
+					LogHelper.logD(TAG, "Updated map successfully");
+					// TODO: send the versions and ids to the upper layer.
+					PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.OK, "");
+					success(getRobotMapPluginResult, callbackId);
+				}
+
+				@Override
+				public void onError(String errMessage) {
+					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_TYPE_UNKNOWN, errMessage);
+					PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
+					error(getRobotMapPluginResult, callbackId);
+				}
+			});
 
 		}
 
-		@Override
-		public void onDiscoveryFinished() {
-			LogHelper.log(TAG, "Discovery Finished");
-			JSONObject jRobotListResult = new JSONObject();
+		private RobotManagerPluginMethods convertToInternalAction(String action) {
+			LogHelper.logD(TAG, "convertToInternalAction - action = " + action);
+			RobotManagerPluginMethods robotManagerPluginMethod = ACTION_MAP.get(action);
+			return robotManagerPluginMethod;
+		}
+
+
+		private static class ActionTypes {
+			public static final String DISCOVER_NEAR_BY_ROBOTS = "discoverNearByRobots";
+			public static final String TRY_DIRECT_CONNECTION = "tryDirectConnection";
+			public static final String SEND_COMMAND_TO_ROBOT = "sendCommandToRobot";
+			public static final String SET_ROBOT_SCHEDULE = "robotSetSchedule";
+			public static final String SET_MAP_OVERLAY_DATA= "setMapOverlayData";
+			public static final String GET_ROBOT_MAP = "getRobotMap";
+			public static final String GET_ROBOT_SCHEDULE = "getSchedule";
+			public static final String DISCONNECT_DIRECT_CONNECTION = "disconnectDirectConnection";
+		}
+
+		private JSONObject getErrorJsonObject(int errorCode, String errMessage) {
+			JSONObject error = new JSONObject();
 			try {
-				jRobotListResult.put(DISCOVERY_NOTIFICATION_STATE, DISCOVERY_FINISHED);
-				jRobotListResult.put(ROBOTS_LIST_KEY, jRobotList);
+				error.put(JsonMapKeys.KEY_ERROR_CODE, errorCode);
+				error.put(JsonMapKeys.KEY_ERROR_MESSAGE, errMessage);
 			} catch (JSONException e) {
-				LogHelper.log(TAG, "Exception in onDiscoveryFinished", e);
+				LogHelper.logD(TAG, "Exception in getErrorJsonObject", e);
+			}
+			return error;
+		}
+
+		// TODO - a lot clean up of code needed.
+		private class RobotPluginDiscoveryListener implements RobotDiscoveryListener {
+
+			private static final String ROBOT_ITEM_KEY = "robot";
+			private static final String ROBOTS_LIST_KEY = "robots";
+			private String mCallBackId;
+			private JSONObject jRobotList = new JSONObject();
+
+			RobotPluginDiscoveryListener(String callBackId) {
+				mCallBackId = callBackId;
 			}
 
-			PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, jRobotListResult.toString());
-			loginUserPluginResult.setKeepCallback(false);
-			success(loginUserPluginResult, mCallBackId);
+			@Override
+			public void onNewRobotFound(RobotInfo robotInfo) {
+				LogHelper.log(TAG, "Robot Found with name: " + robotInfo.getRobotName());
+				addRobotToList(robotInfo);
+			}
 
-		}
-		@Override
-		public void discoveryError() {
-			PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.ERROR);
-			error(loginUserPluginResult, mCallBackId);
+			@Override
+			public void onDiscoveryStarted() {
+				LogHelper.log(TAG, "Discovery started");
+			}
 
-		}
+			@Override
+			public void onDiscoveryFinished() {
+				LogHelper.log(TAG, "Discovery Finished");
+				JSONObject jRobotListResult = new JSONObject();
+				try {
+					//jRobotListResult.put(DISCOVERY_NOTIFICATION_STATE, DISCOVERY_FINISHED);
+					jRobotListResult.put(ROBOTS_LIST_KEY, jRobotList);
+				} catch (JSONException e) {
+					LogHelper.log(TAG, "Exception in onDiscoveryFinished", e);
+				}
 
-		public void addRobotToList(RobotInfo robotInfo) {
-			try {
-				jRobotList.put(ROBOT_ITEM_KEY, robotJsonObject(robotInfo));
-			} catch (JSONException e) {
-				LogHelper.log(TAG, "Exception in addRobotToList", e);
+				PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, jRobotListResult.toString());
+				loginUserPluginResult.setKeepCallback(false);
+				success(loginUserPluginResult, mCallBackId);
+
+			}
+			@Override
+			public void discoveryError() {
+				JSONObject error = getErrorJsonObject(0, "Discovery Error");
+				PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.ERROR, error);
+				error(loginUserPluginResult, mCallBackId);
+
+			}
+
+			public void addRobotToList(RobotInfo robotInfo) {
+				try {
+					jRobotList.put(ROBOT_ITEM_KEY, robotJsonObject(robotInfo));
+				} catch (JSONException e) {
+					LogHelper.log(TAG, "Exception in addRobotToList", e);
+				}
+			}
+
+			public JSONObject robotJsonObject(RobotInfo robotInfo) {
+				JSONObject robot = new JSONObject();
+				try {
+					robot.put(JsonMapKeys.KEY_ROBOT_NAME, robotInfo.getRobotName());
+					robot.put(JsonMapKeys.KEY_ROBOT_ID, robotInfo.getSerialId());
+					//TODO : write a function to form a list of all the robot infos discovered. So that while forming a TCP we would be able to extract the ip address.
+					// For now sending the ip address to UI so as to get it back. Very imp to implement.
+					//robot.put(JsonMapKeys.KEY_ROBOT_IP_ADDRESS, robotInfo.getRobotIpAddress());
+				} catch (JSONException e) {
+					LogHelper.log(TAG, "Exception in robotJsonObject", e);
+				}
+				return robot;
 			}
 		}
-		
-		public JSONObject robotJsonObject(RobotInfo robotInfo) {
-			JSONObject robot = new JSONObject();
-			try {
-				robot.put(JsonMapKeys.KEY_ROBOT_NAME, robotInfo.getRobotName());
-				robot.put(JsonMapKeys.KEY_ROBOT_SERIAL_ID, robotInfo.getSerialId());
-				//TODO : write a function to form a list of all the robot infos discovered. So that while forming a TCP we would be able to extract the ip address.
-				// For now sending the ip address to UI so as to get it back. Very imp to implement.
-				robot.put(JsonMapKeys.KEY_ROBOT_IP_ADDRESS, robotInfo.getRobotIpAddress());
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+
+		private class RobotPluginPeerConnectionListener implements RobotPeerConnectionListener {
+
+			private String mCallBackId;
+
+			RobotPluginPeerConnectionListener(String callbackId) {
+				mCallBackId = callbackId;
 			}
-			return robot;
-		}
-	}
 
-	private class RobotPluginAssociateListener implements RobotAssociateListener {
+			@Override
+			public void onRobotConnected() {
+				PluginResult peerConnectionPluginResult = new  PluginResult(PluginResult.Status.OK);
+				peerConnectionPluginResult.setKeepCallback(true);
+				LogHelper.log(TAG, "Connected to peer");
+				success(peerConnectionPluginResult, mCallBackId);
+			}
 
-		private String mCallBackId;
-		
-		RobotPluginAssociateListener(String callbackId) {
-			mCallBackId = callbackId;
-		}
-		
-		@Override
-		public void associationSuccess() {
-			PluginResult associateRobotPluginResult = new  PluginResult(PluginResult.Status.OK);
-			LogHelper.log(TAG, "Association robot success");
-			success(associateRobotPluginResult, mCallBackId);
-		}
+			@Override
+			public void onRobotDisconnected() {
+				PluginResult peerConnectionPluginResult = new  PluginResult(PluginResult.Status.OK);
+				LogHelper.log(TAG, "Disconnected from peer");
+				peerConnectionPluginResult.setKeepCallback(false);
+				success(peerConnectionPluginResult, mCallBackId);			
+			}
 
-		@Override
-		public void associationError(String errMessage) {
-			PluginResult associateRobotPluginResult = new  PluginResult(PluginResult.Status.ERROR, errMessage);
-			LogHelper.log(TAG, "Association robot Error: " +errMessage);
-			error(associateRobotPluginResult, mCallBackId);
-		}
+			@Override
+			public void errorInConnecting() {
+				PluginResult peerConnectionPluginResult = new  PluginResult(PluginResult.Status.ERROR);
+				peerConnectionPluginResult.setKeepCallback(true);
+				LogHelper.log(TAG, "Robot could not be connected");
+				error(peerConnectionPluginResult, mCallBackId);
+			}
 
-	}
-	
-	private class RobotPluginPeerConnectionListener implements RobotPeerConnectionListener {
-		
-		private String mCallBackId;
-		
-		RobotPluginPeerConnectionListener(String callbackId) {
-			mCallBackId = callbackId;
-		}
+		} 
 
-		@Override
-		public void onRobotConnected() {
-			PluginResult peerConnectionPluginResult = new  PluginResult(PluginResult.Status.OK);
-			peerConnectionPluginResult.setKeepCallback(true);
-			LogHelper.log(TAG, "Connected to peer");
-			success(peerConnectionPluginResult, mCallBackId);
+		private  class ScheduleDetailsPluginListener implements ScheduleWebserviceListener {
+			private String mCallBackId;
+
+			ScheduleDetailsPluginListener(String callbackId) {
+				mCallBackId = callbackId;
+			}
+
+			@Override
+			public void onSuccess() {
+				LogHelper.log(TAG, "ScheduleDetailsPluginListener onSuccess Callback Id = " + mCallBackId);
+				PluginResult scheduleRobotPluginResult = new  PluginResult(PluginResult.Status.OK);
+				success(scheduleRobotPluginResult, mCallBackId);
+			}
+
+			@Override
+			public void onNetworkError() {
+				JSONObject error = getErrorJsonObject(0, "Network Error");
+				LogHelper.log(TAG, "ScheduleDetailsPluginListener onNetworkError Callback Id = " + mCallBackId);
+				PluginResult scheduleRobotPluginResult = new  PluginResult(PluginResult.Status.ERROR, error);
+				error(scheduleRobotPluginResult, mCallBackId);
+			}
+
+			@Override
+			public void onServerError() {
+				JSONObject error = getErrorJsonObject(0, "Server Error");
+				LogHelper.log(TAG, "ScheduleDetailsPluginListener onServerError Callback Id = " + mCallBackId);
+				PluginResult scheduleRobotPluginResult = new  PluginResult(PluginResult.Status.ERROR, error);
+				error(scheduleRobotPluginResult, mCallBackId);
+			}
 
 		}
-
-		@Override
-		public void onRobotDisconnected() {
-			PluginResult peerConnectionPluginResult = new  PluginResult(PluginResult.Status.OK);
-			LogHelper.log(TAG, "Disconnected from peer");
-			peerConnectionPluginResult.setKeepCallback(false);
-			success(peerConnectionPluginResult, mCallBackId);			
-		}
-		
-	} 
-	
-	private static class ScheduleDetailsPluginListener implements ScheduleWebserviceListener {
-		private String mCallBackId;
-		
-		ScheduleDetailsPluginListener(String callbackId) {
-			mCallBackId = callbackId;
-		}
-
-		@Override
-		public void onSuccess() {
-			LogHelper.log(TAG, "ScheduleDetailsPluginListener onSuccess Callback Id = " + mCallBackId);
-		}
-
-		@Override
-		public void onNetworkError() {
-			LogHelper.log(TAG, "ScheduleDetailsPluginListener onNetworkError Callback Id = " + mCallBackId);
-		}
-
-		@Override
-		public void onServerError() {
-			LogHelper.log(TAG, "ScheduleDetailsPluginListener onServerError Callback Id = " + mCallBackId);
-		}
-
-	}
 }
 

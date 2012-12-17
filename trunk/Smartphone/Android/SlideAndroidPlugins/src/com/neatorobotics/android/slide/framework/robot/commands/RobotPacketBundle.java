@@ -95,7 +95,13 @@ public class RobotPacketBundle {
 		for (String key: keys) {
 			Node dataNode = doc.createElement(key);
 			String value = mData.get(key);
-			dataNode.appendChild(doc.createTextNode(value));
+
+			//TODO: added default as empty string.
+			if (value != null) {
+				dataNode.appendChild(doc.createTextNode(value));
+			} else {
+				dataNode.appendChild(doc.createTextNode(""));
+			}
 			commandData.appendChild(dataNode);
 		}
 		return commandData;

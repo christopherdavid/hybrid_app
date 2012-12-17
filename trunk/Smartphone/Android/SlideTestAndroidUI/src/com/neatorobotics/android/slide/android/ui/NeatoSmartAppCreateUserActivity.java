@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.webservice.user.CreateNeatoUserResult;
+import com.neatorobotics.android.slide.framework.webservice.user.GetNeatoUserDetailsResult;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebservicesHelper;
 
 public class NeatoSmartAppCreateUserActivity extends Activity{
@@ -53,7 +54,13 @@ public class NeatoSmartAppCreateUserActivity extends Activity{
 		*/
     }
     
-     class CreateUserTask extends AsyncTask<Void, Void, CreateNeatoUserResult>  {
+    private static class CreateUserResultWrapper
+    {
+    	private CreateNeatoUserResult createUserResult;
+    	private GetNeatoUserDetailsResult getUserDetailResult;
+    }
+    
+     class CreateUserTask extends AsyncTask<Void, Void, CreateUserResultWrapper>  {
     	
     	private String mEmailId;
     	private String mPassword;
@@ -64,31 +71,53 @@ public class NeatoSmartAppCreateUserActivity extends Activity{
     		mPassword = password;
     		mName = name;
     	}
+    	
     	@Override
-    	protected CreateNeatoUserResult doInBackground(Void... params) {
+    	protected CreateUserResultWrapper doInBackground(Void... params) {
+    		CreateUserResultWrapper createUserResultWrapper = new CreateUserResultWrapper();
     		CreateNeatoUserResult result = NeatoUserWebservicesHelper.createNeatoUserRequestNative(NeatoSmartAppCreateUserActivity.this, mName, mEmailId, mPassword);
-    		
-    		return result;
+    		if ((result != null) && result.success()) {
+        		createUserResultWrapper.createUserResult = result;
+				Log.i(TAG, "User handle = " + result.mResult.mUserHandle);
+				GetNeatoUserDetailsResult userDetailResult = NeatoUserWebservicesHelper.getNeatoUserDetails(NeatoSmartAppCreateUserActivity.this,
+															mEmailId, result.mResult.mUserHandle);
+				if ((userDetailResult != null) && userDetailResult.success()) {
+					createUserResultWrapper.getUserDetailResult = userDetailResult;
+				}
+				return createUserResultWrapper;
+			}
+			return createUserResultWrapper;
+			
     	}
 
 		@Override
-		protected void onPostExecute(CreateNeatoUserResult result) {
+		protected void onPostExecute(CreateUserResultWrapper result) {
 			super.onPostExecute(result);
-			if (result == null) {
+			CreateNeatoUserResult createUserResult = result.createUserResult;
+			GetNeatoUserDetailsResult getUserResult = result.getUserDetailResult;
+			if (createUserResult == null) {
 				Toast.makeText(NeatoSmartAppCreateUserActivity.this, "Error in creating user", Toast.LENGTH_LONG).show();
 				return;
 			}
-			if (result.success()) {
-				Log.i(TAG, "User handle Token = " + result.mResult.mUserHandle);
-				NeatoPrefs.saveUserEmailId(NeatoSmartAppCreateUserActivity.this, mEmailId);
+			
+			if (getUserResult == null) {
+				Toast.makeText(NeatoSmartAppCreateUserActivity.this, "User created but failed to fetch user details. Please try and login", Toast.LENGTH_LONG).show();
+				return;
+			}
+			
+			if (getUserResult.success()) {
 				Toast.makeText(NeatoSmartAppCreateUserActivity.this, "User created", Toast.LENGTH_LONG).show();
-				
-				setResult(RESULT_OK);
+				NeatoPrefs.saveUserEmailId(NeatoSmartAppCreateUserActivity.this, getUserResult.mResult.mEmail);
+				NeatoPrefs.saveJabberId(NeatoSmartAppCreateUserActivity.this, getUserResult.mResult.mChat_id);
+				NeatoPrefs.saveJabberPwd(NeatoSmartAppCreateUserActivity.this, getUserResult.mResult.mChat_pwd);
 				Intent createUserIntent = new Intent(NeatoSmartAppCreateUserActivity.this , NeatoSmartAppTestActivity.class);
 				startActivity(createUserIntent);
+				setResult(RESULT_OK);
 				finish();
-			} else {
-				Toast.makeText(NeatoSmartAppCreateUserActivity.this, result.mMessage, Toast.LENGTH_LONG).show();
+				
+			} 
+			else {
+				Toast.makeText(NeatoSmartAppCreateUserActivity.this, getUserResult.mMessage, Toast.LENGTH_LONG).show();
 			}			
 		}
     }

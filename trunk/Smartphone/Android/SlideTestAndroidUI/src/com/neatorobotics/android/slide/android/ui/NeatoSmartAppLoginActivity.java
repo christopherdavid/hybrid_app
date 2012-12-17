@@ -97,12 +97,14 @@ public class NeatoSmartAppLoginActivity extends Activity{
 				return;
 			}
 			if (result.success()) {
-				NeatoPrefs.saveUserEmailId(NeatoSmartAppLoginActivity.this, result.mResult.mEmail);
-			//	Toast.makeText(NeatoSmartAppLoginActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
 				
-				setResult(RESULT_OK);
+				NeatoPrefs.saveUserEmailId(NeatoSmartAppLoginActivity.this, result.mResult.mEmail);
+				// Toast.makeText(NeatoSmartAppWelcomeScreen.this, "Demo user login Successful", Toast.LENGTH_SHORT).show();
+				NeatoPrefs.saveJabberId(NeatoSmartAppLoginActivity.this, result.mResult.mChat_id);
+				NeatoPrefs.saveJabberPwd(NeatoSmartAppLoginActivity.this, result.mResult.mChat_pwd);
 				Intent createUserIntent = new Intent(NeatoSmartAppLoginActivity.this , NeatoSmartAppTestActivity.class);
 				startActivity(createUserIntent);
+				setResult(RESULT_OK);
 				finish();
 			} 
 			else {

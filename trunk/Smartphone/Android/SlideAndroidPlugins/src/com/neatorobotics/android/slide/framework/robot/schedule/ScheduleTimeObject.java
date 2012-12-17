@@ -10,12 +10,18 @@ public class ScheduleTimeObject {
 		mHrs = hrs; 
 	}	
 
-	ScheduleTimeObject(String time) {
+	public ScheduleTimeObject(String time) {
 		int index = time.indexOf(':');
-		String hrs = time.substring(0, index);
-		String mins = time.substring(index+1);
-		mHrs = convertStringToInt(hrs);
-		mMins = convertStringToInt(mins);
+		//TODO: default values
+		if (index == -1 ) {
+			mHrs = 0;
+			mMins = 0;
+		} else {
+			String hrs = time.substring(0, index);
+			String mins = time.substring(index+1);
+			mHrs = convertStringToInt(hrs);
+			mMins = convertStringToInt(mins);
+		}
 	}
 	@Override
 	public String toString() {
@@ -36,7 +42,7 @@ public class ScheduleTimeObject {
 		String valueStr = String.valueOf(value);
 		return valueStr;
 	}
-	
+
 	private static int convertStringToInt(String value) {
 
 		int valueInt = Integer.parseInt(value);

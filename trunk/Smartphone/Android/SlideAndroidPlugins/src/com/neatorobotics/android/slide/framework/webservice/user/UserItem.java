@@ -64,5 +64,16 @@ public class UserItem {
 		return robots.size();
 	}
 	
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Name = " + name);
+		sb.append("\nEmail = " + email);
+		sb.append("\nid = " + id);
+		sb.append("\nchatId = " + chatId);
+		return sb.toString();
+	}
+	
 
 }

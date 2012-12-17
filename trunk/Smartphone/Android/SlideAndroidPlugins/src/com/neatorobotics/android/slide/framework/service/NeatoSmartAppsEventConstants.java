@@ -9,6 +9,7 @@ public class NeatoSmartAppsEventConstants {
 	public static final int ROBOT_CONNECTED = 3;
 	public static final int ROBOT_DISCONNECTED = 4;
 	public static final int ROBOT_DATA_RECEIVED = 5;
+	public static final int ROBOT_CONNECTION_ERROR = 10;
 	
 	public static final int ROBOT_ASSOCIATION_STARTED = 6;
 	public static final int ROBOT_ASSOCIATION_END = 7;

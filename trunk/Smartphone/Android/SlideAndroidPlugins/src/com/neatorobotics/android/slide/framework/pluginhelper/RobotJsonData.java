@@ -20,21 +20,44 @@ public class RobotJsonData {
 		extractJsonObject();
 	}
 
+	public JSONArray getJsonArray(String key) {
+		JSONArray jsonArray = null;
+		try {
+			jsonArray = mDataObject.getJSONArray(key);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			LogHelper.log(TAG, "JSON value doesn't exist for key :"+key);
+		}
+		return jsonArray;
+
+	}
+
+	public JSONObject getJsonObject(String key) {
+
+		JSONObject jsonobj = null;
+		try {
+			jsonobj = mDataObject.getJSONObject(key);
+		} catch (JSONException e) {
+			LogHelper.log(TAG, "JSON value doesn't exist for key :"+key);
+		}
+		return jsonobj;
+	}
 
 	private void extractJsonObject() {
 		try {
-			if (mData != null) {
-				mDataObject = mData.getJSONObject(0);
-			}
+			mDataObject = mData.getJSONObject(0);
 		} catch (JSONException e) {
+			// TODO Auto-generated catch block
 			LogHelper.log(TAG, "JSON object is not present");
 		}
 	}
 
 
 	public String getString(String key) {
-		String value = "";
-
+		return getString(key, "");
+	}
+	public String getString(String key, String DefaultStr) {
+		String value = DefaultStr;
 		try {
 			value = mDataObject.getString(key);
 		} catch (JSONException e) {
@@ -43,11 +66,26 @@ public class RobotJsonData {
 		return value;
 	}
 
+
+	//assume default false
+	public boolean getBoolean(String key) {
+		return getBoolean(key, false);
+	}
+	public boolean getBoolean(String key, boolean defaultValue) {
+		boolean value = defaultValue;
+		try {
+			value = mDataObject.getBoolean(key);
+		} catch(JSONException e) {
+			LogHelper.log(TAG, "JSON value doesn't exist for key :"+key);
+		}
+
+		return value;
+	}
 	// Assume default value as 0
 	public int getInt(String key) {
 		return getInt(key ,0);
 	}
-	
+
 	public int getInt(String key, int defaultValue) {
 		int i = defaultValue;
 
@@ -57,5 +95,14 @@ public class RobotJsonData {
 			LogHelper.log(TAG, "JSON value doesn't exist for key :"+key);
 		}
 		return i;
+	}
+
+	@Override
+	public String toString()
+	{
+		if (mDataObject != null) {
+			return mDataObject.toString();
+		}
+		return "";
 	}
 }

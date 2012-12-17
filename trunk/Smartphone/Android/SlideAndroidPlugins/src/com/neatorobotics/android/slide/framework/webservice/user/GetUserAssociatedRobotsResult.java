@@ -27,14 +27,14 @@ public class GetUserAssociatedRobotsResult extends NeatoWebserviceResult {
 	public String mMessage;	
 	
 	@JsonProperty(value="result")
-	public ArrayList<Result> mResult[];
+	public ArrayList<Result> mResults;
 	
 	@Override
 	public boolean success() {
 		return ((mStatus == STATUS_SUCCESS));
 	}
 	
-	public class Result {
+	public static class Result {
 		
 		@JsonProperty(value="id")
 		public String mId;

@@ -1,8 +1,12 @@
 package com.neatorobotics.android.slide.framework.robot.commands;
 
 public class RobotCommandPacketConstants {
+	
+	//TODO: Base 1000 for replies. change commandIds.
 	public static final int PACKET_TYPE_ROBOT_DISCOVERY = 1;
 	public static final int PACKET_TYPE_ROBOT_DISCOVERY_RESPONSE = 2;
+	public static final int PACKET_TYPE_ASSOCIATED_ROBOT_DISCOVERY = 3;
+	public static final int PACKET_TYPE_ASSOCIATED_ROBOT_DISCOVERY_RESPONSE = 4;
 	public static final int COMMAND_ROBOT_START = 101;
 	public static final int COMMAND_ROBOT_STOP = 102;
 	public static final int COMMAND_ROBOT_JABBER_DETAILS = 103;

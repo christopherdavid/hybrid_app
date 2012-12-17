@@ -4,6 +4,7 @@ package com.neatorobotics.android.slide.phonegap.ui;
 import android.os.Bundle;
 
 import com.neatorobotics.android.slide.framework.plugins.base.SlidePluginBaseActivity;
+import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
 
 
 public class NeatoSmartappTestActivity extends SlidePluginBaseActivity {
@@ -14,6 +15,8 @@ public class NeatoSmartappTestActivity extends SlidePluginBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        NeatoWebConstants.setServerEnvironment(NeatoWebConstants.PROD_SERVER_ID);
+        
 		super.loadUrl(PHONEGAP_URL);
     }
 }

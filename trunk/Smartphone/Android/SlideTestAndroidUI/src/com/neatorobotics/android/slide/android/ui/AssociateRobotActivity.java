@@ -1,6 +1,5 @@
 package com.neatorobotics.android.slide.android.ui;
 
-import org.apache.cordova.api.LOG;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -108,7 +107,7 @@ public class AssociateRobotActivity extends Activity {
 						service.associateRobot(serialId, emailId);
 					} 
 					catch (RemoteException e) {
-						LOG.e(TAG, "Remote Exception:", e);
+						LogHelper.log(TAG, "Remote Exception:", e);
 					}
 
 				}
