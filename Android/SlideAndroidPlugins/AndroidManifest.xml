@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.neatorobotics.android.slide.framework"
-    android:versionCode="8"
-    android:versionName="0.2.0.06" >
+    android:versionCode="9"
+    android:versionName="0.2.0.07" >
 
     <uses-sdk
         android:minSdkVersion="10"

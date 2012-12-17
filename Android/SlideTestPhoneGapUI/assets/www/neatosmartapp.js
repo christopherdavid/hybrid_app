@@ -95,16 +95,15 @@ var neatoSmartApp = (function() {
 		},
 
 		discoverRobotSuccess: function(result) {
-			//TODO : add these all keys in helper class.
 			neatoSmartApp.setResponseText(result);
-			var jsonData = $.parseJSON(result);
 			neatoSmartApp.hideProgressBar();
 			var showList = false;
-			for (var i in jsonData.robots) {
-					showList = true;
-					var robot = jsonData.robots[i];
-					neatoSmartApp.addRobotToList(robot.robot_name, robot.robotId);
-				}
+			for (var i in result) {
+				showList = true;
+				var robot = result[i];
+				neatoSmartApp.addRobotToList(robot.robot_name, robot.robotId);
+			}
+
 			if(showList) {
 				neatoSmartApp.displayRobotList();
 			} else {
@@ -265,7 +264,7 @@ var neatoSmartApp = (function() {
 		logoutUser: function() {
 			// 0 indicates logout.
 			localStorage.setItem('loggedIn' , 0);
-			UserPluginManager.logout("", "", neatoSmartApp.successLogout, neatoSmartApp.errorLogout);
+			UserPluginManager.logout("", neatoSmartApp.successLogout, neatoSmartApp.errorLogout);
 			
 		},
 		
