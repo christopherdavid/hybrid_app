@@ -38,8 +38,8 @@ import com.neatorobotics.android.slide.framework.service.INeatoRobotService;
 import com.neatorobotics.android.slide.framework.service.NeatoSmartAppService;
 import com.neatorobotics.android.slide.framework.service.NeatoSmartAppsEventConstants;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
-import com.neatorobotics.android.slide.framework.webservice.robot.AssociateNeatoRobotResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebservicesHelper;
+import com.neatorobotics.android.slide.framework.webservice.robot.RobotAssociationDisassociationResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 
@@ -49,25 +49,25 @@ public class NeatoSmartAppTestActivity extends Activity {
 	private boolean mServiceBound = false;
 	private Button btnPeerConnection;
 	private boolean mRobotStarted = false;
-	
+
 	private ServiceConnection mNeatoRobotServiceConnection = new ServiceConnection() {
-		
+
 		public void onServiceDisconnected(ComponentName name) {
 			LogHelper.logD(TAG, "onServiceDisconnected called");
 			LogHelper.logD(TAG, "component Name = " + name);
 			mNeatoRobotService = null;
 			ApplicationConfig.getInstance(NeatoSmartAppTestActivity.this).setRobotService(null);
 		}
-		
+
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			LogHelper.log(TAG, "onServiceConnected called");
 			mNeatoRobotService = INeatoRobotService.Stub.asInterface(service);
 			ApplicationConfig.getInstance(NeatoSmartAppTestActivity.this).setRobotService(mNeatoRobotService);
-			
+
 			Intent resultReceiverIntent = new Intent(NeatoSmartAppService.NEATO_RESULT_RECEIVER_ACTION);
 			resultReceiverIntent.putExtra(NeatoSmartAppService.EXTRA_RESULT_RECEIVER, mResultReciever);
 			sendBroadcast(resultReceiverIntent);
-			
+
 			if (mNeatoRobotService != null) {
 				try {
 					mNeatoRobotService.loginToXmpp();
@@ -78,7 +78,7 @@ public class NeatoSmartAppTestActivity extends Activity {
 			}
 		}
 	};
-	
+
 	private RobotListAdapter mRobotListAdapter;
 	private Handler mHandler = new Handler();
 	private AlertDialog mRobotListUi;
@@ -96,9 +96,9 @@ public class NeatoSmartAppTestActivity extends Activity {
 			String emailId = NeatoPrefs.getUserEmailId(NeatoSmartAppTestActivity.this);
 			LogHelper.log(TAG, "Associating user with Robot. User Email = " + emailId);
 			AssociateToUser robotAssociate = new AssociateToUser(robotInfo.getRobotName(), 
-					robotInfo.getSerialId(), emailId);
+					robotInfo.getSerialId(), emailId, robotIpAddress);
 			robotAssociate.execute();
-			NeatoPrefs.setPeerIpAddress(NeatoSmartAppTestActivity.this, robotIpAddress);
+			/*NeatoPrefs.setPeerIpAddress(NeatoSmartAppTestActivity.this, robotIpAddress);*/
 		}
 	};
 
@@ -116,9 +116,10 @@ public class NeatoSmartAppTestActivity extends Activity {
 			LogHelper.log(TAG, "Bundle = " + resultData);
 			
 			if (NeatoSmartAppsEventConstants.NEW_ROBOT_FOUND == resultCode) {
+				LogHelper.logD(TAG, "NEW_ROBOT_FOUND");
 				RobotInfo robotInfo = resultData.getParcelable(NeatoSmartAppService.DISCOVERY_ROBOT_INFO);
 				mRobotListAdapter.addRobot(robotInfo);
-				if (mRobotListUi == null) {
+				if ((mRobotListUi == null) || !mRobotListUi.isShowing()) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(NeatoSmartAppTestActivity.this);
 					builder.setTitle("Nearby Robots");
 					builder.setAdapter(mRobotListAdapter, mRobotSelectListener);					
@@ -127,21 +128,32 @@ public class NeatoSmartAppTestActivity extends Activity {
 				}
 			}
 			else if (NeatoSmartAppsEventConstants.DISCOVERY_STARTED == resultCode) {
+				LogHelper.logD(TAG, "DISCOVERY_STARTED");
 				mProgressBar.setVisibility(View.VISIBLE);
 				mBtnFindRobots.setEnabled(false);
 			}
 			else if (NeatoSmartAppsEventConstants.DISCOVERY_END == resultCode) {
+				LogHelper.logD(TAG, "DISCOVERY_END");
 				mProgressBar.setVisibility(View.GONE);
 				mBtnFindRobots.setEnabled(true);
 			}
 			else if (NeatoSmartAppsEventConstants.ROBOT_CONNECTED == resultCode) {
 				//mConnectionStatusText.setText("Robot Connected");
+				LogHelper.logD(TAG, "ROBOT_CONNECTED");
 				btnPeerConnection.setText("Close Peer connection");
 				enableDisableStartStopUI(true);				
-			}
+			} else if (NeatoSmartAppsEventConstants.ROBOT_DATA_RECEIVED == resultCode) {
+			
+			} else if (NeatoSmartAppsEventConstants.ROBOT_CONNECTION_ERROR == resultCode) {
+				btnPeerConnection.setText("Open Peer connection");
+				LogHelper.logD(TAG, "ROBOT_CONNECTION_ERROR");
+				Toast.makeText(NeatoSmartAppTestActivity.this, "Could not connect to the peer", Toast.LENGTH_LONG).show();
+
+			} 
 			else if (NeatoSmartAppsEventConstants.ROBOT_DISCONNECTED == resultCode) {
 				//mConnectionStatusText.setText("No Robot Connected");
 				btnPeerConnection.setText("Open Peer connection");
+				LogHelper.logD(TAG, "ROBOT_DISCONNECTED");
 				enableDisableStartStopUI(false);
 			}
 			else if (NeatoSmartAppsEventConstants.ROBOT_DATA_RECEIVED == resultCode) {
@@ -383,22 +395,20 @@ public class NeatoSmartAppTestActivity extends Activity {
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy() {
-		
+
 		closeRobotListDialog();
 		if (mServiceBound) {
 			unbindService(mNeatoRobotServiceConnection);
-
-			Intent serviceIntent = new Intent(this, NeatoSmartAppService.class);
-			stopService(serviceIntent);
-
+			//Intent serviceIntent = new Intent(this, NeatoSmartAppService.class);
+			//stopService(serviceIntent);   
 			mServiceBound = false;
 		}
 		super.onDestroy();
 	}
-	
+
 	private void closeRobotListDialog() {
 		if (mRobotListUi != null) {
 			if (mRobotListUi.isShowing()) {
@@ -455,39 +465,37 @@ public class NeatoSmartAppTestActivity extends Activity {
 
 	}
 
-	private class AssociateToUser extends AsyncTask<Void, Void, AssociateNeatoRobotResult>  {
+	private class AssociateToUser extends AsyncTask<Void, Void, RobotAssociationDisassociationResult>  {
 
 		private String mEmailId;
 		private String mRobotSerialId;
 		private String mRobotName;
-		public AssociateToUser(String robotName, String robotSerialId, String emailId)
+		private RobotItem mRobotItem;
+		private String mRobotIpAddress;
+		//NeatoPrefs.saveRobotInformation(getApplicationContext(), robotItem);
+		public AssociateToUser(String robotName, String robotSerialId, String emailId, String robotIpAddress)
 		{
 			mRobotName = robotName;
 			mRobotSerialId = robotSerialId;
 			mEmailId = emailId;
-			
+			mRobotIpAddress = robotIpAddress;
 			LogHelper.log(TAG, "AssociateToUser - mRobotName = " + mRobotName);
 			LogHelper.log(TAG, "AssociateToUser - mRobotSerialId = " + mRobotSerialId);
 		}
 
 		@Override
-		protected AssociateNeatoRobotResult doInBackground(Void... params) {
-			/*CreateNeatoRobotResult result = NeatoRobotWebservicesHelper.CreateNeatoRobotRequest(NeatoSmartAppTestActivity.this, mRobotName, mRobotSerialId);
+		protected RobotAssociationDisassociationResult doInBackground(Void... params) {
 
-    		AssociateNeatoRobotResult associationResult =  NeatoRobotWebservicesHelper.AssociateNeatoRobotRequest(NeatoSmartAppTestActivity.this, 
-    															mEmailId, mRobotSerialId);
-
-    		return associationResult;
-			 */
 			RobotManager robotManager = RobotManager.getInstance(getApplicationContext());
 			RobotItem robotItem = robotManager.getRobotDetail(mRobotSerialId);
 			LogHelper.log(TAG, "Got remote detail from server");
 			LogHelper.log(TAG, "RobotItem = " + robotItem);
+
 			if (robotItem != null) {
-				NeatoPrefs.saveRobotInformation(getApplicationContext(), robotItem);
-				AssociateNeatoRobotResult associationResult =  NeatoRobotWebservicesHelper.associateNeatoRobotRequest(NeatoSmartAppTestActivity.this, 
+				//NeatoPrefs.saveRobotInformation(getApplicationContext(), robotItem);
+				mRobotItem = robotItem;
+				RobotAssociationDisassociationResult associationResult =  NeatoRobotWebservicesHelper.associateNeatoRobotRequest(NeatoSmartAppTestActivity.this, 
 						mEmailId, mRobotSerialId);
-				
 				LogHelper.log(TAG, "AssociateNeatoRobotResult = " + associationResult);
 				return associationResult;
 			}
@@ -495,7 +503,7 @@ public class NeatoSmartAppTestActivity extends Activity {
 		}
 
 		@Override
-		protected void onPostExecute(AssociateNeatoRobotResult result) {
+		protected void onPostExecute(RobotAssociationDisassociationResult result) {
 			super.onPostExecute(result);
 			if (result == null) {
 				Toast.makeText(NeatoSmartAppTestActivity.this, "Please register the robot before associating it.", Toast.LENGTH_LONG).show();
@@ -503,6 +511,8 @@ public class NeatoSmartAppTestActivity extends Activity {
 			}
 			if (result.success()) {
 				//Toast.makeText(NeatoSmartAppTestActivity.this, "Robot associated", Toast.LENGTH_LONG).show();
+				NeatoPrefs.saveRobotInformation(getApplicationContext(), mRobotItem);
+				NeatoPrefs.setPeerIpAddress(NeatoSmartAppTestActivity.this, mRobotIpAddress);
 				setAssociationStatus("Associated with " + mRobotSerialId);
 			} 
 			else {

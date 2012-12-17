@@ -5,11 +5,11 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 
-public class AssociateNeatoRobotResult extends NeatoWebserviceResult{
+public class RobotAssociationDisassociationResult extends NeatoWebserviceResult{
 
 
 	
-	public AssociateNeatoRobotResult(NeatoHttpResponse response) {
+	public RobotAssociationDisassociationResult(NeatoHttpResponse response) {
 		super(response);
 	}
 	public static final int RESPONSE_STATUS_SUCCESS = 0;
@@ -23,7 +23,7 @@ public class AssociateNeatoRobotResult extends NeatoWebserviceResult{
 	@JsonProperty(value="result")
 	public Result mResult;
 
-	public AssociateNeatoRobotResult() {
+	public RobotAssociationDisassociationResult() {
 		super();
 	}
 	

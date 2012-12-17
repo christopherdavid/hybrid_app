@@ -1,4 +1,6 @@
-package com.neatorobotics.android.slide.framework.webservice.user;
+package com.neatorobotics.android.slide.framework.webservice.user.listeners;
+
+import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 
 
 public interface UserDetailsListener {

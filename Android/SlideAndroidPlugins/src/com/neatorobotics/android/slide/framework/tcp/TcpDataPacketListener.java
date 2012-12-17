@@ -7,4 +7,5 @@ public interface TcpDataPacketListener {
 	public void onConnect();
 	public void onDisconnect();
 	public void onDataReceived(RobotPacket robotPacket);
+	public void errorInConnecting();
 }

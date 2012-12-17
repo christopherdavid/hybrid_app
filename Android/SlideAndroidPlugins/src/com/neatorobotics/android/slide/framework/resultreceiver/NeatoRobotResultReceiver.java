@@ -60,6 +60,11 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 		else if (NeatoSmartAppsEventConstants.ROBOT_DATA_RECEIVED == resultCode) {
 
 		} 
+		else if (NeatoSmartAppsEventConstants.ROBOT_CONNECTION_ERROR == resultCode) {
+			if (mRobotPeerConnectionListener != null) {
+				mRobotPeerConnectionListener.errorInConnecting();
+			}
+		}
 		else if (NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED == resultCode) {
 			if (mRobotAssociationListener != null) {
 				String errMessage= "";
@@ -72,12 +77,15 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 			}
 		} 
 		else if (NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_SUCCESS == resultCode) {
-			if(mRobotAssociationListener != null) {
+
+			if (mRobotAssociationListener != null) {
 				mRobotAssociationListener.associationSuccess();
-			} else {
+			} 
+			else {
 				LogHelper.logD(TAG, "Association Listener is null");
 			}
-		}
+		} 
+		
 	}
 
 

@@ -18,6 +18,9 @@ import android.util.Log;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
+import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.DisassociateNeatoRobotToUser;
+import com.neatorobotics.android.slide.framework.webservice.robot.RobotAssociationDisassociationResult;
+import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.AssociateNeatoRobotToUser;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.CreateNeatoUser;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.GetNeatoUserDetails;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.LoginNeatoUser;
@@ -157,6 +160,70 @@ public class NeatoUserWebservicesHelper {
 		return result;
 
 	}
+	
+	public static RobotAssociationDisassociationResult disassociateNeatoRobotRequest(Context context, String email, String robotId) {
+		RobotAssociationDisassociationResult result = null;
+		Map<String, String> associateRobotReqParams = new HashMap<String, String>();
+		associateRobotReqParams.put(DisassociateNeatoRobotToUser.Attribute.EMAIL, email);
+		associateRobotReqParams.put(DisassociateNeatoRobotToUser.Attribute.SERIAL_NUMBER, robotId);
+	
+		
+		NeatoHttpResponse disassociateRobotResponse = NeatoWebserviceHelper.executeHttpPost(context, DisassociateNeatoRobotToUser.METHOD_NAME, associateRobotReqParams);
+		if (disassociateRobotResponse.completed()) { 
+			try {
+				LogHelper.logD(TAG, "Disassociating Neato Robot completed. Reading response");
+				result = resultMapper.readValue(disassociateRobotResponse.mResponseInputStream, new TypeReference<RobotAssociationDisassociationResult>() {});
+				LogHelper.log(TAG, "Robot disassociated.");
+			} catch (JsonParseException e) {
+				LogHelper.log(TAG, "Exception in disassociateNeatoRobotRequest" ,e);
+
+			} catch (JsonMappingException e) {
+				LogHelper.log(TAG, "Exception in disassociateNeatoRobotRequest" ,e);
+
+			} catch (IOException e) {
+				LogHelper.log(TAG, "Exception in disassociateNeatoRobotRequest" ,e);
+
+			}
+		}
+		else { 
+			LogHelper.log(TAG, "Robot disassociation failed.");
+			result = new RobotAssociationDisassociationResult(disassociateRobotResponse);
+		}
+		
+		return result;
+	}
+	
+	public static RobotAssociationDisassociationResult associateNeatoRobotRequest(Context context, String email, String robotId) {
+		RobotAssociationDisassociationResult result = null;
+		Map<String, String> associateRobotReqParams = new HashMap<String, String>();
+		associateRobotReqParams.put(AssociateNeatoRobotToUser.Attribute.EMAIL, email);
+		associateRobotReqParams.put(AssociateNeatoRobotToUser.Attribute.SERIAL_NUMBER, robotId);
+	
+		
+		NeatoHttpResponse associateRobotResponse = NeatoWebserviceHelper.executeHttpPost(context, AssociateNeatoRobotToUser.METHOD_NAME, associateRobotReqParams);
+		if (associateRobotResponse.completed()) { 
+			try {
+				LogHelper.logD(TAG, "Associating Neato Robot completed. Reading response");
+				result = resultMapper.readValue(associateRobotResponse.mResponseInputStream, new TypeReference<RobotAssociationDisassociationResult>() {});
+				LogHelper.log(TAG, "Associating robot completed.");
+			} catch (JsonParseException e) {
+				LogHelper.log(TAG, "Exception in AssociateNeatoRobotRequest" ,e);
+
+			} catch (JsonMappingException e) {
+				LogHelper.log(TAG, "Exception in AssociateNeatoRobotRequest" ,e);
+
+			} catch (IOException e) {
+				LogHelper.log(TAG, "Exception in AssociateNeatoRobotRequest" ,e);
+
+			}
+		}
+		else { 
+			LogHelper.log(TAG, "Association of  Neato Robot request not completed.");
+			result = new RobotAssociationDisassociationResult(associateRobotResponse);
+		}
+		
+		return result;
+	}
 
 	 private static String convertStreamToString(InputStream is) {
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -168,12 +235,12 @@ public class NeatoUserWebservicesHelper {
 	                sb.append(line + "\n");
 	            }
 	        } catch (IOException e) {
-	            e.printStackTrace();
+	          LogHelper.log(TAG, "Excpetion in convertStreamToString", e);
 	        } finally {
 	            try {
 	                is.close();
 	            } catch (IOException e) {
-	                e.printStackTrace();
+	            	LogHelper.log(TAG, "Excpetion in convertStreamToString", e);
 	            }
 	        }
 	        return sb.toString();

@@ -9,7 +9,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import android.content.Context;
-import android.os.Handler;
+// import android.os.Handler;
 import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
@@ -20,7 +20,7 @@ import com.neatorobotics.android.slide.framework.xml.NetworkXmlHelper;
 public class XMPPConnectionHelper {
 
 	private static final String TAG = XMPPConnectionHelper.class.getSimpleName();
-	private Handler mHandler;
+//	private Handler mHandler;
 	private Context mContext;
 	private Connection mConnection;
 	private ConnectionConfiguration mConnectionConfig;
@@ -35,18 +35,14 @@ public class XMPPConnectionHelper {
 	private static XMPPConnectionHelper sXMPPConnectionHelper;
 	private static Object mObjectCreateLock = new Object();
 	private Object mConnectionObjectLock = new Object();
-
-
-	// TODO: Right now hard-coded. later to be set when retrieved from server using set apis declared.
-
-
+	
 
 	private XMPPConnectionHelper(Context context)
 	{
 		mContext = context.getApplicationContext();
 		mJabberLoginAndConnectHelper = new JabberLoginAndConnectHelper();
-
 	}
+	
 	public static XMPPConnectionHelper getInstance(Context context)
 	{
 		synchronized (mObjectCreateLock) {
@@ -55,13 +51,8 @@ public class XMPPConnectionHelper {
 			}
 		}
 		return sXMPPConnectionHelper;
-
 	}
-
-	// Unlike TCP IP where multiple transports are needed, Connection object is only one for all communication in XMPP. 
-	public Connection getConnection() {
-		return mConnection;
-	}
+	
 
 	//TODO : DO we need to have Jabber in different thread? Its a push mechanism. Need to analyse.
 	private class JabberLoginAndConnectHelper {
@@ -74,105 +65,146 @@ public class XMPPConnectionHelper {
 		}
 	}
 
-	private class ConnectAndLoginThread implements Runnable {
-
+		private class ConnectAndLoginThread implements Runnable {
 
 		public ConnectAndLoginThread() {
-
 		}
-		public void run() {
 
+		public void run() {
 			synchronized (mLoginLock) {
 				if (mLoginInProgress) {
 					return;
 				}
 				mLoginInProgress = true;
 			}
-			synchronized (mConnectionObjectLock) {
-				// TODO : Don't connect if already connected. Need to see if this can anytime happen
-				String user_id = getJabberUsername();
-				String user_pwd = getJabberUserPassword();
-
-				if (mConnection == null || !mConnection.isConnected()) {
-
-					LogHelper.logD(TAG, "formJabberConnection");
-					if(mConnectionConfig == null) {
-						mConnectionConfig = new ConnectionConfiguration(JABBER_SERVER_IP_ADDRESS, JABBER_SERVER_PORT, JABBER_WEB_SERVICE);
-					}
-					mConnection = new XMPPConnection(mConnectionConfig);
-					try {
-						mConnection.connect();
-						LogHelper.log(TAG, "Connected to the Jabber Server.");
-					} 
-					catch (XMPPException e) {
-						LogHelper.logD(TAG, "Exception in Jabber Connect", e);
-					}
-				}
-				LogHelper.logD(TAG, "Login attempt- User id - " + user_id + " user_pwd - " + user_pwd);
-				try {
-					mConnection.login(user_id, user_pwd);
-					LogHelper.log(TAG, "Jabber Login Successful");
-	
-				} catch (XMPPException e) {
-					// TODO Auto-generated catch block
-					LogHelper.log(TAG, "Exception in JabberUserLogin: ",e);
-				}
-	
-				finally {
-					synchronized (mLoginLock) {
-						mLoginInProgress = false;
-					}
+			try {
+				boolean connectSuccess = jabberConnect();
+				if (connectSuccess) {
+					String user_id = getJabberUsername();
+					String user_pwd = getJabberUserPassword();
+					login(user_id, user_pwd);
+				} 
+				else {
+					LogHelper.log(TAG, "Jabber not connected. Could not login.");
 				}
 			}
+			finally {
+					synchronized (mLoginLock) {
+					mLoginInProgress = false;
+				}
+			}
+		};
+	}
+
+	// To be called in a thread.
+	private boolean jabberConnect() {
+		Connection connection = null;
+		
+		synchronized (mConnectionObjectLock) {
+			connection = getConnection();
+		}
+		// TODO: If connection already exists, then should we close the existing connection
+		// and create a new connection
+		if ((connection == null) || !connection.isConnected()) {
+			LogHelper.logD(TAG, "jabberConnect called");
+			ConnectionConfiguration connectionConfig = getConnectionConfig();
+			connection = new XMPPConnection(connectionConfig);
+			try {
+				connection.connect();
+				LogHelper.log(TAG, "Connected to the Jabber Server.");
+				setConnection(connection);
+				return true;
+			} 
+			catch (XMPPException e) {
+				LogHelper.logD(TAG, "Exception in Jabber Connect", e);
+				return false;
+			}
+		}
+		//Already connected.
+		LogHelper.log(TAG, "Already connected to jabber server");
+		return true;
+	}
+
+	private ConnectionConfiguration getConnectionConfig() {
+		if(mConnectionConfig == null) {
+			mConnectionConfig = new ConnectionConfiguration(JABBER_SERVER_IP_ADDRESS, JABBER_SERVER_PORT, JABBER_WEB_SERVICE);
+		}
+		return mConnectionConfig;
+	}
+
+	//To be called in a thread. Needs to be called after jabber server is connected.
+	private boolean login(String userId, String userPassword) {
+		
+		if (userId == null || userPassword == null) {
+			LogHelper.log(TAG, "Jabber username or password empty");
+			return false;
+		}
+		synchronized (mConnectionObjectLock) {
+			try {
+				Connection connection = getConnection();
+				if (connection != null && connection.isConnected()) {
+					LogHelper.logD(TAG, "Login attempt- User id - " + userId + " user_pwd - " + userPassword);
+					connection.login(userId, userPassword);
+					LogHelper.log(TAG, "Jabber Login Successful");
+					return true;
+				}
+				else {
+					LogHelper.log(TAG, "Could not Login in Jabber server as Jabber server is not connected");
+					return false;
+				}
+			} catch (XMPPException e) {
+				LogHelper.log(TAG, "Exception in JabberUserLogin: ",e);
+				return false;
+			} 
+		}
+	}
+	
+	private Connection getConnection()
+	{
+		synchronized (mConnectionObjectLock) {
+			return mConnection;
+		}
+	}
+	
+	private void setConnection(Connection connection)
+	{
+		synchronized (mConnectionObjectLock) {
+			mConnection = connection;
 		}
 	}
 
+	public void login() {
 
-	public void JabberUserLogin() {
-
-		if(!isJabberConnected()) {
+		if(!isConnected()) {
 			mJabberLoginAndConnectHelper.formJabberConnectionAndLogin();
-			//TODO: Need to put code for reconnecting after some fix interval of time if connection fails.
 		}
 	}
 
 	public void disconnectXmppConnection() {
 		synchronized (mConnectionObjectLock) {
-			if(isJabberConnected()) {
+			if(isConnected()) {
+				Connection connection = getConnection();
 				LogHelper.logD(TAG, "Jabber is connected. Breaking connection");
-				mConnection.disconnect();
+				if (connection != null) {
+					connection.disconnect();
+				}
 			}
-			mConnection = null;
+			setConnection(null);
 		}
 	}
 
-	public String getJabberUsername() {
+	private String getJabberUsername() {
 		String jabberUserId = NeatoPrefs.getJabberId(mContext);
 		jabberUserId = XMPPUtils.removeJabberDomain(jabberUserId);
 		return jabberUserId;
 	}
-	public String getJabberUserPassword() {
+	private String getJabberUserPassword() {
 		String jabberUserPwd = NeatoPrefs.getJabberPwd(mContext);
 		return jabberUserPwd;
 	}
 
 	private  byte[] getRobotPacket(RobotPacket robotPacket)
 	{
-		/*
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(bos);
-		try {
-			dos.write(RobotCommandHeader.getHeader());
-			byte [] packet = robotPacket.getBytes();
-			dos.writeInt(packet.length);
-			dos.write(packet);
-		}
-		catch (Exception e) {
-			LogHelper.log(TAG, "Exception in getBytes", e);
-			return null;
-		}
-		return bos.toByteArray();
-		 */
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(bos);
 		byte[] packet = NetworkXmlHelper.commandToXml(robotPacket);
@@ -187,13 +219,13 @@ public class XMPPConnectionHelper {
 		return bos.toByteArray();
 	}
 
-	public void sendRobotCommand(RobotPacket robotPacket, String peerJabberId) {
+	public void sendRobotCommand(String peerJabberId, RobotPacket robotPacket) {
 
 		byte[] packet = getRobotPacket(robotPacket);
-		sendRobotPacketAsync(packet, peerJabberId);
+		sendRobotPacketAsync(peerJabberId, packet);
 	}
 
-	private  void sendRobotPacket(byte[] packet , String peerJabberId)
+	private  void sendRobotPacket(String to, byte[] packet)
 	{
 		if (packet == null) {
 			LogHelper.log(TAG, "Packet is null");
@@ -203,31 +235,30 @@ public class XMPPConnectionHelper {
 		Message message = new Message();
 		message.setType(Message.Type.chat);
 		message.setProperty(JABBER_PACKET_PROPERTY_KEY, packet);
-		message.setTo(peerJabberId);
+		message.setTo(to);
 		connection.sendPacket(message);
-		LogHelper.logD(TAG, "Command is sent to :" + peerJabberId);
+		LogHelper.logD(TAG, "Command is sent to :" + to);
 	}
 
-	private  void sendRobotPacketAsync(final byte[] packet, final String peerJabberId)
+	private  void sendRobotPacketAsync(final String to, final byte[] packet)
 	{
 		Runnable task = new Runnable() {
 			public void run() {
-				sendRobotPacket(packet, peerJabberId);
+				sendRobotPacket(to, packet);
 			}
 		};
 		Thread t = new Thread(task);
 		t.start();
 	}
 
-	public boolean isJabberConnected() {
+	public boolean isConnected() {
 		synchronized (mConnectionObjectLock) {
-			if (mConnection == null) {
+			Connection connection = getConnection();
+			if (connection == null) {
 				return false;
 			}
-			return (mConnection.isConnected() && mConnection.isAuthenticated());
+			return (connection.isConnected() && connection.isAuthenticated());
 		}
 	}
-
-
 
 }

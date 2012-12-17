@@ -1,11 +1,20 @@
 package com.neatorobotics.android.slide.framework.webservice.user;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import android.content.Context;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
+import com.neatorobotics.android.slide.framework.webservice.robot.RobotAssociationDisassociationResult;
+import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
+import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
+import com.neatorobotics.android.slide.framework.webservice.user.listeners.AssociatedRobotDetailsListener;
+import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserDetailsListener;
+import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserRobotAssociateDisassociateListener;
+import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserWebserviceListener;
 
 
 public class UserManager {
@@ -14,7 +23,7 @@ public class UserManager {
 
 	private static UserManager sUserManager;
 	private static final Object INSTANCE_LOCK = new Object();
-	
+
 	private UserManager(Context context)
 	{
 		mContext = context.getApplicationContext();
@@ -31,41 +40,8 @@ public class UserManager {
 		return sUserManager;
 	}
 
+	public void loginUser(final String email, final String password, final UserDetailsListener listener) {
 
-
-
-	public void getUserDetail(final String email, final String auth_token, UserDetailsListener listener)
-	{
-		final WeakReference<UserDetailsListener> userDetailListenerWeakRef = new WeakReference<UserDetailsListener>(listener);
-		Runnable task = new Runnable() {
-
-			public void run() {
-				GetNeatoUserDetailsResult result = NeatoUserWebservicesHelper.getNeatoUserDetails(mContext, email , auth_token);
-				UserDetailsListener userListener = userDetailListenerWeakRef.get();
-				if (userListener == null) {
-					LogHelper.logD(TAG, "Callback interface is null in getUserDetail");
-					return;
-				}
-				if (result != null && result.success()) {
-					UserItem userItem = convertUserDetailResultToUserItem(result);
-					if (userListener != null) {
-						userListener.onUserDetailsReceived(userItem);
-					}
-				}
-				else {
-					if (userListener != null) {
-						userListener.onServerError();
-					}
-				}
-			}
-		};
-		TaskUtils.scheduleTask(task, 0);
-	}
-
-	public void loginUser(final String email, final String password, UserDetailsListener listener) {
-
-		
-		final WeakReference<UserDetailsListener> userDetailListenerWeakRef = new WeakReference<UserDetailsListener>(listener);
 		Runnable task = new Runnable() {
 
 			public void run() {
@@ -73,17 +49,18 @@ public class UserManager {
 				LoginNeatoUserTokenResult result = NeatoUserWebservicesHelper.loginNeatoUserToken(mContext, email, password);
 				if (result != null && result.success()) {
 					String auth_token = result.mUserAuthToken;
-					userItem = getUserDetail(email,auth_token);
+					NeatoPrefs.saveNeatoUserAuthToken(mContext, auth_token);
+					userItem = getUserDetail(email, auth_token);
 				} 
-				UserDetailsListener userListener = userDetailListenerWeakRef.get();
 
-				if (userListener == null) {
+				if (listener == null) {
 					LogHelper.logD(TAG, "Callback interface is null in getUserDetail");
 					return;
-				} else {
+				} 
+				else {
 					if (userItem == null) {
 						LogHelper.logD(TAG, "User item is null");
-						userListener.onServerError();
+						listener.onServerError();
 					} else {
 						LogHelper.logD(TAG, "Sending user item to listener");
 						LogHelper.logD(TAG, "Initialise inside User manager!");
@@ -91,7 +68,7 @@ public class UserManager {
 						//InitHelper initHelper = new InitHelper(mContext);
 
 						LogHelper.logD(TAG, "After Initialise inside User manager!");
-						userListener.onUserDetailsReceived(userItem);
+						listener.onUserDetailsReceived(userItem);
 					}
 
 
@@ -112,22 +89,44 @@ public class UserManager {
 		return userItem;
 	}
 
+	public void getUserDetail(final String email, final String auth_token, final UserDetailsListener listener) {
 
+		Runnable task = new Runnable() {
+
+			public void run() {
+				UserItem userItem = null;
+				userItem = getUserDetail(email, auth_token);
+				if (listener == null) {
+					LogHelper.logD(TAG, "Callback interface is null in getUserDetail");
+					return;
+				} 
+				else {
+					if (userItem == null) {
+						LogHelper.logD(TAG, "User item is null");
+						listener.onServerError();
+					} else {
+						LogHelper.logD(TAG, "Sending user item to listener");
+						listener.onUserDetailsReceived(userItem);
+					}
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
 
 	public UserItem loginUser(final String email, final String password) {
 		UserItem userItem = null;
 		LoginNeatoUserTokenResult response = NeatoUserWebservicesHelper.loginNeatoUserToken(mContext, email, password);
 		if (response != null && response.success()) {
 			String auth_token = response.mUserAuthToken;
+			NeatoPrefs.saveNeatoUserAuthToken(mContext, auth_token);
 			userItem = getUserDetail(email,auth_token);
 		}
 		return userItem;
 	}
 
-	public void createUser(final String username, final String email, final String password, UserDetailsListener listener) {
+	public void createUser(final String username, final String email, final String password, final UserDetailsListener listener) {
 
-
-		final WeakReference<UserDetailsListener> userDetailListenerWeakRef = new WeakReference<UserDetailsListener>(listener);
 		Runnable task = new Runnable() {
 
 			public void run() {
@@ -135,36 +134,132 @@ public class UserManager {
 				CreateNeatoUserResult result = NeatoUserWebservicesHelper.createNeatoUserRequestNative(mContext, username, email, password);
 				if (result != null && result.success()) {
 					String auth_token = result.mResult.mUserHandle;
+					NeatoPrefs.saveNeatoUserAuthToken(mContext, auth_token);
 					userItem = getUserDetail(email,auth_token);
 				} 
-				UserDetailsListener userListener = userDetailListenerWeakRef.get();
 
-				if (userListener == null) {
+				if (listener == null) {
 					LogHelper.logD(TAG, "Callback interface is null in getUserDetail");
 					return;
-				} else {
+				} 
+				else {
 					if (userItem == null) {
 						LogHelper.logD(TAG, "User item is null");
-						userListener.onServerError();
+						listener.onServerError();
 					} else {
 						LogHelper.logD(TAG, "Sending user item to listener");
-						userListener.onUserDetailsReceived(userItem);
+						listener.onUserDetailsReceived(userItem);
 					}
 				}
 			}
 		};
 		TaskUtils.scheduleTask(task, 0);
-
 	}
+
+
 
 	public UserItem createUser(final String username, final String email, final String password) {
 		UserItem userItem = null;
 		CreateNeatoUserResult result = NeatoUserWebservicesHelper.createNeatoUserRequestNative(mContext, username, email, password);
 		if (result != null && result.success()) {
 			String auth_token = result.mResult.mUserHandle;
+			NeatoPrefs.saveNeatoUserAuthToken(mContext, auth_token);
 			userItem = getUserDetail(email,auth_token);
+			if (userItem != null) {
+				NeatoPrefs.saveUserDetail(mContext, userItem);
+			}
 		}
 		return userItem;
+	}
+
+	public void associateRobot(final String robotId, final String emailId, final UserRobotAssociateDisassociateListener listener) {
+		Runnable task = new Runnable() {
+
+			public void run() {
+				RobotAssociationDisassociationResult result = NeatoUserWebservicesHelper.associateNeatoRobotRequest(mContext, emailId, robotId);
+				if (result != null && result.success()) {
+					// TODO: Add the associated robot in prefs list.
+					// Keep a ArrayList of robotItems.
+					RobotItem robotItem = RobotManager.getInstance(mContext).getRobotDetail(robotId);
+					LogHelper.log(TAG, "RobotItem = " + robotItem);
+
+					if (robotItem != null) {
+						NeatoPrefs.saveRobotInformation(mContext, robotItem);
+						LogHelper.log(TAG, "Saving robot information");
+					}
+					if (listener != null) {
+						listener.onComplete();
+					}
+				}
+				else {
+					if (listener != null) {
+						listener.onServerError("Server Error");
+					}
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
+	public void disassociateRobot(final String robotId, final String emailId, final UserRobotAssociateDisassociateListener listener) {
+
+		Runnable task = new Runnable() {
+
+			public void run() {
+				RobotAssociationDisassociationResult result = NeatoUserWebservicesHelper.disassociateNeatoRobotRequest(mContext, emailId, robotId);
+				if (result != null && result.success()) {
+					if (listener != null) {
+						listener.onComplete();
+					}
+				}
+				else {
+					if (listener != null) {
+						listener.onServerError("Server Error");
+					}
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
+	public void disassociateAllRobots(final String email, final UserRobotAssociateDisassociateListener listener) {
+		Runnable task = new Runnable() {
+
+			public void run() {
+				TaskUtils.sleep(1000);
+				if (listener != null) {
+					listener.onComplete();
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
+	
+	public void getAssociatedRobots(final String email, final String authToken, final AssociatedRobotDetailsListener listener) {
+		Runnable task = new Runnable() {
+
+			public void run() {
+				GetUserAssociatedRobotsResult result = NeatoUserWebservicesHelper.getUserAssociatedRobots(mContext, email, authToken);
+				if (result != null && result.success()) {
+					if (listener == null) {
+						LogHelper.logD(TAG, "Callback interface is null in getRobotDetails");
+						return;
+					} 
+					else {
+						LogHelper.logD(TAG, "Sending associated robot details to RobotDetailsListener");
+						ArrayList<RobotItem> associatedRobots = convertAssociatedRobotDetailIntoRoboItems(result);
+						listener.onRobotDetailsReceived(associatedRobots);
+					}
+				} 
+				else {
+					if (listener != null) {
+						listener.onNetworkError(null);
+					}
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
 	}
 
 	private UserItem convertUserDetailResultToUserItem(GetNeatoUserDetailsResult result)
@@ -176,6 +271,21 @@ public class UserManager {
 		userItem.setChatId(result.mResult.mChat_id);
 		userItem.setChatPwd(result.mResult.mChat_pwd);
 		return userItem;
+	}
+	
+	private ArrayList<RobotItem> convertAssociatedRobotDetailIntoRoboItems(GetUserAssociatedRobotsResult result) {
+		ArrayList<RobotItem> associatedRobots = new ArrayList<RobotItem>();
+		
+		for (int i = 0; i < result.mResults.size(); i++) {
+			RobotItem robotItem = new RobotItem();
+			robotItem.setId(result.mResults.get(i).mId);
+			robotItem.setName(result.mResults.get(i).mName);
+			robotItem.setSerialNumber(result.mResults.get(i).mSerialNumber);
+			robotItem.setChatId(result.mResults.get(i).mChat_id);
+			associatedRobots.add(robotItem);
+		}
+		
+		return associatedRobots;
 	}
 
 }

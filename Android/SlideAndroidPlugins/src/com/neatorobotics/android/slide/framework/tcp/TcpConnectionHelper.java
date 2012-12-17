@@ -3,6 +3,7 @@ package com.neatorobotics.android.slide.framework.tcp;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -13,7 +14,6 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.CommandFactory;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandsGroup;
-import com.neatorobotics.android.slide.framework.robot.commands.RobotDiscoveryPacketHeader;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotPacket;
 import com.neatorobotics.android.slide.framework.transport.Transport;
 import com.neatorobotics.android.slide.framework.transport.TransportFactory;
@@ -29,6 +29,7 @@ public class TcpConnectionHelper {
 	private static final int TCP_ROBOT_SERVER_PORT = AppConstants.TCP_ROBOT_SERVER_SOCKET_PORT;
 	private TcpDataPacketListener mTcpDataPacketListener;
 	private Transport mTransport;
+	private static final int PACKET_READ_CHUNK_SIZE = (4 * 1024);
 
 	public TcpConnectionHelper(Context context)
 	{
@@ -92,13 +93,21 @@ public class TcpConnectionHelper {
 			int peerPort = TCP_ROBOT_SERVER_PORT;
 			LogHelper.logD(TAG, "Robot TCP IP Address = " + peerAddress);
 			mTransport = TransportFactory.createTransport(peerAddress, peerPort);
-			InputStream transportInputStream = mTransport.getInputStream();
-			ConnectThread readRobotMessages = new ConnectThread(transportInputStream, mTransport);
-			Thread t = new Thread(readRobotMessages);
-			t.start();
-
-			//TODO : Need to send the jabber details in a different way later.
-			sendRobotJabberDetails();
+			if (mTransport != null) {
+				InputStream transportInputStream = mTransport.getInputStream();
+				if (transportInputStream != null) {
+					ConnectThread readRobotMessages = new ConnectThread(transportInputStream, mTransport);
+					Thread t = new Thread(readRobotMessages);
+					t.start();
+					//TODO : Need to send the jabber details in a different way later.
+					sendRobotJabberDetails();
+				} else {
+					LogHelper.log(TAG, "Could not get input stream for the socket. Try again.");
+				}
+			} else {
+				LogHelper.log(TAG, "Could not connect to peer. Try again.");
+				mTcpDataPacketListener.errorInConnecting();
+			}
 		}
 
 		public void sendRobotJabberDetails() {
@@ -128,59 +137,87 @@ public class TcpConnectionHelper {
 				notifyRobotConnected();
 				while(running) {
 					DataInputStream din = new DataInputStream(mIs);
-					int msgLen = din.readInt();
-					LogHelper.logD(TAG, "TCP Message Received with length: " + msgLen);
-					byte[] msg = new byte[msgLen];
-					din.readFully(msg);
-					processPacketAndReply(din , mTransport);
+					RobotCommandsGroup robotCommandsGroup = null;
+					try {
+						if (mTransport != null && mTransport.isConnected()) {
+							robotCommandsGroup = readPacket(din);
+						} else {
+							LogHelper.log(TAG, "Peer is not connected");
+							break;
+						}
+					} catch (EOFException e) {
+						LogHelper.log(TAG, "Exception in ConnectedThread" ,e);
+						break;
+					} catch (IOException e) {
+						LogHelper.log(TAG, "Exception in ConnectedThread" ,e);
+						break;
+					}
+					if (robotCommandsGroup != null) {	
+						//TODO : Get all commands. Right now only processing one.
+						RobotPacket robotPacket = robotCommandsGroup.getRobotPacket(0);
+						notifyPacketReceived(robotPacket);
+					} else {
+						LogHelper.log(TAG, "Null packet received");
+					}
 				}
 			}
-			catch (IOException e) {
-				LogHelper.log(TAG, "Error in ReadThread:  ", e);
-				mTransport = null;
-			}
 			finally {
+				LogHelper.logD(TAG, "Connected Thread end");
+				mTransport = null;
 				notifyRobotDisconnected();
 			}
 		}
 	}
 
-	private void processPacketAndReply(DataInputStream din, Transport mTransport) {
+	private RobotCommandsGroup readPacket(DataInputStream din) throws EOFException, IOException 
+	{
+		RobotCommandsGroup robotCommandGroup = null;
+		int length = din.readInt();
+		LogHelper.log(TAG, "length = " + length);
 
-		// first check the signature and the version
-		int signature;
-		try {
-			signature = din.readInt();
+		byte [] data = new byte[length];
 
-			LogHelper.logD(TAG, "signature = " + Integer.toHexString(signature));		
+		readByteArrayHelper(din, data, length);
 
-			if (signature != AppConstants.APP_SIGNATURE) {
-				LogHelper.log(TAG, "***SIGNATURE MISMATCH*****" );	
-				LogHelper.logD(TAG, "expected signature = " + Integer.toHexString(AppConstants.APP_SIGNATURE));
-				return;
+		robotCommandGroup = CommandFactory.createCommandGroup(data);
+		//LogHelper.log(TAG, "Robot Packet = " + robotPacket);
+		//TODO : Process all robot packets.
+
+		return robotCommandGroup;
+	}
+	private void readByteArrayHelper(DataInputStream din, byte [] byData, int length) throws IOException
+	{
+		int chunkLength = (length > PACKET_READ_CHUNK_SIZE)? PACKET_READ_CHUNK_SIZE:length;
+		byte [] buffer = new byte[chunkLength];
+		int offSet = 0;
+		while (length > 0) {
+			int dataReadSize = (length > PACKET_READ_CHUNK_SIZE)? PACKET_READ_CHUNK_SIZE:length;
+			int dataRead = din.read(buffer, 0, dataReadSize);
+			length -= dataRead;
+			System.arraycopy(buffer, 0, byData, offSet, dataRead);
+			offSet += dataRead;
+			if (length > 0) {
+				TaskUtils.sleep(100);
 			}
-			int version = din.readInt();
-			LogHelper.logD(TAG, "version = " + version);		
-			if (version != mTransport.getVersion()) {
-				LogHelper.logD(TAG, "***VERSION MISMATCH" );	
-				LogHelper.logD(TAG, "expected version = " + Integer.toHexString(RobotDiscoveryPacketHeader.DISCOVERY_PACKET_HEADER_VERSION));
-				return;
-			}
-
-
-			int length = din.readInt();
-			LogHelper.logD(TAG, "length = " + length);	
-			/*RobotPacket robotPacket = CommandFactory.createCommand(din);*/
-			RobotCommandsGroup robotCommandGroup = CommandFactory.createCommandGroup(din);
-			if (robotCommandGroup == null) {
-				LogHelper.log(TAG, "robotCommandGroup is null");
-				return;
-			}
-			// Processes the robot packet and sends reply if necessary
-			// TODO : Handle command replies
 		}
-		catch (IOException e) {
-			LogHelper.log(TAG, "Unable to process incoming TCP Packet.");
+	}
+
+	private void notifyPacketReceived(final RobotPacket robotPacket)
+	{
+		if (mTcpDataPacketListener == null) {
+			return;
+		}
+
+		if (mHandler != null) {
+			mHandler.post(new Runnable() {
+
+				public void run() {
+					mTcpDataPacketListener.onDataReceived(robotPacket);
+				}
+			});
+		}
+		else {
+			mTcpDataPacketListener.onDataReceived(robotPacket);
 		}
 
 	}
@@ -222,6 +259,7 @@ public class TcpConnectionHelper {
 	{
 		LogHelper.log(TAG, "closePeerConnection called");
 		if(isConnected(ipAddress)) {
+			NeatoPrefs.setPeerConnectionStatus(mContext, false);
 			if (mTransport != null) {
 				mTransport.close();
 				mTransport = null;
@@ -229,7 +267,8 @@ public class TcpConnectionHelper {
 		} 
 	}
 
-	public boolean isConnected(String ipAddress) {
+	//TODO: Find if the robot is connected. Map the serial id with the existing connections.
+	public boolean isConnected(String robotId) {
 		LogHelper.log(TAG, "isConnected transport = " + mTransport);
 		if (mTransport == null) {
 			return false;

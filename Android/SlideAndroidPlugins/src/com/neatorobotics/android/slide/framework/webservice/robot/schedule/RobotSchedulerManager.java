@@ -69,11 +69,14 @@ public class RobotSchedulerManager {
 					AddNeatoRobotScheduleDataResult result = NeatoRobotScheduleWebservicesHelper.addNeatoRobotScheduleDataRequest(mContext, serial_number, scheduleType, xmlSchedule, blobData);
 					if (result != null && result.success()) {
 						LogHelper.log(TAG, "Sucessfully posted scheduling data with robot schedule id:"+result.mResult.mRobot_Schedule_Id);
-						scheduleListener.onSuccess();
+						if (scheduleListener != null) {
+							scheduleListener.onSuccess();
+						}
 					} else {
-						LogHelper.log(TAG, "Error");
-						scheduleListener.onNetworkError();
-
+						LogHelper.log(TAG, "Error: "+result.mMessage);
+						if (scheduleListener != null) {
+							scheduleListener.onNetworkError();
+						}
 					}
 				} else {
 					// Robot schedule exists. Hence update schedule
@@ -81,12 +84,15 @@ public class RobotSchedulerManager {
 					UpdateNeatoRobotScheduleResult result = NeatoRobotScheduleWebservicesHelper.updateNeatoRobotScheduleDataRequest(mContext, currentScheduleId, NeatoRobotScheduleWebServicesAttributes.SCHEDULE_TYPE_ADVANCED, xmlSchedule, currentxml_version);
 					if (result != null && result.success()) {
 						LogHelper.log(TAG, "Sucessfully updated scheduling data with robot schedule id: " + currentScheduleId);
-						scheduleListener.onSuccess();
+						if (scheduleListener != null) {
+							scheduleListener.onSuccess();
+						}
 					} else {
 						//TODO: Take into account server error also.
 						LogHelper.log(TAG, "Error in updating schedule");
-						scheduleListener.onNetworkError();
-
+						if (scheduleListener != null) {
+							scheduleListener.onNetworkError();
+						}
 					}
 				}
 			}
