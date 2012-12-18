@@ -179,7 +179,7 @@ public class UserManagerPlugin extends Plugin {
 						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
 						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
 						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());
-						userDetails.put(JsonMapKeys.KEY_AUTH_TOKEN, auth_token);
+						//	userDetails.put(JsonMapKeys.KEY_AUTH_TOKEN, auth_token);
 						NeatoPrefs.saveJabberId(context, userItem.getChatId());
 						NeatoPrefs.saveJabberPwd(context, userItem.getChatPwd());
 						RobotCommandServiceManager.loginToXmpp(context);
@@ -271,7 +271,7 @@ public class UserManagerPlugin extends Plugin {
 						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
 						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
 						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());
-						userDetails.put(JsonMapKeys.KEY_AUTH_TOKEN, auth_token);
+						//userDetails.put(JsonMapKeys.KEY_AUTH_TOKEN, auth_token);
 						NeatoPrefs.saveJabberId(context, userItem.getChatId());
 						NeatoPrefs.saveJabberPwd(context, userItem.getChatPwd());
 						RobotCommandServiceManager.loginToXmpp(context);
@@ -310,44 +310,63 @@ public class UserManagerPlugin extends Plugin {
 	}
 	
 	
-	public void getUserDetails(Context context, UserJsonData jsonData, String callbackId) {
-	
-		LogHelper.logD(TAG, "getUserDetails Called");
+	public void getUserDetails(final Context context, UserJsonData jsonData, final String callbackId) {
 
+		LogHelper.logD(TAG, "getUserDetails Called");
 		LogHelper.logD(TAG, "JSON String: " + jsonData);
 
 		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
-		String authKey = jsonData.getString(JsonMapKeys.KEY_AUTH_TOKEN);
+		String authKey = NeatoPrefs.getNeatoUserAuthToken(context);
 		LogHelper.logD(TAG, "Email:" + email + " authKey: " + authKey);		
 
+		UserManager.getInstance(context).getUserDetails(email, authKey,  new UserDetailsListener() {
+			@Override
+			public void onUserDetailsReceived(UserItem userItem) {
+				JSONObject userDetails = new JSONObject();
+				if (userItem != null) {
+					try {
+						NeatoPrefs.saveUserDetail(context, userItem);
+						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
+						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
+						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());
+						//Not quite sure whether we should save this at this time. As it is it is going to 
+						//be saved at the time of login. Still doing it for safety.
+						NeatoPrefs.saveJabberId(context, userItem.getChatId());
+						NeatoPrefs.saveJabberPwd(context, userItem.getChatPwd());
 
-		
-		String auth_token = NeatoPrefs.getNeatoUserAuthToken(context);
-		UserItem userItem = NeatoPrefs.getUserDetail(context);
-		LogHelper.logD(TAG, "userItem = " + userItem);
-		
-		JSONObject userDetails = new JSONObject();
-		// TODO: As of now we are getting the user detail from preferences but eventually we need to get it from
-		// server
-		if (userItem != null) {
-			try {
-				userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
-				userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
-				userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());
-				userDetails.put(JsonMapKeys.KEY_AUTH_TOKEN, auth_token);
-				PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
-				LogHelper.logD(TAG, "Get User detail succeeded.");
-				success(loginUserPluginResult, callbackId);
-				return;
-			} 
-			catch (JSONException e) { 
-				LogHelper.log(TAG, "Exception in getUserDetails", e);
-				sendError(callbackId, ErrorTypes.JSON_PARSING_ERROR, e.getMessage());
-				return;
+						PluginResult getUserDetailsPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
+						LogHelper.logD(TAG, "Get User detail succeeded.");
+						success(getUserDetailsPluginResult, callbackId);
+						return;
+					} 
+					catch (JSONException e) { 
+						LogHelper.log(TAG, "Exception in getUserDetails", e);
+						sendError(callbackId, ErrorTypes.JSON_PARSING_ERROR, e.getMessage());
+						return;
+					}
+
+				}
+				else {
+					sendError(callbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
+				}	
 			}
-		}
-		LogHelper.logD(TAG, "Could not retrieve user details.");
-		sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, "Failed to get User Details");
+
+			@Override
+			public void onNetworkError() {
+				NeatoPrefs.saveUserEmailId(context, null);
+				LogHelper.logD(TAG, "Failed to get user details. Network Error");
+				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, "Network Error");
+
+			}
+
+			@Override
+			public void onServerError() {
+				NeatoPrefs.saveUserEmailId(context, null);
+				LogHelper.logD(TAG, "Failed to get user details. Server Error");
+				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, "Server Error");
+
+			}
+		});
 	}
 
 	private void associateRobot(Context context, UserJsonData jsonData, final String callbackId) {

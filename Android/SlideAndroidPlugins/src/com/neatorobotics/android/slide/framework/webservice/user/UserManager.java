@@ -89,7 +89,7 @@ public class UserManager {
 		return userItem;
 	}
 
-	public void getUserDetail(final String email, final String auth_token, final UserDetailsListener listener) {
+	public void getUserDetails(final String email, final String auth_token, final UserDetailsListener listener) {
 
 		Runnable task = new Runnable() {
 

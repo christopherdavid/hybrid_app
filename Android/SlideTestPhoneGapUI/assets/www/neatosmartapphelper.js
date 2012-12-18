@@ -125,8 +125,7 @@ UserMgr.prototype.loginUser = function(email, password, callbackSuccess, callbac
 			ACTION_TYPE_LOGIN, [loginArray]);
 };
 
-UserMgr.prototype.logoutUser = function(auth_token, callbackSuccess, callbackError) {
-	var logoutArray = {'auth_token':auth_token};
+UserMgr.prototype.logoutUser = function(callbackSuccess, callbackError) {
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_LOGOUT, []);
 };
@@ -232,11 +231,11 @@ var UserPluginManager = (function() {
 		login: function(email, password , callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.loginUser(email, password, callbackSuccess, callbackError)
 		},
-		logout: function(auth_token, callbackSuccess, callbackError) {
-			window.plugins.neatoPluginLayer.userMgr.logoutUser(auth_token, callbackSuccess, callbackError)
+	
+		logout: function(callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.logoutUser(callbackSuccess, callbackError)
 		},
-		
-
+	
 		createUser: function(email, password, name, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.createUser(email, password, name, callbackSuccess, callbackError);
 		},
