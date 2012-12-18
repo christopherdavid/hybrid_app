@@ -168,20 +168,20 @@ public class NeatoRobotMapWebservicesHelper {
 				Log.i(TAG, "JSON = " + json);
 
 				result = resultMapper.readValue(json, new TypeReference<UpdateNeatoRobotMapResult>() {});
-				LogHelper.log(TAG, "Get Map data for robot completed.");
+				LogHelper.log(TAG, "Set Map data for robot completed.");
 			} catch (JsonParseException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotMapDataRequest" ,e);
+				LogHelper.log(TAG, "Exception in UpdateNeatoRobotMapDataRequest" ,e);
 
 			} catch (JsonMappingException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotMapDataRequest" ,e);
+				LogHelper.log(TAG, "Exception in UpdateNeatoRobotMapDataRequest" ,e);
 
 			} catch (IOException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotMapDataRequest" ,e);
+				LogHelper.log(TAG, "Exception in UpdateNeatoRobotMapDataRequest" ,e);
 
 			}
 		}
 		else { 
-			LogHelper.log(TAG, "GetNeatoRobotMapDataRequest  not completed.");
+			LogHelper.log(TAG, "updateNeatoRobotMapDataRequest  not completed.");
 			result = new UpdateNeatoRobotMapResult(updateNeatoRobotMapDataResponse);
 		}
 

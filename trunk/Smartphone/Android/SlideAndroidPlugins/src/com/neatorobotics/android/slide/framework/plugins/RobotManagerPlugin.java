@@ -202,8 +202,9 @@ public class RobotManagerPlugin extends Plugin {
 				@Override
 				public void onMapDataDownloaded(String robotId, String mapId,
 						String mapOverlay, String mapImage) {
+					JSONArray robotMaps = new JSONArray();
 					JSONObject jGetRobotMapNotification = new JSONObject();
-					// TODO Auto-generated method stub
+					
 					try {
 
 						JSONObject overlayData = JsonHelper.createJsonFromFile(mapOverlay);
@@ -211,7 +212,8 @@ public class RobotManagerPlugin extends Plugin {
 							jGetRobotMapNotification.put(JsonMapKeys.KEY_ROBOT_MAP_ID, mapId);
 							jGetRobotMapNotification.put(JsonMapKeys.KEY_MAP_OVERLAY_INFO, overlayData);
 							jGetRobotMapNotification.put(JsonMapKeys.KEY_MAP_IMAGE, FILE_PREFIX + mapImage);
-							PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.OK, jGetRobotMapNotification);
+							robotMaps.put(jGetRobotMapNotification);
+							PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.OK, robotMaps);
 							success(getRobotMapPluginResult, callbackId);
 						} else {
 							JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_TYPE_UNKNOWN, "Invalid JSON file");

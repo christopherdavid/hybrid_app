@@ -264,13 +264,13 @@ var neatoSmartApp = (function() {
 		logoutUser: function() {
 			// 0 indicates logout.
 			localStorage.setItem('loggedIn' , 0);
-			UserPluginManager.logout("", neatoSmartApp.successLogout, neatoSmartApp.errorLogout);
+			UserPluginManager.logout(neatoSmartApp.successLogout, neatoSmartApp.errorLogout);
 			
 		},
 		
 		test: function() {
 			neatoSmartApp.showProgressBar();
-			RobotPluginManager.tryDirectConnection('demo123', neatoSmartApp.successTest, neatoSmartApp.errorTest);
+			RobotPluginManager.tryDirectConnection('Robot_1001', neatoSmartApp.successTest, neatoSmartApp.errorTest);
 		},
 		
 		successTest: function(result) {
@@ -283,7 +283,6 @@ var neatoSmartApp = (function() {
 		},
 		successLogout: function(result) {
 			neatoSmartApp.hideProgressBar();
-			alert(JSON.stringify(result));
 			document.querySelector('#displayResult').innerHTML = result;
 			neatoSmartApp.hideUserShowWelcome();
 		},
@@ -365,7 +364,7 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.showProgressBar();
 			var robotId = localStorage.getItem('robotId');
 			if (robotId == null) {
-				robotId = "demo123";
+				robotId = "Robot_1001";
 			}
 			RobotPluginManager.setSchedule(robotId, scheduleJsonArray, neatoSmartApp.scheduleEventSuccess, neatoSmartApp.scheduleEventErr);
 		},
@@ -398,7 +397,7 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.showProgressBar();
 			var robotId = localStorage.getItem('robotId');
 			if (robotId == null) {
-				robotId = "demo123";
+				robotId = "Robot_1001";
 			}
 			RobotPluginManager.getMaps(robotId, neatoSmartApp.getRobotMapSuccess, neatoSmartApp.getRobotMapError);
 		},
@@ -409,10 +408,12 @@ var neatoSmartApp = (function() {
 		getRobotMapSuccess: function(result) {
 
 			neatoSmartApp.hideProgressBar();
-			localStorage.setItem('mapId', result.mapId);
-			localStorage.setItem('mapOverlayInfo', JSON.stringify(result.mapOverlayInfo));
-			
-			document.getElementById('robotMapImage').src=result.mapImage;
+			// Map will be array of mapObjects. Right now we are assuming that its 1 element only.
+			for (var i in result) {
+				localStorage.setItem('mapId', result[i].mapId);
+				localStorage.setItem('mapOverlayInfo', JSON.stringify(result[i].mapOverlayInfo));
+				document.getElementById('robotMapImage').src=result[i].mapImage;
+			}
 		},
 		
 		
@@ -425,7 +426,7 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.showProgressBar();
 			var robotId = localStorage.getItem('robotId');
 			if (robotId == null) {
-				robotId = "demo123";
+				robotId = "Robot_1001";
 			}
 			
 			var mapId = localStorage.getItem('mapId');
@@ -643,7 +644,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#robotMapSection').setAttribute('aria-hidden', 'false');
 			var robotId = localStorage.getItem('robotId');
 			if (robotId == null) {
-				robotId = "demo123";
+				robotId = "Robot_1001";
 			}
 			$('#robotSectionHeader').text("Map of "+robotId);
 			document.querySelector('#robotSectionHeader')
