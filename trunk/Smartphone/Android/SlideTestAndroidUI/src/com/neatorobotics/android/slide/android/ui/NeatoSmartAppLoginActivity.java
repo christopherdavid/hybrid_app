@@ -13,10 +13,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.webservice.user.GetNeatoUserDetailsResult;
 import com.neatorobotics.android.slide.framework.webservice.user.LoginNeatoUserTokenResult;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebservicesHelper;
+import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 
 public class NeatoSmartAppLoginActivity extends Activity{
 
@@ -76,11 +78,13 @@ public class NeatoSmartAppLoginActivity extends Activity{
 			mEmailId = emailId;
 			mPassword = password;
 		}
+		
 		@Override
 		protected GetNeatoUserDetailsResult doInBackground(Void... params) {
 			LoginNeatoUserTokenResult result = NeatoUserWebservicesHelper.loginNeatoUserToken(NeatoSmartAppLoginActivity.this, mEmailId, mPassword);
 			if (result.success()) {
 				Log.i(TAG, "Auth Token = " + result.mUserAuthToken);
+				NeatoPrefs.saveNeatoUserAuthToken(getApplicationContext(), result.mUserAuthToken);
 				GetNeatoUserDetailsResult userDetailResult = NeatoUserWebservicesHelper.getNeatoUserDetails(NeatoSmartAppLoginActivity.this,
 															mEmailId, result.mUserAuthToken);
 				return userDetailResult;
@@ -96,12 +100,16 @@ public class NeatoSmartAppLoginActivity extends Activity{
 				Toast.makeText(NeatoSmartAppLoginActivity.this, "Login unsuccessful", Toast.LENGTH_LONG).show();
 				return;
 			}
-			if (result.success()) {
+			if (result.success()) {				
 				
-				NeatoPrefs.saveUserEmailId(NeatoSmartAppLoginActivity.this, result.mResult.mEmail);
-				// Toast.makeText(NeatoSmartAppWelcomeScreen.this, "Demo user login Successful", Toast.LENGTH_SHORT).show();
-				NeatoPrefs.saveJabberId(NeatoSmartAppLoginActivity.this, result.mResult.mChat_id);
-				NeatoPrefs.saveJabberPwd(NeatoSmartAppLoginActivity.this, result.mResult.mChat_pwd);
+				UserItem userDetails = new UserItem();
+				userDetails.setId(result.mResult.mId);
+				userDetails.setChatId(result.mResult.mChat_id);
+				userDetails.setChatPwd(result.mResult.mChat_pwd);
+				userDetails.setEmail(result.mResult.mEmail);
+				userDetails.setName(result.mResult.mName);
+				UserHelper.saveLoggedInUserDetails(getApplicationContext(), userDetails);
+				
 				Intent createUserIntent = new Intent(NeatoSmartAppLoginActivity.this , NeatoSmartAppTestActivity.class);
 				startActivity(createUserIntent);
 				setResult(RESULT_OK);

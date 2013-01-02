@@ -1,6 +1,5 @@
 package com.neatorobotics.android.slide.framework.plugins;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import org.apache.cordova.api.Plugin;
 import org.apache.cordova.api.PluginResult;
@@ -9,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
-
 import com.neatorobotics.android.slide.framework.json.JsonHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
@@ -24,6 +22,7 @@ import com.neatorobotics.android.slide.framework.service.RobotCommandServiceMana
 import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapDataDownloadListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.UpdateRobotMapListener;
+import com.neatorobotics.android.slide.framework.webservice.robot.schedule.GetScheduleListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.RobotSchedulerManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.ScheduleWebserviceListener;
 
@@ -181,14 +180,44 @@ public class RobotManagerPlugin extends Plugin {
 		}
 
 
-		// TODO: re-implement
-		private void getRobotSchedule(Context context, RobotJsonData jsonData,
-				String callbackId) {
+		private void getRobotSchedule(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "getRobotSchedule action initiated in Robot plugin");
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-			//JSONObject result = getTempSchedule();
-			//mFakeListener = new FakeListener(result, callbackId);
-			//fakeNetworkDelay(mFakeListener);
+			
+			RobotSchedulerManager.getInstance(context).getRobotSchedule(robotId, new GetScheduleListener() {
+
+				
+				@Override
+				public void onSuccess(AdvancedScheduleGroup schedules, String scheduleId) {
+					JSONObject schedule = new JSONObject();
+					try {
+						LogHelper.log(TAG, "Schedule retrieved. Sending PluginResult");
+						schedule.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
+						// If there is no schedule set on the Robot then "schedules" may be null
+						if (schedules != null) {
+							schedule.put(JsonMapKeys.KEY_SCHEDULES, schedules.toJsonArray());
+						}
+						else {
+							JSONArray emptySchedule = new JSONArray();
+							schedule.put(JsonMapKeys.KEY_SCHEDULES, emptySchedule);
+						}
+					} catch (JSONException e) {
+						LogHelper.log(TAG, "Exception in GetScheduleListener", e);
+					}
+
+					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, schedule);
+					pluginResult.setKeepCallback(false);
+					success(pluginResult,callbackId);
+				}
+
+				@Override
+				public void onError(String errMessage) {
+					LogHelper.log(TAG, "Schedule not retrieved. Sending Error PluginResult");
+					PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR);
+					pluginResult.setKeepCallback(false);
+					error(pluginResult, callbackId);
+				}
+			});
 		}
 
 		private void getRobotMaps(final Context context, final RobotJsonData jsonData, final String callbackId) {

@@ -10,8 +10,8 @@ import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedRobotSchedule;
 import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedScheduleGroup;
 import com.neatorobotics.android.slide.framework.robot.schedule.ScheduleTimeObject;
@@ -58,7 +58,7 @@ public class ScheduleRobotActivity extends Activity{
 	}
 
 	private void setAssociatedRobotSerialId() {
-		RobotItem robotItem = NeatoPrefs.getRobotItem(getApplicationContext());
+		RobotItem robotItem = RobotHelper.getManagedRobot(getApplicationContext());
 		if (robotItem != null) {
 			mRobotSerialId = robotItem.getSerialNumber();
 			if (mRobotSerialId != null) {

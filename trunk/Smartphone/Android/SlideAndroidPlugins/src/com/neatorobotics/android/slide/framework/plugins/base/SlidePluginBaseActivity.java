@@ -3,7 +3,6 @@ package com.neatorobotics.android.slide.framework.plugins.base;
 import org.apache.cordova.DroidGap;
 
 import android.os.Bundle;
-
 import com.neatorobotics.android.slide.framework.NeatoServiceManager;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 

@@ -1,7 +1,7 @@
 
 
 /*
- * Initialisation of the plugins  
+ * Initialization of the plugins  
  */
 
 var neatoSmartApp = (function() {

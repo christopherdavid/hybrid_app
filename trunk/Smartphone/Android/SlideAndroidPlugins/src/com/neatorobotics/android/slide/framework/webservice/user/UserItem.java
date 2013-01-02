@@ -2,6 +2,8 @@ package com.neatorobotics.android.slide.framework.webservice.user;
 
 import java.util.ArrayList;
 
+import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
+
 public class UserItem {
 
 	private String id;
@@ -9,10 +11,10 @@ public class UserItem {
 	private String email;
 	private String chatId;
 	private String chatPwd;
-	private ArrayList<String> social_networks = new ArrayList<String>();
+	private ArrayList<String> social_networks = new ArrayList<String>();	
 	// TODO : Add list of robot items details associated. Right now only adding the robot names.
 	
-	private ArrayList<String> robots = new ArrayList<String>();
+	private ArrayList<RobotItem> robots = new ArrayList<RobotItem>();
 	
 	public String getId() {
 		return id;
@@ -45,12 +47,11 @@ public class UserItem {
 		this.chatPwd = chatPwd;
 	}
 	
-	public void addAssociatedRobot(String robot)
-	{
+	public void addAssociatedRobot(RobotItem robot)	{
 		robots.add(robot);
 	}
 	
-	public String getAssociateRobot(int index)
+	public RobotItem getAssociateRobot(int index)
 	{
 		int size = robots.size();
 		if (index < 0 || index >= size) {

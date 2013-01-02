@@ -1,5 +1,7 @@
 package com.neatorobotics.android.slide.framework.service;
 
+import org.jivesoftware.smack.XMPPException;
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,22 +16,29 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.ResultReceiver;
+
+import com.neatorobotics.android.slide.framework.AppConstants;
+import com.neatorobotics.android.slide.framework.database.RobotHelper;
+import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiverConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotPacket;
-import com.neatorobotics.android.slide.framework.robot.commands.RobotPacketBundle;
 import com.neatorobotics.android.slide.framework.tcp.TcpConnectionHelper;
 import com.neatorobotics.android.slide.framework.tcp.TcpDataPacketListener;
-import com.neatorobotics.android.slide.framework.udp.RobotDiscovery;
+import com.neatorobotics.android.slide.framework.udp.RobotDiscoveryListener;
 import com.neatorobotics.android.slide.framework.udp.UdpConnectionHelper;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
+import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotAssociationDisassociationResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebservicesHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
+import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
+import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserRobotAssociateDisassociateListener;
 import com.neatorobotics.android.slide.framework.xmpp.XMPPConnectionHelper;
+import com.neatorobotics.android.slide.framework.xmpp.XMPPNotificationListener;
 import com.neatorobotics.android.slide.framework.xmpp.XMPPUtils;
 
 public class NeatoSmartAppService extends Service {
@@ -47,8 +56,48 @@ public class NeatoSmartAppService extends Service {
 
 	private Handler mHandler = new Handler();
 	private ResultReceiver mResultReceiver;
+	
+	private XMPPNotificationListener xmppNotificationListener = new XMPPNotificationListener() {
 
-	private RobotDiscovery mRobotDiscoveryListener = new RobotDiscovery() {
+		@Override
+		public void onConnectFailed() {
+			LogHelper.log(TAG, "XMPP Connection failed");
+			
+		}
+
+		@Override
+		public void onConnectSucceeded() {
+			LogHelper.log(TAG, "XMPP Connection Succeeded");
+		}
+
+		@Override
+		public void onLoginFailed() {
+			LogHelper.log(TAG, "XMPP Login failed");
+		}
+
+		@Override
+		public void onLoginSucceeded() {
+			LogHelper.log(TAG, "XMPP Login succeeded");
+		}
+
+		@Override
+		public void onConnectionReset() {
+			LogHelper.log(TAG, "XMPP Connection reset");
+		}
+
+		@Override
+		public void onDisconnect() {
+			LogHelper.log(TAG, "XMPP disconnected");
+		}
+
+		@Override
+		public void onDataReceived(String data) {
+			LogHelper.log(TAG, "XMPP onDataReceived. Data = " + data);
+		}
+		
+	};
+
+	private RobotDiscoveryListener mRobotDiscoveryListener = new RobotDiscoveryListener() {
 
 		public void onDiscoveryStarted() {
 			if (mResultReceiver != null) {
@@ -104,13 +153,6 @@ public class NeatoSmartAppService extends Service {
 		}
 	};
 
-	private void robotAssociationStarted()
-	{
-		Intent robotAssociationStartIntent = new Intent(NEATO_UI_UPDATE_ACTION);
-		robotAssociationStartIntent.putExtra(EXTRA_ROBOT_ASSOCIATION_START, true);
-		sendBroadcast(robotAssociationStartIntent);
-	}
-
 	private void robotAssociationFinished(int statuscode)
 	{
 		Intent robotAssociationFinishIntent = new Intent(NEATO_UI_UPDATE_ACTION);
@@ -127,14 +169,13 @@ public class NeatoSmartAppService extends Service {
 			mUdpConnectionHelper.startDiscovery();
 		}
 
-		// TODO : Right now we are sending IP Address. To Decide whether to send whole robot-info.
-		public void sendCommand( String ipAddress, int commandId, boolean useXmppServer) throws RemoteException {
+		public void sendCommand(String robotId, int commandId, boolean useXmppServer) throws RemoteException {
 			LogHelper.log(TAG, "sendCommand Called");
 			RobotPacket robotPacket = new RobotPacket(commandId);
 			if (!useXmppServer) {
-				if(mTcpConnectionHelper.isConnected(ipAddress)) {
+				if(mTcpConnectionHelper.isConnected(robotId)) {
 					LogHelper.log(TAG, "SendCommand Called using TCP connection as transport");
-					mTcpConnectionHelper.sendRobotCommand(robotPacket, mTcpConnectionHelper.getTransport(ipAddress));
+					mTcpConnectionHelper.sendRobotCommand(robotId, robotPacket);
 
 				} else {
 					LogHelper.log(TAG, "Tcp peer connection does not exist.");
@@ -143,12 +184,10 @@ public class NeatoSmartAppService extends Service {
 			else {
 				if(mXMPPConnectionHelper.isConnected()) {
 					LogHelper.logD(TAG, "SendCommand Called using XMPP connection as transport. Command Id:-" + commandId);
-
-					//TODO : Right now using hard-coded Jabber ID for robot
-					String jabberId = XMPPUtils.getRobotJabberId(NeatoSmartAppService.this);
-					mXMPPConnectionHelper.sendRobotCommand(jabberId, robotPacket);
+					String chatId = XMPPUtils.getRobotChatId(NeatoSmartAppService.this, robotId);
+					mXMPPConnectionHelper.sendRobotCommand(chatId, robotPacket);
 				} else {
-					LogHelper.logD(TAG, "Xmpp connection does not exist :-" + commandId);
+					LogHelper.logD(TAG, "Xmpp connection does not exist: Command Id = " + commandId);
 				}
 			}
 		}
@@ -159,25 +198,24 @@ public class NeatoSmartAppService extends Service {
 			
 			if(mTcpConnectionHelper.isConnected(robotId)) {
 				LogHelper.log(TAG, "SendCommand Called using TCP connection as transport");
-				mTcpConnectionHelper.sendRobotCommand(robotPacket, mTcpConnectionHelper.getTransport(robotId));
-
+				mTcpConnectionHelper.sendRobotCommand(robotId, robotPacket);
 			} 
 			else {
 				LogHelper.log(TAG, "Tcp peer connection does not exist.");
 				if(mXMPPConnectionHelper.isConnected()) {
 					LogHelper.logD(TAG, "SendCommand Called using XMPP connection as transport. Command Id:-" + commandId);
 
-					//TODO : Right now using hard-coded Jabber ID for robot
-					String jabberId = XMPPUtils.getRobotJabberId(NeatoSmartAppService.this);
-					mXMPPConnectionHelper.sendRobotCommand(jabberId, robotPacket);
+					String chatId = XMPPUtils.getRobotChatId(NeatoSmartAppService.this, robotId);
+					mXMPPConnectionHelper.sendRobotCommand(chatId, robotPacket);
 				} else {
-					LogHelper.logD(TAG, "Xmpp connection does not exist :-" + commandId);
+					LogHelper.logD(TAG, "Xmpp connection does not exist: Command Id = " + commandId);
 				}
 			}
 		}
+		
 		public void connectToRobot(String robot_id) throws RemoteException {
 			LogHelper.log(TAG, "connectToRobot Called. robot_id-" + robot_id);			
-			RobotDiscovery associatedRobotDiscoveryListener = new RobotDiscovery() {
+			RobotDiscoveryListener associatedRobotDiscoveryListener = new RobotDiscoveryListener() {
 				RobotInfo mRobotInfo =null;
 				public void onDiscoveryStarted() {
 
@@ -229,7 +267,7 @@ public class NeatoSmartAppService extends Service {
 			mRobotDiscoveryListener = null;
 			unregisterReceiver(mWifiStateChange);
 			mWifiStateChange = null;
-			mXMPPConnectionHelper.disconnectXmppConnection();
+			mXMPPConnectionHelper.close();
 			mXMPPConnectionHelper =null;
 			stopSelf();
 		}
@@ -252,21 +290,43 @@ public class NeatoSmartAppService extends Service {
 
 		public void associateRobot(String serialId, String emailId)
 				throws RemoteException {
-			CreateRobotIfRequiredAndAssociateToUser associateRobotTask = new CreateRobotIfRequiredAndAssociateToUser(serialId, emailId);
-			associateRobotTask.execute();
+			
+			UserManager.getInstance(getApplicationContext()).associateRobot(serialId, emailId, new UserRobotAssociateDisassociateListener() {
+				
+				@Override
+				public void onServerError(String errorMessage) {
+					LogHelper.log(TAG, "associateRobot onServerError");
+					mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED, null);
+					robotAssociationFinished(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED);
+				}
+				
+				@Override
+				public void onNetworkError(String errorMessage) {
+					LogHelper.log(TAG, "associateRobot onNetworkError");
+					mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED, null);
+					robotAssociationFinished(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED);
+				}
+				
+				@Override
+				public void onComplete() {
+					LogHelper.log(TAG, "associateRobot onComplete");
+					mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_SUCCESS, null);
+					robotAssociationFinished(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_SUCCESS);
+
+				}
+			});
 		}
 
 		@Override
 		public void loginToXmpp() throws RemoteException {
+			LogHelper.log(TAG, "loginToXmpp called");
 			if(mXMPPConnectionHelper != null) {
+				LogHelper.log(TAG, "mXMPPConnectionHelper is not null");
 				Runnable task = new Runnable() {
 
 					@Override
 					public void run() {
-						mXMPPConnectionHelper.disconnectXmppConnection();
-						TaskUtils.sleep(1000);
-						mXMPPConnectionHelper.login();
-
+						loginToXmppServer();
 					}
 				};
 				TaskUtils.scheduleTask(task, 0);
@@ -285,8 +345,14 @@ public class NeatoSmartAppService extends Service {
 				if(networkInfo.isConnected()) {
 					// Wifi is connected
 					LogHelper.logD(TAG, "Connected to a network");
-					mXMPPConnectionHelper.login();
+					Runnable task = new Runnable() {
 
+						@Override
+						public void run() {
+							loginToXmppServer();
+						}
+					};
+					TaskUtils.scheduleTask(task, 0);
 				}
 			} 
 			else if(intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
@@ -311,6 +377,9 @@ public class NeatoSmartAppService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
+		
 		mUdpConnectionHelper = new UdpConnectionHelper(this);
 		mUdpConnectionHelper.setHandler(mHandler);
 		mUdpConnectionHelper.setUdpConnectionListener(mRobotDiscoveryListener);
@@ -318,9 +387,19 @@ public class NeatoSmartAppService extends Service {
 		mTcpConnectionHelper.setHandler(mHandler);
 		mTcpConnectionHelper.setTcpConnectionListener(mTcpDataPacketListener);
 		mXMPPConnectionHelper =  XMPPConnectionHelper.getInstance(this);
-
+		String xmppDomain = NeatoWebConstants.getXmppServerDomain();
+		mXMPPConnectionHelper.setServerInformation(xmppDomain, AppConstants.JABBER_SERVER_PORT, AppConstants.JABBER_WEB_SERVICE);
+		mXMPPConnectionHelper.setXmppNotificationListener(xmppNotificationListener, mHandler);
+		
 		if (isConnectedToWifiNetwork()) {
-			mXMPPConnectionHelper.login();
+			Runnable task = new Runnable() {
+
+				@Override
+				public void run() {
+					loginToXmppServer();
+				}
+			};
+			TaskUtils.scheduleTask(task, 0);
 		}
 		registerReceiver(mWifiStateChange, new IntentFilter( WifiManager.NETWORK_STATE_CHANGED_ACTION));
 		registerReceiver(mWifiStateChange, new IntentFilter( ConnectivityManager.CONNECTIVITY_ACTION));
@@ -371,62 +450,36 @@ public class NeatoSmartAppService extends Service {
 		}
 		return false;
 	}
-
-	private class CreateRobotIfRequiredAndAssociateToUser extends AsyncTask<Void, Void, RobotAssociationDisassociationResult>  {
-
-		private String mEmailId;
-		private String mRobotSerialId;
-		public CreateRobotIfRequiredAndAssociateToUser(String robotSerialId, String emailId)
-		{
-			mRobotSerialId = robotSerialId;
-			mEmailId = emailId;
-		}
-
-
-
-		@Override
-		protected void onPreExecute() {
-			robotAssociationStarted();
-		}
-
-
-
-		@Override
-		protected RobotAssociationDisassociationResult doInBackground(Void... params) {
-			RobotManager robotManager = RobotManager.getInstance(getApplicationContext());
-			RobotItem robotItem = robotManager.getRobotDetail(mRobotSerialId);
-			LogHelper.log(TAG, "RobotItem = " + robotItem);
-
-			if (robotItem != null) {
-				NeatoPrefs.saveRobotInformation(getApplicationContext(), robotItem);
-				LogHelper.log(TAG, "Saving robot information");
-				RobotAssociationDisassociationResult associationResult =  NeatoRobotWebservicesHelper.associateNeatoRobotRequest(NeatoSmartAppService.this, 
-						mEmailId, mRobotSerialId);
-				return associationResult;
-			}
-
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(RobotAssociationDisassociationResult result) {
-			super.onPostExecute(result);
-			if (result == null) {
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED, null);
-				robotAssociationFinished(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED);
-			} 
-			else if (!result.isCompleted()) {
-				Bundle resultData = new Bundle();
-				resultData.putString(NeatoRobotResultReceiverConstants.RESULT_ASSOCIATION_ERROR_MESSAGE, result.mMessage);
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED, resultData);
-				robotAssociationFinished(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED);
-			} else {
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_SUCCESS, null);
-				robotAssociationFinished(NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_SUCCESS);
-				//TODO : remove broadcast listener and implement RobotAssociationListener in native android code too!
+	
+	private Object mXmppConnectionLock = new Object();
+	
+	private void loginToXmppServer() {
+		try {
+			synchronized (mXmppConnectionLock) {
+				LogHelper.log(TAG, "loginToXmppServer called");
+				mXMPPConnectionHelper.close();
+				
+				LogHelper.logD(TAG, "closed existing connection. Now retring to connect");
+				mXMPPConnectionHelper.connect();
+				LogHelper.logD(TAG, "connected. Now loging in");
+				String userId = getUserChatId();
+				String password = getUserChatPassword();
+				LogHelper.log(TAG, "userId = " + userId);
+				mXMPPConnectionHelper.login(userId, password);
 			}
 		}
+		catch (XMPPException e) {
+			LogHelper.log(TAG, "Exception in connecting to XMPP server", e);
+		}
+	}
 
+	private String getUserChatId() {
+		String jabberUserId = UserHelper.getChatId(this);		
+		jabberUserId = XMPPUtils.removeJabberDomain(jabberUserId);
+		return jabberUserId;
+	}
+	private String getUserChatPassword() {
+		String jabberUserPwd = UserHelper.getChatPwd(this);
+		return jabberUserPwd;
 	}
 }

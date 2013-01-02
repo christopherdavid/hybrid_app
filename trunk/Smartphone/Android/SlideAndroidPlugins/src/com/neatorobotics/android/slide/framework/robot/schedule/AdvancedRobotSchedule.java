@@ -6,15 +6,24 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import android.sax.StartElementListener;
+
+import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.robot.schedule.SchedulerConstants.Day;
 import com.neatorobotics.android.slide.framework.robot.schedule.SchedulerConstants.SchedularEvent;
 import com.neatorobotics.android.slide.framework.utils.DataConversionUtils;
 import com.neatorobotics.android.slide.framework.xml.XmlHelper;
 
 public class AdvancedRobotSchedule implements Schedule{
+
+	private static final String TAG = AdvancedRobotSchedule.class.getSimpleName();
 	ArrayList<Day> mDay;
 	ScheduleTimeObject mStartTime;
 	ScheduleTimeObject mEndTime;
@@ -75,6 +84,32 @@ public class AdvancedRobotSchedule implements Schedule{
 		schedule.appendChild(eventIdNode);
 		schedule.appendChild(areaNode);
 
+		return schedule;
+	}
+
+	public JSONObject toJsonObject() {
+		JSONObject schedule = new JSONObject();		
+		try {
+			//Put day array
+			JSONArray dayArray = new JSONArray();
+			for(Day day: mDay) {
+				dayArray.put(day.ordinal());
+			}
+			schedule.put(JsonMapKeys.KEY_DAY, dayArray);
+
+			//Put start-time and end-time HH:MM
+			schedule.put(JsonMapKeys.KEY_START_TIME, mStartTime.toString());
+			schedule.put(JsonMapKeys.KEY_END_TIME,mEndTime.toString());
+
+			//Put event type. 0 for Quiet and 1 for Clean
+			schedule.put(JsonMapKeys.KEY_EVENT_TYPE, mEvent.ordinal());
+
+			//Put Area String
+			schedule.put(JsonMapKeys.KEY_AREA, mArea);
+		} 
+		catch (JSONException e) {
+			LogHelper.log(TAG, "Exception in toJsonObject", e);
+		}
 		return schedule;
 	}
 

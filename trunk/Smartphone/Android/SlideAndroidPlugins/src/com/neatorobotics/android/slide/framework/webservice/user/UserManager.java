@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 import android.content.Context;
 
+import com.neatorobotics.android.slide.framework.database.DBHelper;
+import com.neatorobotics.android.slide.framework.database.RobotHelper;
+import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
@@ -166,7 +169,7 @@ public class UserManager {
 			NeatoPrefs.saveNeatoUserAuthToken(mContext, auth_token);
 			userItem = getUserDetail(email,auth_token);
 			if (userItem != null) {
-				NeatoPrefs.saveUserDetail(mContext, userItem);
+				UserHelper.saveUserDetails(mContext, userItem);
 			}
 		}
 		return userItem;
@@ -184,7 +187,8 @@ public class UserManager {
 					LogHelper.log(TAG, "RobotItem = " + robotItem);
 
 					if (robotItem != null) {
-						NeatoPrefs.saveRobotInformation(mContext, robotItem);
+						RobotHelper.saveRobotDetails(mContext, robotItem);	
+						RobotHelper.setRobotToManage(mContext, robotItem);
 						LogHelper.log(TAG, "Saving robot information");
 					}
 					if (listener != null) {
@@ -208,6 +212,8 @@ public class UserManager {
 			public void run() {
 				RobotAssociationDisassociationResult result = NeatoUserWebservicesHelper.disassociateNeatoRobotRequest(mContext, emailId, robotId);
 				if (result != null && result.success()) {
+					// Clear robot info from the DB
+					RobotHelper.clearRobotDetails(mContext, robotId);
 					if (listener != null) {
 						listener.onComplete();
 					}
@@ -227,6 +233,8 @@ public class UserManager {
 
 			public void run() {
 				TaskUtils.sleep(1000);
+				// Clear all user associated robots from the DB
+				RobotHelper.clearAllUserAssociatedRobots(mContext);
 				if (listener != null) {
 					listener.onComplete();
 				}
@@ -249,6 +257,11 @@ public class UserManager {
 					else {
 						LogHelper.logD(TAG, "Sending associated robot details to RobotDetailsListener");
 						ArrayList<RobotItem> associatedRobots = convertAssociatedRobotDetailIntoRoboItems(result);
+						
+						// Save associated robots into the DB 
+						RobotHelper.clearAllUserAssociatedRobots(mContext);
+						RobotHelper.saveRobotDetails(mContext, associatedRobots);
+						
 						listener.onRobotDetailsReceived(associatedRobots);
 					}
 				} 
@@ -270,6 +283,18 @@ public class UserManager {
 		userItem.setEmail(result.mResult.mEmail);
 		userItem.setChatId(result.mResult.mChat_id);
 		userItem.setChatPwd(result.mResult.mChat_pwd);
+		
+		for (int i = 0; i < result.mResult.mRobots.size(); i++) {
+			UserAssociatedRobot associatedRobot = result.mResult.mRobots.get(i);
+			
+			RobotItem robotItem = new RobotItem();
+			robotItem.setId(associatedRobot.mId);
+			robotItem.setName(associatedRobot.mName);
+			robotItem.setSerialNumber(associatedRobot.mSerialNumber);
+			robotItem.setChatId(associatedRobot.mChat_id);
+			userItem.addAssociatedRobot(robotItem);
+		}
+		
 		return userItem;
 	}
 	

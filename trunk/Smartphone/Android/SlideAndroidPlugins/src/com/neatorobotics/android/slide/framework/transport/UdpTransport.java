@@ -93,12 +93,10 @@ public class UdpTransport implements Transport {
 	}
 
 	public int getVersion() {
-		// TODO Auto-generated method stub
 		return AppConstants.UDP_PACKET_VERSION;
 	}
 
 	public boolean isConnected() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
