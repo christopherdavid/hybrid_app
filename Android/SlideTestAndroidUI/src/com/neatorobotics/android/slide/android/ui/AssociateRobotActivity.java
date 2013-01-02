@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
+import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.service.INeatoRobotService;
@@ -69,7 +70,8 @@ public class AssociateRobotActivity extends Activity {
 		mAssociationProgress = (ProgressBar)findViewById(R.id.robot_associate_progress);
 		final EditText etSerialId = (EditText)findViewById(R.id.edit_robot_serial_number);
 
-		RobotItem robotItem = NeatoPrefs.getRobotItem(this);
+		
+		RobotItem robotItem = RobotHelper.getManagedRobot(this);
 		if (robotItem != null) {
 			String serialId = robotItem.getSerialNumber();
 			if (serialId != null) {
@@ -91,7 +93,7 @@ public class AssociateRobotActivity extends Activity {
 						return;
 					}
 
-					RobotItem robotItem = NeatoPrefs.getRobotItem(getApplicationContext());					
+					RobotItem robotItem = RobotHelper.getManagedRobot(getApplicationContext());
 					if (robotItem != null) {
 						String oldSerialNo = robotItem.getSerialNumber();
 						if (!TextUtils.isEmpty(oldSerialNo)) {

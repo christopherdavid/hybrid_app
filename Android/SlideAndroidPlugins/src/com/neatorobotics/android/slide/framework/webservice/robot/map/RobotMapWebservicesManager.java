@@ -88,7 +88,7 @@ public class RobotMapWebservicesManager {
 						LogHelper.log(TAG, String.format("XML Url = [%s] Image URL = [%s]", result.mResult.mXml_Data_Url, result.mResult.mBlob_Data_Url));
 						blobDataUrl = result.mResult.mBlob_Data_Url;
 						xmlDataUrl = result.mResult.mXml_Data_Url;
-						downloadMapDataAndShow(robotId , xmlDataUrl, blobDataUrl, listener);
+						downloadMapImageAndOverlayFiles(robotId , xmlDataUrl, blobDataUrl, listener);
 					} 
 					else {
 						LogHelper.log(TAG, "Could not retrieve map data");
@@ -157,16 +157,16 @@ public class RobotMapWebservicesManager {
 		TaskUtils.scheduleTask(task, 0);
 	}
 
-	private void downloadMapDataAndShow(final String robotId, final String xmlDataUrl, final String blobDataUrl, final RobotMapDataDownloadListener listener) {
+	private void downloadMapImageAndOverlayFiles(final String robotId, final String overlayFileUrl, final String imageFileUrl, final RobotMapDataDownloadListener listener) {
 
 		LogHelper.log(TAG, "downloadMapDataAndShow called");
 		final String overlayFilePath = getExtMapXMLFilePath(robotId);
 		final String mapImageFile = getExtImageFilePath(robotId);
 		
 		ArrayList<FileDownloadWorkItem> items = new ArrayList<FileDownloadWorkItem>();
-		FileDownloadWorkItem overlayFileItem = new FileDownloadWorkItem(xmlDataUrl, overlayFilePath);
+		FileDownloadWorkItem overlayFileItem = new FileDownloadWorkItem(overlayFileUrl, overlayFilePath);
 		items.add(overlayFileItem);
-		FileDownloadWorkItem mapImageFileItem = new FileDownloadWorkItem(blobDataUrl, mapImageFile);
+		FileDownloadWorkItem mapImageFileItem = new FileDownloadWorkItem(imageFileUrl, mapImageFile);
 		items.add(mapImageFileItem);
 		
 		MultipleFileDownloadHelper.startDownload(mContext, items, new MultipleFileDownloadListener() {

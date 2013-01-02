@@ -1,5 +1,7 @@
 package com.neatorobotics.android.slide.framework.webservice.user;
 
+import java.util.ArrayList;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
@@ -53,8 +55,7 @@ public class GetNeatoUserDetailsResult extends NeatoWebserviceResult {
 		public String mChat_pwd;
 		
 		@JsonProperty(value="robots")
-		public String[] mRobots;	
-		
+		public ArrayList<UserAssociatedRobot> mRobots;
 	}
 
 }

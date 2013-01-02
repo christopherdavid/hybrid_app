@@ -9,6 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.content.Context;
+
+import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
@@ -58,16 +60,6 @@ public class UserManagerPlugin extends Plugin {
 		}
 		
 		handlePluginExecute(action, data, callbackId);
-		/*
-		Activity currentActivity = cordova.getActivity();
-		currentActivity.runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				handlePluginExecute(action, data, callbackId);
-			}
-		});
-		*/
 
 		PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
 		pluginResult.setKeepCallback(true);
@@ -172,16 +164,14 @@ public class UserManagerPlugin extends Plugin {
 				
 				try {
 					if (userItem != null) {
-						String auth_token = NeatoPrefs.getNeatoUserAuthToken(context);
-						NeatoPrefs.saveUserDetail(context, userItem);
+						
+						UserHelper.saveLoggedInUserDetails(context, userItem);
 						LogHelper.logD(TAG, "User Item = " + userItem);
 						
 						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
 						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
 						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());
 						//	userDetails.put(JsonMapKeys.KEY_AUTH_TOKEN, auth_token);
-						NeatoPrefs.saveJabberId(context, userItem.getChatId());
-						NeatoPrefs.saveJabberPwd(context, userItem.getChatPwd());
 						RobotCommandServiceManager.loginToXmpp(context);
 						PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
 						LogHelper.logD(TAG, "Login successful. Start service and send Success plugin to user with user details");
@@ -223,18 +213,13 @@ public class UserManagerPlugin extends Plugin {
 		error(loginUserPluginResult, callbackId);
 	}
 	
-	private void sendError(String callbackId, int errorCode, int errorResId)
-	{
-		String message = cordova.getActivity().getString(errorResId);
-		sendError(callbackId, errorCode, message);
-	}
 
 	private void logoutUser(final Context context, final UserJsonData jsonData, final String callbackId) {	
 		Runnable task = new Runnable() {
 			
 			@Override
 			public void run() {
-				NeatoPrefs.logoutUser(context);
+				UserHelper.logout(context);
 				PluginResult logoutPluginResult = new  PluginResult(PluginResult.Status.OK);
 				LogHelper.logD(TAG, "Logout successful.");
 				success(logoutPluginResult, callbackId);
@@ -266,14 +251,13 @@ public class UserManagerPlugin extends Plugin {
 				
 				try {
 					if (userItem != null) {
-						String auth_token = NeatoPrefs.getNeatoUserAuthToken(context);
-						NeatoPrefs.saveUserDetail(context, userItem);
+						
+						UserHelper.saveLoggedInUserDetails(context, userItem);
 						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
 						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
 						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());
 						//userDetails.put(JsonMapKeys.KEY_AUTH_TOKEN, auth_token);
-						NeatoPrefs.saveJabberId(context, userItem.getChatId());
-						NeatoPrefs.saveJabberPwd(context, userItem.getChatPwd());
+					
 						RobotCommandServiceManager.loginToXmpp(context);
 						PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
 						LogHelper.logD(TAG, "User created");
@@ -325,14 +309,13 @@ public class UserManagerPlugin extends Plugin {
 				JSONObject userDetails = new JSONObject();
 				if (userItem != null) {
 					try {
-						NeatoPrefs.saveUserDetail(context, userItem);
+						
 						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
 						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
 						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());
 						//Not quite sure whether we should save this at this time. As it is it is going to 
 						//be saved at the time of login. Still doing it for safety.
-						NeatoPrefs.saveJabberId(context, userItem.getChatId());
-						NeatoPrefs.saveJabberPwd(context, userItem.getChatPwd());
+						
 
 						PluginResult getUserDetailsPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
 						LogHelper.logD(TAG, "Get User detail succeeded.");

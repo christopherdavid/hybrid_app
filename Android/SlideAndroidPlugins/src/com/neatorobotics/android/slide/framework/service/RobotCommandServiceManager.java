@@ -30,7 +30,7 @@ public class RobotCommandServiceManager {
 	}
 
 	public static void sendCommand(Context context, String robotId, int commandId) {
-		LogHelper.logD(TAG, "Send command action initiated in Robot plugin internal");
+		LogHelper.logD(TAG, "Send command action initiated in Robot plugin internal - RobotSerialId = " + robotId);
 
 		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
 		if (neatoService != null) {

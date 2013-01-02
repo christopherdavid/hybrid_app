@@ -16,11 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.neatorobotics.android.slide.android.ui.image.ImageResizer;
+import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadHelper;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadListener;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadListenerWrapper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.GetNeatoRobotMapDataResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.GetNeatoRobotMapsResult;
@@ -62,7 +62,9 @@ public class GetRobotMapActivity extends Activity {
 			}
 		});
 		
-		RobotItem robotItem = NeatoPrefs.getRobotItem(this);
+		
+		RobotItem robotItem = RobotHelper.getManagedRobot(getApplicationContext());
+		
 		if (robotItem != null) {
 			mRobotSerialNo = robotItem.getSerialNumber();
 			String message = getString(R.string.text_getmap_hdr_title) + " " + mRobotSerialNo;

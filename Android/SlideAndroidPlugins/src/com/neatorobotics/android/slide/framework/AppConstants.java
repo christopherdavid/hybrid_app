@@ -13,7 +13,6 @@ public class AppConstants {
 	
 	// TODO: As of now we are using IP address but eventually we need to switch to 
 	// URL. 
-	public static final String JABBER_SERVER_IP_ADDRESS = "50.116.10.113";
 	public static final int JABBER_SERVER_PORT =  5222;
 	public static final String JABBER_WEB_SERVICE = "rajatogo" ;
 	
@@ -22,7 +21,6 @@ public class AppConstants {
 //	public static final String JABBER_USER_ID = "neatosmartapptest";
 //	public static final String JABBER_CHAT_PASSWORD = "neato123";
 	public static final String JABBER_PACKET_PROPERTY_KEY = "robot_packet";
-	public static final String JABBER_ID_DOMAIN = "@rajatogo";
 	
 	
 	//TODO : Right now hard-coded to be sent to robot. Later will be removed.

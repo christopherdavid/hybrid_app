@@ -3,15 +3,27 @@ package com.neatorobotics.android.slide.framework.webservice.robot.schedule;
 
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
+import android.os.Environment;
+
+import com.neatorobotics.android.slide.framework.http.download.FileDownloadHelper;
+import com.neatorobotics.android.slide.framework.http.download.FileDownloadListener;
+import com.neatorobotics.android.slide.framework.http.download.FileDownloadWorkItem;
+import com.neatorobotics.android.slide.framework.http.download.MultipleFileDownloadHelper;
+import com.neatorobotics.android.slide.framework.http.download.MultipleFileDownloadListener;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedRobotSchedule;
 import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedScheduleGroup;
+import com.neatorobotics.android.slide.framework.robot.schedule.ScheduleXmlHelper;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 
 
 public class RobotSchedulerManager {
 	private static final String TAG = RobotSchedulerManager.class.getSimpleName();
+	private static final String SCHEDULE_DATA_FILE_NAME = "data.xml";
 	Context mContext;
 	private static RobotSchedulerManager sRobotSchedulerManager;
 	private static final Object INSTANCE_LOCK = new Object();
@@ -33,19 +45,16 @@ public class RobotSchedulerManager {
 	}
 
 
-	//TODO: i have kept these two functions separate as i feel there will be many more things involved in advanced scheduling later 
-	//though the web services
-	// as of now as same.
-	public void sendRobotSchedule(AdvancedScheduleGroup robotScheduleGroup, final String serial_number, ScheduleWebserviceListener scheduleDetailsListener) {
+	// Public helper method to set the Robot schedule on the server. 
+	public void sendRobotSchedule(AdvancedScheduleGroup robotScheduleGroup, final String serial_number, final ScheduleWebserviceListener scheduleDetailsListener) {
 		final String xmlSchedule = robotScheduleGroup.getXml();
 		final String blobData = robotScheduleGroup.getBlobData();
 		final String scheduleType = NeatoRobotScheduleWebServicesAttributes.SCHEDULE_TYPE_ADVANCED;
-		final WeakReference<ScheduleWebserviceListener> scheduleDetailsListenerWeakRef = new WeakReference<ScheduleWebserviceListener>(scheduleDetailsListener);
 
 		Runnable task = new Runnable() {
 
 			public void run() {
-				ScheduleWebserviceListener scheduleListener  = scheduleDetailsListenerWeakRef.get();
+				ScheduleWebserviceListener scheduleListener  = scheduleDetailsListener;
 				String currentScheduleId = null;
 				String currentxml_version = null;
 				GetNeatoRobotSchedulesResult schedulesResult = NeatoRobotScheduleWebservicesHelper.getNeatoRobotSchedulesRequest(mContext, serial_number);
@@ -101,9 +110,88 @@ public class RobotSchedulerManager {
 	}
 
 
-	public void sendRobotSchedule(AdvancedRobotSchedule robotSchedule, final String serial_number, ScheduleWebserviceListener scheduleDetailsListener) {
+	public void sendRobotSchedule(AdvancedRobotSchedule robotSchedule, final String robotId, ScheduleWebserviceListener scheduleDetailsListener) {
 		AdvancedScheduleGroup robotScheduleGroup = new AdvancedScheduleGroup();
 		robotScheduleGroup.addSchedule(robotSchedule);
-		sendRobotSchedule(robotScheduleGroup, serial_number, scheduleDetailsListener);
+		sendRobotSchedule(robotScheduleGroup, robotId, scheduleDetailsListener);
+	}
+
+	public void getRobotSchedule(final String robotId, final GetScheduleListener listener) {
+
+		Runnable task = new Runnable() {
+
+			@Override
+			public void run() {
+				GetNeatoRobotSchedulesResult result = NeatoRobotScheduleWebservicesHelper.getNeatoRobotSchedulesRequest(mContext, robotId);		
+				
+				if (result == null) {
+					listener.onError("");
+					return;
+				}
+				
+				if (!result.success()) {
+					LogHelper.log(TAG, "Error: "+ result.mMessage);
+					listener.onError(result.mMessage);
+					return;
+				}
+				
+				if (result.mResult.size() == 0) {
+					LogHelper.log(TAG, "No schedules exist");
+					listener.onSuccess(null, "");
+					return;
+				}
+
+				// Server assumes that there could be multiple schedules and server sends the array 
+				// Since server sends the array of schedule but we assume that there is going to be only
+				// single schedule we are just using the first available item. I think server needs to change
+				// to return only one schedule. 
+				final String scheduleId = result.mResult.get(0).mId;
+
+				GetNeatoRobotScheduleDataResult resultData = NeatoRobotScheduleWebservicesHelper.getNeatoRobotScheduleDataRequest(mContext, scheduleId);
+				if (resultData == null) {
+					LogHelper.log(TAG, "Error in fetching Robot Schedule data request");
+					listener.onError("");
+					return;
+				}
+				
+				if (!resultData.success()) {
+					LogHelper.log(TAG, "Error in fetching Robot Schedule data request: Error: "+ result.mMessage);
+					listener.onError(result.mMessage);
+					return;
+				}
+				
+				LogHelper.logD(TAG, "Sucessfully got scheduling data with xml url:" + resultData.mResult.mXml_Data_Url);
+
+				String schduleFileUrl = resultData.mResult.mXml_Data_Url;
+				String filePath = getScheduleCacheFilePath(robotId, scheduleId);	
+				
+				FileDownloadHelper.downloadFile(mContext, schduleFileUrl, filePath, new FileDownloadListener() {
+					
+					@Override
+					public void onDownloadError(String url) {
+						listener.onError("Could not download schedule data");
+					}
+					
+					@Override
+					public void onDownloadComplete(String url, String filePath) {
+						AdvancedScheduleGroup schedule = ScheduleXmlHelper.readFileXml(filePath);
+						// If there is no schdule on the robot, then we will get schedule as null
+						listener.onSuccess(schedule, scheduleId);
+					}
+				});
+			}
+
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
+
+	private String getScheduleCacheFilePath(String robotId, String scheduleId) {
+		StringBuilder builder = new StringBuilder(Environment.getExternalStorageDirectory().getAbsolutePath()).
+				append("/neato/schedule_data/").append(scheduleId).append("_").append(robotId).
+				append("/").append(SCHEDULE_DATA_FILE_NAME);
+
+		LogHelper.logD(TAG, "getExtScheduleXMLFilePath = " + builder.toString());
+		return builder.toString();
 	}
 }

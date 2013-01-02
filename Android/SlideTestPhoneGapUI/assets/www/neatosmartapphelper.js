@@ -3,10 +3,8 @@ var NOTIFICATION_DISCOVERY_STARTED = 1;
 var NOTIFICATION_DISCOVERY_RESULT = 2;
 
 
-var KEY_MAP_TYPE = "mapType";
 var KEY_MAP_TYPE_XML = 1;
 var KEY_MAP_TYPE_BLOB = 2;
-var KEY_BLOG_IMAGE_DATA = "blobImageData";
 
 var SCHEDULAR_EVENT_TYPE_QUIET = 0;
 var SCHEDULAR_EVENT_TYPE_CLEAN = 1;
@@ -303,8 +301,6 @@ var RobotPluginManager = (function() {
 
 var PluginManagerHelper =  (function() {
 	return {
-		//TODO: change this code to take into account multiple schedule at one time.
-		//Right now only sending one schedule.
 		addToAdvancedSchedule: function(scheduleJsonArray, day, startTime, endTime, eventType, area) {
 			
 			var schedule = {'day':day, 'startTime': startTime, 

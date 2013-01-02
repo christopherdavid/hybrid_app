@@ -277,10 +277,14 @@ public class TcpConnectionHelper {
 	}
 
 
-	//TODO : Can these two functions be included in RobotCommandHelper?
 	public  void sendRobotCommand(RobotPacket robotPacket, Transport transport) {
 		byte[] packet = getRobotPacket(robotPacket);
 		sendRobotPacketAsync(transport,packet);
+	}
+	
+	public  void sendRobotCommand(String robotId, RobotPacket robotPacket) {
+		byte[] packet = getRobotPacket(robotPacket);
+		sendRobotPacketAsync(mTransport, packet);
 	}
 
 	private  byte[] getRobotPacket(RobotPacket robotPacket)

@@ -69,7 +69,7 @@ public class NeatoRobotScheduleWebservicesHelper {
 		if (getNeatoRobotScheduleDataResponse.completed()) { 
 			try {
 				LogHelper.logD(TAG, "Get Schedule data for Neato Robot completed. Reading response");
-				result = resultMapper.readValue(getNeatoRobotScheduleDataResponse.mResponseInputStream, new TypeReference<GetNeatoRobotSchedulesResult>() {});
+				result = resultMapper.readValue(getNeatoRobotScheduleDataResponse.mResponseInputStream, new TypeReference<GetNeatoRobotScheduleDataResult>() {});
 				LogHelper.log(TAG, "Get Schedule data for robot completed.");
 			} catch (JsonParseException e) {
 				LogHelper.log(TAG, "Exception in GetNeatoRobotScheduleDataRequest" ,e);

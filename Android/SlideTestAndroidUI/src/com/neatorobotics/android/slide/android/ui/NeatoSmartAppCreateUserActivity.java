@@ -11,10 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
+import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.webservice.user.CreateNeatoUserResult;
 import com.neatorobotics.android.slide.framework.webservice.user.GetNeatoUserDetailsResult;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebservicesHelper;
+import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 
 public class NeatoSmartAppCreateUserActivity extends Activity{
 	private static final String TAG = NeatoSmartAppCreateUserActivity.class.getSimpleName();
@@ -107,9 +108,14 @@ public class NeatoSmartAppCreateUserActivity extends Activity{
 			
 			if (getUserResult.success()) {
 				Toast.makeText(NeatoSmartAppCreateUserActivity.this, "User created", Toast.LENGTH_LONG).show();
-				NeatoPrefs.saveUserEmailId(NeatoSmartAppCreateUserActivity.this, getUserResult.mResult.mEmail);
-				NeatoPrefs.saveJabberId(NeatoSmartAppCreateUserActivity.this, getUserResult.mResult.mChat_id);
-				NeatoPrefs.saveJabberPwd(NeatoSmartAppCreateUserActivity.this, getUserResult.mResult.mChat_pwd);
+				UserItem userDetails = new UserItem();
+				userDetails.setId(getUserResult.mResult.mId);
+				userDetails.setChatId(getUserResult.mResult.mChat_id);
+				userDetails.setChatPwd(getUserResult.mResult.mChat_pwd);
+				userDetails.setEmail(getUserResult.mResult.mEmail);
+				userDetails.setName(getUserResult.mResult.mName);
+				UserHelper.saveLoggedInUserDetails(getApplicationContext(), userDetails);
+				
 				Intent createUserIntent = new Intent(NeatoSmartAppCreateUserActivity.this , NeatoSmartAppTestActivity.class);
 				startActivity(createUserIntent);
 				setResult(RESULT_OK);

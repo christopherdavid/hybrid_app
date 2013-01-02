@@ -2,18 +2,17 @@ package com.neatorobotics.android.slide.framework.xmpp;
 
 import android.content.Context;
 import android.text.TextUtils;
-
-import com.neatorobotics.android.slide.framework.AppConstants;
+import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 
 public class XMPPUtils {
 	private static final String TAG = XMPPUtils.class.getSimpleName();
 
-	public static  String getRobotJabberId(Context context)
+	public static  String getRobotChatId(Context context, String robotId)
 	{
-		RobotItem robotItem = NeatoPrefs.getRobotItem(context);
+		LogHelper.log(TAG, "robotId = " + robotId);
+		RobotItem robotItem = RobotHelper.getRobotChatId(context, robotId);
 		if (robotItem == null) {
 			LogHelper.log(TAG, "Robot item is null. returning null chat id");
 			return null;
@@ -24,29 +23,6 @@ public class XMPPUtils {
 			return chatId;
 		}
 	}
-
-/*
-	public static String getRobotJabberPwd(Context context)
-	{
-		RobotItem robotItem = NeatoPrefs.getRobotItem(context);
-		if (robotItem == null) {
-			String chatPwd = AppConstants.JABBER_ROBOT_PWD;
-			LogHelper.log(TAG, "Hardcoded Robot Chat Pwd = " + chatPwd);
-			return chatPwd;
-		}
-		else {
-			String chatPwd = robotItem.getChatPwd();
-			LogHelper.log(TAG, "Robot Chat Pwd = " + chatPwd);
-			return chatPwd;
-		}
-	}
-
-	*/
-	//Not needed.
-//	public static String getRobotJabberIdWithoutDomain(Context context) {
-//		return removeJabberDomain(getRobotJabberId(context));
-//
-//	}
 
 	public static String removeJabberDomain(String chat_id) {
 		
@@ -62,8 +38,8 @@ public class XMPPUtils {
 		return userId;
 
 	}
-	public static String  appendJabberDomain(String user_id) {
-		return user_id + AppConstants.JABBER_ID_DOMAIN;
+	public static String  appendJabberDomain(String userId, String domain) {
+		return userId + domain;
 	}
 
 }

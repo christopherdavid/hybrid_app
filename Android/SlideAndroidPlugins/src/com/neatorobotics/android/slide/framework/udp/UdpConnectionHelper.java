@@ -18,7 +18,6 @@ import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandsGro
 import com.neatorobotics.android.slide.framework.robot.commands.RobotDiscoveryCommand;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotPacket;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotPacketBundle;
-import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDiscoveryListener;
 import com.neatorobotics.android.slide.framework.transport.Transport;
 import com.neatorobotics.android.slide.framework.transport.TransportFactory;
 import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
@@ -29,8 +28,8 @@ public class UdpConnectionHelper {
 
 	private static final String TAG = UdpConnectionHelper.class.getSimpleName();
 
-	private RobotDiscovery mRobotDiscoveryListener;
-	private RobotDiscovery mAssociatedRobotDiscoveryListener;
+	private RobotDiscoveryListener mRobotDiscoveryListener;
+	private RobotDiscoveryListener mAssociatedRobotDiscoveryListener;
 	private Handler mHandler;
 	private Context mContext;
 	private static final int MAX_DISCOVERY_TIME_OUT = (5 * 1000); // 5 seconds is the max discovery time for the robots
@@ -54,7 +53,7 @@ public class UdpConnectionHelper {
 		return UDP_SEND_DISCOVERY_BROADCAST_PORT;
 	}
 
-	public void setUdpConnectionListener(RobotDiscovery udpDataPacketListener)
+	public void setUdpConnectionListener(RobotDiscoveryListener udpDataPacketListener)
 	{
 		mRobotDiscoveryListener = udpDataPacketListener;
 	}
@@ -319,7 +318,7 @@ public class UdpConnectionHelper {
 			notifyRobotDiscovery(robotInfo, bAssociated);
 		}
 
-		public void startAssociatedRobotDiscovery(final String robotId, final RobotDiscovery listener)
+		public void findRobotForRobotId(final String robotId, final RobotDiscoveryListener listener)
 		{
 			mAssociatedRobotDiscoveryListener = listener;
 			LogHelper.log(TAG, "startAssociatedRobotDiscovery internal called");
@@ -381,11 +380,11 @@ public class UdpConnectionHelper {
 		}
 	}
 
-	public void discoverAssociatedRobot(String robotId, RobotDiscovery listener) {
+	public void discoverAssociatedRobot(String robotId, RobotDiscoveryListener listener) {
 		LogHelper.log(TAG, "discoverAssociatedRobot called");
 		if (mUdpServiceDiscoveryHelper != null) {
 			mAssociatedRobotDiscoveryListener = listener;
-			mUdpServiceDiscoveryHelper.startAssociatedRobotDiscovery(robotId, listener);
+			mUdpServiceDiscoveryHelper.findRobotForRobotId(robotId, listener);
 		}
 	}
 
@@ -397,7 +396,7 @@ public class UdpConnectionHelper {
 
 	private void notifyRobotDiscovery(final RobotInfo robotInfo, boolean bAssociated) {
 		
-		final RobotDiscovery discoveryListener = (bAssociated)?mAssociatedRobotDiscoveryListener:mRobotDiscoveryListener;
+		final RobotDiscoveryListener discoveryListener = (bAssociated)?mAssociatedRobotDiscoveryListener:mRobotDiscoveryListener;
 
 		// after parsing packet send this data to the callback
 		if (discoveryListener != null) {
