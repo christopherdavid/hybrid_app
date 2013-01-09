@@ -16,6 +16,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.text.TextUtils;
 
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
@@ -147,7 +148,7 @@ public class UserManagerPlugin extends Plugin {
 	private void isUserLoggedIn(Context context, UserJsonData jsonData, String callbackId) {
 
 		String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
-		if (authToken == null) {
+		if (TextUtils.isEmpty(authToken)) {
 			PluginResult pluginLogoutResult = new PluginResult(PluginResult.Status.OK, false);
 			pluginLogoutResult.setKeepCallback(false);
 			success(pluginLogoutResult, callbackId);
@@ -238,6 +239,15 @@ public class UserManagerPlugin extends Plugin {
 			
 			@Override
 			public void run() {
+				
+				String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
+				if (TextUtils.isEmpty(authToken)) {
+					PluginResult logoutPluginResult = new  PluginResult(PluginResult.Status.ERROR);
+					LogHelper.logD(TAG, "No user logged in.");
+					error(logoutPluginResult, callbackId);
+					return;
+				}
+				
 				UserHelper.logout(context);
 				PluginResult logoutPluginResult = new  PluginResult(PluginResult.Status.OK);
 				LogHelper.logD(TAG, "Logout successful.");
