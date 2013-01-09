@@ -128,29 +128,7 @@
             android:layout_height="1dp"
             android:layout_marginBottom="10dp"            
             android:background="@color/separator" />        
-
-        <Button
-            android:id="@+id/startStopServer"
-            style="@style/DefaultButtonStyle"
-            android:layout_width="@dimen/btn_width"
-            android:layout_height="@dimen/btn_height"
-            android:layout_marginBottom="5dp"
-            android:text="@string/text_btn_start_server_conn" />
-
-         <!--  <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"    
-            style="@style/DefaultTextStyle"  
-            android:layout_gravity="left"   
-            android:paddingLeft="5dp"
-            android:layout_marginTop="10dp"       
-            android:text="Robot Configuration" />
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="10dp"            
-            android:background="@color/separator" /> -->
-        
+         
          <Button
             android:id="@+id/btn_getMapData"
             style="@style/DefaultButtonStyle"

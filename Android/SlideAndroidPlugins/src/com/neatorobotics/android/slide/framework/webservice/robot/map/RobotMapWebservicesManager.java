@@ -1,6 +1,5 @@
 package com.neatorobotics.android.slide.framework.webservice.robot.map;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadWorkItem;

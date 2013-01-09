@@ -50,7 +50,6 @@ public class AssociateRobotActivity extends Activity {
 					} catch (RemoteException e) {
 						LogHelper.log(TAG, "Exception in closePeerConnection");
 					}
-					NeatoPrefs.setPeerIpAddress(getApplicationContext(), null);
 					Toast.makeText(AssociateRobotActivity.this, "Robot Associated", Toast.LENGTH_SHORT).show();
 					AssociateRobotActivity.this.setResult(RESULT_OK);
 					finish();

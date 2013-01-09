@@ -95,9 +95,26 @@ public class RobotInfo implements Parcelable {
 		this.mRobotName = robotName;
 	}
 
-	//TODO : This will be displayed in the list of robots. Need to decide what to show to the user.
+	
 	 @Override
 	public String toString() {
-	    return mSerialId;
+		 StringBuilder sb = new StringBuilder();
+			sb.append("******RobotInfo******\n");
+			sb.append("id = ");
+			sb.append(mRobotId);
+			sb.append("\n");
+			
+			sb.append("name = ");
+			sb.append(mRobotName);
+			sb.append("\n");
+			
+			sb.append("serialNumber = ");
+			sb.append(mSerialId);
+			sb.append("\n");
+			
+			sb.append("ipAddress = ");
+			sb.append(mRobotIpAddress);
+			sb.append("\n");
+			return sb.toString();
 	}
 }

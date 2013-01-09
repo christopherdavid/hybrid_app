@@ -25,7 +25,6 @@ public class RobotJsonData {
 		try {
 			jsonArray = mDataObject.getJSONArray(key);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			LogHelper.log(TAG, "JSON value doesn't exist for key :"+key);
 		}
 		return jsonArray;
@@ -47,7 +46,6 @@ public class RobotJsonData {
 		try {
 			mDataObject = mData.getJSONObject(0);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			LogHelper.log(TAG, "JSON object is not present");
 		}
 	}

@@ -12,22 +12,6 @@ import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotP
 public class RobotCommandServiceManager {
 	private static final String TAG = RobotCommandServiceManager.class.getSimpleName();
 	
-	public static void sendCommand(Context context, int commandId, boolean useXmpp) {
-		LogHelper.logD(TAG, "Send command action initiated in Robot plugin internal");
-		
-		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-		if (neatoService != null) {
-			try {
-				neatoService.sendCommand(" ", commandId, useXmpp);
-			} catch (RemoteException e) {
-				LogHelper.logD(TAG, "Could not initiate sendCommand action ");
-			}
-		} else {
-			LogHelper.logD(TAG, "Service is not started!");
-			
-		}
-
-	}
 
 	public static void sendCommand(Context context, String robotId, int commandId) {
 		LogHelper.logD(TAG, "Send command action initiated in Robot plugin internal - RobotSerialId = " + robotId);
@@ -35,7 +19,7 @@ public class RobotCommandServiceManager {
 		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
 		if (neatoService != null) {
 			try {
-				neatoService.sendCommand2(robotId, commandId);
+				neatoService.sendCommand(robotId, commandId);
 			} catch (RemoteException e) {
 				LogHelper.logD(TAG, "Could not initiate sendCommand action ");
 			}

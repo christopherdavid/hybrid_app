@@ -39,7 +39,6 @@ public class ScheduleJsonDataHelper {
 			ScheduleTimeObject endTime = new ScheduleTimeObject(endTImeStr);
 			schedule = new AdvancedRobotSchedule(days, startTime, endTime, area, event);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			LogHelper.log(TAG, "Exception in jsonToSchedule", e);
 		}
 		return schedule;

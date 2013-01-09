@@ -7,16 +7,10 @@ import android.content.SharedPreferences.Editor;
 public class NeatoPrefs {
 	public static final String PREFERANCE_NAME = "NeatoPref";
 	
-
 	private static final String USER_EMAIL_ID_KEY = "user_email_id";
 	private static final String KEY_NEATO_USER_AUTH_TOKEN = "neato_user_auth_token";
-		
-	
 	private static final String PEER_CONNECTION_STATUS = "peer_conn_status";
-	private static final String PEER_IP_ADDRESS = "peer_ip_address";
 	private static final String MANAGED_ROBOT_SERIAL_ID = "managed_robot_serial_id";
-	
-	private static final String TAG = NeatoPrefs.class.getSimpleName();
 	
 	private static boolean savePreference(Context context, String preferenceName, String preferenceValue) {
 		SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
@@ -84,14 +78,6 @@ public class NeatoPrefs {
 		boolean preferenceValue = preferences.getBoolean(PEER_CONNECTION_STATUS, false);
 		
 		return preferenceValue;
-	}
-
-	public static boolean setPeerIpAddress(Context context, String peer_ip_address) {
-		return savePreference(context, NeatoPrefs.PEER_IP_ADDRESS , peer_ip_address);
-	}
-
-	public static String getPeerIpAddress(Context context) {
-		return getPreferenceStrValue(context, NeatoPrefs.PEER_IP_ADDRESS);
 	}
 
 	public static boolean saveNeatoUserAuthToken(Context context, String authToken) {

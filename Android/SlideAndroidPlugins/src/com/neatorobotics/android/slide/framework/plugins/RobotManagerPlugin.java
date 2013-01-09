@@ -163,6 +163,7 @@ public class RobotManagerPlugin extends Plugin {
 			int commandId = jsonData.getInt(JsonMapKeys.KEY_COMMAND_ID);
 			String robot_id = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 
+			@SuppressWarnings("unused")
 			JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
 
 			RobotCommandServiceManager.sendCommand(context, robot_id, commandId);
@@ -322,6 +323,15 @@ public class RobotManagerPlugin extends Plugin {
 				LogHelper.logD(TAG, "Exception in getErrorJsonObject", e);
 			}
 			return error;
+		}
+		
+		@SuppressWarnings("unused")
+		private void dispatchEvent(String eventName) {
+			LogHelper.log(TAG, "Event called");
+			String javascriptTemplate = "var e = document.createEvent('Events');\n" +
+					"e.initEvent('"+eventName+"');\n" +	                    
+					"document.dispatchEvent(e);";
+			this.sendJavascript(javascriptTemplate);		
 		}
 
 		// TODO - a lot clean up of code needed.

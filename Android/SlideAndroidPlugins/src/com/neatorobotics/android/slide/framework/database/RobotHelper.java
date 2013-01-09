@@ -37,7 +37,7 @@ public class RobotHelper {
 		return robotItem;
 	}
 	
-	public static RobotItem getRobotChatId(Context context, String robotId) {
+	public static RobotItem getRobotItem(Context context, String robotId) {
 		RobotItem robotItem = null;
 		if (!TextUtils.isEmpty(robotId)) {
 			robotItem = DBHelper.getInstance(context).getRobotBySerialId(robotId);

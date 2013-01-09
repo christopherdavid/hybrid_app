@@ -1,6 +1,6 @@
-package com.neatorobotics.android.slide.framework.xml;
+package com.neatorobotics.android.slide.framework.robot.commands;
 
-public class NetworkXmlConstants {
+public class CommandXmlConstants {
 
 	public static final String XML_TAG_PACKET = "packet";
 	public static final String XML_TAG_HEADER = "header";

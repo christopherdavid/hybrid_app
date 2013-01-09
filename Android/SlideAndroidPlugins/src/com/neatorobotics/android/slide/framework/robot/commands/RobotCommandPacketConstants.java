@@ -11,6 +11,9 @@ public class RobotCommandPacketConstants {
 	public static final int COMMAND_ROBOT_STOP = 102;
 	public static final int COMMAND_ROBOT_JABBER_DETAILS = 103;
 	public static final int COMMAND_SEND_BASE = 104;
+	public static final int COMMAND_GET_ROBOT_STATE = 105;
+	public static final int COMMAND_SEND_ROBOT_STATE = 106;
+
 
 	
 	
@@ -22,6 +25,11 @@ public class RobotCommandPacketConstants {
 	public static final String KEY_ROBOT_JABBER_PWD = "robot_jabber_pwd";
 	
 	public static final String KEY_ROBOT_NAME = "robot_name";
-	
+	public static final String KEY_ROBOT_STATE = "robot_state";
 
+	//Robot states
+	//TODO: Need to put these constants in relevant class.
+	public static final int ROBOT_STATE_CLEANING = 10001;
+	public static final int ROBOT_STATE_IDLE = 10002;
+	public static final int ROBOT_STATE_CHARGING = 10003;
 }

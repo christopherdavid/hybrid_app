@@ -1,11 +1,9 @@
 package com.neatorobotics.android.slide.framework.webservice.user;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import android.content.Context;
 
-import com.neatorobotics.android.slide.framework.database.DBHelper;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
@@ -17,7 +15,6 @@ import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.user.listeners.AssociatedRobotDetailsListener;
 import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserDetailsListener;
 import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserRobotAssociateDisassociateListener;
-import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserWebserviceListener;
 
 
 public class UserManager {
