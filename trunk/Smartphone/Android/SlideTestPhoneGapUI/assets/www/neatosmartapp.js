@@ -459,6 +459,19 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.setResponseText(error);
 		},
+		getUserDetails: function() {
+			neatoSmartApp.showProgressBar();
+			var email = "demo1@demo.com";
+			UserPluginManager.getUserDetail(email, neatoSmartApp.getUserDetailsSuccess, neatoSmartApp.getUserDetailsErr);
+		},
+		
+		getUserDetailsSuccess: function(result) {
+			neatoSmartApp.setResponseText(result);
+			neatoSmartApp.hideProgressBar();
+		},
+		getUserDetailsErr: function(error) {
+			neatoSmartApp.hideProgressBar();
+		},
 		
 		//##################FUNCTIONS RELATED TO HIDE-SHOW SECTIONS ON HTML#####################################
 		
@@ -547,6 +560,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnSetMap').addEventListener('click', neatoSmartApp.setMapOverlayData, true);
 			document.querySelector('#btnLogout').addEventListener('click', neatoSmartApp.logoutUser , true);
 			document.querySelector('#btnTest').addEventListener('click', neatoSmartApp.test , true);
+			document.querySelector('#btnGetUserDetails').addEventListener('click', neatoSmartApp.getUserDetails , true);
 		},
 
 		hideUserHomePage: function() {
@@ -560,6 +574,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnSetMap').removeEventListener('click', neatoSmartApp.setMapOverlayData, true);
 			document.querySelector('#btnLogout').removeEventListener('click', neatoSmartApp.logoutUser , true);
 			document.querySelector('#btnTest').removeEventListener('click', neatoSmartApp.test , true);
+			document.querySelector('#btnGetUserDetails').removeEventListener('click', neatoSmartApp.getUserDetails , true);
 		},
 		
 		hideUserShowWelcome: function() {
