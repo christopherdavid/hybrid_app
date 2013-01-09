@@ -4,7 +4,7 @@ public class AppConstants {
 	public static final int APP_SIGNATURE = 0xcafebabe;
 	public static final int UDP_PACKET_VERSION = 1;
 	public static final int TCP_PACKET_VERSION = 1;
-	public static final int XMPP_PACKET_VERSION = 1;
+	public static final int COMMAND_PACKET_VERSION = 1;
 	
 	public static final int UDP_ROBOT_BROADCAST_PORT = 12346;
 	public static final int UDP_SMART_APPS_BROADCAST_PORT = 12346;

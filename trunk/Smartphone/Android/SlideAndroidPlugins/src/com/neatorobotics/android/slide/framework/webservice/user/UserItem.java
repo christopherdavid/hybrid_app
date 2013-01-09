@@ -11,6 +11,7 @@ public class UserItem {
 	private String email;
 	private String chatId;
 	private String chatPwd;
+	@SuppressWarnings("unused")
 	private ArrayList<String> social_networks = new ArrayList<String>();	
 	// TODO : Add list of robot items details associated. Right now only adding the robot names.
 	

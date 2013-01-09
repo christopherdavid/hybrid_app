@@ -10,12 +10,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import com.neatorobotics.android.slide.framework.utils.DataConversionUtils;
-import com.neatorobotics.android.slide.framework.xml.NetworkXmlConstants;
 
 
 
 public class RobotPacketBundle {
 
+	@SuppressWarnings("unused")
 	private static final String TAG = RobotPacketBundle.class.getSimpleName();
 
 	private HashMap<String, String> mData;
@@ -88,7 +88,7 @@ public class RobotPacketBundle {
 
 		}
 		Document doc = docBuilder.newDocument();
-		Node commandData = doc.createElement(NetworkXmlConstants.XML_TAG_COMMAND_DATA);
+		Node commandData = doc.createElement(CommandXmlConstants.XML_TAG_COMMAND_DATA);
 
 		Set<String> keys = mData.keySet();
 

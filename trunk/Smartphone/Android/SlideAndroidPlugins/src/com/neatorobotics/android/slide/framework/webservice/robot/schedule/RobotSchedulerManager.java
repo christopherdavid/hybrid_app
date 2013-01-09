@@ -1,19 +1,10 @@
 package com.neatorobotics.android.slide.framework.webservice.robot.schedule;
 
-
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.os.Environment;
 
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadHelper;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadListener;
-import com.neatorobotics.android.slide.framework.http.download.FileDownloadWorkItem;
-import com.neatorobotics.android.slide.framework.http.download.MultipleFileDownloadHelper;
-import com.neatorobotics.android.slide.framework.http.download.MultipleFileDownloadListener;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedRobotSchedule;
 import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedScheduleGroup;

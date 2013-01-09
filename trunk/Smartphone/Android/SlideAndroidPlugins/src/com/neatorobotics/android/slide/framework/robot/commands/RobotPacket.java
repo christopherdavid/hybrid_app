@@ -6,10 +6,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import com.neatorobotics.android.slide.framework.utils.DataConversionUtils;
-import com.neatorobotics.android.slide.framework.xml.NetworkXmlConstants;
 
 public class RobotPacket {
 		
+	@SuppressWarnings("unused")
 	private  final String TAG = getClass().getSimpleName();
 	private int mCommandId;
 	protected RobotPacketBundle mRobotPacketBundle;
@@ -59,8 +59,8 @@ public class RobotPacket {
 
 		}
 		Document doc = docBuilder.newDocument();
-		Node command = doc.createElement(NetworkXmlConstants.XML_TAG_COMMAND);
-		Node commadid = doc.createElement(NetworkXmlConstants.XML_TAG_COMMANDID);
+		Node command = doc.createElement(CommandXmlConstants.XML_TAG_COMMAND);
+		Node commadid = doc.createElement(CommandXmlConstants.XML_TAG_COMMANDID);
 		commadid.appendChild(doc.createTextNode(DataConversionUtils.convertIntToString(getCommandId())));
 		
 		Node commandDataNode = getBundle().bundleToXml();
@@ -71,5 +71,4 @@ public class RobotPacket {
 		command.appendChild(impCommandData);
 		return command;
 	}
-
 }

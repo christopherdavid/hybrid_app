@@ -2,17 +2,18 @@ package com.neatorobotics.android.slide.framework.udp;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import org.w3c.dom.Node;
 import android.content.Context;
 import android.os.Handler;
 import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
 import com.neatorobotics.android.slide.framework.robot.commands.CommandFactory;
+import com.neatorobotics.android.slide.framework.robot.commands.CommandPacketValidator;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandsGroup;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotDiscoveryCommand;
@@ -22,7 +23,6 @@ import com.neatorobotics.android.slide.framework.transport.Transport;
 import com.neatorobotics.android.slide.framework.transport.TransportFactory;
 import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
-import com.neatorobotics.android.slide.framework.xml.NetworkXmlHelper;
 
 public class UdpConnectionHelper {
 
@@ -141,7 +141,10 @@ public class UdpConnectionHelper {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			DataOutputStream dos = new DataOutputStream(bos);
 
-			byte[] packet = NetworkXmlHelper.commandToXml(discoveryCommand);
+
+			Node header = CommandPacketValidator.getHeaderXml();
+			Node command = discoveryCommand.robotCommandToXmlNode();
+			byte[] packet = CommandFactory.getPacketData(header, command);
 			try {
 				dos.write(packet);
 			}
@@ -160,8 +163,10 @@ public class UdpConnectionHelper {
 			discoverAssociatedRobotPacket.getBundle().putString(RobotCommandPacketConstants.KEY_ROBOT_SERIAL_ID, robotId);
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			DataOutputStream dos = new DataOutputStream(bos);
+			Node header = CommandPacketValidator.getHeaderXml();
+			Node command = discoverAssociatedRobotPacket.robotCommandToXmlNode();
+			byte[] packet = CommandFactory.getPacketData(header, command);
 
-			byte[] packet = NetworkXmlHelper.commandToXml(discoverAssociatedRobotPacket);
 			try {
 				dos.write(packet);
 			}
@@ -241,24 +246,29 @@ public class UdpConnectionHelper {
 
 							// Parse the data
 							byte [] data = receive_packet.getData();
-
 							ByteArrayInputStream bias = new ByteArrayInputStream(data);
-
 							LogHelper.log(TAG, "Received data: "+receive_packet.getLength());
 							byte[] dataPacket = new byte[receive_packet.getLength()];
 							bias.read(dataPacket, 0, receive_packet.getLength());
 
-							ByteArrayInputStream bais = new ByteArrayInputStream(dataPacket);
-							DataInputStream dis = new DataInputStream(bais);
-
-							RobotCommandsGroup robotCommandsGroup = CommandFactory.createCommandGroup(dis);
-							//Handle all commands
-							RobotPacket robotPacket = robotCommandsGroup.getRobotPacket(0);
-							if (robotPacket == null) {
-								LogHelper.log(TAG, "robotPacket is null");
-								continue;
+							RobotCommandsGroup robotCommandsGroup = null;
+							boolean isValidCommandPacket = CommandPacketValidator.validateHeaderAndSignature(dataPacket);
+							if (isValidCommandPacket) {
+								LogHelper.log(TAG, "Header Version and Signature match");
+								robotCommandsGroup = CommandFactory.createCommandGroup(dataPacket);
+							} else {
+								LogHelper.log(TAG, "Header Version and Signature mis-match");
 							}
-							parsePacket(robotPacket);
+
+							//Handle all commands
+							if (robotCommandsGroup != null) {
+								RobotPacket robotPacket = robotCommandsGroup.getRobotPacket(0);
+								if (robotPacket == null) {
+									LogHelper.log(TAG, "robotPacket is null");
+									continue;
+								}
+								parsePacket(robotPacket);
+							}
 						} 
 						catch (IOException e) {
 							if (!mExplicitCloseSocket) {
@@ -281,7 +291,7 @@ public class UdpConnectionHelper {
 			int commandId = packet.getCommandId();
 			if (commandId == RobotCommandPacketConstants.PACKET_TYPE_ROBOT_DISCOVERY_RESPONSE) {
 				RobotPacketBundle robotPacketBundle = packet.getBundle();
-				
+
 				if (robotPacketBundle != null) {
 					parseResponseAndGetRobotInfo(robotPacketBundle, false);
 				} 
@@ -292,7 +302,7 @@ public class UdpConnectionHelper {
 			} 
 			else if (commandId == RobotCommandPacketConstants.PACKET_TYPE_ASSOCIATED_ROBOT_DISCOVERY_RESPONSE) {
 				RobotPacketBundle robotPacketBundle = packet.getBundle();
-				
+
 				if (robotPacketBundle != null) {
 					parseResponseAndGetRobotInfo(robotPacketBundle, true);
 				} 
@@ -395,7 +405,7 @@ public class UdpConnectionHelper {
 	}
 
 	private void notifyRobotDiscovery(final RobotInfo robotInfo, boolean bAssociated) {
-		
+
 		final RobotDiscoveryListener discoveryListener = (bAssociated)?mAssociatedRobotDiscoveryListener:mRobotDiscoveryListener;
 
 		// after parsing packet send this data to the callback

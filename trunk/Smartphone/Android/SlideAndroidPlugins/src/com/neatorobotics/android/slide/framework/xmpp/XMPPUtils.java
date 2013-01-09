@@ -12,7 +12,7 @@ public class XMPPUtils {
 	public static  String getRobotChatId(Context context, String robotId)
 	{
 		LogHelper.log(TAG, "robotId = " + robotId);
-		RobotItem robotItem = RobotHelper.getRobotChatId(context, robotId);
+		RobotItem robotItem = RobotHelper.getRobotItem(context, robotId);
 		if (robotItem == null) {
 			LogHelper.log(TAG, "Robot item is null. returning null chat id");
 			return null;

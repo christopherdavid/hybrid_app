@@ -8,7 +8,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.neatorobotics.android.slide.framework.xml.NetworkXmlConstants;
 
 
 public class RobotCommandsGroup {
@@ -42,7 +41,7 @@ public class RobotCommandsGroup {
 
 		}
 		Document doc = docBuilder.newDocument();
-		Node payload = doc.createElement(NetworkXmlConstants.XML_TAG_PAYLOAD);
+		Node payload = doc.createElement(CommandXmlConstants.XML_TAG_PAYLOAD);
 		for (int robotPacketIterator =0; robotPacketIterator< groupSize; robotPacketIterator++){
 			Node xmlNode = getRobotPacket(robotPacketIterator).robotCommandToXmlNode();
 			Node robotCommandNode = doc.adoptNode(xmlNode);

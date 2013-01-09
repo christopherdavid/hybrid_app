@@ -97,7 +97,7 @@ public class NeatoSmartAppTestActivity extends Activity {
 			String emailId = NeatoPrefs.getUserEmailId(NeatoSmartAppTestActivity.this);
 			LogHelper.log(TAG, "Associating user with Robot. User Email = " + emailId);
 			AssociateToUser robotAssociate = new AssociateToUser(robotInfo.getRobotName(), 
-					robotInfo.getSerialId(), emailId, robotIpAddress);
+					robotInfo.getSerialId(), emailId);
 			robotAssociate.execute();
 			/*NeatoPrefs.setPeerIpAddress(NeatoSmartAppTestActivity.this, robotIpAddress);*/
 		}
@@ -141,8 +141,7 @@ public class NeatoSmartAppTestActivity extends Activity {
 			else if (NeatoSmartAppsEventConstants.ROBOT_CONNECTED == resultCode) {
 				//mConnectionStatusText.setText("Robot Connected");
 				LogHelper.logD(TAG, "ROBOT_CONNECTED");
-				btnPeerConnection.setText("Close Peer connection");
-				enableDisableStartStopUI(true);				
+				btnPeerConnection.setText("Close Peer connection");			
 			} else if (NeatoSmartAppsEventConstants.ROBOT_DATA_RECEIVED == resultCode) {
 			
 			} else if (NeatoSmartAppsEventConstants.ROBOT_CONNECTION_ERROR == resultCode) {
@@ -155,7 +154,6 @@ public class NeatoSmartAppTestActivity extends Activity {
 				//mConnectionStatusText.setText("No Robot Connected");
 				btnPeerConnection.setText("Open Peer connection");
 				LogHelper.logD(TAG, "ROBOT_DISCONNECTED");
-				enableDisableStartStopUI(false);
 			}
 			else if (NeatoSmartAppsEventConstants.ROBOT_DATA_RECEIVED == resultCode) {
 
@@ -167,7 +165,6 @@ public class NeatoSmartAppTestActivity extends Activity {
 	private Button mBtnFindRobots; 
 	private TextView mRobotAssociationStatusText;
 	private Button mStartStopPeerConn;
-	private Button mStartStopServerConn;
 	
 	private static final int ROBOT_ASSOCIATED_REQUEST_CODE = 1;
 	
@@ -224,18 +221,21 @@ public class NeatoSmartAppTestActivity extends Activity {
 
 			public void onClick(View v) {
 				try {
+					RobotItem managedRobotItem = RobotHelper.getManagedRobot(NeatoSmartAppTestActivity.this);
 					if(!NeatoPrefs.getPeerConnectionStatus(NeatoSmartAppTestActivity.this)) {
-						
-						RobotItem robotItem = RobotHelper.getManagedRobot(getApplicationContext());
-						if (robotItem != null) {
-							mNeatoRobotService.connectToRobot(robotItem.getSerialNumber());
-							LogHelper.log(TAG, "Forming connection " + robotItem.getSerialNumber());
+						if(managedRobotItem != null) {
+							String robotId = managedRobotItem.getSerialNumber();
+							mNeatoRobotService.connectToRobot(robotId);
+							LogHelper.log(TAG, "Forming connection "+robotId);
 						} else {
-							Toast.makeText(NeatoSmartAppTestActivity.this, "Ip address not available", Toast.LENGTH_LONG).show();
+							Toast.makeText(NeatoSmartAppTestActivity.this, "Please select a robot to connect.", Toast.LENGTH_LONG).show();
 						}
+
 					} else {
 						LogHelper.logD(TAG, "Connection exists. Disconnecting..");
-						mNeatoRobotService.closePeerConnection("");
+						if (managedRobotItem != null) {
+							mNeatoRobotService.closePeerConnection(managedRobotItem.getSerialNumber());
+						}
 					}
 				} catch (RemoteException e) {
 					LogHelper.log(TAG, "Exception in closePeerConnection", e);
@@ -248,19 +248,11 @@ public class NeatoSmartAppTestActivity extends Activity {
 		mStartStopPeerConn.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {				
-				toggleRobot(false);
+				toggleRobot();
 			}
 		});
 
-		mStartStopServerConn = (Button)findViewById(R.id.startStopServer);
-		mStartStopServerConn.setOnClickListener(new OnClickListener() {
-			
-			public void onClick(View v) {
-				toggleRobot(true);
-			}
-		});
-		
-		
+
 		Button btnAssociateRobot = (Button)findViewById(R.id.btn_associaterobot);
 		btnAssociateRobot.setOnClickListener(new OnClickListener() {
 			
@@ -302,12 +294,9 @@ public class NeatoSmartAppTestActivity extends Activity {
 		boolean isPeerConnected = NeatoPrefs.getPeerConnectionStatus(this);
 		if (isPeerConnected) {
 			//mConnectionStatusText.setText("Robot Connected");
-
-			enableDisableStartStopUI(true);
 			btnPeerConnection.setText("Close Peer connection");
 		}
 		else {
-			enableDisableStartStopUI(false);
 			btnPeerConnection.setText("Open Peer connection");
 		}
 
@@ -339,46 +328,34 @@ public class NeatoSmartAppTestActivity extends Activity {
 	private void updateStartStopUI() {
 		if (mRobotStarted) {
 			mStartStopPeerConn.setText(getString(R.string.text_btn_stop_peer_conn));
-			mStartStopServerConn.setText(getString(R.string.text_btn_stop_server_conn));
 		}
 		else {
 			mStartStopPeerConn.setText(getString(R.string.text_btn_start_peer_conn));
-			mStartStopServerConn.setText(getString(R.string.text_btn_start_server_conn));
 		}
 	}
 	
-	private void enableDisableStartStopUI(boolean enable) {
-		if (enable) {
-			mStartStopPeerConn.setEnabled(true);
-		}
-		else {
-			mStartStopPeerConn.setEnabled(false);			
-		}
-	}
 	
-	private void toggleRobot(boolean useXmppServer) {
+	private void toggleRobot() {
 		if(mRobotStarted) {
-			stopRobot(useXmppServer);
+			stopRobot();
 			mRobotStarted = false;
 		}
 		else {
-			startRobot(useXmppServer);
+			startRobot();
 			mRobotStarted = true;
 		}
 		
 		updateStartStopUI();
 	}
 	
-	private void startRobot(boolean useXmppServer) {
+	private void startRobot() {
 		if (mNeatoRobotService != null) {
 			try {
-				RobotItem robotItem = RobotHelper.getManagedRobot(getApplicationContext());
 				mRobotListAdapter.clear();
-				if (robotItem != null) {
-					setAssociationStatus("Associated with " + robotItem.getName());
-					mNeatoRobotService.sendCommand(robotItem.getSerialNumber(), RobotCommandPacketConstants.COMMAND_ROBOT_START ,useXmppServer);
+				String managedRobotId = RobotHelper.getManagedRobot(getApplicationContext()).getSerialNumber();
+				//TODO Send right IP Address. As we supporting only one Robot now, this won't create a problem.
+				mNeatoRobotService.sendCommand(managedRobotId, RobotCommandPacketConstants.COMMAND_ROBOT_START);
 				}
-			}
 			
 			catch (RemoteException e) {				
 				e.printStackTrace();
@@ -386,16 +363,13 @@ public class NeatoSmartAppTestActivity extends Activity {
 		}
 	}
 	
-	private void stopRobot(boolean useXmppServer) {
+	private void stopRobot() {
 		if (mNeatoRobotService != null) {
 			try {
 				mRobotListAdapter.clear();
-				RobotItem robotItem = RobotHelper.getManagedRobot(getApplicationContext());
-				mRobotListAdapter.clear();
-				if (robotItem != null) {
-					setAssociationStatus("Associated with " + robotItem.getName());
-					mNeatoRobotService.sendCommand(robotItem.getSerialNumber(), RobotCommandPacketConstants.COMMAND_ROBOT_STOP ,useXmppServer);
-				}
+				String managedRobotId = RobotHelper.getManagedRobot(getApplicationContext()).getSerialNumber();
+				//TODO  Send right IP Address. As we supporting only one Robot now, this won't create a problem.
+				mNeatoRobotService.sendCommand(managedRobotId, RobotCommandPacketConstants.COMMAND_ROBOT_STOP);
 			} 
 			catch (RemoteException e) {				
 				e.printStackTrace();
@@ -478,14 +452,12 @@ public class NeatoSmartAppTestActivity extends Activity {
 		private String mRobotSerialId;
 		private String mRobotName;
 		private RobotItem mRobotItem;
-		private String mRobotIpAddress;
 		//NeatoPrefs.saveRobotInformation(getApplicationContext(), robotItem);
-		public AssociateToUser(String robotName, String robotSerialId, String emailId, String robotIpAddress)
+		public AssociateToUser(String robotName, String robotSerialId, String emailId)
 		{
 			mRobotName = robotName;
 			mRobotSerialId = robotSerialId;
 			mEmailId = emailId;
-			mRobotIpAddress = robotIpAddress;
 			LogHelper.log(TAG, "AssociateToUser - mRobotName = " + mRobotName);
 			LogHelper.log(TAG, "AssociateToUser - mRobotSerialId = " + mRobotSerialId);
 		}
@@ -518,8 +490,8 @@ public class NeatoSmartAppTestActivity extends Activity {
 			}
 			if (result.success()) {
 				//Toast.makeText(NeatoSmartAppTestActivity.this, "Robot associated", Toast.LENGTH_LONG).show();
+				RobotHelper.saveRobotDetails(getApplicationContext(), mRobotItem);
 				RobotHelper.setRobotToManage(getApplicationContext(), mRobotItem);
-				NeatoPrefs.setPeerIpAddress(NeatoSmartAppTestActivity.this, mRobotIpAddress);
 				setAssociationStatus("Associated with " + mRobotSerialId);
 			} 
 			else {

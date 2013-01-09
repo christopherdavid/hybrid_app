@@ -7,29 +7,33 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import org.w3c.dom.Node;
 import android.content.Context;
 import android.os.Handler;
 import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.CommandFactory;
+import com.neatorobotics.android.slide.framework.robot.commands.CommandPacketValidator;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandsGroup;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotPacket;
 import com.neatorobotics.android.slide.framework.transport.Transport;
 import com.neatorobotics.android.slide.framework.transport.TransportFactory;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
-import com.neatorobotics.android.slide.framework.xml.NetworkXmlHelper;
 
 public class TcpConnectionHelper {
 
 	private static final String TAG = TcpConnectionHelper.class.getSimpleName();
 	private Context mContext;
 	private Handler mHandler;
-	private TcpRobotConnectHelper mTcpRobotConnectHelper;
+	private TcpRobotConnectHelper mTcpRobotConnectHelper;       
 	private static final int TCP_ROBOT_SERVER_PORT = AppConstants.TCP_ROBOT_SERVER_SOCKET_PORT;
 	private TcpDataPacketListener mTcpDataPacketListener;
-	private Transport mTransport;
 	private static final int PACKET_READ_CHUNK_SIZE = (4 * 1024);
+
+	// Can be array if multiple connections. Right now only one connection is going to be supported.
+	// If request for a new robot comes, we disconnect the current connection.
+	private RobotConnectionInfo mRobotConnectionInfo;
 
 	public TcpConnectionHelper(Context context)
 	{
@@ -45,7 +49,7 @@ public class TcpConnectionHelper {
 		mTcpDataPacketListener = tcpDataPacketListener;
 	}
 
-	private void notifyRobotConnected()
+	private void notifyRobotConnected(final String robotId)
 	{
 		NeatoPrefs.setPeerConnectionStatus(mContext, true);
 		if (mTcpDataPacketListener != null) {
@@ -53,17 +57,17 @@ public class TcpConnectionHelper {
 				mHandler.post(new Runnable() {
 
 					public void run() {
-						mTcpDataPacketListener.onConnect();
+						mTcpDataPacketListener.onConnect(robotId);
 					}
 				});
 			}
 			else {
-				mTcpDataPacketListener.onConnect();
+				mTcpDataPacketListener.onConnect(robotId);
 			}
 		}
 	}
 
-	private void notifyRobotDisconnected()
+	private void notifyRobotDisconnected(final String robotId)
 	{
 		NeatoPrefs.setPeerConnectionStatus(mContext, false);
 		if (mTcpDataPacketListener != null) {
@@ -71,75 +75,72 @@ public class TcpConnectionHelper {
 				mHandler.post(new Runnable() {
 
 					public void run() {
-						mTcpDataPacketListener.onDisconnect();
+						mTcpDataPacketListener.onDisconnect(robotId);
 					}
 				});
 
 			}
 			else {
-				mTcpDataPacketListener.onDisconnect();
+				mTcpDataPacketListener.onDisconnect(robotId);
 			}
 		}
 	}
 
 	private class TcpRobotConnectHelper
 	{
-		// TODO: Need to figure out whether to pass IP Address or Robot Id. Right now implemented for IpAddress
-		public void connectToRobot(String IPAddress) {
-
+		public void connectToRobot(String robot_id, String ipAddress) {
 			LogHelper.log(TAG, "connectToRobot internal called");
-			/*InetAddress peerAddress = TcpUtils.getRobotInetAddressFromRobotId(RobotId);*/
-			InetAddress peerAddress = TcpUtils.getInetAddressFromIp(IPAddress);
+			InetAddress peerAddress = TcpUtils.getInetAddressFromIp(ipAddress);
 			int peerPort = TCP_ROBOT_SERVER_PORT;
 			LogHelper.logD(TAG, "Robot TCP IP Address = " + peerAddress);
-			mTransport = TransportFactory.createTransport(peerAddress, peerPort);
-			if (mTransport != null) {
-				InputStream transportInputStream = mTransport.getInputStream();
+
+			//TODO: As we are supporting only one TCP connection as of now, break the exisiting conneciton if any
+			if (getConnectedRobotInfo() != null) {
+				closePeerConnectionInternal(getConnectedRobotInfo().getRobotId());
+			}
+
+			Transport transport = TransportFactory.createTransport(peerAddress, peerPort);
+
+			if (transport != null) {
+				RobotConnectionInfo robotConnectionInfo = createRobotConnectionInfo(robot_id, ipAddress, transport);
+				InputStream transportInputStream = transport.getInputStream();
 				if (transportInputStream != null) {
-					ConnectThread readRobotMessages = new ConnectThread(transportInputStream, mTransport);
+					ConnectThread readRobotMessages = new ConnectThread(transportInputStream, robotConnectionInfo);
 					Thread t = new Thread(readRobotMessages);
 					t.start();
-					//TODO : Need to send the jabber details in a different way later.
-					sendRobotJabberDetails();
 				} else {
 					LogHelper.log(TAG, "Could not get input stream for the socket. Try again.");
 				}
 			} else {
 				LogHelper.log(TAG, "Could not connect to peer. Try again.");
-				mTcpDataPacketListener.errorInConnecting();
+				mTcpDataPacketListener.errorInConnecting(robot_id);
 			}
-		}
-
-		public void sendRobotJabberDetails() {
-			LogHelper.log(TAG, "Send Jabber details to Robot");
-//			RobotPacket jabberDetailsPacket = new RobotPacket(RobotCommandPacketConstants.COMMAND_ROBOT_JABBER_DETAILS);
-			/*NetworkPacketBundle jabberDetailsBundle = jabberDetailsPacket.getBundle();*/
-	//		RobotPacketBundle jabberDetailsBundle = jabberDetailsPacket.getBundle();
-	//		jabberDetailsBundle.putString(RobotCommandPacketConstants.KEY_ROBOT_JABBER_ID, XMPPUtils.getRobotJabberId(mContext));
-	//		jabberDetailsBundle.putString(RobotCommandPacketConstants.KEY_ROBOT_JABBER_PWD, XMPPUtils.getRobotJabberPwd(mContext));
-	//		sendRobotCommand(jabberDetailsPacket, mTransport);
-		}
+		}		
 	}
 
 	private class ConnectThread implements Runnable {
 
 		boolean running = true;
 		private InputStream mIs;
-
-		public ConnectThread(InputStream is , Transport transport) {
+		private RobotConnectionInfo connectionInfo;
+		private Transport transport;
+		private String robotId;
+		//No need to send input stream. It can be very well retrieved from the transport. This is just to make sure input streaM
+		// exists for ther transport before making an attempt to connect.
+		public ConnectThread(InputStream is , RobotConnectionInfo robotConnectionInfo) {
 			mIs = is;
-			mTransport = transport;
-
+			connectionInfo = robotConnectionInfo;
 		}
 		public void run() {
-
+			transport = connectionInfo.getTransport();
+			robotId = connectionInfo.getRobotId();
 			try {
-				notifyRobotConnected();
+				notifyRobotConnected(robotId);
 				while(running) {
 					DataInputStream din = new DataInputStream(mIs);
 					RobotCommandsGroup robotCommandsGroup = null;
 					try {
-						if (mTransport != null && mTransport.isConnected()) {
+						if (transport != null && transport.isConnected()) {
 							robotCommandsGroup = readPacket(din);
 						} else {
 							LogHelper.log(TAG, "Peer is not connected");
@@ -153,9 +154,7 @@ public class TcpConnectionHelper {
 						break;
 					}
 					if (robotCommandsGroup != null) {	
-						//TODO : Get all commands. Right now only processing one.
-						RobotPacket robotPacket = robotCommandsGroup.getRobotPacket(0);
-						notifyPacketReceived(robotPacket);
+						notifyPacketReceived(robotId, robotCommandsGroup);
 					} else {
 						LogHelper.log(TAG, "Null packet received");
 					}
@@ -163,8 +162,8 @@ public class TcpConnectionHelper {
 			}
 			finally {
 				LogHelper.logD(TAG, "Connected Thread end");
-				mTransport = null;
-				notifyRobotDisconnected();
+				notifyRobotDisconnected(robotId);
+				deleteConnectionInfo(robotId);
 			}
 		}
 	}
@@ -174,15 +173,17 @@ public class TcpConnectionHelper {
 		RobotCommandsGroup robotCommandGroup = null;
 		int length = din.readInt();
 		LogHelper.log(TAG, "length = " + length);
-
 		byte [] data = new byte[length];
 
 		readByteArrayHelper(din, data, length);
-
-		robotCommandGroup = CommandFactory.createCommandGroup(data);
-		//LogHelper.log(TAG, "Robot Packet = " + robotPacket);
-		//TODO : Process all robot packets.
-
+		
+		boolean isValidCommandPacket = CommandPacketValidator.validateHeaderAndSignature(data);
+		if (isValidCommandPacket) {
+			LogHelper.log(TAG, "Header Version and Signature match");
+			robotCommandGroup = CommandFactory.createCommandGroup(data);
+		} else {
+			LogHelper.log(TAG, "Header Version and Signature mis-match");
+		}
 		return robotCommandGroup;
 	}
 	private void readByteArrayHelper(DataInputStream din, byte [] byData, int length) throws IOException
@@ -202,80 +203,93 @@ public class TcpConnectionHelper {
 		}
 	}
 
-	private void notifyPacketReceived(final RobotPacket robotPacket)
+	// TODO: add a field for robotId. Once we have multiple robot support, we will nedd that field.
+	private void notifyPacketReceived(final String robotId, final RobotCommandsGroup robotCommandGroup)
 	{
-		if (mTcpDataPacketListener == null) {
-			return;
-		}
+		for (int i = 0; i < robotCommandGroup.size(); i++) {
 
-		if (mHandler != null) {
-			mHandler.post(new Runnable() {
+			final RobotPacket robotPacket = robotCommandGroup.getRobotPacket(i);
+			if (mTcpDataPacketListener == null) {
+				return;
+			}
 
-				public void run() {
-					mTcpDataPacketListener.onDataReceived(robotPacket);
-				}
-			});
+			if (mHandler != null) {
+				mHandler.post(new Runnable() {
+					public void run() {
+						mTcpDataPacketListener.onDataReceived(robotId, robotPacket);
+					}
+				});
+			}
+			else {
+				mTcpDataPacketListener.onDataReceived(robotId, robotPacket);
+			}
 		}
-		else {
-			mTcpDataPacketListener.onDataReceived(robotPacket);
-		}
-
 	}
 
-	public void connectToRobot(final String ipAddress) {
+	public void connectToRobot(final String robot_id, final String ipAddress) {
 		Runnable task = new Runnable() {
 
 			public void run() {
-				connectToRobotInternal(ipAddress);
+				connectToRobotInternal(robot_id, ipAddress);
 			}
 		};
 
 		TaskUtils.scheduleTask(task, 0);
 	}
 
-	public void connectToRobotInternal(String ipAddress) {
+	public void connectToRobotInternal(String robot_id, String ipAddress) {
 		LogHelper.log(TAG, "connectToRobot called");
-		if(!isConnected(ipAddress)) {
-			mTcpRobotConnectHelper.connectToRobot(ipAddress);
+		if(!isConnected(robot_id)) {
+			mTcpRobotConnectHelper.connectToRobot(robot_id, ipAddress);
 		} 
 		else {
-			LogHelper.log(TAG, "Already connected to robot. IpAddress: " + ipAddress);
+			LogHelper.log(TAG, "Already connected to robot. IpAddress: " + ipAddress + ". Breaking connection");
 		}
 	}
 
-	public void closePeerConnection(final String ipAddress)
+	public void closePeerConnection(final String robotId)
 	{
 		Runnable task = new Runnable() {
-
 			public void run() {
-				closePeerConnectionInternal(ipAddress);
+				closePeerConnectionInternal(robotId);
 			}
 		};
 
 		TaskUtils.scheduleTask(task, 0);
 	}
 
-	public void closePeerConnectionInternal(String ipAddress)
+	private void closePeerConnectionInternal(String robotId)
 	{
 		LogHelper.log(TAG, "closePeerConnection called");
-		if(isConnected(ipAddress)) {
+		if(isConnected(robotId)) {	
 			NeatoPrefs.setPeerConnectionStatus(mContext, false);
-			if (mTransport != null) {
-				mTransport.close();
-				mTransport = null;
+			RobotConnectionInfo robotConnection = getRobotConnectionInfo(robotId);
+			Transport transport = robotConnection.getTransport();
+			if (transport != null) {
+				transport.close();
+				transport = null;
 			}
+			deleteConnectionInfo(robotId);
 		} 
 	}
 
 	//TODO: Find if the robot is connected. Map the serial id with the existing connections.
 	public boolean isConnected(String robotId) {
-		LogHelper.log(TAG, "isConnected transport = " + mTransport);
-		if (mTransport == null) {
-			return false;
+		LogHelper.log(TAG, "isConnected transport: "+robotId);
+		RobotConnectionInfo robotConnectionInfo = getRobotConnectionInfo(robotId);
+		if (robotConnectionInfo != null) {
+			Transport transport = robotConnectionInfo.getTransport();
+			if (transport == null) {
+				LogHelper.log(TAG, "trasport for robotId is null");
+				return false;
+			}
+			return transport.isConnected();
 		}
-		return mTransport.isConnected();
+		else {
+			LogHelper.log(TAG, "RobotConnectionInfo for robotId does not exist");
+			return false;
+		}		
 	}
-
 
 	public  void sendRobotCommand(RobotPacket robotPacket, Transport transport) {
 		byte[] packet = getRobotPacket(robotPacket);
@@ -284,7 +298,14 @@ public class TcpConnectionHelper {
 	
 	public  void sendRobotCommand(String robotId, RobotPacket robotPacket) {
 		byte[] packet = getRobotPacket(robotPacket);
-		sendRobotPacketAsync(mTransport, packet);
+		RobotConnectionInfo robotConnectionInfo = getRobotConnectionInfo(robotId);
+		if (robotConnectionInfo != null) {
+			Transport transport = robotConnectionInfo.getTransport();
+			LogHelper.log(TAG, "Connection exist. Sending command.");
+			sendRobotPacketAsync(transport,packet);
+		} else {
+			LogHelper.log(TAG, "Connection does not exist.");
+		}
 	}
 
 	private  byte[] getRobotPacket(RobotPacket robotPacket)
@@ -292,7 +313,10 @@ public class TcpConnectionHelper {
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(bos);
-		byte[] packet = NetworkXmlHelper.commandToXml(robotPacket);
+
+		Node header = CommandPacketValidator.getHeaderXml();
+		Node command = robotPacket.robotCommandToXmlNode();
+		byte[] packet = CommandFactory.getPacketData(header, command);
 		try {
 			dos.writeInt(packet.length);
 			dos.write(packet);
@@ -304,8 +328,6 @@ public class TcpConnectionHelper {
 		return bos.toByteArray();
 	}
 
-
-
 	private  void sendRobotPacket(Transport transport,  byte[] Packet )
 	{
 
@@ -316,6 +338,7 @@ public class TcpConnectionHelper {
 
 		try {
 			transport.send(Packet);
+			LogHelper.log(TAG, "Packet is sent");
 		}
 		catch (IOException e) {
 			LogHelper.log(TAG, "Exception in sendRobotPacket", e);
@@ -324,7 +347,10 @@ public class TcpConnectionHelper {
 
 	private  void sendRobotPacketAsync(final Transport transport, final  byte[] Packet )
 	{
-
+		if (transport == null) {
+			LogHelper.log(TAG, "Transport is null. Cannot send packet");
+			return;
+		}
 		Runnable task = new Runnable() {
 
 			public void run() {
@@ -335,12 +361,77 @@ public class TcpConnectionHelper {
 		t.start();
 	}
 
-	//TODO : Later to be used in a MAP 
-	public Transport getTransport(String ipAddress) {
-		return mTransport;
+	public Transport getTransport(String robotId) {
+		RobotConnectionInfo robotConnectionInfo = getRobotConnectionInfo(robotId);
+		if (robotConnectionInfo != null) {
+			return robotConnectionInfo.getTransport();
+		} else {
+			LogHelper.log(TAG, "No transport exists for the robotId");
+			return null;
+		}
 	}
 
+	// TODO: If supporting multiple connections. Change this function to return a Arraylist<RobotConnectionInfo> 
+	public RobotConnectionInfo getConnectedRobotInfo() {
+		return mRobotConnectionInfo;
+	}
 
+	private RobotConnectionInfo createRobotConnectionInfo(String robotId, String ipAddress, Transport transport) {
+		//TODO: Right now only one connectionInfoObject as supports only one connection.
+		mRobotConnectionInfo = new RobotConnectionInfo(robotId, ipAddress, transport);
+		return mRobotConnectionInfo;
+	}
 
+	private RobotConnectionInfo getRobotConnectionInfo(String robotId) {
+		if ((mRobotConnectionInfo != null) && (mRobotConnectionInfo.getRobotId().equals(robotId))) {
+			return mRobotConnectionInfo;
+		} else {
+			LogHelper.log(TAG, "RobotConnectionInfo does not exist for robotId:" + robotId);
+			return null;
+		}
+	}
 
+	private void deleteConnectionInfo(String robotId) {
+		LogHelper.log(TAG, "Deleting Peer robot connection info");
+		//TODO: Right now only one connectionInfoObject as supports only one connection.
+		if (mRobotConnectionInfo != null) {
+			mRobotConnectionInfo.setIpAddress(null);
+			mRobotConnectionInfo.setRobotId(null);
+			mRobotConnectionInfo.setTransport(null);
+		}
+		mRobotConnectionInfo = null;
+	}
+	private class RobotConnectionInfo {
+		private String mIpAddress;
+		private String mRobotId;
+		private Transport mTransport;
+		
+		public RobotConnectionInfo(String robotId, String ipAddress, Transport transport) {
+			mRobotId = robotId;
+			mIpAddress = ipAddress;
+			mTransport = transport;
+		}
+
+		public String getRobotId() {
+			return mRobotId;
+		}
+		
+		@SuppressWarnings("unused")
+		public String getIpAddress() {
+			return mIpAddress;
+		}
+		public Transport getTransport() {
+			return mTransport;
+		}
+
+		public void setRobotId(String robotId) {
+			mRobotId = robotId;
+		}
+		public void setIpAddress(String ipAddress) {
+			mIpAddress = ipAddress;
+		}
+		public void setTransport(Transport transport) {
+			mTransport = transport;
+		}
+	}
 }

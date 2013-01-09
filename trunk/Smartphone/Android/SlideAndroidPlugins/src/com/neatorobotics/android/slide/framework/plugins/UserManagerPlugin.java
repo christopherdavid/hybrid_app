@@ -8,11 +8,19 @@ import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
+import com.neatorobotics.android.slide.framework.pluginhelper.EventTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.UserJsonData;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
@@ -34,7 +42,7 @@ public class UserManagerPlugin extends Plugin {
 	private static final HashMap<String, UserManagerPluginMethods> ACTION_MAP = new HashMap<String, UserManagerPlugin.UserManagerPluginMethods>();
 
 	// If we add more action type, please ensure to add it into the ACTION_MAP
-	private static enum UserManagerPluginMethods {CREATE_USER, LOGIN, LOGOUT, ISLOGGEDIN, GET_USER_DETAILS, ASSOCIATE_ROBOT, DISASSOCIATE_ROBOT, GET_ASSOCIATED_ROBOTS, DISASSOCAITE_ALL_ROBOTS};
+	private static enum UserManagerPluginMethods {CREATE_USER, LOGIN, LOGOUT, ISLOGGEDIN, GET_USER_DETAILS, ASSOCIATE_ROBOT, DISASSOCIATE_ROBOT, GET_ASSOCIATED_ROBOTS, DISASSOCAITE_ALL_ROBOTS, REGISTER_NETWORK_STATE_LISTENER};
 	static {
 		ACTION_MAP.put(ActionTypes.LOGIN, UserManagerPluginMethods.LOGIN);
 		ACTION_MAP.put(ActionTypes.IS_USER_LOGGEDIN, UserManagerPluginMethods.ISLOGGEDIN);
@@ -45,6 +53,7 @@ public class UserManagerPlugin extends Plugin {
 		ACTION_MAP.put(ActionTypes.DISASSOCIATE_ROBOT, UserManagerPluginMethods.DISASSOCIATE_ROBOT);
 		ACTION_MAP.put(ActionTypes.GET_ASSOCIATED_ROBOTS, UserManagerPluginMethods.GET_ASSOCIATED_ROBOTS);
 		ACTION_MAP.put(ActionTypes.DISASSOCAITE_ALL_ROBOTS, UserManagerPluginMethods.DISASSOCAITE_ALL_ROBOTS);
+		ACTION_MAP.put(ActionTypes.REGISTER_NETWORK_STATE_LISTENER, UserManagerPluginMethods.REGISTER_NETWORK_STATE_LISTENER);
 	}
 
 	private RobotDetailsPluginListener mRobotDetailsPluginListener;
@@ -121,6 +130,10 @@ public class UserManagerPlugin extends Plugin {
 		case DISASSOCAITE_ALL_ROBOTS:
 			LogHelper.log(TAG, "DISASSOCAITE_ALL_ROBOTS action initiated");
 			disassociateAllRobots(context, jsonData, callbackId);
+			break;
+		case REGISTER_NETWORK_STATE_LISTENER:
+			LogHelper.log(TAG, "REGISTER_NETWORK_STATE_LISTENER action initiated");
+			registerNetworkStateListener(context, jsonData, callbackId);
 			break;
 		}
 	}
@@ -213,6 +226,12 @@ public class UserManagerPlugin extends Plugin {
 		error(loginUserPluginResult, callbackId);
 	}
 	
+	@SuppressWarnings("unused")
+	private void sendError(String callbackId, int errorCode, int errorResId)
+	{
+		String message = cordova.getActivity().getString(errorResId);
+		sendError(callbackId, errorCode, message);
+	}
 
 	private void logoutUser(final Context context, final UserJsonData jsonData, final String callbackId) {	
 		Runnable task = new Runnable() {
@@ -461,7 +480,40 @@ public class UserManagerPlugin extends Plugin {
 		mRobotDetailsPluginListener = new RobotDetailsPluginListener(callbackId);
 		UserManager.getInstance(context).getAssociatedRobots(email, auth_token, mRobotDetailsPluginListener);
 	}
+	
+	// TODO: for now this is in UserManager. Should be moved to appropriate plugin.
+	private void registerNetworkStateListener(Context context, UserJsonData jsonData, String callbackId) {
+		
+		// TODO : Club all the Broadcast listeners for network state change together.
+		BroadcastReceiver mWifiStateChange = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
 
+				if(intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
+					NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+					if(networkInfo.isConnected()) {
+						// Network is connected
+						LogHelper.logD(TAG, "Connected to a network");
+						dispatchEvent(EventTypes.WIFI_CONNECTED);
+					}
+				} 
+				else if(intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+					NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+					if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI && ! networkInfo.isConnected()) {
+						// Network is disconnected
+						LogHelper.logD(TAG, "Disconnecting from the network");
+						dispatchEvent(EventTypes.WIFI_DISCONNECTED);
+					}
+				}
+			}
+		};
+		context.registerReceiver(mWifiStateChange, new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
+		context.registerReceiver(mWifiStateChange, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+		PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK);
+		LogHelper.logD(TAG, "Network state listener registerred");
+		success(pluginResult, callbackId);
+	}
+	
 	private static class ActionTypes {
 		public static final String LOGIN = "login";
 		public static final String CREATE_USER = "createUser";
@@ -472,9 +524,8 @@ public class UserManagerPlugin extends Plugin {
 		public static final String GET_ASSOCIATED_ROBOTS = "getAssociatedRobots";
 		public static final String DISASSOCIATE_ROBOT = "disassociateRobot";
 		public static final String DISASSOCAITE_ALL_ROBOTS = "disassociateAllRobots";
+		public static final String REGISTER_NETWORK_STATE_LISTENER = "registerNetworkStateListener";
 	}
-
-
 
 	private JSONObject getErrorJsonObject(int errorCode, String errMessage) {
 		JSONObject error = new JSONObject();
@@ -486,7 +537,15 @@ public class UserManagerPlugin extends Plugin {
 		}
 		return error;
 	}
-
+	
+	private void dispatchEvent(String eventName) {
+		LogHelper.log(TAG, "Event called");
+		String javascriptTemplate = "var e = document.createEvent('Events');\n" +
+				"e.initEvent('"+eventName+"');\n" +	                    
+				"document.dispatchEvent(e);";
+		this.sendJavascript(javascriptTemplate);		
+	}
+	
 	private class RobotDetailsPluginListener implements AssociatedRobotDetailsListener {
 
 		private String mCallBackId;
@@ -496,13 +555,13 @@ public class UserManagerPlugin extends Plugin {
 		}
 		@Override
 		public void onRobotDetailsReceived(ArrayList<RobotItem> robotList) {
-			
+
 			JSONArray robots = new JSONArray();
 			PluginResult pluginResult;
 			if (robotList != null) {
 				for (RobotItem item: robotList) {
 					try {
-						
+
 						JSONObject robot = new JSONObject();
 						robot.put(JsonMapKeys.KEY_ROBOT_ID, item.getSerialNumber());
 						robot.put(JsonMapKeys.KEY_ROBOT_NAME, item.getName());
