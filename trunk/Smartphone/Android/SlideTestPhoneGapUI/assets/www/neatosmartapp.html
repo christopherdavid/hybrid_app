@@ -89,11 +89,11 @@
 			<hr>
 			<input type="button" id="btnStartStopCleaningServer" value="" class="defaultButton" aria-hidden=true></input>
 			<input type="button" id="btnGoToRobotMap" value="Show Robot Map" class="defaultButton"></input>
-			<input type="button" id="btnSetMap" value="Set Map" class="defaultButton"></input>
+			<input type="button" id="btnGoToAtlas" value="Robot Atlas" class="defaultButton"></input>
 			<input type="button" id="btnGetUserDetails" value="Get User Details" class="defaultButton"/></input>
 		<br>
 		<br>
-			<input type="button" id="btnTest" value="Test" class="defaultButton" aria-hidden=true></input>
+		<input type="button" id="btnTest" value="Test" class="defaultButton" aria-hidden=true></input>
 		<input type="button" id="btnLogout" value="Logout" class="defaultButton"></input>
 		<div id="robotoverlay" aria-hidden=true></div>
 		<div id="robotsFound" aria-hidden=true>
@@ -181,6 +181,21 @@
 		<br>	
 		<div id="robotMap">
 			<img id="robotMapImage"> </img>
+			
+		<div>
+	</section>
+	
+	<!-- Atlas section -->
+		<section id="robotAtlasSection"  aria-hidden=true>
+		<div class="defaultSectionHeader" id="robotAtlasHeader">""</div>
+		<input type="button" id="btnGetRobotAtlasMetadata" value="Get Atlas Metadata" class="defaultButton" ></input>
+		<input type="button" id="btnUpdateRobotAtlasMetadata" value="Update Atlas Metadata" class="defaultButton" ></input>
+		<input type="button" id="btnGetGridData" value="Get Grid Data" class="defaultButton"></input>
+		<br>
+		<br>
+		<br>	
+		<div id="robotAtlas">
+			<img id="robotAtlasGridImage"> </img>
 			
 		<div>
 	</section>

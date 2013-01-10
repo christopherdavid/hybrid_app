@@ -19,6 +19,11 @@ import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotD
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
 import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedScheduleGroup;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
+import com.neatorobotics.android.slide.framework.webservice.robot.atlas.RobotAtlasWebservicesManager;
+import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.RobotAtlasGridWebservicesManager;
+import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.listeners.RobotGridDataDownloadListener;
+import com.neatorobotics.android.slide.framework.webservice.robot.atlas.listeners.AddUpdateRobotAtlasListener;
+import com.neatorobotics.android.slide.framework.webservice.robot.atlas.listeners.RobotAtlasDataDownloadListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapDataDownloadListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.UpdateRobotMapListener;
@@ -39,7 +44,8 @@ public class RobotManagerPlugin extends Plugin {
 	private enum RobotManagerPluginMethods {DISCOVER_NEAR_BY_ROBOTS, TRY_DIRECT_CONNECTION, 
 		SEND_COMMAND_TO_ROBOT, SET_ROBOT_SCHEDULE, 
 		SET_MAP_OVERLAY_DATA, GET_ROBOT_MAP, 
-		GET_ROBOT_SCHEDULE, DISCONNECT_DIRECT_CONNECTION};
+		GET_ROBOT_SCHEDULE, DISCONNECT_DIRECT_CONNECTION, GET_ROBOT_ATLAS_METADATA,
+		UPDATE_ROBOT_ATLAS_METADATA, GET_ATLAS_GRID_DATA};
 
 		static {
 			ACTION_MAP.put(ActionTypes.DISCOVER_NEAR_BY_ROBOTS, RobotManagerPluginMethods.DISCOVER_NEAR_BY_ROBOTS);
@@ -50,6 +56,9 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_MAP.put(ActionTypes.GET_ROBOT_MAP, RobotManagerPluginMethods.GET_ROBOT_MAP);
 			ACTION_MAP.put(ActionTypes.GET_ROBOT_SCHEDULE, RobotManagerPluginMethods.GET_ROBOT_SCHEDULE);
 			ACTION_MAP.put(ActionTypes.DISCONNECT_DIRECT_CONNECTION, RobotManagerPluginMethods.DISCONNECT_DIRECT_CONNECTION);
+			ACTION_MAP.put(ActionTypes.GET_ROBOT_ATLAS_METADATA, RobotManagerPluginMethods.GET_ROBOT_ATLAS_METADATA);
+			ACTION_MAP.put(ActionTypes.UPDATE_ROBOT_ATLAS_METADATA, RobotManagerPluginMethods.UPDATE_ROBOT_ATLAS_METADATA);
+			ACTION_MAP.put(ActionTypes.GET_ATLAS_GRID_DATA, RobotManagerPluginMethods.GET_ATLAS_GRID_DATA);
 		}
 
 		/*private RobotPluginAssociateListener mRobotPluginAssociateListener;*/
@@ -104,7 +113,7 @@ public class RobotManagerPlugin extends Plugin {
 				// TODO: handle with a listener
 				break;
 			case SET_MAP_OVERLAY_DATA:
-				LogHelper.log(TAG, "UPDATE_ROBOT_MAP action initiated");
+				LogHelper.log(TAG, "SET_MAP_OVERLAY_DATA action initiated");
 				// TODO: handle with a listener
 				setMapOverlayData(context, jsonData, callbackId);
 				break;
@@ -124,6 +133,18 @@ public class RobotManagerPlugin extends Plugin {
 
 				LogHelper.log(TAG, "DISCONNECT_PEER action initiated");
 				disconnectPeerConnection(context, jsonData, callbackId);
+
+			case GET_ROBOT_ATLAS_METADATA:
+				LogHelper.log(TAG, "GET_ROBOT_ATLAS_METADATA action initiated");
+				getRobotAtlasMetadata(context, jsonData, callbackId);
+				break;
+			case UPDATE_ROBOT_ATLAS_METADATA:
+				LogHelper.log(TAG, "UPDATE_ROBOT_ATLAS_METADATA action initiated");
+				updateAtlasMetaData(context, jsonData, callbackId);
+				break;
+			case GET_ATLAS_GRID_DATA:
+				LogHelper.log(TAG, "GET_ATLAS_GRID_DATA action initiated");
+				getAtlasGridData(context, jsonData, callbackId);
 			}
 		}
 
@@ -296,6 +317,130 @@ public class RobotManagerPlugin extends Plugin {
 
 		}
 
+		private void updateAtlasMetaData(Context context, final RobotJsonData robotParams, final String callbackId) {
+			LogHelper.logD(TAG, "setAtlasMetaData action initiated in Robot plugin");
+			LogHelper.logD(TAG, "Input Params = " + robotParams);
+			String robotId = robotParams.getString(JsonMapKeys.KEY_ROBOT_ID);
+			//TODO: we calculate the atlasversion inside for now. Later we will store it in the Database.
+			String atlasVersion = "";
+			JSONObject atlasMetaData = robotParams.getJsonObject(JsonMapKeys.KEY_ALTAS_METADATA);
+			String overlayDataStr = atlasMetaData.toString();	
+			RobotAtlasWebservicesManager.getInstance(context).updateRobotAtlasData(robotId, atlasVersion, overlayDataStr, new AddUpdateRobotAtlasListener() {
+
+				@Override
+				public void onSuccess(String robot_atlas_id, String atlas_version) {
+					LogHelper.logD(TAG, "atlas data uploaded successfully");
+					// TODO: send the versions and ids to the upper layer.
+					PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.OK);
+					success(getRobotMapPluginResult, callbackId);
+				}
+
+				@Override
+				public void onServerError(String errMessage) {
+					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_SERVER_ERROR, errMessage);
+					PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
+					error(getRobotMapPluginResult, callbackId);
+				}
+
+				@Override
+				public void onNetworkError(String errMessage) {
+					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
+					PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
+					error(getRobotMapPluginResult, callbackId);
+					
+				}
+			});
+
+		}
+		
+		private void getRobotAtlasMetadata(final Context context, final RobotJsonData jsonData, final String callbackId) {
+
+			LogHelper.logD(TAG, "getRobotAtlasMetadata action initiated in Robot plugin");
+
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+
+			RobotAtlasWebservicesManager.getInstance(context).getRobotAtlasData(robotId, new RobotAtlasDataDownloadListener() {
+
+				@Override
+				public void onAtlasDataDownloaded(String atlasId,
+						String atlasFileUrl) {
+					JSONArray robotMaps = new JSONArray();
+					JSONObject jGetRobotAtlasNotification = new JSONObject();
+					try {
+						JSONObject overlayData = JsonHelper.createJsonFromFile(atlasFileUrl);
+						if (overlayData != null) {
+							jGetRobotAtlasNotification.put(JsonMapKeys.KEY_ATLAS_ID, atlasId);
+							jGetRobotAtlasNotification.put(JsonMapKeys.KEY_ALTAS_METADATA, overlayData);
+							robotMaps.put(jGetRobotAtlasNotification);
+							PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.OK, robotMaps);
+							success(getRobotMapPluginResult, callbackId);
+						} else {
+							JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_TYPE_UNKNOWN, "Invalid JSON file");
+							PluginResult getRobotAtlasPluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
+							error(getRobotAtlasPluginResult, callbackId);
+						}
+
+					}
+					catch (JSONException e) {
+						LogHelper.log(TAG, "Exception in getMapDataSuccess", e);
+					}
+
+				}
+
+				@Override
+				public void onAtlasDataDownloadError(String mapId,
+						String errMessage) {
+					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_TYPE_UNKNOWN, errMessage);
+					PluginResult getRobotAtlasPluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
+					error(getRobotAtlasPluginResult, callbackId);
+
+				}
+			});
+		}
+		
+
+		//TODO: We are taking robotId. Analyse if taking atlas_id is a better option.
+		private void getAtlasGridData(Context context,
+				RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "getAtlasGridData action initiated in Robot plugin");
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			String gridId = jsonData.getString(JsonMapKeys.KEY_ATLAS_GRID_ID);
+			RobotAtlasGridWebservicesManager.getInstance(context).getAtlasGridData(robotId, gridId, new RobotGridDataDownloadListener() {
+				
+				@Override
+				public void onGridDataDownloaded(String atlasId, String gridId,
+						String fileUrl) {
+					JSONObject jGetAtlasGridNotification = new JSONObject();
+					JSONArray robotGrids = new JSONArray();
+					if (fileUrl != null) {
+						try {
+							jGetAtlasGridNotification.put(JsonMapKeys.KEY_ATLAS_ID, atlasId);
+							jGetAtlasGridNotification.put(JsonMapKeys.KEY_ATLAS_GRID_ID, atlasId);
+							jGetAtlasGridNotification.put(JsonMapKeys.KEY_ATLAS_GRID_DATA, FILE_PREFIX + fileUrl);						} 
+						catch (JSONException e) {
+							LogHelper.log(TAG, "Exception in getAtlasGridData", e);
+						}
+						robotGrids.put(jGetAtlasGridNotification);
+						PluginResult getAtlasGridPluginResult = new  PluginResult(PluginResult.Status.OK, robotGrids);
+						success(getAtlasGridPluginResult, callbackId);
+					} else {
+						JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_TYPE_UNKNOWN, "Invalid JSON file");
+						PluginResult getAtlasGridPluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
+						error(getAtlasGridPluginResult, callbackId);
+					}
+				}
+				
+				@Override
+				public void onGridDataDownloadError(String atlasId, String gridId,
+						String errMessage) {
+					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_SERVER_ERROR, errMessage);
+					PluginResult getRobotGridPluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
+					error(getRobotGridPluginResult, callbackId);
+					
+				}
+			});
+		}
+		
 		private RobotManagerPluginMethods convertToInternalAction(String action) {
 			LogHelper.logD(TAG, "convertToInternalAction - action = " + action);
 			RobotManagerPluginMethods robotManagerPluginMethod = ACTION_MAP.get(action);
@@ -312,6 +457,9 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String GET_ROBOT_MAP = "getRobotMap";
 			public static final String GET_ROBOT_SCHEDULE = "getSchedule";
 			public static final String DISCONNECT_DIRECT_CONNECTION = "disconnectDirectConnection";
+			public static final String GET_ROBOT_ATLAS_METADATA = "getRobotAtlasMetadata";
+			public static final String UPDATE_ROBOT_ATLAS_METADATA = "updateRobotAtlasMetadata";
+			public static final String GET_ATLAS_GRID_DATA = "getAtlasGridData";
 		}
 
 		private JSONObject getErrorJsonObject(int errorCode, String errMessage) {
@@ -373,7 +521,7 @@ public class RobotManagerPlugin extends Plugin {
 			}
 
 			public void addRobotToList(RobotInfo robotInfo) {
-					robotList.put(robotJsonObject(robotInfo));
+				robotList.put(robotJsonObject(robotInfo));
 			}
 
 			public JSONObject robotJsonObject(RobotInfo robotInfo) {

@@ -1,21 +1,16 @@
 package com.neatorobotics.android.slide.framework.webservice.user;
 
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-
 import android.content.Context;
-import android.util.Log;
-
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.DisassociateNeatoRobotToUser;
@@ -43,7 +38,7 @@ public class NeatoUserWebservicesHelper {
 		if (createUserResponse.completed()) { 
 			try {
 				LogHelper.logD(TAG, "Creating Neato User completed. Reading response");
-				String createUserJson = convertStreamToString(createUserResponse.mResponseInputStream);
+				String createUserJson = AppUtils.convertStreamToString(createUserResponse.mResponseInputStream);
 				LogHelper.log(TAG, "Create New User Json = " + createUserJson);
 				result = resultMapper.readValue(createUserJson, new TypeReference<CreateNeatoUserResult>() {});
 				LogHelper.log(TAG, "Creating user completed.");
@@ -78,7 +73,7 @@ public class NeatoUserWebservicesHelper {
 		if (loginUserResponse.completed()) { 
 			try {
 				LogHelper.logD(TAG, "Login completed. Reading response");
-				String json = convertStreamToString(loginUserResponse.mResponseInputStream);
+				String json = AppUtils.convertStreamToString(loginUserResponse.mResponseInputStream);
 				LogHelper.logD(TAG, "LoginNeatoUserToken JSON = " + json);
 				result = resultMapper.readValue(json, new TypeReference<LoginNeatoUserTokenResult>() {});
 				LogHelper.log(TAG, "Login Neato User completed.");
@@ -107,18 +102,18 @@ public class NeatoUserWebservicesHelper {
 		NeatoHttpResponse getNeatoUserDetailsResponse = NeatoWebserviceHelper.executeHttpPost(context, GetNeatoUserDetails.METHOD_NAME, reqParams);
 		if (getNeatoUserDetailsResponse.completed()) { 
 			try {
-				Log.i(TAG, "authkey = " + authToken);
-				String json = convertStreamToString(getNeatoUserDetailsResponse.mResponseInputStream);
-				Log.i(TAG, "JSON = " + json);
+				LogHelper.logD(TAG, "authkey = " + authToken);
+				String json = AppUtils.convertStreamToString(getNeatoUserDetailsResponse.mResponseInputStream);
+				LogHelper.logD(TAG, "JSON = " + json);
 				result = resultMapper.readValue(json, new TypeReference<GetNeatoUserDetailsResult>() {});
 			} catch (JsonParseException e) {
-				Log.e(TAG, "GetNeatoUserDetails", e);
+				LogHelper.log(TAG, "GetNeatoUserDetails", e);
 				
 			} catch (JsonMappingException e) {
-				Log.e(TAG, "GetNeatoUserDetails", e);
+				LogHelper.log(TAG, "GetNeatoUserDetails", e);
 				
 			} catch (IOException e) {
-				Log.e(TAG, "GetNeatoUserDetails", e);
+				LogHelper.log(TAG, "GetNeatoUserDetails", e);
 			}
 		}
 		else { 
@@ -139,18 +134,18 @@ public class NeatoUserWebservicesHelper {
 		NeatoHttpResponse getUserAssociatedRobotsResponse = NeatoWebserviceHelper.executeHttpPost(context, GetUserAssociatedRobots.METHOD_NAME, reqParams);
 		if (getUserAssociatedRobotsResponse.completed()) { 
 			try {
-				Log.i(TAG, "authkey = " + authToken);
-				String json = convertStreamToString(getUserAssociatedRobotsResponse.mResponseInputStream);
-				Log.i(TAG, "JSON = " + json);
+				LogHelper.logD(TAG, "authkey = " + authToken);
+				String json = AppUtils.convertStreamToString(getUserAssociatedRobotsResponse.mResponseInputStream);
+				LogHelper.logD(TAG, "JSON = " + json);
 				result = resultMapper.readValue(json, new TypeReference<GetUserAssociatedRobotsResult>() {});
 			} catch (JsonParseException e) {
-				Log.e(TAG, "Exception in GetUserAssociatedRobotsResult", e);
+				LogHelper.log(TAG, "Exception in GetUserAssociatedRobotsResult", e);
 				
 			} catch (JsonMappingException e) {
-				Log.e(TAG, "Exception in GetUserAssociatedRobotsResult", e);
+				LogHelper.log(TAG, "Exception in GetUserAssociatedRobotsResult", e);
 				
 			} catch (IOException e) {
-				Log.e(TAG, "Exception in GetUserAssociatedRobotsResult", e);
+				LogHelper.log(TAG, "Exception in GetUserAssociatedRobotsResult", e);
 			}
 		}
 		else { 
@@ -224,27 +219,4 @@ public class NeatoUserWebservicesHelper {
 		
 		return result;
 	}
-
-	 private static String convertStreamToString(InputStream is) {
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-	        StringBuilder sb = new StringBuilder();
-	 
-	        String line = null;
-	        try {
-	            while ((line = reader.readLine()) != null) {
-	                sb.append(line + "\n");
-	            }
-	        } catch (IOException e) {
-	          LogHelper.log(TAG, "Excpetion in convertStreamToString", e);
-	        } finally {
-	            try {
-	                is.close();
-	            } catch (IOException e) {
-	            	LogHelper.log(TAG, "Excpetion in convertStreamToString", e);
-	            }
-	        }
-	        return sb.toString();
-	 }
-
-	
 }

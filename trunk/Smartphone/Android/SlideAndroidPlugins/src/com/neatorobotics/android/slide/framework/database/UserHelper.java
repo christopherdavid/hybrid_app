@@ -24,7 +24,6 @@ public class UserHelper {
 		if (result) {
 			NeatoPrefs.saveUserEmailId(context, userItem.getEmail());
 		}
-		
 		return result;
 	}
 	

@@ -47,6 +47,13 @@ public class JsonMapKeys {
 	public static final String KEY_MAP_IMAGE = "mapImage";
 
 	
+	// Used by ATLAS 
+	public static final String KEY_ATLAS_ID = "atlasId";
+	public static final String KEY_ATLAS_VERSION = "atlasVersion";
+	public static final String KEY_ALTAS_METADATA = "atlasMetadata";
+	public static final String KEY_ATLAS_GRID_ID = "gridId";
+	public static final String KEY_ATLAS_GRID_DATA = "gridData";
+	
 	public static final String KEY_ROOMMAP = "RoomMap";
 	public static final String KEY_NO_GO_MAP = "NoGoMap";
 	public static final String KEY_BASE_STATION_MAP = "BaseStationMap";

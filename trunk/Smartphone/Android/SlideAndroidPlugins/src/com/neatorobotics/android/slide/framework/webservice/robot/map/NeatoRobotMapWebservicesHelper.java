@@ -1,21 +1,14 @@
 package com.neatorobotics.android.slide.framework.webservice.robot.map;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
-
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
@@ -41,8 +34,8 @@ public class NeatoRobotMapWebservicesHelper {
 		if (getNeatoRobotMapsResponse.completed()) { 
 			try {
 				LogHelper.logD(TAG, "Get Maps for Neato Robot completed. Reading response");
-				String json = convertStreamToString(getNeatoRobotMapsResponse.mResponseInputStream);
-				Log.i(TAG, "JSON = " + json);
+				String json = AppUtils.convertStreamToString(getNeatoRobotMapsResponse.mResponseInputStream);
+				LogHelper.logD(TAG, "JSON = " + json);
 				result = resultMapper.readValue(json, new TypeReference<GetNeatoRobotMapsResult>() {});
 				LogHelper.log(TAG, "Get Maps for robot completed.");
 			} catch (JsonParseException e) {
@@ -73,8 +66,8 @@ public class NeatoRobotMapWebservicesHelper {
 		if (getNeatoRobotMapDataResponse.completed()) { 
 			try {
 				LogHelper.logD(TAG, "Get map data for Neato Robot completed. Reading response");
-				String json = convertStreamToString(getNeatoRobotMapDataResponse.mResponseInputStream);
-				Log.i(TAG, "JSON = " + json);
+				String json = AppUtils.convertStreamToString(getNeatoRobotMapDataResponse.mResponseInputStream);
+				LogHelper.logD(TAG, "JSON = " + json);
 				result = resultMapper.readValue(json, new TypeReference<GetNeatoRobotMapDataResult>() {});
 				LogHelper.log(TAG, "Get map data for robot completed.");
 			} catch (JsonParseException e) {
@@ -116,8 +109,8 @@ public class NeatoRobotMapWebservicesHelper {
 		if (postNeatoRobotMapDataResponse.completed()) { 
 			try {
 				LogHelper.logD(TAG, "Add Map data for Neato Robot completed. Reading response");
-				String json = convertStreamToString(postNeatoRobotMapDataResponse.mResponseInputStream);
-				Log.i(TAG, "JSON = " + json);
+				String json = AppUtils.convertStreamToString(postNeatoRobotMapDataResponse.mResponseInputStream);
+				LogHelper.logD(TAG, "JSON = " + json);
 
 				result = resultMapper.readValue(json, new TypeReference<AddNeatoRobotMapDataResult>() {});
 				LogHelper.log(TAG, "Get Map data for robot completed.");
@@ -164,8 +157,8 @@ public class NeatoRobotMapWebservicesHelper {
 		if (updateNeatoRobotMapDataResponse.completed()) { 
 			try {
 				LogHelper.logD(TAG, "Updated Map data for Neato Robot completed. Reading response");
-				String json = convertStreamToString(updateNeatoRobotMapDataResponse.mResponseInputStream);
-				Log.i(TAG, "JSON = " + json);
+				String json = AppUtils.convertStreamToString(updateNeatoRobotMapDataResponse.mResponseInputStream);
+				LogHelper.logD(TAG, "JSON = " + json);
 
 				result = resultMapper.readValue(json, new TypeReference<UpdateNeatoRobotMapResult>() {});
 				LogHelper.log(TAG, "Set Map data for robot completed.");
@@ -198,28 +191,7 @@ public class NeatoRobotMapWebservicesHelper {
 		return updateNeatoRobotMapDataRequest(context, robot_map_id, INVALID_VERSION_NUMBER, null, imageDataVersion, imageData);
 	}
 	
-	 private static String convertStreamToString(InputStream is) {
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-	        StringBuilder sb = new StringBuilder();
-	 
-	        String line = null;
-	        try {
-	            while ((line = reader.readLine()) != null) {
-	                sb.append(line + "\n");
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        } finally {
-	            try {
-	                is.close();
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        return sb.toString();
-	 }
-	 
-	 public static DeleteNeatoRobotMapsResult deleteNeatoRobotMap(Context context, String mapId) {
+	public static DeleteNeatoRobotMapsResult deleteNeatoRobotMap(Context context, String mapId) {
 		 DeleteNeatoRobotMapsResult result = null;
 			Map<String, String> deleteNeatoRobotMapReqParams = new HashMap<String, String>();
 			deleteNeatoRobotMapReqParams.put(DeleteNeatoRobotMapData.Attribute.ROBOT_MAP_ID, mapId);
@@ -228,8 +200,8 @@ public class NeatoRobotMapWebservicesHelper {
 			if (deleteNeatoRobotMapResponse.completed()) { 
 				try {
 					LogHelper.logD(TAG, "Deleting Maps for Neato Robot completed. Reading response");
-					String json = convertStreamToString(deleteNeatoRobotMapResponse.mResponseInputStream);
-					Log.i(TAG, "JSON = " + json);
+					String json = AppUtils.convertStreamToString(deleteNeatoRobotMapResponse.mResponseInputStream);
+					LogHelper.logD(TAG, "JSON = " + json);
 					result = resultMapper.readValue(json, new TypeReference<DeleteNeatoRobotMapsResult>() {});
 					LogHelper.log(TAG, "Delete Map for robot completed.");
 				} catch (JsonParseException e) {

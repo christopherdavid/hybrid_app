@@ -1,5 +1,10 @@
 package com.neatorobotics.android.slide.framework.utils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Base64;
@@ -51,5 +56,27 @@ public class AppUtils {
 		String encodedString = Base64.encodeToString(data, Base64.DEFAULT);
 		return encodedString;
 	}
+	
+	 public static String convertStreamToString(InputStream is) {
+	        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+	        StringBuilder sb = new StringBuilder();
+	 
+	        String line = null;
+	        try {
+	            while ((line = reader.readLine()) != null) {
+	                sb.append(line + "\n");
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        } finally {
+	            try {
+	                is.close();
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        return sb.toString();
+	 }
+	
 
 }

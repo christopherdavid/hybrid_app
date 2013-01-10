@@ -13,6 +13,7 @@ var neatoSmartApp = (function() {
 	var ROBOT_ASSOCIATION_PAGE = 105;
 	var ROBOT_SCHEDULE_PAGE = 106;
 	var ROBOT_MAP_PAGE = 107;
+	var ROBOT_ATLAS_PAGE = 108;
 	var CURRENT_PAGE = USER_HOME_PAGE;
 	return {
 
@@ -366,7 +367,7 @@ var neatoSmartApp = (function() {
 			if (robotId == null) {
 				robotId = "Robot_1001";
 			}
-			RobotPluginManager.setSchedule(robotId, scheduleJsonArray, neatoSmartApp.scheduleEventSuccess, neatoSmartApp.scheduleEventErr);
+			RobotPluginManager.setSchedule(robotId, 1, scheduleJsonArray, neatoSmartApp.scheduleEventSuccess, neatoSmartApp.scheduleEventErr);
 		},
 		
 		scheduleEventSuccess: function(result) {
@@ -454,11 +455,68 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 		},
 		
-		
 		setMapOverlayDataError: function(error) {
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.setResponseText(error);
 		},
+	
+		//ATLAS test buttons
+		
+		getRobotAtlasMetadata: function() {
+			neatoSmartApp.showProgressBar();
+			var robotId = localStorage.getItem('robotId');
+			if (robotId == null) {
+				robotId = "Robot_1001";
+			}
+			RobotPluginManager.getRobotAtlasMetadata(robotId, neatoSmartApp.atlasSuccess, neatoSmartApp.atlasErr);
+		}, 
+		
+			
+		updateRobotAtlasMetadata: function() {
+			neatoSmartApp.showProgressBar();
+			var robotId = localStorage.getItem('robotId');
+			if (robotId == null) {
+				robotId = "Robot_1001";
+			}
+			atlasMetadataInfoStr = "{\"geographies\":[{\"id\":\"floor1\",\"noGo\":[[120,30,150,45],[65,110,85,140]],\"base\":[[20,5,25,10]]}]}";
+			var atlasMetadataInfo = JSON.parse(atlasMetadataInfoStr);
+			RobotPluginManager.updateAtlasMetaData(robotId, atlasMetadataInfo, neatoSmartApp.atlasUpdateSuccess, neatoSmartApp.atlasErr);
+		},
+		
+		getAtlasGridData: function() {
+			neatoSmartApp.showProgressBar();
+			var robotId = localStorage.getItem('robotId');
+			var gridId = "";
+			RobotPluginManager.getAtlasGridData(robotId, gridId, neatoSmartApp.gridSuccess, neatoSmartApp.gridErr);
+		},
+		
+		gridSuccess: function(result) {
+			neatoSmartApp.hideProgressBar();
+			document.getElementById('robotAtlasGridImage').src=result[0].gridData;
+		},
+		
+		gridErr: function(error) {
+			neatoSmartApp.hideProgressBar();
+			neatoSmartApp.setResponseText(result);
+			alert("Error in retrieving grid data");
+		},
+		
+		atlasUpdateSuccess: function(result) {
+			alert("Updated atlas metadata successfully");
+			neatoSmartApp.hideProgressBar();
+		},
+		
+		atlasSuccess: function(result) {
+			alert("Retrieved atlas metadata successfully");
+			neatoSmartApp.hideProgressBar();
+		},
+		
+		atlasErr: function(error) {
+			alert("Error in retrieving atlas metadata");
+			neatoSmartApp.hideProgressBar();
+			neatoSmartApp.setResponseText(error);
+		},
+		
 		getUserDetails: function() {
 			neatoSmartApp.showProgressBar();
 			var email = "demo1@demo.com";
@@ -472,6 +530,7 @@ var neatoSmartApp = (function() {
 		getUserDetailsErr: function(error) {
 			neatoSmartApp.hideProgressBar();
 		},
+		
 		
 		//##################FUNCTIONS RELATED TO HIDE-SHOW SECTIONS ON HTML#####################################
 		
@@ -557,9 +616,9 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnStartStopCleaningServer').addEventListener('click', neatoSmartApp.startStopCleaningServer , true);
 			document.querySelector('#btnStartStopCleaningPeer').addEventListener('click', neatoSmartApp.startStopCleaningPeer , true);
 			document.querySelector('#btnGoToRobotMap').addEventListener('click', neatoSmartApp.hideHomeShowMap, true);
-			document.querySelector('#btnSetMap').addEventListener('click', neatoSmartApp.setMapOverlayData, true);
 			document.querySelector('#btnLogout').addEventListener('click', neatoSmartApp.logoutUser , true);
 			document.querySelector('#btnTest').addEventListener('click', neatoSmartApp.test , true);
+			document.querySelector('#btnGoToAtlas').addEventListener('click', neatoSmartApp.hideHomeShowAtlas , true);
 			document.querySelector('#btnGetUserDetails').addEventListener('click', neatoSmartApp.getUserDetails , true);
 		},
 
@@ -571,9 +630,9 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnStartStopCleaningServer').removeEventListener('click', neatoSmartApp.startStopCleaningServer , true);
 			document.querySelector('#btnStartStopCleaningPeer').removeEventListener('click', neatoSmartApp.startStopCleaningPeer , true);
 			document.querySelector('#btnGoToRobotMap').removeEventListener('click', neatoSmartApp.hideHomeShowMap, true);
-			document.querySelector('#btnSetMap').removeEventListener('click', neatoSmartApp.setMapOverlayData, true);
 			document.querySelector('#btnLogout').removeEventListener('click', neatoSmartApp.logoutUser , true);
 			document.querySelector('#btnTest').removeEventListener('click', neatoSmartApp.test , true);
+			document.querySelector('#btnGoToAtlas').removeEventListener('click', neatoSmartApp.hideHomeShowAtlas , true);
 			document.querySelector('#btnGetUserDetails').removeEventListener('click', neatoSmartApp.getUserDetails , true);
 		},
 		
@@ -662,7 +721,7 @@ var neatoSmartApp = (function() {
 				robotId = "Robot_1001";
 			}
 			$('#robotSectionHeader').text("Map of "+robotId);
-			document.querySelector('#robotSectionHeader')
+		//	document.querySelector('#robotSectionHeader')
 			document.querySelector('#btnGetRobotMap').addEventListener('click', neatoSmartApp.getRobotMap , true);
 		},
 		
@@ -681,6 +740,37 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideRobotMapPage();
 			neatoSmartApp.showUserHomepage();
 		},
+		
+		//Atlas
+		showRobotAtlasPage: function() {
+			CURRENT_PAGE = ROBOT_ATLAS_PAGE;
+			document.querySelector('#robotAtlasSection').setAttribute('aria-hidden', 'false');
+			var robotId = localStorage.getItem('robotId');
+			if (robotId == null) {
+				robotId = "Robot_1001";
+			}
+			$('#robotAtlasHeader').text("Atlas of "+robotId);
+			document.querySelector('#btnGetRobotAtlasMetadata').addEventListener('click', neatoSmartApp.getRobotAtlasMetadata , true);
+			document.querySelector('#btnUpdateRobotAtlasMetadata').addEventListener('click', neatoSmartApp.updateRobotAtlasMetadata , true);
+			document.querySelector('#btnGetGridData').addEventListener('click', neatoSmartApp.getAtlasGridData , true);
+		},
+		
+		hideRobotAtlasPage: function() {
+			neatoSmartApp.setResponseText(null);
+			document.querySelector('#robotAtlasSection').setAttribute('aria-hidden', 'true');
+			document.querySelector('#btnGetRobotAtlasMetadata').removeEventListener('click', neatoSmartApp.getRobotAtlasMetadata , true);
+			document.querySelector('#btnUpdateRobotAtlasMetadata').removeEventListener('click', neatoSmartApp.updateRobotAtlasMetadata , true);
+			document.querySelector('#btnGetGridData').removeEventListener('click', neatoSmartApp.getAtlasGridData , true);
+		},
+
+		hideHomeShowAtlas: function() {
+			neatoSmartApp.hideUserHomePage();
+			neatoSmartApp.showRobotAtlasPage();
+		},
+		hideAtlasShowHomePage: function() {
+			neatoSmartApp.hideRobotAtlasPage();
+			neatoSmartApp.showUserHomepage();
+		},
 		backButtonPressed: function() {  
 			/*e.preventDefault();*/
 		 	if (CURRENT_PAGE == ROBOT_ASSOCIATION_PAGE) {
@@ -693,6 +783,8 @@ var neatoSmartApp = (function() {
 		 		neatoSmartApp.hideScheduleShowHome();
 		 	} else if(CURRENT_PAGE == ROBOT_MAP_PAGE) {
 		 		neatoSmartApp.hideMapShowHomePage();
+		 	} else if (CURRENT_PAGE == ROBOT_ATLAS_PAGE) {
+		 		neatoSmartApp.hideAtlasShowHomePage();
 		 	} else {
 		 		 neatoSmartApp.setResponseText(null);
 		 		 navigator.app.exitApp();
