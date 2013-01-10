@@ -58,9 +58,6 @@ public class NeatoServiceManager {
 		Intent bindServiceIntent = new Intent(mContext, NeatoSmartAppService.class);
 		bindServiceIntent.putExtra(NeatoSmartAppService.EXTRA_RESULT_RECEIVER, mResultReciever);
 		mServiceBound = mContext.bindService(bindServiceIntent, mNeatoRobotServiceConnection, Context.BIND_AUTO_CREATE);
-//		NeatoPrefs.saveJabberId(mContext, AppConstants.JABBER_USER_ID);
-//		NeatoPrefs.saveJabberPwd(mContext, AppConstants.JABBER_CHAT_PASSWORD);
-
 	}
 	
 	public void uninitialize() {

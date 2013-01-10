@@ -1,9 +1,7 @@
 package com.neatorobotics.android.slide.framework.webservice.robot;
 
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import org.codehaus.jackson.JsonParseException;
@@ -12,6 +10,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import android.content.Context;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.AssociateNeatoRobotToUser;
@@ -98,7 +97,7 @@ public class NeatoRobotWebservicesHelper {
 		if (robotDetailResponse.completed()) { 
 			try {
 				LogHelper.logD(TAG, "Get Robot detail completed. Reading response");
-				String robotDetailJson = convertStreamToString(robotDetailResponse.mResponseInputStream);
+				String robotDetailJson = AppUtils.convertStreamToString(robotDetailResponse.mResponseInputStream);
 				LogHelper.logD(TAG, "robotDetailJson = " + robotDetailJson);
 				result = resultMapper.readValue(robotDetailJson, new TypeReference<RobotDetailResult>() {});
 				LogHelper.log(TAG, "Robot detail fetched .");
@@ -119,30 +118,4 @@ public class NeatoRobotWebservicesHelper {
 		}
 		return result;
 	}
-
-	
-	 private static String convertStreamToString(InputStream is) {
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-	        StringBuilder sb = new StringBuilder();
-	 
-	        String line = null;
-	        try {
-	            while ((line = reader.readLine()) != null) {
-	                sb.append(line + "\n");
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        } finally {
-	            try {
-	                is.close();
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        return sb.toString();
-	 }
-	
-	
-	
-	
 }

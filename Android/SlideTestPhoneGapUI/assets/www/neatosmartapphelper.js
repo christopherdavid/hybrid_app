@@ -17,9 +17,8 @@ var DAY_THURSDAY = 4;
 var DAY_FRIDAY = 5;
 var DAY_SATURDAY = 6;
 
-
+var SCHEDULE_TYPE_BASIC = 0;
 var SCHEDULE_TYPE_ADVANCED = 1;
-var SCHEDULE_TYPE_BASIC = 2;
 
 var PLUGIN_JSON_KEYS  =  (function() {
     var keys = {
@@ -56,6 +55,10 @@ var ACIION_TYPE_GET_ROBOT_SCHEDULE 				= "getSchedule";
 var ACTION_TYPE_GET_ROBOT_MAP 					= "getRobotMap";
 var ACTION_TYPE_SET_MAP_OVERLAY_DATA  			= "setMapOverlayData";
 var ACTION_TYPE_DISCONNECT_DIRECT_CONNETION		= "disconnectDirectConnection";
+var ACTION_TYPE_GET_ROBOT_ATLAS_METADATA 		= "getRobotAtlasMetadata";
+var ACTION_TYPE_UPDATE_ROBOT_ATLAS_METADATA		= "updateRobotAtlasMetadata";
+var ACTION_TYPE_GET_ATLAS_GRID_DATA 			= "getAtlasGridData";
+
 //List of keys to send data:
 
 var KEY_EMAIL = 'email';
@@ -198,8 +201,8 @@ RobotMgr.prototype.sendCommandToRobot = function(robotId, commandId, commandPara
 			ACTION_TYPE_SEND_COMMAND_TO_ROBOT, [commandArray]);
 };
 
-RobotMgr.prototype.setSchedule = function(robotId, jsonArray, callbackSuccess, callbackError) {
-	var scheduleArray = {'robotId':robotId, 'schedule': jsonArray};
+RobotMgr.prototype.setSchedule = function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
+	var scheduleArray = {'robotId':robotId, 'scheduletype':scheduleType, 'schedule': jsonArray};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACIION_TYPE_SET_SCHEDULE, [scheduleArray]);
 };
@@ -222,6 +225,25 @@ RobotMgr.prototype.setMapOverlayData = function(robotId, mapId, mapOverlayInfo, 
 			ACTION_TYPE_SET_MAP_OVERLAY_DATA, [mapArray]);
 };
 
+// Atlas action types
+RobotMgr.prototype.getRobotAtlasMetadata = function(robotId, callbackSuccess, callbackError) {
+	var atlasArray = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ROBOT_ATLAS_METADATA, [atlasArray]);
+};
+
+
+RobotMgr.prototype.updateAtlasMetaData = function(robotId, atlasMetadata, callbackSuccess, callbackError) {
+	var atlasArray = {'robotId':robotId, 'atlasMetadata':atlasMetadata};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_UPDATE_ROBOT_ATLAS_METADATA, [atlasArray]);
+};
+
+RobotMgr.prototype.getAtlasGridData = function(robotId, gridId, callbackSuccess, callbackError) {
+	var getGridArray = {'robotId':robotId, 'gridId':gridId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ATLAS_GRID_DATA, [getGridArray]);
+};
 
 var UserPluginManager = (function() {
 	return {
@@ -281,8 +303,8 @@ var RobotPluginManager = (function() {
 			window.plugins.neatoPluginLayer.robotMgr.sendCommandToRobot(robotId, commandId, commandParams, callbackSuccess, callbackError);
 		},
 		
-		setSchedule: function(robotId, jsonArray, callbackSuccess, callbackError) {
-			window.plugins.neatoPluginLayer.robotMgr.setSchedule(robotId, jsonArray, callbackSuccess, callbackError);
+		setSchedule: function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.setSchedule(robotId, scheduleType, jsonArray, callbackSuccess, callbackError);
 		},
 		
 		getSchedule: function(robotId, scheduleType, callbackSuccess, callbackError) {
@@ -295,6 +317,22 @@ var RobotPluginManager = (function() {
 		
 		setMapOverlayData : function(robotId, mapId, mapOverlayInfo, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.setMapOverlayData (robotId, mapId, mapOverlayInfo, callbackSuccess, callbackError);
+		},
+		
+		// It will give the atlas xml data.
+		getRobotAtlasMetadata: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotAtlasMetadata(robotId, callbackSuccess, callbackError);
+		},
+		
+				
+		// It will update the atlas mapped to this robotId. The version of the xml is stored inside.
+		updateAtlasMetaData: function(robotId, atlasMetadata, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.updateAtlasMetaData(robotId, atlasMetadata, callbackSuccess, callbackError);
+		},
+		
+		// TODO: We are taking robotId. Analyse if taking atlas_id is a better option.
+		getAtlasGridData: function(robotId, gridId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getAtlasGridData(robotId, gridId, callbackSuccess, callbackError);
 		}
 }
 }());
@@ -307,7 +345,6 @@ var PluginManagerHelper =  (function() {
 					'endTime': endTime, 'eventType': eventType,
 					'area':area};
 			scheduleJsonArray.push(schedule);
-			//scheduleJsonObject["schedule"] = schedule;
 			return scheduleJsonArray;
 		},	
 	}

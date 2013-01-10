@@ -24,7 +24,7 @@ public class RobotMapWebservicesManager {
 	private static String mOverlayVersion;
 	private static String mBlobVersion;
 
-	private static RobotMapWebservicesManager sRobotMapWebservicesHelper;
+	private static RobotMapWebservicesManager sRobotMapWebservicesManager;
 	private static final Object INSTANCE_LOCK = new Object(); 
 	private RobotMapWebservicesManager(Context context)
 	{
@@ -34,12 +34,12 @@ public class RobotMapWebservicesManager {
 	public static RobotMapWebservicesManager getInstance(Context context)
 	{
 		synchronized (INSTANCE_LOCK) {
-			if (sRobotMapWebservicesHelper == null) {
-				sRobotMapWebservicesHelper = new RobotMapWebservicesManager(context);
+			if (sRobotMapWebservicesManager == null) {
+				sRobotMapWebservicesManager = new RobotMapWebservicesManager(context);
 			}
 		}
 
-		return sRobotMapWebservicesHelper;
+		return sRobotMapWebservicesManager;
 	}
 	public void setHandler(Handler handler) {
 		mHandler = handler;

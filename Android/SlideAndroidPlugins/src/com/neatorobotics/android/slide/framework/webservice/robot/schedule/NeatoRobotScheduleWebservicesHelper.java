@@ -1,9 +1,7 @@
 package com.neatorobotics.android.slide.framework.webservice.robot.schedule;
 
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import org.codehaus.jackson.JsonParseException;
@@ -11,8 +9,8 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import android.content.Context;
-import android.util.Log;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.DeleteNeatoRobotMapsResult;
@@ -166,8 +164,8 @@ public class NeatoRobotScheduleWebservicesHelper {
 			if (deleteNeatoRobotScheduleResponse.completed()) { 
 				try {
 					LogHelper.logD(TAG, "Deleting schedule for Neato Robot completed. Reading response");
-					String json = convertStreamToString(deleteNeatoRobotScheduleResponse.mResponseInputStream);
-					Log.i(TAG, "JSON = " + json);
+					String json = AppUtils.convertStreamToString(deleteNeatoRobotScheduleResponse.mResponseInputStream);
+					LogHelper.logD(TAG, "JSON = " + json);
 					result = resultMapper.readValue(json, new TypeReference<DeleteNeatoRobotMapsResult>() {});
 					LogHelper.log(TAG, "Delete schedule for robot completed.");
 				} catch (JsonParseException e) {
@@ -188,25 +186,4 @@ public class NeatoRobotScheduleWebservicesHelper {
 
 			return result;
 		}
-	 
-	 private static String convertStreamToString(InputStream is) {
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-	        StringBuilder sb = new StringBuilder();
-	 
-	        String line = null;
-	        try {
-	            while ((line = reader.readLine()) != null) {
-	                sb.append(line + "\n");
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        } finally {
-	            try {
-	                is.close();
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        return sb.toString();
-	 }
 }

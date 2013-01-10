@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import org.w3c.dom.Node;
 import android.content.Context;
@@ -177,6 +178,8 @@ public class TcpConnectionHelper {
 
 		readByteArrayHelper(din, data, length);
 		
+		logAsString(data);
+		
 		boolean isValidCommandPacket = CommandPacketValidator.validateHeaderAndSignature(data);
 		if (isValidCommandPacket) {
 			LogHelper.log(TAG, "Header Version and Signature match");
@@ -185,6 +188,19 @@ public class TcpConnectionHelper {
 			LogHelper.log(TAG, "Header Version and Signature mis-match");
 		}
 		return robotCommandGroup;
+	}
+	
+	private void logAsString(byte [] data)
+	{
+		String dataAsStr;
+		try {
+			dataAsStr = new String(data, "UTF-8");
+			LogHelper.logD(TAG, "Message received");
+			LogHelper.logD(TAG, "Message = " + dataAsStr);
+		} catch (UnsupportedEncodingException e) {
+			
+		}
+		
 	}
 	private void readByteArrayHelper(DataInputStream din, byte [] byData, int length) throws IOException
 	{
@@ -328,16 +344,15 @@ public class TcpConnectionHelper {
 		return bos.toByteArray();
 	}
 
-	private  void sendRobotPacket(Transport transport,  byte[] Packet )
+	private  void sendRobotPacket(Transport transport,  byte[] packet )
 	{
-
-		if (Packet == null) {
+		if (packet == null) {
 			LogHelper.log(TAG, "Packet is null");
 			return;
 		}
 
 		try {
-			transport.send(Packet);
+			transport.send(packet);
 			LogHelper.log(TAG, "Packet is sent");
 		}
 		catch (IOException e) {
@@ -345,7 +360,7 @@ public class TcpConnectionHelper {
 		}
 	}
 
-	private  void sendRobotPacketAsync(final Transport transport, final  byte[] Packet )
+	private  void sendRobotPacketAsync(final Transport transport, final  byte[] packet )
 	{
 		if (transport == null) {
 			LogHelper.log(TAG, "Transport is null. Cannot send packet");
@@ -354,7 +369,7 @@ public class TcpConnectionHelper {
 		Runnable task = new Runnable() {
 
 			public void run() {
-				sendRobotPacket( transport, Packet );
+				sendRobotPacket( transport, packet );
 			}
 		};
 		Thread t = new Thread(task);
