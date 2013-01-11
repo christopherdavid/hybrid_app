@@ -1,10 +1,17 @@
 {
+	"common": {
+		"back": "zurück",
+		"next": "weiter",
+		"ok" : "OK",
+		"cancel" : "Abbrechen"
+	},
 	"s0": {
 		"cleaning": "Reinigung",
 		"remote": "Fernbedienung",
 		"schedule": "Wochenplan",
 		"settings": "Einstellungen",
 		"logout": "Abmelden",
+		"change_robot" : "Roboter wechseln",
 		"send_to_base": "Zur Basis schicken"
 	},
     "s1-1": {
@@ -33,9 +40,31 @@
             "logout": "Abmelden"
         },
         "page": {
-            "title": "Registrierung abgeschlossen. Willkommen, %s!",
-            "add_robot": "Saugroboter hinzufügen"
+            "register": "Registrierung abgeschlossen. Willkommen, %s!",
+            "login" : "Willkommen, %s!",
+            "no_robot": "Sie haben noch keinen Roboter registriert.<br>Bitte fügen Sie einen neuen Roboter hinzu.",
+            "select_robot" : "Bitte wählen sie einen Roboter aus:"
         }
+    },
+    "s1-2-3": {
+    	"navi": {
+            "title": "Roboter aktivieren"
+        },
+        "page": {
+	        "wifisetup" : "Bitte geben sie die Roboter ID ein.</br>Sie finden sie unter:</br><span class=\"companyColoredTxt\">Wifi Einstellungen / Registrierung</span> im Anzeige Menü des Roboters, oder auf der Rückseite Ihres Gerätes.",	
+            "robotId": "Roboter ID"
+        }
+    },
+    "s1-2-4":{
+    	"page":{
+    		"id_accepted" : "Ihre Roboter ID wurde akzeptiert.</br></br>Sie können nun bei Bedarf den Namen Ihres Roboters personalisieren.",
+    		"robot_name": "Roboter Name"
+		}
+    },
+    "s1-2-6":{
+    	"page":{
+    		"reg_complete" : "Yay! Robot Registration is complete.</br></br>Thank you for choosing this product. Happy Cleaning!"
+		}
     },
     "s1-3-1": {
         "navi": {
@@ -44,9 +73,21 @@
             "next": "anmelden"
         },
         "page": {
-            "title": "Willkommen bei der Registrierung.<br/>Zum weiterkommen werden noch ein paar Informationen benötigt.",
-            "email": "Email Addresse",
-            "password": "Passwort"
+            "title": "Bitte geben Sie Name und Passwort Ihres Vorwerk Benutzerkontos ein.",
+            "email": "Email Adresse",
+            "password": "Passwort",
+            "password_lost": "Passwort vergessen?",
+            "tap_here": "Hier berühren."
+        }
+    },
+    "s3-1-1": {
+        "navi": {
+            "title": "Einstellungen"
+        },
+        "page" : {
+            "room_management": "Raum Management",
+            "robot_management": "Robot Management",
+            "user_settings": "Benutzereinstellungen"
         }
     },
     "s3-2-1": {
@@ -59,6 +100,30 @@
             "cut_multiple": "zusammenfügen",
             "edit": "bearbeiten",
             "edit_area": "OK"
+        },
+        "dialog": {
+            "title":"Bereich bearbeiten",
+            "area":"Cleaning Area",
+            "nogo":"No-Go-Area",
+            "color":"Farbe",
+            "category":"Kategorie"
+        }
+    },
+    "s4-1-1": {
+        "navi": {
+            "back": "zurück",
+            "title": "Wochenplan",
+            "add": "hinzufügen"
+        },
+        
+        "day": {
+            "1": "Montag",
+            "2": "Dienstag",
+            "3": "Mittwoch",
+            "4": "Donnerstag",
+            "5": "Freitag",
+            "6": "Samstag",
+            "7": "Sonntag"
         }
     },
     "confirm": {

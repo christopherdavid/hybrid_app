@@ -3,6 +3,17 @@
 
 @color_notficationbar: #009a3d;
 @color_notficationbar_expand: #dd0000;
+
+// map view
+@map_selection_border_spot:#ff4c00;
+@map_selection_border_cut:#fcdf02;
+@map_selection_background_spot: fade(#ff6c00,33%);
+@map_selection_background_cut: fade(#fcff02, 33%);
+@map_dialog_border: #191919;
+@map_dialog_cursor:#404040;
+@map_dialog_cursor_selected:#e9e9e9;
+@map_dialog_cursor_inner_shadow:fade(#000000, 50%);
+
 @bg_gradient_start: #0f0f0f;
 @bg_gradient_end: #333332;
 
@@ -11,14 +22,35 @@
 @s0_btn_gradient_down_start: @s0_btn_gradient_end;
 @s0_btn_gradient_down_end: @s0_btn_gradient_start;
 
-@s0_btn_gradient_disabled_start: fade(@s0_btn_gradient_end, 30%);
-@s0_btn_gradient_disabled_end: fade(@s0_btn_gradient_start, 30%);
+@s0_btn_gradient_disabled_start: fade(@s0_btn_gradient_end, 33%);
+@s0_btn_gradient_disabled_end: fade(@s0_btn_gradient_start, 33%);
 
 @s0_btn_border_gradient_start: #4c4c4c;
 @s0_btn_border_gradient_end: #403e3e;
 @s0_btn_border_gradient_disabled_start: fade(#808080, 50%);
 @s0_btn_border_gradient_disabled_quarter: fade(#333333, 50%);
+@s0_btn_border_gradient_disabled_end: @s0_btn_border_gradient_disabled_start;
 
-// Substitute page and viewport background with gradient
-.gradient-definition("ui-mobile-viewport", @bg_gradient_start, @bg_gradient_end);
-.gradient-definition("ui-page", @bg_gradient_start, @bg_gradient_end);
+// input field colors
+@input_border: #454545;
+@input_gradient_start: fade(#99aac2, 10%);
+@input_gradient_mid: fade(#ffffff, 10%);
+@input_gradient_end: fade(#ffffff, 33%);
+
+// list views
+@listview_border: #393938;
+@listView_border_selected: #0e4524;
+@listview_separator: #181818;
+@listview_cell: #333333;
+/*@listview_lastCell_gradient_mid: #353535:
+@listview_lastCell_gradient_end: #353535:*/
+@listview_lastCell_gradient_mid: fade(#ffffff, 10%);
+@listview_lastCell_gradient_end: fade(#ffffff, 33%);
+@listview_cell_selected: #004d1f;
+
+
+// scheduler
+@scheduler_task: #004D1F;
+
+
+

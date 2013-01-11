@@ -14,10 +14,13 @@ ko.bindingHandlers.translate = {
         var valueUnwrapped = ko.utils.unwrapObservable(value);
         var jQElement = $(element);
         var translationKey = jQElement.attr('data-i18n');
-        var translatedValue ="";
-        if(typeof viewModel.getTranslationVars == "function" && viewModel.getTranslationVars(translationKey).length > 0) {
+        var translatedValue = "";
+        if ( typeof viewModel.getTranslationVars == "function" && viewModel.getTranslationVars(translationKey).length > 0) {
             console.log("translation variables " + viewModel.getTranslationVars(translationKey))
-            translatedValue = $.i18n.t(translationKey,{postProcess:'sprintf', sprintf: viewModel.getTranslationVars(translationKey)});
+            translatedValue = $.i18n.t(translationKey, {
+                postProcess : 'sprintf',
+                sprintf : viewModel.getTranslationVars(translationKey)
+            });
         } else {
             translatedValue = $.i18n.t(translationKey);
         }
@@ -39,13 +42,13 @@ ko.bindingHandlers.translate = {
                 break;
             case textTarget.jqLinkButton:
                 jQElement.find("span.ui-btn-text").text(translatedValue);
-            break;
+                break;
         }
     }
 }
 
 ko.bindingHandlers.jqLinkButtonEnable = {
-    update: function(element, valueAccessor) {
+    update : function(element, valueAccessor) {
         ko.bindingHandlers.enable.update(element, valueAccessor);
         var value = ko.utils.unwrapObservable(valueAccessor());
         //console.log("jqLinkButtonEnable " + value);
@@ -54,7 +57,7 @@ ko.bindingHandlers.jqLinkButtonEnable = {
 }
 
 ko.bindingHandlers.jqLinkButtonText = {
-    update: function(element, valueAccessor) {
+    update : function(element, valueAccessor) {
         ko.bindingHandlers.enable.update(element, valueAccessor);
         var value = ko.utils.unwrapObservable(valueAccessor());
         var jQElement = $(element);
@@ -64,10 +67,26 @@ ko.bindingHandlers.jqLinkButtonText = {
 }
 
 ko.bindingHandlers.jqButtonEnable = {
-    update: function(element, valueAccessor) {
+    update : function(element, valueAccessor) {
         ko.bindingHandlers.enable.update(element, valueAccessor);
         var value = ko.utils.unwrapObservable(valueAccessor());
         //console.log("jqButtonEnable " + value);
-        $(element).button(value ? "enable" : "disable");
+        $(element).button( value ? "enable" : "disable");
+    }
+}
+
+ko.bindingHandlers.jqmOptions = {
+    update : function(element, valueAccessor, allBindingsAccessor, context) {
+        ko.bindingHandlers.options.update(element, valueAccessor, allBindingsAccessor, context);
+        $(element).selectmenu("refresh");
+    }
+};
+
+ko.bindingHandlers.jqOptionsEnable = {
+    update : function(element, valueAccessor) {
+        ko.bindingHandlers.enable.update(element, valueAccessor);
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        //console.log("jqOptionsEnable " + value);
+        $(element).selectmenu( value ? "enable" : "disable");
     }
 }

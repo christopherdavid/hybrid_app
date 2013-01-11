@@ -15,8 +15,17 @@
     <group name="colors">
         <css>/colors.less</css>
     </group>
+    <group name="map">
+        <css>/map.less</css>
+    </group>
     <group name="startscreen">
     	<css>/startscreen.less</css>
+    </group>
+    <group name="scheduler">
+        <css>/scheduler.less</css>
+    </group>
+    <group name="vr200theme">
+        <css>/vr200theme.less</css>
     </group>
     <group name="libs">
       <js>/../../../bin/copymin/cordova.min.js</js>
@@ -25,6 +34,7 @@
       <js>/../../../bin/copymin/handler.js</js>
       <js>/../../../bin/copymin/i18next-1.5.7.min.js</js>
       <js>/../../../bin/copymin/knockout-2.1.0.min.js</js>
+      <js>/../../../bin/copymin/knockout.mapping.min.js</js>
       <js>/../../../bin/copymin/state-machine.min.js</js>
       <js>/../../../bin/copymin/jquery-ui-1.9.2.custom.min.js</js>
       <js>/../../../bin/copymin/jquery.ui.touch-punch.min.js</js>
