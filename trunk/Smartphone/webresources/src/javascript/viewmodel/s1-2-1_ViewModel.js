@@ -17,10 +17,19 @@ resourceHandler.registerFunction('s1-2-1_ViewModel.js', 's1-2-1_ViewModel', func
     }, this);
 
     this.next = function() {
-        // TODO: add validation check for formular
-        parent.setUserName(this.name());
-        that.conditions['valid'] = true;
-        parent.flowNavigator.next();
+        // TODO: add validation check for formular        
+        parent.communicationWrapper.exec(UserPluginManager.createUser, [that.email(), that.password(), that.name()], that.successRegister, that.errorRegister, "user");
     };
+    
+    this.successRegister = function (result) {
+    	that.conditions['valid'] = true;
+        parent.flowNavigator.next(robotScreenCaller.REGISTER);
+    }
+    
+    this.errorRegister = function(error) {
+    	that.conditions['valid'] = false;
+    	alert("error: " + error);
+    }
+    
 })
 console.log('loaded file: s1-2-1_ViewModel.js');

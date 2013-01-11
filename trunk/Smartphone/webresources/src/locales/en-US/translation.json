@@ -1,12 +1,19 @@
 {
-	"s0": {
-		"cleaning": "Cleaning",
-		"remote": "Remote",
-		"schedule": "Schedule",
-		"settings": "Settings",
-		"logout": "Logout",
-		"send_to_base": "Send to base"
-	},
+    "common": {
+        "back": "back",
+        "next": "next",
+        "ok": "OK",
+        "cancel": "Cancel"
+    },
+    "s0": {
+        "cleaning": "Cleaning",
+        "remote": "Remote",
+        "schedule": "Schedule",
+        "settings": "Settings",
+        "logout": "Logout",
+        "change_robot": "Change",
+        "send_to_base": "Send to base"
+    },
     "s1-1": {
         "login": "So please login!",
         "login_question": "You already have an account?",
@@ -33,8 +40,30 @@
             "logout": "logout"
         },
         "page": {
-            "title": "Registration completed.</br> Welcome, %s!",
-            "add_robot": "Add a Robot"
+            "register": "Registration completed.</br> Welcome, %s!",
+            "login": "Welcome, %s!",
+            "no_robot": "<br>You have no robots registered yet.<br>Please add your new robot.",
+            "select_robot": "<br>Please choose your robot:"
+        }
+    },
+    "s1-2-3": {
+        "navi": {
+            "title": "Robot activation"
+        },
+        "page": {
+            "wifisetup": "Now, please enter the Robot ID.</br>You will find it under:</br><span class=\"companyColoredTxt\">Wifi Setup / Register</span> in the robot display menu or on the back of your device.",
+            "robotId": "Robot ID"
+        }
+    },
+    "s1-2-4": {
+        "page": {
+            "id_accepted": "Your ID was accepted.</br></br>If you want, you can now personalize your robot's name.",
+            "robot_name": "Robot name"
+        }
+    },
+    "s1-2-6": {
+        "page": {
+            "reg_complete": "Yay! Robot Registration is complete.</br></br>Thank you for choosing this product. Happy Cleaning!"
         }
     },
     "s1-3-1": {
@@ -44,9 +73,21 @@
             "next": "login"
         },
         "page": {
-            "title": "Welcome to the registration.<br/>We need some information to continue",
+            "title": "Please enter name and password for your Vorwerk Account.",
             "email": "Email Address",
-            "password": "Password"
+            "password": "Password",
+            "password_lost": "Lost your password?",
+            "tap_here": "Tap here."
+        }
+    },
+    "s3-1-1": {
+        "navi": {
+            "title": "Settings"
+        },
+        "page" : {
+            "room_management": "Room Management",
+            "robot_management": "Robot Management",
+            "user_settings": "User Settings"
         }
     },
     "s3-2-1": {
@@ -59,6 +100,13 @@
             "cut_multiple": "merge",
             "edit": "edit",
             "edit_area": "OK"
+        },
+        "dialog": {
+            "title": "Edit Area",
+            "area": "Cleaning Area",
+            "nogo": "No-Go-Area",
+            "color": "Colour",
+            "category": "Category"
         }
     },
     "confirm": {

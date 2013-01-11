@@ -16,7 +16,18 @@ function WorkflowHistory(parent) {
         return (entries.length > 0  
             && entries[entries.length -1].screenId == screenlId);
     }
-    
+    /**
+     * Clear the history 
+     */
+    this.clear = function() {
+        for(var i = entries.length - 1; i >= 0; i--) {
+            if(typeof entries[i].destroy != "undefined") {
+                entries[i].destroy();
+                delete entries[i]; 
+            }
+        }
+        entries.length = 0;
+    }
     /**
      * Returns the last entry from history 
      * @return {object} Last entry in history or null if there were no entries

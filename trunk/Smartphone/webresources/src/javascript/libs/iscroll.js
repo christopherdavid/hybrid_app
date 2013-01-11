@@ -136,7 +136,8 @@ var m = Math,
 			onDestroy: null,
 			onZoomStart: null,
 			onZoom: null,
-			onZoomEnd: null
+			onZoomEnd: null,
+			onPosChanged: null
 		};
 
 		// User defined options
@@ -285,6 +286,7 @@ iScroll.prototype = {
 	},
 	
 	_pos: function (x, y) {
+		var that = this;
 		if (this.zoomed) return;
 
 		x = this.hScroll ? x : 0;
@@ -304,6 +306,8 @@ iScroll.prototype = {
 
 		this._scrollbarPos('h');
 		this._scrollbarPos('v');
+		
+		if (that.options.onPosChanged) that.options.onPosChanged.call(that,this.x,this.y);
 	},
 
 	_scrollbarPos: function (dir, hidden) {

@@ -1,28 +1,33 @@
 var conditonType = {
     FUNCTION : "0",
-}
+};
 
 var textTarget = {
     INNERHTML : "0",
     FIRSTCHILD : "1",
     VALUE : "2",
     PLACEHOLDER : "3",
-    jqLinkButton: "4"
+    jqLinkButton : "4"
+};
+
+var ICON = ["cat-empty", "cat-kitchen", "cat-living"];
+
+var COLORTABLE = ["#000000", "#f1e60d", "#f39129", "#e72832", "#6ac6d9", "#65b32e", "#b3b4b3", "#63318a", "#0470b8"];
+
+var STATE = {
+    INACTIVE : "inactive",
+    ACTIVE : "active",
+    PAUSED : "paused",
+    STOPPED : "stopped",
+    BLOCKED : "blocked", // Robot is blocked, as the robot is used by another user
+    UNAVAILABLE : "disabled" // Robot is out of reach, or couldn't be found (no network connection)
 }
 
-var ICON = {
-    EMPTY:"0",
-    KITCHEN:"1",
-    LIVINGROOM:"2"
-}
-var COLOR = {
-    BLACK:"#000000",
-    YELLOW:"#f1e60d",
-    ORANGE:"#f39129",
-    RED:"#e72832",
-    CYAN:"#6ac6d9",
-    GREEN:"#65b32e",
-    GREY:"#b3b4b3",
-    PURPLE:"#63318a",
-    BLUE:"#0470b8"
+/**
+ * Enumeration defining the caller of the robot selection screen 
+ */
+var robotScreenCaller = {
+    REGISTER : "register",
+    LOGIN : "login",
+    CHANGE : "change"
 }

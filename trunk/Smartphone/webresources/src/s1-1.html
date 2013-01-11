@@ -1,59 +1,45 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name = "format-detection" content = "telephone=no"/>
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width;" />
-        <style type="text/css">
-        	.ui-li-has-count .ui-li-count { position: absolute; font-size: 11px; font-weight: bold; padding: .2em .5em; top: 25%; margin-top: -.9em; left: 10px; }
-        	.ui-li-has-arrow.ui-li-has-count .ui-li-count { right: auto; }
-        	.ui-btn-text {
-        		padding-top:22px;
-        		padding-bottom:11px;
-        	}
-        </style>
-        <title>CleaningRobotApp</title>
-    </head>
-    <body>
-        <div data-role="page" id="s1-1">
-            <div data-role="header" data-position="fixed" data-tap-toggle="false">
-                <div data-role="notificationbar">
-                    <div>notificationbar</div>
-                </div>
-            </div>
-            <div data-role="content">
-                <ul data-role="listview" data-divider-theme="a" data-inset="true">
-                    <li data-theme="c">
-                        <a href="javascript:void();" data-transition="slide" data-i18n="s1-1.login" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}, click: login">
-                            login!
-                            <span class="ui-li-count" data-i18n="s1-1.login_question" data-bind="translate:{obs:language()}">
-                                have an account?
-                            </span>
-                        </a>
-                    </li>
-                    <li data-theme="c">
-                        <a href="javascript:void(0);" data-transition="slide" data-i18n="s1-1.register" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}, click: register">
-                            register.
-                            <span class="ui-li-count" data-i18n="s1-1.register_question" data-bind="translate:{obs:language()}">
-                                no account so far?
-                            </span>
-                        </a>
-                    </li>
-                    <li data-theme="c">
-                        <a href="javascript:void(0);" data-transition="slide" data-i18n="s1-1.register" data-bind="click: map">
-                            show map
-                        </a>
-                    </li>
-                    <li data-theme="c">
-                        <a href="javascript:void();" data-transition="slide" data-bind="click: showStatus">show notificationbar</a>
-                    </li>
-                    <li data-theme="c">
-                        <a href="javascript:void(0);" data-transition="slide" data-bind="click: hideStatusbar">hide notificationbar</a>
-                    </li>
-                </ul>
-            </div><!-- /content -->
-            
-        </div><!-- /page -->
-        
-    </body>
-</html>
+<div data-role="page" id="s1-1" style="background-repeat: no-repeat; background-image: url(img/icons/company_logo_225x126.png); background-position: 0% 100%">
+    <div data-role="header" data-theme="b" data-position="fixed" data-tap-toggle="false">
+        <div data-role="notificationbar">
+            <div>notificationbar</div>
+        </div>
+    </div>
+    <div data-role="content">
+        <ul data-role="listview" data-divider-theme="a" data-inset="true">
+            <li>
+                <a href="javascript:void(0);" data-bind="click: login">                    
+                    <span class="ui-li-desc" data-i18n="s1-1.login_question" data-bind="translate:{obs:language()}">
+                        already have an account?
+                    </span>
+                    <h3 class="companyColoredTxt" data-i18n="s1-1.login" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                    	login
+					</h3>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" data-bind="click: register">
+                    <span class="ui-li-desc" data-i18n="s1-1.register_question" data-bind="translate:{obs:language()}">
+                        no account so far?
+                    </span>
+                    <h3 class="companyColoredTxt" data-i18n="s1-1.register" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                    	register
+                    </h3>
+                </a>
+            </li>
+            <!--li>
+                <a href="javascript:void(0);" data-transition="slide" data-i18n="s1-1.register" data-bind="click: map">
+                    show map
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" data-transition="slide" data-bind="click: schedule">schedule</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" data-transition="slide" data-bind="click: showStatus">show notificationbar</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" data-transition="slide" data-bind="click: hideStatusbar">hide notificationbar</a>
+            </li-->
+        </ul>
+    </div><!-- /content -->
+</div><!-- /page -->

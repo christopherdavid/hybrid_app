@@ -8,9 +8,11 @@
 .img-fullscreen-definition("splash");
 
 // s0 Start-Stop Button
-.img-definition("startstopbtn", 344, 356);
-.sprite-definition("startbtn", 0, 344, 356, 3);
-.sprite-definition("stopbtn", 1, 344, 356, 3);
+.img-definition("startstopbtn", 390, 390);
+.sprite-definition("startbtn_inactive", 0, 390, 390, 3);
+.sprite-definition("startbtn_active", 1, 390, 390, 3);
+.sprite-definition("startbtn_paused", 2, 390, 390, 3);
+.sprite-definition("stopbtn", 3, 390, 390, 2);
 
 // s0 Category Buttons
 .img-definition("categoryimg", 303, 303);
@@ -18,3 +20,14 @@
 .sprite-definition("remoteimg", 1, 303, 303, 2, "", "up", "disabled");
 .sprite-definition("settingsimg", 2, 303, 303, 2, "", "up", "disabled");
 .sprite-definition("scheduleimg", 3, 303, 303, 2, "", "up", "disabled");
+
+// selection area on map view
+.img-definitionExt("selectionarea", ".ui-resizable-handle", 50, 50);
+// need to be filled with real icons
+.img-definition("category", 50, 50);
+.sprite-definition("cat", 0, 50, 50, 1, "", "", "empty");
+.sprite-definition("cat", 1, 50, 50, 1, "", "", "kitchen");
+.sprite-definition("cat", 2, 50, 50, 1, "", "", "living");
+
+// Logo definitions
+.img-definition("product_logo", 142, 31);

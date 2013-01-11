@@ -12,10 +12,21 @@
   }
 }
 
+.vertical-gradient(@startColor: #ff0000, @startOffset: 0%, @midColor:#00ff00, @midOffset: 50%, @endColor:#0000ff, @endOffset:100%) {
+    background: @startColor;
+    background: -moz-linear-gradient(top,  @startColor @startOffset, @midColor @midOffset, @endColor @endOffset);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(@startOffset,@startColor), color-stop(@midOffset,@midColor), color-stop(@endOffset,@endColor));
+    background: -webkit-linear-gradient(top,  @startColor @startOffset,@midColor @midOffset,@endColor @endOffset);
+    background: -o-linear-gradient(top,  @startColor @startOffset,@midColor @midOffset,@endColor @endOffset);
+    background: -ms-linear-gradient(top,  @startColor @startOffset,@midColor @midOffset,@endColor @endOffset);
+    background: linear-gradient(to bottom,  @startColor @startOffset,@midColor @midOffset,@endColor @endOffset);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=(~"'@{startColor}'"), endColorstr=(~"'@{endColor}'"),GradientType=0 );
+}
+
 .vertical-gradient(@startColor: #ff0000, @endColor:#00ff00){
     background: @startColor;
     background: -moz-linear-gradient(top,  @startColor 0%, @endColor 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0f0f0f), color-stop(100%,@endColor));
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@startColor), color-stop(100%,@endColor));
     background: -webkit-linear-gradient(top,  @startColor 0%,@endColor 100%);
     background: -o-linear-gradient(top,  @startColor 0%,@endColor 100%);
     background: -ms-linear-gradient(top,  @startColor 0%,@endColor 100%);
@@ -23,7 +34,7 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=(~"'@{startColor}'"), endColorstr=(~"'@{endColor}'"),GradientType=0 );
 }
 
-.vertical-gradient25(@startColor: #ff0000, @quarterColor: #00ff00, @endColor:#0000ff){
+.vertical-gradient25(@startColor:#ff0000, @quarterColor:#00ff00, @endColor:#0000ff){
   background: @startColor;
   background: -moz-linear-gradient(top,  @startColor 0%, @quarterColor 25%, @endColor 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@startColor), color-stop(25%,@quarterColor), color-stop(100%,@endColor));
@@ -52,23 +63,38 @@
     }
 }
 
-.img-definition(@imgFile: "dummyImg", @width: 18 , @height: 18, @fileExtension: "png") {
-	(~".img-@{imgFile}"){
+/**
+ *   Create an image definition with (optional) additional classes that are attached to the
+ *   img-imgFile name. i.e. if the imgFile name is "myPicture" and the additional classes are ".bright" the resulting
+ *   CSS will contain ".img-myPicture .bright {...}"
+ */
+
+.img-definitionExt(@imgFile: "dummyImg", @additionalClasses: "", @width: 18 , @height: 18, @fileExtension: "png") {
+  (~".img-@{imgFile} @{additionalClasses}"){
         background-image: url("@{iconRoot}@{imgFile}_@{width}x@{height}.@{fileExtension}");
         width: (~"@{width}px");
         height: (~"@{height}px");
         background-repeat: no-repeat;
     }
 
-    @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+    /*@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
                         only screen and (min-resolution: 144dpi) {
-		@dblwidth : @width * 2;
+    @dblwidth : @width * 2;
         @dblheight : @height * 2;
         
         (~".img-@{imgFile}"){
         background-image: url("@{iconRoot}@{imgFile}_@{dblwidth}x@{dblheight}.@{fileExtension}");
-		}
+        background-size: cover;
     }
+    }*/
+
+}
+
+/**
+ *   Create a simple image with the given dimensions.
+ */
+.img-definition(@imgFile: "dummyImg", @width: 18 , @height: 18, @fileExtension: "png") {
+  .img-definitionExt(@imgFile, "", @width, @height, @fileExtension);
 }
 
 /**

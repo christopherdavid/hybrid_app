@@ -10,6 +10,11 @@
   height:30px;
 }
 
+#statusTxt{
+  color:@fontColor;
+  font-weight:normal;
+}
+
 // sendToBase button scaling
 .sendToBaseContainer{
   margin-left:15px;
@@ -31,16 +36,13 @@
   .vertical-gradient(@s0_btn_border_gradient_end, @s0_btn_border_gradient_start);
 }
 
-
-
-.categoryBtnBorderDisabled{
-  .vertical-gradient25(@s0_btn_border_gradient_disabled_start, @s0_btn_border_gradient_disabled_quarter);
+.categoryBtnBorder.disabled{
+  .vertical-gradient25(@s0_btn_border_gradient_disabled_start, @s0_btn_border_gradient_disabled_quarter, @s0_btn_border_gradient_disabled_end);
 }
 
 // Gradient for the category button background
 .categoryBtnGradient{
     .vertical-gradient(@s0_btn_gradient_start, @s0_btn_gradient_end);
-     font-weight:bold;
      border:none;
      border-radius:5px;
      width:100%;
@@ -53,7 +55,7 @@
   .vertical-gradient(@s0_btn_gradient_end, @s0_btn_gradient_start);
 }
 
-.categoryBtnGradientDisabled{
+.categoryBtnGradient.disabled{
     .vertical-gradient(@s0_btn_gradient_disabled_start, @s0_btn_gradient_disabled_end);
 }
 
@@ -68,6 +70,7 @@
 // Text within a category button
 .categoryBtnTxt{
   color:@fontColorCategoryBtn;
+  font-weight:bold;
   font-size:32px;
   text-align:center;
   text-shadow: 0px 0px 13px rgba(0, 0, 0, 0.25);
@@ -85,6 +88,10 @@
 
 .categoryBtnTxt[data-align="bottom"]{
     padding-top:72%;
+}
+
+.categoryBtnTxt.disabled{
+  color:@fontColorCategoryBtnDisabled;  
 }
 
 // Category Area surrounding the table
