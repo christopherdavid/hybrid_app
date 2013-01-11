@@ -1,5 +1,15 @@
 <resources>
 
     <style name="AppTheme" parent="android:Theme.Light" />
-
+	
+     <style name="HeaderStyle" parent="android:Widget.TextView">        
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/header_text</item>
+    </style>
+    
+    <style name="AppActionBarTheme" parent="android:style/Theme.Holo.Light">        
+        <item name="android:windowActionBarOverlay">false</item>
+    </style>
+    
 </resources>

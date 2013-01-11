@@ -57,6 +57,7 @@
     <!-- Menu strings -->
     <string name="text_menu_logout">Logout</string>
     <string name="text_menu_addrobot">Associate Robot</string>
+    <string name="text_menu_about">About</string>
     <!-- GetMap data activity strings -->    
     <string name="text_getmap_hdr_title">Map of</string>
     <string name="text_getmap_hdr_title_default">No Robot associated</string>
@@ -72,4 +73,10 @@
     <string name="text_set_schedule_weekends">Only Weekends</string>
     <string name="text_set_schedule_babynap">Weekdays (Baby Nap)</string>
     <string name="text_set_schedule_clear">Clear Schedule</string>
+    
+    <!-- About page strings -->
+    <string name="text_about_header_title">About</string>    
+    <string name="text_about_app_name">Neato \nCleaning Robot App v1.0</string>
+    <string name="text_about_user_info">Logged in user - %1$s \n%2$s</string>
+    
 </resources>

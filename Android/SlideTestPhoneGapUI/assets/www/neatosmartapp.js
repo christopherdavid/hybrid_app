@@ -118,7 +118,7 @@ var neatoSmartApp = (function() {
 		},
 		
 		clickRobot: function(robotId) {
-			
+			localStorage.setItem('robotId', robotId);
 			RobotPluginManager.tryDirectConnection(robotId, neatoSmartApp.successTest, neatoSmartApp.errorTest); 
 			 var myNode = document.getElementById("robotsFound");
 			 while (myNode.firstChild) {
@@ -194,12 +194,15 @@ var neatoSmartApp = (function() {
 		
 		startStopCleaningServer: function() {
 			
-			//TODO: Sending junk serial id for now. Later this serial id should be the serial id of the robot 
 			neatoSmartApp.showProgressBar();
-			var robotId = 0;
 			// TODO: Temp variable. Later the robot status will be sent by the robot. Store in local storage as of now.
 			var robotStarted = localStorage.getItem('isRobotStarted');
 			
+			var robotId = localStorage.getItem('robotId');
+			if (robotId == null) {
+				robotId = "Robot_1001";
+			}
+
 			if (robotStarted == null) {
 				robotStarted = "false";
 			}
@@ -225,9 +228,12 @@ var neatoSmartApp = (function() {
 		},
 		
 		startStopCleaningPeer: function() {
-			//TODO: Sending junk serial id for now. Later this serial id should be the serial id of the robot 	
+
 			neatoSmartApp.showProgressBar();
-			var robotId = 0;
+			var robotId = localStorage.getItem('robotId');
+			if (robotId == null) {
+				robotId = "Robot_1001";
+			}
 			// TODO: Temp variable. Later the robot status will be sent by the robot. Store in local storage as of now.
 			var robotStarted = localStorage.getItem('isRobotStarted');
 			

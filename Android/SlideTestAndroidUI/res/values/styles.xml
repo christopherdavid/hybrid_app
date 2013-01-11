@@ -24,5 +24,9 @@
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/button_bg</item>
     </style>
+    
+    <style name="AppActionBarTheme" parent="android:style/Theme.Holo.Light">        
+        <item name="android:windowActionBarOverlay">false</item>
+    </style>
 
 </resources>

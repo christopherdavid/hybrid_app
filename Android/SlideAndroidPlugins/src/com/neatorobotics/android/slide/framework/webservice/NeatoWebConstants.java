@@ -26,6 +26,10 @@ public class NeatoWebConstants {
 	public static final int RESPONSE_SUCCESS = 0;
 
 	private static int s_CurrentServerCode = STAGING_SERVER_ID;
+	
+	public static int getServerId() {
+		return s_CurrentServerCode;
+	}
 
 	public static String getBaseJsonUrl() {
 		switch (s_CurrentServerCode) {
