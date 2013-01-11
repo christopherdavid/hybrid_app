@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<title>Neato Smartapp</title>
+<!-- CSS Style -->
+<link rel="stylesheet" href="neatosmartapp.css" />
+
+<!-- Java scripts -->
+<script type="text/javascript"  src="cordova-2.1.0.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/pluginmanager.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/neatosmartapphelper.js"></script>
+<script>
+    function mylogin(form)
+    {
+    loginUser(form.email.value,form.password.value,successLogin,errorLogin);
+    }
+    function goToWelcomeScreen()
+    {
+         window.location.assign("WelcomeScreen.html");
+    }
+</script>
+<script>
+</script>
+</head>
+	<body>
+		<!-- Login screen -->
+        <section id="loginPage">
+            <div class="defaultSectionHeader">Enter your login credentials!</div>
+            <br>
+            <form name="loginForm">
+            <input type="text" name="email" id="mailid" placeholder="Email" class="defaultInputText"></input>
+            <br>
+            <input type="password" name="password" id="passkey" placeholder="Password" class="defaultInputText"></input>
+            <br>
+            <br>
+            <input type="button" id="loginButton" value="Login" class="defaultButton" onclick="mylogin(this.form);"></input>
+            <input type="button" id="backButton" value="back" class="defaultButton" onclick="goToWelcomeScreen();"></input>
+            </form>
+        </section>
+        <label id="responseText"></label>
+	</body>
+</html>

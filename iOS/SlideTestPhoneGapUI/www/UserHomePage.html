@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<title>Neato Smartapp</title>
+<!-- CSS Style -->
+<link rel="stylesheet" href="neatosmartapp.css" />
+
+<!-- Java scripts -->
+<script type="text/javascript"  src="cordova-2.1.0.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="jquery.js"></script>   
+<script type="text/javascript" charset="utf-8" src="js/pluginmanager.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/neatosmartapphelper.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/neatosmartapp.js"></script>
+</head>
+	<body onload="onUserHomeLoaded();">
+        <div><center><img src="spinner.gif" id="spinnerImg" style="display:none;"  /></center></div>
+		<!-- User screen -->
+        <section id="userHomePage"  aria-hidden=false >
+            <div class="defaultSectionHeader">Neato Smart App</div>
+            <br>
+            <center>
+                <br>
+                <label>Associated Robot : </label>
+                <label id="peerDevice">None</label>
+                <br>
+                <label>Connection status : </label>
+                <label id="tcpstatusText">Not connected</label>
+            </center>
+            <br>
+            <label>Associate Robot</label>
+            <hr>
+			<input type="button" id="btnDiscoverRobot" value="Discover Nearby Robots" class="defaultButton" onclick="findNearbyRobots(successfindNearbyRobots,errorfindnearbyRobots);"></input>
+            <br>
+                <input type="text" name="robotId" id="serialNumbertxt" placeholder="RobotId" class="defaultInputText"></input>
+                <br>
+                <input type="button" id="associatebtn" value="Associate" class="defaultButton" onclick="associateRobot(successAsssociateRobot,errorAsssociateRobot);"></input>
+            <br>
+            <label>Robot Commands</label>
+            <hr>
+			<input type="button" id="btnStartCleaningPeer" value="Start Cleaning" class="defaultButton" onclick="startCleaning(successStartCleaning,errorStartCleaning);"></input>
+            <input type="button" id="btnStopCleaningPeer" value="Stop Cleaning" class="defaultButton" onclick="stopCleaning(successStopCleaning,errorStopCleaning);"></input>
+            <div id="connectTCPbtnDiv" aria-hidden=true>
+                <hr>
+                <input type="button" id="btnConnectTCP" value="Connect with " class="defaultButton" onclick="connectTCP(successConnectTCP,errorConnectTCP);" width="150px"></input>
+                <hr>
+            </div>
+            <div id="disconnectTCPbtnDiv" aria-hidden=true>
+                <hr>
+            <input type="button" id="btnDisconnect" value="Disconnect TCP" class="defaultButton" onclick="disconnectTCP(successDisconnectTCP,errorDisconnectTCP);"></input>
+                <hr>
+                </div>
+    
+            <input type="button" id="btnLogout" value="Logout" class="defaultButton" onclick="logout(successLogout,errorLogout);"></input>
+            <br>
+            <div id="robotoverlay" aria-hidden=true></div>
+            <div id="robotsFound" aria-hidden=true>
+               
+            </div>
+	</body>
+</html>
