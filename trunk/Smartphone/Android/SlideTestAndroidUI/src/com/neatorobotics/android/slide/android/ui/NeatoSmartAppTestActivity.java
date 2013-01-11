@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -21,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -168,21 +170,26 @@ public class NeatoSmartAppTestActivity extends Activity {
 	
 	private static final int ROBOT_ASSOCIATED_REQUEST_CODE = 1;
 	
-	private static String getTitle(Context context)
+	/*private static String getTitle(Context context)
 	{
 		String version = AppUtils.getVersionWithBuildNumber(context);
 		String title = "Neato SmartApps (Build " + version + ")";
 		return title;
 		
-	}
+	}*/
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+	    	requestWindowFeature(Window.FEATURE_NO_TITLE);
+	    }
+		
 		setContentView(R.layout.main);
 		
-		String title = getTitle(this);
-		setTitle(title);
+		// String title = getTitle(this);
+		// setTitle(title);
 		
 		String version = AppUtils.getVersionWithBuildNumber(this);
 		LogHelper.log(TAG, "Build Number = " + version);
@@ -514,6 +521,11 @@ public class NeatoSmartAppTestActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.menuitem_logout:
 			logout();
+			return true;
+			
+		case R.id.menuitem_about:
+			Intent aboutIntent = new Intent(getApplicationContext(), AboutActivity.class);
+			startActivity(aboutIntent);
 			return true;
 
 		default:

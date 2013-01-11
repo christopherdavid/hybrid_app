@@ -8,5 +8,8 @@
      
     <item android:id="@+id/menuitem_logout"
         android:title="@string/text_menu_logout"/>
+    
+    <item android:id="@+id/menuitem_about"
+        android:title="@string/text_menu_about"/>
 
 </menu>
