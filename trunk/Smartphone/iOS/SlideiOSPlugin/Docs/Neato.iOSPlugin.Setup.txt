@@ -1,0 +1,175 @@
+Neato SmartApp iOS Plugin - Setup
+
+Raja Software
+Created: 01/02/2013
+Last updated: 01/16/2013
+
+
+iOS Plugin Component Overview
+
+We have used Cordova 2.1.0 for the PhoneGap plugin. (Even though there is a 2.2.0, the code
+checked into Neato is 2.1.0) - we pulled it from what UID checked into the Neato tree, but
+you can also download it from "http://www.phonegap.com/download#"
+
+There are 3 main directories: 
+
+1. CordovaLib (this is inside ../PhoneGap/phonegap-phonegap-26d211b/lib/ios/CordovaLib)
+2. SlideiOSPlugin
+3. SlideTestPhoneGapUI
+
+2 is dependent on 1; 3 is dependent on 1 and 2.
+
+~~~
+CordovaLib:
+
+- We can compile the CordovaLib and generate the 'libCordova.a' and use it in the 
+  SlideiOSPlugin and SlideTestPhoneGapUI directly.
+- NOTE: The lib file generated for the device and simulators would be different. So if 
+  plugin and test app are to be compiled for device/simulator we need to use the 
+  correct lib file.
+						 OR
+  CordovaLib can be a part of project SlideiOSPlugin and we can set the dependency 
+  on CordovaLib. So first CordovaLib will be compiled and then the SlideiOSPlugin will 
+  be compiled. We are using this approach just to ensure we don't have to keep coping 
+  the lib files to build the app for simulator and device.
+
+~~~
+SlideiOSPlugin:
+
+- SlideiOSPlugin is a static library built using the CordovaLib.
+- It has the UserManagerPlugin and RobotManagerPlugin.
+- The output generated on compiling this project in 
+      "SlideiOSPlugin/DerivedData/Build/Products/<PHONE_PLATFORM>".
+  where PHONE_PLATFORM is: Debug-iphonesimulator, Release-iphonesimulator, Debug-iphoneos, or Release-iphoneos
+
+- The Directory structure is as follows (say, for Debug-iphonesimulator)
+	<include>
+		<Cordova>
+			 File1.h
+			   .
+			   .
+			Filen.h
+		<SlideiOSPlugin>
+			SlideiOSPlugin.h
+	libCordova.a
+	libSlideiOSPlugin.a
+
+- We need to copy the complete directory structure under the PHONE_PLATFORM directory 
+  to 'SlideTestPhoneGapUI/dist/SlidePlugins'
+
+~~~
+SlideTestPhoneGapUI:
+
+- SlideTestPhoneGapUI is the test application created using the CordovaLib from the command prompt. 
+  The command used is to generate the project is:
+
+  ./create ../RslRepo/Neato_SmartApps/trunk/Smartphone/iOS/SlideTestPhoneGapUI com.neato.plugin SlideTestPhoneGapUI
+
+- When we compile the SlideTestPhoneGapUI the SlideTestPhoneGapUI.app is generated 
+  under "..SlideTestPhoneGapUI/DerivedData/Build/Products/<PHONE_PLATFORM>".
+
+- If we have compiled this for simulator we can run it directly or else install on the device 
+  and run it on device.
+
+~~~
+SlideTestPGApp.xcworkspace:
+
+- We have also created a workspace 'SlideTestPGApp.xcworkspace' which has both the 
+  lib and the test app.
+- Developers can always use the workspace so that the entire code will be accessible to 
+  them instead of opening separate projects. When we compile the workspace the output is generated under 
+  "../Neato_SmartApps/trunk/Smartphone/iOS/DerivedData/SlideTestPGApp/Build/Products/PHONE_PLATFORM" as follows:
+
+  Debug-iphonesimulator directory
+	<include>
+		<Cordova>
+			File-1.h
+		 	.
+		 	.
+			File-n.h
+		<SlideiOSPlugin>
+			SlideiOSPlugin.h
+	libCordova.a
+	libSlideiOSPlugin.a
+	SlideTestPhoneGapUI.app
+	SlideTestPhoneGapUI.app.dSYM
+
+
+- With this we have the complete output generated in one place and we need not worry about copying the lib files. 
+  SlideTestPhoneGapUI.app is the test app which can be installed on the device.
+
+~~~
+Code Flow:
+
+- SlideiOSPlugin - PhoneGap plugin which has RobotManagerPlugin and UserManagerPlugin 
+  both extended from CDVPlugin. 
+- SlideTestPhoneGapUI : This is a test application used to test the API exposed through the SlideiOSPlugin. 
+- SlideTestPhoneGapUI is created from command prompt using the ./create command.
+  This gives us the phone gap plugin project template. The template had its own default icon and splash screen.
+  These are retained as placeholders for time being. On receiving the actual assets these should be 
+  replaced with the correct assets. (Left it in so that it will be easy for someone to add correct assets in future).
+- The "www/index.html" is the UI which appears after the splash screen. It has 3 buttons - Login, Logout, Create User.
+  index.html include the javascript neatosmartapphelper.js and pluginmanager.js. On click of the above 
+  buttons we invoke the javascript functions form neatosmartapphelper.js
+- The "www/js/neatosmartapphelper.js" has the javascript functions to be called from the index.html.
+  These functions internally call the 
+  PluginManager:callNativeFunction (success, fail, pluginName, functionName, argumentsArray) 
+  method from pluginmanger.js.
+	success: Callback function in case of success
+	fail: Callback function in case of failure
+     	pluginName: Can be UserManagerPlugin/ RobotManagerPlugin
+     	functionName: Name of the native function to be invoked for the plugin.
+	argumentsArray: JSON string of arguments. Please see how the argumentsArray 
+                 is passed to PluginManager:callNativeFunction.
+
+~~~
+Building and Running the Test UI App:
+
+- Just click on 'SlideTestPGApp.xcworkspace' under iOS folder. This will open up, main project which includes:
+  - Test PhoneGap UI app
+  - Static library - SlideiOSPlugin which implements and exposes the API's
+  - Corodova lib project
+- This project should compile and work straightway. 
+
+Note: SlideTestPGApp does NOT compile and work for a Simulator. You have to compile the project against a device.
+
+
+~~~
+
+Adding 'SlideiOSPlugin' static library to a different project:
+
+- SlideiOSPlugin implements and exposes backend APIs required for Neato smart app. 
+  SlideiOSPlugin includes CorodovaLib lib, as it exposes the required APIs as 'Phonegap plugins'. 
+  See UserManagerPlugin.h and RobotManagerPlugin.h files for available APIs.
+
+- Main project should add SlideiOSPlugin as a library. To add the static library to an
+  existing project:
+  - Right click on main project and then select 'Add file to <project_name>'
+  - Browse and select the 'SlideiOSPlugin.xcodeproj' file (under iOS->SlideiOSPlugin)
+  - Make sure you check both 'Copy items into destinations group folder' and 'add to targets' options
+  - Click add
+  - Select 'Build Phases' tab for main project, click on 'Link binary with libraries'
+  - Now 'libSlideiOSPlugin.a' should show up in the options available. Add that file to project.
+- If you compile the app now, the compilation will fail with bunch of errors. This is expected.
+
+- SlideiOSPlugin has following dependencies:(which the main project should include)
+  - CFNetwork.framework
+  - Security.framework
+  - libsqlite3.dylib
+  - libresolv.dylib
+  - libxml2.dylib
+
+- The Main project should include all these frameworks as Apple does not recommend adding 
+  frameworks to a static library. (See our TestUI app for reference).
+
+- To include these files go to ->'Build tab' in xCode->Link binary with libraries-> click on + button at the bottom.
+  All of above framework are provided by Apple, so they will show up once you start typing the name.
+
+- Apart from this the main project should add '/usr/include/libxml2' in 
+  the 'Header search path' section in 'Build settings' tab. For this, go to Build settings->Header search paths->click on + and 
+  then add '/usr/include/libxml2' for both debug and release sections.
+
+- Done. After this entire workspace should compile and run.
+
+
+End.
