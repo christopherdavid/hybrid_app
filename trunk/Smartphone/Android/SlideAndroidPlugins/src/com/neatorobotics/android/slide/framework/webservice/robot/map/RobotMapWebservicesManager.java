@@ -2,22 +2,21 @@ package com.neatorobotics.android.slide.framework.webservice.robot.map;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.neatorobotics.android.slide.framework.http.download.FileCachePath;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadWorkItem;
 import com.neatorobotics.android.slide.framework.http.download.MultipleFileDownloadHelper;
 import com.neatorobotics.android.slide.framework.http.download.MultipleFileDownloadListener;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import android.content.Context;
-import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 
-public class RobotMapWebservicesManager {	
-	private static final String ROBOT_MAP_CACHE_DATA_DIR = "/neato/map_data/";
+public class RobotMapWebservicesManager {
 	private static final String TAG = RobotMapWebservicesManager.class.getSimpleName();
 	Context mContext;
-	private static final String OVERLAY_FILE_NAME = "overlayFile.xml";
-	private static final String MAP_IMAGE_FILE_NAME = "image.jpg";
+	
 	private Handler mHandler;
 
 	private static String mMapId;
@@ -43,28 +42,6 @@ public class RobotMapWebservicesManager {
 	}
 	public void setHandler(Handler handler) {
 		mHandler = handler;
-	}
-
-	private static String getExtImageFilePath(String robotId) {
-		if (mMapId == null || robotId == null) { 
-			return null;
-		}
-		StringBuilder builder = new StringBuilder(Environment.getExternalStorageDirectory().getAbsolutePath()).
-				append(ROBOT_MAP_CACHE_DATA_DIR).append(mMapId).append("_").append(robotId).
-				append("/").append(MAP_IMAGE_FILE_NAME);
-
-		return builder.toString();
-	}
-	
-	private String getExtMapXMLFilePath(String robotSerialNumber) {
-
-		if (mMapId == null || robotSerialNumber == null) { 
-			return null;
-		}
-		StringBuilder builder = new StringBuilder(Environment.getExternalStorageDirectory().getAbsolutePath()).
-				append(ROBOT_MAP_CACHE_DATA_DIR).append(mMapId).append("_").append(robotSerialNumber).
-				append("/").append(OVERLAY_FILE_NAME);
-		return builder.toString();
 	}
 
 	public void getRobotMapData(final String robotId, final RobotMapDataDownloadListener listener) {
@@ -159,8 +136,8 @@ public class RobotMapWebservicesManager {
 	private void downloadMapImageAndOverlayFiles(final String robotId, final String overlayFileUrl, final String imageFileUrl, final RobotMapDataDownloadListener listener) {
 
 		LogHelper.log(TAG, "downloadMapDataAndShow called");
-		final String overlayFilePath = getExtMapXMLFilePath(robotId);
-		final String mapImageFile = getExtImageFilePath(robotId);
+		final String overlayFilePath = FileCachePath.getMapXMLFilePath(mContext, robotId, mMapId);
+		final String mapImageFile = FileCachePath.getImageFilePath(mContext, robotId, mMapId);
 		
 		ArrayList<FileDownloadWorkItem> items = new ArrayList<FileDownloadWorkItem>();
 		FileDownloadWorkItem overlayFileItem = new FileDownloadWorkItem(overlayFileUrl, overlayFilePath);

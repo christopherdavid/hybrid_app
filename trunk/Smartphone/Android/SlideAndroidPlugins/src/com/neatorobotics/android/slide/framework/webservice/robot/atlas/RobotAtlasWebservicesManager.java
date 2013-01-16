@@ -2,9 +2,9 @@ package com.neatorobotics.android.slide.framework.webservice.robot.atlas;
 
 
 import android.content.Context;
-import android.os.Environment;
 import android.text.TextUtils;
 
+import com.neatorobotics.android.slide.framework.http.download.FileCachePath;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadHelper;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadListener;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
@@ -18,8 +18,6 @@ public class RobotAtlasWebservicesManager {
 	private Context mContext;
 	private static RobotAtlasWebservicesManager sRobotAtlasWebservicesManager;
 	private static final Object INSTANCE_LOCK = new Object(); 
-	private static final String ATLAS_FILE_NAME = "atlas.xml";
-	private static final String ROBOT_ATLAS_CACHE_DATA_DIR = "/neato/atlas_data/";
 
 	private RobotAtlasWebservicesManager(Context context)
 	{
@@ -35,18 +33,7 @@ public class RobotAtlasWebservicesManager {
 		}
 
 		return sRobotAtlasWebservicesManager;
-	}
-
-	private String getAtlasMapXMLFilePath(String robotId, String atlasId) {
-
-		if (atlasId == null) { 
-			return null;
-		}
-		StringBuilder builder = new StringBuilder(Environment.getExternalStorageDirectory().getAbsolutePath()).
-				append(ROBOT_ATLAS_CACHE_DATA_DIR).append(atlasId).
-				append("/").append(ATLAS_FILE_NAME);
-		return builder.toString();
-	}
+	}	
 
 	public void addRobotAtlasData(final String robotId, final String atlas_data, final AddUpdateRobotAtlasListener listener) {
 
@@ -168,7 +155,7 @@ public class RobotAtlasWebservicesManager {
 	private void downloadAtlasFile(final String robotId, final String atlas_id, final String xmlDataUrl, final RobotAtlasDataDownloadListener listener) {
 
 		LogHelper.log(TAG, "downloadAtlasFile called");
-		final String atlasFilePath = getAtlasMapXMLFilePath(robotId, atlas_id);
+		final String atlasFilePath = FileCachePath.getAtlasMapXMLFilePath(mContext, robotId, atlas_id);
 
 		FileDownloadHelper.downloadFile(mContext, xmlDataUrl, atlasFilePath, new FileDownloadListener() {
 			

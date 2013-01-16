@@ -7,16 +7,16 @@ public class JsonMapKeys {
 	// Used by user plugin
 	public static final String KEY_EMAIL = "email";
 	public static final String KEY_PASSWORD = "password";
-	public static final String KEY_USER_NAME = "username";
+	public static final String KEY_USER_NAME = "userName";
 	public static final String KEY_USER_ID = "userId";
-	public static final String KEY_AUTH_TOKEN = "auth_token";
+	public static final String KEY_AUTH_TOKEN = "authToken";
 	// Used by robot plugin
 	public static final String KEY_COMMAND_ID = "commandId";
 	public static final String KEY_COMMAND_PARAMETERS = "commandParams";
 	public static final String KEY_ROBOT_ID = "robotId";
 	public static final String KEY_USE_XMPP = "useXMPP";
-	public static final String KEY_ROBOT_NAME = "robot_name";
-	public static final String KEY_ROBOT_IP_ADDRESS = "robot_ipaddress";
+	public static final String KEY_ROBOT_NAME = "robotName";
+	public static final String KEY_ROBOT_IP_ADDRESS = "robotIpaddress";
 	
 	
 	//Used for error
@@ -36,7 +36,7 @@ public class JsonMapKeys {
 	public static final String KEY_END_TIME = "endTime";
 	
 	
-	public static final String KEY_SCHEDULE_TYPE = "scheduletype";
+	public static final String KEY_SCHEDULE_TYPE = "scheduleType";
 	public static final String KEY_SCHEDULES = "schedules";
 	public static final String KEY_SCHEDULE_ID = "scheduleId";
 	

@@ -48,8 +48,7 @@ public class UserManager {
 				UserItem userItem = null;
 				LoginNeatoUserTokenResult result = NeatoUserWebservicesHelper.loginNeatoUserToken(mContext, email, password);
 				if (result != null && result.success()) {
-					String auth_token = result.mUserAuthToken;
-					NeatoPrefs.saveNeatoUserAuthToken(mContext, auth_token);
+					String auth_token = result.mUserAuthToken;					
 					userItem = getUserDetail(email, auth_token);
 				} 
 
@@ -65,13 +64,13 @@ public class UserManager {
 						LogHelper.logD(TAG, "Sending user item to listener");
 						LogHelper.logD(TAG, "Initialise inside User manager!");
 						// myHandler.sendEmptyMessage(0);
-						//InitHelper initHelper = new InitHelper(mContext);
+						//InitHelper initHelper = new InitHelper(mContext);						
+						
+						UserHelper.saveLoggedInUserDetails(mContext, userItem, result.mUserAuthToken);
 
 						LogHelper.logD(TAG, "After Initialise inside User manager!");
 						listener.onUserDetailsReceived(userItem);
 					}
-
-
 				}
 			}
 		};
@@ -118,10 +117,12 @@ public class UserManager {
 		UserItem userItem = null;
 		LoginNeatoUserTokenResult response = NeatoUserWebservicesHelper.loginNeatoUserToken(mContext, email, password);
 		if (response != null && response.success()) {
-			String auth_token = response.mUserAuthToken;
-			NeatoPrefs.saveNeatoUserAuthToken(mContext, auth_token);
-			userItem = getUserDetail(email,auth_token);
+			userItem = getUserDetail(email,response.mUserAuthToken);
+			if (userItem != null) {
+				UserHelper.saveLoggedInUserDetails(mContext, userItem, response.mUserAuthToken);
+			}
 		}
+		
 		return userItem;
 	}
 
@@ -133,8 +134,7 @@ public class UserManager {
 				UserItem userItem = null;
 				CreateNeatoUserResult result = NeatoUserWebservicesHelper.createNeatoUserRequestNative(mContext, username, email, password);
 				if (result != null && result.success()) {
-					String auth_token = result.mResult.mUserHandle;
-					NeatoPrefs.saveNeatoUserAuthToken(mContext, auth_token);
+					String auth_token = result.mResult.mUserHandle;					
 					userItem = getUserDetail(email,auth_token);
 				} 
 
@@ -147,7 +147,8 @@ public class UserManager {
 						LogHelper.logD(TAG, "User item is null");
 						listener.onServerError();
 					} else {
-						LogHelper.logD(TAG, "Sending user item to listener");
+						LogHelper.logD(TAG, "Sending user item to listener");					
+						UserHelper.saveLoggedInUserDetails(mContext, userItem, result.mResult.mUserHandle);
 						listener.onUserDetailsReceived(userItem);
 					}
 				}
@@ -162,11 +163,10 @@ public class UserManager {
 		UserItem userItem = null;
 		CreateNeatoUserResult result = NeatoUserWebservicesHelper.createNeatoUserRequestNative(mContext, username, email, password);
 		if (result != null && result.success()) {
-			String auth_token = result.mResult.mUserHandle;
-			NeatoPrefs.saveNeatoUserAuthToken(mContext, auth_token);
+			String auth_token = result.mResult.mUserHandle;			
 			userItem = getUserDetail(email,auth_token);
-			if (userItem != null) {
-				UserHelper.saveUserDetails(mContext, userItem);
+			if (userItem != null) {				
+				UserHelper.saveLoggedInUserDetails(mContext, userItem, auth_token);
 			}
 		}
 		return userItem;

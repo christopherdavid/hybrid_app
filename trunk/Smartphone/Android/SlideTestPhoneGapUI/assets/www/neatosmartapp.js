@@ -537,6 +537,25 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 		},
 		
+		setRobotName: function() {
+			neatoSmartApp.showProgressBar();
+			var robotName = document.querySelector('#robotName').value;
+			var robotId = localStorage.getItem('robotId');
+			if (robotId == null) {
+				robotId = "Robot_1001";
+			}
+			RobotPluginManager.setRobotName(robotId, robotName, neatoSmartApp.setRobotNameSuccess, neatoSmartApp.setRobotNameErr);
+		},
+		
+		setRobotNameSuccess: function(result) {
+			neatoSmartApp.setResponseText(result);
+			neatoSmartApp.hideProgressBar();
+		},
+		
+		setRobotNameErr: function(error) {
+			neatoSmartApp.setResponseText(error);
+			neatoSmartApp.hideProgressBar();
+		},
 		
 		//##################FUNCTIONS RELATED TO HIDE-SHOW SECTIONS ON HTML#####################################
 		
@@ -704,6 +723,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnDisassociateRobot').addEventListener('click', neatoSmartApp.disassociateRobot , true);
 			document.querySelector('#btnDisassociateAllRobot').addEventListener('click', neatoSmartApp.disassociateAllRobots , true);
 			document.querySelector('#btnGetAssociatedRobots').addEventListener('click', neatoSmartApp.getAssociatedRobots , true);
+			document.querySelector('#btnSetRobotName').addEventListener('click', neatoSmartApp.setRobotName , true);
 		},
 
 		hideAssociateRobotPage: function() {
@@ -712,6 +732,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnDisassociateRobot').removeEventListener('click', neatoSmartApp.disassociateRobot , true);
 			document.querySelector('#btnDisassociateAllRobot').removeEventListener('click', neatoSmartApp.disassociateAllRobots , true);
 			document.querySelector('#btnGetAssociatedRobots').removeEventListener('click', neatoSmartApp.getAssociatedRobots , true);
+			document.querySelector('#btnSetRobotName').removeEventListener('click', neatoSmartApp.setRobotName , true);
 		},
 
 		hideAssociateShowHome: function() {

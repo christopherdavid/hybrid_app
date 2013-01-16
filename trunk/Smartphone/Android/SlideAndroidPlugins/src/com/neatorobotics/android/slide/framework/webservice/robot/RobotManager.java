@@ -1,11 +1,13 @@
 package com.neatorobotics.android.slide.framework.webservice.robot;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 
 import android.content.Context;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
+import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.SetRobotProfileDetails;
 
 public class RobotManager {
 	private static final String TAG = RobotManager.class.getSimpleName();
@@ -67,7 +69,28 @@ public class RobotManager {
 		}
 		return robotItem;
 	}
-	
+
+	public void setRobotName(final String robotId, final String robotName, final SetRobotProfileDetailsListener listener) 
+	{
+		Runnable task = new Runnable() {
+			public void run() {
+				HashMap<String, String> profileParams = new HashMap<String, String>();
+				profileParams.put(SetRobotProfileDetails.Attribute.ROBOT_NAME, robotName);
+				SetRobotProfileDetailsResult result = NeatoRobotWebservicesHelper.setRobotProfileDetailsRequest(mContext, robotId, profileParams);
+				if (result != null) {
+					if(result.success()) {
+						listener.onSetProfileSuccess();
+					} else {
+						listener.onSetProfileServerError(result.mMessage);
+					}
+				} else {
+					listener.onSetProfileNetworkError("Network Error");
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+
 	private RobotItem convertRobotDetailResultToRobotItem(RobotDetailResult result)
 	{
 		RobotItem robotItem = new RobotItem();

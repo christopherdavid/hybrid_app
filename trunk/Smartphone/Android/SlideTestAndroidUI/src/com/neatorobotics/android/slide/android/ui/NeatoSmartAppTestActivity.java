@@ -533,8 +533,7 @@ public class NeatoSmartAppTestActivity extends Activity {
 		}
 	}
 
-	private void logout() {
-		NeatoPrefs.saveUserEmailId(NeatoSmartAppTestActivity.this, null);
+	private void logout() {		
 		try {
 			mNeatoRobotService.cleanup();
 		} catch (RemoteException e) {		
