@@ -58,7 +58,7 @@ var ACTION_TYPE_DISCONNECT_DIRECT_CONNETION		= "disconnectDirectConnection";
 var ACTION_TYPE_GET_ROBOT_ATLAS_METADATA 		= "getRobotAtlasMetadata";
 var ACTION_TYPE_UPDATE_ROBOT_ATLAS_METADATA		= "updateRobotAtlasMetadata";
 var ACTION_TYPE_GET_ATLAS_GRID_DATA 			= "getAtlasGridData";
-
+var ACTION_TYPE_SET_ROBOT_NAME					= "setRobotName";
 //List of keys to send data:
 
 var KEY_EMAIL = 'email';
@@ -69,10 +69,10 @@ var KEY_USER_NAME = 'username';
 var KEY_COMMAND = 'command';
 var KEY_ROBOT_ID = 'robotId';
 var KEY_USE_XMPP = 'useXMPP';
-var KEY_ROBOT_NAME = "robot_name";
-var KEY_ROBOT_IP_ADDRESS = "robot_ipaddress";
+var KEY_ROBOT_NAME = "robotName";
+var KEY_ROBOT_IP_ADDRESS = "robotIpaddress";
 
-var KEY_SCHEDULE_TYPE = "scheduletype";
+var KEY_SCHEDULE_TYPE = "scheduleType";
 
 var KEY_DAY = 'day';
 
@@ -138,7 +138,7 @@ UserMgr.prototype.isUserLoggedIn = function(email, callbackSuccess, callbackErro
 };
 
 UserMgr.prototype.createUser = function(email, password, name, callbackSuccess, callbackError) {
-	var registerArray = {'email':email, 'password':password, 'username':name};
+	var registerArray = {'email':email, 'password':password, 'userName':name};
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_CREATE_USER, [registerArray]);
 };
@@ -201,14 +201,20 @@ RobotMgr.prototype.sendCommandToRobot = function(robotId, commandId, commandPara
 			ACTION_TYPE_SEND_COMMAND_TO_ROBOT, [commandArray]);
 };
 
+RobotMgr.prototype.setRobotName = function(robotId, robotName, callbackSuccess, callbackError) {
+	var setRobotName = {'robotId':robotId, 'robotName':robotName};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_SET_ROBOT_NAME, [setRobotName]);
+};
+
 RobotMgr.prototype.setSchedule = function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
-	var scheduleArray = {'robotId':robotId, 'scheduletype':scheduleType, 'schedule': jsonArray};
+	var scheduleArray = {'robotId':robotId, 'scheduleType':scheduleType, 'schedule': jsonArray};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACIION_TYPE_SET_SCHEDULE, [scheduleArray]);
 };
 
 RobotMgr.prototype.getSchedule = function(robotId, scheduleType, callbackSuccess, callbackError) {
-	var scheduleArray = {'robotId':robotId, 'scheduletype':scheduleType};
+	var scheduleArray = {'robotId':robotId, 'scheduleType':scheduleType};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACIION_TYPE_GET_ROBOT_SCHEDULE, [scheduleArray]);
 };
@@ -303,6 +309,10 @@ var RobotPluginManager = (function() {
 			window.plugins.neatoPluginLayer.robotMgr.sendCommandToRobot(robotId, commandId, commandParams, callbackSuccess, callbackError);
 		},
 		
+		setRobotName : function(robotId, robotName, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.setRobotName(robotId, robotName, callbackSuccess, callbackError);
+		},
+		
 		setSchedule: function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.setSchedule(robotId, scheduleType, jsonArray, callbackSuccess, callbackError);
 		},
@@ -330,7 +340,7 @@ var RobotPluginManager = (function() {
 			window.plugins.neatoPluginLayer.robotMgr.updateAtlasMetaData(robotId, atlasMetadata, callbackSuccess, callbackError);
 		},
 		
-		// TODO: We are taking robotId. Analyse if taking atlas_id is a better option.
+		// TODO: We are taking robotId. Analyse if taking atlasId is a better option.
 		getAtlasGridData: function(robotId, gridId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getAtlasGridData(robotId, gridId, callbackSuccess, callbackError);
 		}

@@ -16,6 +16,7 @@ import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelpe
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.AssociateNeatoRobotToUser;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.CreateNeatoRobot;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotDetails;
+import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.SetRobotProfileDetails;
 
 
 public class NeatoRobotWebservicesHelper {
@@ -86,6 +87,48 @@ public class NeatoRobotWebservicesHelper {
 		return result;
 	}
 	
+	public static SetRobotProfileDetailsResult setRobotProfileDetailsRequest(Context context, String robotId, HashMap<String, String> profileDetailsParams) 
+	{
+		SetRobotProfileDetailsResult result = null;
+		Map<String, String> robotSetDetailParams = new HashMap<String, String>();
+		robotSetDetailParams.put(SetRobotProfileDetails.Attribute.SERIAL_NUMBER, robotId);
+		robotSetDetailParams.putAll(addProfilePrefix(profileDetailsParams));
+		NeatoHttpResponse robotSetDetailResponse = NeatoWebserviceHelper.executeHttpPost(context, SetRobotProfileDetails.METHOD_NAME, robotSetDetailParams);
+		if (robotSetDetailResponse.completed()) { 
+			try {
+				LogHelper.logD(TAG, "Set Robot detail completed. Reading response");
+				String robotDetailJson = AppUtils.convertStreamToString(robotSetDetailResponse.mResponseInputStream);
+				LogHelper.logD(TAG, "robotDetailJson = " + robotDetailJson);
+				result = resultMapper.readValue(robotDetailJson, new TypeReference<SetRobotProfileDetailsResult>() {});
+				LogHelper.log(TAG, "Robot detail updated .");
+			} catch (JsonParseException e) {
+				LogHelper.log(TAG, "Exception in setRobotProfileDetailsRequest" ,e);
+
+			} catch (JsonMappingException e) {
+				LogHelper.log(TAG, "Exception in setRobotProfileDetailsRequest" ,e);
+
+			} catch (IOException e) {
+				LogHelper.log(TAG, "Exception in setRobotProfileDetailsRequest" ,e);
+			}
+		}
+		else { 
+			LogHelper.log(TAG, "Failed to set the Robot Profile detail.");
+			result = new SetRobotProfileDetailsResult(robotSetDetailResponse);
+		}
+		return result;
+		
+	}
+	
+	private static HashMap<String, String> addProfilePrefix(HashMap<String, String> profileParams) {
+		HashMap<String, String> profile = new HashMap<String, String>();
+		String profilePrefix = SetRobotProfileDetails.Attribute.PROFILE;
+		for (HashMap.Entry<String, String> entry : profileParams.entrySet()) {
+			
+			String keyWithProfilePrefix = profilePrefix+"[" + entry.getKey() + "]";
+			profile.put(keyWithProfilePrefix, entry.getValue());	        		        
+		}
+		return profile;
+	}
 	
 	public static RobotDetailResult getRobotDetail(Context context, String serialNumber) {
 		RobotDetailResult result = null;

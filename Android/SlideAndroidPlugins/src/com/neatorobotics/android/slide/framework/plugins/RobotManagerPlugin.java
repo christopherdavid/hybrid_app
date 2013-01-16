@@ -19,6 +19,8 @@ import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotD
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
 import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedScheduleGroup;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
+import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
+import com.neatorobotics.android.slide.framework.webservice.robot.SetRobotProfileDetailsListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.RobotAtlasWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.RobotAtlasGridWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.listeners.RobotGridDataDownloadListener;
@@ -44,7 +46,7 @@ public class RobotManagerPlugin extends Plugin {
 	private enum RobotManagerPluginMethods {DISCOVER_NEAR_BY_ROBOTS, TRY_DIRECT_CONNECTION, 
 		SEND_COMMAND_TO_ROBOT, SET_ROBOT_SCHEDULE, 
 		SET_MAP_OVERLAY_DATA, GET_ROBOT_MAP, 
-		GET_ROBOT_SCHEDULE, DISCONNECT_DIRECT_CONNECTION, GET_ROBOT_ATLAS_METADATA,
+		GET_ROBOT_SCHEDULE, DISCONNECT_DIRECT_CONNECTION, SET_ROBOT_NAME, GET_ROBOT_ATLAS_METADATA,
 		UPDATE_ROBOT_ATLAS_METADATA, GET_ATLAS_GRID_DATA};
 
 		static {
@@ -59,6 +61,7 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_MAP.put(ActionTypes.GET_ROBOT_ATLAS_METADATA, RobotManagerPluginMethods.GET_ROBOT_ATLAS_METADATA);
 			ACTION_MAP.put(ActionTypes.UPDATE_ROBOT_ATLAS_METADATA, RobotManagerPluginMethods.UPDATE_ROBOT_ATLAS_METADATA);
 			ACTION_MAP.put(ActionTypes.GET_ATLAS_GRID_DATA, RobotManagerPluginMethods.GET_ATLAS_GRID_DATA);
+			ACTION_MAP.put(ActionTypes.SET_ROBOT_NAME, RobotManagerPluginMethods.SET_ROBOT_NAME);
 		}
 
 		/*private RobotPluginAssociateListener mRobotPluginAssociateListener;*/
@@ -130,10 +133,13 @@ public class RobotManagerPlugin extends Plugin {
 				getRobotSchedule(context, jsonData, callbackId);
 				break;
 			case DISCONNECT_DIRECT_CONNECTION:
-
 				LogHelper.log(TAG, "DISCONNECT_PEER action initiated");
 				disconnectPeerConnection(context, jsonData, callbackId);
-
+				break;
+			case SET_ROBOT_NAME:
+				LogHelper.log(TAG, "SET_ROBOT_NAME action initiated");
+				setRobotName(context, jsonData, callbackId);
+				break;
 			case GET_ROBOT_ATLAS_METADATA:
 				LogHelper.log(TAG, "GET_ROBOT_ATLAS_METADATA action initiated");
 				getRobotAtlasMetadata(context, jsonData, callbackId);
@@ -146,6 +152,43 @@ public class RobotManagerPlugin extends Plugin {
 				LogHelper.log(TAG, "GET_ATLAS_GRID_DATA action initiated");
 				getAtlasGridData(context, jsonData, callbackId);
 			}
+		}
+
+
+		private void setRobotName(Context context, RobotJsonData jsonData,
+				final String callbackId) {
+			LogHelper.logD(TAG, "setRobotName action initiated in Robot plugin");	
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			String robotName = jsonData.getString(JsonMapKeys.KEY_ROBOT_NAME);
+			
+			RobotManager.getInstance(context).setRobotName(robotId, robotName, new SetRobotProfileDetailsListener() {
+				
+				@Override
+				public void onSetProfileSuccess() {
+					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+					pluginResult.setKeepCallback(false);
+					success(pluginResult, callbackId);
+				}
+
+				@Override
+				public void onSetProfileServerError(String errMessage) {
+					LogHelper.log(TAG, "Unable to update  robot profile");
+					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_SERVER_ERROR, errMessage);
+					PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, jsonError);
+					pluginResult.setKeepCallback(false);
+					error(pluginResult, callbackId);	
+					
+				}
+
+				@Override
+				public void onSetProfileNetworkError(String errMessage) {
+					LogHelper.log(TAG, "Unable to update  robot profile");
+					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
+					PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, jsonError);
+					pluginResult.setKeepCallback(false);
+					error(pluginResult, callbackId);	
+				}
+			});
 		}
 
 
@@ -460,6 +503,7 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String GET_ROBOT_ATLAS_METADATA = "getRobotAtlasMetadata";
 			public static final String UPDATE_ROBOT_ATLAS_METADATA = "updateRobotAtlasMetadata";
 			public static final String GET_ATLAS_GRID_DATA = "getAtlasGridData";
+			public static final String SET_ROBOT_NAME = "setRobotName";
 		}
 
 		private JSONObject getErrorJsonObject(int errorCode, String errMessage) {

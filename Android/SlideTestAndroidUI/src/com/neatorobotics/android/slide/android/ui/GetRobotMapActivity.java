@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
@@ -17,6 +16,7 @@ import android.widget.Toast;
 
 import com.neatorobotics.android.slide.android.ui.image.ImageResizer;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
+import com.neatorobotics.android.slide.framework.http.download.FileCachePath;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadHelper;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadListener;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadListenerWrapper;
@@ -28,9 +28,6 @@ import com.neatorobotics.android.slide.framework.webservice.robot.map.NeatoRobot
 
 public class GetRobotMapActivity extends Activity {
 	private static final String TAG = "GetRobotMapActivity";
-	
-	private static final String XML_FILE_NAME = "data.xml";
-	private static final String IMAGE_FILE_NAME = "image.jpg";
 	
 	private ProgressBar mProgressView;
 	private ImageView mImgMapData;
@@ -165,21 +162,11 @@ public class GetRobotMapActivity extends Activity {
 	}
 	
 	private String getExtMapXMLFilePath() {
-		StringBuilder builder = new StringBuilder(Environment.getExternalStorageDirectory().getAbsolutePath()).
-								append("/neato/map_data/").append(mMapId).append("_").append(mRobotSerialNo).
-								append("/").append(XML_FILE_NAME);
-		
-		return builder.toString();
-								
-		 
+		return FileCachePath.getMapXMLFilePath(getApplicationContext(), mRobotSerialNo, mMapId);
 	}
 	
 	private String getExtImageFilePath() {
-		StringBuilder builder = new StringBuilder(Environment.getExternalStorageDirectory().getAbsolutePath()).
-									append("/neato/map_data/").append(mMapId).append("_").append(mRobotSerialNo).
-									append("/").append(IMAGE_FILE_NAME);
-		
-		return builder.toString();
+		return FileCachePath.getImageFilePath(getApplicationContext(), mRobotSerialNo, mMapId);
 	}
 	
 	private FileDownloadListener mFileDownloadListener = new FileDownloadListener() {

@@ -19,11 +19,13 @@ public class UserHelper {
 		return result;
 	}
 	
-	public static boolean saveLoggedInUserDetails(Context context, UserItem userItem) {
+	public static boolean saveLoggedInUserDetails(Context context, UserItem userItem, String authKey) {
 		boolean result = saveUserDetails(context, userItem);
 		if (result) {
 			NeatoPrefs.saveUserEmailId(context, userItem.getEmail());
+			NeatoPrefs.saveNeatoUserAuthToken(context, authKey);
 		}
+		
 		return result;
 	}
 	

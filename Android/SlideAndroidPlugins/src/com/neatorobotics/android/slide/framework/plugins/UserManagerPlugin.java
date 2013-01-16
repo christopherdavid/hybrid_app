@@ -178,14 +178,12 @@ public class UserManagerPlugin extends Plugin {
 				
 				try {
 					if (userItem != null) {
-						
-						UserHelper.saveLoggedInUserDetails(context, userItem);
 						LogHelper.logD(TAG, "User Item = " + userItem);
 						
 						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
 						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
 						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());
-						//	userDetails.put(JsonMapKeys.KEY_AUTH_TOKEN, auth_token);
+						
 						RobotCommandServiceManager.loginToXmpp(context);
 						PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
 						LogHelper.logD(TAG, "Login successful. Start service and send Success plugin to user with user details");
@@ -280,12 +278,9 @@ public class UserManagerPlugin extends Plugin {
 				
 				try {
 					if (userItem != null) {
-						
-						UserHelper.saveLoggedInUserDetails(context, userItem);
 						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
 						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
-						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());
-						//userDetails.put(JsonMapKeys.KEY_AUTH_TOKEN, auth_token);
+						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());						
 					
 						RobotCommandServiceManager.loginToXmpp(context);
 						PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);

@@ -1,30 +1,21 @@
 package com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid;
 
-import java.util.Date;
-
 import android.content.Context;
-import android.os.Environment;
 import android.text.TextUtils;
-import android.text.format.Time;
 
+import com.neatorobotics.android.slide.framework.http.download.FileCachePath;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadHelper;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadListener;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.RobotAtlasWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.listeners.RobotGridDataDownloadListener;
-import com.neatorobotics.android.slide.framework.webservice.robot.atlas.listeners.RobotAtlasDataDownloadListener;
 
 public class RobotAtlasGridWebservicesManager {
-
-
 	private static final String TAG = RobotAtlasGridWebservicesManager.class.getSimpleName();
 	private Context mContext;
 	private static RobotAtlasGridWebservicesManager sRobotAtlasGridWebservicesManager;
-	private static final Object INSTANCE_LOCK = new Object(); 
-	private static final String GRID_FILE_NAME = "grid.xml";
-	private static final String ROBOT_MAP_CACHE_DATA_DIR = "/neato/map_data/";
-
+	private static final Object INSTANCE_LOCK = new Object();
 
 	private RobotAtlasGridWebservicesManager(Context context)
 	{
@@ -40,22 +31,6 @@ public class RobotAtlasGridWebservicesManager {
 		}
 		return sRobotAtlasGridWebservicesManager;
 	}
-
-	private String getAtlasGridFilePath(String atlasId, String gridId) {
-
-		if ((atlasId == null) || (gridId == null)) { 
-			return null;
-		}
-		Date d = new Date();
-		//TODO: find a better way to timestamp so that the fils have different names. There
-		// are chances that if the image is cached then even if the robot grid is changed, but 
-		// the file name is same, we get the old grid in JS.
-		StringBuilder builder = new StringBuilder(Environment.getExternalStorageDirectory().getAbsolutePath()).
-				append(ROBOT_MAP_CACHE_DATA_DIR).append(atlasId).
-				append("/").append(GRID_FILE_NAME).append("_").append(d.getMinutes()).append(d.getSeconds());
-		return builder.toString();
-	}
-
 
 	//Always to be called in a secondary thread.
 	public String getAtlasGridDataUrl(final String atlas_id, final String gridId) {
@@ -97,7 +72,7 @@ public class RobotAtlasGridWebservicesManager {
 				String gridUrl = getAtlasGridDataUrl(atlasId, gridId);
 				if (!TextUtils.isEmpty(gridUrl)) {
 					LogHelper.log(TAG, String.format("XML Url = [%s]", gridUrl));
-					downloadGridFile(atlasId, gridId, gridUrl, listener);
+					downloadGridFile(robotId, atlasId, gridId, gridUrl, listener);
 				} else {
 					//TODO: right now sending empty strings as at this point we do not know gridId and we calculate the same
 					listener.onGridDataDownloadError("", "", "No grid data exists");
@@ -151,11 +126,11 @@ public class RobotAtlasGridWebservicesManager {
 		TaskUtils.scheduleTask(task, 0);
 	}
 	
-	private void downloadGridFile(final String atlas_id, final String gridId, final String xmlDataUrl, final RobotGridDataDownloadListener listener) {
+	private void downloadGridFile(final String robotId, final String atlas_id, final String gridId, final String xmlDataUrl, final RobotGridDataDownloadListener listener) {
 
 		LogHelper.log(TAG, "downloadGridFile called");
-		final String atlasFilePath = getAtlasGridFilePath(atlas_id, gridId);
-
+		final String atlasFilePath = FileCachePath.getAtlasGridFilePath(mContext, robotId, atlas_id);		
+		
 		FileDownloadHelper.downloadFile(mContext, xmlDataUrl, atlasFilePath, new FileDownloadListener() {
 			
 			@Override

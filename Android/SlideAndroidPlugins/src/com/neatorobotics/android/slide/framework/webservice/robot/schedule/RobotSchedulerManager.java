@@ -1,8 +1,8 @@
 package com.neatorobotics.android.slide.framework.webservice.robot.schedule;
 
 import android.content.Context;
-import android.os.Environment;
 
+import com.neatorobotics.android.slide.framework.http.download.FileCachePath;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadHelper;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadListener;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
@@ -13,8 +13,7 @@ import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 
 
 public class RobotSchedulerManager {
-	private static final String TAG = RobotSchedulerManager.class.getSimpleName();
-	private static final String SCHEDULE_DATA_FILE_NAME = "data.xml";
+	private static final String TAG = RobotSchedulerManager.class.getSimpleName();	
 	Context mContext;
 	private static RobotSchedulerManager sRobotSchedulerManager;
 	private static final Object INSTANCE_LOCK = new Object();
@@ -154,7 +153,7 @@ public class RobotSchedulerManager {
 				LogHelper.logD(TAG, "Sucessfully got scheduling data with xml url:" + resultData.mResult.mXml_Data_Url);
 
 				String schduleFileUrl = resultData.mResult.mXml_Data_Url;
-				String filePath = getScheduleCacheFilePath(robotId, scheduleId);	
+				String filePath = FileCachePath.getScheduleDataFilePath(mContext, robotId, scheduleId);	
 				
 				FileDownloadHelper.downloadFile(mContext, schduleFileUrl, filePath, new FileDownloadListener() {
 					
@@ -174,15 +173,5 @@ public class RobotSchedulerManager {
 
 		};
 		TaskUtils.scheduleTask(task, 0);
-	}
-	
-
-	private String getScheduleCacheFilePath(String robotId, String scheduleId) {
-		StringBuilder builder = new StringBuilder(Environment.getExternalStorageDirectory().getAbsolutePath()).
-				append("/neato/schedule_data/").append(scheduleId).append("_").append(robotId).
-				append("/").append(SCHEDULE_DATA_FILE_NAME);
-
-		LogHelper.logD(TAG, "getExtScheduleXMLFilePath = " + builder.toString());
-		return builder.toString();
-	}
+	}	
 }

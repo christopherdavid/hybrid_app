@@ -48,7 +48,17 @@ public class NeatoRobotWebServicesAttributes {
 		}
 
 	}
+	
+	public static class SetRobotProfileDetails {
+		public static final String METHOD_NAME = "robot.set_profile_details"; 
 
+		public static class Attribute {
+			public static final String API_KEY = "api_key";
+			public static final String SERIAL_NUMBER = "serial_number";
+			public static final String ROBOT_NAME = "name";
+			public static final String PROFILE = "profile";
+		}
 
+	}
 
 }

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -13,12 +12,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.neatorobotics.android.slide.framework.database.UserHelper;
-import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
-import com.neatorobotics.android.slide.framework.webservice.user.GetNeatoUserDetailsResult;
-import com.neatorobotics.android.slide.framework.webservice.user.LoginNeatoUserTokenResult;
-import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebservicesHelper;
 import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
+import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
 
 public class NeatoSmartAppLoginActivity extends Activity{
 
@@ -69,7 +64,7 @@ public class NeatoSmartAppLoginActivity extends Activity{
 		mProgressView.setVisibility(View.GONE);
 	}
 	
-	private class LoginTask extends AsyncTask<Void, Void, GetNeatoUserDetailsResult>  {
+	private class LoginTask extends AsyncTask<Void, Void, UserItem>  {
 
 		private String mEmailId;
 		private String mPassword;
@@ -80,43 +75,24 @@ public class NeatoSmartAppLoginActivity extends Activity{
 		}
 		
 		@Override
-		protected GetNeatoUserDetailsResult doInBackground(Void... params) {
-			LoginNeatoUserTokenResult result = NeatoUserWebservicesHelper.loginNeatoUserToken(NeatoSmartAppLoginActivity.this, mEmailId, mPassword);
-			if (result.success()) {
-				Log.i(TAG, "Auth Token = " + result.mUserAuthToken);
-				NeatoPrefs.saveNeatoUserAuthToken(getApplicationContext(), result.mUserAuthToken);
-				GetNeatoUserDetailsResult userDetailResult = NeatoUserWebservicesHelper.getNeatoUserDetails(NeatoSmartAppLoginActivity.this,
-															mEmailId, result.mUserAuthToken);
-				return userDetailResult;
-			}
-			return null;
+		protected UserItem doInBackground(Void... params) {
+			UserItem userItem = UserManager.getInstance(getApplicationContext()).loginUser(mEmailId, mPassword);
+			return userItem;
 		}
 
 		@Override
-		protected void onPostExecute(GetNeatoUserDetailsResult result) {
-			super.onPostExecute(result);
+		protected void onPostExecute(UserItem userItem) {			
 			closeProgress();
-			if (result == null) {
+			
+			if (userItem == null) {
 				Toast.makeText(NeatoSmartAppLoginActivity.this, "Login unsuccessful", Toast.LENGTH_LONG).show();
 				return;
 			}
-			if (result.success()) {				
-				
-				UserItem userDetails = new UserItem();
-				userDetails.setId(result.mResult.mId);
-				userDetails.setChatId(result.mResult.mChat_id);
-				userDetails.setChatPwd(result.mResult.mChat_pwd);
-				userDetails.setEmail(result.mResult.mEmail);
-				userDetails.setName(result.mResult.mName);
-				UserHelper.saveLoggedInUserDetails(getApplicationContext(), userDetails);
-				
+			else {
 				Intent createUserIntent = new Intent(NeatoSmartAppLoginActivity.this , NeatoSmartAppTestActivity.class);
 				startActivity(createUserIntent);
 				setResult(RESULT_OK);
 				finish();
-			} 
-			else {
-				Toast.makeText(NeatoSmartAppLoginActivity.this, result.mMessage, Toast.LENGTH_LONG).show();
 			}
 		}
 	}

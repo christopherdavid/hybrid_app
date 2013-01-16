@@ -238,6 +238,10 @@ public class NeatoSmartAppService extends Service {
 			mWifiStateChange = null;
 			mXMPPConnectionHelper.close();
 			mXMPPConnectionHelper =null;
+			
+			// Delete logged-in user related info from the DB & shared preference
+			UserHelper.logout(getApplicationContext());
+			
 			stopSelf();
 		}
 
