@@ -31,7 +31,7 @@
             "name": "User Name",
             "email": "Email Address",
             "password": "Password",
-            "password_verify": " Password verification"
+            "password_verify": "Password verification"
         }
     },
     "s1-2-2": {

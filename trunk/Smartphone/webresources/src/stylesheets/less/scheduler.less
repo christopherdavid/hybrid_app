@@ -1,0 +1,106 @@
+@import "colors.less";
+
+@import "fonts.less";
+
+@timeColumnWidth:  60px;
+@dayMinColumnWidth:  82px;
+@dayNameHeight:  50px;
+@hourHeight:  154px;
+
+#schedulerTarget {
+	position: absolute;
+	top: 55px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	overflow: hidden;
+    box-sizing: border-box;
+    background-color: @bg_gradient_start;
+    
+}
+
+.scheduler { 
+
+	.dayRow {
+		min-width: 7*@dayMinColumnWidth + @timeColumnWidth;
+		box-sizing: border-box; 
+		z-index: 1;
+		position: relative;
+        
+        .vertical-gradient(@bg_gradient_start,transparent);
+        padding-left: @timeColumnWidth;
+        
+		.dayLabel {
+			display : inline-block;
+			width: floor(100%/ 7);
+			min-width: @dayMinColumnWidth;
+			text-overflow: ellipsis;
+			text-align: center;
+			height: @dayNameHeight;
+			font-size: 24px;
+			
+	    }
+
+	}
+	
+	.timeColumn {
+		position: absolute;
+		width: @timeColumnWidth; 
+		z-index: 1;
+		.horizontal-gradient(@bg_gradient_start,transparent);
+		
+		.time { 
+		    height: @hourHeight;
+			text-align: right;
+			font-size: 24px;
+			margin-top: -7px;
+			&:first-child{
+			   padding-top:@dayNameHeight;
+		    }
+		
+		}
+	}
+	#scrollWrapper {
+		overflow: hidden;
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+		top: 0px;
+		left: 0px;
+	}
+	
+	.schedulerContent {
+		height: 2000px;
+		min-width: 7*@dayMinColumnWidth + @timeColumnWidth; 
+		margin-left: @timeColumnWidth;
+		box-sizing: border-box; 
+		background-image: url('../../img/scheduler_bg.png');
+		background-position-y: 48px;
+		
+		.day {
+			display : inline-block;
+			width: floor(100%/ 7);
+			min-width: @dayMinColumnWidth;
+			height: 700px; 
+			position: relative;
+			margin-top: @dayNameHeight;
+			
+			.task { 
+				height : @hourHeight;
+				
+				width: 100%;
+				position: absolute;
+				
+				.taskInner{
+					background-color: @scheduler_task;
+					position: absolute;
+					top: 2px;
+					left: 2px;
+					bottom: 2px;
+					right: 2px;
+				}
+				
+			}
+		}
+	}
+}

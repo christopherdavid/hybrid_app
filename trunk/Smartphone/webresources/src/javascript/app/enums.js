@@ -10,7 +10,7 @@ var textTarget = {
     jqLinkButton : "4"
 };
 
-var ICON = ["cat-empty", "cat-kitchen", "cat-living"];
+var ICON = ["cat-bath", "cat-baby", "cat-children","cat-cat", "cat-garage", "cat-dog"];
 
 var COLORTABLE = ["#000000", "#f1e60d", "#f39129", "#e72832", "#6ac6d9", "#65b32e", "#b3b4b3", "#63318a", "#0470b8"];
 
@@ -29,5 +29,6 @@ var STATE = {
 var robotScreenCaller = {
     REGISTER : "register",
     LOGIN : "login",
-    CHANGE : "change"
+    CHANGE : "change",
+    MANAGE : "manage"
 }

@@ -13,7 +13,7 @@
                     <a href="#" data-role="button" data-mini="true" data-inline="true" data-i18n="s3-2-1.navi.cancel" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton},visible:isCancelVisible, click:cancel">cancel</a>
                 </div>
                 <h1 data-i18n="s1-3-1.navi.title" data-bind="text:labelTitle">Rooms</h1>
-                <select data-native-menu="false" name="select-choice-floor" id="select-choice-floor" data-bind="value: selectedFloor, jqmOptions: floorList, jqOptionsEnable:isFloorListEnabled , optionsText: $data, optionsCaption: 'Choose Floor...'">
+                <select data-native-menu="false" name="select-choice-floor" id="select-choice-floor" data-bind="value: selectedFloor, jqmOptions: floorList, jqOptionsEnable:isFloorListEnabled , optionsText: 'text', optionsValue : 'id', optionsCaption: 'Choose Floor...'">
                 </select>
                 <div class="ui-btn-right" style="right:0px;top:0px;margin-top:-5px;">
                     <a href="#" data-role="button" data-mini="true" data-inline="true" data-bind="jqLinkButtonText:labelCutMerge,jqLinkButtonEnable: isCutMergeEnabled, visible:isCutMergeVisible, click:cut">cut</a>
@@ -23,7 +23,7 @@
             <div data-role="content" id="mapView">
                 <div id="viewport" style="position:absolute; top:0px; bottom:0px; left:0px; width:100%;overflow:hidden;">
                     <div id="scroller" style="position:absolute; top:0px; left:0px;height:100% width:100%;padding:10px;">
-                        <canvas style="position:relative; top:0px; left:0px; display:block;cursor:pointer" id="canvasView"></canvas>
+                        <canvas style="position:relative; top:0px; left:0px; display:block;cursor:pointer; z-index:-1; background-repeat: no-repeat;" id="canvasView"></canvas>
                         <div id="grid">
                             <div id="selection-area" class="img-selectionarea"></div>
                         </div>
@@ -63,14 +63,14 @@
                     
                      <div data-role="fieldcontain" data-bind="visible: isArea">
                         <label for="categoryScroller" data-i18n="s3-2-1.dialog.category" data-bind="translate: language">Category</label>
-                        <div id="categoryScroller" data-bind="foreach: icons">
+                        <div id="categoryScroller" data-bind="foreach: icons" style="white-space: nowrap;">
                             <div data-bind="attr: {'class': 'chooseBox img-category ' + $data}, css:{selected: $root.room.icon() == $data}, click:$root.selectCategory"></div>
                         </div>
                     </div>
                     
                     <div data-role="fieldcontain" data-bind="visible: isArea">
                         <label for="colorScroller" data-i18n="s3-2-1.dialog.color" data-bind="translate: language">Color</label>
-                        <div id="colorScroller" data-bind="foreach: colors">
+                        <div id="colorScroller" data-bind="foreach: colors" style="white-space: nowrap;">
                             <div class="chooseBox" data-bind="style:{backgroundColor:$data }, css:{selected: $root.room.color() == $data}, click:$root.selectColor"></div>
                         </div>
                     </div>

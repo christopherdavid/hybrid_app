@@ -1,7 +1,7 @@
 resourceHandler.registerFunction('s3-2-1_ViewModel.js', 's3-2-1_ViewModel', function(parent) {
     console.log('instance created for: s3-2-1_ViewModel');
     var that = this,
-        mcanvas, $editPopup, geoData;
+        mcanvas, $editPopup, geoData, gridImage;
         
     this.id = 's3-2-1_ViewModel';
     this.conditions = {};
@@ -17,15 +17,35 @@ resourceHandler.registerFunction('s3-2-1_ViewModel.js', 's3-2-1_ViewModel', func
     this.isArea = ko.observable(true);
     this.colors = ko.observableArray(COLORTABLE);
     this.icons = ko.observableArray(ICON);
+
     
     this.init = function() {
         // load the geography
-        parent.communicationWrapper.exec(RobotPluginManager.getMaps, [parent.communicationWrapper.dataValues["activeRobot"].robotId], that.geographySuccess, that.geographyError);
+        parent.communicationWrapper.exec(RobotPluginManager.getRobotAtlasMetadata, [parent.communicationWrapper.dataValues["activeRobot"].robotId], that.atlasSuccess, that.atlasError);
         
         mcanvas = new MapCanvas(this);
         mcanvas.setState(mcanvas.STATES.AREA);
         mcanvas.init();
         $editPopup = $( "#editPopup" );
+        
+     // prevent the default behavior of standard touch events
+		document.addEventListener('touchmove.map', function(e) {
+			e.preventDefault();
+		}, false);
+        
+        $('#colorScroller').makeScrollable({
+			hScrollbar : false,
+			vScrollbar : false,
+			vScroll : false,
+			hScroll : true,
+		});
+        
+        $('#categoryScroller').makeScrollable({
+			hScrollbar : false,
+			vScrollbar : false,
+			vScroll : false,
+			hScroll : true,
+		});
     }
     
     this.deinit = function() {
@@ -37,28 +57,54 @@ resourceHandler.registerFunction('s3-2-1_ViewModel.js', 's3-2-1_ViewModel', func
         if(typeof newValue != "undefined" && newValue) {
             parent.communicationWrapper.storeDataValue("selectedFloor", newValue);
             mcanvas.setGeoData(jQuery.extend(true, {}, geoData[newValue]));
+            if(gridImage[geoData[newValue].gridId]) {
+                mcanvas.setGridImage(gridImage[geoData[newValue].gridId]);
+            }
         }
     });
     
-    this.geographySuccess = function(result) {
-        console.log("geography received: " + JSON.stringify(result));
-        parent.showLoadingArea(false);
-        
+    this.atlasSuccess = function(result) {
+        console.log("atlas received: " + JSON.stringify(result));
         geoData = {};
+        gridImage= {};
         
-        for (var i = 0, max = result[0].mapOverlayInfo.geographies.length; i < max; i++) {
-            that.floorList.push(result[0].mapOverlayInfo.geographies[i].id);
-            geoData[result[0].mapOverlayInfo.geographies[i].id] = result[0].mapOverlayInfo.geographies[i];
+        for (var i = 0, max = result[0].atlasMetadata.geographies.length; i < max; i++) {
+            that.floorList.push({"text":result[0].atlasMetadata.geographies[i].name, "id":result[i].atlasMetadata.geographies[i].id});
+            // TODO: temorary add gridId
+            result[i].atlasMetadata.geographies[i].gridId = "86";
+            geoData[result[i].atlasMetadata.geographies[i].id] = result[i].atlasMetadata.geographies[i];
+            // load grid image
+            parent.communicationWrapper.exec(RobotPluginManager.getAtlasGridData, [parent.communicationWrapper.dataValues["activeRobot"].robotId, ""], that.gridSuccess, that.gridError);
         }
-        that.isFloorListEnabled(true);
-        console.log("selectedFloor " + parent.communicationWrapper["selectedFloor"])
-        if(parent.communicationWrapper.dataValues["selectedFloor"] && geoData[parent.communicationWrapper.dataValues["selectedFloor"]]) {
+        //console.log("that.floorList.length " + that.floorList.length)
+        // if there is just one floor or there was a previous selected floor, than select it
+        if(that.floorList().length == 1) {
+            that.selectedFloor(that.floorList()[0].id);
+        } else if (parent.communicationWrapper.dataValues["selectedFloor"] && geoData[parent.communicationWrapper.dataValues["selectedFloor"]]) {
             that.selectedFloor(parent.communicationWrapper.dataValues["selectedFloor"]);
+        }
+        
+        // just enable the selection list if there is more than one entry
+        if(that.floorList().length > 1) {
+            that.isFloorListEnabled(true);
         }
     }
     
-    this.geographyError = function(error) {
-        parent.showLoadingArea(false);
+    this.atlasError = function(error) {
+        alert(error.message);
+    }
+    this.gridSuccess = function(result) {
+        console.log("grid received: " + JSON.stringify(result));
+        //gridImage[result[0].gridId] = result[0].gridData;
+        // TODO: temorary set gridId so that it maps to atlas
+        gridImage["86"] = result[0].gridData;
+        if(parent.communicationWrapper.dataValues["selectedFloor"] && geoData[parent.communicationWrapper.dataValues["selectedFloor"]]) {
+            if(geoData[parent.communicationWrapper.dataValues["selectedFloor"]].gridId = result[0].gridId) {
+                mcanvas.setGridImage(result[0].gridData);
+            }
+        }
+    }
+    this.gridError = function(error) {
         alert(error.message);
     }
     
