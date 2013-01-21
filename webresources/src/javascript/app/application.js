@@ -15,7 +15,7 @@ function Application() {
     // configuration for the application
     this.config = {
         firstScreen : "s1-1",
-        pageTransition : "slide"
+        pageTransition : "none"
     };
     // user object
     this.user = {

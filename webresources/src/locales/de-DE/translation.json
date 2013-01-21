@@ -31,7 +31,7 @@
             "name": "Benutzername",
             "email": "Email Addresse",
             "password": "Passwort",
-            "password_verify": " Passwort verifizieren"
+            "password_verify": "Passwort verifizieren"
         }
     },
     "s1-2-2": {

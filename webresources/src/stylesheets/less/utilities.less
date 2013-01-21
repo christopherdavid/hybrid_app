@@ -45,6 +45,62 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=(~"'@{startColor}'"), endColorstr=(~"'@{endColor}'"),GradientType=0 );
 }
 
+.horizontal-gradient(@startColor: #ff0000, @endColor:#00ff00){
+    background: @startColor;
+    background: -moz-linear-gradient(left,  @startColor 0%, @endColor 100%);
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,@startColor), color-stop(100%,@endColor));
+    background: -webkit-linear-gradient(left,  @startColor 0%,@endColor 100%);
+    background: -o-linear-gradient(left,  @startColor 0%,@endColor 100%);
+    background: -ms-linear-gradient(left,  @startColor 0%,@endColor 100%);
+    background: linear-gradient(to right,  @startColor 0%,@endColor 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=(~"'@{startColor}'"), endColorstr=(~"'@{endColor}'"),GradientType=1 );
+}
+
+
+.border-radius(@size: 5px){
+	-webkit-border-radius: @size;
+	-moz-border-radius: @size;
+	border-radius: @size;
+}
+
+.border-radius-top(@size: 5px){
+	-webkit-border-top-left-radius: @size;
+    -webkit-border-top-right-radius: @size;
+    -moz-border-radius-topleft: @size;
+    -moz-border-radius-topright: @size;
+    border-top-left-radius: @size;
+    border-top-right-radius: @size;
+}
+
+.border-radius-bottom(@size: 5px){
+	-webkit-border-bottom-right-radius: @size;
+    -webkit-border-bottom-left-radius: @size;
+    -moz-border-radius-bottomright: @size;
+    -moz-border-radius-bottomleft: @size;
+    border-bottom-right-radius: @size;
+    border-bottom-left-radius: @size;
+}
+
+.border-radius-left(@size: 5px){
+    -webkit-border-top-left-radius: @size;
+    -webkit-border-bottom-left-radius: @size;
+    -moz-border-radius-topleft: @size;
+    -moz-border-radius-bottomleft: @size;
+    border-top-left-radius: @size;
+    border-bottom-left-radius: @size;
+}
+
+.border-radius-right(@size: 5px){
+    -webkit-border-top-right-radius: @size;
+    -webkit-border-bottom-right-radius: @size;
+    -moz-border-radius-topright: @size;
+    -moz-border-radius-topright: @size;
+    border-bottom-right-radius: @size;
+    border-top-right-radius: @size;
+}
+
+
+
 // Highres icon definition
 .ui-icon-definition(@iconFile: "dummyIcon", @width: 18 , @height: 18, @fileExtension: "png") {
     (~".ui-icon-@{iconFile}"){

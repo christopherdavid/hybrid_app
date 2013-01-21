@@ -23,16 +23,16 @@
                 <div data-role="header" data-theme="b">
                     <a href="#" data-role="button" data-theme="b" data-mini="true" data-inline="true" data-icon="back" data-i18n="s1-2-1.navi.back" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
                     <h1 data-i18n="s1-2-1.navi.title" data-bind="translate: language">Create User Account</h1>
-                    <a href="#"  data-role="button" data-theme="b" data-mini="true" data-inline="true" data-i18n="s1-2-1.navi.next" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: isFilledOut(), click:next"> continue</a>
+                    <a href="#"  data-role="button" data-theme="b" data-mini="true" data-inline="true" data-i18n="s1-2-1.navi.next" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: isFilledOut() && isValid(), click:next"> continue</a>
                 </div>
             </div>
             <div data-role="content">
                 <h2 data-i18n="s1-2-1.page.title" data-bind="translate: language">welcome</h2>
                 <fieldset>
-                    <input type="text" data-i18n="s1-2-1.page.name" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: name, valueUpdate: 'afterkeydown'"/>
-                    <input type="text" data-i18n="s1-2-1.page.email" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'afterkeydown'"/>
-                    <input type="password" data-i18n="s1-2-1.page.password" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'afterkeydown'"/>
-                    <input type="password" data-i18n="s1-2-1.page.password_verify" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown'"/>
+                    <input type="text" data-i18n="s1-2-1.page.name" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: name, valueUpdate: 'onblur', css: {invalid: nameValid}"/>
+                    <input type="text" data-i18n="s1-2-1.page.email" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'onblur', css: {invalid: mailValid}"/>
+                    <input type="password" data-i18n="s1-2-1.page.password" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'onblur', css: {invalid: passwordComplex}"/>
+                    <input type="password" data-i18n="s1-2-1.page.password_verify" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', css: {invalid: passwordValid}"/>
                 </fieldset>
             </div><!-- /content -->
         </div>

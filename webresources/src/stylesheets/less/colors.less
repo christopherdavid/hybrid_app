@@ -1,6 +1,10 @@
 @import "fonts.less";
 @import "utilities.less";
 
+
+@color_green: #004d1f;
+@color_green_bright: #95C11C;
+
 @color_notficationbar: #009a3d;
 @color_notficationbar_expand: #dd0000;
 
@@ -11,7 +15,7 @@
 @map_selection_background_cut: fade(#fcff02, 33%);
 @map_dialog_border: #191919;
 @map_dialog_cursor:#404040;
-@map_dialog_cursor_selected:#e9e9e9;
+@map_dialog_cursor_selected:@color_green_bright;
 @map_dialog_cursor_inner_shadow:fade(#000000, 50%);
 
 @bg_gradient_start: #0f0f0f;
@@ -39,14 +43,15 @@
 
 // list views
 @listview_border: #393938;
-@listView_border_selected: #0e4524;
+@listview_border_down: #005422; 
+@listView_border_selected: #005422;
 @listview_separator: #181818;
 @listview_cell: #333333;
 /*@listview_lastCell_gradient_mid: #353535:
 @listview_lastCell_gradient_end: #353535:*/
 @listview_lastCell_gradient_mid: fade(#ffffff, 10%);
 @listview_lastCell_gradient_end: fade(#ffffff, 33%);
-@listview_cell_selected: #004d1f;
+@listview_cell_selected: @color_green_bright;
 
 
 // scheduler

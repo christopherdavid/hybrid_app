@@ -7,6 +7,8 @@ resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', func
     this.backConditions = {};
     this.robots = ko.observableArray([]);
     this.isBackVisible = ko.observable(false);
+    this.isDeleteVisible = ko.observable(false);
+    this.selectedRobot = ko.observable();
     
     this.back = function(){
         parent.flowNavigator.previous();
@@ -29,10 +31,29 @@ resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', func
         that.conditions['addRobot'] = true;
         parent.flowNavigator.next(that.bundle);
     };
+    
+    this.removeRobot = function(robot) {
+        var userEmail = parent.communicationWrapper.dataValues["user"].email;        
+        parent.communicationWrapper.exec(UserPluginManager.disassociateRobot, [userEmail, robot.robotId()], that.successRemoveRobot, that.errorRemoveRobot);                
+    };
+    
+    this.successRemoveRobot = function(result){
+        console.log("Result" + result);
+        
+        // ToDo: notify the user
+        
+        // Query the new robot list on success
+        that.getRobotList();
+    };
+    
+    this.errorRemoveRobot = function(error){
+        console.log("Error: "+ error.errorMessage);
+    };
 
     this.reload = function() {
         that.conditions = {};
         that.backConditions = {};
+        that.selectedRobot = ko.observable();
     };
 
     /**
@@ -41,10 +62,15 @@ resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', func
     this.robotSelected = function(data, event) {
         that.conditions['robotSelected'] = true;
         
-        // store the selected robot within the communication model 
-        // data needs to converted back to plain JavaScript object using toJS
-        parent.communicationWrapper.storeDataValue("activeRobot", ko.toJS(data));
-        parent.flowNavigator.next();
+        if (that.bundle == robotScreenCaller.MANAGE){
+            // Store the selected robot
+            that.selectedRobot(data);
+        }else {
+            // store the selected robot within the communication model 
+            // data needs to converted back to plain JavaScript object using toJS
+            parent.communicationWrapper.storeDataValue("activeRobot", ko.toJS(data));
+            parent.flowNavigator.next();
+        }
     };
     
     this.getHintText = function(){        
@@ -87,29 +113,45 @@ resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', func
         }        
     };
     
-    this.updateBackBtn = function(){
+    this.updateButtons = function(){
         if (that.bundle){
-            that.isBackVisible(that.bundle == robotScreenCaller.CHANGE);
+            that.isDeleteVisible(that.bundle == robotScreenCaller.MANAGE)
+            that.isBackVisible(that.bundle == robotScreenCaller.CHANGE || that.bundle == robotScreenCaller.MANAGE);
         }
     };
+    
+    this.getRobotList = function(){
+        // Get the user's email for the robot query from the stored user data values
+        var userEmail = parent.communicationWrapper.dataValues["user"].email;
+        
+        that.title("");
+            
+        // Get the associated robots
+        parent.communicationWrapper.exec(UserPluginManager.getAssociatedRobots, [userEmail], that.successGetAssociatedRobots, that.errorGetAssociatedRobots, "robots");        
+    };
+    
+    /**
+     *  Called when the delete button has been pressed. A robot needs to be selected before 
+     */
+    this.deleteRobot = function(){
+        
+        if (that.selectedRobot()){       
+            // Remove the selected robot
+            that.removeRobot(that.selectedRobot());
+        }
+    }
 
     this.init = function() {
         
         // Update the back button depending on the screen that opened this view
-        that.updateBackBtn();
+        that.updateButtons();
 
         // When we are in the register flow, simply show the screen without querying the robots
         if (that.bundle && that.bundle == robotScreenCaller.REGISTER){
             that.updateScreenTitle();
         }
         else{            
-            // Get the user's email for the robot query from the stored user data values
-            var userEmail = parent.communicationWrapper.dataValues["user"].email;
-        
-            that.title("");
-            
-            // Get the associated robots
-            parent.communicationWrapper.exec(UserPluginManager.getAssociatedRobots, [userEmail], that.successGetAssociatedRobots, that.errorGetAssociatedRobots, "robots");
+            that.getRobotList();
         }
     };
 
@@ -118,7 +160,7 @@ resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', func
         that.robots(ko.mapping.fromJS(result)());
         
         that.updateScreenTitle();
-    };
+    };  
 
     this.errorGetAssociatedRobots = function(error) {
         console.log("Error(Get AssociatedRobots)" + error.errorMessage);

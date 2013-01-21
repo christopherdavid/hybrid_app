@@ -19,7 +19,7 @@
                 <div data-role="header" data-theme="b">
                     <h1></h1>
                     <div class="ui-btn-left">
-                        <div class="img-product_logo"></div>
+                        <div class="img-product_logo" style="width:72px; height:16px; background-size:cover;margin-top:9px; margin-left:6px;"></div>
                     </div>
                 </div>
             </div>
@@ -27,8 +27,8 @@
             <div data-role="content">
                 <div id="startContent" style="display:block;">
                     <!-- cleaning status area -->
-                    <div style="min-width:50%;display:inline-block" data-bind="with: robot">
-                        <div id="robotNameTxt" class="companyColoredTxt" data-bind="text: robot_name">
+                    <div style="min-width:50%;margin-left:4px;display:inline-block" data-bind="with: robot">
+                        <div id="robotNameTxt" class="companyColoredTxt" data-bind="text: robotName">
                             robotname
                         </div>
                         <div id="statusTxt" data-bind="text: robotId">
