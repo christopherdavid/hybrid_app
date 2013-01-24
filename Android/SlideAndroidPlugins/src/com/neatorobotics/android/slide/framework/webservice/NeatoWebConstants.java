@@ -16,6 +16,11 @@ public class NeatoWebConstants {
 	private static final String DEV_BASE_JSON_URL = "http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json";
 	private static final String DEV_API_KEY = "1e26686d806d82144a71ea9a99d1b3169adaad917";
 	private static final String DEV_XMPP_SERVER_DOMAIN = "rajatogo.com";
+	
+	public static final int DEMO_SERVER_ID = 1004;
+	private static final String DEMO_BASE_JSON_URL = "http://neatodemo.rajatogo.com/api/rest/json";
+	private static final String DEMO_API_KEY = "1e26686d806d82144a71ea9a99d1b3169adaad917";
+	private static final String DEMO_XMPP_SERVER_DOMAIN = "rajatogo.com";
 
 	public static final String QUERY_KEY_METHOD = "method";
 	public static final String QUERY_KEY_APIKEY = "api_key";
@@ -39,9 +44,11 @@ public class NeatoWebConstants {
 			return STAGING_BASE_JSON_URL;
 		case DEV_SERVER_ID:
 			return DEV_BASE_JSON_URL;
+		case DEMO_SERVER_ID:
+			return DEMO_BASE_JSON_URL;
 
 		}
-		return null;
+		return PROD_BASE_JSON_URL;
 	}
 
 	public static void setServerEnvironment(int environment)
@@ -57,8 +64,10 @@ public class NeatoWebConstants {
 			return STAGING_API_KEY;
 		case DEV_SERVER_ID:
 			return DEV_API_KEY;
+		case DEMO_SERVER_ID:
+			return DEMO_API_KEY;
 		}
-		return null;
+		return PROD_API_KEY;
 	}
 	
 	public static String getXmppServerDomain()
@@ -70,8 +79,10 @@ public class NeatoWebConstants {
 			return STAGING_XMPP_SERVER_DOMAIN;
 		case DEV_SERVER_ID:
 			return DEV_XMPP_SERVER_DOMAIN;
+		case DEMO_SERVER_ID:
+			return DEMO_XMPP_SERVER_DOMAIN;
 		}
-		return null;
+		return PROD_XMPP_SERVER_DOMAIN;
 	}
 
 }

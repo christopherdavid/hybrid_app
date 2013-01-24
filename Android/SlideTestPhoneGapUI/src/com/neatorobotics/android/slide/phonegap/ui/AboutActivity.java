@@ -66,6 +66,8 @@ public class AboutActivity extends Activity {
 				break;
 			case NeatoWebConstants.PROD_SERVER_ID:
 				serverName = "Production";
+			case NeatoWebConstants.DEMO_SERVER_ID:
+				serverName = "Demo";
 				break;
 		}
 		
