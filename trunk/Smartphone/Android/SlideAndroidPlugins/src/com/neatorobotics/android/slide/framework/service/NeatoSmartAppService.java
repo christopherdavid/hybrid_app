@@ -351,7 +351,8 @@ public class NeatoSmartAppService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		
-		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
+		// NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
+		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.DEMO_SERVER_ID);
 		
 		mUdpConnectionHelper = new UdpConnectionHelper(this);
 		mUdpConnectionHelper.setHandler(mHandler);

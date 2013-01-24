@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import com.neatorobotics.android.slide.framework.plugins.base.SlidePluginBaseActivity;
-import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
 
 
 public class NeatoSmartappTestActivity extends SlidePluginBaseActivity {
@@ -23,8 +21,6 @@ public class NeatoSmartappTestActivity extends SlidePluginBaseActivity {
     		super.setBooleanProperty("showTitle", true);
     	}
         super.onCreate(savedInstanceState);
-        NeatoWebConstants.setServerEnvironment(NeatoWebConstants.PROD_SERVER_ID);
-                
 		super.loadUrl(PHONEGAP_URL);
     }
     

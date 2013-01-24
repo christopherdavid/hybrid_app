@@ -102,7 +102,7 @@ var neatoSmartApp = (function() {
 			for (var i in result) {
 				showList = true;
 				var robot = result[i];
-				neatoSmartApp.addRobotToList(robot.robot_name, robot.robotId);
+				neatoSmartApp.addRobotToList(robot.robotName, robot.robotId);
 			}
 
 			if(showList) {
