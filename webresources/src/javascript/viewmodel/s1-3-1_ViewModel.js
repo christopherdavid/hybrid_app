@@ -3,9 +3,10 @@ resourceHandler.registerFunction('s1-3-1_ViewModel.js', 's1-3-1_ViewModel', func
     var that = this;
     this.id = 's1-3-1_ViewModel';
     this.conditions = {};
-    // TODO: remove initial data
-    this.email = ko.observable('demo1@demo.com');
-    this.password = ko.observable('demo123');
+    this.email = ko.observable();
+    this.password = ko.observable();
+    /*this.email = ko.observable('uid1@demo.com');
+    this.password = ko.observable('test123');*/
     
 
     this.back = function() {
@@ -24,7 +25,7 @@ resourceHandler.registerFunction('s1-3-1_ViewModel.js', 's1-3-1_ViewModel', func
 
     this.next = function() {
         // TODO: add validation check for entries
-        parent.communicationWrapper.exec(UserPluginManager.login, [that.email(), that.password()], that.sucessLogin, that.errorLogin, "user");
+        parent.communicationWrapper.exec(UserPluginManager.login, [that.email(), that.password()], that.sucessLogin, that.errorLogin, {}, "user");
     };
     
     this.sucessLogin = function(result) {        
@@ -34,7 +35,7 @@ resourceHandler.registerFunction('s1-3-1_ViewModel.js', 's1-3-1_ViewModel', func
     };
     
     this.errorLogin = function(error) {
-        alert("Error: " + error.errorMessage);
+        console.log("Error: " + error.errorMessage);
     };
     
     this.reload = function() {

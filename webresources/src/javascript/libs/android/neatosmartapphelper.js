@@ -59,6 +59,9 @@ var ACTION_TYPE_GET_ROBOT_ATLAS_METADATA 		= "getRobotAtlasMetadata";
 var ACTION_TYPE_UPDATE_ROBOT_ATLAS_METADATA		= "updateRobotAtlasMetadata";
 var ACTION_TYPE_GET_ATLAS_GRID_DATA 			= "getAtlasGridData";
 var ACTION_TYPE_SET_ROBOT_NAME					= "setRobotName";
+var ACTION_TYPE_SET_ROBOT_NAME_2				= "setRobotName2";
+var ACTION_TYPE_GET_ROBOT_DETAIL				= "getRobotDetail";
+
 //List of keys to send data:
 
 var KEY_EMAIL = 'email';
@@ -162,13 +165,13 @@ UserMgr.prototype.getAssociatedRobots = function(email, callbackSuccess, callbac
 };
 
 UserMgr.prototype.disassociateRobot = function(email, robotId, callbackSuccess, callbackError) {
-	var disassociateRobotArray = {email:'email', 'robotId':robotId};
+	var disassociateRobotArray = {'email':email, 'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_DISASSOCIATE_ROBOT, [disassociateRobotArray]);
 };
 
 UserMgr.prototype.disassociateAllRobots = function(email, callbackSuccess, callbackError) {
-	var disassociateAllRobotsArray = {email:'email'};
+	var disassociateAllRobotsArray = {'email':email};
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS, [disassociateAllRobotsArray]);
 };
@@ -205,6 +208,18 @@ RobotMgr.prototype.setRobotName = function(robotId, robotName, callbackSuccess, 
 	var setRobotName = {'robotId':robotId, 'robotName':robotName};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_SET_ROBOT_NAME, [setRobotName]);
+};
+
+RobotMgr.prototype.setRobotName2 = function(robotId, robotName, callbackSuccess, callbackError) {
+	var setRobotName = {'robotId':robotId, 'robotName':robotName};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_SET_ROBOT_NAME_2, [setRobotName]);
+};
+
+RobotMgr.prototype.getRobotDetail = function(robotId, robotName, callbackSuccess, callbackError) {
+	var getRobotDetail = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ROBOT_DETAIL, [getRobotDetail]);
 };
 
 RobotMgr.prototype.setSchedule = function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
@@ -311,6 +326,14 @@ var RobotPluginManager = (function() {
 		
 		setRobotName : function(robotId, robotName, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.setRobotName(robotId, robotName, callbackSuccess, callbackError);
+		},
+		
+		setRobotName2 : function(robotId, robotName, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.setRobotName2(robotId, robotName, callbackSuccess, callbackError);
+		},
+		
+		getRobotDetail : function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotDetail(robotId, callbackSuccess, callbackError);
 		},
 		
 		setSchedule: function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {

@@ -4,7 +4,6 @@ resourceHandler.registerFunction('s1-1_ViewModel.js', 's1-1_ViewModel', function
     this.id = 's1-1_ViewModel';
     this.conditions = {};
     this.login = function() {
-        parent.showLoadingArea(false);
         that.conditions['login'] = true;
         parent.flowNavigator.next();
     };
@@ -24,14 +23,6 @@ resourceHandler.registerFunction('s1-1_ViewModel.js', 's1-1_ViewModel', function
     this.schedule = function(){
     	that.conditions['schedule'] = true;
         parent.flowNavigator.next();
-    }
-    
-    this.showStatus = function() {
-        $(":jqmData(role='notificationbar')").trigger("expand");
-    };
-    this.hideStatusbar = function() {
-        $(":jqmData(role='notificationbar')").trigger("collapse");
-    };
-    
+    }    
 })
 console.log('loaded file: s1-1_ViewModel.js');

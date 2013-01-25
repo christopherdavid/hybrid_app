@@ -17,6 +17,11 @@ resourceHandler.registerFunction('s3-1-1_ViewModel.js', 's3-1-1_ViewModel', func
         that.conditions['robots'] = true;
         parent.flowNavigator.next(robotScreenCaller.MANAGE);
     };
+    
+    this.testArea = function() {
+        that.conditions['test'] = true;
+        parent.flowNavigator.next();
+    }
 
     this.reload = function() {
         // remove conditions

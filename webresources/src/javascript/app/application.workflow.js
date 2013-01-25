@@ -30,7 +30,7 @@ Application.prototype.loadWorkflow = function() {
                 }]
             },
             {
-                targetScreenId : "test",
+                targetScreenId : "s5-1-1",
                 conditions : [{
                     "key" : "cleaning",
                     "value" : true
@@ -155,7 +155,16 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "robots",
                     "value" : true
                 }]
-            }]
+            }
+            
+            ,{
+                targetScreenId : "test",
+                conditions : [{
+                    "key" : "test",
+                    "value" : true
+                }]
+            }
+            ]
         },        
         "s3-2-1" : {
             navrules : [{
@@ -168,13 +177,61 @@ Application.prototype.loadWorkflow = function() {
         },
         "s4-1-1" : {
             navrules : [{
+                targetScreenId : "s0",
+                backConditions : [{
+                    "key" : "home",
+                    "value" : true
+                }]
+            },{
                 targetScreenId : "s4-1-2",
                 conditions : [{
-                    "key" : "add",
+                    "key" : "addEvent",
                     "value" : true
                 }]
             }]
-        },        
+        },
+        "s4-1-2" : {
+            navrules : [{
+                targetScreenId : "s4-1-1",
+                conditions : [{
+                    "key" : "cancel",
+                    "value" : true
+                }]
+            },
+            {
+                targetScreenId : "s4-1-3",
+                conditions : [{
+                    "key" : "next",
+                    "value" : true
+                }]
+            }]
+        },
+        "s4-1-3" : {
+            navrules : [{
+                targetScreenId : "s4-1-2",
+                conditions : [{
+                    "key" : "back",
+                    "value" : true
+                }]
+            },
+            {
+                targetScreenId : "s4-1-1",
+                conditions : [{
+                    "key" : "next",
+                    "value" : true
+                }]
+            }]
+        },
+        "s5-1-1" : {
+            navrules : [{
+                targetScreenId : "s1-1",
+                conditions : [{
+                    "key" : "back",
+                    "value" : true
+                }]
+            }]
+        },
+        
         "test" : {
             navrules : [{
                 targetScreenId : "s1-1",

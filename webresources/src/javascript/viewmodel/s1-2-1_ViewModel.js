@@ -23,8 +23,6 @@ resourceHandler.registerFunction('s1-2-1_ViewModel.js', 's1-2-1_ViewModel', func
     };
     
     this.isFilledOut = ko.computed(function() {
-    	
-    	
         return (this.name() != '' && this.email() != '' && this.password() != '' && this.password_verify() != '');
     }, this);
     
@@ -37,7 +35,7 @@ resourceHandler.registerFunction('s1-2-1_ViewModel.js', 's1-2-1_ViewModel', func
 
     this.next = function() {
         // TODO: add validation check for formular        
-        parent.communicationWrapper.exec(UserPluginManager.createUser, [that.email(), that.password(), that.name()], that.successRegister, that.errorRegister, "user");
+        parent.communicationWrapper.exec(UserPluginManager.createUser, [that.email(), that.password(), that.name()], that.successRegister, that.errorRegister, {}, "user");
     };
     
     this.successRegister = function (result) {
@@ -47,7 +45,7 @@ resourceHandler.registerFunction('s1-2-1_ViewModel.js', 's1-2-1_ViewModel', func
     
     this.errorRegister = function(error) {
     	that.conditions['valid'] = false;
-    	alert("error: " + error);
+    	console.log("error: " + error);
     }
     
     function isUsernameValid(){

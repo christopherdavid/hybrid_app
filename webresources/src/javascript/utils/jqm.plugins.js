@@ -12,34 +12,67 @@
         notificationbarContent : null,
 
         _create : function() {
-            var self = this, o = self.options, $el = self.element, header = $el.closest(":jqmData(role='header')");
-            // wrap html elements of notificationbar to content div (needed to toggle visibility)
-            self.notificationbarContent = $el.wrapInner("<div class='ui-notificationbar-content'></div>").children(".ui-notificationbar-content"),
-            // remove borders of the outer header element
-            header.addClass("ui-header-noborder");
-            // add style
-            $el.addClass("ui-notificationbar");
+            var self = this, o = self.options, $el = self.element, isShown = false, currentType;
             
-            /**
-             * bind to event handler for expand/collapse events
-             */
-            $el.bind("expand collapse", function(event) {
-                if (!event.isDefaultPrevented()) {
-                    var $this = $(this), isCollapse = (event.type === "collapse" );
-                    event.preventDefault();
-
-                    $this.toggleClass("ui-notificationbar-collapsed", isCollapse);
-                    self.notificationbarContent.toggleClass("ui-notificationbar-content-collapsed", isCollapse).attr("aria-hidden", isCollapse);
-                    // trigger update event because page layout has changed
-                    self.notificationbarContent.trigger("updatelayout");
-                }
-            })
-            // set initial state of notificationbar
-            $el.trigger(o.collapsed ? "collapse" : "expand");
+            var $contentWrapper = $('<div/>', {
+				'class' : 'contentWrapper',
+			}).appendTo($el);
+                      
+            // Append the loading spinner
+            self.loadingSpinner = $("<div id='loadingSpinnerSmall'><div class='f_circleG' id='frotateG_01'></div><div class='f_circleG' id='frotateG_02'></div><div class='f_circleG' id='frotateG_03'></div><div class='f_circleG' id='frotateG_04'></div><div class='f_circleG' id='frotateG_05'></div><div class='f_circleG' id='frotateG_06'></div><div class='f_circleG' id='frotateG_07'></div><div class='f_circleG' id='frotateG_08'></div></div>").appendTo($contentWrapper);
+            
+            // Append the message area when spinner is invisible
+            self.messageText = $("<span class='ui-notificationbar_text' style='left:0px;'>MessageText</span>").appendTo($contentWrapper);
+            
+            // Append the message area when spinner is visible
+            self.messageTextSpinner = $("<span class='ui-notificationbar_text' style='margin-left: -90px;'>Message</span>").appendTo($contentWrapper);            
+                        
+            // add style
+            $el.addClass("ui-notificationbar");                        
+        },
+        
+        show : function(message, type) {
+            var self = this;
+            
+            // Get the current header in range
+            // If no header is available use the border on top for displaying the notifcationbar
+            var offsetTop = 0;          
+            
+            switch(type){
+                case notificationType.OPERATION:
+                    self.loadingSpinner.show();
+                    self.messageTextSpinner.show();
+                    self.messageTextSpinner.text(message);
+                    self.messageText.hide();
+                    break;
+                    
+                case notificationType.HINT:
+                    self.loadingSpinner.hide();
+                    self.messageTextSpinner.hide();
+                    self.messageText.show();
+                    self.messageText.text(message);
+                    setTimeout(function() {self.hide(type, false);}, 3000);
+                    break;
+            }          
+            self.element.slideDown(400);
+                        
+            self.currentType = type;
+            self.isShown = true;            
+        },
+        
+        hide:function(type, force){
+            var self = this;
+            
+            if (self.currentType == type || (force && self.currentType != notificationType.HINT)){
+                self.element.slideUp(400);
+            }                     
+            self.currentType = null;
+            self.isShown = false;
         }
+        
     });
     //auto self-init widgets
-    $(document).bind("pagecreate create", function(e) {
+    $(document).bind("ready", function(e) {
         $.mobile.notificationbar.prototype.enhanceWithin(e.target);
     });
 

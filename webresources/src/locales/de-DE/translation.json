@@ -3,7 +3,12 @@
 		"back": "zurück",
 		"next": "weiter",
 		"ok" : "OK",
-		"cancel" : "Abbrechen"
+		"cancel" : "Abbrechen",
+		"edit" : "bearbeiten"
+	},
+	"communication": {
+	   "fetch_robots" : "Roboterliste wird abgerufen...",
+	   "fetch_map" : "Kartendaten werden abgerufen..."
 	},
 	"s0": {
 		"cleaning": "Reinigung",
@@ -92,8 +97,6 @@
     },
     "s3-2-1": {
         "navi": {
-            "back": "zurück",
-            "cancel": "abbrechen",
             "title": "Raum Management",
             "title_area": "Bereich auswählen",
             "cut": "teilen",
@@ -113,7 +116,8 @@
         "navi": {
             "back": "zurück",
             "title": "Wochenplan",
-            "add": "hinzufügen"
+            "add": "hinzufügen",
+            "edit": "bearbeiten"
         },
         
         "day": {
@@ -124,6 +128,37 @@
             "5": "Freitag",
             "6": "Samstag",
             "7": "Sonntag"
+        }
+    },
+    "s4-1-2": {
+        "navi": {
+            "title": "Wochenplan"
+        },
+        "page": {
+            "cleaning_event": "Reinigungsevent",
+            "quiet_time": "Ruhezeit",
+            "starting_time": "Startzeit",
+            "clean_every": "Sauge jeden...",
+            "starting_time": "Startzeit",
+            "ending_time": "Endzeit",
+            "dnd_on": "Nicht stören am ..."
+        }
+    },
+    
+    "s4-1-3": {
+        "navi": {
+            "title": "Wochenplan"
+        },
+        "page": {
+            "list": "Liste",
+            "map": "Karte"
+        }
+    },
+    "s5-1-1": {
+        "navi": {
+            "title": "Cleaning",
+            "start": "starten",
+            "pause": "pausieren"
         }
     },
     "confirm": {

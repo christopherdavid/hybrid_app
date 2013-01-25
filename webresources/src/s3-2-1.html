@@ -7,20 +7,22 @@
     <body>
 
         <div data-role="page" id="s3-2-1">
-            <div data-role="header" data-theme="b" data-position="fixed" data-tap-toggle="false">
+            <div id="pageHeader" data-role="header" data-theme="b" data-position="fixed" data-tap-toggle="false">
                 <div class="ui-btn-left" style="left:0px;top:0px;margin-top:-5px;">
-                    <a href="#" data-role="button" data-mini="true" data-inline="true" data-icon="back" data-i18n="s3-2-1.navi.back" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton},visible:isBackVisible, click:back">back</a>
-                    <a href="#" data-role="button" data-mini="true" data-inline="true" data-i18n="s3-2-1.navi.cancel" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton},visible:isCancelVisible, click:cancel">cancel</a>
+                    <a href="#" data-role="button" data-mini="true" data-inline="true" data-icon="back" data-i18n="common.back" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton},visible:isBackVisible, click:back">back</a>
+                    <a href="#" data-role="button" data-mini="true" data-inline="true" data-i18n="common.cancel" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton},visible:isCancelVisible, click:cancel">cancel</a>
                 </div>
                 <h1 data-i18n="s1-3-1.navi.title" data-bind="text:labelTitle">Rooms</h1>
-                <select data-native-menu="false" name="select-choice-floor" id="select-choice-floor" data-bind="value: selectedFloor, jqmOptions: floorList, jqOptionsEnable:isFloorListEnabled , optionsText: 'text', optionsValue : 'id', optionsCaption: 'Choose Floor...'">
-                </select>
                 <div class="ui-btn-right" style="right:0px;top:0px;margin-top:-5px;">
                     <a href="#" data-role="button" data-mini="true" data-inline="true" data-bind="jqLinkButtonText:labelCutMerge,jqLinkButtonEnable: isCutMergeEnabled, visible:isCutMergeVisible, click:cut">cut</a>
                     <a href="#" data-role="button" data-mini="true" data-inline="true" data-bind="jqLinkButtonText:labelEditOk, jqLinkButtonEnable: isEditOkEnabled, click:edit">edit</a>
                 </div>
             </div>
-            <div data-role="content" id="mapView">
+            <div data-role="content">
+                <div id="mapOptions">
+                    <select data-native-menu="false" name="select-choice-floor" id="select-choice-floor" data-bind="value: selectedFloor, jqmOptions: floorList, jqOptionsEnable:isFloorListEnabled , optionsText: 'text', optionsValue : 'id', optionsCaption: 'Choose Floor...'">
+                    </select>
+                </div>
                 <div id="viewport" style="position:absolute; top:0px; bottom:0px; left:0px; width:100%;overflow:hidden;">
                     <div id="scroller" style="position:absolute; top:0px; left:0px;height:100% width:100%;padding:10px;">
                         <canvas style="position:relative; top:0px; left:0px; display:block;cursor:pointer; z-index:-1; background-repeat: no-repeat;" id="canvasView"></canvas>
@@ -34,11 +36,6 @@
                         <a href="#" data-rel="popup" data-transition="slide" data-role="button">Open panel</a>
                     </p-->
                 </div>
-                <!--
-                <div id="infoPopup" data-history="false" data-role="popup">
-                    <h3>Kitchen</h3>
-                </div>
-                -->
             </div>
             
             <div id="editPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport">
@@ -76,7 +73,6 @@
                     </div>
                 </div>
             </div>
-            
         </div>
 
     </body>

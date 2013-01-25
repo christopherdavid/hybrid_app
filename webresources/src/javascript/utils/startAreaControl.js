@@ -281,7 +281,7 @@ function StartAreaControl(startArea, categoryArea, startBtn, categoryTable, cate
             }
 
             if (state != "disabled") {
-                className += isMouseDown ? "-up" : "-down";
+                className += isMouseDown ? "-down" : "-up";
                 that.startBtnDown = isMouseDown;
             }
 

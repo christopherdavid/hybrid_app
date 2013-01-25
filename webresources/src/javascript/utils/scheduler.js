@@ -14,6 +14,8 @@ function Scheduler($root) {
 	var $dayRow;
 	
 	var columns = new Array(7);
+	
+	var currentTask = "blubb";
 
 	/**
 	 * updates the width of layout to take resize/orientation changes
@@ -22,13 +24,15 @@ function Scheduler($root) {
 		scroller.refresh();
 		var width = $scrollWrapper.width();
 
+		
+		//delta == margin left + right
 		var delta = $content.outerWidth(true) - $content.innerWidth();
 
 		$content.width((parseInt(width) - delta) + "px");
 
 		//$('.dayRow').width((parseInt(width) - delta) + "px");
 
-		// android Bugfix, doesn't work :'(
+		// android Bugfix
 		var contentWidth = (parseInt($content.css('width')) - delta);
 		var colwidth = Math.floor(contentWidth / 7) + "px";
 		$('.day').width(colwidth);
@@ -88,6 +92,11 @@ function Scheduler($root) {
         columns = null;
         // remove all event handler for scheduler
         $(document).off(".scheduler");
+    }
+    
+    
+    this.getSelectedTask = function(){
+    	return currentTask;
     }
 
 	/**

@@ -64,6 +64,8 @@ var ACTION_TYPE_GET_ROBOT_ATLAS_METADATA = "getRobotAtlasMetadata";
 var ACTION_TYPE_UPDATE_ROBOT_ATLAS_METADATA = "updateRobotAtlasMetadata";
 var ACTION_TYPE_GET_ATLAS_GRID_DATA = "getAtlasGridData";
 var ACTION_TYPE_SET_ROBOT_NAME = "setRobotName";
+var ACTION_TYPE_SET_ROBOT_NAME_2                = "setRobotName2";
+var ACTION_TYPE_GET_ROBOT_DETAIL                = "getRobotDetail";
 //List of keys to send data:
 
 var KEY_EMAIL = 'email';
@@ -196,7 +198,7 @@ var UserPluginManager = ( function() {
                         "robotName" : "test",
                         "robotId" : "NR_JAN_1"
                     }]);
-                }, 2000);
+                }, 1000);
             },
 
             disassociateRobot : function(email, robotId, callbackSuccess, callbackError) {
@@ -230,6 +232,14 @@ var RobotPluginManager = ( function() {
 
             setRobotName : function(robotId, robotName, callbackSuccess, callbackError) {
                 window.plugins.neatoPluginLayer.robotMgr.setRobotName(robotId, robotName, callbackSuccess, callbackError);
+            },
+            
+            setRobotName2 : function(robotId, robotName, callbackSuccess, callbackError) {
+            window.plugins.neatoPluginLayer.robotMgr.setRobotName2(robotId, robotName, callbackSuccess, callbackError);
+            },
+            
+            getRobotDetail : function(robotId, callbackSuccess, callbackError) {
+                window.plugins.neatoPluginLayer.robotMgr.getRobotDetail(robotId, callbackSuccess, callbackError);
             },
 
             setSchedule : function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
@@ -330,6 +340,7 @@ var RobotPluginManager = ( function() {
             // It will update the atlas mapped to this robotId. The version of the xml is stored inside.
             updateAtlasMetaData : function(robotId, atlasMetadata, callbackSuccess, callbackError) {
                 //window.plugins.neatoPluginLayer.robotMgr.updateAtlasMetaData(robotId, atlasMetadata, callbackSuccess, callbackError);
+                callbackSuccess(true);
             },
 
             // TODO: We are taking robotId. Analyse if taking atlasId is a better option.

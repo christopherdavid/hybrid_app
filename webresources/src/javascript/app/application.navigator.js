@@ -20,6 +20,10 @@ function WorkflowNavigator(parent, workflow, dataTemplate) {
         console.log('WorkflowNavigator.next()');
         var tempScreenId = getNextValidScreenId();
         if (tempScreenId != null) {
+            
+            // check if loading indicators and hide them if necessary
+            hideLoadingIndicators();
+        
             that.loadScreen(tempScreenId, typeof bundle != "undefined" ? bundle : null);
         }
     }
@@ -73,6 +77,10 @@ function WorkflowNavigator(parent, workflow, dataTemplate) {
      */
     this.previous = function() {
         console.log('WorkflowNavigator.previous()');
+        
+        // check if loading indicators and hide them is necessary
+        hideLoadingIndicators();
+        
         // check if backConditions were set
         if(parent.viewModel.backConditions) {
             var tempScreenId = getNextValidScreenId("backConditions");
@@ -98,6 +106,13 @@ function WorkflowNavigator(parent, workflow, dataTemplate) {
         } else {
             that.exit();
         }
+    }
+    
+    /**
+     *  Hides all loading indicators and hints if the screen is left. 
+     */
+    function hideLoadingIndicators() {
+        parent.showLoadingArea(false, notificationType.SPINNER, "", true);
     }
     
     /**

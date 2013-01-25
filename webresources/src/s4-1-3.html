@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Scheduling</title>
+
+
+</head>
+<body>
+    <div data-role="page" id="s4-1-1">
+        <div id="pageHeader" data-role="header" data-theme="b" data-position="fixed"
+            data-tap-toggle="false">
+            <div class="ui-btn-left"
+                style="left: 0px; top: 0px; margin-top: -5px;">
+                <a href="#" data-role="button" data-mini="true"
+                    data-inline="true" data-icon="back"
+                    data-i18n="common.back"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+            </div>
+            <h1 data-i18n="s4-1-3.navi.title" data-bind="translate: language">Schedule</h1>
+            <div class="ui-btn-right"
+                style="right: 0px; top: 0px; margin-top: -5px;">
+                <a href="#" data-role="button" data-mini="true"
+                    data-inline="true" data-i18n="common.next"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:next">next</a>
+            </div>
+        </div>
+        <div data-role="content">
+
+            <div id="mapOptions">
+                
+                <div data-role="navbar">
+                    <select data-native-menu="false" name="select-choice-floor" id="select-choice-floor" data-bind="value: selectedFloor, jqmOptions: floorList, jqOptionsEnable:isFloorListEnabled , optionsText: 'text', optionsValue : 'id', optionsCaption: 'Choose Floor...'">
+                    </select>
+                    <ul>
+                        <li><a href="#"
+                            class="ui-btn-active ui-state-persist"
+                            data-i18n="s4-1-3.page.list"
+                            data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:selectList">List</a></li>
+                        <li><a href="#"
+                            data-i18n="s4-1-3.page.map"
+                            data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:selectMap">Map</a></li>
+                    </ul>
+                </div>
+                
+            </div>
+
+            <div data-role="fieldcontain" data-bind="visible: isList">
+                <ul data-role="listview" data-inset="true" data-bind="foreach: rooms">
+                    <li data-icon="tick" data-bind="click: $root.selectRoom, css:{'checked': $parent.selectedRooms.indexOf($data) != -1}">
+                        <a href="javascript:void(0);"> <span class="thumbnail" data-bind="attr: {'class': 'thumbnail img-category ' + ICON[icon]}"><label data-bind="text: name"> room </label></span></a>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="viewport" data-bind="visible: !isList()" style="position:absolute; top:0px; bottom:0px; left:0px; width:100%;overflow:hidden;">
+                <div id="scroller" style="position:absolute; top:0px; left:0px;height:100% width:100%;padding:10px;">
+                    <canvas style="position:relative; top:0px; left:0px; display:block;cursor:pointer; z-index:-1; background-repeat: no-repeat;" id="canvasView"></canvas>
+                    <div id="grid">
+                        <div id="selection-area" class="img-selectionarea"></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+        <div id="pageFooter" data-role="footer" data-theme="b" data-position="fixed" data-tap-toggle="false">
+            <select data-native-menu="false" name="cleaning-mode" data-bind="value: selectedMode, jqmOptions: cleaningModeList, optionsText: 'text', optionsValue : 'id', jqOptionsEnable:isModeEnabled, optionsCaption: 'Choose mode...'">
+            </select>
+        </div>
+        
+
+        <style type="text/css">
+        #mapOptions .ui-navbar .ui-select {
+            display: inline-block;
+            vertical-align: middle;
+            width: 70%
+        }
+        #mapOptions .ui-navbar .ui-select .ui-btn{
+            display: block;
+            width: initial;
+        }
+        
+        #mapOptions .ui-grid-a {
+            width: 28%;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        #mapOptions .ui-btn-inner.ui-btn-corner-all {
+            height: 21px;
+        }
+        
+        #mapOptions .ui-select .ui-btn-inner .ui-btn-text {
+             height: 20px;
+             margin-top: 2px;
+        }
+        </style>
+    </div>
+</body>
+</html>

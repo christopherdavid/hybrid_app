@@ -6,6 +6,64 @@ resourceHandler.registerFunction('test_ViewModel.js', 'test_ViewModel', function
     
     this.selectedTest =  ko.observable();
     this.testList = ko.observableArray(["user","robot", "map", "scheduler", "canvas"]);
+    
+    var geoData = {"geographies" : [{
+                    "id" : "0",
+                    "base" : [[158, 233, 192, 237], [503, 243, 537, 247]],
+                    "nogo" : [[120, 30, 150, 45], [65, 110, 85, 140]],
+                    "boundingBox" : [0, 0, 525, 360],
+                    "visibleMap" : {
+                        "img" : ""
+                    },
+                    "name" : "TwoSimpleRooms",
+                    "rooms" : [{
+                        "id" : "0",
+                        "coord" : [{
+                            "y" : 0,
+                            "x" : 0
+                        }, {
+                            "y" : 0,
+                            "x" : 360
+                        }, {
+                            "y" : 240,
+                            "x" : 360
+                        }, {
+                            "y" : 240,
+                            "x" : 0
+                        }],
+                        "icon" : "4",
+                        "boundingBox" : [0, 0, 360, 240],
+                        "color" : "6",
+                        "name" : "Room1"
+                    }, {
+                        "id" : "1",
+                        "coord" : [{
+                            "y" : 160,
+                            "x" : 360
+                        }, {
+                            "y" : 160,
+                            "x" : 525
+                        }, {
+                            "y" : 360,
+                            "x" : 525
+                        }, {
+                            "y" : 360,
+                            "x" : 375
+                        }, {
+                            "y" : 240,
+                            "x" : 375
+                        }, {
+                            "y" : 240,
+                            "x" : 360
+                        }],
+                        "icon" : "2",
+                        "boundingBox" : [360, 160, 525, 360],
+                        "color" : "4",
+                        "name" : "Room2"
+                    }]
+                }]
+            };
+                            
     this.testScenario = {
         "user":[
             // login failed, unknown user
@@ -53,7 +111,8 @@ resourceHandler.registerFunction('test_ViewModel.js', 'test_ViewModel', function
             {label:"getAtlasMetaData arr",exe:function(){RobotPluginManager.getRobotAtlasMetadata("arr", that.callbackSuccess, that.callbackError);}},
             {label:"getMaps wall-e",exe:function(){RobotPluginManager.getMaps("wall-e", that.callbackSuccess, that.callbackError);}},
             {label:"getAtlasMetaData wall-e",exe:function(){RobotPluginManager.getRobotAtlasMetadata("wall-e", that.callbackSuccess, that.callbackError);}},
-            {label:"getAtlasGridData wall-e",exe:function(){RobotPluginManager.getAtlasGridData("wall-e", "", that.callbackSuccess, that.callbackError);}}
+            {label:"getAtlasGridData wall-e",exe:function(){RobotPluginManager.getAtlasGridData("wall-e", "", that.callbackSuccess, that.callbackError);}},
+            {label:"updateAtlasMetaData wall-e",exe:function(){RobotPluginManager.updateAtlasMetaData("wall-e", geoData, that.callbackSuccess, that.callbackError);}}
         ],
         
         "scheduler":[

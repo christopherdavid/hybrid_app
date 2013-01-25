@@ -35,6 +35,7 @@
         <link rel="stylesheet" href="stylesheets/css/startscreen.css" />
         <link rel="stylesheet"  href="stylesheets/css/vr200theme.css" />
         <link rel="stylesheet"  href="stylesheets/css/scheduler.css" />
+        <link rel="stylesheet"  href="stylesheets/css/themes/default/mobiscroll.datetime-2.3.1.min.css" />
 
         <!-- <script type="text/javascript" src="javascript/libs/cordova-2.1.0.js"></script> -->
         <script type="text/javascript" src="javascript/libs/globalization.js"></script>
@@ -74,31 +75,32 @@
         <script type="text/javascript" src="javascript/utils/startAreaControl.js"></script>
         <script type="text/javascript" src="javascript/utils/scheduler.js"></script>
         <script type="text/javascript" src="javascript/utils/makeScrollable.js"></script>
+        <script type="text/javascript" src="javascript/libs/mobiscroll.datetime-2.3.1.min.js"></script>
 
         <title>CleaningRobotApp</title>
     </head>
     <body>
+        <!-- Loading spinner -->
+        <div id="loadingArea">
+            <div id="loadingSpinnerLarge">
+                <div class="f_circleG" id="frotateG_01"></div>
+                <div class="f_circleG" id="frotateG_02"></div>
+                <div class="f_circleG" id="frotateG_03"></div>
+                <div class="f_circleG" id="frotateG_04"></div>
+                <div class="f_circleG" id="frotateG_05"></div>
+                <div class="f_circleG" id="frotateG_06"></div>
+                <div class="f_circleG" id="frotateG_07"></div>
+                <div class="f_circleG" id="frotateG_08"></div>
+            </div>
+        </div>
+        
+        <!-- Notification area -->
+        <div id="notificationArea" data-role="notificationbar"></div>
 
         <div data-role="page" id="splash">
             <div class="img-fullscreen-splash"></div>
         </div>
-        <div data-role="page" class="type-home" id="home">
-            <div data-role="header">
-                <span>Frank's Robot</span>
-                <span>Dining Room</span>
-            </div>
-            <div data-role="content">
-                <div class="img-startbtn" style="height:158px;width:158px;display:inline-block"></div>
-                <a href="#" data-role="button" data-inline="true">Cleaning</a>
-                <a href="#" data-role="button" data-inline="true">Remote</a>
-                <a href="#" data-role="button" data-inline="true">Schedule</a>
-                <a href="#" data-role="button" data-inline="true">Settings</a>
-                <a href="#" data-role="button" data-inline="true">Start/Stop</a>
-                <a href="#" data-role="button" data-inline="true">Send to base</a>
-                <a href="#" data-role="button" data-inline="true">Logout</a>
-            </div>
 
-        </div>
         <div data-role="page" id="nowifi">
             <div data-role="content">
                 <span data-i18n="startup.message.nowifi" data-bind="translate: language"></span>

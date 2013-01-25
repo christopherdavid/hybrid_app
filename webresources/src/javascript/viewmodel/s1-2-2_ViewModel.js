@@ -64,7 +64,12 @@ resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', func
         
         if (that.bundle == robotScreenCaller.MANAGE){
             // Store the selected robot
-            that.selectedRobot(data);
+            if (that.selectedRobot() == data){
+                that.selectedRobot(null);
+            }
+            else {
+                that.selectedRobot(data);
+            }
         }else {
             // store the selected robot within the communication model 
             // data needs to converted back to plain JavaScript object using toJS
@@ -125,9 +130,10 @@ resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', func
         var userEmail = parent.communicationWrapper.dataValues["user"].email;
         
         that.title("");
-            
+        
+        var fetchingRobots = $.i18n.t('communication.fetch_robots');          
         // Get the associated robots
-        parent.communicationWrapper.exec(UserPluginManager.getAssociatedRobots, [userEmail], that.successGetAssociatedRobots, that.errorGetAssociatedRobots, "robots");        
+        parent.communicationWrapper.exec(UserPluginManager.getAssociatedRobots, [userEmail], that.successGetAssociatedRobots, that.errorGetAssociatedRobots, {type: notificationType.OPERATION, message:fetchingRobots, callback: null }, "robots");        
     };
     
     /**

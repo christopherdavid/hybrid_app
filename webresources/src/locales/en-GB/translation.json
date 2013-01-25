@@ -3,7 +3,12 @@
         "back": "back",
         "next": "next",
         "ok": "OK",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "edit" : "Edit"
+    },
+    "communication": {
+       "fetch_robots": "Robot list is being fetched...",
+       "fetch_map": "Maps are being fetched..."
     },
     "s0": {
         "cleaning": "Cleaning",
@@ -92,8 +97,6 @@
     },
     "s3-2-1": {
         "navi": {
-            "back": "back",
-            "cancel": "cancel",
             "title": "Room Management",
             "title_area": "divide area",
             "cut": "cut",
@@ -107,6 +110,55 @@
             "nogo": "No-Go-Area",
             "color": "Colour",
             "category": "Category"
+        }
+    },
+    "s4-1-1": {
+        "navi": {
+            "back": "back",
+            "title": "Scheduling",
+            "add": "add",
+            "edit": "edit"
+        },
+        
+        "day": {
+            "1": "Monday",
+            "2": "Tuesday",
+            "3": "Wednesday",
+            "4": "Thursday",
+            "5": "Friday",
+            "6": "Saturday",
+            "7": "Sunday"
+        }
+    },
+    "s4-1-2": {
+        "navi": {
+            "title": "Scheduling"
+        },
+        "page": {
+            "cleaning_event": "Cleaning Event",
+            "quiet_time": "Quiet Time",
+            "starting_time": "Starting time",
+            "clean_every": "Clean every...",
+            "starting_time": "Starting time",
+            "ending_time": "Ending time",
+            "dnd_on": "Do not disturb every..."
+        }
+    },
+    
+    "s4-1-3": {
+        "navi": {
+            "title": "Scheduling"
+        },
+        "page": {
+            "list": "List",
+            "map": "Map"
+        }
+    },
+    "s5-1-1": {
+        "navi": {
+            "title": "Cleaning",
+            "start": "start",
+            "pause": "pause"
         }
     },
     "confirm": {

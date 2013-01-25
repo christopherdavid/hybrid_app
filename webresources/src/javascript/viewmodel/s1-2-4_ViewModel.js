@@ -15,15 +15,15 @@ resourceHandler.registerFunction('s1-2-4_ViewModel.js', 's1-2-4_ViewModel', func
     }, this);
 
     this.next = function() {
-        parent.communicationWrapper.exec(RobotPluginManager.setRobotName , [that.bundle.robot.robotId, that.robotName()], that.robotNameSuccess, that.robotNameError);
-        
-        
+        parent.communicationWrapper.exec(RobotPluginManager.setRobotName, [that.bundle.robot.robotId, that.robotName()], that.robotNameSuccess, that.robotNameError);
+
         parent.flowNavigator.next();
     };
     
     this.robotNameSuccess = function(result) {
-    	console.log("robotNameSuccess " + result);
+    	console.log("robotNameSuccess " + JSON.stringify(result));
     	that.conditions['robotNameValid'] = true;
+    	that.bundle.robot.robotName = that.robotName();    	
     	
         // Set the robot as active one if required 
         if (that.bundle){
@@ -34,7 +34,7 @@ resourceHandler.registerFunction('s1-2-4_ViewModel.js', 's1-2-4_ViewModel', func
     }
     
     this.robotNameError = function(error) {
-    	alert("robotName can't be set:" + error);
+    	console.log("robotName can't be set:" + error);
     }
     
     this.reload = function(){
