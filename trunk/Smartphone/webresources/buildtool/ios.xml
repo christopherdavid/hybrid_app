@@ -27,5 +27,6 @@
     <group name="jqm.plugins">
       <js>/../../javascript/utils/jqm.plugins.js</js>
       <js>/../../javascript/libs/iscroll.js</js>
+      <js>/../../javascript/libs/mobiscroll.datetime-2.3.1.min.js</js>
     </group>
 </groups>

@@ -43,6 +43,18 @@ Application.prototype.loadDataTemplate = function() {
         's4-1-1' : {
             view : 's4-1-1.html',
             model : 's4-1-1_ViewModel'
+        },
+        's4-1-2' : {
+            view : 's4-1-2.html',
+            model : 's4-1-2_ViewModel'
+        },
+        's4-1-3' : {
+            view : 's4-1-3.html',
+            model : 's4-1-3_ViewModel'
+        },
+        's5-1-1' : {
+            view : 's5-1-1.html',
+            model : 's5-1-1_ViewModel'
         }
         
         ,'test' : {

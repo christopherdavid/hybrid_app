@@ -2,6 +2,7 @@ package com.uid.robot;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 
 import com.neatorobotics.android.slide.framework.plugins.base.SlidePluginBaseActivity;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
@@ -23,9 +24,15 @@ public class CleaningRobotAppActivity extends SlidePluginBaseActivity {
 		super.onCreate(savedInstanceState);
 		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.PROD_SERVER_ID);
 
-
-
 		super.loadUrl("file:///android_asset/www/index.html");
+		
+		// Disable text selection on android to enable taphold within the web view.
+		/*super.appView.setOnLongClickListener(new View.OnLongClickListener() {
+
+            public boolean onLongClick(View v) {
+                return true;
+            }
+        });*/
 	}
 
 	@Override

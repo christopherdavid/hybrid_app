@@ -36,6 +36,7 @@
         <link rel="stylesheet" href="stylesheets/css/startscreen.css" />
         <link rel="stylesheet"  href="stylesheets/css/vr200theme.css" />
         <link rel="stylesheet"  href="stylesheets/css/scheduler.css" />
+        <link rel="stylesheet"  href="stylesheets/css/themes/default/mobiscroll.datetime-2.3.1.min.css" />
 
         <!-- load cordova, plugins and jQuery -->
         <script type="text/javascript" src="javascript/libs.js"></script>
@@ -50,17 +51,27 @@
         <title>CleaningRobotApp</title>
     </head>
     <body>
+        <!-- Loading spinner -->
+        <div id="loadingArea">
+            <div id="loadingSpinnerLarge">
+                <div class="f_circleG" id="frotateG_01"></div>
+                <div class="f_circleG" id="frotateG_02"></div>
+                <div class="f_circleG" id="frotateG_03"></div>
+                <div class="f_circleG" id="frotateG_04"></div>
+                <div class="f_circleG" id="frotateG_05"></div>
+                <div class="f_circleG" id="frotateG_06"></div>
+                <div class="f_circleG" id="frotateG_07"></div>
+                <div class="f_circleG" id="frotateG_08"></div>
+            </div>
+        </div>
+        
+        <!-- Notification area -->
+        <div id="notificationArea" data-role="notificationbar"></div>
+        
         <div data-role="page" id="splash">
             <div class="img-fullscreen-splash"></div>
         </div>
-        <div data-role="page" class="type-home" id="home">
-            <div data-role="header">
-                <span>Frank's Robot</span>
-                <span>Dining Room</span>
-            </div>
-            <div data-role="content"></div>
-
-        </div>
+        
         <div data-role="page" id="nowifi">
             <div data-role="content">
                 <span data-i18n="startup.message.nowifi" data-bind="translate: language"></span>

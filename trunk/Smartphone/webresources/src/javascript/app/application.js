@@ -21,23 +21,77 @@ function Application() {
     this.user = {
         name : "",
     };
-    this.loadingArea
 
-    this.robots = [], this.scheduler;
-    this.flowNotification
+    this.scheduler;
+    this.flowNotification;
+    
+    // loading
+    this.$loadingSpinner;
+    this.$notificationArea;
 
     /**
      * Shows a loading spinner indicating background activity.
+     * There are two types of spinner. One is shown on the center of the screen and has no text.
+     * The other one is a notification bar on top of the screen (below the header)
+     * @param {boolean} show Flag to determine if the area should be shown or not
+     * @param {enumeration} type The notificationType enumeration that determines which kind of indicator should be shown.
+     * @param {string} message The message to be displayed when using OPERATION or HINT notification types.
+     * @param {boolean} force Flag that forces the action (i.e. hide the notification)
      */
-    this.showLoadingArea = function(show) {
+    this.showLoadingArea = function(show, type, message, force) {
         if (show) {
-
+            
+            // show the simple spinner by default
+            if (!type){
+                that.$loadingSpinner.show();
+            }
+            
             //cue the page loader
-            $.mobile.loading('show');
+            switch(type){
+                case notificationType.SPINNER:
+                    that.$loadingSpinner.show();
+                    break;
+                case notificationType.OPERATION:
+                case notificationType.HINT:
+                    that.$notificationArea.notificationbar("show", message, type);
+                    break;
+            }
         } else {
-            $.mobile.loading('hide');
+            
+            if (force){
+                // hide all notification displays
+                that.$loadingSpinner.hide();
+                that.$notificationArea.notificationbar("hide", type, force);
+            }
+            else{
+                // hide the simple spinner by default
+                if (!type){
+                    that.$loadingSpinner.hide();
+                }
+                
+                switch(type) {
+                    case notificationType.SPINNER:
+                        that.$loadingSpinner.hide();
+                        break;
+                    case notificationType.OPERATION:
+                    case notificationType.HINT:
+                        that.$notificationArea.notificationbar("hide", type);
+                        break;                                                
+                }
+            }
         }
     }
+    
+    /**
+     * Shows an error message on the screen (and blocks all other interaction).
+     * Whenever there's an error (i.e. "Wifi lost", "User name not valid") there will be an error Popup 
+     * in the middle of the screen with an "OK" button to be dismissed by the user. The other content on the screen is blocked.
+     */
+    this.showError = function (error){//errorTitle, errorText, callback) {
+        alert("An Error occurred while contacting the server:\n" + error.errorMessage);
+        console.log("error: " + result.errorCode + " msg: " + result.errorMessage);        
+    }
+    
     /**
      * loads a view according to it's filename
      *
@@ -125,12 +179,21 @@ function Application() {
                 loadFirstPage()
             });
         }, function() {
-            console.log('language couldn\'t be detected. Load fallback en-GB');
-            that.changeLanguage('en-GB', function() {
+            console.log('language couldn\'t be detected. Load fallback en-US');
+            that.changeLanguage('en-US', function() {
                 loadFirstPage()
             });
         });
+        
+        // Initialize the loading spinner and notification area
+        initializeUserFeedbackControls();
     }
+    
+    function initializeUserFeedbackControls(){
+        that.$loadingSpinner = $('#loadingArea');
+        that.$notificationArea = $('#notificationArea');
+    }
+    
     /**
      * Load the first page when the application starts
      */
@@ -173,7 +236,7 @@ function Application() {
             // file).
             $.i18n.init({
                 lng : sLang,
-                fallbackLng : false
+                fallbackLng : 'en-GB'
             }, function() {
                 that.language = ko.observable($.i18n.lng());
                 console.log('init lang ' + $.i18n.lng() + ' app: ' + that.language());

@@ -27,12 +27,6 @@
     <body>
         <div data-role="page" id="s-1-2-2">
             <div data-role="header" data-theme="b" data-position="fixed" data-tap-toggle="false">
-                <div data-role="notificationbar">
-                    <div>
-                        notificationbar
-                    </div>
-                </div>
-                <div data-role="header" data-theme="b">
                     <div class="ui-btn-left" style="left:0px;top:0px;margin-top:-5px;">
                         <a href="#" data-role="button" data-theme="b" data-mini="true" data-inline="true" data-icon="back" data-i18n="s1-2-2.navi.logout" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, visible:!isBackVisible() , click:logout">logout</a>
                         <a href="#" data-role="button" data-mini="true" data-inline="true" data-icon="back" data-i18n="common.back" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton},visible:isBackVisible, click:back">back</a>
@@ -41,9 +35,8 @@
                     <h1 data-i18n="s1-2-2.navi.title" data-bind="translate:{obs:language()}">robot selection</h1>
                     <div class="ui-btn-right" style="right:0px;top:0px;margin-top:-5px;">
                         <a href="#" data-role="button" data-mini="true" data-inline="true" data-bind="click: addRobot">+</a>
-                        <a href="#" data-role="button" data-theme="b" data-inline="true" data-bind="visible: isDeleteVisible, click: deleteRobot">delete</a>
+                        <a href="#" data-role="button" data-theme="b" data-inline="true" data-bind="jqLinkButtonEnable: selectedRobot, visible: isDeleteVisible, click: deleteRobot">delete</a>
                     </div>
-                </div>
             </div>
 
             <div data-role="content">

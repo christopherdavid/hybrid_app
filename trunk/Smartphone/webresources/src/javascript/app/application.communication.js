@@ -7,16 +7,21 @@ function WorkflowCommunication(parent) {
     console.log('create WorkflowCommunication instance')
     var that = this;
     this.dataValues = {};
-    this.onCallbackReturn = function(success, result, storeKey){
+    this.onCallbackReturn = function(success, result, notificationOptions, storeKey){
         //console.log("result: " + JSON.stringify(result) + "\nstoreKey: " + storeKey)
+        
+        // TODO: Hide loading indicator AFTER the success and error handling. For now
+        //       put here to prevent error alert from not hiding the notification area.
+        parent.showLoadingArea(false, notificationOptions.type);
+        
         if (success){
             if (storeKey){
                 that.dataValues[storeKey] = result;
             }
         }else{
-            console.log("error: " + result.errorCode + " msg: " + result.errorMessage);
+            parent.showError(result);
         }
-        parent.showLoadingArea(false);
+        
     };
     /**
      * Calls a given command on the communication layer using the given arguments and callbacks.
@@ -27,36 +32,42 @@ function WorkflowCommunication(parent) {
      * @param {array} args The arguments for the function call. If no arguments exists be sure to supply an empty array.
      * @param {function} successCallback The callback called, when the communcation layer returns a success. 
      * @param {function} errorCallback The callback called, when the communcation layer returns an error.
+     * @param {object} notificationOptions The notification options containing the callback an the notification type.
      * @param {string} [storeKey] optional key for data storage
      */
-     this.exec = function(command, args, successCallback, errorCallback, storeKey) {
+     this.exec = function(command, args, successCallback, errorCallback, notificationOptions, storeKey) {
         
-        parent.showLoadingArea(true);
+        var notifyOptions = notificationOptions;
+        if (!notificationOptions || !notificationOptions.type){
+            notifyOptions = { type: notificationType.SPINNER, message: "" , callback: null };
+        }
+        
+        parent.showLoadingArea(true, notifyOptions.type, notifyOptions.message);
         
         switch(args.length) {
             case 0:
-                command(function(result) { that.onCallbackReturn(true, result, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, storeKey), errorCallback(result)});
+                command(function(result) { that.onCallbackReturn(true, result, notifyOptions, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, notifyOptions, storeKey), errorCallback(result)});
             break;
             case 1:
-                command(args[0], function(result) { that.onCallbackReturn(true, result, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, storeKey), errorCallback(result)});
+                command(args[0], function(result) { that.onCallbackReturn(true, result, notifyOptions, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, notifyOptions, storeKey), errorCallback(result)});
             break;
             case 2:
-                command(args[0],args[1], function(result) { that.onCallbackReturn(true, result, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, storeKey), errorCallback(result)});
+                command(args[0],args[1], function(result) { that.onCallbackReturn(true, result, notifyOptions, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, notifyOptions, storeKey), errorCallback(result)});
             break;
             case 3:
-                command(args[0],args[1],args[2], function(result) { that.onCallbackReturn(true, result, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, storeKey), errorCallback(result)});
+                command(args[0],args[1],args[2], function(result) { that.onCallbackReturn(true, result, notifyOptions, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, notifyOptions, storeKey), errorCallback(result)});
             break;
             case 4:
-                command(args[0],args[1],args[2],args[3], function(result) { that.onCallbackReturn(true, result, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, storeKey), errorCallback(result)});
+                command(args[0],args[1],args[2],args[3], function(result) { that.onCallbackReturn(true, result, notifyOptions, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, notifyOptions, storeKey), errorCallback(result)});
             break;
             case 5:
-                command(args[0],args[1],args[2],args[3],args[4], function(result) { that.onCallbackReturn(true, result, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, storeKey), errorCallback(result)});
+                command(args[0],args[1],args[2],args[3],args[4], function(result) { that.onCallbackReturn(true, result, notifyOptions, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, notifyOptions, storeKey), errorCallback(result)});
             break;
             case 6:
-                command(args[0],args[1],args[2],args[3],args[4],args[5], function(result) { that.onCallbackReturn(true, result, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, storeKey), errorCallback(result)});
+                command(args[0],args[1],args[2],args[3],args[4],args[5], function(result) { that.onCallbackReturn(true, result, notifyOptions, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, notifyOptions, storeKey), errorCallback(result)});
             break;
             case 7:
-                command(args[0],args[1],args[2],args[3],args[4],args[5],args[6], function(result) { that.onCallbackReturn(true, result, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, storeKey), errorCallback(result)});
+                command(args[0],args[1],args[2],args[3],args[4],args[5],args[6], function(result) { that.onCallbackReturn(true, result, notifyOptions, storeKey); successCallback(result)}, function(result) { that.onCallbackReturn(false, result, notifyOptions, storeKey), errorCallback(result)});
             break;
             
             default:

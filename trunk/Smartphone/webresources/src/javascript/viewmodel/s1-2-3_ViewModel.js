@@ -21,14 +21,14 @@ resourceHandler.registerFunction('s1-2-3_ViewModel.js', 's1-2-3_ViewModel', func
     
     this.robotIdSuccess = function(result) {
     	that.conditions['robotIdValid'] = true;
-    	
-    	// TODO: pass the server robot and the caller to the next view
-    	var robotBundle = {callerContext : that.bundle, robot : {robotId : "asus", robotName : "TODO: Use the correct robot!"}};
+    	    	
+    	// Pass the server robot and the caller to the next view
+    	var robotBundle = {callerContext : that.bundle, robot : {robotId : that.robotId(), robotName : "TODO: Use the correct robot name!"}};
         parent.flowNavigator.next(robotBundle);
     }
     
     this.robotIdError = function(error) {
-    	alert("robotId invalid:" + error.errorMessage);
+    	console.log("robotId invalid:" + error.errorMessage);
     }
     
     this.reload = function(){

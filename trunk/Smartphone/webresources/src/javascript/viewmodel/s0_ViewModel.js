@@ -20,7 +20,7 @@ resourceHandler.registerFunction('s0_ViewModel.js', 's0_ViewModel', function(par
     }
 
     this.errorLogout = function(error) {
-        alert("Error(Logout failed):" + error);
+        console.log("Error(Logout failed):" + error);
     }
 
     this.changeRobot = function() {
@@ -49,7 +49,6 @@ resourceHandler.registerFunction('s0_ViewModel.js', 's0_ViewModel', function(par
     }
 
     this.cleaning = function() {
-        // TODO: switch to cleaning workflow
         that.conditions['cleaning'] = true;
         parent.flowNavigator.next();
     }
@@ -81,7 +80,7 @@ resourceHandler.registerFunction('s0_ViewModel.js', 's0_ViewModel', function(par
     }
 
     this.errorSendToBase = function(error) {
-        alert("Error:(Sending robot to base):" + error);
+        console.log("Error:(Sending robot to base):" + error);
     }
     /**
      * Called when the viewmodel is initialized (after the view has been loaded, before bindings are applied)
