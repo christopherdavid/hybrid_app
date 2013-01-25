@@ -16,4 +16,6 @@ public class AppConstants {
 	
 	public static final String JABBER_PACKET_PROPERTY_KEY = "robot_packet";
 	
+	public static final String NETWORK_ERROR_STRING = "Network Error";
+	
 }

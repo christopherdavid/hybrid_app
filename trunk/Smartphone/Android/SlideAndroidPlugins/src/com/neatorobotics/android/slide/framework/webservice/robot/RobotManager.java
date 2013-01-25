@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import android.content.Context;
 
+import com.neatorobotics.android.slide.framework.AppConstants;
+import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.SetRobotProfileDetails;
@@ -72,25 +74,32 @@ public class RobotManager {
 
 	public void setRobotName(final String robotId, final String robotName, final SetRobotProfileDetailsListener listener) 
 	{
+		LogHelper.logD(TAG, "setRobotName called");
+		LogHelper.logD(TAG, "Robot Id = " + robotId + " New Name = " + robotName);
 		Runnable task = new Runnable() {
 			public void run() {
 				HashMap<String, String> profileParams = new HashMap<String, String>();
 				profileParams.put(SetRobotProfileDetails.Attribute.ROBOT_NAME, robotName);
 				SetRobotProfileDetailsResult result = NeatoRobotWebservicesHelper.setRobotProfileDetailsRequest(mContext, robotId, profileParams);
-				if (result != null) {
-					if(result.success()) {
-						listener.onSetProfileSuccess();
-					} else {
-						listener.onSetProfileServerError(result.mMessage);
-					}
-				} else {
-					listener.onSetProfileNetworkError("Network Error");
+				if (result == null) {
+					listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
+					return;
 				}
+				
+				if(result.success()) {
+					// Robot Name updated on the server, we now update the name in the database
+					RobotItem robotItem = RobotHelper.updateRobotName(mContext, robotId, robotName);	
+					listener.onComplete(robotItem);
+				}
+				else {
+					listener.onServerError(result.mMessage);
+				}
+				
 			}
 		};
 		TaskUtils.scheduleTask(task, 0);
 	}
-
+	
 	private RobotItem convertRobotDetailResultToRobotItem(RobotDetailResult result)
 	{
 		RobotItem robotItem = new RobotItem();

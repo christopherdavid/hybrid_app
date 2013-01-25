@@ -537,6 +537,24 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 		},
 		
+		getRobotDetails: function() {
+			neatoSmartApp.showProgressBar();
+			var robotId = localStorage.getItem('robotId');
+			if (robotId == null) {
+				robotId = "Robot_1001";
+			}
+			RobotPluginManager.getRobotDetail(robotId, neatoSmartApp.getRobotDetailsSuccess, neatoSmartApp.getRobotDetailsErr);
+		},
+		
+		getRobotDetailsSuccess: function(result) {
+			neatoSmartApp.setResponseText(result);
+			neatoSmartApp.hideProgressBar();
+		},
+		getRobotDetailsErr: function(error) {
+			neatoSmartApp.setResponseText(error);
+			neatoSmartApp.hideProgressBar();
+		},
+		
 		setRobotName: function() {
 			neatoSmartApp.showProgressBar();
 			var robotName = document.querySelector('#robotName').value;
@@ -544,7 +562,7 @@ var neatoSmartApp = (function() {
 			if (robotId == null) {
 				robotId = "Robot_1001";
 			}
-			RobotPluginManager.setRobotName(robotId, robotName, neatoSmartApp.setRobotNameSuccess, neatoSmartApp.setRobotNameErr);
+			RobotPluginManager.setRobotName2(robotId, robotName, neatoSmartApp.setRobotNameSuccess, neatoSmartApp.setRobotNameErr);
 		},
 		
 		setRobotNameSuccess: function(result) {
@@ -643,8 +661,11 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnGoToRobotMap').addEventListener('click', neatoSmartApp.hideHomeShowMap, true);
 			document.querySelector('#btnLogout').addEventListener('click', neatoSmartApp.logoutUser , true);
 			document.querySelector('#btnTest').addEventListener('click', neatoSmartApp.test , true);
+			document.querySelector('#btnSetSchedule').addEventListener('click', neatoSmartApp.goToSchedule , true);
+			
 			document.querySelector('#btnGoToAtlas').addEventListener('click', neatoSmartApp.hideHomeShowAtlas , true);
 			document.querySelector('#btnGetUserDetails').addEventListener('click', neatoSmartApp.getUserDetails , true);
+			document.querySelector('#btnGetRobotDetails').addEventListener('click', neatoSmartApp.getRobotDetails , true);
 		},
 
 		hideUserHomePage: function() {
@@ -657,8 +678,10 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnGoToRobotMap').removeEventListener('click', neatoSmartApp.hideHomeShowMap, true);
 			document.querySelector('#btnLogout').removeEventListener('click', neatoSmartApp.logoutUser , true);
 			document.querySelector('#btnTest').removeEventListener('click', neatoSmartApp.test , true);
+			document.querySelector('#btnSetSchedule').removeEventListener('click', neatoSmartApp.goToSchedule , true);
 			document.querySelector('#btnGoToAtlas').removeEventListener('click', neatoSmartApp.hideHomeShowAtlas , true);
 			document.querySelector('#btnGetUserDetails').removeEventListener('click', neatoSmartApp.getUserDetails , true);
+			document.querySelector('#btnGetRobotDetails').removeEventListener('click', neatoSmartApp.getRobotDetails , true);
 		},
 		
 		hideUserShowWelcome: function() {

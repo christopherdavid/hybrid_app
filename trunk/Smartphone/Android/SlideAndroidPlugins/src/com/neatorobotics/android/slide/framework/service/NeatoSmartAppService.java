@@ -346,6 +346,11 @@ public class NeatoSmartAppService extends Service {
 			mResultReceiver = intent.getParcelableExtra(EXTRA_RESULT_RECEIVER);
 		}
 	};
+	
+	private String getFormattedServerInfo()
+	{
+		return String.format("%s (%s)", NeatoWebConstants.getServerUrl(), NeatoWebConstants.getServerName());
+	}
 
 	@Override
 	public void onCreate() {
@@ -353,6 +358,8 @@ public class NeatoSmartAppService extends Service {
 		
 		// NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
 		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.DEMO_SERVER_ID);
+		
+		LogHelper.log(TAG, "Server information = " + getFormattedServerInfo());
 		
 		mUdpConnectionHelper = new UdpConnectionHelper(this);
 		mUdpConnectionHelper.setHandler(mHandler);
