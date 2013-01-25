@@ -54,28 +54,12 @@ public class AboutActivity extends Activity {
 	}
 	
 	private void showServerInfo() {
-		String serverName = null;
+		String serverName = NeatoWebConstants.getServerName();
 		
-		int serverId = NeatoWebConstants.getServerId();
-		switch (serverId) {
-			case NeatoWebConstants.DEV_SERVER_ID:
-				serverName = "Development";
-				break;
-			case NeatoWebConstants.STAGING_SERVER_ID:
-				serverName = "Staging";
-				break;
-			case NeatoWebConstants.PROD_SERVER_ID:
-				serverName = "Production";
-			case NeatoWebConstants.DEMO_SERVER_ID:
-				serverName = "Demo";
-				break;
-		}
-		
+		String serverUrl = NeatoWebConstants.getServerUrl();
 		if (!TextUtils.isEmpty(serverName)) {
-			// String serverText = String.format("%s server in use", serverName);;
 			TextView txtInfo = (TextView)findViewById(R.id.txt_about_server);
-			txtInfo.setText(Html.fromHtml(String.format("<u><i>%s</i></u>", serverName)));			
-			txtInfo.append(" server in use");
+			txtInfo.setText(Html.fromHtml(String.format("<u><i>%s (%s)</i></u>", serverUrl, serverName)));			
 		}
 	}
 }

@@ -311,6 +311,19 @@ public class DBHelper {
 		return robotItem;
 	}
 	
+	public RobotItem updateRobotNameBySerialId(String serialId, String name) {		
+		String[] selectionArgs = new String[] {serialId};
+		
+		ContentValues values = new ContentValues();
+		values.put(DBCommon.COL_NAME_ROBOT_NAME, name);
+		
+		SQLiteDatabase db = getDatabase();		
+		db.update(DBCommon.TABLE_NAME_ROBOT_INFO, values, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs);
+		RobotItem robotItem = getRobotBySerialId(serialId);		
+		
+		return robotItem;
+	}
+	
 	public List<RobotItem> getAllAssociatedRobots() {
 		List<RobotItem> robotList = new ArrayList<RobotItem>();
 		
