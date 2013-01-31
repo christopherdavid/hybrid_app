@@ -13,6 +13,7 @@ import android.content.Context;
 import android.os.Handler;
 import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.model.RobotInfo;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.CommandFactory;
 import com.neatorobotics.android.slide.framework.robot.commands.CommandPacketValidator;
@@ -20,6 +21,9 @@ import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandsGro
 import com.neatorobotics.android.slide.framework.robot.commands.RobotPacket;
 import com.neatorobotics.android.slide.framework.transport.Transport;
 import com.neatorobotics.android.slide.framework.transport.TransportFactory;
+import com.neatorobotics.android.slide.framework.udp.RobotDiscoveryListener;
+import com.neatorobotics.android.slide.framework.udp.RobotDiscoveryService;
+import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 
 public class TcpConnectionHelper {
@@ -89,7 +93,7 @@ public class TcpConnectionHelper {
 
 	private class TcpRobotConnectHelper
 	{
-		public void connectToRobot(String robot_id, String ipAddress) {
+		public void connectToRobot(String robotId, String ipAddress) {
 			LogHelper.log(TAG, "connectToRobot internal called");
 			InetAddress peerAddress = TcpUtils.getInetAddressFromIp(ipAddress);
 			int peerPort = TCP_ROBOT_SERVER_PORT;
@@ -103,7 +107,7 @@ public class TcpConnectionHelper {
 			Transport transport = TransportFactory.createTransport(peerAddress, peerPort);
 
 			if (transport != null) {
-				RobotConnectionInfo robotConnectionInfo = createRobotConnectionInfo(robot_id, ipAddress, transport);
+				RobotConnectionInfo robotConnectionInfo = createRobotConnectionInfo(robotId, ipAddress, transport);
 				InputStream transportInputStream = transport.getInputStream();
 				if (transportInputStream != null) {
 					ConnectThread readRobotMessages = new ConnectThread(transportInputStream, robotConnectionInfo);
@@ -114,7 +118,7 @@ public class TcpConnectionHelper {
 				}
 			} else {
 				LogHelper.log(TAG, "Could not connect to peer. Try again.");
-				mTcpDataPacketListener.errorInConnecting(robot_id);
+				mTcpDataPacketListener.errorInConnecting(robotId);
 			}
 		}		
 	}
@@ -242,25 +246,63 @@ public class TcpConnectionHelper {
 		}
 	}
 
-	public void connectToRobot(final String robot_id, final String ipAddress) {
+	public void connectToRobot(final String robotId, final String ipAddress) {
 		Runnable task = new Runnable() {
 
 			public void run() {
-				connectToRobotInternal(robot_id, ipAddress);
+				connectToRobotInternal(robotId, ipAddress);
+			}
+		};
+
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
+	public void connectToRobot(final String robotId) {
+		LogHelper.log(TAG, "connectToRobot called. Robot Id = " + robotId);
+		Runnable task = new Runnable() {
+			public void run() {
+				String userId = AppUtils.getLoggedInUserId(mContext);
+				RobotDiscoveryService.startRobotsDiscovery(mContext, userId, robotId, new RobotDiscoveryListener() {
+					
+					private boolean receivedRobotIp = false;
+					@Override
+					public void onRobotDiscovered(RobotInfo robotInfo) {
+						// We send the discovery request 3 times and we get the response 3 times. So
+						// whenever we get the request we ignore subsequent request
+						if (receivedRobotIp) {
+							return;
+						}
+
+						LogHelper.logD(TAG, "Robot Discovered. Now will try to connect");
+						if (robotInfo != null) {
+							receivedRobotIp = true;
+							connectToRobotInternal(robotId, robotInfo.getRobotIpAddress());
+						}
+					}
+					
+					@Override
+					public void onDiscoveryStarted() {
+					}
+					
+					@Override
+					public void onDiscoveryEnd() {
+					}
+				});
 			}
 		};
 
 		TaskUtils.scheduleTask(task, 0);
 	}
 
-	public void connectToRobotInternal(String robot_id, String ipAddress) {
+	private void connectToRobotInternal(String robotId, String ipAddress) {
 		LogHelper.log(TAG, "connectToRobot called");
-		if(!isConnected(robot_id)) {
-			mTcpRobotConnectHelper.connectToRobot(robot_id, ipAddress);
+		if(!isConnected(robotId)) {
+			LogHelper.log(TAG, "Not connected to robot. Connecting now.");
 		} 
 		else {
-			LogHelper.log(TAG, "Already connected to robot. IpAddress: " + ipAddress + ". Breaking connection");
+			LogHelper.log(TAG, "Already connected to robot. Breaking Connection.");
 		}
+		mTcpRobotConnectHelper.connectToRobot(robotId, ipAddress);
 	}
 
 	public void closePeerConnection(final String robotId)

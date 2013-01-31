@@ -2,24 +2,15 @@ package com.neatorobotics.android.slide.framework.robot.commands;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
 import com.neatorobotics.android.slide.framework.xml.XmlHelper;
-
-
-import android.content.Context;
 
 public class CommandFactory {
 	
 	@SuppressWarnings("unused")
 	private static final String TAG = CommandFactory.class.getSimpleName();
 	
-	public static RobotDiscoveryCommand createRobotDicoveryCommand(Context context)
-	{
-		return new RobotDiscoveryCommand();
-	}
 
 	public static RobotCommandsGroup createCommandGroup(DataInputStream dis) {
 		

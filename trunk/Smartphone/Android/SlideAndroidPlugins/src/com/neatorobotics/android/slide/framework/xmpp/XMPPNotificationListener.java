@@ -1,6 +1,7 @@
 package com.neatorobotics.android.slide.framework.xmpp;
 
 import com.neatorobotics.android.slide.framework.robot.commands.RobotPacket;
+import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacket;
 
 public interface XMPPNotificationListener {
 	public void onConnectFailed();
@@ -10,4 +11,5 @@ public interface XMPPNotificationListener {
 	public void onConnectionReset();
 	public void onDisconnect();
 	public void onDataReceived(String from, RobotPacket packet);
+	public void onDataReceived(String from, RobotCommandPacket packet);
 }

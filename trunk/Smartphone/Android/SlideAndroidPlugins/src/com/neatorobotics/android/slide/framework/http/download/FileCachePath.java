@@ -15,7 +15,7 @@ public class FileCachePath {
 	// Atlas data path constants
 	private static final String ROBOT_ATLAS_CACHE_DATA_DIR = "/atlas_data/";
 	private static final String ATLAS_FILE_NAME = "atlas.xml";
-	private static final String GRID_FILE_NAME = "grid.xml";
+	private static final String GRID_FILE_NAME = "grid.jpg";
 	
 	// Map data path constants
 	private static final String ROBOT_MAP_CACHE_DATA_DIR = "/map_data/";
@@ -55,16 +55,17 @@ public class FileCachePath {
 		return null;
 	}
 	
-	public static String getAtlasGridFilePath(Context context, String robotSerialNo, String atlasId) {
-		if (TextUtils.isEmpty(atlasId) || TextUtils.isEmpty(robotSerialNo)) { 
+	public static String getAtlasGridFilePath(Context context, String atlasId, String gridId) {
+		if (TextUtils.isEmpty(atlasId) || TextUtils.isEmpty(gridId)) { 
 			return null;
 		}
 		
 		String cacheBaseDir = getExtCahceBaseDir(context);
 		if (!TextUtils.isEmpty(cacheBaseDir)) {
+			String fileName = String.format("%s_%s", String.valueOf(System.currentTimeMillis()), GRID_FILE_NAME); 
 			StringBuilder builder = new StringBuilder(cacheBaseDir).append(ROBOT_ATLAS_CACHE_DATA_DIR).
-							append(atlasId).append("_").append(robotSerialNo).
-							append(File.separator).append(GRID_FILE_NAME);
+							append(atlasId).append("_").append(gridId).
+							append(File.separator).append(fileName);
 		
 			return builder.toString();
 		}
@@ -79,8 +80,9 @@ public class FileCachePath {
 		
 		String cacheBaseDir = getExtCahceBaseDir(context);
 		if (!TextUtils.isEmpty(cacheBaseDir)) {
+			String fileName = String.format("%s_%s", String.valueOf(System.currentTimeMillis()), MAP_IMAGE_FILE_NAME); 
 			StringBuilder builder = new StringBuilder(cacheBaseDir).append(ROBOT_MAP_CACHE_DATA_DIR).
-			append(mapId).append("_").append(robotSerialNo).append(File.separator).append(MAP_IMAGE_FILE_NAME);
+			append(mapId).append("_").append(robotSerialNo).append(File.separator).append(fileName);
 	
 			return builder.toString();
 		}

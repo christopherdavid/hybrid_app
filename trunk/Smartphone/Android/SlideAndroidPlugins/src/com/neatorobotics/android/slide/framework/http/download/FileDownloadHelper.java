@@ -11,8 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -28,13 +26,13 @@ public class FileDownloadHelper {
 	private static final String TAG = FileDownloadHelper.class.getSimpleName();
 	private String mUrl;
 	private String mDownloadFilePath;
-	private WeakReference<FileDownloadListener> mListener;
+	private FileDownloadListener mListener;
 	private Context mContext;
-	private FileDownloadHelper(Context context, String url, String filePath, FileDownloadListener listener)
+	private FileDownloadHelper(Context context, String url, String filePath, final FileDownloadListener listener)
 	{
 		mUrl = url;
 		mDownloadFilePath = filePath;
-		mListener = new WeakReference<FileDownloadListener>(listener);
+		mListener = listener;
 		mContext = context.getApplicationContext();
 	}
 	
@@ -49,7 +47,6 @@ public class FileDownloadHelper {
 				HttpGet httpGet = new HttpGet(mUrl);
 				HttpEntity responseEntity = null;
 				InputStream responseInputStream = null;
-				FileDownloadListener listener = null;
 				boolean downloadSuccessful = false;
 
 				try {
@@ -78,13 +75,12 @@ public class FileDownloadHelper {
 					LogHelper.log(TAG, "Exception in doing HTTP Post request", e);
 				}
 				finally {
-					listener = mListener.get();
-					if (listener != null) {
+					if (mListener != null) {
 						if(downloadSuccessful) {
-							listener.onDownloadComplete(mUrl, mDownloadFilePath);
+							mListener.onDownloadComplete(mUrl, mDownloadFilePath);
 						}
 						else {
-							listener.onDownloadError(mUrl);
+							mListener.onDownloadError(mUrl);
 						}
 					}
 				}
@@ -118,7 +114,7 @@ public class FileDownloadHelper {
 		
 	}
 	
-	public static void downloadFile(Context context, String url, String filePath, FileDownloadListener listener)
+	public static void downloadFile(Context context, String url, String filePath, final FileDownloadListener listener)
 	{
 		FileDownloadHelper fileDownloadHelper = new FileDownloadHelper(context, url, filePath, listener);
 		fileDownloadHelper.download();

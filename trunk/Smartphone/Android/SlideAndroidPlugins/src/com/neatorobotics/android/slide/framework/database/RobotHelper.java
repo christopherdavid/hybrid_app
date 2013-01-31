@@ -51,14 +51,6 @@ public class RobotHelper {
 		}
 	}
 	
-	public static RobotItem updateRobotName(Context context, String robotSerialNo, String name) {
-		RobotItem robotItem = null;
-		if (!TextUtils.isEmpty(robotSerialNo) && (!TextUtils.isEmpty(name))) {
-			robotItem = DBHelper.getInstance(context).updateRobotNameBySerialId(robotSerialNo, name);
-		}
-		return robotItem;
-	}
-	
 	public static boolean clearRobotDetails(Context context, String serialId) {
 		boolean result = false;
 		
@@ -87,5 +79,17 @@ public class RobotHelper {
 		if (robotList != null) {
 			DBHelper.getInstance(context).saveRobot(robotList);
 		}
+	}
+	
+	public static List<RobotItem> getAllAssociatedRobots(Context context) {
+		return DBHelper.getInstance(context).getAllAssociatedRobots();
+	}
+	
+	public static RobotItem updateRobotName(Context context, String robotSerialNo, String name) {
+		RobotItem robotItem = null;
+		if (!TextUtils.isEmpty(robotSerialNo) && (!TextUtils.isEmpty(name))) {
+			robotItem = DBHelper.getInstance(context).updateRobotNameBySerialId(robotSerialNo, name);
+		}
+		return robotItem;
 	}
 }

@@ -9,6 +9,9 @@ import com.neatorobotics.android.slide.framework.model.RobotInfo;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotAssociateListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDiscoveryListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
+import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPacketListener;
+import com.neatorobotics.android.slide.framework.robot.commands.request.ResponsePacket;
+import com.neatorobotics.android.slide.framework.robot.commands.request.RobotRequests;
 import com.neatorobotics.android.slide.framework.service.NeatoSmartAppService;
 import com.neatorobotics.android.slide.framework.service.NeatoSmartAppsEventConstants;
 
@@ -18,6 +21,8 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 	private RobotDiscoveryListener mRobotDiscoveryListener;
 	private RobotAssociateListener mRobotAssociationListener;
 	private RobotPeerConnectionListener mRobotPeerConnectionListener;
+	private RobotPacketListener mRobotResponseListener;
+
 	public NeatoRobotResultReceiver(Handler handler) {
 		super(handler);
 	}
@@ -55,15 +60,17 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 			if (mRobotPeerConnectionListener != null) {
 				mRobotPeerConnectionListener.onRobotDisconnected();
 			}
-
 		}
 		else if (NeatoSmartAppsEventConstants.ROBOT_DATA_RECEIVED == resultCode) {
 
-		} 
+		}
 		else if (NeatoSmartAppsEventConstants.ROBOT_CONNECTION_ERROR == resultCode) {
 			if (mRobotPeerConnectionListener != null) {
 				mRobotPeerConnectionListener.errorInConnecting();
 			}
+		}
+		else if (NeatoSmartAppsEventConstants.ROBOT_PACKET_RECEIVED_ON_PEER_CONNETION == resultCode) {
+			handleRemotePacket(resultData);
 		}
 		else if (NeatoSmartAppsEventConstants.ROBOT_ASSOCIATION_STATUS_FAILED == resultCode) {
 			if (mRobotAssociationListener != null) {
@@ -89,6 +96,42 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 	}
 
 
+	private void handleRemotePacket(Bundle resultData) {
+		if (isResponsePacket(resultData)) {
+			ResponsePacket response = resultData.getParcelable(NeatoRobotResultReceiverConstants.KEY_REMOTE_RESPONSE_PACKET);
+			LogHelper.logD(TAG, "Reponse received in resultReceiver: " + response);
+			String robotId = resultData.getString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID);
+			if (mRobotResponseListener != null) {
+				mRobotResponseListener.onResponseReceived(robotId, response);
+			} 
+			else {
+				LogHelper.log(TAG, "mRobotResponseListener is null");
+			}
+		} 
+		else if (isRequestPacket(resultData)) {
+			RobotRequests requests = resultData.getParcelable(NeatoRobotResultReceiverConstants.KEY_REMOTE_REQUEST_PACKET);
+			LogHelper.logD(TAG, "Reponse received in resultReceiver: " + requests);
+			String robotId = resultData.getString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID);
+			if (mRobotResponseListener != null) {
+				mRobotResponseListener.onRequestReceived(robotId, requests);
+			} 
+			else {
+				LogHelper.log(TAG, "mRobotCommandListener is null");
+			}
+		}
+	}
+	
+	private boolean isRequestPacket(Bundle bundle)
+	{
+		return bundle.containsKey(NeatoRobotResultReceiverConstants.KEY_REMOTE_REQUEST_PACKET);
+	}
+	
+	private boolean isResponsePacket(Bundle bundle)
+	{
+		return bundle.containsKey(NeatoRobotResultReceiverConstants.KEY_REMOTE_RESPONSE_PACKET);
+	}
+
+
 	public void addDiscoveryListener(RobotDiscoveryListener robotDiscoveryListener) {
 		mRobotDiscoveryListener = robotDiscoveryListener;
 	}
@@ -99,4 +142,9 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 	public void addPeerConnectionListener(RobotPeerConnectionListener robotPeerConnectionListener) {
 		mRobotPeerConnectionListener = robotPeerConnectionListener;
 	}
+
+	public void addRobotResponseListener(RobotPacketListener listener) {
+		mRobotResponseListener = listener;
+	}
+	
 }

@@ -13,9 +13,11 @@ public class RobotCommandPacketConstants {
 	public static final int COMMAND_SEND_BASE = 104;
 	public static final int COMMAND_GET_ROBOT_STATE = 105;
 	public static final int COMMAND_SEND_ROBOT_STATE = 106;
+	public static final int COMMAND_PAUSE_CLEANING = 107;
+	public static final int COMMAND_ENABLE_SCHEDULE = 108;
+	public static final int COMMAND_DATA_CHANGED_ON_SERVER = 109;
+	public static final int COMMAND_SET_ROBOT_TIME = 110;
 
-
-	
 	
 	public static final String KEY_ROBOT_ID = "robot_id";
 	public static final String KEY_ROBOT_SERIAL_ID = "serial_id";
@@ -23,9 +25,11 @@ public class RobotCommandPacketConstants {
 	public static final String KEY_ROBOT_PORT = "robot_port";
 	public static final String KEY_ROBOT_JABBER_ID = "robot_jabber_id";
 	public static final String KEY_ROBOT_JABBER_PWD = "robot_jabber_pwd";
+	public static final String KEY_COMMAND_PARAMS_TAG = "params";
 	
 	public static final String KEY_ROBOT_NAME = "robot_name";
 	public static final String KEY_ROBOT_STATE = "robot_state";
+	public static final String KEY_REQUEST_COMMAND = "request_command";
 
 	//Robot states
 	//TODO: Need to put these constants in relevant class.

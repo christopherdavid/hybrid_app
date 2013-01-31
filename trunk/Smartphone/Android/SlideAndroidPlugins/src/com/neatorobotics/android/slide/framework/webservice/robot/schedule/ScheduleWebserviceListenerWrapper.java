@@ -33,7 +33,7 @@ public class ScheduleWebserviceListenerWrapper implements ScheduleWebserviceList
 	}
 
 	@Override
-	public void onNetworkError() {
+	public void onNetworkError(final String errMessage) {
 
 		if (mListener != null) {
 			if (mHandler != null) {
@@ -41,12 +41,12 @@ public class ScheduleWebserviceListenerWrapper implements ScheduleWebserviceList
 					
 					@Override
 					public void run() {
-						mListener.onNetworkError();
+						mListener.onNetworkError(errMessage);
 					}
 				});
 			}
 			else {
-				mListener.onNetworkError();
+				mListener.onNetworkError(errMessage);
 			}
 		}
 
@@ -56,7 +56,7 @@ public class ScheduleWebserviceListenerWrapper implements ScheduleWebserviceList
 	}
 
 	@Override
-	public void onServerError() {
+	public void onServerError(final String errMessage) {
 
 		if (mListener != null) {
 			if (mHandler != null) {
@@ -64,12 +64,12 @@ public class ScheduleWebserviceListenerWrapper implements ScheduleWebserviceList
 					
 					@Override
 					public void run() {
-						mListener.onNetworkError();
+						mListener.onNetworkError(errMessage);
 					}
 				});
 			}
 			else {
-				mListener.onNetworkError();
+				mListener.onNetworkError(errMessage);
 			}
 		}
 

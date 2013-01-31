@@ -1,13 +1,11 @@
 package com.neatorobotics.android.slide.framework.webservice.user;
 
 import java.util.ArrayList;
-
 import android.content.Context;
-
+import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotAssociationDisassociationResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
@@ -59,8 +57,14 @@ public class UserManager {
 				else {
 					if (userItem == null) {
 						LogHelper.logD(TAG, "User item is null");
-						listener.onServerError();
-					} else {
+						if (result != null) {
+							listener.onServerError(result.mMessage);
+						}
+						else {
+							listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
+						}
+					} 
+					else {
 						LogHelper.logD(TAG, "Sending user item to listener");
 						LogHelper.logD(TAG, "Initialise inside User manager!");
 						// myHandler.sendEmptyMessage(0);
@@ -102,7 +106,7 @@ public class UserManager {
 				else {
 					if (userItem == null) {
 						LogHelper.logD(TAG, "User item is null");
-						listener.onServerError();
+						listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
 					} else {
 						LogHelper.logD(TAG, "Sending user item to listener");
 						listener.onUserDetailsReceived(userItem);
@@ -145,7 +149,12 @@ public class UserManager {
 				else {
 					if (userItem == null) {
 						LogHelper.logD(TAG, "User item is null");
-						listener.onServerError();
+						if (result != null) {
+							listener.onServerError(result.mMessage);
+						}
+						else {
+							listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
+						}
 					} else {
 						LogHelper.logD(TAG, "Sending user item to listener");					
 						UserHelper.saveLoggedInUserDetails(mContext, userItem, result.mResult.mUserHandle);
@@ -228,18 +237,32 @@ public class UserManager {
 	public void disassociateAllRobots(final String email, final UserRobotAssociateDisassociateListener listener) {
 		Runnable task = new Runnable() {
 
-			public void run() {
-				TaskUtils.sleep(1000);
-				// Clear all user associated robots from the DB
-				RobotHelper.clearAllUserAssociatedRobots(mContext);
-				if (listener != null) {
-					listener.onComplete();
+			public void run() {			
+				RobotAssociationDisassociationResult result = NeatoUserWebservicesHelper.dissociateAllNeatoRobotsRequest(mContext, email);
+				if (result != null) {
+					if (result.success()) {
+						// Clear all robots info from the DB
+						RobotHelper.clearAllUserAssociatedRobots(mContext);
+						
+						if (listener != null) {
+							listener.onComplete();
+						}					
+					}
+					else {
+						if (listener != null) {
+							listener.onServerError(result.mMessage);
+						}
+					}
+				}
+				else {
+					if (listener != null) {
+						listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
+					}
 				}
 			}
 		};
 		TaskUtils.scheduleTask(task, 0);
 	}
-	
 	
 	public void getAssociatedRobots(final String email, final String authToken, final AssociatedRobotDetailsListener listener) {
 		Runnable task = new Runnable() {

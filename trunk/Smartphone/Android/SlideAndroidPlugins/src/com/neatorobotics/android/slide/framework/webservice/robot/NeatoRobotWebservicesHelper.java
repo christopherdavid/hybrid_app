@@ -4,11 +4,14 @@ package com.neatorobotics.android.slide.framework.webservice.robot;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+
 import android.content.Context;
+
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
@@ -16,6 +19,7 @@ import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelpe
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.AssociateNeatoRobotToUser;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.CreateNeatoRobot;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotDetails;
+import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotOnlineStatus;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.SetRobotProfileDetails;
 
 
@@ -161,4 +165,32 @@ public class NeatoRobotWebservicesHelper {
 		}
 		return result;
 	}
+	
+	public static RobotOnlineStatusResult getRobotOnlineStatus(Context context, String serialNumber) {
+		RobotOnlineStatusResult result = null;
+		Map<String, String> robotGetOnlineStatus = new HashMap<String, String>();
+		robotGetOnlineStatus.put(GetRobotOnlineStatus.Attribute.SERIAL_NUMBER, serialNumber);	
+		
+		NeatoHttpResponse robotStatusResponse = NeatoWebserviceHelper.executeHttpPost(context, GetRobotOnlineStatus.METHOD_NAME, robotGetOnlineStatus);
+		if (robotStatusResponse.completed()) { 
+			try {
+				LogHelper.logD(TAG, "Get Robot online status completed. Reading response");
+				String robotStatusJson = AppUtils.convertStreamToString(robotStatusResponse.mResponseInputStream);
+				LogHelper.logD(TAG, "robotStatusJson = " + robotStatusJson);
+				result = resultMapper.readValue(robotStatusJson, new TypeReference<RobotOnlineStatusResult>() {});
+				LogHelper.log(TAG, "Robot online status fetched.");
+			} catch (JsonParseException e) {
+				LogHelper.log(TAG, "Exception in getRobotOnlineStatus" ,e);
+			} catch (JsonMappingException e) {
+				LogHelper.log(TAG, "Exception in getRobotOnlineStatus" ,e);
+			} catch (IOException e) {
+				LogHelper.log(TAG, "Exception in getRobotOnlineStatus" ,e);
+			}
+		}
+		else { 
+			LogHelper.log(TAG, "Failed to get the Robot online status.");
+			result = new RobotOnlineStatusResult(robotStatusResponse);
+		}
+		return result;
+	}	
 }

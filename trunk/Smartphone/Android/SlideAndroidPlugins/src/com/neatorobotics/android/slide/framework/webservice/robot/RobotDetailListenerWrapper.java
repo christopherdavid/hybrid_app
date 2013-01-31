@@ -38,41 +38,41 @@ public class RobotDetailListenerWrapper implements RobotDetailListener {
 		
 	}
 
-	public void onNetworkError() {
+	public void onNetworkError(final String errMessage) {
 		
 		if (mListener == null) {
 			return;
 		}
 		
 		if (mHandler == null) {
-			mListener.onNetworkError();
+			mListener.onNetworkError(errMessage);
 			return;
 		}
 		
 		mHandler.post(new Runnable() {
 			
 			public void run() {
-				mListener.onNetworkError();
+				mListener.onNetworkError(errMessage);
 			}
 		});
 		
 	}
 
-	public void onServerError() {
+	public void onServerError(final String errMessage) {
 		
 		if (mListener == null) {
 			return;
 		}
 		
 		if (mHandler == null) {
-			mListener.onServerError();
+			mListener.onServerError(errMessage);
 			return;
 		}
 		
 		mHandler.post(new Runnable() {
 			
 			public void run() {
-				mListener.onServerError();
+				mListener.onServerError(errMessage);
 				
 			}
 		});

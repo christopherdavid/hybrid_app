@@ -14,6 +14,7 @@ import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
 
 public class NeatoSmartAppCreateUserActivity extends Activity{
+	@SuppressWarnings("unused")
 	private static final String TAG = NeatoSmartAppCreateUserActivity.class.getSimpleName();
 	
     public void onCreate(Bundle savedInstanceState) {

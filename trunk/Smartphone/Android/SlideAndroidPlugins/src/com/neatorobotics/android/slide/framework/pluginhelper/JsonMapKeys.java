@@ -17,8 +17,12 @@ public class JsonMapKeys {
 	public static final String KEY_USE_XMPP = "useXMPP";
 	public static final String KEY_ROBOT_NAME = "robotName";
 	public static final String KEY_ROBOT_IP_ADDRESS = "robotIpaddress";
+	public static final String KEY_ROBOT_ONLINE_STATUS = "online";
 	
-	
+	// Used for notification in robot plugin
+	public static final String KEY_RESPONSE_STATUS = "responseStatus";
+	public static final String KEY_RESPONSE_PARAMS = "responseParams";
+	public static final String KEY_ROBOT_COMMANDS = "robotCommands";
 	//Used for error
 	public static final String KEY_ERROR_CODE = "errorCode";
 	public static final String KEY_ERROR_MESSAGE = "errorMessage";

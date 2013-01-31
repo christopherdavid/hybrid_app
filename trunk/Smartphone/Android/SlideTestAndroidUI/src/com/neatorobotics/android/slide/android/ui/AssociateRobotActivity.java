@@ -105,9 +105,9 @@ public class AssociateRobotActivity extends Activity {
 
 					String emailId = NeatoPrefs.getUserEmailId(getApplicationContext());
 					try {
-						service.associateRobot(serialId, emailId);
+						// service.associateRobot(serialId, emailId);
 					} 
-					catch (RemoteException e) {
+					catch (Exception e) {
 						LogHelper.log(TAG, "Remote Exception:", e);
 					}
 
