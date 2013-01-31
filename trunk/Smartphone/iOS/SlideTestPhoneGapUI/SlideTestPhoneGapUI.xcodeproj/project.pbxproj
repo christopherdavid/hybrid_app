@@ -44,7 +44,9 @@
 		B206F8A7169159AB00825DCB /* libCordova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B206F8A5169159AB00825DCB /* libCordova.a */; };
 		B206F8A8169159AB00825DCB /* libSlideiOSPlugin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B206F8A6169159AB00825DCB /* libSlideiOSPlugin.a */; };
 		D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */; };
+		E15D336A16B820F500DB950D /* NeatoDataStore.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E15D336916B820F500DB950D /* NeatoDataStore.bundle */; };
 		E168BBDA169D475900BA6AD3 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E168BBD9169D475900BA6AD3 /* libsqlite3.dylib */; };
+		E198854C16B2FBE200ED1AD8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E198854B16B2FBE200ED1AD8 /* CoreData.framework */; };
 		E1A065CD16956C38009C22F7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A065CC16956C38009C22F7 /* Security.framework */; };
 		E1A065D116956CBE009C22F7 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A065D016956CBE009C22F7 /* libxml2.dylib */; };
 		E1A065D316956E68009C22F7 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A065D216956E68009C22F7 /* libresolv.dylib */; };
@@ -93,7 +95,9 @@
 		B206F8A5169159AB00825DCB /* libCordova.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCordova.a; path = dist/SlidePlugins/libCordova.a; sourceTree = "<group>"; };
 		B206F8A6169159AB00825DCB /* libSlideiOSPlugin.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSlideiOSPlugin.a; path = dist/SlidePlugins/libSlideiOSPlugin.a; sourceTree = "<group>"; };
 		D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
+		E15D336916B820F500DB950D /* NeatoDataStore.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = NeatoDataStore.bundle; path = ../SlideiOSPlugin/ResourceBundle/NeatoDataStore.bundle; sourceTree = "<group>"; };
 		E168BBD9169D475900BA6AD3 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		E198854B16B2FBE200ED1AD8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		E1A065CC16956C38009C22F7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		E1A065D016956CBE009C22F7 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		E1A065D216956E68009C22F7 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
@@ -104,6 +108,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E198854C16B2FBE200ED1AD8 /* CoreData.framework in Frameworks */,
 				E168BBDA169D475900BA6AD3 /* libsqlite3.dylib in Frameworks */,
 				E1A065D316956E68009C22F7 /* libresolv.dylib in Frameworks */,
 				E1A065D116956CBE009C22F7 /* libxml2.dylib in Frameworks */,
@@ -170,6 +175,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				E15D336916B820F500DB950D /* NeatoDataStore.bundle */,
+				E198854B16B2FBE200ED1AD8 /* CoreData.framework */,
 				E168BBD9169D475900BA6AD3 /* libsqlite3.dylib */,
 				E1A065D216956E68009C22F7 /* libresolv.dylib */,
 				E1A065D016956CBE009C22F7 /* libxml2.dylib */,
@@ -340,6 +347,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E15D336A16B820F500DB950D /* NeatoDataStore.bundle in Resources */,
 				301BF570109A69640062928A /* www in Resources */,
 				30E1352710E2C1420031B30D /* Cordova.plist in Resources */,
 				308D05371370CCF300D202BF /* icon-72.png in Resources */,

@@ -28,14 +28,17 @@
 	<string>cloud</string>
 	<key>ExternalHosts</key>
 	<array>
+		<string>http://neatodev.rajatogo.com/*</string>
 		<string>http://neatostaging.rajatogo.com/api/rest/json/*</string>
 		<string>http://neato.rajatogo.com/api/rest/json/*</string>
+		<string>http://neatostaging.rajatogo.com/*</string>
+		<string>http://neato.rajatogo.com/*</string>
 	</array>
 	<key>Plugins</key>
 	<dict>
-		<key>RobotManagerPlugin</key>
+		<key>RobotManagement</key>
 		<string>RobotManagerPlugin</string>
-		<key>UserManagerPlugin</key>
+		<key>UserManagement</key>
 		<string>UserManagerPlugin</string>
 		<key>Device</key>
 		<string>CDVDevice</string>

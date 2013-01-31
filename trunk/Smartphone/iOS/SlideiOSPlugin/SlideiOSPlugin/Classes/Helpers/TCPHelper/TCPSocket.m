@@ -50,12 +50,19 @@ static TCPSocket *sharedInstance = nil;
 
 -(BOOL) connectHost:(NSString *) host overPort:(int) port
 {
+    debugLog(@"");
     if (self.tcpScoket && [self.tcpScoket isConnected])
     {
         debugLog(@"Device is already connected over TCP!");
-        //[self.tcpScoket disconnect];
-        return NO;
+        // TODO: check if the two devices are same
+        // If the IP of both current connected and new request are same
+        // we should return connection success straightway
+        [self.tcpScoket setDelegate:nil];
+        [self.tcpScoket disconnect];
+        self.tcpScoket = nil;
+        [self initializeTCPSocket];
     }
+    debugLog(@"Connecting to IP : %@, over Port : %d", host, port);
     NSError *error = nil;
     bool didConnect = [self.tcpScoket connectToHost:host onPort:port error:&error];
     if (didConnect && error == nil)

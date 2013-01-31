@@ -23,6 +23,8 @@
     if ([NeatoUserHelper getNeatoUser])
     {
         // User is logged in, lets extend the auth key expiry
+        // When the Auth key is extended we do not notify the caller, so we dont need
+        // to retain 'self' here
         NeatoServerManager *manager = [[NeatoServerManager alloc] init];
         manager.delegate = self;
         [manager updateUserAuthToken:[NeatoUserHelper getUsersAuthToken]];
@@ -43,6 +45,30 @@
     NeatoServerManager *manager = [[NeatoServerManager alloc] init];
     manager.delegate = self;
     [manager loginNativeUser:email password:password];
+}
+
+-(void) loginSuccess:(NeatoUser *) user
+{
+    debugLog(@"");
+    [self notifyCallback:@selector(loginSuccess:callbackId:) object:user];
+}
+
+-(void) failedToCreateUserWithError:(NSError *) error
+{
+    debugLog(@"");
+    [self notifyCallback:@selector(failedToCreateUserWithError:callbackId:) object:error];
+}
+
+-(void) userCreated:(NeatoUser *) neatoUser
+{
+    debugLog(@"");
+    [self notifyCallback:@selector(userCreated:callbackId:) object:neatoUser];
+}
+
+-(void) loginFailedWithError:(NSError *)error
+{
+    debugLog(@"");
+    [self notifyCallback:@selector(loginFailedWithError:callbackId:) object:error];
 }
 
 -(void) loginFacebookUser:(NSString *) externalSocialId callbackID:(NSString *) callbackId
@@ -79,6 +105,12 @@
     manager.delegate = self;
     [manager createUser:neatoUser];
     
+}
+
+-(void) userCreationFailedWithError:(NSError *)error
+{
+    debugLog(@"");
+    [self notifyCallback:@selector(userCreationFailedWithError:callbackId:) object:error];
 }
 
 
@@ -129,6 +161,11 @@
     [manager logoutUserEmail:email authToken:auth_token];
 }
 
+-(void) logoutRequestFailedWithEror:(NSError *)error
+{
+    debugLog(@"");
+    [self notifyCallback:@selector(logoutRequestFailedWithEror:callbackId:) object:error];
+}
 
 -(void) notifyCallback:(SEL) action
 {
@@ -154,11 +191,17 @@
 }
 
 
--(void) requestFailed:(NSError *) error
+-(void) failedToGetUserDetailsWithError:(NSError *)error
+{
+    debugLog(@"");
+    [self notifyCallback:@selector(failedToGetUserDetailsWithError:callbackId:) object:error];
+}
+
+/*-(void) requestFailed:(NSError *) error
 {
     debugLog(@"");
     [self notifyCallback:@selector(requestFailed:callbackId:) object:error];
-}
+}*/
 
 
 -(void) gotUserDetails:(NeatoUser *)neatoUser
@@ -168,6 +211,11 @@
     [self notifyCallback:@selector(gotUserDetails:callbackId:) object:neatoUser];
 }
 
+-(void) failedToGetRobotDetailsWihError:(NSError *)error
+{
+    debugLog(@"");
+    [self notifyCallback:@selector(failedToGetRobotDetailsWihError:callbackId:) object:error];
+}
 
 -(void) gotRobotDetails:(NeatoRobot *)neatoRobot
 {
@@ -176,6 +224,11 @@
     [self notifyCallback:@selector(gotRobotDetails:callbackId:) object:neatoRobot];
 }
 
+-(void) robotCreationFailedWithError:(NSError *)error
+{
+    debugLog(@"");
+    [self notifyCallback:@selector(robotCreationFailedWithError:callbackId:) object:error];
+}
 
 -(void) robotCreated
 {
@@ -183,6 +236,11 @@
     [self notifyCallback:@selector(robotCreated:)];
 }
 
+-(void) robotAssociationFailedWithError:(NSError *)error
+{
+    debugLog(@"");
+    [self notifyCallback:@selector(robotAssociationFailedWithError:callbackId:) object:error];
+}
 
 -(void) robotAssociatedWithUser:(NSString *)message robotId:(NSString *)robotId
 {

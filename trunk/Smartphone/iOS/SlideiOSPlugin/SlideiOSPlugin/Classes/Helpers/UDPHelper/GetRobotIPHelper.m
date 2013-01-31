@@ -4,6 +4,8 @@
 #import "NetworkUtils.h"
 #import "UDPSocket.h"
 #import "UDPCommandHelper.h"
+#import "CommandTracker.h"
+#import "AppHelper.h"
 
 #define TAG_GET_ROBOT_IP_COMMAND 9002
 
@@ -13,22 +15,25 @@
 @property(nonatomic, readwrite) SEL callbackAction;
 @property(nonatomic, retain) GetRobotIPHelper *retained_self;
 @property(nonatomic, retain) NSString *serialId;
+@property(nonatomic, retain) NSTimer *socketTimer;
 
 -(void) sendGetRobotIPCommand;
 -(void) closeSocketAfterTimerExpires;
 -(void) parseReceivedCommand:(NSString *)xml fromAddress:(NSString *) address overPort:(uint16_t) port;
 -(void) closeSocket:(id) value;
-
+-(void) notifyGetIPFailed;
 @end
 
 @implementation GetRobotIPHelper
 @synthesize callbackAction = _callbackAction, callbackDelegate = _callbackDelegate, retained_self = _retained_self,serialId = _serialId;
+@synthesize socketTimer = _socketTimer;
 
 -(void) getRobotIPAddress:(NSString *) serialId delegate:(id)delegate action:(SEL)action
 {
     if (delegate == nil || action == nil)
     {
         debugLog(@"Delegate or action not set!!");
+        [self notifyGetIPFailed];
         return;
     }
     self.retained_self = self;
@@ -38,8 +43,33 @@
     self.serialId = serialId;
     
     [UDPSocket getSharedUDPSocket].delegate = self;
+    if (![[UDPSocket getSharedUDPSocket] prepareUDPSocket])
+    {
+        debugLog(@"Could not start UDP socket!!");
+        [self notifyGetIPFailed];
+        [[UDPSocket getSharedUDPSocket] closeSocket];
+        return;
+    }
+    
+    if(![[UDPSocket getSharedUDPSocket] bindOnPort:GET_IP_OF_SELECTED_ROBOT_FIND_PORT])
+    {
+        debugLog(@"could not bind UDP socket on port %d",GET_IP_OF_SELECTED_ROBOT_FIND_PORT);
+        [self notifyGetIPFailed];
+        [[UDPSocket getSharedUDPSocket] closeSocket];
+        return;
+    }
     
     [self sendGetRobotIPCommand];
+}
+
+-(void) notifyGetIPFailed
+{
+    @synchronized(self)
+    {
+        [self.callbackDelegate performSelectorOnMainThread:self.callbackAction withObject:nil waitUntilDone:NO];
+        self.callbackDelegate = nil;
+        self.retained_self = nil;
+    }
 }
 
 -(void) sendGetRobotIPCommand
@@ -50,22 +80,26 @@
     if (!([[UDPSocket getSharedUDPSocket] enableBroadcast:YES]))
     {
         debugLog(@"Cound not enable broadcast on UDP socket. Would not send 'findNearByRobotsCommand'!!");
-        self.retained_self = nil;
+        [self notifyGetIPFailed];
         [[UDPSocket getSharedUDPSocket] closeSocket];
-        self.callbackDelegate = nil;
         return;
     }
 
     if (!([[UDPSocket getSharedUDPSocket] beginReceiving]))
     {
         debugLog(@"Could not receive data on UDP socket!!");
-        self.retained_self = nil;
+        [self notifyGetIPFailed];
         [[UDPSocket getSharedUDPSocket] closeSocket];
-        self.callbackDelegate = nil;
         return;
     }
     
-    [[UDPSocket getSharedUDPSocket] sendData:[[[UDPCommandHelper alloc] init] getRobotIPAddressCommand:self.serialId] host:[[[NetworkUtils alloc] init] getSubnetIPAddress] port:UDP_SMART_APPS_BROADCAST_PORT tag:TAG_GET_ROBOT_IP_COMMAND];
+    NSString *requestId = [AppHelper generateUniqueString];
+    NSString *xmlCommand = [[[UDPCommandHelper alloc] init] getRobotIPAddressCommandRequestId:requestId robotId:self.serialId] ;
+    
+    CommandTracker *tracker = [[CommandTracker alloc] init];
+    [tracker addCommandToTracker:xmlCommand withRequestId:requestId];
+    
+    [[UDPSocket getSharedUDPSocket] sendData:[xmlCommand dataUsingEncoding:NSUTF8StringEncoding] host:[[[NetworkUtils alloc] init] getSubnetIPAddress] port:UDP_SMART_APPS_BROADCAST_NEW_SEND_PORT tag:TAG_GET_ROBOT_IP_COMMAND];
     
     [self closeSocketAfterTimerExpires];
 }
@@ -73,7 +107,7 @@
 -(void) closeSocketAfterTimerExpires
 {
     debugLog(@"");
-    [NSTimer scheduledTimerWithTimeInterval:TIME_BEFORE_SOCKET_CLOSES target:self selector:@selector(closeSocket:) userInfo:nil repeats:NO];
+    self.socketTimer = [NSTimer scheduledTimerWithTimeInterval:TIME_BEFORE_SOCKET_CLOSES target:self selector:@selector(closeSocket:) userInfo:nil repeats:NO];
 }
 
 -(void) closeSocket:(id) value
@@ -90,15 +124,17 @@
         if ([[[CommandsHelper alloc] init] isResponseToGetRobotIP:xml])
         {
             debugLog(@"Get robot ip response = %@", xml);
-            [self closeSocket:nil];
+            [[[CommandsHelper alloc]init] removeCommandFromTracker:xml];
+            [self.socketTimer invalidate];
+            
             NeatoRobot *robot = [[[CommandsHelper alloc] init] getRemoteRobot:xml];
             robot.ipAddress = address;
             robot.port  = port;
            
             [self.callbackDelegate performSelectorOnMainThread:self.callbackAction withObject:robot waitUntilDone:NO];
             self.callbackDelegate = nil;
-            self.callbackDelegate = nil;
             self.retained_self = nil;
+            [self closeSocket:nil];
         }
     }
 }
@@ -150,6 +186,7 @@ withFilterContext:(id)filterContext
 - (void)udpSocketDidClose:(GCDAsyncUdpSocket *)sock withError:(NSError *)error
 {
     debugLog(@"udpSocketDidClose called");
+    // If we do not receive any response till the socket times out -  we notify failure
     @synchronized(self)
     {
         [self.callbackDelegate performSelectorOnMainThread:self.callbackAction withObject:nil waitUntilDone:NO];

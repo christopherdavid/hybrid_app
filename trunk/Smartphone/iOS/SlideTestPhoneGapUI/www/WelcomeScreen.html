@@ -11,9 +11,8 @@
 <!-- Java scripts -->
     <script type="text/javascript" src="cordova-2.1.0.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript" charset="utf-8" src="js/pluginmanager.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/neatosmartapphelper.js"></script>
-
+    <script type="text/javascript" charset="utf-8" src="js/welcomescreen.js"></script>
 
 </head>
 	<body>
@@ -26,22 +25,17 @@
 	<br>
 	<label>Already Have A Neato Account?</label>
 	<br>
-	<input type="button" id="btnGoToLogin" value="Log in" class="defaultButton" onClick="loadLoginScreen();" disabled></input>
+	<input type="button" id="btnGoToLogin" value="Log in" class="defaultButton"></input>
 	<br>
 	<label>New To Neato?</label>
 	<br>
-	<input type="button" id="btnGoToRegister" value="Create New Account" class="defaultButton"  disabled></input > 
+	<input type="button" id="btnGoToRegister" value="Create New Account" class="defaultButton"></input > 
 	<br>
 	<br>
 	<br>
 	<label>Just show me the demo!</label>
 	<br>
-	<input type="button" id="btnDemoLogin" value="Login as Demo1" class="defaultButton" onclick="loginAsDemo(successLoginAsDemo, errorLoginAsDemo);" ></input>
+	<input type="button" id="btnDemoLogin" value="Login as Demo1" class="defaultButton"></input>
 	</section>
 	</body>
-    <script>
-        function loadLoginScreen() {
-             window.location.assign("LoginScreen.html");
-        }
-    </script>
 </html>

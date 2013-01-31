@@ -5,7 +5,9 @@
 #import "UDPSocket.h"
 #import "CommandsHelper.h"
 #import "UDPCommandHelper.h"
-
+#import "NeatoConstants.h"
+#import "AppHelper.h"
+#import "CommandTracker.h"
 
 #define TAG_FIND_ROBOT_COMMAND 9001
 
@@ -15,23 +17,24 @@
 @property(nonatomic, readwrite) SEL callbackAction;
 @property(nonatomic, retain) FindNearByRobotsHelper *retained_self;
 @property(nonatomic, retain) NSMutableArray *receivedCommands;
-@property(nonatomic, retain) NSMutableArray *foundRobots;
+@property(nonatomic, retain) NSMutableDictionary *foundRobotsMap;
 
 
 -(void) sendDiscoverRobotsCommand;
 -(void) closeSocketAfterTimerExpires;
 -(void) parseReceivedCommands;
-
+-(void) notifyFindRobotsFailed;
 @end
 
 @implementation FindNearByRobotsHelper
-@synthesize callbackAction = _callbackAction, callbackDelegate = _callbackDelegate, retained_self = _retained_self, receivedCommands = _receivedCommands,foundRobots = _foundRobots;
+@synthesize callbackAction = _callbackAction, callbackDelegate = _callbackDelegate, retained_self = _retained_self, receivedCommands = _receivedCommands,foundRobotsMap = _foundRobotsMap;
 
--(void) findNearbyRobots:(id)delegate action:(SEL)action
+-(void) findNearbyRobots:(id) delegate action:(SEL) action
 {
     if (delegate == nil || action == nil)
     {
         debugLog(@"Delegate or action not set!!");
+        [self notifyFindRobotsFailed];
         return;
     }
     self.retained_self = self;
@@ -43,13 +46,35 @@
     if (![[UDPSocket getSharedUDPSocket] prepareUDPSocket])
     {
         debugLog(@"Could not start UDP socket!!");
-        self.retained_self = nil;
+        [self notifyFindRobotsFailed];
         [[UDPSocket getSharedUDPSocket] closeSocket];
-        self.callbackDelegate = nil;
         return;
     }
+    
+    if(![[UDPSocket getSharedUDPSocket] bindOnPort:FIND_NEARBY_ROBOTS_BIND_PORT])
+    {
+        debugLog(@"could not bind UDP socket on port %d",FIND_NEARBY_ROBOTS_BIND_PORT);
+        [self notifyFindRobotsFailed];
+        [[UDPSocket getSharedUDPSocket] closeSocket];
+        return;
+    }
+    else
+    {
+        debugLog(@"Bind successfull!");
+    }
+    
     self.receivedCommands = [[NSMutableArray alloc] init];
     [self sendDiscoverRobotsCommand];
+}
+
+-(void) notifyFindRobotsFailed
+{
+    @synchronized(self)
+    {
+        [self.callbackDelegate performSelectorOnMainThread:self.callbackAction withObject:nil waitUntilDone:NO];
+        self.callbackDelegate = nil;
+        self.retained_self = nil;
+    }
 }
 
 -(void) sendDiscoverRobotsCommand
@@ -59,22 +84,26 @@
     if (!([[UDPSocket getSharedUDPSocket] enableBroadcast:YES]))
     {
         debugLog(@"Cound not enable broadcast on UDP socket. Would not send 'findNearByRobotsCommand'!!");
-        self.retained_self = nil;
+        [self notifyFindRobotsFailed];
         [[UDPSocket getSharedUDPSocket] closeSocket];
-        self.callbackDelegate = nil;
         return;
     }
     
     if (!([[UDPSocket getSharedUDPSocket] beginReceiving]))
     {
         debugLog(@"Could not receive data on UDP socket!!");
-        self.retained_self = nil;
+        [self notifyFindRobotsFailed];
         [[UDPSocket getSharedUDPSocket] closeSocket];
-        self.callbackDelegate = nil;
         return;
     }
     
-    [[UDPSocket getSharedUDPSocket] sendData:[[[UDPCommandHelper alloc] init] getFindRobotsCommand] host:[[[NetworkUtils alloc] init] getSubnetIPAddress] port:UDP_SMART_APPS_BROADCAST_PORT tag:TAG_FIND_ROBOT_COMMAND];
+    NSString *requestId = [AppHelper generateUniqueString];
+    NSString *xmlCommand = [[[UDPCommandHelper alloc] init] getFindRobotsCommand:requestId];
+    
+    CommandTracker *tracker = [[CommandTracker alloc] init];
+    [tracker addCommandToTracker:xmlCommand withRequestId:requestId];
+
+    [[UDPSocket getSharedUDPSocket] sendData:[xmlCommand dataUsingEncoding:NSUTF8StringEncoding] host:[[[NetworkUtils alloc] init] getSubnetIPAddress] port:UDP_SMART_APPS_BROADCAST_NEW_SEND_PORT tag:TAG_FIND_ROBOT_COMMAND];
     
     [self closeSocketAfterTimerExpires];
 }
@@ -113,15 +142,15 @@ withFilterContext:(id)filterContext
     }
 }
 
+
 -(void) parseReceivedCommands
 {
     debugLog(@"");
     if (!self.receivedCommands || [self.receivedCommands count] == 0)
     {
         debugLog(@"No replies received. Robots not found!");
-        self.retained_self = nil;
+        [self notifyFindRobotsFailed];
         [[UDPSocket getSharedUDPSocket] closeSocket];
-        self.callbackDelegate = nil;
         return;
     }
     
@@ -133,10 +162,18 @@ withFilterContext:(id)filterContext
             [self remoteRobotFound:xmlCommand];
         }
     }
+   
+    
+    // Once we have processed all the commands, we should remove the commands from
+    // local storage
+    for (NSString *xmlCommand in self.receivedCommands) {
+        [[[CommandsHelper alloc]init] removeCommandFromTracker:xmlCommand];
+    }
+    
     
     @synchronized(self)
     {
-        [self.callbackDelegate performSelectorOnMainThread:self.callbackAction withObject:self.foundRobots waitUntilDone:NO];
+        [self.callbackDelegate performSelectorOnMainThread:self.callbackAction withObject:[self.foundRobotsMap allValues] waitUntilDone:NO];
         self.callbackDelegate = nil;
         self.retained_self = nil;
     }
@@ -145,11 +182,11 @@ withFilterContext:(id)filterContext
 -(void) remoteRobotFound:(NSString *) xmlCommand
 {
     NeatoRobot *robot = [[[CommandsHelper alloc] init] getRemoteRobot:xmlCommand];
-    if (self.foundRobots == nil)
+    if (self.foundRobotsMap == nil)
     {
-        self.foundRobots = [[NSMutableArray alloc] init];
+        self.foundRobotsMap = [[NSMutableDictionary alloc] init];
     }
-    [self.foundRobots addObject:robot];
+    [self.foundRobotsMap setValue:robot forKey:robot.robotId];
 }
 
 /**

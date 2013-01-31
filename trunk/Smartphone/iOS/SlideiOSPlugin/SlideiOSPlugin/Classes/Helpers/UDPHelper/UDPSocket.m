@@ -1,7 +1,26 @@
 #import "UDPSocket.h"
 #import "LogHelper.h"
 
-#define UDP_SMART_APPS_BROADCAST_PORT 12346
+
+// Internal class to wrap packet data
+@interface UDPPacket : NSObject
+
+@property(nonatomic, retain) NSData *commandData;
+@property(nonatomic, retain) NSString *remoteIPAddress;
+@property(nonatomic, readwrite) int remotePort;
+@property(nonatomic, readwrite) long tag;
+
+@end
+
+@implementation UDPPacket
+@synthesize commandData = _commandData;
+@synthesize remoteIPAddress = _remoteIPAddress;
+@synthesize remotePort = _remotePort;
+@synthesize tag = _tag;
+
+@end
+
+
 static UDPSocket *sharedInstance = nil;
 @interface UDPSocket()
 
@@ -10,6 +29,8 @@ static UDPSocket *sharedInstance = nil;
 
 @implementation UDPSocket
 @synthesize delegate = _delegate;
+
+
 
 +(UDPSocket *) getSharedUDPSocket
 {
@@ -60,20 +81,41 @@ static UDPSocket *sharedInstance = nil;
 -(BOOL) prepareUDPSocket
 {
     debugLog(@"");
-    if (!self.udpSocket || [self.udpSocket isClosed])
+    // || [self.udpSocket isClosed]
+    if (!self.udpSocket)
     {
         debugLog(@"Binding socket");
         self.udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-        NSError *bindError = nil;
-        [self.udpSocket bindToPort:UDP_SMART_APPS_BROADCAST_PORT error:&bindError];
-        return (bindError == nil);
+        
+        if(self.udpSocket)
+        {
+            return YES;
+        }
+        else
+        {
+            return NO;
+        }
     }
     else
     {
         return YES;
     }
 }
-
+-(BOOL) bindOnPort:(int)bindPort
+{
+    debugLog(@"");
+    if ([self prepareUDPSocket])
+    {
+        NSError *bindError = nil;
+        [self.udpSocket bindToPort:bindPort error:&bindError];
+        return (bindError == nil);
+    }
+    else
+    {
+        debugLog(@"UDP socket is not prepared");
+        return NO;
+    }
+}
 -(BOOL) receiveOnce
 {
     if ([self prepareUDPSocket])
@@ -94,12 +136,28 @@ static UDPSocket *sharedInstance = nil;
     }
 }
 
+// Sends the data over UDP socket
+// To make up for loss of UDP packets over the network, we send every command three
+// times, at a inteval of time
 -(void) sendData:(NSData *)data host:(NSString *) host port:(int) port tag:(long) tag
 {
     debugLog(@"");
     if ([self prepareUDPSocket])
     {
-        [self.udpSocket sendData:data toHost:host port:port withTimeout:-1 tag:tag];
+        UDPPacket *packet = [[UDPPacket alloc] init];
+        packet.commandData = data;
+        packet.remoteIPAddress = host;
+        packet.remotePort = port;
+        packet.tag = tag;
+        
+        debugLog(@"Will schedule timer");
+        // Schedule timer to send the data three times at a interval of 5 mili seconds
+        for (int count = 0; count < 3; count++) {
+            float trigger = ((count + 1) * 0.005);
+            debugLog(@"Scheduling a timer for : %f", trigger);
+            [NSTimer scheduledTimerWithTimeInterval:trigger target:self selector:@selector(sendUDPPacket:) userInfo:packet repeats:NO];
+        }
+       
     }
     else
     {
@@ -108,13 +166,21 @@ static UDPSocket *sharedInstance = nil;
 }
 
 
+-(void) sendUDPPacket:(NSTimer *) timer
+{
+    debugLog(@"");
+    UDPPacket *packet = timer.userInfo;
+    [self.udpSocket sendData:packet.commandData toHost:packet.remoteIPAddress port:packet.remotePort withTimeout:-1 tag:packet.tag];
+}
+
 -(BOOL) beginReceiving
 {
+    debugLog(@"");
     if ([self prepareUDPSocket])
     {
         NSError *error = nil;
         [self.udpSocket beginReceiving:&error];
-        if (!(error == nil))
+        if ((error != nil))
         {
             debugLog(@"Cound not start receive on socket.");
             return NO;

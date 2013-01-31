@@ -5,14 +5,12 @@
 
 -(id) initWithDictionary:(NSDictionary *) data
 {
-    id obj = [super init];
-    if (obj)
+    if ((self = [super init]))
     {
         self.provider = [data valueForKey:@"provider"];
         self.externalSocialId = [data valueForKey:@"external_social_id"];
-        return obj;
     }
-    return nil;
+    return self;
 }
 
 @end

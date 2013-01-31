@@ -11,5 +11,8 @@
 -(BOOL) beginReceiving;
 -(void) closeSocket;
 -(BOOL) prepareUDPSocket;
+-(BOOL) bindOnPort:(int)bindPort;
 -(void) sendData:(NSData *)data host:(NSString *) host port:(int) port tag:(long) tag;
+
+
 @end

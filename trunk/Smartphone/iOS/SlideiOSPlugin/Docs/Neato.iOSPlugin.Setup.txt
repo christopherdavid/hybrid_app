@@ -2,8 +2,7 @@ Neato SmartApp iOS Plugin - Setup
 
 Raja Software
 Created: 01/02/2013
-Last updated: 01/16/2013
-
+Last updated: 01/30/2013
 
 iOS Plugin Component Overview
 
@@ -155,6 +154,7 @@ Adding 'SlideiOSPlugin' static library to a different project:
 - SlideiOSPlugin has following dependencies:(which the main project should include)
   - CFNetwork.framework
   - Security.framework
+  - Coredata.framework
   - libsqlite3.dylib
   - libresolv.dylib
   - libxml2.dylib
@@ -164,12 +164,32 @@ Adding 'SlideiOSPlugin' static library to a different project:
 
 - To include these files go to ->'Build tab' in xCode->Link binary with libraries-> click on + button at the bottom.
   All of above framework are provided by Apple, so they will show up once you start typing the name.
-
+  
 - Apart from this the main project should add '/usr/include/libxml2' in 
   the 'Header search path' section in 'Build settings' tab. For this, go to Build settings->Header search paths->click on + and 
   then add '/usr/include/libxml2' for both debug and release sections.
 
+Last step, including core data bundle:
+- SlideiOSPlugin stores data locally using Core data framework. For Core data to work, the 
+  main project must include a bundle file, that get created after SlideiOSPlugin app compiles. 
+  By default the file would be create inside SlideiOSPlugin/ResourceBundle/ folder.
+- To create this file, select SlideiOSPlugin target from the target selection drop down in xCode.
+- Clean and build the target (SlideiOSPlugin) from 'Product' menu
+- After build succeeds, NeatoDataStore.bundle should be created under 'SlideiOSPlugin/ResourceBundle/'.
+
+- Main project must include this file in the 'Copy Bundle Resources' section of 'Build Phases' tab,
+  so do the following:
+  - Go to build phases tab of main project
+  - Click on the 'plus' sign at the bottom of section 'Copy Bundle Resources'
+  - In the next pop-up click on 'Add other' button.
+  - Browse to SlideiOSPlugin/ResourceBundle folder.
+  - Select 'NeatoDataStore.bundle' file and then click open
+  - In the next pop-up make sure that 'copy items into destination group's folder' is UNCHECKED.
+  - Click Finish.
+
 - Done. After this entire workspace should compile and run.
 
+UID: If you have any problems including the plugin in your project, please check in your
+changes (even if they don't build) so we can make the necessary changes.
 
 End.

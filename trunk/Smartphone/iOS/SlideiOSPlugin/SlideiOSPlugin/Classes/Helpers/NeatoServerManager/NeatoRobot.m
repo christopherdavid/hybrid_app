@@ -5,16 +5,14 @@
 
 -(id) initWithDictionary:(NSDictionary *) data
 {
-    id obj = [super init];
-    if (obj)
+    if ((self = [super init]))
     {
         self.chatId = [data valueForKey:@"chat_id"];
         self.robotId = [data valueForKey:@"id"];
         self.name = [data valueForKey:@"name"];
         self.serialNumber = [data valueForKey:@"serial_number"];
-        return obj;
     }
-    return nil;
+    return self;
 }
 
 

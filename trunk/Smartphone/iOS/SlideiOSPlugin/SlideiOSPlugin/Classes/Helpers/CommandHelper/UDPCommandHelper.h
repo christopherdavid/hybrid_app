@@ -2,7 +2,7 @@
 
 @interface UDPCommandHelper : NSObject
 
--(NSData*) getFindRobotsCommand;
--(NSData *) getRobotIPAddressCommand:(NSString *) serialId;
+-(NSString*) getFindRobotsCommand:(NSString *) requestId;
+-(NSString *) getRobotIPAddressCommandRequestId:(NSString *) requestId robotId:(NSString *) robotId;
 
 @end

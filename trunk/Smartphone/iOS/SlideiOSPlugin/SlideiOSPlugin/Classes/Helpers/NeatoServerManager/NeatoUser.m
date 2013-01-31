@@ -8,8 +8,7 @@
 
 -(id) initWithDictionary:(NSDictionary *) dictionary
 {
-    id obj = [super init];
-    if (obj)
+    if ((self = [super init]))
     {
         self.chatId = [dictionary valueForKey:@"chat_id"];
         self.chatPassword = [dictionary valueForKey:@"chat_pwd"];
@@ -40,10 +39,8 @@
             }
             [self.socialNetworks addObject:network];
         }
-        
-        return obj;
     }
-    return nil;
+    return self;
 }
 
 @end
