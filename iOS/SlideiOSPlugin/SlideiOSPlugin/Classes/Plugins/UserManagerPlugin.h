@@ -8,14 +8,15 @@
 
 @interface UserManagerPlugin : CDVPlugin <UserManagerProtocol>
 
-- (void) login:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void) logout:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void) createUser:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void) isLoggedIn:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void) getUserDetails:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void) associateRobot:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void) getAssociatedRobots:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void) disassociateRobot:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void) disassociateAllRobots:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) login:(CDVInvokedUrlCommand *)command;
+- (void) logout:(CDVInvokedUrlCommand *)command;
+- (void) createUser:(CDVInvokedUrlCommand *)command;
+- (void) isLoggedIn:(CDVInvokedUrlCommand *)command;
+- (void) getUserDetails:(CDVInvokedUrlCommand *)command;
+- (void) associateRobot:(CDVInvokedUrlCommand *)command;
+- (void) getAssociatedRobots:(CDVInvokedUrlCommand *)command;
+- (void) disassociateRobot:(CDVInvokedUrlCommand *)command;
+- (void) disassociateAllRobots:(CDVInvokedUrlCommand *)command;
+- (void) debugGetConfigDetails:(CDVInvokedUrlCommand *)command;
 
 @end

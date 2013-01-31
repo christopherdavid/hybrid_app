@@ -1,9 +1,9 @@
 #import "NeatoDBHelper.h"
 #import "LogHelper.h"
 #import "sqlite3.h"
+#import "AppHelper.h"
 
 
-#define ENABLE_DB_CREATION_IN_DOCUMENTS_DIR 1
 
 #define DATABASE_NAME                   @"neato_smartapp_database.db"
 
@@ -87,7 +87,7 @@ static NeatoDBHelper *sharedInstance  = nil;
     sqlite3 *mNeatoDatabase;
 }
 - (DWORD) createDatabaseIfNeeded;
-- (NSString *) getDBPath;
+- (NSURL *) getDBPath;
 - (DWORD) createNeatoUserTable;
 - (DWORD) createNeatoRobotTable;
 - (DWORD) createSocialNetworksTable;
@@ -130,21 +130,9 @@ static NeatoDBHelper *sharedInstance  = nil;
     return self;
 }
 
-- (NSString *) getDBPath
-{
-    NSArray *paths;
-    
-#ifdef ENABLE_DB_CREATION_IN_DOCUMENTS_DIR
-    
-    paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    
-#else
-    paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-#endif
-    
-    NSString *documentsDir = [paths objectAtIndex:0];
-    
-	return [documentsDir stringByAppendingPathComponent:DATABASE_NAME];
+- (NSURL *) getDBPath
+{    
+	return [[AppHelper getLocalCachePath] URLByAppendingPathComponent:DATABASE_NAME];
 }
 
 -(DWORD) createNeatoUserTable
@@ -203,7 +191,7 @@ static NeatoDBHelper *sharedInstance  = nil;
         
         @synchronized(self) {
             
-            NSString *databasePath = [self getDBPath];
+            NSString *databasePath = [[self getDBPath] path];
             
             const char *dbpath = [databasePath UTF8String];
             

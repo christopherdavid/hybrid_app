@@ -10,11 +10,19 @@
 #define KEY_USE_XMPP @"useXMPP"
 #define KEY_ROBOT_NAME @"robot_name"
 #define KEY_ROBOT_IP_ADDRESS @"robot_ipaddress"
-
-
+#define KEY_ATLAS_GRID_ID @"gridId"
+#define KEY_ATLAS_METADATA @"atlasMetadata"
+#define KEY_ATLAS_VERSION @"atlasVersion"
+#define KEY_ATLAS_ID  @"atlasId"
+#define KEY_ATLAS_GRID_DATA @"gridData"
 //Used for error
 #define KEY_ERROR_CODE @"errorCode"
 #define KEY_ERROR_MESSAGE @"errorMessage"
+
+#define ERROR_TYPE_UNKNOWN @"1001"
+#define ERROR_NETWORK_ERROR @"1002"
+#define ERROR_SERVER_ERROR @"1003"
+#define JSON_PARSING_ERROR @"1004"
 
 //Used by scheduler
 #define KEY_DAY @"day"

@@ -48,14 +48,28 @@
     self.retained_self = self;
     self.neatoRobot = robot;
     
-    debugLog(@"Will try o associate the robot with the logged-in user.");
+    debugLog(@"Will try to associate the robot with the logged-in user.");
     /*[TCPSocket getSharedTCPSocket].delegate = self;
     
     [[TCPSocket getSharedTCPSocket] connectHost:robot.ipAddress overPort:TCP_ROBOT_SERVER_SOCKET_PORT];*/
     
     NeatoServerManager *manager = [[NeatoServerManager alloc] init];
     manager.delegate = self;
-    [manager setRobotUserEmail:[NeatoUserHelper getLoggedInUserEmail] serialNumber:robot.serialNumber];
+    [manager setRobotUserEmail:[NeatoUserHelper getLoggedInUserEmail] serialNumber:robot.robotId];
+    
+}
+
+-(void) robotAssociationFailedWithError:(NSError *)error
+{
+    debugLog(@"Robot association failed with user. Will not connect over TCP.");
+    if ([self.delegate respondsToSelector:@selector(tcpConnectionDisconnected:)])
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate performSelector:@selector(tcpConnectionDisconnected:) withObject:error];
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
 }
 
 -(void) robotAssociatedWithUser:(NSString *)message robotId:(NSString *)robotId
@@ -148,7 +162,7 @@
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
     debugLog(@"");
-    [self notifyCallback:@selector(tcpConnectionDisconnected) withObject:err];
+    [self notifyCallback:@selector(tcpConnectionDisconnected:) withObject:err];
 }
 
 -(void) notifyCallback :(SEL) callbackAction withObject:(id) object
@@ -166,5 +180,6 @@
         });
     }
 }
+
 
 @end

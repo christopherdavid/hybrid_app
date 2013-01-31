@@ -1,21 +1,41 @@
 
+var NOTIFICATION_DISCOVERY_STARTED = 1;
+var NOTIFICATION_DISCOVERY_RESULT = 2;
+
+
+var KEY_MAP_TYPE_XML = 1;
+var KEY_MAP_TYPE_BLOB = 2;
+
+var SCHEDULAR_EVENT_TYPE_QUIET = 0;
+var SCHEDULAR_EVENT_TYPE_CLEAN = 1;
+
+var DAY_SUNDAY = 0;
+var DAY_MONDAY = 1;
+var DAY_TUEDAY = 2;
+var DAY_WEDNESDAY = 3;
+var DAY_THURSDAY = 4;
+var DAY_FRIDAY = 5;
+var DAY_SATURDAY = 6;
+
+var SCHEDULE_TYPE_BASIC = 0;
+var SCHEDULE_TYPE_ADVANCED = 1;
+
+var PLUGIN_JSON_KEYS  =  (function() {
+    var keys = {
+            'DISCOVERY_NOTIFICATION_KEY': 'notificationType', 
+        };
+
+        return {
+           get: function(name) { return keys[name]; }
+       };
+   })();
+
+
 //List of plugins.
-var USER_MANAGER_PLUGIN = "UserManagerPlugin";
-var ROBOT_MANAGER_PLUGIN = "RobotManagerPlugin";
+var USER_MANAGEMENT_PLUGIN = "UserManagement";
+var ROBOT_MANAGEMENT_PLUGIN = "RobotManagement";
 
-var TCP_CONNECTION_STATUS_CONNECTED  = 2001;
-var TCP_CONNECTION_STATUS_NOT_CONNECTED =  2002;
-
-var XMPP_CONNECTION_STATUS_CONNECTED  = 3001;
-var XMPP_CONNECTION_STATUS_NOT_CONNECTED  = 3002;
-
-var COMMAND_SENT_SUCCESS  = 5001;
-var COMMAND_SENT_FAILURE  = 5002;
-
-var ROBOT_ASSOCIATION_SUCCESS = 9001;
-var ROBOT_ASSOCIATION_FAILED  = 9002;
-
-//List of action types of USER manager
+//List of action types of USER manager 
 var ACTION_TYPE_LOGIN 							= "login";
 var ACTION_TYPE_LOGOUT 							= "logout";
 var ACTION_TYPE_ISLOGGEDIN 						= "isLoggedIn";
@@ -25,6 +45,8 @@ var ACTION_TYPE_ASSOCIATE_ROBOT					= "associateRobot";
 var ACTION_TYPE_GET_ASSOCIATED_ROBOTS 			= "getAssociatedRobots"
 var ACTION_TYPE_DISASSOCIATE_ROBOT 				= "disassociateRobot";
 var ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS 		= "disassociateAllRobots";
+// Debug method
+var ACTION_TYPE_DEBUG_GET_CONFIG_DETAILS 		= "debugGetConfigDetails";
 
 // List of actions types of Robot Manager
 var ACTION_TYPE_DISCOVER_NEARBY_ROBOTS 			= "discoverNearByRobots";
@@ -35,411 +57,329 @@ var ACIION_TYPE_GET_ROBOT_SCHEDULE 				= "getSchedule";
 var ACTION_TYPE_GET_ROBOT_MAP 					= "getRobotMap";
 var ACTION_TYPE_SET_MAP_OVERLAY_DATA  			= "setMapOverlayData";
 var ACTION_TYPE_DISCONNECT_DIRECT_CONNETION		= "disconnectDirectConnection";
-//functions with their success and error callbacks
+var ACTION_TYPE_GET_ROBOT_ATLAS_METADATA 		= "getRobotAtlasMetadata";
+var ACTION_TYPE_UPDATE_ROBOT_ATLAS_METADATA		= "updateRobotAtlasMetadata";
+var ACTION_TYPE_GET_ATLAS_GRID_DATA 			= "getAtlasGridData";
+var ACTION_TYPE_SET_ROBOT_NAME					= "setRobotName";
+var ACTION_TYPE_DELETE_ROBOT_SCHEDULE			= "deleteScheduleData";
 
-function loginUser (email, password, callbackSuccess, callbackError)
-{
-   // alert("neatosmartapphelper : loginUser called");
+//List of keys to send data:
+
+var KEY_EMAIL = 'email';
+var KEY_PASSWORD = 'password';
+var KEY_USER_NAME = 'username';
+
+//Used by robot plugin
+var KEY_COMMAND = 'command';
+var KEY_ROBOT_ID = 'robotId';
+var KEY_USE_XMPP = 'useXMPP';
+var KEY_ROBOT_NAME = "robotName";
+var KEY_ROBOT_IP_ADDRESS = "robotIpaddress";
+
+var KEY_SCHEDULE_TYPE = "scheduleType";
+
+var KEY_DAY = 'day';
+
+var KEY_EVENT_TYPE = 'eventType';
+var KEY_AREA = 'area';
+
+var KEY_START_TIME = "startTime";
+var KEY_END_TIME = "endTime";
+
+
+//COMMAND IDS:
+var COMMAND_ROBOT_START = 101;
+var COMMAND_ROBOT_STOP = 102;
+var COMMAND_ROBOT_JABBER_DETAILS = 103;
+var COMMAND_SEND_BASE = 104;
+
+
+if(!window.plugins) {
+	window.plugins = {};
+}
+
+if (!window.plugins.neatoPluginLayer) {
+	window.plugins.neatoPluginLayer = new NeatoPluginLayer();
+}
+
+if (!window.plugins.neatoPluginLayer.userMgr) {
+	window.plugins.neatoPluginLayer.userMgr = new UserMgr();
+}
+
+if (!window.plugins.neatoPluginLayer.robotMgr) {
+	window.plugins.neatoPluginLayer.robotMgr = new RobotMgr();
+}
+
+function NeatoPluginLayer() {
+	this.userMgr = null;
+	this.robotMgr = null;
+};
+
+
+function UserMgr() {
+
+};
+
+function RobotMgr() {
+
+};
+
+UserMgr.prototype.loginUser = function(email, password, callbackSuccess, callbackError) {
 	var loginArray = {'email':email, 'password':password};
-
-    PluginManager.callNativeFunction(callbackSuccess, callbackError, USER_MANAGER_PLUGIN, ACTION_TYPE_LOGIN, JSON.stringify(loginArray));
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+                 ACTION_TYPE_LOGIN,[loginArray]);
 };
 
-function successLogin (result)
-{
-    //alert("SUCCESS Login: \r\n"+result );
-    //window.document.location.href = 'LoginAsDemo.html';
-    window.location.assign("UserHomePage.html");
-    
-}
-
-function errorLogin (error)
-{
-    //setResponseText(error);
-    document.getElementById('spinnerImg').style.display = "none";
-}
-
-function associateRobot (callbackSuccess, callbackError)
-{
-    var tempRobo = document.getElementById('serialNumbertxt').value;
-    var associateArray = {'email':'', 'robotId':tempRobo};
-    localStorage.setItem('tempRobotId', tempRobo);
-    document.getElementById('spinnerImg').style.display = "block";
-    PluginManager.callNativeFunction(callbackSuccess, callbackError, USER_MANAGER_PLUGIN, ACTION_TYPE_ASSOCIATE_ROBOT, JSON.stringify(associateArray));
-}
-
-function successAsssociateRobot (result)
-{
-    document.getElementById('spinnerImg').style.display = "none";
-    if (ROBOT_ASSOCIATION_SUCCESS === result.responseStat)
-    {
-        localStorage.setItem('robotId', result.robotId);
-        document.getElementById('serialNumbertxt').value = "Robot Associated";
-        document.getElementById('peerDevice').innerHTML = result.robotId;
-        
-        var robotId = localStorage.getItem('robotId');
-        document.getElementById('tcpstatusText').innerHTML = 'Not connected';
-        document.getElementById('disconnectTCPbtnDiv').style.display = "none";
-        document.getElementById('connectTCPbtnDiv').style.display = "block";
-        if (robotId)
-        {
-            document.getElementById('btnConnectTCP').value = "Connect with " + robotId;
-        }
-    }
-    else
-    {
-        document.getElementById('peerDevice').innerHTML = 'None';
-    }
-}
-
-function errorAsssociateRobot (error)
-{
-    document.getElementById('spinnerImg').style.display = "none";
-}
-
-function loginAsDemo (callbackSuccess, callbackError)
-{
-    //alert("neatosmartapphelper : loginAsDemo called");
-	var loginArray = {'email':'demo1@demo.com', 'password':'demo123'};
-    document.getElementById('spinnerImg').style.display = "block";
-    PluginManager.callNativeFunction(callbackSuccess, callbackError, USER_MANAGER_PLUGIN, ACTION_TYPE_LOGIN, JSON.stringify(loginArray));
+UserMgr.prototype.logoutUser = function(callbackSuccess, callbackError) {
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_LOGOUT, []);
 };
 
-function successLoginAsDemo (result)
-{
-    document.getElementById('spinnerImg').style.display = "none";
-    //alert("loginAsDemo");    // why it is hanging in this alert maybe check(in future)
-    window.location.assign("UserHomePage.html");
-    
-}
-
-function errorLoginAsDemo (error)
-{
-    document.getElementById('spinnerImg').style.display = "none";
-    //alert("ERROR loginAsDemo: \r\n"+error );
-}
-
-
-function logoutUser (callbackSuccess, callbackError)
-{
-    PluginManager.callNativeFunction(callbackSuccess, callbackError, USER_MANAGER_PLUGIN, ACTION_TYPE_LOGOUT);
-};
-
-function successLogout (result)
-{
-    //alert("SUCCESS Logout: \r\n"+result );
-    localStorage.setItem('robotId', null);
-    localStorage.removeItem('robotId');
-    window.location.assign("WelcomeScreen.html");
-}
-
-function errorLogout (error)
-{
-    alert("ERROR Logout: \r\n"+error );
-}
-
-function createUser (email, password, name, callbackSuccess, callbackError)
-{
-	var registerArray = {'email':email, 'password':password, 'username':name};
-    
-    PluginManager.callNativeFunction(callbackSuccess, callbackError, USER_MANAGER_PLUGIN, ACTION_TYPE_CREATE_USER, JSON.stringify(registerArray));
-};
-
-function successCreateUser(result)
-{
-    alert("SUCCESS CreateUser: \r\n"+result );
-}
-
-function errorCreateUser (error)
-{
-    alert("ERROR CreateUser: \r\n"+error );
-}
-
-function isUserLoggedIn (email, callbackSuccess, callbackError)
-{
+UserMgr.prototype.isUserLoggedIn = function(email, callbackSuccess, callbackError) {
 	var isUserLoggedInArray = {'email':email};
-	PluginManager(callbackSuccess, callbackError, USER_MANAGER_PLUGIN,
-                 ACTION_TYPE_ISLOGGEDIN, [isUserLoggedInArray]);
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_ISLOGGEDIN, [isUserLoggedInArray]);
 };
 
-function successIsUserLoggedIn(result)
-{
-    alert("SUCCESS isUserLoggedIn: \r\n"+result );
-}
-
-function errorIsUserLoggedIn (error)
-{
-    alert("ERROR isUserLoggedIn: \r\n"+error );
-}
-
-//robotManagerPlugin methods with their success and error returns
-function findNearbyRobots(callbackSuccess,callbackError)
-{
-    //alert("findNearbyRobots(javascript) called");
-    var findRobotsArray = {};
-    document.getElementById('spinnerImg').style.display = "block";
-    PluginManager.callNativeFunction(callbackSuccess, callbackError, ROBOT_MANAGER_PLUGIN,ACTION_TYPE_DISCOVER_NEARBY_ROBOTS, findRobotsArray);
-    
-}
-function successfindNearbyRobots(result)
-{
-    document.getElementById('spinnerImg').style.display = "none";
-    if(result.length==0)
-    {
-         alert("No robots found. Check if the device is connected over wifi and make sure that both device and robot are on the same local network.");
-    }
-    else
-    {
-        neatoSmartApp.setRobotListPage(result);
-    }
-}
-function errorfindnearbyRobots()
-{
-    document.getElementById('spinnerImg').style.display = "none";
-}
-function directConnection(robotId,callbackSuccess,callbackError)
-{
-    var connectPeerCommandArray = {'robotId':robotId};
-    PluginManager.callNativeFunction(callbackSuccess, callbackError, ROBOT_MANAGER_PLUGIN,ACTION_TYPE_TRY_CONNECT_CONNECTION,JSON.stringify(connectPeerCommandArray));
-    
-}
-function successDirectConnection(result)
-{
-    if (result === TCP_CONNECTION_STATUS_CONNECTED)
-    {
-        var robotId = localStorage.getItem('robotId');
-        document.getElementById('spinnerImg').style.display = "none";
-        document.getElementById('tcpstatusText').innerHTML = 'Connected';
-        document.getElementById('connectTCPbtnDiv').style.display = "none";
-        document.getElementById('disconnectTCPbtnDiv').style.display = "block";
-        document.getElementById('peerDevice').innerHTML = robotId;
-    }
-    else
-    {
-        var robotId = localStorage.getItem('robotId');
-        document.getElementById('tcpstatusText').innerHTML = 'Not connected';
-        document.getElementById('disconnectTCPbtnDiv').style.display = "none";
-        document.getElementById('connectTCPbtnDiv').style.display = "block";
-        document.getElementById('peerDevice').innerHTML = "None";
-        if (robotId)
-        {
-            document.getElementById('btnConnectTCP').value = "Connect with " + robotId;
-        }
-    }
-    
-}
-function errorDirectConnection()
-{
-}
-
-
-function startCleaning(callbackSuccess,callbackError)
-{
-    var robotId = localStorage.getItem('robotId');
-    document.getElementById('spinnerImg').style.display = "block";
-    var commandArray = {'robotId':robotId, 'commandId':101};
-    PluginManager.callNativeFunction(callbackSuccess, callbackError, ROBOT_MANAGER_PLUGIN,ACTION_TYPE_SEND_COMMAND_TO_ROBOT,JSON.stringify(commandArray));
-    
-}
-
-function successStartCleaning(value)
-{
-    document.getElementById('spinnerImg').style.display = "none";
-    if (value == COMMAND_SENT_SUCCESS)
-    {
-    
-    }
-    else
-    {
-        
-    }
-}
-
-function errorStartCleaning(value)
-{
-}
-
-function disconnectTCP(callbackSuccess,callbackError)
-{
-    var robotId = localStorage.getItem('robotId');
-    var commandArray = {'robotId':robotId};
-    document.getElementById('spinnerImg').style.display = "block";
-    PluginManager.callNativeFunction(callbackSuccess, callbackError, ROBOT_MANAGER_PLUGIN,ACTION_TYPE_DISCONNECT_DIRECT_CONNETION,JSON.stringify(commandArray));
-}
-
-function successDisconnectTCP(value)
-{
-    if (value === TCP_CONNECTION_STATUS_NOT_CONNECTED)
-    {
-        var robotId = localStorage.getItem('robotId');
-        document.getElementById('tcpstatusText').innerHTML = 'Not connected';
-        document.getElementById('disconnectTCPbtnDiv').style.display = "none";
-        document.getElementById('connectTCPbtnDiv').style.display = "block";
-        if (robotId)
-        {
-            document.getElementById('btnConnectTCP').value = "Connect with " + robotId;
-        }
-    }
-    else
-    {
-        alert('still connected over TCP');
-    }
-    document.getElementById('spinnerImg').style.display = "none";
-}
-
-
-function errorDisconnectTCP(value)
-{
-}
-
-function connectTCP(callbackSuccess,callbackError)
-{
-    var robotId = localStorage.getItem('robotId');
-    document.getElementById('spinnerImg').style.display = "block";
-    directConnection(robotId,callbackSuccess,callbackError);
-}
-
-function successConnectTCP(value)
-{
-    if (value === TCP_CONNECTION_STATUS_CONNECTED)
-    {
-        document.getElementById('spinnerImg').style.display = "none";
-        document.getElementById('tcpstatusText').innerHTML = 'Connected';
-        document.getElementById('connectTCPbtnDiv').style.display = "none";
-        document.getElementById('disconnectTCPbtnDiv').style.display = "block";
-    }
-    else
-    {
-        var robotId = localStorage.getItem('robotId');
-        document.getElementById('spinnerImg').style.display = "none";
-        document.getElementById('tcpstatusText').innerHTML = 'Not connected';
-        document.getElementById('disconnectTCPbtnDiv').style.display = "none";
-        document.getElementById('connectTCPbtnDiv').style.display = "block";
-        if (robotId)
-        {
-            document.getElementById('btnConnectTCP').value = "Connect with " + robotId;
-        }
-    }
-    document.getElementById('spinnerImg').style.display = "none";
-}
-
-
-function errorConnectTCP(value)
-{
-    /*document.getElementById('spinnerImg').style.display = "none";
-    var robotId = localStorage.getItem('robotId');
-    document.getElementById('tcpstatusText').innerHTML = 'Not connected';
-    document.getElementById('disconnectTCPbtnDiv').style.display = "none";
-    document.getElementById('connectTCPbtnDiv').style.display = "block";
-    if (robotId)
-    {
-        document.getElementById('btnConnectTCP').value = "Connect with " + robotId;
-    }*/
-}
-
-function onUserHomeLoaded()
-{
-    var robotId = localStorage.getItem('robotId');
-    if (robotId && robotId != null && robotId != 'null') {
-        //alert(robotId);
-        document.getElementById('peerDevice').innerHTML = robotId;
-        document.getElementById('btnConnectTCP').value = "Connect with " + robotId;
-        document.getElementById('connectTCPbtnDiv').style.display = "block";
-        document.getElementById('disconnectTCPbtnDiv').style.display = "none";
-    }
-    else
-    {
-        document.getElementById('disconnectTCPbtnDiv').style.display = "none";
-    }
-}
-
-
-function stopCleaning(callbackSuccess,callbackError)
-{
-    var robotId = localStorage.getItem('robotId');
-    document.getElementById('spinnerImg').style.display = "block";
-    var commandArray = {'robotId':robotId, 'commandId':102};
-    PluginManager.callNativeFunction(callbackSuccess, callbackError, ROBOT_MANAGER_PLUGIN,ACTION_TYPE_SEND_COMMAND_TO_ROBOT,JSON.stringify(commandArray));
-    
-}
-
-function successStopCleaning(value)
-{
-    document.getElementById('spinnerImg').style.display = "none";
-    if (value == COMMAND_SENT_SUCCESS)
-    {
-        
-    }
-    else
-    {
-        
-    }
-}
-
-function errorStopCleaning(value)
-{
-
-}
-
-var neatoSmartApp = {
-    
-deviceReady: function ()
-    {
-        isUserLoggedIn();
-    }
+UserMgr.prototype.createUser = function(email, password, name, callbackSuccess, callbackError) {
+	var registerArray = {'email':email, 'password':password, 'userName':name};
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_CREATE_USER, [registerArray]);
 };
 
-function isUserLoggedIn()
-{
-    /*var isUserLoggedInArray = {'email':'userEmail'};
-    PluginManager.callNativeFunction(isLoginSuccess, isLoginError, USER_MANAGER_PLUGIN, ACTION_TYPE_ISLOGGEDIN, JSON.stringify(isUserLoggedInArray));*/
-    var isUserLoggedInArray = {'email':'userEmail'};
-    PluginManager.callNativeFunction(isLoginSuccess, isLoginError, USER_MANAGER_PLUGIN, ACTION_TYPE_ISLOGGEDIN, [isUserLoggedInArray]);
-}
+UserMgr.prototype.getUserDetail = function(email, callbackSuccess, callbackError) {
+	var getUserDetailsArray = {'email': email};
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_USER_DETAILS, [getUserDetailsArray]);
+};
 
-function isLoginSuccess(value)
-{
-    if (value === 1)
-    {
-        //window.location.href = "UserHomePage.html";
-        window.open("UserHomePage.html",'_self');
-    }
-    else
-    {
-        //window.location.href = "WelcomeScreen.html";
-        localStorage.setItem('robotId', null);
-        window.open("WelcomeScreen.html",'_self');
-    }
-}
-function isLoginError(error)
-{
-    document.getElementById('spinnerImg').style.display = "none";
-}
+UserMgr.prototype.associateRobotCommand = function(email, robotId, callbackSuccess, callbackError) {
+	var associateArray = {'email':email, 'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_ASSOCIATE_ROBOT, [associateArray]);
+};
 
-function logout(callbackSuccess,callbackError)
-{
-    var isUserLoggedInArray;
-    document.getElementById('spinnerImg').style.display = "block";
-    PluginManager.callNativeFunction(isLoginSuccess, isLoginError, USER_MANAGER_PLUGIN, ACTION_TYPE_LOGOUT, [isUserLoggedInArray]);
-}
+UserMgr.prototype.getAssociatedRobots = function(email, callbackSuccess, callbackError) {
+	var getAssociatedRobotsArray = {'email':email};
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ASSOCIATED_ROBOTS, [getAssociatedRobotsArray]);
+};
 
-function successLogout(value)
-{
-    document.getElementById('spinnerImg').style.display = "none";
-    localStorage.setItem('robotId', null);
-    localStorage.removeItem('robotId');
-    window.open("WelcomeScreen.html",'_self');
-}
+UserMgr.prototype.disassociateRobot = function(email, robotId, callbackSuccess, callbackError) {
+	var disassociateRobotArray = {email:'email', 'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_DISASSOCIATE_ROBOT, [disassociateRobotArray]);
+};
 
-function errorLogout(value)
-{
-    document.getElementById('spinnerImg').style.display = "none";
-}
+UserMgr.prototype.disassociateAllRobots = function(email, callbackSuccess, callbackError) {
+	var disassociateAllRobotsArray = {email:'email'};
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS, [disassociateAllRobotsArray]);
+};
+
+// Debug method.
+UserMgr.prototype.debugGetConfigurationDetails = function(callbackSuccess, callbackError) {
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+                 ACTION_TYPE_DEBUG_GET_CONFIG_DETAILS, []);
+};
+
+// ***********************ROBOT PLUGIN METHODS ****************************
+
+RobotMgr.prototype.discoverNearbyRobots = function(callbackSuccess, callbackError) {
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_DISCOVER_NEARBY_ROBOTS, []);
+};
+
+RobotMgr.prototype.tryDirectConnection = function(robotId, callbackSuccess, callbackError) {
+	var connectPeerCommandArray = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_TRY_CONNECT_CONNECTION, [connectPeerCommandArray]);
+};
+
+RobotMgr.prototype.disconnectDirectConnection  = function(robotId, callbackSuccess, callbackError) {
+	var disconnectPeerCommandArray = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_DISCONNECT_DIRECT_CONNETION, [disconnectPeerCommandArray]);
+};
 
 
-function setResponseText(result) {
-    if (result == null) {
-        document.querySelector('#responseText').innerHTML = '';
-    }
-    document.querySelector('#responseText').innerHTML ="Response: "+result;
+RobotMgr.prototype.sendCommandToRobot = function(robotId, commandId, commandParams, callbackSuccess, callbackError) {
+	var commandArray = {'robotId':robotId, 'commandId':commandId, 'commandParams':commandParams};
+	
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_SEND_COMMAND_TO_ROBOT, [commandArray]);
+};
+
+RobotMgr.prototype.setRobotName = function(robotId, robotName, callbackSuccess, callbackError) {
+	var setRobotName = {'robotId':robotId, 'robotName':robotName};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_SET_ROBOT_NAME, [setRobotName]);
+};
+
+RobotMgr.prototype.setSchedule = function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
+	var scheduleArray = {'robotId':robotId, 'scheduleType':scheduleType, 'schedule': jsonArray};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACIION_TYPE_SET_SCHEDULE, [scheduleArray]);
+};
+
+RobotMgr.prototype.getSchedule = function(robotId, scheduleType, callbackSuccess, callbackError) {
+	var scheduleArray = {'robotId':robotId, 'scheduleType':scheduleType};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACIION_TYPE_GET_ROBOT_SCHEDULE, [scheduleArray]);
+};
+
+RobotMgr.prototype.deleteSchedule = function(robotId, callbackSuccess, callbackError) {
+	var scheduleArray = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_DELETE_ROBOT_SCHEDULE, [scheduleArray]);
+};
+
+RobotMgr.prototype.getMaps = function(robotId, callbackSuccess, callbackError) {
+	var mapArray = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ROBOT_MAP, [mapArray]);
+};
+
+RobotMgr.prototype.setMapOverlayData = function(robotId, mapId, mapOverlayInfo, callbackSuccess, callbackError) {
+	var mapArray = {'robotId':robotId, 'mapId':mapId, 'mapOverlayInfo':mapOverlayInfo};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_SET_MAP_OVERLAY_DATA, [mapArray]);
+};
+
+// Atlas action types
+RobotMgr.prototype.getRobotAtlasMetadata = function(robotId, callbackSuccess, callbackError) {
+	var atlasArray = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ROBOT_ATLAS_METADATA, [atlasArray]);
+};
+
+
+RobotMgr.prototype.updateAtlasMetaData = function(robotId, atlasMetadata, callbackSuccess, callbackError) {
+	var atlasArray = {'robotId':robotId, 'atlasMetadata':atlasMetadata};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_UPDATE_ROBOT_ATLAS_METADATA, [atlasArray]);
+};
+
+RobotMgr.prototype.getAtlasGridData = function(robotId, gridId, callbackSuccess, callbackError) {
+	var getGridArray = {'robotId':robotId, 'gridId':gridId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ATLAS_GRID_DATA, [getGridArray]);
+};
+
+var UserPluginManager = (function() {
+	return {
+		
+		login: function(email, password , callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.loginUser(email, password, callbackSuccess, callbackError)
+		},
+	
+		logout: function(callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.logoutUser(callbackSuccess, callbackError)
+		},
+	
+		createUser: function(email, password, name, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.createUser(email, password, name, callbackSuccess, callbackError);
+		},
+		
+		isUserLoggedIn: function(email, callbackSuccess, callbackError) {	
+			window.plugins.neatoPluginLayer.userMgr.isUserLoggedIn(email, callbackSuccess, callbackError);
+		},
+		
+		associateRobot: function(email, robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.associateRobotCommand(email, robotId, callbackSuccess, callbackError);
+		},
+		
+		getUserDetail: function(email, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.getUserDetail(email, callbackSuccess, callbackError);
+		},
+		
+		getAssociatedRobots: function(email, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.getAssociatedRobots(email, callbackSuccess, callbackError);
+		},
+		
+		disassociateRobot: function(email, robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.disassociateRobot(email, robotId, callbackSuccess, callbackError);
+		},
+		
+		disassociateAllRobots: function(email, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.disassociateAllRobots(email, callbackSuccess, callbackError);
+		},
+        // Debug method. May not exposed in the finished product
+        debugGetConfigurationDetails: function(callbackSuccess, callbackError) {
+            window.plugins.neatoPluginLayer.userMgr.debugGetConfigurationDetails(callbackSuccess, callbackError);
+        }
+	}
+}());
+
+
+var RobotPluginManager = (function() {
+	return {
+		discoverNearbyRobots: function(callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.discoverNearbyRobots(callbackSuccess, callbackError);
+		},
+		tryDirectConnection: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.tryDirectConnection(robotId, callbackSuccess, callbackError);
+		},
+		disconnectDirectConnection: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.disconnectDirectConnection(robotId, callbackSuccess, callbackError);
+		},
+		
+		sendCommandToRobot: function(robotId, commandId, commandParams, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.sendCommandToRobot(robotId, commandId, commandParams, callbackSuccess, callbackError);
+		},
+		
+		setRobotName : function(robotId, robotName, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.setRobotName(robotId, robotName, callbackSuccess, callbackError);
+		},
+		
+		setSchedule: function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.setSchedule(robotId, scheduleType, jsonArray, callbackSuccess, callbackError);
+		},
+		
+		getSchedule: function(robotId, scheduleType, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getSchedule(robotId, scheduleType,  callbackSuccess, callbackError);
+		},
+		
+		deleteSchedule: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.deleteSchedule(robotId, callbackSuccess, callbackError);
+		},
+		
+		getMaps: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getMaps(robotId, callbackSuccess, callbackError);
+		}, 
+		
+		setMapOverlayData : function(robotId, mapId, mapOverlayInfo, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.setMapOverlayData (robotId, mapId, mapOverlayInfo, callbackSuccess, callbackError);
+		},
+		
+		// It will give the atlas xml data.
+		getRobotAtlasMetadata: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotAtlasMetadata(robotId, callbackSuccess, callbackError);
+		},
+		
+				
+		// It will update the atlas mapped to this robotId. The version of the xml is stored inside.
+		updateAtlasMetaData: function(robotId, atlasMetadata, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.updateAtlasMetaData(robotId, atlasMetadata, callbackSuccess, callbackError);
+		},
+		
+		// TODO: We are taking robotId. Analyse if taking atlasId is a better option.
+		getAtlasGridData: function(robotId, gridId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getAtlasGridData(robotId, gridId, callbackSuccess, callbackError);
+		}
 }
+}());
+
+var PluginManagerHelper =  (function() {
+	return {
+		addToAdvancedSchedule: function(scheduleJsonArray, day, startTime, endTime, eventType, area) {
+			
+			var schedule = {'day':day, 'startTime': startTime, 
+					'endTime': endTime, 'eventType': eventType,
+					'area':area};
+			scheduleJsonArray.push(schedule);
+			return scheduleJsonArray;
+		},	
+	}
+}());
+

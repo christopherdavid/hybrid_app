@@ -1,25 +1,22 @@
 #import <Foundation/Foundation.h>
 #import "NeatoUser.h"
 #import "NeatoRobot.h"
+#import "NSURLConnectionHelper.h"
+#import "NeatoServerHelper.h"
 
 @protocol NeatoServerManagerProtocol <NSObject>
 
-@optional
--(void) requestFailed:(NSError *) error;
--(void) gotUserDetails:(NeatoUser *)neatoUser;
--(void) gotRobotDetails:(NeatoRobot *)neatoRobot;
--(void) robotCreated;
--(void) robotAssociatedWithUser:(NSString *)message robotId:(NSString *) robotId;
--(void) userLoggedOut;
--(void) gotUserAssociatedRobots:(NSMutableArray *) robots;
+-(void) loginSuccess:(NeatoUser *) user;
 
+-(void) failedToCreateUserWithError:(NSError *) error;
+-(void) userCreated:(NeatoUser *) neatoUser;
 
 
 @end
 
-@interface NeatoServerManager : NSObject
+@interface NeatoServerManager : NSObject <NeatoServerHelperProtocol>
 
-@property(nonatomic, weak) id<NeatoServerManagerProtocol> delegate;
+@property(nonatomic, weak) id delegate;
 
 -(void) loginNativeUser:(NSString *) email password:(NSString *)password;
 -(void) loginFacebookUser:(NSString *) externalSocialId;

@@ -7,6 +7,8 @@
 #import "NeatoUserHelper.h"
 #import "XMPPHelper.h"
 #import "NeatoRobotHelper.h"
+#import "RobotAtlasManager.h"
+#import "AtlasGridManager.h"
 
 #define COMMAND_START_ROBOT 101
 #define COMMAND_STOP_ROBOT 102
@@ -42,6 +44,25 @@
     XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
     helper.delegate = delegate;
     [helper disconnectFromRobot];
+}
+
++(void) getRobotAtlasMetadataForRobotId:(NSString *) robotId delegate:(id) delegate
+{
+    RobotAtlasManager *atlasManager = [[RobotAtlasManager alloc] init];
+    [atlasManager getAtlasMetadataForRobotWithId:robotId delegate:delegate];
+}
+
++(void) updateRobotAtlasData:(NeatoRobotAtlas *) robotAtlas  delegate:(id) delegate
+{
+    RobotAtlasManager *atlasManager = [[RobotAtlasManager alloc] init];
+    [atlasManager updateRobotAtlasData:robotAtlas delegate:delegate];
+}
+
++(void) getAtlasGridMetadata:(NSString *) robotId gridId:(NSString *) gridId delegate:(id) delegate
+{
+    AtlasGridManager *atlasGridMan = [[AtlasGridManager alloc] init];
+    atlasGridMan.delegate = delegate;
+    [atlasGridMan getAtlasGridMetadata:robotId gridId:gridId];
 }
 
 // AS of now we allow only one TCP connection

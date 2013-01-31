@@ -11,22 +11,13 @@
 <!-- Java scripts -->
 <script type="text/javascript"  src="cordova-2.1.0.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/pluginmanager.js"></script>
+    <script type="text/javascript" src="jquery.js"></script> 
 <script type="text/javascript" charset="utf-8" src="js/neatosmartapphelper.js"></script>
-<script>
-    function mylogin(form)
-    {
-    loginUser(form.email.value,form.password.value,successLogin,errorLogin);
-    }
-    function goToWelcomeScreen()
-    {
-         window.location.assign("WelcomeScreen.html");
-    }
-</script>
-<script>
-</script>
+<script type="text/javascript" charset="utf-8" src="js/loginscreen.js"></script>
 </head>
 	<body>
+        
+        <div><center><img src="spinner.gif" id="spinnerImg" style="display:none;"  /></center></div>
 		<!-- Login screen -->
         <section id="loginPage">
             <div class="defaultSectionHeader">Enter your login credentials!</div>
@@ -37,8 +28,8 @@
             <input type="password" name="password" id="passkey" placeholder="Password" class="defaultInputText"></input>
             <br>
             <br>
-            <input type="button" id="loginButton" value="Login" class="defaultButton" onclick="mylogin(this.form);"></input>
-            <input type="button" id="backButton" value="back" class="defaultButton" onclick="goToWelcomeScreen();"></input>
+            <input type="button" id="loginButton" value="Login" class="defaultButton"></input>
+            <input type="button" id="backButton" value="back" class="defaultButton"></input>
             </form>
         </section>
         <label id="responseText"></label>

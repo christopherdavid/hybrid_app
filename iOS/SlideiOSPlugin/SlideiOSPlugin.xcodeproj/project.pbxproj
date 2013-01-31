@@ -17,12 +17,32 @@
 		B22BDACA168D7C8400FFCB76 /* SlideiOSPluginTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B22BDAC9168D7C8400FFCB76 /* SlideiOSPluginTests.m */; };
 		B22BDAFB168D7F3B00FFCB76 /* UserManagerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B22BDAFA168D7F3B00FFCB76 /* UserManagerPlugin.m */; };
 		B22BDAFE168D7F5500FFCB76 /* RobotManagerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B22BDAFD168D7F5500FFCB76 /* RobotManagerPlugin.m */; };
+		E121001216B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */; };
+		E15FC46616A9B68F0000AB67 /* AtlasGridManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC44916A9B68F0000AB67 /* AtlasGridManager.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
+		E15FC46716A9B68F0000AB67 /* AtlasGridMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC44B16A9B68F0000AB67 /* AtlasGridMetadata.m */; };
+		E15FC46816A9B68F0000AB67 /* AtlasServerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC44D16A9B68F0000AB67 /* AtlasServerHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
+		E15FC46916A9B68F0000AB67 /* GetAtlasDataListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC44F16A9B68F0000AB67 /* GetAtlasDataListener.m */; };
+		E15FC46A16A9B68F0000AB67 /* GetAtlasMetadataListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45116A9B68F0000AB67 /* GetAtlasMetadataListener.m */; };
+		E15FC46B16A9B68F0000AB67 /* NeatoRobotAtlas.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45316A9B68F0000AB67 /* NeatoRobotAtlas.m */; };
+		E15FC46C16A9B68F0000AB67 /* RobotAtlasManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45516A9B68F0000AB67 /* RobotAtlasManager.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
+		E15FC46D16A9B68F0000AB67 /* UpdateAtlasMetadataListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45716A9B68F0000AB67 /* UpdateAtlasMetadataListener.m */; };
+		E15FC46E16A9B68F0000AB67 /* DelegateWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45A16A9B68F0000AB67 /* DelegateWrapper.m */; };
+		E15FC46F16A9B68F0000AB67 /* DelegationTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45C16A9B68F0000AB67 /* DelegationTracker.m */; };
+		E15FC47016A9B68F0000AB67 /* FileDownloadHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45E16A9B68F0000AB67 /* FileDownloadHelper.m */; };
+		E15FC47116A9B68F0000AB67 /* FileDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC46016A9B68F0000AB67 /* FileDownloadManager.m */; };
+		E15FC47216A9B68F0000AB67 /* FileDownloadTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC46216A9B68F0000AB67 /* FileDownloadTracker.m */; };
+		E15FC47316A9B68F0000AB67 /* NSURLConnectionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC46516A9B68F0000AB67 /* NSURLConnectionHelper.m */; };
 		E168BBD0169D461800BA6AD3 /* NeatoDBHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBC2169D461800BA6AD3 /* NeatoDBHelper.m */; };
 		E168BBD1169D461800BA6AD3 /* NeatoRobotHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBC5169D461800BA6AD3 /* NeatoRobotHelper.m */; };
 		E168BBD2169D461800BA6AD3 /* NeatoUserHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBC8169D461800BA6AD3 /* NeatoUserHelper.m */; };
 		E168BBD3169D461800BA6AD3 /* XMPPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBCB169D461800BA6AD3 /* XMPPConnection.m */; };
 		E168BBD4169D461800BA6AD3 /* XMPPConnectionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBCD169D461800BA6AD3 /* XMPPConnectionHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
 		E168BBD5169D461800BA6AD3 /* XMPPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBCF169D461800BA6AD3 /* XMPPHelper.m */; };
+		E195EA1516B6B56A00E4D9C6 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E195EA1416B6B56A00E4D9C6 /* CoreFoundation.framework */; };
+		E195EA1B16B6B56A00E4D9C6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E195EA1916B6B56A00E4D9C6 /* InfoPlist.strings */; };
+		E195EA2216B6B65F00E4D9C6 /* NeatoDatastoreModel.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */; };
+		E198854616B2FB6400ED1AD8 /* NeatoDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E198854316B2FB6400ED1AD8 /* NeatoDataStore.m */; };
+		E198854A16B2FB8300ED1AD8 /* CommandTrackerEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E198854916B2FB8300ED1AD8 /* CommandTrackerEntity.m */; };
 		E1A064EB1695639D009C22F7 /* AppHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064BF1695639D009C22F7 /* AppHelper.m */; };
 		E1A064EC1695639D009C22F7 /* CommandsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064C31695639D009C22F7 /* CommandsHelper.m */; };
 		E1A064ED1695639D009C22F7 /* TCPCommandHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064C51695639D009C22F7 /* TCPCommandHelper.m */; };
@@ -80,6 +100,11 @@
 		E1A065B316956556009C22F7 /* RobotManagerCallWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A065B016956556009C22F7 /* RobotManagerCallWrapper.m */; };
 		E1A065B416956556009C22F7 /* UserManagerCallWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A065B216956556009C22F7 /* UserManagerCallWrapper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
 		E1AC0E921695BE19005601EE /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A06555169563B5009C22F7 /* libidn.a */; };
+		E1B60E0916B0400300342422 /* CreateUserListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0216B0400300342422 /* CreateUserListener.m */; };
+		E1B60E0A16B0400300342422 /* LoginListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0416B0400300342422 /* LoginListener.m */; };
+		E1B60E0B16B0400300342422 /* NeatoServerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0616B0400300342422 /* NeatoServerHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
+		E1B60E0C16B0400300342422 /* RobotAssociationListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0816B0400300342422 /* RobotAssociationListener.m */; };
+		E1B6A6A616AEA49E0077DB08 /* CommandTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B6A6A516AEA49E0077DB08 /* CommandTracker.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +128,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = CordovaLib;
+		};
+		E15D338316B827CC00DB950D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B22BDA9F168D7C8400FFCB76 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E195EA1216B6B56A00E4D9C6;
+			remoteInfo = NeatoDataStore;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -137,6 +169,35 @@
 		B22BDAFD168D7F5500FFCB76 /* RobotManagerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotManagerPlugin.m; sourceTree = "<group>"; };
 		B29F92F21694659A001A70B7 /* CordovaLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CordovaLib.xcodeproj; path = "../../PhoneGap/phonegap-phonegap-26d211b/lib/ios/CordovaLib/CordovaLib.xcodeproj"; sourceTree = "<group>"; };
 		B29F930616946E81001A70B7 /* Build.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Build.h; sourceTree = "<group>"; };
+		E121001116B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NeatoDatastoreModel.xcdatamodel; sourceTree = "<group>"; };
+		E15FC44816A9B68F0000AB67 /* AtlasGridManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtlasGridManager.h; sourceTree = "<group>"; };
+		E15FC44916A9B68F0000AB67 /* AtlasGridManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AtlasGridManager.m; sourceTree = "<group>"; };
+		E15FC44A16A9B68F0000AB67 /* AtlasGridMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtlasGridMetadata.h; sourceTree = "<group>"; };
+		E15FC44B16A9B68F0000AB67 /* AtlasGridMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AtlasGridMetadata.m; sourceTree = "<group>"; };
+		E15FC44C16A9B68F0000AB67 /* AtlasServerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtlasServerHelper.h; sourceTree = "<group>"; };
+		E15FC44D16A9B68F0000AB67 /* AtlasServerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AtlasServerHelper.m; sourceTree = "<group>"; };
+		E15FC44E16A9B68F0000AB67 /* GetAtlasDataListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetAtlasDataListener.h; sourceTree = "<group>"; };
+		E15FC44F16A9B68F0000AB67 /* GetAtlasDataListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAtlasDataListener.m; sourceTree = "<group>"; };
+		E15FC45016A9B68F0000AB67 /* GetAtlasMetadataListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetAtlasMetadataListener.h; sourceTree = "<group>"; };
+		E15FC45116A9B68F0000AB67 /* GetAtlasMetadataListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAtlasMetadataListener.m; sourceTree = "<group>"; };
+		E15FC45216A9B68F0000AB67 /* NeatoRobotAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoRobotAtlas.h; sourceTree = "<group>"; };
+		E15FC45316A9B68F0000AB67 /* NeatoRobotAtlas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoRobotAtlas.m; sourceTree = "<group>"; };
+		E15FC45416A9B68F0000AB67 /* RobotAtlasManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotAtlasManager.h; sourceTree = "<group>"; };
+		E15FC45516A9B68F0000AB67 /* RobotAtlasManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotAtlasManager.m; sourceTree = "<group>"; };
+		E15FC45616A9B68F0000AB67 /* UpdateAtlasMetadataListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateAtlasMetadataListener.h; sourceTree = "<group>"; };
+		E15FC45716A9B68F0000AB67 /* UpdateAtlasMetadataListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateAtlasMetadataListener.m; sourceTree = "<group>"; };
+		E15FC45916A9B68F0000AB67 /* DelegateWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DelegateWrapper.h; sourceTree = "<group>"; };
+		E15FC45A16A9B68F0000AB67 /* DelegateWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DelegateWrapper.m; sourceTree = "<group>"; };
+		E15FC45B16A9B68F0000AB67 /* DelegationTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DelegationTracker.h; sourceTree = "<group>"; };
+		E15FC45C16A9B68F0000AB67 /* DelegationTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DelegationTracker.m; sourceTree = "<group>"; };
+		E15FC45D16A9B68F0000AB67 /* FileDownloadHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileDownloadHelper.h; sourceTree = "<group>"; };
+		E15FC45E16A9B68F0000AB67 /* FileDownloadHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileDownloadHelper.m; sourceTree = "<group>"; };
+		E15FC45F16A9B68F0000AB67 /* FileDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileDownloadManager.h; sourceTree = "<group>"; };
+		E15FC46016A9B68F0000AB67 /* FileDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileDownloadManager.m; sourceTree = "<group>"; };
+		E15FC46116A9B68F0000AB67 /* FileDownloadTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileDownloadTracker.h; sourceTree = "<group>"; };
+		E15FC46216A9B68F0000AB67 /* FileDownloadTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileDownloadTracker.m; sourceTree = "<group>"; };
+		E15FC46416A9B68F0000AB67 /* NSURLConnectionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLConnectionHelper.h; sourceTree = "<group>"; };
+		E15FC46516A9B68F0000AB67 /* NSURLConnectionHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLConnectionHelper.m; sourceTree = "<group>"; };
 		E168BBC1169D461800BA6AD3 /* NeatoDBHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoDBHelper.h; sourceTree = "<group>"; };
 		E168BBC2169D461800BA6AD3 /* NeatoDBHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoDBHelper.m; sourceTree = "<group>"; };
 		E168BBC4169D461800BA6AD3 /* NeatoRobotHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoRobotHelper.h; sourceTree = "<group>"; };
@@ -151,6 +212,19 @@
 		E168BBCF169D461800BA6AD3 /* XMPPHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPHelper.m; sourceTree = "<group>"; };
 		E168BBD6169D46C400BA6AD3 /* PluginConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PluginConstants.h; sourceTree = "<group>"; };
 		E168BBD7169D471300BA6AD3 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		E195EA1316B6B56A00E4D9C6 /* NeatoDataStore.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NeatoDataStore.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		E195EA1416B6B56A00E4D9C6 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		E195EA1816B6B56A00E4D9C6 /* NeatoDataStore-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NeatoDataStore-Info.plist"; sourceTree = "<group>"; };
+		E195EA1A16B6B56A00E4D9C6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E195EA1C16B6B56A00E4D9C6 /* NeatoDataStore-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NeatoDataStore-Prefix.pch"; sourceTree = "<group>"; };
+		E198854216B2FB6400ED1AD8 /* NeatoDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoDataStore.h; sourceTree = "<group>"; };
+		E198854316B2FB6400ED1AD8 /* NeatoDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoDataStore.m; sourceTree = "<group>"; };
+		E198854816B2FB8300ED1AD8 /* CommandTrackerEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandTrackerEntity.h; sourceTree = "<group>"; };
+		E198854916B2FB8300ED1AD8 /* CommandTrackerEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandTrackerEntity.m; sourceTree = "<group>"; };
+		E198855316B2FD7200ED1AD8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		E198855616B2FD7200ED1AD8 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		E198855716B2FD7200ED1AD8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		E198855816B2FD7200ED1AD8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E1A064BE1695639D009C22F7 /* AppHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHelper.h; sourceTree = "<group>"; };
 		E1A064BF1695639D009C22F7 /* AppHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHelper.m; sourceTree = "<group>"; };
 		E1A064C11695639D009C22F7 /* CommandProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandProtocol.h; sourceTree = "<group>"; };
@@ -276,6 +350,16 @@
 		E1A065B016956556009C22F7 /* RobotManagerCallWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotManagerCallWrapper.m; sourceTree = "<group>"; };
 		E1A065B116956556009C22F7 /* UserManagerCallWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserManagerCallWrapper.h; sourceTree = "<group>"; };
 		E1A065B216956556009C22F7 /* UserManagerCallWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserManagerCallWrapper.m; sourceTree = "<group>"; };
+		E1B60E0116B0400300342422 /* CreateUserListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateUserListener.h; sourceTree = "<group>"; };
+		E1B60E0216B0400300342422 /* CreateUserListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateUserListener.m; sourceTree = "<group>"; };
+		E1B60E0316B0400300342422 /* LoginListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginListener.h; sourceTree = "<group>"; };
+		E1B60E0416B0400300342422 /* LoginListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginListener.m; sourceTree = "<group>"; };
+		E1B60E0516B0400300342422 /* NeatoServerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoServerHelper.h; sourceTree = "<group>"; };
+		E1B60E0616B0400300342422 /* NeatoServerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoServerHelper.m; sourceTree = "<group>"; };
+		E1B60E0716B0400300342422 /* RobotAssociationListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotAssociationListener.h; sourceTree = "<group>"; };
+		E1B60E0816B0400300342422 /* RobotAssociationListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotAssociationListener.m; sourceTree = "<group>"; };
+		E1B6A6A416AEA49E0077DB08 /* CommandTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandTracker.h; sourceTree = "<group>"; };
+		E1B6A6A516AEA49E0077DB08 /* CommandTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandTracker.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -298,6 +382,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E195EA1016B6B56A00E4D9C6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E195EA1516B6B56A00E4D9C6 /* CoreFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -308,6 +400,7 @@
 				B29F92F21694659A001A70B7 /* CordovaLib.xcodeproj */,
 				B22BDAAD168D7C8400FFCB76 /* SlideiOSPlugin */,
 				B22BDAC2168D7C8400FFCB76 /* SlideiOSPluginTests */,
+				E195EA1616B6B56A00E4D9C6 /* NeatoDataStore */,
 				B22BDAAA168D7C8400FFCB76 /* Frameworks */,
 				B22BDAA9168D7C8400FFCB76 /* Products */,
 			);
@@ -318,6 +411,7 @@
 			children = (
 				B22BDAA8168D7C8400FFCB76 /* libSlideiOSPlugin.a */,
 				B22BDAB9168D7C8400FFCB76 /* SlideiOSPluginTests.octest */,
+				E195EA1316B6B56A00E4D9C6 /* NeatoDataStore.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -327,6 +421,9 @@
 			children = (
 				B22BDAAB168D7C8400FFCB76 /* Foundation.framework */,
 				B22BDABA168D7C8400FFCB76 /* SenTestingKit.framework */,
+				E198855316B2FD7200ED1AD8 /* Cocoa.framework */,
+				E195EA1416B6B56A00E4D9C6 /* CoreFoundation.framework */,
+				E198855516B2FD7200ED1AD8 /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -406,6 +503,9 @@
 		B22BDB10168D848800FFCB76 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				E15FC44716A9B68F0000AB67 /* AtlasHelper */,
+				E15FC45816A9B68F0000AB67 /* FileDownloadHelper */,
+				E15FC46316A9B68F0000AB67 /* NSURLConnectionHelper */,
 				E168BBC0169D461800BA6AD3 /* DBHelper */,
 				E168BBC3169D461800BA6AD3 /* RobotHelper */,
 				E168BBC6169D461800BA6AD3 /* UserHelper */,
@@ -430,11 +530,65 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		E15FC44716A9B68F0000AB67 /* AtlasHelper */ = {
+			isa = PBXGroup;
+			children = (
+				E15FC44816A9B68F0000AB67 /* AtlasGridManager.h */,
+				E15FC44916A9B68F0000AB67 /* AtlasGridManager.m */,
+				E15FC44A16A9B68F0000AB67 /* AtlasGridMetadata.h */,
+				E15FC44B16A9B68F0000AB67 /* AtlasGridMetadata.m */,
+				E15FC44C16A9B68F0000AB67 /* AtlasServerHelper.h */,
+				E15FC44D16A9B68F0000AB67 /* AtlasServerHelper.m */,
+				E15FC44E16A9B68F0000AB67 /* GetAtlasDataListener.h */,
+				E15FC44F16A9B68F0000AB67 /* GetAtlasDataListener.m */,
+				E15FC45016A9B68F0000AB67 /* GetAtlasMetadataListener.h */,
+				E15FC45116A9B68F0000AB67 /* GetAtlasMetadataListener.m */,
+				E15FC45216A9B68F0000AB67 /* NeatoRobotAtlas.h */,
+				E15FC45316A9B68F0000AB67 /* NeatoRobotAtlas.m */,
+				E15FC45416A9B68F0000AB67 /* RobotAtlasManager.h */,
+				E15FC45516A9B68F0000AB67 /* RobotAtlasManager.m */,
+				E15FC45616A9B68F0000AB67 /* UpdateAtlasMetadataListener.h */,
+				E15FC45716A9B68F0000AB67 /* UpdateAtlasMetadataListener.m */,
+			);
+			path = AtlasHelper;
+			sourceTree = "<group>";
+		};
+		E15FC45816A9B68F0000AB67 /* FileDownloadHelper */ = {
+			isa = PBXGroup;
+			children = (
+				E15FC45916A9B68F0000AB67 /* DelegateWrapper.h */,
+				E15FC45A16A9B68F0000AB67 /* DelegateWrapper.m */,
+				E15FC45B16A9B68F0000AB67 /* DelegationTracker.h */,
+				E15FC45C16A9B68F0000AB67 /* DelegationTracker.m */,
+				E15FC45D16A9B68F0000AB67 /* FileDownloadHelper.h */,
+				E15FC45E16A9B68F0000AB67 /* FileDownloadHelper.m */,
+				E15FC45F16A9B68F0000AB67 /* FileDownloadManager.h */,
+				E15FC46016A9B68F0000AB67 /* FileDownloadManager.m */,
+				E15FC46116A9B68F0000AB67 /* FileDownloadTracker.h */,
+				E15FC46216A9B68F0000AB67 /* FileDownloadTracker.m */,
+			);
+			path = FileDownloadHelper;
+			sourceTree = "<group>";
+		};
+		E15FC46316A9B68F0000AB67 /* NSURLConnectionHelper */ = {
+			isa = PBXGroup;
+			children = (
+				E15FC46416A9B68F0000AB67 /* NSURLConnectionHelper.h */,
+				E15FC46516A9B68F0000AB67 /* NSURLConnectionHelper.m */,
+			);
+			path = NSURLConnectionHelper;
+			sourceTree = "<group>";
+		};
 		E168BBC0169D461800BA6AD3 /* DBHelper */ = {
 			isa = PBXGroup;
 			children = (
+				E198854216B2FB6400ED1AD8 /* NeatoDataStore.h */,
+				E198854316B2FB6400ED1AD8 /* NeatoDataStore.m */,
+				E198854816B2FB8300ED1AD8 /* CommandTrackerEntity.h */,
+				E198854916B2FB8300ED1AD8 /* CommandTrackerEntity.m */,
 				E168BBC1169D461800BA6AD3 /* NeatoDBHelper.h */,
 				E168BBC2169D461800BA6AD3 /* NeatoDBHelper.m */,
+				E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */,
 			);
 			path = DBHelper;
 			sourceTree = "<group>";
@@ -470,6 +624,34 @@
 			path = XMPPHelper;
 			sourceTree = "<group>";
 		};
+		E195EA1616B6B56A00E4D9C6 /* NeatoDataStore */ = {
+			isa = PBXGroup;
+			children = (
+				E195EA1716B6B56A00E4D9C6 /* Supporting Files */,
+			);
+			path = NeatoDataStore;
+			sourceTree = "<group>";
+		};
+		E195EA1716B6B56A00E4D9C6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E195EA1816B6B56A00E4D9C6 /* NeatoDataStore-Info.plist */,
+				E195EA1916B6B56A00E4D9C6 /* InfoPlist.strings */,
+				E195EA1C16B6B56A00E4D9C6 /* NeatoDataStore-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E198855516B2FD7200ED1AD8 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E198855616B2FD7200ED1AD8 /* AppKit.framework */,
+				E198855716B2FD7200ED1AD8 /* CoreData.framework */,
+				E198855816B2FD7200ED1AD8 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
 		E1A064BD1695639D009C22F7 /* AppHelper */ = {
 			isa = PBXGroup;
 			children = (
@@ -482,6 +664,8 @@
 		E1A064C01695639D009C22F7 /* CommandHelper */ = {
 			isa = PBXGroup;
 			children = (
+				E1B6A6A416AEA49E0077DB08 /* CommandTracker.h */,
+				E1B6A6A516AEA49E0077DB08 /* CommandTracker.m */,
 				E1A064C11695639D009C22F7 /* CommandProtocol.h */,
 				E1A064C21695639D009C22F7 /* CommandsHelper.h */,
 				E1A064C31695639D009C22F7 /* CommandsHelper.m */,
@@ -516,6 +700,14 @@
 		E1A064D01695639D009C22F7 /* NeatoServerManager */ = {
 			isa = PBXGroup;
 			children = (
+				E1B60E0116B0400300342422 /* CreateUserListener.h */,
+				E1B60E0216B0400300342422 /* CreateUserListener.m */,
+				E1B60E0316B0400300342422 /* LoginListener.h */,
+				E1B60E0416B0400300342422 /* LoginListener.m */,
+				E1B60E0516B0400300342422 /* NeatoServerHelper.h */,
+				E1B60E0616B0400300342422 /* NeatoServerHelper.m */,
+				E1B60E0716B0400300342422 /* RobotAssociationListener.h */,
+				E1B60E0816B0400300342422 /* RobotAssociationListener.m */,
 				E1A064D21695639D009C22F7 /* NeatoRobot.h */,
 				E1A064D31695639D009C22F7 /* NeatoRobot.m */,
 				E1A064D41695639D009C22F7 /* NeatoServerManager.h */,
@@ -825,10 +1017,12 @@
 				B22BDAA4168D7C8400FFCB76 /* Sources */,
 				B22BDAA5168D7C8400FFCB76 /* Frameworks */,
 				B22BDAA6168D7C8400FFCB76 /* CopyFiles */,
+				E15D336716B820A100DB950D /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				E15D338416B827CC00DB950D /* PBXTargetDependency */,
 				B29F92FC169465A0001A70B7 /* PBXTargetDependency */,
 			);
 			name = SlideiOSPlugin;
@@ -853,6 +1047,23 @@
 			name = SlideiOSPluginTests;
 			productName = SlideiOSPluginTests;
 			productReference = B22BDAB9168D7C8400FFCB76 /* SlideiOSPluginTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+		E195EA1216B6B56A00E4D9C6 /* NeatoDataStore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E195EA1D16B6B56A00E4D9C6 /* Build configuration list for PBXNativeTarget "NeatoDataStore" */;
+			buildPhases = (
+				E195EA0F16B6B56A00E4D9C6 /* Sources */,
+				E195EA1016B6B56A00E4D9C6 /* Frameworks */,
+				E195EA1116B6B56A00E4D9C6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NeatoDataStore;
+			productName = NeatoDataStore;
+			productReference = E195EA1316B6B56A00E4D9C6 /* NeatoDataStore.bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -884,6 +1095,7 @@
 			targets = (
 				B22BDAA7168D7C8400FFCB76 /* SlideiOSPlugin */,
 				B22BDAB8168D7C8400FFCB76 /* SlideiOSPluginTests */,
+				E195EA1216B6B56A00E4D9C6 /* NeatoDataStore */,
 			);
 		};
 /* End PBXProject section */
@@ -907,6 +1119,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E195EA1116B6B56A00E4D9C6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E195EA1B16B6B56A00E4D9C6 /* InfoPlist.strings in Resources */,
+				E195EA2216B6B65F00E4D9C6 /* NeatoDatastoreModel.xcdatamodeld in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -922,6 +1143,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+		E15D336716B820A100DB950D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "// script to copy the bundle file to custom output directory\nBUNDLE=\"/NeatoDataStore.bundle\"\nOUTPUT_DIR_BAUNDLE=\"ResourceBundle\"\n\nbundleFile=$CONFIGURATION_BUILD_DIR\"\"$BUNDLE\necho $bundleFile\nrm -fR $OUTPUT_DIR_BAUNDLE\nmkdir -p $OUTPUT_DIR_BAUNDLE\ncp -R $bundleFile $OUTPUT_DIR_BAUNDLE";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -995,6 +1229,28 @@
 				E168BBD3169D461800BA6AD3 /* XMPPConnection.m in Sources */,
 				E168BBD4169D461800BA6AD3 /* XMPPConnectionHelper.m in Sources */,
 				E168BBD5169D461800BA6AD3 /* XMPPHelper.m in Sources */,
+				E15FC46616A9B68F0000AB67 /* AtlasGridManager.m in Sources */,
+				E15FC46716A9B68F0000AB67 /* AtlasGridMetadata.m in Sources */,
+				E15FC46816A9B68F0000AB67 /* AtlasServerHelper.m in Sources */,
+				E15FC46916A9B68F0000AB67 /* GetAtlasDataListener.m in Sources */,
+				E15FC46A16A9B68F0000AB67 /* GetAtlasMetadataListener.m in Sources */,
+				E15FC46B16A9B68F0000AB67 /* NeatoRobotAtlas.m in Sources */,
+				E15FC46C16A9B68F0000AB67 /* RobotAtlasManager.m in Sources */,
+				E15FC46D16A9B68F0000AB67 /* UpdateAtlasMetadataListener.m in Sources */,
+				E15FC46E16A9B68F0000AB67 /* DelegateWrapper.m in Sources */,
+				E15FC46F16A9B68F0000AB67 /* DelegationTracker.m in Sources */,
+				E15FC47016A9B68F0000AB67 /* FileDownloadHelper.m in Sources */,
+				E15FC47116A9B68F0000AB67 /* FileDownloadManager.m in Sources */,
+				E15FC47216A9B68F0000AB67 /* FileDownloadTracker.m in Sources */,
+				E15FC47316A9B68F0000AB67 /* NSURLConnectionHelper.m in Sources */,
+				E1B6A6A616AEA49E0077DB08 /* CommandTracker.m in Sources */,
+				E1B60E0916B0400300342422 /* CreateUserListener.m in Sources */,
+				E1B60E0A16B0400300342422 /* LoginListener.m in Sources */,
+				E1B60E0B16B0400300342422 /* NeatoServerHelper.m in Sources */,
+				E1B60E0C16B0400300342422 /* RobotAssociationListener.m in Sources */,
+				E198854616B2FB6400ED1AD8 /* NeatoDataStore.m in Sources */,
+				E198854A16B2FB8300ED1AD8 /* CommandTrackerEntity.m in Sources */,
+				E121001216B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1003,6 +1259,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				B22BDACA168D7C8400FFCB76 /* SlideiOSPluginTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E195EA0F16B6B56A00E4D9C6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1019,6 +1282,11 @@
 			name = CordovaLib;
 			targetProxy = B29F92FB169465A0001A70B7 /* PBXContainerItemProxy */;
 		};
+		E15D338416B827CC00DB950D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E195EA1216B6B56A00E4D9C6 /* NeatoDataStore */;
+			targetProxy = E15D338316B827CC00DB950D /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1026,6 +1294,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				B22BDAC6168D7C8400FFCB76 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		E195EA1916B6B56A00E4D9C6 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E195EA1A16B6B56A00E4D9C6 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1159,6 +1435,47 @@
 			};
 			name = Release;
 		};
+		E195EA1E16B6B56A00E4D9C6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NeatoDataStore/NeatoDataStore-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "NeatoDataStore/NeatoDataStore-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = "";
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos6.0;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		E195EA1F16B6B56A00E4D9C6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NeatoDataStore/NeatoDataStore-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "NeatoDataStore/NeatoDataStore-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = "";
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos6.0;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1189,7 +1506,29 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		E195EA1D16B6B56A00E4D9C6 /* Build configuration list for PBXNativeTarget "NeatoDataStore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E195EA1E16B6B56A00E4D9C6 /* Debug */,
+				E195EA1F16B6B56A00E4D9C6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				E121001116B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodel */,
+			);
+			currentVersion = E121001116B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodel */;
+			path = NeatoDatastoreModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = B22BDA9F168D7C8400FFCB76 /* Project object */;
 }
