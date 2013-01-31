@@ -1,6 +1,5 @@
 package com.neatorobotics.android.slide.framework.webservice.robot;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -34,27 +33,29 @@ public class RobotManager {
 		return sRobotManager;
 	}
 	
-	public void getRobotDetail(final String serialId, RobotDetailListener listener)
-	{
-		final WeakReference<RobotDetailListener> robotDetailListenerWeakRef = new WeakReference<RobotDetailListener>(listener);
+	public void getRobotDetail(final String serialId, final RobotDetailListener listener)	{
 		Runnable task = new Runnable() {
 			
 			public void run() {
-				RobotDetailResult result = NeatoRobotWebservicesHelper.getRobotDetail(mContext, serialId);
-				RobotDetailListener robotListener = robotDetailListenerWeakRef.get();
-				if (robotListener == null) {
-					LogHelper.logD(TAG, "Callback interface is null in getRobotDetail");
-					return;
-				}
-				if (result != null && result.success()) {
-					RobotItem robotItem = convertRobotDetailResultToRobotItem(result);
-					if (robotListener != null) {
-						robotListener.onRobotDetailReceived(robotItem);
+				RobotDetailResult result = NeatoRobotWebservicesHelper.getRobotDetail(mContext, serialId);				
+				if (result != null) {
+					if (result.success()) {
+						RobotItem robotItem = convertRobotDetailResultToRobotItem(result);
+						// Update the robot data if anything changed
+						RobotHelper.saveRobotDetails(mContext, robotItem);
+						if (listener != null) {
+							listener.onRobotDetailReceived(robotItem);
+						}
+					}
+					else {
+						if (listener != null) {
+							listener.onServerError(result.mMessage);
+						}
 					}
 				}
 				else {
-					if (robotListener != null) {
-						robotListener.onServerError();
+					if (listener != null) {
+						listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
 					}
 				}
 			}
@@ -97,6 +98,34 @@ public class RobotManager {
 				
 			}
 		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
+	public void getRobotOnlineStatus(final String robotId, final RobotOnlineStatusListener listener) {
+		LogHelper.logD(TAG, "getRobotOnlineStatus called for RobotID = " + robotId);
+		
+		Runnable task = new Runnable() {			
+			@Override
+			public void run() {
+				RobotOnlineStatusResult result = NeatoRobotWebservicesHelper.getRobotOnlineStatus(mContext, robotId);
+				if (listener == null) {					
+					return;
+				}
+				
+				if (result != null) {
+					if (result.success()) {
+						listener.onComplete(result.mResult.mOnline);
+					}
+					else {
+						listener.onServerError(result.mMessage);
+					}
+				}
+				else {
+					listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
+				}
+			}
+		};
+		
 		TaskUtils.scheduleTask(task, 0);
 	}
 	

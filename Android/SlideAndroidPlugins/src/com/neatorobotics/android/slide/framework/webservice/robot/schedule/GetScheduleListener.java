@@ -4,5 +4,6 @@ import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedSchedule
 
 public interface GetScheduleListener {
 	public void onSuccess(AdvancedScheduleGroup group, String scheduleId);
-	public void onError(String errMessage);
+	public void onServerError(String errMessage);
+	public void onNetworkError(String errMessage);
 }

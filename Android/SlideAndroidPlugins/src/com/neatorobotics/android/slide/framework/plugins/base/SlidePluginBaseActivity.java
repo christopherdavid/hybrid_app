@@ -5,6 +5,7 @@ import org.apache.cordova.DroidGap;
 import android.os.Bundle;
 import com.neatorobotics.android.slide.framework.NeatoServiceManager;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
 
 public class SlidePluginBaseActivity extends DroidGap {
 
@@ -15,6 +16,7 @@ public class SlidePluginBaseActivity extends DroidGap {
 	public void onCreate(Bundle savedInstanceState) {
 		LogHelper.logD(TAG, "onCreate called");
 		super.onCreate(savedInstanceState);
+		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
 		
 		mServiceManager = new NeatoServiceManager(getApplicationContext());
 		

@@ -120,7 +120,7 @@ public class RobotMapWebservicesManager {
 						}
 					} else {
 						if (listener != null) {
-							listener.onError("Error in updating the overdata for map");
+							listener.onServerError(result.mMessage);
 						} 
 						else {
 							LogHelper.log(TAG, "UpdateRobotMapListener is null. Update failed.");

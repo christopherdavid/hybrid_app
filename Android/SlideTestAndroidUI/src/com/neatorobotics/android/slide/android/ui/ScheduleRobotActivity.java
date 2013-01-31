@@ -30,9 +30,7 @@ public class ScheduleRobotActivity extends Activity{
 	private boolean mIsRobotAssocited;
 	private ProgressBar mProgressView;
 	private ScheduleWebserviceListener mScheduleDetailsAndroidListener;
-	private ScheduleWebserviceListener mScheduleClearAndroidListener;
 	private ScheduleWebserviceListenerWrapper mScheduleDetailsListenerWrapper;
-	private ScheduleWebserviceListenerWrapper mScheduleClearListenerWrapper;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,8 +38,6 @@ public class ScheduleRobotActivity extends Activity{
 		mProgressView = (ProgressBar)findViewById(R.id.progress_schedule);
 		mScheduleDetailsAndroidListener = new ScheduleDetailsAndroidListener();
 		mScheduleDetailsListenerWrapper = new ScheduleWebserviceListenerWrapper(mHandler, mScheduleDetailsAndroidListener);
-		mScheduleClearAndroidListener = new ScheduleDetailsAndroidListener();
-		mScheduleClearListenerWrapper = new ScheduleWebserviceListenerWrapper(mHandler, mScheduleClearAndroidListener);
 
 		findViewById(R.id.btn_set_schedule_weekdays).setOnClickListener(mOnClickListener);
 		findViewById(R.id.btn_set_schedule_babynap).setOnClickListener(mOnClickListener);
@@ -231,15 +227,6 @@ public class ScheduleRobotActivity extends Activity{
 		schedulerManager.sendRobotSchedule(scheduleGroup, mRobotSerialId, mScheduleDetailsListenerWrapper);		
 	}
 
-	/*private void clearRobotSchedule(String robot_schedule_id) {
-		mScheduleClearAndroidListener = new ScheduleClearAndroidListener();
-		mScheduleDetailsListenerWrapper = new ScheduleWebserviceListenerWrapper(mHandler, mScheduleClearAndroidListener);
-		LogHelper.log(TAG, "Updating robot schedule to the server");
-		RobotSchedulerManager schedulerManager = RobotSchedulerManager.getInstance(getApplicationContext());
-		schedulerManager.clearRobotSchedule(robot_schedule_id , mScheduleDetailsListenerWrapper);		
-
-	}
-	 */
 	private class ScheduleDetailsAndroidListener implements ScheduleWebserviceListener {
 
 		@Override
@@ -250,42 +237,17 @@ public class ScheduleRobotActivity extends Activity{
 		}
 
 		@Override
-		public void onNetworkError() {
+		public void onNetworkError(String errMessage) {
 			LogHelper.log(TAG, "Schedule details post error");
 			hideProgressView();
 			Toast.makeText(ScheduleRobotActivity.this, "Could not update robot schedule.", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
-		public void onServerError() {
+		public void onServerError(String errMessage) {
 			LogHelper.log(TAG, "Schedule details post error");
 			hideProgressView();
 			Toast.makeText(ScheduleRobotActivity.this, "Could not update robot schedule.", Toast.LENGTH_SHORT).show();
-		}
-
-	}
-
-	private class ScheduleClearAndroidListener implements ScheduleWebserviceListener {
-
-		@Override
-		public void onSuccess() {
-			LogHelper.log(TAG, "Schedule cleared");			
-			hideProgressView();
-			Toast.makeText(ScheduleRobotActivity.this, "Cleared robot schedule successfully", Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onNetworkError() {
-			LogHelper.log(TAG, "Schedule details post error");
-			hideProgressView();
-			Toast.makeText(ScheduleRobotActivity.this, "Could not clear robot schedule.", Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onServerError() {
-			LogHelper.log(TAG, "Schedule details post error");
-			hideProgressView();
-			Toast.makeText(ScheduleRobotActivity.this, "Could not clear robot schedule.", Toast.LENGTH_SHORT).show();
 		}
 
 	}

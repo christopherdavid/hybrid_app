@@ -11,7 +11,27 @@ public class NeatoPrefs {
 	private static final String KEY_NEATO_USER_AUTH_TOKEN = "neato_user_auth_token";
 	private static final String PEER_CONNECTION_STATUS = "peer_conn_status";
 	private static final String MANAGED_ROBOT_SERIAL_ID = "managed_robot_serial_id";
+
+	// TODO: This is just a temporary arrangement till everybody switches to the new command structure
+	// 
+	private static final String USE_NEW_COMMAND_STRUCTURE = "useNewCommandStructure";
+	private static final boolean DEFAULT_USE_NEW_COMMAND_PACKET_STRUCTURE = false;
+
+	public static boolean savePreferenceBooleanValue(Context context, String preferenceName, boolean preferenceValue) {
+		SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
+		Editor preferencesEditor = preferences.edit();
+		preferencesEditor.putBoolean(preferenceName, preferenceValue);
+		boolean result = preferencesEditor.commit();
+
+		return result;
+	} 
 	
+	private static boolean getPreferenceBooleanValue(Context context, String preferenceName, boolean defaultValue) {
+		SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
+		boolean preferenceValue = preferences.getBoolean(preferenceName, defaultValue);
+		return preferenceValue;
+	}
+
 	private static boolean savePreference(Context context, String preferenceName, String preferenceValue) {
 		SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
 		Editor preferencesEditor = preferences.edit();
@@ -95,7 +115,17 @@ public class NeatoPrefs {
 	public static String getManagedRobotSerialId(Context context) {
 		return getPreferenceStrValue(context, NeatoPrefs.MANAGED_ROBOT_SERIAL_ID);
 	}
-	
+
+	public static boolean shouldUseNewCommandPacketStruture(Context context)
+	{
+		return getPreferenceBooleanValue(context, USE_NEW_COMMAND_STRUCTURE, DEFAULT_USE_NEW_COMMAND_PACKET_STRUCTURE);
+	}
+
+	public static boolean saveUseNewCommandStruture(Context context, boolean useNewCommandStructure)
+	{
+		return savePreferenceBooleanValue(context, USE_NEW_COMMAND_STRUCTURE, useNewCommandStructure);
+	}
+
 	public static boolean clearManagedRobotSerialId(Context context) {
 		return savePreference(context, NeatoPrefs.MANAGED_ROBOT_SERIAL_ID, "");
 	}

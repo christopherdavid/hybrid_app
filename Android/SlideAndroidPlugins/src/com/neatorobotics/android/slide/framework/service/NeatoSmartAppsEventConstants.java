@@ -15,4 +15,6 @@ public class NeatoSmartAppsEventConstants {
 	public static final int ROBOT_ASSOCIATION_END = 7;
 	public static final int ROBOT_ASSOCIATION_STATUS_FAILED = 8;
 	public static final int ROBOT_ASSOCIATION_STATUS_SUCCESS = 9;
+	
+	public static final int ROBOT_PACKET_RECEIVED_ON_PEER_CONNETION = 11;
 }

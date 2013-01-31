@@ -62,7 +62,7 @@ public class UserHelper {
 			String email = NeatoPrefs.getUserEmailId(context);
 			DBHelper dbHelper = DBHelper.getInstance(context);
 			dbHelper.deleteUserByEmail(email);
-			dbHelper.clearAllAssociatedRobots();
+			dbHelper.clearAllData();
 			NeatoPrefs.clearUserEmailAndAuthToken(context);
 			NeatoPrefs.clearManagedRobotSerialId(context);
 		}

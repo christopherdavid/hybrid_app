@@ -14,6 +14,7 @@ import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.DisassociateNeatoRobotToUser;
+import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.DissociateAllNeatoRobotsFromUser;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotAssociationDisassociationResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.AssociateNeatoRobotToUser;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.CreateNeatoUser;
@@ -96,7 +97,7 @@ public class NeatoUserWebservicesHelper {
 		
 		Map<String, String> reqParams = new HashMap<String, String>();
 		reqParams.put(GetNeatoUserDetails.Attribute.EMAIL, email);
-		reqParams.put(GetNeatoUserDetails.Attribute.AUTHHENTICATION_TOKEN, authToken);
+		reqParams.put(GetNeatoUserDetails.Attribute.AUTHENTICATION_TOKEN, authToken);
 		GetNeatoUserDetailsResult result = null;
 
 		NeatoHttpResponse getNeatoUserDetailsResponse = NeatoWebserviceHelper.executeHttpPost(context, GetNeatoUserDetails.METHOD_NAME, reqParams);
@@ -128,7 +129,7 @@ public class NeatoUserWebservicesHelper {
 		
 		Map<String, String> reqParams = new HashMap<String, String>();
 		reqParams.put(GetUserAssociatedRobots.Attribute.EMAIL, email);
-		reqParams.put(GetUserAssociatedRobots.Attribute.AUTHHENTICATION_TOKEN, authToken);
+		reqParams.put(GetUserAssociatedRobots.Attribute.AUTHENTICATION_TOKEN, authToken);
 		GetUserAssociatedRobotsResult result = null;
 
 		NeatoHttpResponse getUserAssociatedRobotsResponse = NeatoWebserviceHelper.executeHttpPost(context, GetUserAssociatedRobots.METHOD_NAME, reqParams);
@@ -167,7 +168,9 @@ public class NeatoUserWebservicesHelper {
 		if (disassociateRobotResponse.completed()) { 
 			try {
 				LogHelper.logD(TAG, "Disassociating Neato Robot completed. Reading response");
-				result = resultMapper.readValue(disassociateRobotResponse.mResponseInputStream, new TypeReference<RobotAssociationDisassociationResult>() {});
+				String json = AppUtils.convertStreamToString(disassociateRobotResponse.mResponseInputStream);
+				LogHelper.logD(TAG, "JSON = " + json);
+				result = resultMapper.readValue(json, new TypeReference<RobotAssociationDisassociationResult>() {});				
 				LogHelper.log(TAG, "Robot disassociated.");
 			} catch (JsonParseException e) {
 				LogHelper.log(TAG, "Exception in disassociateNeatoRobotRequest" ,e);
@@ -188,6 +191,36 @@ public class NeatoUserWebservicesHelper {
 		return result;
 	}
 	
+	public static RobotAssociationDisassociationResult dissociateAllNeatoRobotsRequest(Context context, String email) {
+		RobotAssociationDisassociationResult result = null;
+		Map<String, String> dissociateRobotReqParams = new HashMap<String, String>();
+		dissociateRobotReqParams.put(DisassociateNeatoRobotToUser.Attribute.EMAIL, email);
+		dissociateRobotReqParams.put(DisassociateNeatoRobotToUser.Attribute.SERIAL_NUMBER, "");	
+		
+		NeatoHttpResponse disassociateRobotResponse = NeatoWebserviceHelper.executeHttpPost(context, DissociateAllNeatoRobotsFromUser.METHOD_NAME, dissociateRobotReqParams);
+		if (disassociateRobotResponse.completed()) { 
+			try {
+				LogHelper.logD(TAG, "Dissociating all Neato Robots completed. Reading response");
+				String json = AppUtils.convertStreamToString(disassociateRobotResponse.mResponseInputStream);
+				LogHelper.logD(TAG, "JSON = " + json);
+				result = resultMapper.readValue(json, new TypeReference<RobotAssociationDisassociationResult>() {});				
+				LogHelper.log(TAG, "All Robots dissociated.");
+			} catch (JsonParseException e) {
+				LogHelper.log(TAG, "Exception in dissociateAllNeatoRobotsRequest" ,e);
+			} catch (JsonMappingException e) {
+				LogHelper.log(TAG, "Exception in dissociateAllNeatoRobotsRequest" ,e);
+			} catch (IOException e) {
+				LogHelper.log(TAG, "Exception in dissociateAllNeatoRobotsRequest" ,e);
+			}
+		}
+		else { 
+			LogHelper.log(TAG, "All Robots dissociation failed.");
+			result = new RobotAssociationDisassociationResult(disassociateRobotResponse);
+		}
+		
+		return result;
+	}
+
 	public static RobotAssociationDisassociationResult associateNeatoRobotRequest(Context context, String email, String robotId) {
 		RobotAssociationDisassociationResult result = null;
 		Map<String, String> associateRobotReqParams = new HashMap<String, String>();

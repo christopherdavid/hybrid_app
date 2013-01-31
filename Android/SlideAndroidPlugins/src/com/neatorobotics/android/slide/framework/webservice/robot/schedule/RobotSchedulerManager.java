@@ -2,6 +2,7 @@ package com.neatorobotics.android.slide.framework.webservice.robot.schedule;
 
 import android.content.Context;
 
+import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.http.download.FileCachePath;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadHelper;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadListener;
@@ -36,7 +37,7 @@ public class RobotSchedulerManager {
 
 
 	// Public helper method to set the Robot schedule on the server. 
-	public void sendRobotSchedule(AdvancedScheduleGroup robotScheduleGroup, final String serial_number, final ScheduleWebserviceListener scheduleDetailsListener) {
+	public void sendRobotSchedule(AdvancedScheduleGroup robotScheduleGroup, final String robotId, final ScheduleWebserviceListener scheduleDetailsListener) {
 		final String xmlSchedule = robotScheduleGroup.getXml();
 		final String blobData = robotScheduleGroup.getBlobData();
 		final String scheduleType = NeatoRobotScheduleWebServicesAttributes.SCHEDULE_TYPE_ADVANCED;
@@ -46,16 +47,25 @@ public class RobotSchedulerManager {
 			public void run() {
 				ScheduleWebserviceListener scheduleListener  = scheduleDetailsListener;
 				String currentScheduleId = null;
-				String currentxml_version = null;
-				GetNeatoRobotSchedulesResult schedulesResult = NeatoRobotScheduleWebservicesHelper.getNeatoRobotSchedulesRequest(mContext, serial_number);
-				if (schedulesResult != null && schedulesResult.success()) {
+				String currentScheduleVersion = null;
+				GetNeatoRobotSchedulesResult schedulesResult = NeatoRobotScheduleWebservicesHelper.getNeatoRobotSchedulesRequest(mContext, robotId);
+				
+				if (schedulesResult == null) {
+					//TODO: Take into account server error also.
+					LogHelper.log(TAG, "failed to update the schedule data");
+					if (scheduleListener != null) {
+						scheduleListener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
+					}
+					return;
+				}
+				if (schedulesResult.success()) {
 					int scheduleListSize = schedulesResult.mResult.size();
 
 					//TODO: This is under assumption that the schedules are sent in descending order.
 					for (int scheduleIterator = (scheduleListSize-1); scheduleIterator >= 0 ; scheduleIterator--) {
 						if (NeatoRobotScheduleWebServicesAttributes.SCHEDULE_TYPE_ADVANCED.equals(schedulesResult.mResult.get(scheduleIterator).mSchedule_Type)) {
 							currentScheduleId = schedulesResult.mResult.get(scheduleIterator).mId;
-							currentxml_version = schedulesResult.mResult.get(scheduleIterator).mXml_Data_Version;
+							currentScheduleVersion = schedulesResult.mResult.get(scheduleIterator).mXml_Data_Version;
 							LogHelper.log(TAG, "Current schedule id is: "+currentScheduleId);
 							break;
 						}
@@ -65,32 +75,49 @@ public class RobotSchedulerManager {
 				}
 
 				if (currentScheduleId == null) {
-					AddNeatoRobotScheduleDataResult result = NeatoRobotScheduleWebservicesHelper.addNeatoRobotScheduleDataRequest(mContext, serial_number, scheduleType, xmlSchedule, blobData);
-					if (result != null && result.success()) {
-						LogHelper.log(TAG, "Sucessfully posted scheduling data with robot schedule id:"+result.mResult.mRobot_Schedule_Id);
+					AddNeatoRobotScheduleDataResult result = NeatoRobotScheduleWebservicesHelper.addNeatoRobotScheduleDataRequest(mContext, robotId, scheduleType, xmlSchedule, blobData);
+					if (result == null) {
+						//TODO: Take into account server error also.
+						LogHelper.log(TAG, "currentScheduleId is null. Failed to add the schedule data");
+						if (scheduleListener != null) {
+							scheduleListener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
+						}
+						return;
+					}
+					
+					if (result.success()) {
+						LogHelper.log(TAG, "Sucessfully posted scheduling data with robot schedule id:" + result.mResult.mRobot_Schedule_Id);
 						if (scheduleListener != null) {
 							scheduleListener.onSuccess();
 						}
-					} else {
-						LogHelper.log(TAG, "Error: "+result.mMessage);
+					} 
+					else {
+						LogHelper.log(TAG, "Error: " + result.mMessage);
 						if (scheduleListener != null) {
-							scheduleListener.onNetworkError();
+							scheduleListener.onServerError(result.mMessage);
 						}
 					}
 				} else {
 					// Robot schedule exists. Hence update schedule
 					LogHelper.log(TAG, "Currrent scheduel ID: :" + currentScheduleId);
-					UpdateNeatoRobotScheduleResult result = NeatoRobotScheduleWebservicesHelper.updateNeatoRobotScheduleDataRequest(mContext, currentScheduleId, NeatoRobotScheduleWebServicesAttributes.SCHEDULE_TYPE_ADVANCED, xmlSchedule, currentxml_version);
-					if (result != null && result.success()) {
+					UpdateNeatoRobotScheduleResult result = NeatoRobotScheduleWebservicesHelper.updateNeatoRobotScheduleDataRequest(mContext, currentScheduleId, NeatoRobotScheduleWebServicesAttributes.SCHEDULE_TYPE_ADVANCED, xmlSchedule, currentScheduleVersion);
+					if (result == null) {
+						//TODO: Take into account server error also.
+						LogHelper.log(TAG, "currentScheduleId is not null. Failed to update the schedule data");
+						if (scheduleListener != null) {
+							scheduleListener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
+						}
+						return;
+					}
+					if (result.success()) {
 						LogHelper.log(TAG, "Sucessfully updated scheduling data with robot schedule id: " + currentScheduleId);
 						if (scheduleListener != null) {
 							scheduleListener.onSuccess();
 						}
 					} else {
-						//TODO: Take into account server error also.
 						LogHelper.log(TAG, "Error in updating schedule");
 						if (scheduleListener != null) {
-							scheduleListener.onNetworkError();
+							scheduleListener.onServerError(result.mMessage);
 						}
 					}
 				}
@@ -115,13 +142,13 @@ public class RobotSchedulerManager {
 				GetNeatoRobotSchedulesResult result = NeatoRobotScheduleWebservicesHelper.getNeatoRobotSchedulesRequest(mContext, robotId);		
 				
 				if (result == null) {
-					listener.onError("");
+					listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
 					return;
 				}
 				
 				if (!result.success()) {
 					LogHelper.log(TAG, "Error: "+ result.mMessage);
-					listener.onError(result.mMessage);
+					listener.onServerError(result.mMessage);
 					return;
 				}
 				
@@ -140,13 +167,13 @@ public class RobotSchedulerManager {
 				GetNeatoRobotScheduleDataResult resultData = NeatoRobotScheduleWebservicesHelper.getNeatoRobotScheduleDataRequest(mContext, scheduleId);
 				if (resultData == null) {
 					LogHelper.log(TAG, "Error in fetching Robot Schedule data request");
-					listener.onError("");
+					listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
 					return;
 				}
 				
 				if (!resultData.success()) {
 					LogHelper.log(TAG, "Error in fetching Robot Schedule data request: Error: "+ result.mMessage);
-					listener.onError(result.mMessage);
+					listener.onServerError(result.mMessage);
 					return;
 				}
 				
@@ -159,7 +186,7 @@ public class RobotSchedulerManager {
 					
 					@Override
 					public void onDownloadError(String url) {
-						listener.onError("Could not download schedule data");
+						listener.onServerError("Could not download schedule data");
 					}
 					
 					@Override
@@ -173,5 +200,66 @@ public class RobotSchedulerManager {
 
 		};
 		TaskUtils.scheduleTask(task, 0);
-	}	
+	}
+	
+	public void deleteRobotSchedule(final String robotId, final DeleteScheduleListener listener) {
+		Runnable task = new Runnable() {			
+			@Override
+			public void run() {
+				GetNeatoRobotSchedulesResult getScheduleResult = NeatoRobotScheduleWebservicesHelper.getNeatoRobotSchedulesRequest(mContext, robotId);
+				if (getScheduleResult == null) {
+					if (listener != null) {						
+						listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
+					}
+					return;
+				}
+				
+				if (!getScheduleResult.success()) {
+					if (listener != null) {						
+						listener.onServerError(getScheduleResult.mMessage);
+					}
+					return;
+				}
+				
+				// Presently server assumes that there could be multiple schedules and server sends the array 
+				// Since server sends the array of schedule but we assume that there is going to be only
+				// single schedule we are just using the first available item. I think server needs to change
+				if (getScheduleResult.mResult.size() == 0) {
+					LogHelper.logD(TAG, "Failed to delete robot schedule data - " + robotId);
+					if (listener != null) {
+						listener.onServerError("Failed to delete robot schedule data");
+					}
+					return;
+				}
+				
+				// to return only one schedule.					
+				String scheduleId = getScheduleResult.mResult.get(0).mId; 
+				LogHelper.logD(TAG, "Deleting the schedule. scheduleId  = " + scheduleId);
+				DeleteNeatoRobotScheduleResult deleteScheduleResult = NeatoRobotScheduleWebservicesHelper.deleteNeatoRobotSchedule(mContext, scheduleId);
+				
+				if (deleteScheduleResult == null) {
+					if (listener != null) {						
+						listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
+					}
+					return;
+				}
+				
+			
+				if (deleteScheduleResult.success()) {
+					LogHelper.logD(TAG, "Schedule data deleted successfully");
+					if (listener != null) {
+						listener.onSuccess(robotId);
+					}
+				}
+				else {
+					LogHelper.logD(TAG, "Failed to delete robot schedule data - " + robotId);
+					if (listener != null) {
+						listener.onServerError("Failed to delete robot schedule data");
+					}
+				}
+			}
+		};
+		
+		TaskUtils.scheduleTask(task, 0);
+	}
 }

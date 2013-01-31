@@ -38,7 +38,7 @@ public class NeatoUserWebServicesAttributes {
 		public static class Attribute {
 			public static final String API_KEY = "api_key";
 			public static final String EMAIL = "email";
-			public static final String AUTHHENTICATION_TOKEN = "auth_token";
+			public static final String AUTHENTICATION_TOKEN = "auth_token";
 		}
 	}
 	
@@ -47,7 +47,7 @@ public class NeatoUserWebServicesAttributes {
 		public static class Attribute {
 			public static final String API_KEY = "api_key";
 			public static final String EMAIL = "email";
-			public static final String AUTHHENTICATION_TOKEN = "auth_token";
+			public static final String AUTHENTICATION_TOKEN = "auth_token";
 		}
 	}
 

@@ -21,6 +21,7 @@ import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
 
 public class NeatoSmartAppWelcomeScreen extends Activity {
+	@SuppressWarnings("unused")
 	private static final String TAG = NeatoSmartAppLoginActivity.class.getSimpleName();
 	
 	private static final int REQUEST_CODE_LOGIN_ACTIVITY = 1001;

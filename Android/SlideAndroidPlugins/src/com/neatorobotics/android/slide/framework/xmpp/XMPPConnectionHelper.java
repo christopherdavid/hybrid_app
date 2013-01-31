@@ -1,8 +1,6 @@
 package com.neatorobotics.android.slide.framework.xmpp;
 
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.UnsupportedEncodingException;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -17,28 +15,32 @@ import org.w3c.dom.Node;
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
-import com.neatorobotics.android.slide.framework.AppConstants;
+import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.commands.CommandFactory;
 import com.neatorobotics.android.slide.framework.robot.commands.CommandPacketValidator;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandsGroup;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotPacket;
+import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandBuilder;
+import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacket;
+import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandParser;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
+
+
 
 
 
 public class XMPPConnectionHelper {
 
 	private static final String TAG = XMPPConnectionHelper.class.getSimpleName();
+	private static final int MAX_RETRY_CONNECT_COUNT = 3;
 	public static final String STRING_ENCODING = "UTF-8";
-	@SuppressWarnings("unused")
 	private Context mContext;
 	private Connection mConnection;
 	private ConnectionConfiguration mConnectionConfig;
 	private String serverIpAddress;
 	private String webServiceName;
 	private int serverPort;
-	private static final String JABBER_PACKET_PROPERTY_KEY = AppConstants.JABBER_PACKET_PROPERTY_KEY;
 	private static XMPPConnectionHelper sXMPPConnectionHelper;
 	private static Object mObjectCreateLock = new Object();
 	private Object mConnectionObjectLock = new Object();
@@ -213,9 +215,19 @@ public class XMPPConnectionHelper {
 
 		LogHelper.logD(TAG, "sendRobotCommand called");
 		LogHelper.logD(TAG, "sending to = " + to);
-		byte[] packet = getRobotPacket(robotPacket);
 		String packetXml = getRobotPacketString(robotPacket);
-		sendRobotPacketAsync(to, packetXml, packet);
+		sendRobotPacketAsync(to, packetXml);
+	}
+	
+	public void sendRobotCommand(String peerJabberId, RobotCommandPacket robotPacket) {
+
+		LogHelper.logD(TAG, "sendRobotCommand called");
+		LogHelper.logD(TAG, "sending to = " + peerJabberId);
+		
+		RobotCommandBuilder builder = new RobotCommandBuilder();
+		String robotPacketInXmlFormat =  builder.convertRobotCommandsToString(robotPacket);
+		LogHelper.logD(TAG, "robotPacketInXmlFormat = " + robotPacketInXmlFormat);
+		sendRobotPacketAsync(peerJabberId, robotPacketInXmlFormat);
 	}
 
 	public boolean isConnected() {
@@ -233,25 +245,6 @@ public class XMPPConnectionHelper {
 	}
 
 
-	private  byte[] getRobotPacket(RobotPacket robotPacket)
-	{
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(bos);
-
-		Node header = CommandPacketValidator.getHeaderXml();
-		Node command = robotPacket.robotCommandToXmlNode();
-		byte[] packet = CommandFactory.getPacketData(header, command);
-		try {
-			dos.write(packet);
-		}
-		catch (Exception e) {
-			LogHelper.log(TAG, "Exception in getBytes", e);
-			return null;
-		}
-		return bos.toByteArray();
-
-	}
-
 	private String getRobotPacketString(RobotPacket robotPacket)
 	{		
 		Node header = CommandPacketValidator.getHeaderXml();
@@ -263,76 +256,133 @@ public class XMPPConnectionHelper {
 	}
 
 	//TODO: later the byte[] parameter will be removed. This is temporary.
-	private  void sendRobotPacket(String to, String packetXml, byte[] packet)
+	private  void sendRobotPacket(String to, String packetXml)
 	{
-		if (packet == null) {
-			LogHelper.log(TAG, "Packet is null");
-			return;
-		}
 		Connection connection = getConnection();
 		Message message = new Message();
 		message.setType(Message.Type.chat);
-		message.setProperty(JABBER_PACKET_PROPERTY_KEY, packet);
 		message.setBody(packetXml);
 		message.setTo(to);
 		connection.sendPacket(message);
 		LogHelper.logD(TAG, "Command is sent to :" + to);
 	}
 
-	//TODO: later the byte[] parameter will be removed. This is temporary.
-	private  void sendRobotPacketAsync(final String to, final String packetData, final byte[] packet)
+	private  void sendRobotPacketAsync(final String to, final String packetData)
 	{
 		Runnable task = new Runnable() {
 			public void run() {
-				sendRobotPacket(to, packetData, packet);
+				boolean isConnected = tryXmppConnection();
+				if (isConnected) {
+					sendRobotPacket(to, packetData);
+				}
+				else {
+					LogHelper.log(TAG, "Not connected over XMPP. Will not be sending packet");
+				}
 			}
 		};
 		Thread t = new Thread(task);
 		t.start();
 	}
+	
+	private boolean tryXmppConnection() 
+	{
+		Connection connection = getConnection();
+		boolean isConnected = connection.isConnected();
+		boolean isAuthenticated = connection.isAuthenticated();
+		if (isConnected && isAuthenticated) {
+			// already connected return true from here
+			return true;
+		}
+		for (int i = 0; i < MAX_RETRY_CONNECT_COUNT; i++) {
+			try {
+				close();
+				connection = getConnection();
+				isConnected = connection.isConnected();
+				if (!isConnected) {
+					connect();
+				}
+				isAuthenticated = connection.isAuthenticated();
+				if (!isAuthenticated) {
+					String userId = getUserChatId();
+					String password = getUserChatPassword();
+					if (isValidUserIdAndPassword(userId, password)) {
+						try {
+							connection.login(userId, password);
+						}
+						catch (Exception e) {
+							
+						}
+						
+					} 
+				}
+				else {
+					LogHelper.log(TAG, "XMPP login");
+					break;
+				}
+			}
+			catch (XMPPException e) {
+				
+			}
+		}
+		return isConnected;
+	}
 
 	private void processMessageFromRobot(Message message) {
 		String packetXml = message.getBody();
-		RobotCommandsGroup robotCommandsGroup = null;
-		byte[] packetData = null;
+		
+		LogHelper.log(TAG, "Message body : "+ packetXml);
 		String messageSender = message.getFrom();
 		LogHelper.log(TAG, "Message recevied from: "+ messageSender);
-		//TODO: Remove the check for command in property. This is just temporary. Later commands will be sent 
-		// in body itself.
-		if (packetXml == null) {
-			packetData = (byte[]) message.getProperty(JABBER_PACKET_PROPERTY_KEY);
-			if (packetData == null) {
-				LogHelper.logD(TAG, "Empty jabber message");
-				return;
-			}
-			LogHelper.logD(TAG, "jabber message size: "+packetData.length);
-		} else {
-			LogHelper.log(TAG, "Incoming message: " + packetXml);
-			try {
-				packetData = packetXml.getBytes(STRING_ENCODING);
-			} catch (UnsupportedEncodingException e) {
-				LogHelper.log(TAG, "Exception in processMessageFromRobot", e);
-				return;
-			}
-		}
-		boolean isPacketValid = CommandPacketValidator.validateHeaderAndSignature(packetData);
-		if (isPacketValid) {
-			LogHelper.log(TAG, "Header Version and Signature match");
-			robotCommandsGroup = CommandFactory.createCommandGroup(packetData);
-		} 
-		else {
-			LogHelper.log(TAG, "Header Version or Signature mis-match");
-		}
-		if (robotCommandsGroup == null) {
-			LogHelper.log(TAG, "robotCommandsGroup is null");
+
+		// first try to parse for the new packet structure. If we are able to parse to the new packet
+		// structure then its OK, otherwise we try to parse with the old packet structure
+		
+		RobotCommandParser parser = new RobotCommandParser();
+		RobotCommandPacket packet = parser.convertStringToRobotCommands(packetXml);
+		if ((packet != null) && (packet.isValidPacket())) {
+			LogHelper.log(TAG, "New packet structure and packet is valid ");
+			notifyPacketReceived(messageSender, packet);
 			return;
 		}
-		notifyPacketReceived(messageSender, robotCommandsGroup);
+		else {
+			
+			RobotCommandsGroup robotCommandsGroup = null;
+			byte[] packetData = null;
+	
+			if (packetXml == null) {
+				LogHelper.logD(TAG, "Empty jabber message");
+				return;
+			} 
+			else {
+				LogHelper.log(TAG, "Incoming message: " + packetXml);
+				try {
+					packetData = packetXml.getBytes(STRING_ENCODING);
+				} 
+				catch (UnsupportedEncodingException e) {
+					LogHelper.log(TAG, "Exception in processMessageFromRobot", e);
+					return;
+				}
+			}
+			
+			boolean isPacketValid = CommandPacketValidator.validateHeaderAndSignature(packetData);
+			if (isPacketValid) {
+				LogHelper.log(TAG, "Header Version and Signature match");
+				robotCommandsGroup = CommandFactory.createCommandGroup(packetData);
+			} 
+			else {
+				LogHelper.log(TAG, "Header Version or Signature mis-match");
+			}
+			if (robotCommandsGroup == null) {
+				LogHelper.log(TAG, "robotCommandsGroup is null");
+				return;
+			}
+			notifyPacketReceived(messageSender, robotCommandsGroup);
+		}
 	}
 
 	private void notifyPacketReceived(final String from, final RobotCommandsGroup robotCommandGroup)
 	{
-		for (int i=0; i<robotCommandGroup.size(); i++) {
+		for (int i = 0; i < robotCommandGroup.size(); i++) {
 			final RobotPacket robotPacket = robotCommandGroup.getRobotPacket(i);
 			if (mListener == null) {
 				LogHelper.logD(TAG, "XMPPDataPacketListener is null");
@@ -352,7 +402,25 @@ public class XMPPConnectionHelper {
 		}
 	}
 
+	private void notifyPacketReceived(final String from, final RobotCommandPacket packet)
+	{
+		if (mListener == null) {
+			return;
+		}
 
+		if (mHandler != null) {
+			mHandler.post(new Runnable() {
+
+				public void run() {
+					mListener.onDataReceived(from, packet);
+				}
+			});
+		}
+		else {
+			mListener.onDataReceived(from, packet);
+		}
+
+	}	
 
 	private void notifyConnectionSuccessful()
 	{
@@ -402,6 +470,16 @@ public class XMPPConnectionHelper {
 				}
 			});
 		}
+	}
+	
+	private String getUserChatId() {
+		String jabberUserId = UserHelper.getChatId(mContext);		
+		jabberUserId = XMPPUtils.removeJabberDomain(jabberUserId);
+		return jabberUserId;
+	}
+	private String getUserChatPassword() {
+		String jabberUserPwd = UserHelper.getChatPwd(mContext);
+		return jabberUserPwd;
 	}
 
 }

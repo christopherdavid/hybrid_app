@@ -49,7 +49,9 @@ var ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS 		= "disassociateAllRobots";
 // List of actions types of Robot Manager
 var ACTION_TYPE_DISCOVER_NEARBY_ROBOTS 			= "discoverNearByRobots";
 var ACTION_TYPE_TRY_CONNECT_CONNECTION 			= "tryDirectConnection";
+var ACTION_TYPE_TRY_CONNECT_CONNECTION2			= "tryDirectConnection2";
 var ACTION_TYPE_SEND_COMMAND_TO_ROBOT 			= "sendCommandToRobot";
+var ACTION_TYPE_SEND_COMMAND_TO_ROBOT2 			= "sendCommandToRobot2";
 var ACIION_TYPE_SET_SCHEDULE 					= "robotSetSchedule";
 var ACIION_TYPE_GET_ROBOT_SCHEDULE 				= "getSchedule";
 var ACTION_TYPE_GET_ROBOT_MAP 					= "getRobotMap";
@@ -59,14 +61,16 @@ var ACTION_TYPE_GET_ROBOT_ATLAS_METADATA 		= "getRobotAtlasMetadata";
 var ACTION_TYPE_UPDATE_ROBOT_ATLAS_METADATA		= "updateRobotAtlasMetadata";
 var ACTION_TYPE_GET_ATLAS_GRID_DATA 			= "getAtlasGridData";
 var ACTION_TYPE_SET_ROBOT_NAME					= "setRobotName";
+var ACTION_TYPE_DELETE_ROBOT_SCHEDULE			= "deleteScheduleData";
 var ACTION_TYPE_SET_ROBOT_NAME_2				= "setRobotName2";
 var ACTION_TYPE_GET_ROBOT_DETAIL				= "getRobotDetail";
+var ACTION_TYPE_GET_ROBOT_ONLINE_STATUS			= "getRobotOnlineStatus";
 
 //List of keys to send data:
 
 var KEY_EMAIL = 'email';
 var KEY_PASSWORD = 'password';
-var KEY_USER_NAME = 'username';
+var KEY_USER_NAME = 'userName';
 
 //Used by robot plugin
 var KEY_COMMAND = 'command';
@@ -91,7 +95,17 @@ var COMMAND_ROBOT_START = 101;
 var COMMAND_ROBOT_STOP = 102;
 var COMMAND_ROBOT_JABBER_DETAILS = 103;
 var COMMAND_SEND_BASE = 104;
+var COMMAND_GET_ROBOT_STATE = 105;
+var COMMAND_SEND_ROBOT_STATE = 106;
+var COMMAND_PAUSE_CLEANING = 107;
+var COMMAND_ENABLE_SCHEDULE = 108;
+var COMMAND_DATA_CHANGED_ON_SERVER = 109;
+var COMMAND_SET_ROBOT_TIME = 110;
 
+
+var START_CLEAN_TYPE_HIGH = 1;
+var START_CLEAN_TYPE_NORMAL = 2;
+var START_CLEAN_TYPE_SPOT = 3;
 
 if(!window.plugins) {
 	window.plugins = {};
@@ -190,10 +204,18 @@ RobotMgr.prototype.tryDirectConnection = function(robotId, callbackSuccess, call
 			ACTION_TYPE_TRY_CONNECT_CONNECTION, [connectPeerCommandArray]);
 };
 
+RobotMgr.prototype.tryDirectConnection2 = function(robotId, callbackSuccess, callbackError) {
+	var connectPeerCommandArray = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_TRY_CONNECT_CONNECTION2, [connectPeerCommandArray]);
+};
+
+
+
 RobotMgr.prototype.disconnectDirectConnection  = function(robotId, callbackSuccess, callbackError) {
 	var disconnectPeerCommandArray = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
-			ACTION_TYPE_DISCONNECT_DIRECT_CONNETION, [connectPeerCommandArray]);
+			ACTION_TYPE_DISCONNECT_DIRECT_CONNETION, [disconnectPeerCommandArray]);
 };
 
 
@@ -203,6 +225,15 @@ RobotMgr.prototype.sendCommandToRobot = function(robotId, commandId, commandPara
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_SEND_COMMAND_TO_ROBOT, [commandArray]);
 };
+
+RobotMgr.prototype.sendCommandToRobot2 = function(robotId, commandId, commandParams, callbackSuccess, callbackError) {
+	var params = {'params': commandParams};
+	var commandArray = {'robotId':robotId, 'commandId':commandId, 'commandParams':params};
+	
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_SEND_COMMAND_TO_ROBOT2, [commandArray]);
+};
+
 
 RobotMgr.prototype.setRobotName = function(robotId, robotName, callbackSuccess, callbackError) {
 	var setRobotName = {'robotId':robotId, 'robotName':robotName};
@@ -222,6 +253,12 @@ RobotMgr.prototype.getRobotDetail = function(robotId, robotName, callbackSuccess
 			ACTION_TYPE_GET_ROBOT_DETAIL, [getRobotDetail]);
 };
 
+RobotMgr.prototype.getRobotOnlineStatus = function(robotId, callbackSuccess, callbackError) {
+	var getRobotStatus = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ROBOT_ONLINE_STATUS, [getRobotStatus]);
+};
+
 RobotMgr.prototype.setSchedule = function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
 	var scheduleArray = {'robotId':robotId, 'scheduleType':scheduleType, 'schedule': jsonArray};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
@@ -232,6 +269,12 @@ RobotMgr.prototype.getSchedule = function(robotId, scheduleType, callbackSuccess
 	var scheduleArray = {'robotId':robotId, 'scheduleType':scheduleType};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACIION_TYPE_GET_ROBOT_SCHEDULE, [scheduleArray]);
+};
+
+RobotMgr.prototype.deleteSchedule = function(robotId, scheduleType, callbackSuccess, callbackError) {
+	var scheduleArray = {'robotId':robotId, 'scheduleType':scheduleType};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_DELETE_ROBOT_SCHEDULE, [scheduleArray]);
 };
 
 RobotMgr.prototype.getMaps = function(robotId, callbackSuccess, callbackError) {
@@ -265,6 +308,7 @@ RobotMgr.prototype.getAtlasGridData = function(robotId, gridId, callbackSuccess,
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_GET_ATLAS_GRID_DATA, [getGridArray]);
 };
+
 
 var UserPluginManager = (function() {
 	return {
@@ -316,6 +360,9 @@ var RobotPluginManager = (function() {
 		tryDirectConnection: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.tryDirectConnection(robotId, callbackSuccess, callbackError);
 		},
+		tryDirectConnection2: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.tryDirectConnection2(robotId, callbackSuccess, callbackError);
+		},
 		disconnectDirectConnection: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.disconnectDirectConnection(robotId, callbackSuccess, callbackError);
 		},
@@ -324,6 +371,9 @@ var RobotPluginManager = (function() {
 			window.plugins.neatoPluginLayer.robotMgr.sendCommandToRobot(robotId, commandId, commandParams, callbackSuccess, callbackError);
 		},
 		
+		sendCommandToRobot2: function(robotId, commandId, commandParams, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.sendCommandToRobot2(robotId, commandId, commandParams, callbackSuccess, callbackError);
+		},
 		setRobotName : function(robotId, robotName, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.setRobotName(robotId, robotName, callbackSuccess, callbackError);
 		},
@@ -336,12 +386,20 @@ var RobotPluginManager = (function() {
 			window.plugins.neatoPluginLayer.robotMgr.getRobotDetail(robotId, callbackSuccess, callbackError);
 		},
 		
+		getRobotOnlineStatus : function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotOnlineStatus(robotId, callbackSuccess, callbackError);
+		},
+		
 		setSchedule: function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.setSchedule(robotId, scheduleType, jsonArray, callbackSuccess, callbackError);
 		},
 		
 		getSchedule: function(robotId, scheduleType, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getSchedule(robotId, scheduleType,  callbackSuccess, callbackError);
+		},
+		
+		deleteSchedule: function(robotId, scheduleType, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.deleteSchedule(robotId, scheduleType, callbackSuccess, callbackError);
 		},
 		
 		getMaps: function(robotId, callbackSuccess, callbackError) {

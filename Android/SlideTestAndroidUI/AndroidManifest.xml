@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.neatorobotics.android.slide.android.ui"
-    android:versionCode="16"
-    android:versionName="0.2.0.14" >
+    android:versionCode="19"
+    android:versionName="0.2.0.18" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -15,30 +15,25 @@
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:allowBackup="false"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".NeatoSmartAppTestActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"            
             android:theme="@style/AppActionBarTheme">
-            <intent-filter>
-            </intent-filter>
         </activity>
         <activity
             android:name=".NeatoSmartAppLoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
-            <intent-filter>
-            </intent-filter>
         </activity>
         <activity
             android:name=".NeatoSmartAppCreateUserActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
-            <intent-filter>
-            </intent-filter>
         </activity>
         <activity
             android:name=".NeatoSmartAppWelcomeScreen"
@@ -47,7 +42,6 @@
             android:theme="@style/AppActionBarTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -56,8 +50,6 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
-            <intent-filter>
-            </intent-filter>
         </activity>
 
 	<activity
@@ -65,16 +57,12 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
-            <intent-filter>
-            </intent-filter>
         </activity>        
 	<activity
             android:name=".ScheduleRobotActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
-            <intent-filter>
-            </intent-filter>
         </activity>
         
 	<activity 

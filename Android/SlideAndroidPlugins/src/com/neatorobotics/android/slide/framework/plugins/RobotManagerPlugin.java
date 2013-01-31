@@ -15,13 +15,16 @@ import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
 import com.neatorobotics.android.slide.framework.pluginhelper.ScheduleJsonDataHelper;
+import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDiscoveryListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
 import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedScheduleGroup;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
+import com.neatorobotics.android.slide.framework.utils.DataConversionUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotDetailListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
+import com.neatorobotics.android.slide.framework.webservice.robot.RobotOnlineStatusListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.SetRobotProfileDetailsListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.RobotAtlasWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.RobotAtlasGridWebservicesManager;
@@ -31,6 +34,7 @@ import com.neatorobotics.android.slide.framework.webservice.robot.atlas.listener
 import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapDataDownloadListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.UpdateRobotMapListener;
+import com.neatorobotics.android.slide.framework.webservice.robot.schedule.DeleteScheduleListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.GetScheduleListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.RobotSchedulerManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.ScheduleWebserviceListener;
@@ -49,12 +53,15 @@ public class RobotManagerPlugin extends Plugin {
 		SEND_COMMAND_TO_ROBOT, SET_ROBOT_SCHEDULE, 
 		SET_MAP_OVERLAY_DATA, GET_ROBOT_MAP, 
 		GET_ROBOT_SCHEDULE, DISCONNECT_DIRECT_CONNECTION, SET_ROBOT_NAME, GET_ROBOT_ATLAS_METADATA,
-		UPDATE_ROBOT_ATLAS_METADATA, GET_ATLAS_GRID_DATA, SET_ROBOT_NAME_2, GET_ROBOT_DETAIL};
+		UPDATE_ROBOT_ATLAS_METADATA, GET_ATLAS_GRID_DATA, DELETE_ROBOT_SCHEDULE, GET_ROBOT_DETAIL, 
+		SET_ROBOT_NAME_2, TRY_DIRECT_CONNECTION2, SEND_COMMAND_TO_ROBOT2, ROBOT_ONLINE_STATUS};
 
 		static {
 			ACTION_MAP.put(ActionTypes.DISCOVER_NEAR_BY_ROBOTS, RobotManagerPluginMethods.DISCOVER_NEAR_BY_ROBOTS);
 			ACTION_MAP.put(ActionTypes.TRY_DIRECT_CONNECTION, RobotManagerPluginMethods.TRY_DIRECT_CONNECTION);
+			ACTION_MAP.put(ActionTypes.TRY_DIRECT_CONNECTION2, RobotManagerPluginMethods.TRY_DIRECT_CONNECTION2);
 			ACTION_MAP.put(ActionTypes.SEND_COMMAND_TO_ROBOT, RobotManagerPluginMethods.SEND_COMMAND_TO_ROBOT);
+			ACTION_MAP.put(ActionTypes.SEND_COMMAND_TO_ROBOT2, RobotManagerPluginMethods.SEND_COMMAND_TO_ROBOT2);
 			ACTION_MAP.put(ActionTypes.SET_ROBOT_SCHEDULE, RobotManagerPluginMethods.SET_ROBOT_SCHEDULE);
 			ACTION_MAP.put(ActionTypes.SET_MAP_OVERLAY_DATA, RobotManagerPluginMethods.SET_MAP_OVERLAY_DATA);
 			ACTION_MAP.put(ActionTypes.GET_ROBOT_MAP, RobotManagerPluginMethods.GET_ROBOT_MAP);
@@ -64,11 +71,12 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_MAP.put(ActionTypes.UPDATE_ROBOT_ATLAS_METADATA, RobotManagerPluginMethods.UPDATE_ROBOT_ATLAS_METADATA);
 			ACTION_MAP.put(ActionTypes.GET_ATLAS_GRID_DATA, RobotManagerPluginMethods.GET_ATLAS_GRID_DATA);
 			ACTION_MAP.put(ActionTypes.SET_ROBOT_NAME, RobotManagerPluginMethods.SET_ROBOT_NAME);
-			ACTION_MAP.put(ActionTypes.SET_ROBOT_NAME_2, RobotManagerPluginMethods.SET_ROBOT_NAME_2);
+			ACTION_MAP.put(ActionTypes.DELETE_ROBOT_SCHEDULE, RobotManagerPluginMethods.DELETE_ROBOT_SCHEDULE);
 			ACTION_MAP.put(ActionTypes.GET_ROBOT_DETAIL, RobotManagerPluginMethods.GET_ROBOT_DETAIL);
+			ACTION_MAP.put(ActionTypes.SET_ROBOT_NAME_2, RobotManagerPluginMethods.SET_ROBOT_NAME_2);
+			ACTION_MAP.put(ActionTypes.GET_ROBOT_ONLINE_STATUS, RobotManagerPluginMethods.ROBOT_ONLINE_STATUS);
 		}
 
-		/*private RobotPluginAssociateListener mRobotPluginAssociateListener;*/
 		private RobotPluginDiscoveryListener mRobotPluginDiscoveryListener;
 		private ScheduleDetailsPluginListener mScheduleDetailsPluginListener;
 
@@ -109,9 +117,18 @@ public class RobotManagerPlugin extends Plugin {
 				LogHelper.log(TAG, "Form Peer Connection action initiated");
 				tryDirectConnection(context, jsonData , callbackId);
 				break;
+			case TRY_DIRECT_CONNECTION2:	
+				LogHelper.log(TAG, "try connection 2 called");
+				tryDirectConnection2(context, jsonData , callbackId);
+				break;
 			case SEND_COMMAND_TO_ROBOT:
 				LogHelper.log(TAG, "ROBOTCOMMAND action initiated");
 				sendCommand(context, jsonData, callbackId);
+				// No need to wait for other callbacks
+				break;
+			case SEND_COMMAND_TO_ROBOT2:
+				LogHelper.log(TAG, "ROBOTCOMMAND action initiated");
+				sendCommand2(context, jsonData, callbackId);
 				// No need to wait for other callbacks
 				break;
 			case SET_ROBOT_SCHEDULE:
@@ -125,16 +142,19 @@ public class RobotManagerPlugin extends Plugin {
 				setMapOverlayData(context, jsonData, callbackId);
 				break;
 			case GET_ROBOT_MAP:
-
 				LogHelper.log(TAG, "GET_ROBOT_MAP action initiated");
 				// TODO: handle with a listener
 				getRobotMaps(context, jsonData, callbackId);
 				break;
 			case GET_ROBOT_SCHEDULE:
-
 				LogHelper.log(TAG, "GET_ROBOT_SCHEDULE action initiated");
 				// TODO: handle with a listener
-				getRobotSchedule(context, jsonData, callbackId);
+				getRobotSchedule(context, jsonData, callbackId);				
+				break;
+				
+			case DELETE_ROBOT_SCHEDULE:
+				LogHelper.log(TAG, "DELETE_ROBOT_SCHEDULE action initiated");				
+				deleteRobotSchedule(context, jsonData, callbackId);
 				break;
 			case DISCONNECT_DIRECT_CONNECTION:
 				LogHelper.log(TAG, "DISCONNECT_PEER action initiated");
@@ -164,40 +184,14 @@ public class RobotManagerPlugin extends Plugin {
 				LogHelper.log(TAG, "GET_ROBOT_DETAIL action initiated");
 				getRobotDetail(context, jsonData, callbackId);
 				break;
+				
+			case ROBOT_ONLINE_STATUS:
+				LogHelper.log(TAG, "ROBOT_ONLINE_STATUS action initiated");
+				getRobotOnlineStatus(context, jsonData, callbackId);
+				break;
 			}
 		}
 
-		private void getRobotDetail(Context context, RobotJsonData jsonData, final String callbackId) {
-			LogHelper.logD(TAG, "getRobotDetail action initiated in Robot plugin");	
-			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-			
-			RobotManager.getInstance(context).getRobotDetail(robotId, new RobotDetailListener() {
-				
-				@Override
-				public void onRobotDetailReceived(RobotItem robotItem) {
-					LogHelper.log(TAG, "getRobotDetail - onRobotDetailReceived");
-					JSONObject robotJsonObj = getRobotDetailJsonObject(robotItem);
-					PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, robotJsonObj);			
-					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);
-				}
-				
-				@Override
-				public void onServerError() {
-					LogHelper.log(TAG, "getRobotDetail - onServerError");
-					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_SERVER_ERROR, "Server Error");
-					PluginResult pluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
-					pluginResult.setKeepCallback(false);
-					error(pluginResult, callbackId);
-				}
-				
-				@Override
-				public void onNetworkError() {
-					LogHelper.log(TAG, "getRobotDetail - onNetworkError");
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, "Network Error");
-				}
-			});
-		}
 
 		private void setRobotName(Context context, RobotJsonData jsonData,
 				final String callbackId) {
@@ -227,7 +221,7 @@ public class RobotManagerPlugin extends Plugin {
 				}
 			});
 		}
-
+		
 		private void setRobotName2(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "setRobotName2 action initiated in Robot plugin");	
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
@@ -260,6 +254,66 @@ public class RobotManagerPlugin extends Plugin {
 				}
 			});	
 		}
+
+		private void getRobotDetail(Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "getRobotDetail action initiated in Robot plugin");	
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			
+			RobotManager.getInstance(context).getRobotDetail(robotId, new RobotDetailListener() {
+				
+				@Override
+				public void onRobotDetailReceived(RobotItem robotItem) {
+					LogHelper.log(TAG, "getRobotDetail - onRobotDetailReceived");
+					JSONObject robotJsonObj = getRobotDetailJsonObject(robotItem);
+					PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, robotJsonObj);			
+					pluginResult.setKeepCallback(false);
+					success(pluginResult, callbackId);
+				}
+				
+				@Override
+				public void onServerError(String errMessage) {
+					LogHelper.log(TAG, "getRobotDetail - onServerError");
+					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_SERVER_ERROR, errMessage);
+					PluginResult pluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
+					pluginResult.setKeepCallback(false);
+					error(pluginResult, callbackId);
+				}
+				
+				@Override
+				public void onNetworkError(String errMessage) {
+					LogHelper.log(TAG, "getRobotDetail - onNetworkError");
+					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
+				}
+			});
+		}
+
+		private void getRobotOnlineStatus(Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "getRobotOnlineStatus action initiated in Robot plugin");	
+			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			
+			RobotManager.getInstance(context).getRobotOnlineStatus(robotId, new RobotOnlineStatusListener() {
+				@Override
+				public void onComplete(boolean isOnline) {
+					LogHelper.log(TAG, "getRobotOnlineStatus - onComplete = " + isOnline);
+					JSONObject robotOnlineStatusJsonObj = getRobotOnlineStatusJsonObject(robotId, isOnline);
+					PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, robotOnlineStatusJsonObj);			
+					pluginResult.setKeepCallback(false);
+					success(pluginResult, callbackId);
+				}
+				
+				@Override
+				public void onServerError(String errMessage) {
+					LogHelper.log(TAG, "getRobotOnlineStatus - onServerError = " + errMessage);					
+					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
+				}
+				
+				@Override
+				public void onNetworkError(String errMessage) {
+					LogHelper.log(TAG, "getRobotOnlineStatus - onNetworkError = " + errMessage);
+					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
+				}				
+			});
+		}
 		
 		private JSONObject getRobotDetailJsonObject(RobotItem robotItem) {
 			JSONObject robotJsonObj = new JSONObject();
@@ -273,7 +327,20 @@ public class RobotManagerPlugin extends Plugin {
 			
 			return robotJsonObj;
 		}
-
+		
+		private JSONObject getRobotOnlineStatusJsonObject(String robotId, boolean online) {
+			JSONObject robotJsonObj = new JSONObject();
+			try {
+				robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+				robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ONLINE_STATUS, online);				
+			}
+			catch (JSONException e) {
+				LogHelper.logD(TAG, "Exception in getRobotOnlineStatusJsonObject", e);
+			}
+			
+			return robotJsonObj;
+		}
+		
 		private void disconnectPeerConnection(Context context,
 				RobotJsonData jsonData, String callbackId) {
 			LogHelper.logD(TAG, "disconnectPeerConnection action initiated in Robot plugin");
@@ -291,6 +358,12 @@ public class RobotManagerPlugin extends Plugin {
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			RobotCommandServiceManager.tryDirectConnection(context, robotId, new RobotPluginPeerConnectionListener(callbackId));	
 		}
+		
+		private void tryDirectConnection2(Context context, RobotJsonData jsonData, String callbackId) {
+			LogHelper.logD(TAG, "Try direct connection action initiated in Robot plugin");
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			RobotCommandServiceManager.tryDirectConnection2(context, robotId, new RobotPluginPeerConnectionListener(callbackId));	
+		}
 
 
 		private void setAdvancedSchedule(Context context, RobotJsonData jsonData, String callbackId) {
@@ -303,7 +376,6 @@ public class RobotManagerPlugin extends Plugin {
 			schedulerManager.sendRobotSchedule(schedules, robotId, mScheduleDetailsPluginListener);
 		}
 
-		// TODO : Write listener
 		private void sendCommand(Context context, RobotJsonData jsonData, String callbackId) {
 			LogHelper.logD(TAG, "Send command action initiated in Robot plugin");
 			int commandId = jsonData.getInt(JsonMapKeys.KEY_COMMAND_ID);
@@ -314,9 +386,23 @@ public class RobotManagerPlugin extends Plugin {
 
 			RobotCommandServiceManager.sendCommand(context, robot_id, commandId);
 			//TODO: Success should be send in a thread way.
-			PluginResult mpluginStartResult = new PluginResult(PluginResult.Status.OK);
-			mpluginStartResult.setKeepCallback(false);
-			success(mpluginStartResult,callbackId);
+			PluginResult pluginStartResult = new PluginResult(PluginResult.Status.OK);
+			pluginStartResult.setKeepCallback(false);
+			success(pluginStartResult, callbackId);
+		} 
+
+		private void sendCommand2(Context context, RobotJsonData jsonData, String callbackId) {
+			LogHelper.logD(TAG, "Send command action initiated in Robot plugin " + jsonData.toString());
+			int commandId = jsonData.getInt(JsonMapKeys.KEY_COMMAND_ID);
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			
+			JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
+			HashMap<String, String> commadParamsMap = getCommandParams(commandParams);
+			RobotCommandServiceManager.sendCommand2(context, robotId, commandId, commadParamsMap);
+			// TODO: Success should be send in a thread way.
+			PluginResult pluginStartResult = new PluginResult(PluginResult.Status.OK);
+			pluginStartResult.setKeepCallback(false);
+			success(pluginStartResult,callbackId);
 		} 
 
 
@@ -358,11 +444,46 @@ public class RobotManagerPlugin extends Plugin {
 				}
 
 				@Override
-				public void onError(String errMessage) {
+				public void onServerError(String errMessage) {
 					LogHelper.log(TAG, "Schedule not retrieved. Sending Error PluginResult");
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR);
 					pluginResult.setKeepCallback(false);
 					error(pluginResult, callbackId);
+				}
+
+				@Override
+				public void onNetworkError(String errMessage) {
+					LogHelper.log(TAG, "Schedule not retrieved. Sending Error PluginResult");
+					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
+					
+				}
+			});
+		}
+		
+		private void deleteRobotSchedule(final Context context, final RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "Delete robot schedule action initiated in Robot plugin");
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			
+			RobotSchedulerManager.getInstance(context).deleteRobotSchedule(robotId, new DeleteScheduleListener() {
+				
+				@Override
+				public void onSuccess(String robotId) {					
+					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+					pluginResult.setKeepCallback(false);
+					success(pluginResult,callbackId);
+				}
+				
+				@Override
+				public void onServerError(String errMessage) {
+					LogHelper.log(TAG, "DeleteScheduleListener:onServerError - " + errMessage);
+					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
+				}
+
+				@Override
+				public void onNetworkError(String errMessage) {
+					LogHelper.log(TAG, "DeleteScheduleListener:onNetworkError - " + errMessage);
+					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
+					
 				}
 			});
 		}
@@ -433,10 +554,15 @@ public class RobotManagerPlugin extends Plugin {
 				}
 
 				@Override
-				public void onError(String errMessage) {
+				public void onServerError(String errMessage) {
 					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_TYPE_UNKNOWN, errMessage);
 					PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
 					error(getRobotMapPluginResult, callbackId);
+				}
+
+				@Override
+				public void onNetworkError(String errMessage) {
+					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
 				}
 			});
 
@@ -469,9 +595,7 @@ public class RobotManagerPlugin extends Plugin {
 
 				@Override
 				public void onNetworkError(String errMessage) {
-					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-					PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
-					error(getRobotMapPluginResult, callbackId);
+					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
 					
 				}
 			});
@@ -525,29 +649,29 @@ public class RobotManagerPlugin extends Plugin {
 		
 
 		//TODO: We are taking robotId. Analyse if taking atlas_id is a better option.
-		private void getAtlasGridData(Context context,
-				RobotJsonData jsonData, final String callbackId) {
+		private void getAtlasGridData(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "getAtlasGridData action initiated in Robot plugin");
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			String gridId = jsonData.getString(JsonMapKeys.KEY_ATLAS_GRID_ID);
+			
 			RobotAtlasGridWebservicesManager.getInstance(context).getAtlasGridData(robotId, gridId, new RobotGridDataDownloadListener() {
 				
 				@Override
-				public void onGridDataDownloaded(String atlasId, String gridId,
-						String fileUrl) {
+				public void onGridDataDownloaded(String atlasId, String gridId, String fileUrl) {
+					LogHelper.logD(TAG, "getAtlasGridData - onGridDataDownloaded - " + fileUrl);
 					JSONObject jGetAtlasGridNotification = new JSONObject();
 					JSONArray robotGrids = new JSONArray();
 					if (fileUrl != null) {
 						try {
 							jGetAtlasGridNotification.put(JsonMapKeys.KEY_ATLAS_ID, atlasId);
-							jGetAtlasGridNotification.put(JsonMapKeys.KEY_ATLAS_GRID_ID, atlasId);
+							jGetAtlasGridNotification.put(JsonMapKeys.KEY_ATLAS_GRID_ID, gridId);
 							jGetAtlasGridNotification.put(JsonMapKeys.KEY_ATLAS_GRID_DATA, FILE_PREFIX + fileUrl);						} 
 						catch (JSONException e) {
 							LogHelper.log(TAG, "Exception in getAtlasGridData", e);
 						}
 						robotGrids.put(jGetAtlasGridNotification);
-						PluginResult getAtlasGridPluginResult = new  PluginResult(PluginResult.Status.OK, robotGrids);
-						success(getAtlasGridPluginResult, callbackId);
+						PluginResult getAtlasGridPluginResult = new  PluginResult(PluginResult.Status.OK, robotGrids);						
+						success(getAtlasGridPluginResult, callbackId);						
 					} else {
 						JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_TYPE_UNKNOWN, "Invalid JSON file");
 						PluginResult getAtlasGridPluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
@@ -556,16 +680,15 @@ public class RobotManagerPlugin extends Plugin {
 				}
 				
 				@Override
-				public void onGridDataDownloadError(String atlasId, String gridId,
-						String errMessage) {
+				public void onGridDataDownloadError(String atlasId, String gridId, String errMessage) {
+					LogHelper.logD(TAG, "getAtlasGridData - onGridDataDownloadError - " + errMessage);
 					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_SERVER_ERROR, errMessage);
 					PluginResult getRobotGridPluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
 					error(getRobotGridPluginResult, callbackId);
-					
 				}
 			});
 		}
-		
+
 		private RobotManagerPluginMethods convertToInternalAction(String action) {
 			LogHelper.logD(TAG, "convertToInternalAction - action = " + action);
 			RobotManagerPluginMethods robotManagerPluginMethod = ACTION_MAP.get(action);
@@ -576,7 +699,9 @@ public class RobotManagerPlugin extends Plugin {
 		private static class ActionTypes {
 			public static final String DISCOVER_NEAR_BY_ROBOTS = "discoverNearByRobots";
 			public static final String TRY_DIRECT_CONNECTION = "tryDirectConnection";
+			public static final String TRY_DIRECT_CONNECTION2 = "tryDirectConnection2";
 			public static final String SEND_COMMAND_TO_ROBOT = "sendCommandToRobot";
+			public static final String SEND_COMMAND_TO_ROBOT2 = "sendCommandToRobot2";
 			public static final String SET_ROBOT_SCHEDULE = "robotSetSchedule";
 			public static final String SET_MAP_OVERLAY_DATA= "setMapOverlayData";
 			public static final String GET_ROBOT_MAP = "getRobotMap";
@@ -586,8 +711,10 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String UPDATE_ROBOT_ATLAS_METADATA = "updateRobotAtlasMetadata";
 			public static final String GET_ATLAS_GRID_DATA = "getAtlasGridData";
 			public static final String SET_ROBOT_NAME = "setRobotName";
-			public static final String SET_ROBOT_NAME_2 = "setRobotName2";
+			public static final String DELETE_ROBOT_SCHEDULE = "deleteScheduleData";
 			public static final String GET_ROBOT_DETAIL = "getRobotDetail";
+			public static final String SET_ROBOT_NAME_2 = "setRobotName2";
+			public static final String GET_ROBOT_ONLINE_STATUS = "getRobotOnlineStatus";
 		}
 
 		private JSONObject getErrorJsonObject(int errorCode, String errMessage) {
@@ -717,15 +844,13 @@ public class RobotManagerPlugin extends Plugin {
 			}
 
 			@Override
-			public void onNetworkError() {
-				JSONObject error = getErrorJsonObject(0, "Network Error");
+			public void onNetworkError(String errMessage) {
 				LogHelper.log(TAG, "ScheduleDetailsPluginListener onNetworkError Callback Id = " + mCallBackId);
-				PluginResult scheduleRobotPluginResult = new  PluginResult(PluginResult.Status.ERROR, error);
-				error(scheduleRobotPluginResult, mCallBackId);
+				sendError(mCallBackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
 			}
 
 			@Override
-			public void onServerError() {
+			public void onServerError(String errMessage) {
 				JSONObject error = getErrorJsonObject(0, "Server Error");
 				LogHelper.log(TAG, "ScheduleDetailsPluginListener onServerError Callback Id = " + mCallBackId);
 				PluginResult scheduleRobotPluginResult = new  PluginResult(PluginResult.Status.ERROR, error);
@@ -747,6 +872,24 @@ public class RobotManagerPlugin extends Plugin {
 		{
 			String message = cordova.getActivity().getString(errorResId);
 			sendError(callbackId, errorCode, message);
+		}
+		
+		
+		private HashMap<String, String> getCommandParams(JSONObject jObject) {
+			HashMap<String, String> commandParamsMap = null;
+			if (jObject == null) {
+				return new HashMap<String, String>();
+			}
+			if (jObject.has(RobotCommandPacketConstants.KEY_COMMAND_PARAMS_TAG)) {
+				// Command params are present. Need to parse the JSON object and convert it to HashMap
+				try {
+					JSONObject commandParams = jObject.getJSONObject(RobotCommandPacketConstants.KEY_COMMAND_PARAMS_TAG);
+					commandParamsMap = DataConversionUtils.jsonObjectToHashMap(commandParams);
+				} catch (JSONException e) {
+					LogHelper.log(TAG, "Exception in getCommandParams", e);
+				}	
+			}
+			return commandParamsMap;
 		}
 }
 

@@ -1,9 +1,13 @@
 package com.neatorobotics.android.slide.framework.webservice.robot.atlas;
 
 
+import java.io.File;
+
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.neatorobotics.android.slide.framework.AppConstants;
+import com.neatorobotics.android.slide.framework.database.DBHelper;
 import com.neatorobotics.android.slide.framework.http.download.FileCachePath;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadHelper;
 import com.neatorobotics.android.slide.framework.http.download.FileDownloadListener;
@@ -57,7 +61,7 @@ public class RobotAtlasWebservicesManager {
 						listener.onServerError(result.mMessage);
 					}	
 				} else {
-					listener.onNetworkError("Network Error");
+					listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
 				}
 				return;
 			}
@@ -88,7 +92,7 @@ public class RobotAtlasWebservicesManager {
 					}	
 				}
 				else {
-					listener.onNetworkError("Network Error");
+					listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
 				}
 				return;
 			}
@@ -126,17 +130,23 @@ public class RobotAtlasWebservicesManager {
 		}
 		Runnable task = new Runnable() {
 			@Override
-			public void run() {
-				String atlasId;
-				String xmlDataUrl;
+			public void run() {			
 				GetRobotAtlasDataResult result = RobotAtlasWebservicesHelper.getRobotAtlasDataRequest(mContext, robotId);
 				if (result.success()) {
 					LogHelper.log(TAG, "Data got successfully");
 					LogHelper.log(TAG, String.format("XML Url = [%s]", result.mResult.mXml_Data_Url));
-					atlasId = result.mResult.mAtlas_Id;
-					xmlDataUrl = result.mResult.mXml_Data_Url;
+					String atlasId = result.mResult.mAtlas_Id;
+					String xmlDataUrl = result.mResult.mXml_Data_Url;
+					String atlasVersion = result.mResult.mXml_Data_Version; 
+					
 					if (!TextUtils.isEmpty(xmlDataUrl)) {
-						downloadAtlasFile(robotId, atlasId, xmlDataUrl, listener);
+						AtlasItem atlasItem = DBHelper.getInstance(mContext).saveAtlasData(atlasId, atlasVersion);	
+						if (needToDownloadAtlasXml(atlasItem)) {
+							downloadAtlasFile(robotId, atlasId, xmlDataUrl, listener);
+						}
+						else {
+							listener.onAtlasDataDownloaded(atlasId, atlasItem.getXmlFilePath());
+						}
 					} 
 					else {
 						listener.onAtlasDataDownloadError(robotId, "Atlas does not exist");
@@ -152,6 +162,16 @@ public class RobotAtlasWebservicesManager {
 		TaskUtils.scheduleTask(task, 0);
 	}
 
+	// Return true if Xml file is exist in the cache directory
+	private boolean needToDownloadAtlasXml(AtlasItem atlasItem) {
+		boolean fileExist = false;
+		if (!TextUtils.isEmpty(atlasItem.getXmlFilePath())) {
+			fileExist = new File(atlasItem.getXmlFilePath()).exists();
+		}
+		
+		return (!fileExist);
+	}
+	
 	private void downloadAtlasFile(final String robotId, final String atlas_id, final String xmlDataUrl, final RobotAtlasDataDownloadListener listener) {
 
 		LogHelper.log(TAG, "downloadAtlasFile called");
@@ -166,6 +186,7 @@ public class RobotAtlasWebservicesManager {
 			
 			@Override
 			public void onDownloadComplete(String url, String filePath) {
+				DBHelper.getInstance(mContext).updateAtlasXmlFilePath(atlas_id, filePath);
 				listener.onAtlasDataDownloaded(atlas_id, filePath);
 			}
 		});

@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.UUID;
+
+import com.neatorobotics.android.slide.framework.database.UserHelper;
+import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -77,6 +81,21 @@ public class AppUtils {
 	        }
 	        return sb.toString();
 	 }
+	 
+	 public static String generateNewRequestId(Context context)
+	 {
+		 String requestId = UUID.randomUUID().toString();
+		 return requestId;
+	 }
 	
+	public static String getLoggedInUserId(Context context)
+	{
+		String userId = null;
+		UserItem userItem = UserHelper.getLoggedInUserDetails(context);
+		if (userItem != null) {
+			userId = userItem.getId();
+		}
+		return userId;
+	}
 
 }

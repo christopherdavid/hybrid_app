@@ -17,38 +17,32 @@
 
 </head>
 	<body>     
-	 <!-- Display result. Just for testing purposes. -->
+	<!-- Display result. Just for testing purposes. -->
 	<label id="displayResult" aria-hidden=true></label>  
 	
 	<!-- Welcome screen -->
 	<section id="welcomeScreen" aria-hidden=true>
-	<div class="defaultSectionHeader">Welcome to Neato!</div>  
-	<br>
-	<label>Already Have A Neato Account?</label>
-	<br>
-	<input type="button" id="btnGoToLogin" value="Log in" class="defaultButton"></input>
-	<br>
-	<label>New To Neato?</label>
-	<br>
-	<input type="button" id="btnGoToRegister" value="Create New Account" class="defaultButton"></input>
-	<br>
-	<br>
-	<br>
-	<label>Just show me the demo!</label>
-	<br>
-	<input type="button" id="btnDemoLogin" value="Login as Demo1" class="defaultButton"></input>
+	<div class="defaultSectionHeader">Welcome to Neato!</div>
+	<br>	
+	<center><img src="img/neato_app.png" align="middle"/></center>
+	<br>	
+	<input type="button" id="btnGoToLogin" value="Login" class="gradientButton"></input>
+	<input type="button" id="btnGoToRegister" value="New Account" class="gradientButton"></input>
+	<br><br>	
+	<center><label>Just show me the demo!</label></center>	
+	<input type="button" id="btnDemoLogin" value="Login as Demo1" class="gradientButton"></input>
 	</section>
 	
 	<!-- Login screen -->
 	<section id="loginPage"  aria-hidden=true>
 	<div class="defaultSectionHeader">Enter your login credentials!</div>  
 	<br>
-	<input type="text" id="mailid" placeholder="Email" class="defaultInputText"></input>
+	<input type="text" id="mailid" placeholder="email address" class="defaultInputText"></input>
 	<br>
 	<input type="password" id="passkey" placeholder="Password" class="defaultInputText"></input>
 	<br>
 	<br>
-	<input type="button" id="loginButton" value="Login" class="defaultButton"></input>
+	<input type="button" id="loginButton" value="Login" class="gradientButton"></input>
 	</section>
 	
 	<!-- Create user screen -->
@@ -66,21 +60,40 @@
 	<br>
 	<input type="password" id="regpasskeyconfirm" placeholder="Re-Enter Password" class="defaultInputText"></input>
 	<br>
-	<input type="button" id="registerUserButton" value="Register" class="defaultButton"></input> 
+	<input type="button" id="registerUserButton" value="Register" class="gradientButton"></input> 
 	</section>
 	
 	
 	<!-- User screen -->
 	<section id="userHomePage"  aria-hidden=true>
-		<div class="defaultSectionHeader">Neato Smart App</div>
-		<br>
-		<label>Associate Robot</label>
-		<hr>
-			<input type="button" id="btnDiscoverRobot" value="Discover Nearby Robots" class="defaultButton"></input> 
-			<input type="button" id="btnGoAssociatePage" value="Associate Robot" class="defaultButton"></input> 
+		<div class="defaultSectionHeader">Neato Test App</div>
+			<br><br>
+			<center>
+			<div>
+			<button type="button" id="btnGoToAddRobot" class="gradientButton2">
+				<img src="img/add.png"/><br/>Add Robot</button>
+			
+			<button type="button" id="btnGoToCommandRobot" class="gradientButton2">
+				<img src="img/command.png"/><br/>Commands</button>
+			</div>
+			</center>
+			
+			<center>
+			<div>
+			<button type="button" id="btnGoToSchedule" class="gradientButton2">
+				<img src="img/schedule.png"/><br/>Schedule</button> 
+			
+			<button type="button" id="btnGoToSettings" class="gradientButton2">
+				<img src="img/settings.png"/><br/>Settings</button>
+				  
+			</div>
+			</center>
+			
+			<br><br><input type="button" id="btnGoToDebug" value="Test APIs" class="gradientButton">
+			<br><input type="button" id="btnLogout" value="Logout" class="gradientButton"></input>
 		<br>
 		
-		<label>Robot Commands</label>
+		<!-- <label>Robot Commands</label>
 		<hr>
 			<input type="button" id="btnClosePeer" value="Close Peer Connection" class="defaultButton" aria-hidden=true></input> 
 			<input type="button" id="btnStartStopCleaningPeer" value="Start Cleaning" class="defaultButton" ></input> 
@@ -90,26 +103,18 @@
 			<input type="button" id="btnStartStopCleaningServer" value="" class="defaultButton" aria-hidden=true></input>
 			<input type="button" id="btnGoToRobotMap" value="Show Robot Map" class="defaultButton"></input>
 			<input type="button" id="btnGoToAtlas" value="Robot Atlas" class="defaultButton"></input>
+			<input type="button" id="btnGoToSchedule" value="Robot Schedule" class="defaultButton"></input>
 			<input type="button" id="btnGetUserDetails" value="Get User Details" class="defaultButton"/></input>
-			<input type="button" id="btnGetRobotDetails" value="Get Robot Details" class="defaultButton"/></input>
-			
 		<br>
-		<br>
-		<input type="button" id="btnTest" value="Test" class="defaultButton" aria-hidden=true></input>
-		<input type="button" id="btnSetSchedule" value="Set Schedule" class="defaultButton" ></input>
-		<input type="button" id="btnLogout" value="Logout" class="defaultButton"></input>
-		<div id="robotoverlay" aria-hidden=true></div>
-		<div id="robotsFound" aria-hidden=true>
-			
+		<br> 
+		<input type="button" id="btnTest" value="Test" class="defaultButton" aria-hidden=true></input> -->	
 		</div>
-
-
 	</section>
 	
 		<!-- Associate Robot screen -->
 	<section id="associateRobot"  aria-hidden=true>
 		<div class="defaultSectionHeader">Associate Robot</div>
-		<br>
+		<!-- <br>
 		<br>
 		<input type="text" id="robotId" placeholder="Robot Id" class="defaultInputText"></input> 
 		<br>
@@ -118,12 +123,81 @@
 		<input type="button" id="btnDisassociateRobot" value="Disassociate Robot" class="defaultButton"></input>
 		<input type="button" id="btnDisassociateAllRobot" value="Disassociate All Robots" class="defaultButton"></input>
 		<input type="button" id="btnGetAssociatedRobots" value="Get Associated Robots" class="defaultButton"></input>
+		<input type="button" id="btnGetAssociatedRobotDetail" value="Associated Robot Detail" class="defaultButton"></input>
 		
 		<br>
 		<input type="text" id="robotName" placeholder="Robot Name" class="defaultInputText"></input>
 		<input type="button" id="btnSetRobotName" value="Set Robot Name" class="defaultButton"></input>
-		<br>
+		<input type="button" id="btnSetRobotName2" value="Set Robot Name 2" class="defaultButton"></input>
+		<br> -->
 		
+	</section>
+	
+	<section id="debugOptions"  aria-hidden=true>
+		<div class="defaultSectionHeader">Test APIs</div>
+		
+		<br><input type="button" id="btnDisassociateAllRobot" value="Dissociate all Robots" class="gradientButton"></input>
+		<br><input type="button" id="btnOpenClosePeerConn" value="Open Connection" class="gradientButton"></input>
+		<br><input type="button" id="btnOpenClosePeerConn2" value="Open Connection (New)" class="gradientButton"></input>
+		<br><input type="button" id="btnSendStartStopCleanCommand" value="Start Cleaning" class="gradientButton"></input>
+		<br><input type="button" id="btnSendStartStopCleanCommand2" value="Start Cleaning (New)" class="gradientButton"></input>
+		<br><input type="button" id="btnPauseCleaningCommand" value="Pause Cleaning (New)" class="gradientButton"></input>
+		<br><input type="button" id="btnEnableSchedule" value="Enable Schedule (New)" class="gradientButton"></input>
+		<br><input type="button" id="btnDisableSchedule" value="Disable Schedule (New)" class="gradientButton"></input>
+		<br><input type="button" id="btnSetRobotClock" value="Set Robot Clock (New)" class="gradientButton"></input>
+		<br><input type="button" id="btnTestGoToRobotMap" value="Show Robot Map" class="gradientButton"></input>
+		<br><input type="button" id="btnTestDissociateRobot" value="Dissociate Robot" class="gradientButton"></input>	
+		<br><input type="button" id="btnTestAllAssociatedRobots" value="All Associated Robots" class="gradientButton"></input>
+		<br><input type="button" id="btnTestRobotDetail" value="Robot Detail" class="gradientButton"></input>
+		<br><input type="button" id="btnTestUserDetail" value="User Detail" class="gradientButton"></input>							
+		
+	</section>
+	
+	<section id="robotCommands"  aria-hidden=true>
+		<div class="defaultSectionHeader">Robot Commands</div>
+		<br><br><input type="button" id="btnStartStopCleaning" value="Start Cleaning" class="gradientButton"></input>
+		<br><input type="button" id="btnSendToBase" value="Send to base" class="gradientButton"></input>
+	</section>
+		
+	<section id="settings"  aria-hidden=true>
+		<div class="defaultSectionHeader">Settings</div>
+		<br><br><input type="button" id="btnRobotSettings" value="Robot" class="gradientButton"></input>		
+		<br><input type="button" id="btnUserSettings" value="User" class="gradientButton"></input>
+	</section>
+	
+	<section id="robotSettings"  aria-hidden=true>
+		<div class="defaultSectionHeader">Robot Settings</div>		 		
+		<br><br><input type="button" id="btnGoToSetRobotName" value="Set Name" class="gradientButton"></input>
+		<br><input type="button" id="btnGetRobotDetail" value="Robot Detail" class="gradientButton"></input>
+		<br><input type="button" id="btnGoToAtlas" value="Atlas" class="gradientButton"></input>		
+	</section>
+	
+	<section id="setRobotName"  aria-hidden=true>
+		<div class="defaultSectionHeader">Set Robot name</div>
+		<br><br><input type="text" id="robotName" placeholder="Robot name" class="defaultInputText"></input> 		
+		<br><input type="button" id="btnSetRobotName" value="Set" class="gradientButton"></input>
+	</section>
+	
+	<section id="addRobot"  aria-hidden=true>
+		<div class="defaultSectionHeader">Add Robot</div>
+		<br><br><input type="button" id="btnDiscoverRobots" value="Discover Robots" class="gradientButton"></input>		
+		<br><input type="button" id="btnAssociateRobotDirect" value="Associate Manually" class="gradientButton"></input>
+		<br><input type="button" id="btnGetAllAssociated" value="All Associated" class="gradientButton"></input>
+		
+		<div id="robotoverlay" aria-hidden=true></div>
+		<div id="robotsFound" aria-hidden=true>
+		</div>
+	</section>
+	
+	<section id="associateDirect"  aria-hidden=true>
+		<div class="defaultSectionHeader">Associate Manually</div>
+		<br><br><input type="text" id="robotId" placeholder="Robot serial number" class="defaultInputText"></input> 		
+		<br><input type="button" id="btnAssociateDirect" value="Associate" class="gradientButton"></input>
+	</section>
+	
+	<section id="userSettings"  aria-hidden=true>
+		<div class="defaultSectionHeader">User Settings</div>		 		
+		<br><br><input type="button" id="btnGetUserDetail" value="User Detail" class="gradientButton"></input>
 	</section>
 	
 	<!-- Old schedule section
@@ -159,28 +233,21 @@
  
  	<!-- Schedule section -->
 	<section id="scheduleRobot"  aria-hidden=true>
-		<div class="defaultSectionHeader">Schedule Robot</div>
-		<br>
-			<input type="button" id="btnScheduleAlternateWeekdays" value="Mon, Wed, Fri" class="defaultButton"></input> 
-<br>
-			<input type="button" id="btnScheduleBabyNap" value="Weekdays(Baby Nap)" class="defaultButton"></input> 
-<br>
-			<input type="button" id="btnScheduleOnlyWeekends" value="Only Weekends" class="defaultButton"></input> 
-<br>
-			<input type="button" id="btnScheduleWorkingCouple" value="Working Couples" class="defaultButton" ></input> 
-			<br>
-			<br>
-			<input type="button" id="btnScheduleClear" value="Clear Schedule" class="defaultButton" ></input> 
-			<br>
-			<br>
-			<input type="button" id="btnGetSchedule" value="Get Schedule" class="defaultButton" ></input> 
-		<br>
+		<div class="defaultSectionHeader">Robot Schedule</div>
+		
+		<br><input type="button" id="btnScheduleAlternateWeekdays" value="Mon, Wed, Fri" class="gradientButton"></input> 
+		<br><input type="button" id="btnScheduleBabyNap" value="Weekdays(Baby Nap)" class="gradientButton"></input> 
+		<br><input type="button" id="btnScheduleOnlyWeekends" value="Only Weekends" class="gradientButton"></input> 
+		<br><input type="button" id="btnScheduleWorkingCouple" value="Working Couples" class="gradientButton" ></input> 
+		<br><input type="button" id="btnScheduleClear" value="Clear Schedule" class="gradientButton" ></input> 
+		<br><input type="button" id="btnGetSchedule" value="Get Schedule" class="gradientButton" ></input>
+		
 	</section>
 	
 	<!-- Map section -->
 		<section id="robotMapSection"  aria-hidden=true>
-		<div class="defaultSectionHeader" id="robotSectionHeader">""</div>
-		<input type="button" id="btnGetRobotMap" value="Get Map" class="defaultButton" ></input> 
+		<div class="defaultSectionHeader" id="robotSectionHeader">Robot Map</div>		 
+		<br><input type="button" id="btnGetRobotMap" value="Get Map" class="gradientButton" ></input>
 		<br>
 		<br>
 		<br>	
@@ -193,11 +260,9 @@
 	<!-- Atlas section -->
 		<section id="robotAtlasSection"  aria-hidden=true>
 		<div class="defaultSectionHeader" id="robotAtlasHeader">""</div>
-		<input type="button" id="btnGetRobotAtlasMetadata" value="Get Atlas Metadata" class="defaultButton" ></input>
-		<input type="button" id="btnUpdateRobotAtlasMetadata" value="Update Atlas Metadata" class="defaultButton" ></input>
-		<input type="button" id="btnGetGridData" value="Get Grid Data" class="defaultButton"></input>
-		<br>
-		<br>
+		<br><br><input type="button" id="btnGetRobotAtlasMetadata" value="Get Metadata" class="gradientButton" ></input>
+		<br><input type="button" id="btnUpdateRobotAtlasMetadata" value="Update Metadata" class="gradientButton" ></input>
+		<br><input type="button" id="btnGetGridData" value="Get Grid Data" class="gradientButton"></input>		
 		<br>	
 		<div id="robotAtlas">
 			<img id="robotAtlasGridImage"> </img>

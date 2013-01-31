@@ -17,6 +17,7 @@ import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
 
 public class NeatoSmartAppLoginActivity extends Activity{
 
+	@SuppressWarnings("unused")
 	private static final String TAG = NeatoSmartAppLoginActivity.class.getSimpleName();
 	
 	private ProgressBar mProgressView;

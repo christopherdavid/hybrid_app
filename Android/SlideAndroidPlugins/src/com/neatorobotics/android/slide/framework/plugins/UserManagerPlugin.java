@@ -8,7 +8,6 @@ import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +16,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
-
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
@@ -202,17 +200,17 @@ public class UserManagerPlugin extends Plugin {
 			}
 
 			@Override
-			public void onNetworkError() {
+			public void onNetworkError(String errMessage) {
 				NeatoPrefs.saveUserEmailId(context, null);
 				LogHelper.logD(TAG, "Login unsuccessful. Network Error");
-				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, "Network Error");
+				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
 			}
 
 			@Override
-			public void onServerError() {
+			public void onServerError(String errMessage) {
 				NeatoPrefs.saveUserEmailId(context, null);
 				LogHelper.logD(TAG, "Login unsuccessful. Server Error");
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, "Server Error");
+				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
 			}
 			
 		});
@@ -300,18 +298,18 @@ public class UserManagerPlugin extends Plugin {
 			}
 
 			@Override
-			public void onNetworkError() {
+			public void onNetworkError(String errMessage) {
 				NeatoPrefs.saveUserEmailId(context, null);
 				LogHelper.logD(TAG, "Failed to create new user. Network Error");
-				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, "Network Error");
+				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
 				
 			}
 
 			@Override
-			public void onServerError() {
+			public void onServerError(String errMessage) {
 				NeatoPrefs.saveUserEmailId(context, null);
 				LogHelper.logD(TAG, "Failed to create new user. Server Error");
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, "Server Error");
+				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
 
 			}
 		});
@@ -359,18 +357,18 @@ public class UserManagerPlugin extends Plugin {
 			}
 
 			@Override
-			public void onNetworkError() {
+			public void onNetworkError(String errMessage) {
 				NeatoPrefs.saveUserEmailId(context, null);
 				LogHelper.logD(TAG, "Failed to get user details. Network Error");
-				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, "Network Error");
+				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
 
 			}
 
 			@Override
-			public void onServerError() {
+			public void onServerError(String errMessage) {
 				NeatoPrefs.saveUserEmailId(context, null);
 				LogHelper.logD(TAG, "Failed to get user details. Server Error");
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, "Server Error");
+				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
 
 			}
 		});
@@ -378,13 +376,16 @@ public class UserManagerPlugin extends Plugin {
 
 	private void associateRobot(Context context, UserJsonData jsonData, final String callbackId) {
 		LogHelper.logD(TAG, "associateRobot Called");
-
-		String email = NeatoPrefs.getUserEmailId(context);
-		String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 		
+		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
 		
-		LogHelper.logD(TAG, "JSON String: " + jsonData);
+		if (TextUtils.isEmpty(email)) {
+			email = NeatoPrefs.getUserEmailId(context);
+		}
 		
+		String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);	
+		
+		LogHelper.logD(TAG, "JSON String: " + jsonData);		
 		LogHelper.logD(TAG, "Associate action initiated in Robot plugin for robot Id: " + robotId + " and email id: " + email);
 
 		UserManager.getInstance(context).associateRobot(robotId, email, new UserRobotAssociateDisassociateListener() {
@@ -411,11 +412,13 @@ public class UserManagerPlugin extends Plugin {
 
 	}
 
-	private void disassociateAllRobots(Context context, UserJsonData jsonData, final String callbackId) {
-		
+	private void disassociateAllRobots(Context context, UserJsonData jsonData, final String callbackId) {		
 		LogHelper.logD(TAG, "disassociateAllRobots Called");
-
-		String email = NeatoPrefs.getUserEmailId(context);
+		
+		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
+		if (TextUtils.isEmpty(email)) {
+			email = NeatoPrefs.getUserEmailId(context);
+		}
 		LogHelper.logD(TAG, "JSON String: " + jsonData);
 		
 		LogHelper.logD(TAG, "Disassociate all robots for email id: " + email);
@@ -424,13 +427,13 @@ public class UserManagerPlugin extends Plugin {
 			@Override
 			public void onServerError(String errorMessage) {
 				LogHelper.logD(TAG, "disassociateAllRobots robot Error: " + errorMessage);
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, "Server Error");
+				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
 			}
 			
 			@Override
 			public void onNetworkError(String errorMessage) {
 				LogHelper.logD(TAG, "disassociateAllRobots network Error: " + errorMessage);
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, "Network Error");
+				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
 			}
 			
 			@Override
@@ -442,31 +445,30 @@ public class UserManagerPlugin extends Plugin {
 		});
 	}
 
-	private void disassociateRobot(Context context, UserJsonData jsonData, final String callbackId) {
+	private void disassociateRobot(Context context, UserJsonData jsonData, final String callbackId) {		
+		LogHelper.logD(TAG, "disassociateRobot Called");
 		
-		LogHelper.logD(TAG, "associateRobot Called");
-
-		String email = NeatoPrefs.getUserEmailId(context);
+		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
+		if (TextUtils.isEmpty(email)) {
+			email = NeatoPrefs.getUserEmailId(context);
+		}
 		String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 		
-		
 		LogHelper.logD(TAG, "JSON String: " + jsonData);
-		
 		LogHelper.logD(TAG, "Disassociate action initiated in Robot plugin for robot Id: " + robotId + " and email id: " + email);
-
 
 		UserManager.getInstance(context).disassociateRobot(robotId, email, new UserRobotAssociateDisassociateListener() {
 			
 			@Override
 			public void onServerError(String errorMessage) {
 				LogHelper.logD(TAG, "disassociateRobot robot Error: " + errorMessage);
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, "Server Error");
+				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
 			}
 			
 			@Override
 			public void onNetworkError(String errorMessage) {
 				LogHelper.logD(TAG, "disassociateRobot network Error: " + errorMessage);
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, "Network Error");
+				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
 			}
 			
 			@Override
@@ -478,10 +480,17 @@ public class UserManagerPlugin extends Plugin {
 		});
 	}
 
-	private void getAssociatedRobots(Context context, UserJsonData jsonData,
-			String callbackId) {
-		String email = NeatoPrefs.getUserEmailId(context);
+	private void getAssociatedRobots(Context context, UserJsonData jsonData, String callbackId) {
+		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);		
+		
+		if (TextUtils.isEmpty(email)) {
+			email = NeatoPrefs.getUserEmailId(context);
+		}
+		
 		String auth_token = NeatoPrefs.getNeatoUserAuthToken(context);
+		
+		LogHelper.logD(TAG, "getAssociatedRobots - JSON String: " + jsonData);
+		
 		mRobotDetailsPluginListener = new RobotDetailsPluginListener(callbackId);
 		UserManager.getInstance(context).getAssociatedRobots(email, auth_token, mRobotDetailsPluginListener);
 	}
