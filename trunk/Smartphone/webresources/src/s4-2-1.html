@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Scheduling Basic</title>
+
+
+</head>
+<body>
+    <div data-role="page" id="s4-1-1">
+        <div id="pageHeader" data-role="header" data-theme="b" data-position="fixed"
+            data-tap-toggle="false">
+            <div class="ui-btn-left"
+                style="left: 0px; top: 0px; margin-top: -5px;">
+                <a href="#" data-role="button" data-mini="true"
+                    data-inline="true" data-icon="back"
+                    data-i18n="common.back"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+            </div>
+            <h1 data-i18n="s4-1-3.navi.title" data-bind="translate: language">Schedule</h1>
+            <div class="ui-btn-right"
+                style="right: 0px; top: 0px; margin-top: -5px;">
+            </div>
+        </div>
+        <div data-role="content">
+            <ol id="scheduleList" data-bind="foreach: days">
+                <li>
+                    <div class="day" data-bind="text: $.i18n.t('s4-1-1.day.'+(day+1))"></div>
+                    <div class="time" data-bind="text: time"></div>
+                </li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

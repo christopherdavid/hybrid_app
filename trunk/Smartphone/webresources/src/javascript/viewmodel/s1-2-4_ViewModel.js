@@ -31,6 +31,8 @@ resourceHandler.registerFunction('s1-2-4_ViewModel.js', 's1-2-4_ViewModel', func
         }
 
         parent.flowNavigator.next();
+        //TODO replace with correct message
+        parent.showLoadingArea(true, notificationType.HINT, "added " + that.robotName(), false);
     }
     
     this.robotNameError = function(error) {

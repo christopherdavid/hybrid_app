@@ -33,8 +33,9 @@ resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', func
     };
     
     this.removeRobot = function(robot) {
-        var userEmail = parent.communicationWrapper.dataValues["user"].email;        
-        parent.communicationWrapper.exec(UserPluginManager.disassociateRobot, [userEmail, robot.robotId()], that.successRemoveRobot, that.errorRemoveRobot);                
+        var userEmail = parent.communicationWrapper.dataValues["user"].email;  
+        parent.communicationWrapper.exec(UserPluginManager.disassociateAllRobots, [userEmail, robot.robotId()], that.successRemoveRobot, that.errorRemoveRobot);
+        //parent.communicationWrapper.exec(UserPluginManager.disassociateRobot, [userEmail, robot.robotId()], that.successRemoveRobot, that.errorRemoveRobot);                
     };
     
     this.successRemoveRobot = function(result){
@@ -103,13 +104,13 @@ resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', func
                 default:            
                 break;
             }
-            
-            var userName = parent.communicationWrapper.dataValues["user"].username;
-            
+                        
             var generatedTitle = "";
             
             if (translationKey){
-                generatedTitle += $.i18n.t(translationKey, {postProcess:'sprintf', sprintf: [userName]}) + "<br><br>";                
+                generatedTitle += $.i18n.t(translationKey) + "<br><br>";    
+                //old version string with arguments for the now removed username
+                //generatedTitle += $.i18n.t(translationKey, {postProcess:'sprintf', sprintf: [userName]}) + "<br><br>";  
             }
             
             generatedTitle += $.i18n.t(that.getHintText());
@@ -120,8 +121,8 @@ resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', func
     
     this.updateButtons = function(){
         if (that.bundle){
-            that.isDeleteVisible(that.bundle == robotScreenCaller.MANAGE)
-            that.isBackVisible(that.bundle == robotScreenCaller.CHANGE || that.bundle == robotScreenCaller.MANAGE);
+            that.isDeleteVisible(that.bundle == robotScreenCaller.MANAGE && that.robots().length > 0);
+            that.isBackVisible((that.bundle == robotScreenCaller.CHANGE || that.bundle == robotScreenCaller.MANAGE) && that.robots().length > 0);
         }
     };
     
@@ -163,9 +164,11 @@ resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', func
 
     this.successGetAssociatedRobots = function(result) {
         //ko.mapping.fromJS(result,null, that.robots);
+
         that.robots(ko.mapping.fromJS(result)());
         
-        that.updateScreenTitle();
+    	that.updateScreenTitle();
+        that.updateButtons();
     };  
 
     this.errorGetAssociatedRobots = function(error) {

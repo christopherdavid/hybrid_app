@@ -24,7 +24,6 @@
             <div data-role="content">
                 <h2 data-i18n="s1-2-1.page.title" data-bind="translate: language">welcome</h2>
                 <fieldset>
-                    <input type="text" data-i18n="s1-2-1.page.name" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: name, valueUpdate: 'onblur', css: {invalid: nameValid}"/>
                     <input type="text" data-i18n="s1-2-1.page.email" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'onblur', css: {invalid: mailValid}"/>
                     <input type="password" data-i18n="s1-2-1.page.password" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'onblur', css: {invalid: passwordComplex}"/>
                     <input type="password" data-i18n="s1-2-1.page.password_verify" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', css: {invalid: passwordValid}"/>

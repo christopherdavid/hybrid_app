@@ -3,11 +3,11 @@
  */
 
 // for desktop usage
-var deviceReadyDeferred = true;
+var deviceReadyDeferred = $.Deferred();
 // on device usage
 //var deviceReadyDeferred = $.Deferred();
 var jqmReadyDeferred = $.Deferred();
-document.addEventListener('deviceReady', deviceReadyDeferred.resolve, false);
+$(document).ready(deviceReadyDeferred.resolve);
 
 // trigger event when both frameworks were ready
 $.when(deviceReadyDeferred, jqmReadyDeferred).then(function() {

@@ -4,7 +4,8 @@
 		"next": "weiter",
 		"ok" : "OK",
 		"cancel" : "Abbrechen",
-		"edit" : "bearbeiten"
+		"edit" : "bearbeiten",
+		"delete" : "löschen"
 	},
 	"communication": {
 	   "fetch_robots" : "Roboterliste wird abgerufen...",
@@ -45,8 +46,8 @@
             "logout": "Abmelden"
         },
         "page": {
-            "register": "Registrierung abgeschlossen. Willkommen, %s!",
-            "login" : "Willkommen, %s!",
+            "register": "Registrierung abgeschlossen. Willkommen!",
+            "login" : "Willkommen!",
             "no_robot": "Sie haben noch keinen Roboter registriert.<br>Bitte fügen Sie einen neuen Roboter hinzu.",
             "select_robot" : "Bitte wählen sie einen Roboter aus:"
         }
@@ -159,6 +160,11 @@
             "title": "Cleaning",
             "start": "starten",
             "pause": "pausieren"
+        }
+    },
+    "s6-1-1": {
+        "navi": {
+            "title": "Remote"
         }
     },
     "confirm": {

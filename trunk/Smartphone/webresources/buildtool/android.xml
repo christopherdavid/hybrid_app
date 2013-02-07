@@ -11,6 +11,7 @@
         <js>/../../javascript/utils/map.js</js>
         <js>/../../javascript/utils/startAreaControl.js</js>
         <js>/../../javascript/utils/scheduler.js</js>
+        <js>/../../javascript/utils/remoteControl.js</js>
         <js>/../../javascript/utils/makeScrollable.js</js>
         <!-- has to be removed when the real geo data is supplied from neato -->
         <js>/../../javascript/utils/geodata.js</js>

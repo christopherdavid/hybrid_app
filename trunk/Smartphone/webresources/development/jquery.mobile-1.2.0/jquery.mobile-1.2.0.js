@@ -3447,7 +3447,7 @@ $.mobile.getMaxScrollForTransition = $.mobile.getMaxScrollForTransition || defau
 	$.mobile._bindPageRemove = function() {
 		var page = $( this );
 
-		// when dom caching is not enabled or the page is embedded bind to remove the page on hide
+		// when dom caching is not enabled or the page is embedded bind to remove the page on 
 		if ( !page.data( "page" ).options.domCache &&
 				page.is( ":jqmData(external-page='true')" ) ) {
 
