@@ -35,6 +35,13 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "cleaning",
                     "value" : true
                 }]
+            },
+            {
+                targetScreenId : "s6-1-1",
+                conditions : [{
+                    "key" : "remote",
+                    "value" : true
+                }]
             }],
             clearHistory:true
     	},
@@ -156,11 +163,17 @@ Application.prototype.loadWorkflow = function() {
                     "value" : true
                 }]
             }
-            
             ,{
                 targetScreenId : "test",
                 conditions : [{
                     "key" : "test",
+                    "value" : true
+                }]
+            }
+            ,{
+                targetScreenId : "s4-2-1",
+                conditions : [{
+                    "key" : "basicSchedule",
                     "value" : true
                 }]
             }
@@ -188,6 +201,12 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "addEvent",
                     "value" : true
                 }]
+            },{
+                targetScreenId : "s4-1-2",
+                conditions : [{
+                    "key" : "editEvent",
+                    "value" : true
+                }]
             }]
         },
         "s4-1-2" : {
@@ -201,7 +220,14 @@ Application.prototype.loadWorkflow = function() {
             {
                 targetScreenId : "s4-1-3",
                 conditions : [{
-                    "key" : "next",
+                    "key" : "cleaning",
+                    "value" : true
+                }]
+            },
+            {
+                targetScreenId : "s4-1-1",
+                conditions : [{
+                    "key" : "quiet",
                     "value" : true
                 }]
             }]
@@ -222,11 +248,29 @@ Application.prototype.loadWorkflow = function() {
                 }]
             }]
         },
-        "s5-1-1" : {
+        "s4-2-1" : {
             navrules : [{
-                targetScreenId : "s1-1",
+                targetScreenId : "s3-1-1",
                 conditions : [{
                     "key" : "back",
+                    "value" : true
+                }]
+            }]
+        },
+        "s5-1-1" : {
+            navrules : [{
+                targetScreenId : "s0",
+                conditions : [{
+                    "key" : "back",
+                    "value" : true
+                }]
+            }]
+        },
+        "s6-1-1" : {
+            navrules : [{
+                targetScreenId : "s0",
+                backConditions : [{
+                    "key" : "home",
                     "value" : true
                 }]
             }]
@@ -234,7 +278,7 @@ Application.prototype.loadWorkflow = function() {
         
         "test" : {
             navrules : [{
-                targetScreenId : "s1-1",
+                targetScreenId : "s0",
                 conditions : [{
                     "key" : "add",
                     "value" : true

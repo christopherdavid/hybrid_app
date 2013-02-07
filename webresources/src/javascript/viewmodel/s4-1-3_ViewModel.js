@@ -12,15 +12,20 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
     this.isFloorListEnabled = ko.observable(false);
     this.selectedFloor = ko.observable();
    
+ 
     
     this.rooms = ko.computed(function(){
         if(typeof that.selectedFloor() != "undefined") {
             return geoData[that.selectedFloor()].rooms;
         } else {
-            return []
+            return [];
         }
     },this);
     this.selectedRooms = ko.observableArray([]);
+    
+    this.isNextEnabled = ko.computed(function(){
+    	return that.selectedRooms().length > 0;
+    },this);
     
     this.selectedMode = ko.observable();
     this.cleaningModeList = ko.observableArray([{
@@ -47,6 +52,10 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
         
         // load the geography
         parent.communicationWrapper.exec(RobotPluginManager.getRobotAtlasMetadata, [parent.communicationWrapper.dataValues["activeRobot"].robotId], that.atlasSuccess, that.atlasError);
+        
+        if(!that.bundle.events || !that.bundle.oldEvents){
+        	parent.showError('bundle has no events or no oldEvents!!!');
+        }
     }
 
     this.reload = function() {
@@ -55,6 +64,8 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
     }
 
     this.deinit = function() {
+    	mcanvas.deinit();
+    	mcanvas = null;
     }
     /* </enviroment functions> */
    
@@ -81,7 +92,23 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
             that.floorList.push({"text":result[0].atlasMetadata.geographies[i].name, "id":result[i].atlasMetadata.geographies[i].id});
             // TODO: temorary add gridId
             result[i].atlasMetadata.geographies[i].gridId = "86";
-            geoData[result[i].atlasMetadata.geographies[i].id] = result[i].atlasMetadata.geographies[i];
+            var id = result[i].atlasMetadata.geographies[i].id;
+            geoData[id] = result[i].atlasMetadata.geographies[i];
+            
+            //on edit only
+            //add reference of the room into selectedRooms if the room is in the loaded event  
+            if(that.bundle.oldEvents.length > 0){
+	            $.each(geoData[id].rooms, function(index, room){
+	            	$.each(that.bundle.oldEvents[0].rooms,function(index, loadedRoom){
+	            		if(loadedRoom){
+		            		if(loadedRoom.id == room.id){
+		            			//push reference
+		            			that.selectedRooms.push(room);
+		            		}
+	            		}
+	            	});
+	            });
+            }
             
             var fetchMap = $.i18n.t('communication.fetch_map');
             
@@ -91,6 +118,8 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
                 message : fetchMap,
                 callback : null
             });
+            
+            
         }
         //console.log("that.floorList.length " + that.floorList.length)
         // if there is just one floor or there was a previous selected floor, than select it
@@ -107,6 +136,7 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
     }
     
     this.atlasError = function(error) {
+    	
         console.log(error.message);
     }
     this.gridSuccess = function(result) {
@@ -132,8 +162,32 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
     };
 
     this.next = function() {
+    	
+    	var rooms = new Array(that.selectedRooms().length);			
+    	
+		ko.utils.arrayForEach(that.selectedRooms(), function(item) {
+			rooms.push(item);
+		});
+		
+		for ( var i = 0; i < that.bundle.events.length; i++) {
+			that.bundle.events[i].rooms = rooms;
+		}
+    	
         that.conditions['next'] = true;
-        parent.flowNavigator.next();
+        
+        
+      //remove old events and add the new ones
+		parent.communicationWrapper.exec(RobotPluginManager.removeEvent, ['robotId', 'advanced', that.bundle.oldEvents], function(success) {
+			parent.communicationWrapper.exec(RobotPluginManager.addEvent, ['robotId', 'advanced', that.bundle.events], function(success) {
+				parent.flowNavigator.next();
+			}, function(error) {
+				parent.showError(error);
+			});
+		}, function(error) {
+			parent.showError(error);
+		});
+        
+        
     };
     /* </actionbar functions> */
 
@@ -153,7 +207,7 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
         } else {
         	that.selectedRooms.remove(item);
         }
-        console.log("item " + JSON.stringify(item) + "\nselectedRooms " + that.selectedRooms())
+        console.log("item " + JSON.stringify(item) + "\nselectedRooms " + JSON.stringify(that.selectedRooms()) );
     }
 })
 console.log('loaded file: s4-1-1_ViewModel.js'); 

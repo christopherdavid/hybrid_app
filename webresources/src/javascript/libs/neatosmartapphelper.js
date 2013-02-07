@@ -199,19 +199,230 @@ var UserPluginManager = ( function() {
                         "robotId" : "NR_JAN_1"
                     }]);
                 }, 1000);
+                
+                //no robots callback
+                window.setTimeout(function() {
+                    callbackSuccess([]);
+                }, 5000);
             },
 
             disassociateRobot : function(email, robotId, callbackSuccess, callbackError) {
                 //window.plugins.neatoPluginLayer.userMgr.disassociateRobot(email, robotId, callbackSuccess, callbackError);
+            	window.setTimeout(function() {
+                    callbackSuccess("OK");
+                }, 1000);
             },
 
             disassociateAllRobots : function(email, callbackSuccess, callbackError) {
-                //window.plugins.neatoPluginLayer.userMgr.disassociateAllRobots(email, callbackSuccess, callbackError);
+                window.plugins.neatoPluginLayer.userMgr.disassociateAllRobots(email, callbackSuccess, callbackError);
             }
         }
     }());
 
 var RobotPluginManager = ( function() {
+	
+		var schedulerEvents = [
+		                       {
+		                    	      "eventType":"cleaning",
+		                    	      "day":4,
+		                    	      "startTime":"01:30",
+		                    	      "state":"local",
+		                    	      "id":"2a6ba65e-45wq-4a31-b727-0e846e5c9845",
+		                    	      "rooms":[
+		                    	         {
+		                    	            "id":"1",
+		                    	            "coord":[
+		                    	               {
+		                    	                  "y":160,
+		                    	                  "x":360
+		                    	               },
+		                    	               {
+		                    	                  "y":160,
+		                    	                  "x":525
+		                    	               },
+		                    	               {
+		                    	                  "y":360,
+		                    	                  "x":525
+		                    	               },
+		                    	               {
+		                    	                  "y":360,
+		                    	                  "x":375
+		                    	               },
+		                    	               {
+		                    	                  "y":240,
+		                    	                  "x":375
+		                    	               },
+		                    	               {
+		                    	                  "y":240,
+		                    	                  "x":360
+		                    	               }
+		                    	            ],
+		                    	            "icon":0,
+		                    	            "boundingBox":[
+		                    	               360,
+		                    	               160,
+		                    	               525,
+		                    	               360
+		                    	            ],
+		                    	            "color":1,
+		                    	            "name":"Room2"
+		                    	         }
+		                    	      ]
+		                    	   },
+		                    	   {
+		                    	      "eventType":"cleaning",
+		                    	      "day":2,
+		                    	      "startTime":"01:30",
+		                    	      "state":"robot",
+		                    	      "id":"2a6ba65e-aseb-4a31-b727-0e846e5c5012",
+		                    	      "rooms":[
+		                    	         {
+		                    	            "id":"1",
+		                    	            "coord":[
+		                    	               {
+		                    	                  "y":160,
+		                    	                  "x":360
+		                    	               },
+		                    	               {
+		                    	                  "y":160,
+		                    	                  "x":525
+		                    	               },
+		                    	               {
+		                    	                  "y":360,
+		                    	                  "x":525
+		                    	               },
+		                    	               {
+		                    	                  "y":360,
+		                    	                  "x":375
+		                    	               },
+		                    	               {
+		                    	                  "y":240,
+		                    	                  "x":375
+		                    	               },
+		                    	               {
+		                    	                  "y":240,
+		                    	                  "x":360
+		                    	               }
+		                    	            ],
+		                    	            "icon":0,
+		                    	            "boundingBox":[
+		                    	               360,
+		                    	               160,
+		                    	               525,
+		                    	               360
+		                    	            ],
+		                    	            "color":1,
+		                    	            "name":"Room2"
+		                    	         },
+		                    	         {
+		                    	            "id":"0",
+		                    	            "coord":[
+		                    	               {
+		                    	                  "y":0,
+		                    	                  "x":0
+		                    	               },
+		                    	               {
+		                    	                  "y":0,
+		                    	                  "x":360
+		                    	               },
+		                    	               {
+		                    	                  "y":240,
+		                    	                  "x":360
+		                    	               },
+		                    	               {
+		                    	                  "y":240,
+		                    	                  "x":0
+		                    	               }
+		                    	            ],
+		                    	            "icon":0,
+		                    	            "boundingBox":[
+		                    	               0,
+		                    	               0,
+		                    	               360,
+		                    	               240
+		                    	            ],
+		                    	            "color":1,
+		                    	            "name":"Room1"
+		                    	         }
+		                    	      ]
+		                    	   },
+		                    	   {
+		                    	      "eventType":"quiet",
+		                    	      "day":3,
+		                    	      "startTime":"02:30",
+		                    	      "endTime":"03:45",
+		                    	      "id":"3333255e-a00f-422c-834d-06f1cba591cb"
+		                    	   },
+		                    	   {
+		                    	      "eventType":"quiet",
+		                    	      "day":2,
+		                    	      "startTime":"02:30",
+		                    	      "endTime":"03:45",
+		                    	      "id":"3333255e-a00f-422c-834d-06f1cba591cb"
+		                    	   },
+		                    	   {
+		                    	      "eventType":"quiet",
+		                    	      "day":1,
+		                    	      "startTime":"02:30",
+		                    	      "endTime":"03:45",
+		                    	      "id":"3333255e-a00f-422c-834d-06f1cba591cb"
+		                    	   },
+		                    	   {
+		                    	      "eventType":"cleaning",
+		                    	      "day":3,
+		                    	      "startTime":"03:45",
+		                    	      "state":"server",
+		                    	      "id":"2a6ba65e-30eb-4a31-b727-0e846e5c5082",
+		                    	      "rooms":[
+		                    	         {
+		                    	            "id":"0",
+		                    	            "coord":[
+		                    	               {
+		                    	                  "y":0,
+		                    	                  "x":0
+		                    	               },
+		                    	               {
+		                    	                  "y":0,
+		                    	                  "x":360
+		                    	               },
+		                    	               {
+		                    	                  "y":240,
+		                    	                  "x":360
+		                    	               },
+		                    	               {
+		                    	                  "y":240,
+		                    	                  "x":0
+		                    	               }
+		                    	            ],
+		                    	            "icon":0,
+		                    	            "boundingBox":[
+		                    	               0,
+		                    	               0,
+		                    	               360,
+		                    	               240
+		                    	            ],
+		                    	            "color":1,
+		                    	            "name":"Room1"
+		                    	         }
+		                    	      ]
+		                    	   },
+		                    	   {
+		                    	      "eventType":"quiet",
+		                    	      "day":4,
+		                    	      "startTime":"03:30",
+		                    	      "endTime":"07:30",
+		                    	      "id":"e89fc620-acde-4144-9dc6-4f09fbad2552"
+		                    	   },
+		                    	   {
+		                    	      "eventType":"quiet",
+		                    	      "day":6,
+		                    	      "startTime":"00:00",
+		                    	      "endTime":"05:15",
+		                    	      "id":"5e7c00c3-2341-4f06-a446-5706e32f3336"
+		                    	   }
+		                    	];
+	
+	
         return {
             discoverNearbyRobots : function(callbackSuccess, callbackError) {
                 window.plugins.neatoPluginLayer.robotMgr.discoverNearbyRobots(callbackSuccess, callbackError);
@@ -231,7 +442,10 @@ var RobotPluginManager = ( function() {
             },
 
             setRobotName : function(robotId, robotName, callbackSuccess, callbackError) {
-                window.plugins.neatoPluginLayer.robotMgr.setRobotName(robotId, robotName, callbackSuccess, callbackError);
+              	 window.setTimeout(function() {
+                     callbackSuccess("OK");
+                 }, 1000);
+                //window.plugins.neatoPluginLayer.robotMgr.setRobotName(robotId, robotName, callbackSuccess, callbackError);
             },
             
             setRobotName2 : function(robotId, robotName, callbackSuccess, callbackError) {
@@ -240,14 +454,54 @@ var RobotPluginManager = ( function() {
             
             getRobotDetail : function(robotId, callbackSuccess, callbackError) {
                 window.plugins.neatoPluginLayer.robotMgr.getRobotDetail(robotId, callbackSuccess, callbackError);
-            },
-
+            },            
+            
             setSchedule : function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
                 window.plugins.neatoPluginLayer.robotMgr.setSchedule(robotId, scheduleType, jsonArray, callbackSuccess, callbackError);
             },
+            
+            addEvent : function(robotId, scheduleType, eventArray, callbackSuccess, callbackError) {
+            	$.each(eventArray, function(index, event){
+            		schedulerEvents.push(event);
+            	});
+            	
+            	callbackSuccess("OK");
+            },
+            
+            removeEvent : function(robotId, scheduleType, eventArray, callbackSuccess, callbackError) {
+            	$.each(eventArray, function(index, delEvent){
+            		$.each(schedulerEvents, function(index, savedEvent){
+	            		if(delEvent == savedEvent){
+	            			schedulerEvents.splice(index,1);
+	            			return true; //continue
+	            		}
+            		});
+            	});
+            	
+            	callbackSuccess("OK");
+            },
 
             getSchedule : function(robotId, scheduleType, callbackSuccess, callbackError) {
-                window.plugins.neatoPluginLayer.robotMgr.getSchedule(robotId, scheduleType, callbackSuccess, callbackError);
+            	
+            	if(scheduleType == 'advanced'){
+            		
+	            	window.setTimeout(function() {
+	                    callbackSuccess(schedulerEvents);
+	                }, 1000);
+	            	
+            	} else if(scheduleType == 'basic'){
+            		
+            		var days = new Array(0);
+                	for(i = 0; i < 7; i++){
+        				days.push({'day': i, 'time': '8:00'});
+        			}
+                	window.setTimeout(function() {
+                        callbackSuccess(days);
+                    }, 1000);
+            	}
+            	
+            	
+                //window.plugins.neatoPluginLayer.robotMgr.getSchedule(robotId, scheduleType, callbackSuccess, callbackError);
             },
 
             getMaps : function(robotId, callbackSuccess, callbackError) {

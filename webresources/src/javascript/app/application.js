@@ -88,6 +88,8 @@ function Application() {
      * in the middle of the screen with an "OK" button to be dismissed by the user. The other content on the screen is blocked.
      */
     this.showError = function (error){//errorTitle, errorText, callback) {
+    	
+    	//TODO fix that! there is no result...
         alert("An Error occurred while contacting the server:\n" + error.errorMessage);
         console.log("error: " + result.errorCode + " msg: " + result.errorMessage);        
     }

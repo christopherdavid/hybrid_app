@@ -8,7 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		192420E8163FCF8700479217 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 192420E7163FCF8600479217 /* Default-568h@2x.png */; };
-		19716E25162315230047F9D5 /* libCordova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1927FDC71622D8A00065A9BB /* libCordova.a */; };
+		1964078416C406D200C71028 /* libSlideiOSPlugin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964077F16C406A200C71028 /* libSlideiOSPlugin.a */; };
+		1964078616C4073C00C71028 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964078516C4073C00C71028 /* Security.framework */; };
+		1964078816C4074700C71028 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964078716C4074700C71028 /* CoreData.framework */; };
+		1964078A16C4076500C71028 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964078916C4076500C71028 /* libsqlite3.dylib */; };
+		1964078C16C4077000C71028 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964078B16C4077000C71028 /* libresolv.dylib */; };
+		1964078E16C4077800C71028 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964078D16C4077800C71028 /* libxml2.dylib */; };
 		19941BE91636C943001BD6A3 /* Globalization.m in Sources */ = {isa = PBXBuildFile; fileRef = 19941BE81636C943001BD6A3 /* Globalization.m */; };
 		199568011623FA7C00EF3215 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 199568001623FA7C00EF3215 /* www */; };
 		19B54C3B162FD5B000829C4C /* icon-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 19B54C3A162FD5B000829C4C /* icon-568h@2x.png */; };
@@ -46,32 +51,37 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1927FDC61622D8A00065A9BB /* PBXContainerItemProxy */ = {
+		1964077E16C406A200C71028 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1927FDBF1622D8A00065A9BB /* CordovaLib.xcodeproj */;
+			containerPortal = 1964077716C406A000C71028 /* SlideiOSPlugin.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 68A32D7114102E1C006B237C;
-			remoteInfo = CordovaLib;
+			remoteGlobalIDString = B22BDAA8168D7C8400FFCB76;
+			remoteInfo = SlideiOSPlugin;
 		};
-		1927FDC81622D9010065A9BB /* PBXContainerItemProxy */ = {
+		1964078016C406A200C71028 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1927FDBF1622D8A00065A9BB /* CordovaLib.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC07D0554694100DB518D;
-			remoteInfo = CordovaLib;
+			containerPortal = 1964077716C406A000C71028 /* SlideiOSPlugin.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B22BDAB9168D7C8400FFCB76;
+			remoteInfo = SlideiOSPluginTests;
 		};
-		199568111624202100EF3215 /* PBXContainerItemProxy */ = {
+		1964078216C406A200C71028 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 19956807162413C800EF3215;
-			remoteInfo = "Ant Build Web Resources";
+			containerPortal = 1964077716C406A000C71028 /* SlideiOSPlugin.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E195EA1316B6B56A00E4D9C6;
+			remoteInfo = NeatoDataStore;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		192420E7163FCF8600479217 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		1927FDBF1622D8A00065A9BB /* CordovaLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CordovaLib.xcodeproj; path = "../phonegap/phonegap-phonegap-26d211b/lib/ios/CordovaLib/CordovaLib.xcodeproj"; sourceTree = "<group>"; };
+		1964077716C406A000C71028 /* SlideiOSPlugin.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SlideiOSPlugin.xcodeproj; path = SlideiOSPlugin/SlideiOSPlugin.xcodeproj; sourceTree = "<group>"; };
+		1964078516C4073C00C71028 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		1964078716C4074700C71028 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		1964078916C4076500C71028 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		1964078B16C4077000C71028 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
+		1964078D16C4077800C71028 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		19941BE71636C943001BD6A3 /* Globalization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Globalization.h; sourceTree = "<group>"; };
 		19941BE81636C943001BD6A3 /* Globalization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Globalization.m; sourceTree = "<group>"; };
 		199568001623FA7C00EF3215 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../webresources/dist/ios/www; sourceTree = "<group>"; };
@@ -124,7 +134,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19716E25162315230047F9D5 /* libCordova.a in Frameworks */,
+				1964078E16C4077800C71028 /* libxml2.dylib in Frameworks */,
+				1964078C16C4077000C71028 /* libresolv.dylib in Frameworks */,
+				1964078A16C4076500C71028 /* libsqlite3.dylib in Frameworks */,
+				1964078816C4074700C71028 /* CoreData.framework in Frameworks */,
+				1964078616C4073C00C71028 /* Security.framework in Frameworks */,
+				301BF5BD109A6A2B0062928A /* CFNetwork.framework in Frameworks */,
+				1964078416C406D200C71028 /* libSlideiOSPlugin.a in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
@@ -132,7 +148,6 @@
 				301BF5B7109A6A2B0062928A /* AddressBookUI.framework in Frameworks */,
 				301BF5B9109A6A2B0062928A /* AudioToolbox.framework in Frameworks */,
 				301BF5BB109A6A2B0062928A /* AVFoundation.framework in Frameworks */,
-				301BF5BD109A6A2B0062928A /* CFNetwork.framework in Frameworks */,
 				301BF5BF109A6A2B0062928A /* CoreLocation.framework in Frameworks */,
 				301BF5C1109A6A2B0062928A /* MediaPlayer.framework in Frameworks */,
 				301BF5C3109A6A2B0062928A /* QuartzCore.framework in Frameworks */,
@@ -158,10 +173,12 @@
 			path = CleaningRobotApp/Classes;
 			sourceTree = SOURCE_ROOT;
 		};
-		1927FDC01622D8A00065A9BB /* Products */ = {
+		1964077816C406A000C71028 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1927FDC71622D8A00065A9BB /* libCordova.a */,
+				1964077F16C406A200C71028 /* libSlideiOSPlugin.a */,
+				1964078116C406A200C71028 /* SlideiOSPluginTests.octest */,
+				1964078316C406A200C71028 /* NeatoDataStore.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -193,8 +210,13 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				1964078D16C4077800C71028 /* libxml2.dylib */,
+				1964078B16C4077000C71028 /* libresolv.dylib */,
+				1964078916C4076500C71028 /* libsqlite3.dylib */,
+				1964078716C4074700C71028 /* CoreData.framework */,
+				1964078516C4073C00C71028 /* Security.framework */,
+				1964077716C406A000C71028 /* SlideiOSPlugin.xcodeproj */,
 				199568001623FA7C00EF3215 /* www */,
-				1927FDBF1622D8A00065A9BB /* CordovaLib.xcodeproj */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				307C750510C5A3420062BCA9 /* Plugins */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -309,28 +331,12 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXLegacyTarget section */
-		19956807162413C800EF3215 /* Ant Build Web Resources */ = {
-			isa = PBXLegacyTarget;
-			buildArgumentsString = "$(ACTION) createiOS";
-			buildConfigurationList = 19956808162413C800EF3215 /* Build configuration list for PBXLegacyTarget "Ant Build Web Resources" */;
-			buildPhases = (
-			);
-			buildToolPath = /usr/local/ant/bin/ant;
-			buildWorkingDirectory = "$(PROJECT_DIR)/../webresources/buildtool";
-			dependencies = (
-			);
-			name = "Ant Build Web Resources";
-			passBuildSettingsInEnvironment = 1;
-			productName = "Ant Build Web Resources";
-		};
-/* End PBXLegacyTarget section */
-
 /* Begin PBXNativeTarget section */
 		1D6058900D05DD3D006BFB54 /* CleaningRobotApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "CleaningRobotApp" */;
 			buildPhases = (
+				19C0613316C144B500DE1338 /* ShellScript */,
 				304B58A110DAC018002A0835 /* Touch www folder */,
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
@@ -339,8 +345,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				199568121624202100EF3215 /* PBXTargetDependency */,
-				1927FDC91622D9010065A9BB /* PBXTargetDependency */,
 			);
 			name = CleaningRobotApp;
 			productName = CrossplatformTemplate;
@@ -373,24 +377,37 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 1927FDC01622D8A00065A9BB /* Products */;
-					ProjectRef = 1927FDBF1622D8A00065A9BB /* CordovaLib.xcodeproj */;
+					ProductGroup = 1964077816C406A000C71028 /* Products */;
+					ProjectRef = 1964077716C406A000C71028 /* SlideiOSPlugin.xcodeproj */;
 				},
 			);
 			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* CleaningRobotApp */,
-				19956807162413C800EF3215 /* Ant Build Web Resources */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		1927FDC71622D8A00065A9BB /* libCordova.a */ = {
+		1964077F16C406A200C71028 /* libSlideiOSPlugin.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libCordova.a;
-			remoteRef = 1927FDC61622D8A00065A9BB /* PBXContainerItemProxy */;
+			path = libSlideiOSPlugin.a;
+			remoteRef = 1964077E16C406A200C71028 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1964078116C406A200C71028 /* SlideiOSPluginTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SlideiOSPluginTests.octest;
+			remoteRef = 1964078016C406A200C71028 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1964078316C406A200C71028 /* NeatoDataStore.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = NeatoDataStore.bundle;
+			remoteRef = 1964078216C406A200C71028 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -423,6 +440,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		19C0613316C144B500DE1338 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "env\n/usr/local/ant/bin/ant -buildfile '$PROJECT_DIR/../webresources/buildtool/build.xml' createiOS";
+		};
 		304B58A110DAC018002A0835 /* Touch www folder */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -452,19 +482,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		1927FDC91622D9010065A9BB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = CordovaLib;
-			targetProxy = 1927FDC81622D9010065A9BB /* PBXContainerItemProxy */;
-		};
-		199568121624202100EF3215 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 19956807162413C800EF3215 /* Ant Build Web Resources */;
-			targetProxy = 199568111624202100EF3215 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		1F766FDC13BBADB100FB74C0 /* Localizable.strings */ = {
@@ -502,63 +519,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		19956809162413C800EF3215 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-			};
-			name = Debug;
-		};
-		1995680A162413C800EF3215 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-			};
-			name = Release;
-		};
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -569,6 +529,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CleaningRobotApp/CleaningRobotApp-Prefix.pch";
 				GCC_VERSION = "";
+				HEADER_SEARCH_PATHS = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(BUILT_PRODUCTS_DIR)\"",
+					usr/include/libxml2,
+				);
 				INFOPLIST_FILE = "CleaningRobotApp/CleaningRobotApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = CleaningRobotApp;
@@ -584,6 +550,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CleaningRobotApp/CleaningRobotApp-Prefix.pch";
 				GCC_VERSION = "";
+				HEADER_SEARCH_PATHS = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(BUILT_PRODUCTS_DIR)\"",
+					/usr/include/libxml2,
+				);
 				INFOPLIST_FILE = "CleaningRobotApp/CleaningRobotApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = CleaningRobotApp;
@@ -665,15 +637,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		19956808162413C800EF3215 /* Build configuration list for PBXLegacyTarget "Ant Build Web Resources" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				19956809162413C800EF3215 /* Debug */,
-				1995680A162413C800EF3215 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "CleaningRobotApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -52,9 +52,17 @@ Application.prototype.loadDataTemplate = function() {
             view : 's4-1-3.html',
             model : 's4-1-3_ViewModel'
         },
+        's4-2-1' : {
+            view : 's4-2-1.html',
+            model : 's4-2-1_ViewModel'
+        },
         's5-1-1' : {
             view : 's5-1-1.html',
             model : 's5-1-1_ViewModel'
+        },
+        's6-1-1' : {
+            view : 's6-1-1.html',
+            model : 's6-1-1_ViewModel'
         }
         
         ,'test' : {

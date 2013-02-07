@@ -51,7 +51,9 @@
                     self.messageTextSpinner.hide();
                     self.messageText.show();
                     self.messageText.text(message);
-                    setTimeout(function() {self.hide(type, false);}, 3000);
+                    setTimeout(function() {
+                    	self.hide(type, false);
+                    	}, 3000);
                     break;
             }          
             self.element.slideDown(400);
@@ -63,16 +65,17 @@
         hide:function(type, force){
             var self = this;
             
-            if (self.currentType == type || (force && self.currentType != notificationType.HINT)){
+            if (self.currentType == type || (force && (self.currentType != notificationType.HINT))){
                 self.element.slideUp(400);
+                self.currentType = null;
+                self.isShown = false;
             }                     
-            self.currentType = null;
-            self.isShown = false;
+            
         }
         
     });
     //auto self-init widgets
-    $(document).bind("ready", function(e) {
+    $(document).one("frameworksReady", function(e) {
         $.mobile.notificationbar.prototype.enhanceWithin(e.target);
     });
 

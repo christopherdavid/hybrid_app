@@ -16,7 +16,7 @@ resourceHandler.registerFunction('s1-2-3_ViewModel.js', 's1-2-3_ViewModel', func
     this.next = function() {
         // send the robotId to the server for validation
         var email = parent.communicationWrapper.dataValues["user"].email;
-        parent.communicationWrapper.exec(UserPluginManager.associateRobot, [email, that.robotId()], that.robotIdSuccess, that.robotIdError); 
+        parent.communicationWrapper.exec(UserPluginManager.associateRobot, [email, that.robotId()], that.robotIdSuccess, that.robotIdError);
     };
     
     this.robotIdSuccess = function(result) {

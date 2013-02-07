@@ -22,6 +22,11 @@ resourceHandler.registerFunction('s3-1-1_ViewModel.js', 's3-1-1_ViewModel', func
         that.conditions['test'] = true;
         parent.flowNavigator.next();
     }
+    
+    this.basicSchedule = function(){
+    	that.conditions['basicSchedule'] = true;
+        parent.flowNavigator.next();
+    }
 
     this.reload = function() {
         // remove conditions

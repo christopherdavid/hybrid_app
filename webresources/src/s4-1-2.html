@@ -21,7 +21,7 @@
                 style="right: 0px; top: 0px; margin-top: -5px;">
                 <a href="#" data-role="button" data-mini="true"
                     data-inline="true" data-i18n="common.next"
-                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:next">next</a>
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:next, jqLinkButtonEnable: isNextEnabled">next</a>
             </div>
         </div>
         <div data-role="content">
@@ -63,7 +63,7 @@
                     data-i18n="s4-1-2.page.starting_time"
                     data-bind="translate: language">Starting
                     time</label>
-                <div class="timePicker"></div>
+                <div id="cleaningTime" class="timePicker"></div>
             </div>
 
 
@@ -87,7 +87,7 @@
                     data-i18n="s4-1-2.page.starting_time"
                     data-bind="translate: language">Starting
                     time</label>
-                <div class="timePicker"></div>
+                <div id="quietStartTime" class="timePicker"></div>
             </div>
             
             <div data-role="fieldcontain"
@@ -96,7 +96,7 @@
                     data-i18n="s4-1-2.page.ending_time"
                     data-bind="translate: language">End
                     time</label>
-                <div class="timePicker"></div>
+                <div id="quietEndTime" class="timePicker"></div>
             </div>
 
 

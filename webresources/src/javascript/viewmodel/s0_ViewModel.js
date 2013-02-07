@@ -54,6 +54,8 @@ resourceHandler.registerFunction('s0_ViewModel.js', 's0_ViewModel', function(par
     }
 
     this.remote = function() {
+    	that.conditions['remote'] = true;
+        parent.flowNavigator.next();
         // TODO: switch to remote view
     }
 

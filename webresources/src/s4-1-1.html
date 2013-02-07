@@ -21,10 +21,13 @@
                 data-bind="text:labelTitle">Schedule</h1>
             <div class="ui-btn-right"
                 style="right: 0px; top: 0px; margin-top: -5px;">
-                <a href="#" data-role="button" data-mini="true"
+                <a href="#" id="deleteButton" data-role="button" data-mini="true"
+                    data-inline="true" data-i18n="common.delete"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, visible: false, click:del">edit</a>
+                <a href="#" id="editButton" data-role="button" data-mini="true"
                     data-inline="true" data-i18n="common.edit"
-                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: isEditEnabled, click:edit">edit</a>
-                <a href="#" data-role="button" data-mini="true"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: false, click:edit">edit</a>
+                <a href="#" id="addButton" data-role="button" data-mini="true"
                     data-inline="true" data-i18n="s4-1-1.navi.add"
                     data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:add">add</a>
             </div>
