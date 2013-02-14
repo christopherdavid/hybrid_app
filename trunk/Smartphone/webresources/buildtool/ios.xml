@@ -18,6 +18,7 @@
     </group>
     <group name="cordova.min">
       <js>/../../javascript/libs/ios/cordova-2.1.0.js</js>
+      <js>/../../javascript/libs/ios/neatosmartapphelper.js</js>
     </group>
     <group name="plugins">
       <js>/../../javascript/libs/ios/globalization.js</js>
