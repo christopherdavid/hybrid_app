@@ -25,8 +25,11 @@
 	<key>ExternalHosts</key>
 	<array>
 		<string>uid.com*</string>
-		<string>*.phonegap.com*</string>
-		<string>jquerymobile.com*</string>
+		<string>http://neatodev.rajatogo.com/*</string>
+		<string>http://neatostaging.rajatogo.com/api/rest/json/*</string>
+		<string>http://neato.rajatogo.com/api/rest/json/*</string>
+		<string>http://neatostaging.rajatogo.com/*</string>
+		<string>http://neato.rajatogo.com/*</string>
 	</array>
 	<key>Plugins</key>
 	<dict>
@@ -64,6 +67,10 @@
 		<string>CDVBattery</string>
 		<key>Globalization</key>
 		<string>Globalization</string>
+		<key>RobotManagement</key>
+		<string>RobotManagerPlugin</string>
+		<key>UserManagement</key>
+		<string>UserManagerPlugin</string>
 	</dict>
 </dict>
 </plist>

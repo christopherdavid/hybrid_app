@@ -14,6 +14,7 @@
 		1964078A16C4076500C71028 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964078916C4076500C71028 /* libsqlite3.dylib */; };
 		1964078C16C4077000C71028 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964078B16C4077000C71028 /* libresolv.dylib */; };
 		1964078E16C4077800C71028 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964078D16C4077800C71028 /* libxml2.dylib */; };
+		1964079216CD309500C71028 /* libCordova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964079116CD309500C71028 /* libCordova.a */; };
 		19941BE91636C943001BD6A3 /* Globalization.m in Sources */ = {isa = PBXBuildFile; fileRef = 19941BE81636C943001BD6A3 /* Globalization.m */; };
 		199568011623FA7C00EF3215 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 199568001623FA7C00EF3215 /* www */; };
 		19B54C3B162FD5B000829C4C /* icon-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 19B54C3A162FD5B000829C4C /* icon-568h@2x.png */; };
@@ -82,6 +83,7 @@
 		1964078916C4076500C71028 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		1964078B16C4077000C71028 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
 		1964078D16C4077800C71028 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		1964079116CD309500C71028 /* libCordova.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCordova.a; path = "/Users/uid/Library/Developer/Xcode/DerivedData/CleaningRobotApp-fjjopscayftduodhuhxpfnpddrra/Build/Products/Debug-iphoneos/libCordova.a"; sourceTree = "<absolute>"; };
 		19941BE71636C943001BD6A3 /* Globalization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Globalization.h; sourceTree = "<group>"; };
 		19941BE81636C943001BD6A3 /* Globalization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Globalization.m; sourceTree = "<group>"; };
 		199568001623FA7C00EF3215 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../webresources/dist/ios/www; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1964079216CD309500C71028 /* libCordova.a in Frameworks */,
 				1964078E16C4077800C71028 /* libxml2.dylib in Frameworks */,
 				1964078C16C4077000C71028 /* libresolv.dylib in Frameworks */,
 				1964078A16C4076500C71028 /* libsqlite3.dylib in Frameworks */,
@@ -210,11 +213,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				1964078D16C4077800C71028 /* libxml2.dylib */,
-				1964078B16C4077000C71028 /* libresolv.dylib */,
-				1964078916C4076500C71028 /* libsqlite3.dylib */,
-				1964078716C4074700C71028 /* CoreData.framework */,
-				1964078516C4073C00C71028 /* Security.framework */,
 				1964077716C406A000C71028 /* SlideiOSPlugin.xcodeproj */,
 				199568001623FA7C00EF3215 /* www */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -259,6 +257,12 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1964079116CD309500C71028 /* libCordova.a */,
+				1964078D16C4077800C71028 /* libxml2.dylib */,
+				1964078B16C4077000C71028 /* libresolv.dylib */,
+				1964078916C4076500C71028 /* libsqlite3.dylib */,
+				1964078516C4073C00C71028 /* Security.framework */,
+				1964078716C4074700C71028 /* CoreData.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
@@ -537,6 +541,10 @@
 				);
 				INFOPLIST_FILE = "CleaningRobotApp/CleaningRobotApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"/Users/uid/Library/Developer/Xcode/DerivedData/CleaningRobotApp-fjjopscayftduodhuhxpfnpddrra/Build/Products/Debug-iphoneos\"",
+				);
 				PRODUCT_NAME = CleaningRobotApp;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -558,6 +566,10 @@
 				);
 				INFOPLIST_FILE = "CleaningRobotApp/CleaningRobotApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"/Users/uid/Library/Developer/Xcode/DerivedData/CleaningRobotApp-fjjopscayftduodhuhxpfnpddrra/Build/Products/Debug-iphoneos\"",
+				);
 				PRODUCT_NAME = CleaningRobotApp;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
