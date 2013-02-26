@@ -34,8 +34,7 @@ public class RobotSchedulerManager {
 
 		return sRobotSchedulerManager;
 	}
-
-
+	
 	// Public helper method to set the Robot schedule on the server. 
 	public void sendRobotSchedule(AdvancedScheduleGroup robotScheduleGroup, final String robotId, final ScheduleWebserviceListener scheduleDetailsListener) {
 		final String xmlSchedule = robotScheduleGroup.getXml();
@@ -157,12 +156,21 @@ public class RobotSchedulerManager {
 					listener.onSuccess(null, "");
 					return;
 				}
+				String currentScheduleId = null;
 
 				// Server assumes that there could be multiple schedules and server sends the array 
 				// Since server sends the array of schedule but we assume that there is going to be only
 				// single schedule we are just using the first available item. I think server needs to change
 				// to return only one schedule. 
-				final String scheduleId = result.mResult.get(0).mId;
+				//TODO: This is under assumption that the schedules are sent in descending order.
+				for (int scheduleIterator = (result.mResult.size()-1); scheduleIterator >= 0 ; scheduleIterator--) {
+					if (NeatoRobotScheduleWebServicesAttributes.SCHEDULE_TYPE_ADVANCED.equals(result.mResult.get(scheduleIterator).mSchedule_Type)) {
+						currentScheduleId = result.mResult.get(scheduleIterator).mId;
+						LogHelper.log(TAG, "Current schedule id is: "+currentScheduleId);
+						break;
+					}
+				}
+				final String scheduleId = currentScheduleId;
 
 				GetNeatoRobotScheduleDataResult resultData = NeatoRobotScheduleWebservicesHelper.getNeatoRobotScheduleDataRequest(mContext, scheduleId);
 				if (resultData == null) {
@@ -232,8 +240,16 @@ public class RobotSchedulerManager {
 					return;
 				}
 				
-				// to return only one schedule.					
-				String scheduleId = getScheduleResult.mResult.get(0).mId; 
+				// to return only one schedule.	
+				String currentScheduleId = null;
+				for (int scheduleIterator = (getScheduleResult.mResult.size()-1); scheduleIterator >= 0 ; scheduleIterator--) {
+					if (NeatoRobotScheduleWebServicesAttributes.SCHEDULE_TYPE_ADVANCED.equals(getScheduleResult.mResult.get(scheduleIterator).mSchedule_Type)) {
+						currentScheduleId = getScheduleResult.mResult.get(scheduleIterator).mId;
+						LogHelper.log(TAG, "Current schedule id is: "+currentScheduleId);
+						break;
+					}
+				}
+				final String scheduleId = currentScheduleId;
 				LogHelper.logD(TAG, "Deleting the schedule. scheduleId  = " + scheduleId);
 				DeleteNeatoRobotScheduleResult deleteScheduleResult = NeatoRobotScheduleWebservicesHelper.deleteNeatoRobotSchedule(mContext, scheduleId);
 				

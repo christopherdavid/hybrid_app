@@ -8,7 +8,7 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 public class NeatoHttpResponse {
 
 	private static final String TAG = NeatoHttpResponse.class.getSimpleName();
-	public int mResponse; 
+	public int mResponse = 0; 
 	public int mServerErrorReason; 
 	public InputStream mResponseInputStream;
 

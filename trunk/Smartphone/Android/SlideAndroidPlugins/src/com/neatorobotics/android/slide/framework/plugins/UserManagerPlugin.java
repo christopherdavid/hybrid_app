@@ -24,13 +24,16 @@ import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.UserJsonData;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
+import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
 import com.neatorobotics.android.slide.framework.webservice.user.listeners.AssociatedRobotDetailsListener;
 import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserDetailsListener;
+import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserForgetPasswordListener;
 import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserRobotAssociateDisassociateListener;
+import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserPasswordChangeListener;
 
 
 public class UserManagerPlugin extends Plugin {
@@ -41,7 +44,10 @@ public class UserManagerPlugin extends Plugin {
 	private static final HashMap<String, UserManagerPluginMethods> ACTION_MAP = new HashMap<String, UserManagerPlugin.UserManagerPluginMethods>();
 
 	// If we add more action type, please ensure to add it into the ACTION_MAP
-	private static enum UserManagerPluginMethods {CREATE_USER, LOGIN, LOGOUT, ISLOGGEDIN, GET_USER_DETAILS, ASSOCIATE_ROBOT, DISASSOCIATE_ROBOT, GET_ASSOCIATED_ROBOTS, DISASSOCAITE_ALL_ROBOTS, REGISTER_NETWORK_STATE_LISTENER};
+	private static enum UserManagerPluginMethods {CREATE_USER, LOGIN, LOGOUT, ISLOGGEDIN, GET_USER_DETAILS, 
+										ASSOCIATE_ROBOT, DISASSOCIATE_ROBOT, GET_ASSOCIATED_ROBOTS, 
+										DISASSOCAITE_ALL_ROBOTS, REGISTER_NETWORK_STATE_LISTENER, 
+										FORGET_PASSWORD, CHANGE_PASSWORD};
 	static {
 		ACTION_MAP.put(ActionTypes.LOGIN, UserManagerPluginMethods.LOGIN);
 		ACTION_MAP.put(ActionTypes.IS_USER_LOGGEDIN, UserManagerPluginMethods.ISLOGGEDIN);
@@ -53,6 +59,9 @@ public class UserManagerPlugin extends Plugin {
 		ACTION_MAP.put(ActionTypes.GET_ASSOCIATED_ROBOTS, UserManagerPluginMethods.GET_ASSOCIATED_ROBOTS);
 		ACTION_MAP.put(ActionTypes.DISASSOCAITE_ALL_ROBOTS, UserManagerPluginMethods.DISASSOCAITE_ALL_ROBOTS);
 		ACTION_MAP.put(ActionTypes.REGISTER_NETWORK_STATE_LISTENER, UserManagerPluginMethods.REGISTER_NETWORK_STATE_LISTENER);
+		ACTION_MAP.put(ActionTypes.FORGET_PASSWORD, UserManagerPluginMethods.FORGET_PASSWORD);
+		ACTION_MAP.put(ActionTypes.CHANGE_PASSWORD, UserManagerPluginMethods.CHANGE_PASSWORD);
+	
 	}
 
 	private RobotDetailsPluginListener mRobotDetailsPluginListener;
@@ -133,8 +142,16 @@ public class UserManagerPlugin extends Plugin {
 		case REGISTER_NETWORK_STATE_LISTENER:
 			LogHelper.log(TAG, "REGISTER_NETWORK_STATE_LISTENER action initiated");
 			registerNetworkStateListener(context, jsonData, callbackId);
+			break;	
+		case FORGET_PASSWORD:
+			LogHelper.log(TAG, "FORGET_PASSWORD action initiated");
+			forgetPassword(context, jsonData, callbackId);
+			break;	
+		case CHANGE_PASSWORD:
+			LogHelper.log(TAG, "CHANGE_PASSWORD action initiated");
+			changePassword(context, jsonData, callbackId);
 			break;
-		}
+ 		}
 	}
 
 	private UserManagerPluginMethods convertToInternalAction(String action) {
@@ -143,6 +160,60 @@ public class UserManagerPlugin extends Plugin {
 	}
 
 
+	private void forgetPassword (Context context, UserJsonData jsonData, final String callbackId) {
+		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
+		UserManager.getInstance(context).forgetPassword(email, new UserForgetPasswordListener() {
+			
+			@Override
+			public void onComplete() {
+				PluginResult result = new PluginResult(PluginResult.Status.OK);
+				result.setKeepCallback(false);
+				success(result, callbackId);
+			}
+			
+			@Override
+			public void onServerError(int statusCode, String errorMessage) {
+				LogHelper.logD(TAG, "forgetPassword unsuccessful. Server Error");
+				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
+			}
+			
+			@Override
+			public void onNetworkError(String errorMessage) {
+				LogHelper.logD(TAG, "forgetPassword unsuccessful. Network Error");
+				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errorMessage);
+			}
+		});
+	}
+	
+	private void changePassword(Context context, UserJsonData jsonData, final String callbackId) {
+		String emailId = jsonData.getString(JsonMapKeys.KEY_EMAIL);
+		LogHelper.logD(TAG, "emailId = " + emailId);
+		String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
+		String currentPassword = jsonData.getString(JsonMapKeys.KEY_CURRENT_PASSWORD);
+		String newPassword = jsonData.getString(JsonMapKeys.KEY_NEW_PASSWORD);
+		UserManager.getInstance(context).changePassword(authToken, currentPassword, newPassword, new UserPasswordChangeListener() {
+			
+			@Override
+			public void onComplete() {
+				PluginResult result = new PluginResult(PluginResult.Status.OK);
+				result.setKeepCallback(false);
+				success(result, callbackId);
+			}
+			
+			@Override
+			public void onServerError(int statusCode, String errorMessage) {
+				LogHelper.logD(TAG, "changePassword unsuccessful. Server Error");
+				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
+			}
+			
+			@Override
+			public void onNetworkError(String errorMessage) {
+				LogHelper.logD(TAG, "changePassword unsuccessful. Network Error");
+				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errorMessage);
+
+			}
+		});
+	}
 	private void isUserLoggedIn(Context context, UserJsonData jsonData, String callbackId) {
 
 		String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
@@ -186,6 +257,8 @@ public class UserManagerPlugin extends Plugin {
 						PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
 						LogHelper.logD(TAG, "Login successful. Start service and send Success plugin to user with user details");
 						success(loginUserPluginResult, callbackId);
+						String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
+						UserManager.getInstance(context).setUserAttributesOnServer(authToken, DeviceUtils.getUserAttributes(context));
 					}
 					else {
 						sendError(callbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
@@ -284,6 +357,8 @@ public class UserManagerPlugin extends Plugin {
 						PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
 						LogHelper.logD(TAG, "User created");
 						success(loginUserPluginResult, callbackId);
+						String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
+						UserManager.getInstance(context).setUserAttributesOnServer(authToken, DeviceUtils.getUserAttributes(context));
 					}
 					else {
 						sendError(callbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
@@ -539,6 +614,8 @@ public class UserManagerPlugin extends Plugin {
 		public static final String DISASSOCIATE_ROBOT = "disassociateRobot";
 		public static final String DISASSOCAITE_ALL_ROBOTS = "disassociateAllRobots";
 		public static final String REGISTER_NETWORK_STATE_LISTENER = "registerNetworkStateListener";
+		public static final String FORGET_PASSWORD	= "forgetPassword";
+		public static final String CHANGE_PASSWORD	= "changePassword";
 	}
 
 	private JSONObject getErrorJsonObject(int errorCode, String errMessage) {

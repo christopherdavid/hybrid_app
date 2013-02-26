@@ -1,13 +1,20 @@
 package com.neatorobotics.android.slide.framework.plugins;
 
 import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.cordova.api.Plugin;
 import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
+import android.text.TextUtils;
+
+import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.json.JsonHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
@@ -17,7 +24,9 @@ import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
 import com.neatorobotics.android.slide.framework.pluginhelper.ScheduleJsonDataHelper;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDiscoveryListener;
+import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotNotificationsListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
+import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotStateListener;
 import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedScheduleGroup;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 import com.neatorobotics.android.slide.framework.utils.DataConversionUtils;
@@ -54,7 +63,8 @@ public class RobotManagerPlugin extends Plugin {
 		SET_MAP_OVERLAY_DATA, GET_ROBOT_MAP, 
 		GET_ROBOT_SCHEDULE, DISCONNECT_DIRECT_CONNECTION, SET_ROBOT_NAME, GET_ROBOT_ATLAS_METADATA,
 		UPDATE_ROBOT_ATLAS_METADATA, GET_ATLAS_GRID_DATA, DELETE_ROBOT_SCHEDULE, GET_ROBOT_DETAIL, 
-		SET_ROBOT_NAME_2, TRY_DIRECT_CONNECTION2, SEND_COMMAND_TO_ROBOT2, ROBOT_ONLINE_STATUS};
+		SET_ROBOT_NAME_2, TRY_DIRECT_CONNECTION2, SEND_COMMAND_TO_ROBOT2, ROBOT_ONLINE_STATUS,
+		REGISTER_ROBOT_NOTIFICATIONS, UNREGISTER_ROBOT_NOTIFICATIONS};
 
 		static {
 			ACTION_MAP.put(ActionTypes.DISCOVER_NEAR_BY_ROBOTS, RobotManagerPluginMethods.DISCOVER_NEAR_BY_ROBOTS);
@@ -75,10 +85,13 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_MAP.put(ActionTypes.GET_ROBOT_DETAIL, RobotManagerPluginMethods.GET_ROBOT_DETAIL);
 			ACTION_MAP.put(ActionTypes.SET_ROBOT_NAME_2, RobotManagerPluginMethods.SET_ROBOT_NAME_2);
 			ACTION_MAP.put(ActionTypes.GET_ROBOT_ONLINE_STATUS, RobotManagerPluginMethods.ROBOT_ONLINE_STATUS);
+			ACTION_MAP.put(ActionTypes.REGISTER_ROBOT_NOTIFICATIONS, RobotManagerPluginMethods.REGISTER_ROBOT_NOTIFICATIONS);
+			ACTION_MAP.put(ActionTypes.UNREGISTER_ROBOT_NOTIFICATIONS, RobotManagerPluginMethods.UNREGISTER_ROBOT_NOTIFICATIONS);
 		}
 
 		private RobotPluginDiscoveryListener mRobotPluginDiscoveryListener;
-		private ScheduleDetailsPluginListener mScheduleDetailsPluginListener;
+		private RobotNotificationsPluginListener mRobotNotificationsPluginListener;		
+		private RobotStateNotificationPluginListener mRobotStateNotificationPluginListener;
 
 		@Override
 		public PluginResult execute(final String action, final JSONArray data, final String callbackId) {
@@ -189,11 +202,45 @@ public class RobotManagerPlugin extends Plugin {
 				LogHelper.log(TAG, "ROBOT_ONLINE_STATUS action initiated");
 				getRobotOnlineStatus(context, jsonData, callbackId);
 				break;
+				
+			case REGISTER_ROBOT_NOTIFICATIONS:
+				LogHelper.log(TAG, "REGISTER_ROBOT_NOTIFICATIONS action initiated");
+				registerRobotNotifications(context, jsonData, callbackId);
+				break;
+				
+			case UNREGISTER_ROBOT_NOTIFICATIONS:
+				LogHelper.log(TAG, "UNREGISTER_ROBOT_NOTIFICATIONS action initiated");
+				unregisterRobotStatusNotification(context, jsonData, callbackId);
+				break;
 			}
 		}
 
+		private void registerRobotNotifications(Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "registerRobotNotifications action initiated in Robot plugin");
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			
+			if (mRobotNotificationsPluginListener == null) {
+				mRobotNotificationsPluginListener  = new RobotNotificationsPluginListener();
+			}			
+			mRobotNotificationsPluginListener.addRegisterCallbackId(robotId, callbackId);
+			
+			RobotCommandServiceManager.registerRobotNotificationsListener(context, robotId, mRobotNotificationsPluginListener);
+		}
+		
+		private void unregisterRobotStatusNotification(Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "unregisterRobotStatusNotification action initiated in Robot plugin");
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			
+			if (mRobotNotificationsPluginListener == null) {
+				mRobotNotificationsPluginListener  = new RobotNotificationsPluginListener();			
+				ApplicationConfig.getInstance(context).getRobotResultReceiver().addRobotNotificationsListener(mRobotNotificationsPluginListener);
+			}			
+			mRobotNotificationsPluginListener.addUnregisterCallbackId(robotId, callbackId);			
+			
+			RobotCommandServiceManager.unregisteredRobotNotificationsListener(context, robotId);
+		}
 
-		private void setRobotName(Context context, RobotJsonData jsonData,
+		private void setRobotName(final Context context, RobotJsonData jsonData,
 				final String callbackId) {
 			LogHelper.logD(TAG, "setRobotName action initiated in Robot plugin");	
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
@@ -206,6 +253,7 @@ public class RobotManagerPlugin extends Plugin {
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
 					pluginResult.setKeepCallback(false);
 					success(pluginResult, callbackId);
+					sendDataChangedCommand(context, item.getSerialNumber(), RobotCommandPacketConstants.KEY_ROBOT_DETAILS_CHANGED);
 				}
 
 				@Override
@@ -222,7 +270,7 @@ public class RobotManagerPlugin extends Plugin {
 			});
 		}
 		
-		private void setRobotName2(Context context, RobotJsonData jsonData, final String callbackId) {
+		private void setRobotName2(final Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "setRobotName2 action initiated in Robot plugin");	
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			String robotName = jsonData.getString(JsonMapKeys.KEY_ROBOT_NAME);
@@ -235,6 +283,7 @@ public class RobotManagerPlugin extends Plugin {
 					PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, robotJsonObj);	
 					pluginResult.setKeepCallback(false);
 					success(pluginResult, callbackId);
+					sendDataChangedCommand(context, robotItem.getSerialNumber(), RobotCommandPacketConstants.KEY_ROBOT_DETAILS_CHANGED);
 				}
 
 				@Override
@@ -366,14 +415,36 @@ public class RobotManagerPlugin extends Plugin {
 		}
 
 
-		private void setAdvancedSchedule(Context context, RobotJsonData jsonData, String callbackId) {
+		private void setAdvancedSchedule(final Context context, RobotJsonData jsonData, final String callbackId) {
 
-			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			JSONArray scheduleArray= jsonData.getJsonArray("schedule");
 			AdvancedScheduleGroup schedules = ScheduleJsonDataHelper.jsonToScheduleGroup(scheduleArray);
 			RobotSchedulerManager schedulerManager = RobotSchedulerManager.getInstance(context);
-			mScheduleDetailsPluginListener = new ScheduleDetailsPluginListener(callbackId);
-			schedulerManager.sendRobotSchedule(schedules, robotId, mScheduleDetailsPluginListener);
+			schedulerManager.sendRobotSchedule(schedules, robotId, new ScheduleWebserviceListener() {
+				@Override
+				public void onSuccess() {
+					LogHelper.log(TAG, "ScheduleDetailsPluginListener onSuccess Callback Id = " + callbackId);
+					PluginResult scheduleRobotPluginResult = new  PluginResult(PluginResult.Status.OK);
+					success(scheduleRobotPluginResult, callbackId);
+					sendDataChangedCommand(context, robotId, RobotCommandPacketConstants.KEY_ROBOT_SCHEDULE_CHANGED);
+				}
+
+				@Override
+				public void onNetworkError(String errMessage) {
+					LogHelper.log(TAG, "ScheduleDetailsPluginListener onNetworkError Callback Id = " + callbackId);
+					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
+				}
+
+				@Override
+				public void onServerError(String errMessage) {
+					JSONObject error = getErrorJsonObject(0, "Server Error");
+					LogHelper.log(TAG, "ScheduleDetailsPluginListener onServerError Callback Id = " + callbackId);
+					PluginResult scheduleRobotPluginResult = new  PluginResult(PluginResult.Status.ERROR, error);
+					error(scheduleRobotPluginResult, callbackId);
+				}
+
+			});
 		}
 
 		private void sendCommand(Context context, RobotJsonData jsonData, String callbackId) {
@@ -396,15 +467,27 @@ public class RobotManagerPlugin extends Plugin {
 			int commandId = jsonData.getInt(JsonMapKeys.KEY_COMMAND_ID);
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			
+			// Create Robot state notification listener to notify when we get a robot state info
+			// from the robot
+			if (commandId == RobotCommandPacketConstants.COMMAND_GET_ROBOT_STATE) {
+				if (mRobotStateNotificationPluginListener == null) {
+					mRobotStateNotificationPluginListener = new RobotStateNotificationPluginListener();
+					RobotCommandServiceManager.registerRobotStateNotificationListener(context, mRobotStateNotificationPluginListener);
+				}
+				
+				mRobotStateNotificationPluginListener.addCallbackId(robotId, callbackId);
+			}	
+			
 			JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
 			HashMap<String, String> commadParamsMap = getCommandParams(commandParams);
 			RobotCommandServiceManager.sendCommand2(context, robotId, commandId, commadParamsMap);
-			// TODO: Success should be send in a thread way.
-			PluginResult pluginStartResult = new PluginResult(PluginResult.Status.OK);
-			pluginStartResult.setKeepCallback(false);
-			success(pluginStartResult,callbackId);
+			if (commandId != RobotCommandPacketConstants.COMMAND_GET_ROBOT_STATE) {
+				// TODO: Success should be send in a thread way.
+				PluginResult pluginStartResult = new PluginResult(PluginResult.Status.OK);
+				pluginStartResult.setKeepCallback(false);
+				success(pluginStartResult,callbackId);
+			}
 		} 
-
 
 		private void discoverRobot(Context context, RobotJsonData jsonData, String callbackId) {
 			LogHelper.logD(TAG, "Discovery action initiated in Robot plugin");
@@ -537,10 +620,10 @@ public class RobotManagerPlugin extends Plugin {
 		}
 
 
-		private void setMapOverlayData(Context context, final RobotJsonData robotParams, final String callbackId) {
+		private void setMapOverlayData(final Context context, final RobotJsonData robotParams, final String callbackId) {
 			LogHelper.logD(TAG, "setMapOverlayData action initiated in Robot plugin");
 			LogHelper.logD(TAG, "Input Params = " + robotParams);
-			String robotId = robotParams.getString(JsonMapKeys.KEY_ROBOT_ID);
+			final String robotId = robotParams.getString(JsonMapKeys.KEY_ROBOT_ID);
 			JSONObject overlayData = robotParams.getJsonObject(JsonMapKeys.KEY_MAP_OVERLAY_INFO);
 			String overlayDataStr = overlayData.toString();	
 			RobotMapWebservicesManager.getInstance(context).setRobotOverlayData(robotId, overlayDataStr, new UpdateRobotMapListener() {
@@ -551,6 +634,7 @@ public class RobotManagerPlugin extends Plugin {
 					// TODO: send the versions and ids to the upper layer.
 					PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.OK, "");
 					success(getRobotMapPluginResult, callbackId);
+					sendDataChangedCommand(context, robotId, RobotCommandPacketConstants.KEY_ROBOT_MAP_CHANGED);
 				}
 
 				@Override
@@ -568,10 +652,10 @@ public class RobotManagerPlugin extends Plugin {
 
 		}
 
-		private void updateAtlasMetaData(Context context, final RobotJsonData robotParams, final String callbackId) {
+		private void updateAtlasMetaData(final Context context, final RobotJsonData robotParams, final String callbackId) {
 			LogHelper.logD(TAG, "setAtlasMetaData action initiated in Robot plugin");
 			LogHelper.logD(TAG, "Input Params = " + robotParams);
-			String robotId = robotParams.getString(JsonMapKeys.KEY_ROBOT_ID);
+			final String robotId = robotParams.getString(JsonMapKeys.KEY_ROBOT_ID);
 			//TODO: we calculate the atlasversion inside for now. Later we will store it in the Database.
 			String atlasVersion = "";
 			JSONObject atlasMetaData = robotParams.getJsonObject(JsonMapKeys.KEY_ALTAS_METADATA);
@@ -584,6 +668,7 @@ public class RobotManagerPlugin extends Plugin {
 					// TODO: send the versions and ids to the upper layer.
 					PluginResult getRobotMapPluginResult = new  PluginResult(PluginResult.Status.OK);
 					success(getRobotMapPluginResult, callbackId);
+					sendDataChangedCommand(context, robotId, RobotCommandPacketConstants.KEY_ROBOT_ATLAS_CHANGED);
 				}
 
 				@Override
@@ -715,6 +800,8 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String GET_ROBOT_DETAIL = "getRobotDetail";
 			public static final String SET_ROBOT_NAME_2 = "setRobotName2";
 			public static final String GET_ROBOT_ONLINE_STATUS = "getRobotOnlineStatus";
+			public static final String REGISTER_ROBOT_NOTIFICATIONS = "registerRobotNotifications";
+			public static final String UNREGISTER_ROBOT_NOTIFICATIONS = "unregisterRobotNotifications";
 		}
 
 		private JSONObject getErrorJsonObject(int errorCode, String errMessage) {
@@ -737,7 +824,6 @@ public class RobotManagerPlugin extends Plugin {
 			this.sendJavascript(javascriptTemplate);		
 		}
 
-		// TODO - a lot clean up of code needed.
 		private class RobotPluginDiscoveryListener implements RobotDiscoveryListener {
 
 			private String mCallBackId;
@@ -829,34 +915,185 @@ public class RobotManagerPlugin extends Plugin {
 
 		} 
 
-		private  class ScheduleDetailsPluginListener implements ScheduleWebserviceListener {
-			private String mCallBackId;
-
-			ScheduleDetailsPluginListener(String callbackId) {
-				mCallBackId = callbackId;
+		
+		private class RobotNotificationsPluginListener implements RobotNotificationsListener {
+			private Map<String, String> mRegCallbackIdsMap = new HashMap<String, String>();
+			private Map<String, String> mUnregCallbackIdsMap = new HashMap<String, String>();			
+			
+			public RobotNotificationsPluginListener() {
+			}
+			
+			public void addUnregisterCallbackId(String robotId, String callbackId) {
+				LogHelper.logD(TAG, String.format("RobotNotificationsPluginListener:addUnregisterCallbackId - RobotID = [%s] CallbackId = [%s]", robotId, callbackId));
+				mUnregCallbackIdsMap.put(robotId, callbackId);				
+			}			
+			
+			public void addRegisterCallbackId(String robotId, String regCallbackId) {
+				LogHelper.logD(TAG, String.format("RobotNotificationsPluginListener:addRegisterCallbackId - RobotID = [%s] CallbackId = [%s]", robotId, regCallbackId));
+				mRegCallbackIdsMap.put(robotId, regCallbackId);				
+			}
+			
+			@Override
+			public void onStatusChanged(String robotId, Bundle bundle) {			
+				LogHelper.logD(TAG, "RobotNotificationsPluginListener:onStatusChanged - " + robotId);
+				if (bundle != null) { 
+					for (String key: bundle.keySet()) {
+						LogHelper.logD(TAG, key + " = " + bundle.getString(key));
+					}
+				}
+				
+				String callbackId = mRegCallbackIdsMap.get(robotId);
+				LogHelper.logD(TAG, "RobotNotificationsPluginListener:onStatusChanged - CallbackId = " + callbackId);
+				if (!TextUtils.isEmpty(callbackId)) {
+					JSONObject eventJsonObj = getEventJsonObject(JsonMapKeys.EVENT_ID_STATUS, robotId, bundle);
+					PluginResult successPluginResult = new PluginResult(PluginResult.Status.OK, eventJsonObj);
+					successPluginResult.setKeepCallback(true);				
+					success(successPluginResult, callbackId);					
+				}
+			}
+			
+			@Override
+			public void onRegister(String robotId, Bundle bundle) {
+				LogHelper.logD(TAG, "RobotNotificationsPluginListener:onRegister - " + robotId);	
+	
+				String callbackId= mRegCallbackIdsMap.get(robotId);
+				if (!TextUtils.isEmpty(callbackId)) {
+					boolean resultSuccess = getRegisterResult(bundle);					
+					JSONObject eventJsonObj = getEventJsonObject(JsonMapKeys.EVENT_ID_REGISTER, robotId, bundle);
+					PluginResult successPluginResult = new  PluginResult(PluginResult.Status.OK, eventJsonObj);
+					successPluginResult.setKeepCallback(resultSuccess);	
+					LogHelper.logD(TAG, "RobotNotificationsPluginListener:onRegister - CallbackId = " + callbackId);					
+					if (resultSuccess) {
+						success(successPluginResult, callbackId);
+					}
+					else {
+						error(successPluginResult, callbackId);
+						if (!resultSuccess) {
+							mRegCallbackIdsMap.remove(robotId);
+						}
+					}
+					
+				}
+			}
+			
+			@Override
+			public void onUnregister(String robotId, Bundle bundle) {				
+				LogHelper.logD(TAG, "RobotNotificationsPluginListener:onUnRegister - " + robotId);
+				
+				String callbackId = mUnregCallbackIdsMap.get(robotId);
+				if (!TextUtils.isEmpty(callbackId)) {
+					boolean resultSuccess = getUnregisterResult(bundle);
+					
+					JSONObject eventJsonObj = getEventJsonObject(JsonMapKeys.EVENT_ID_UNREGISTER, robotId, bundle);
+					PluginResult successPluginResult = new  PluginResult(PluginResult.Status.OK, eventJsonObj);
+					successPluginResult.setKeepCallback(false);
+					if (resultSuccess) {
+						success(successPluginResult, callbackId);
+					}
+					else {
+						error(successPluginResult, callbackId);
+					}
+					
+					LogHelper.logD(TAG, "RobotNotificationsPluginListener:onUnRegister - CallbackId = " + callbackId);
+					mUnregCallbackIdsMap.remove(robotId);
+					
+					if (resultSuccess) {						
+						mRegCallbackIdsMap.remove(robotId);
+					}
+				}
+			}
+			
+			private boolean getRegisterResult(Bundle bundle) {
+				String resultValue = bundle.getString(JsonMapKeys.KEY_REGISTER_RESULT);
+				return Boolean.valueOf(resultValue);
+			}
+			
+			private boolean getUnregisterResult(Bundle bundle) {
+				String resultValue = bundle.getString(JsonMapKeys.KEY_UNREGISTER_RESULT);
+				return Boolean.valueOf(resultValue);
+			}
+			
+			private JSONObject getEventJsonObject(int eventId, String robotId, Bundle bundle) {
+				JSONObject eventInfo = new JSONObject();
+				try {
+					eventInfo.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+					eventInfo.put(JsonMapKeys.KEY_EVENT_NOTIFICATION_ID, eventId);
+					JSONObject paramsObj = new JSONObject();
+					if (bundle != null) {
+						for (String key: bundle.keySet()) {
+							paramsObj.put(key, bundle.getString(key));						
+						}
+					}
+					eventInfo.put(JsonMapKeys.KEY_EVENT_NOTIFICATION_PARAMS, paramsObj);					
+				} catch (JSONException e) {
+					LogHelper.logD(TAG, "Exception in getEventJsonObject", e);
+				}
+				return eventInfo;
 			}
 
 			@Override
-			public void onSuccess() {
-				LogHelper.log(TAG, "ScheduleDetailsPluginListener onSuccess Callback Id = " + mCallBackId);
-				PluginResult scheduleRobotPluginResult = new  PluginResult(PluginResult.Status.OK);
-				success(scheduleRobotPluginResult, mCallBackId);
+			public void onRobotCommandReceived(String robotId, String commandId, Bundle bundle) {
+				JSONObject commandObj = new JSONObject();
+				try {
+					commandObj.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+					JSONObject paramsObj = new JSONObject();
+					for (String key: bundle.keySet()) {
+						paramsObj.put(key, bundle.getString(key));						
+					}
+					commandObj.put(JsonMapKeys.KEY_COMMAND_PARAMETERS, paramsObj);					
+				} catch (JSONException e) {
+					LogHelper.logD(TAG, "Exception in getEventJsonObject", e);
+				}
 			}
-
+			
+		}
+		
+		private class RobotStateNotificationPluginListener implements RobotStateListener {			
+			private Map<String, String> mCallbackIdsMap = new HashMap<String, String>();
+			
+			public RobotStateNotificationPluginListener() {
+			
+			}
+			
+			public void addCallbackId(String robotId, String callbackId) {
+				mCallbackIdsMap.put(robotId, callbackId);
+			}
+			
 			@Override
-			public void onNetworkError(String errMessage) {
-				LogHelper.log(TAG, "ScheduleDetailsPluginListener onNetworkError Callback Id = " + mCallBackId);
-				sendError(mCallBackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
+			public void onStateReceived(String robotId, Bundle bundle) {
+				LogHelper.logD(TAG, "RobotStateNotificationPluginListener:onStateReceived for " + robotId);
+				for (String key: bundle.keySet()) {
+					LogHelper.logD(TAG, key + " = " + bundle.getString(key));
+				}
+				
+				sendStateInfo(robotId, bundle);			
 			}
-
-			@Override
-			public void onServerError(String errMessage) {
-				JSONObject error = getErrorJsonObject(0, "Server Error");
-				LogHelper.log(TAG, "ScheduleDetailsPluginListener onServerError Callback Id = " + mCallBackId);
-				PluginResult scheduleRobotPluginResult = new  PluginResult(PluginResult.Status.ERROR, error);
-				error(scheduleRobotPluginResult, mCallBackId);
+			
+			private void sendStateInfo(String robotId, Bundle bundle) {
+				String callbackId = mCallbackIdsMap.get(robotId);
+				if (!TextUtils.isEmpty(callbackId)) {
+					JSONObject stateInfo = getStateJsonObject(robotId, bundle);
+					PluginResult successPluginResult = new  PluginResult(PluginResult.Status.OK, stateInfo);
+					successPluginResult.setKeepCallback(false);
+					success(successPluginResult, callbackId);
+					LogHelper.logD(TAG, "sendStateInfo for CallbackId " + callbackId);
+					mCallbackIdsMap.remove(robotId);
+				}				
 			}
-
+			
+			private JSONObject getStateJsonObject(String robotId, Bundle bundle) {
+				JSONObject stateInfo = new JSONObject();
+				try {
+					stateInfo.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+					for (String key: bundle.keySet()) {
+						stateInfo.put(key, bundle.getString(key));						
+					}
+					
+				} catch (JSONException e) {
+					LogHelper.logD(TAG, "Exception in getStateJsonObject", e);
+				}
+				return stateInfo;
+			}
 		}
 		
 		private void sendError(String callbackId, int errorCode, String message)
@@ -890,6 +1127,14 @@ public class RobotManagerPlugin extends Plugin {
 				}	
 			}
 			return commandParamsMap;
+		}
+		
+		private void sendDataChangedCommand(Context context, String robotId, int dataCode) 
+		{
+			HashMap<String, String> commandParams = new HashMap<String, String>();
+			String dataCodeStr = DataConversionUtils.convertIntToString(dataCode);
+			commandParams.put(RobotCommandPacketConstants.KEY_DATA_CODE_CHANGED_ON_SERVER, dataCodeStr);
+			RobotCommandServiceManager.sendCommand2(context, robotId, RobotCommandPacketConstants.COMMAND_DATA_CHANGED_ON_SERVER, commandParams);
 		}
 }
 

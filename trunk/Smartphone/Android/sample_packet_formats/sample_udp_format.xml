@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <discovery_packet>
+ 	<header>
+ 		<version>1</version>
+ 		<signature>0xcafebabe</signature>
+ 	</header>
+ 	<payload>
+ 		<request>
+ 			<command>5001</command>
+ 			<requestId>ffedt</requestId>
+ 			<userId>userId</userId>
+ 			<robotId>RobotId</robotId>
+ 			<params>
+ 				<param1>value1</param1>
+ 			</params>
+ 		</request>
+ 	</payload>
+ </discovery_packet>

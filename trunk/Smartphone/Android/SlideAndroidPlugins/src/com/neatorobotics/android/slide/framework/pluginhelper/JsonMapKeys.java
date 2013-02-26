@@ -10,6 +10,8 @@ public class JsonMapKeys {
 	public static final String KEY_USER_NAME = "userName";
 	public static final String KEY_USER_ID = "userId";
 	public static final String KEY_AUTH_TOKEN = "authToken";
+	public static final String KEY_CURRENT_PASSWORD = "currentPassword";
+	public static final String KEY_NEW_PASSWORD = "newPassword";
 	// Used by robot plugin
 	public static final String KEY_COMMAND_ID = "commandId";
 	public static final String KEY_COMMAND_PARAMETERS = "commandParams";
@@ -80,5 +82,16 @@ public class JsonMapKeys {
 	public static final String SET_COLOR_DEFAULT_VALUE = "#FF0000";
 	public static final String KEY_ROOMS = "rooms";
 	public static final String KEY_GEOGRAPHIES = "geographies";
-
+	
+	// Robot status notification events constants
+	private static final int EVENT_ID_BASE  		= 20000; 
+	public static final int EVENT_ID_REGISTER 		= EVENT_ID_BASE;
+	public static final int EVENT_ID_UNREGISTER 	= EVENT_ID_BASE + 1;
+	public static final int EVENT_ID_STATUS		 	= EVENT_ID_BASE + 2;
+	
+	public static final String KEY_EVENT_NOTIFICATION_ID 		= "eventId";
+	public static final String KEY_EVENT_NOTIFICATION_PARAMS 	= "params";
+	
+	public static final String KEY_REGISTER_RESULT		= "register";
+	public static final String KEY_UNREGISTER_RESULT 	= "unregister";
 }

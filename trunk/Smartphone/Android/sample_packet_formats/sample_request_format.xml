@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <packet>
+ 		<header>
+ 			<version>1</version>
+ 			<signature>0xcafebabe</signature>
+ 		</header>
+ 		<payload>
+ 			<request>
+ 				<command>101</command>
+ 				<requestId>ff345</requestId>
+ 				<timeStamp></timestamp>
+ 				<retryCount>0</retryCount>
+ 				<responseNeeded>true</responseNeeded>
+ 				<replyTo>userId</replyTo>
+ 				<distributionMode>0</distributionMode> <!--  0 for XMPP and 1 for TCP/IP -->
+ 				<params>
+ 				<param1>value1</param1>
+ 				</params>
+ 			</request>
+ 		</payload>
+ </packet>
