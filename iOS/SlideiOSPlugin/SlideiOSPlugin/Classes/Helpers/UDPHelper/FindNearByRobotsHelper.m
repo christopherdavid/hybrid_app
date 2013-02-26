@@ -136,7 +136,7 @@ withFilterContext:(id)filterContext
     
     if ([[NetworkUtils alloc] isCommandFromRemoteDevice:host])
     {
-        debugLog(@"Packet is from remove deivce!");
+        debugLog(@"Packet is from remote deivce!");
         NSString *xmlStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         [self.receivedCommands addObject:xmlStr];
     }

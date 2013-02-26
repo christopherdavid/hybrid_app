@@ -3,7 +3,5 @@
 
 @interface TCPCommandHelper : NSObject <CommandProtocol>
 
--(NSData *) getStartRobotCommand;
--(NSData *) getStopRobotCommand;
 
 @end

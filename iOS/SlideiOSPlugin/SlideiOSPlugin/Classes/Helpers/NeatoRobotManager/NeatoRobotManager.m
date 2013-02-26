@@ -9,9 +9,10 @@
 #import "NeatoRobotHelper.h"
 #import "RobotAtlasManager.h"
 #import "AtlasGridManager.h"
+#import "DeviceConnectionManager.h"
+#import "RobotCommandHelper.h"
+#import "CommandsHelper.h"
 
-#define COMMAND_START_ROBOT 101
-#define COMMAND_STOP_ROBOT 102
 
 @implementation NeatoRobotManager
 
@@ -24,7 +25,7 @@
 +(void) getRobotInfoBySerialId:(NSString *) serialId delegate:(id) delegate action:(SEL) action
 {
     GetRobotIPHelper *ipHelper = [[GetRobotIPHelper alloc] init];
-    [ipHelper getRobotIPAddress:serialId delegate:delegate action:action];
+    [ipHelper robotIPAddress:serialId delegate:delegate action:action];
 }
 
 +(void) connectToRobotOverTCP:(NeatoRobot *) robot delegate:(id<TCPConnectionHelperProtocol>) delegate
@@ -172,6 +173,35 @@
         default:
             break;
     }
+}
+
++ (void)setRobotName2:(NSString *)robotName forRobotWithId:(NSString *)robotId delegate:(id)delegate {
+    NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
+    serverManager.delegate = delegate;
+    [serverManager setRobotName2:robotName forRobotWithId:robotId];
+}
+
++ (void)getDetailsForRobotWithId:(NSString *)robotId delegate:(id)delegate {
+    NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
+    serverManager.delegate = delegate;
+    [serverManager getRobotDetails:robotId];
+}
+
++ (void)onlineStatusForRobotWithId:(NSString *)robotId delegate:(id)delegate {
+    NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
+    serverManager.delegate = delegate;
+    [serverManager onlineStatusForRobotWithId:robotId];
+}
+
++ (void)tryDirectConnection2:(NSString *)robotId delegate:(id)delegate {
+    DeviceConnectionManager *deviceConnectionManager = [[DeviceConnectionManager alloc] init];
+    [deviceConnectionManager tryDirectConnection2:robotId delegate:delegate];
+}
+
+
++ (void)sendCommandToRobot2:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate {
+    RobotCommandHelper *robotCommandHelper = [[RobotCommandHelper alloc] init];
+    [robotCommandHelper sendCommandToRobot2:robotId commandId:commandId params:params delegate:delegate];
 }
 
 @end

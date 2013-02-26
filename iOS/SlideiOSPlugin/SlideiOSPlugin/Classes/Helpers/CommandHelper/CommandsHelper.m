@@ -12,6 +12,7 @@
 #define RESPONSE_TYPE_FIND_ROBOTS 9002
 #define RESPONSE_TYPE_GET_IP 9003
 
+#define TEMP_PARAMS_XML_FORMAT @"<%@>%@</%@>"
 
 // Internal class defination
 @interface UDPCommandFormat : NSObject
@@ -222,6 +223,53 @@
         robot.ipAddress = [[robotIPAddArr objectAtIndex:0] stringValue];
     }
     return robot;
+}
+
+- (NSInteger)versionForCommand {
+    return 1;
+}
+
+- (NSInteger)commandRetryCount {
+    return 0;
+}
+
+- (NSString *)commandResponseNeeded
+{
+    //Sending the default value as of now.It may Change later.
+    return @"false";
+}
+
+- (NSInteger)distributionModeForCommandType:(NSString *)connectionType
+{
+    if([connectionType isEqualToString:@"XMPP"])
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+}
+
+- (NSString *)generateXMLForParams:(NSDictionary *)params {
+    debugLog(@"");
+    NSMutableString *paramsXML = [[NSMutableString alloc] init];
+    if([params count] != 0)
+    {
+        [paramsXML appendString:@"<params>"];
+        NSArray *keys = [params allKeys];
+        for(int i=0 ;i <[keys count]; i++)
+        {
+            [paramsXML appendString:[NSString stringWithFormat:TEMP_PARAMS_XML_FORMAT, keys[i], [params objectForKey:keys[i]], keys[i]]];
+        }
+        [paramsXML appendString:@"</params>"];
+        return paramsXML;
+    }
+    else
+    {
+        [paramsXML appendString:@"<params/>"];
+        return paramsXML;
+    }
 }
 
 @end

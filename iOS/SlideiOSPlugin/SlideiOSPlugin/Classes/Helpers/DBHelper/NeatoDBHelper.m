@@ -86,17 +86,16 @@ static NeatoDBHelper *sharedInstance  = nil;
 {
     sqlite3 *mNeatoDatabase;
 }
-- (DWORD) createDatabaseIfNeeded;
-- (NSURL *) getDBPath;
-- (DWORD) createNeatoUserTable;
-- (DWORD) createNeatoRobotTable;
-- (DWORD) createSocialNetworksTable;
-- (void) deleteUserDetails;
-- (void) deleteNeatoUser;
-- (void) deleteAllRobots;
-- (void) deleteAllNetworks;
-- (BOOL) robotExistsWithSerialNumber:(NSString *) serialNumber forUser:(NSString *) userId;
-- (void) deleteRobotWithSerialNumber:(NSString *) serialNumber forUser:(NSString *) userId;
+- (DWORD)createDatabaseIfNeeded;
+- (NSURL *)getDBPath;
+- (DWORD)createNeatoUserTable;
+- (DWORD)createNeatoRobotTable;
+- (DWORD)createSocialNetworksTable;
+- (void)deleteUserDetails;
+- (void)deleteNeatoUser;
+- (void)deleteAllNetworks;
+- (BOOL)robotExistsWithSerialNumber:(NSString *)serialNumber forUser:(NSString *)userId;
+
 @end
 
 @implementation NeatoDBHelper

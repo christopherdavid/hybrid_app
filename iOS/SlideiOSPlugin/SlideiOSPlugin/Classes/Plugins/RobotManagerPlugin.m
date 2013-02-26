@@ -129,7 +129,7 @@
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:ERROR_TYPE_UNKNOWN forKey:KEY_ERROR_CODE];
+    [dictionary setValue:[[NSNumber numberWithInt:error.code] stringValue] forKey:KEY_ERROR_CODE];
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
@@ -152,7 +152,7 @@
     NSString *callbackId = command.callbackId;
     
     NSString *parameters = [command.arguments objectAtIndex:0];
-     debugLog(@"parameters received are %@",parameters);
+     debugLog(@"parameters received : %@",parameters);
     RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
     call.delegate = self;
     [call getAtlasGridMetadata:[parameters valueForKey:KEY_ROBOT_ID] gridId:[parameters valueForKey:KEY_ATLAS_GRID_ID]  callbackId:callbackId];
@@ -161,11 +161,13 @@
 -(void) gotAtlasGridMetadata:(AtlasGridMetadata *) atlasGridMetadata callbackId:(NSString *) callbackId
 {
     debugLog(@"callbackId = %@", callbackId);
+    NSMutableArray *array = [[NSMutableArray alloc] init];
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:atlasGridMetadata.atlasId forKey:KEY_ATLAS_ID];
     [dictionary setValue:atlasGridMetadata.gridId forKey:KEY_ATLAS_GRID_ID];
     [dictionary setValue:atlasGridMetadata.gridCachePath forKey:KEY_ATLAS_GRID_DATA];
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dictionary];
+    [array addObject:dictionary];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:array];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
@@ -187,12 +189,12 @@
     NSString *callbackId = command.callbackId;
     
     NSString *parameters = [command.arguments objectAtIndex:0];
-    debugLog(@"parameters received are %@",parameters);
+    debugLog(@"parameters received : %@",parameters);
     
     NeatoRobotAtlas *robotAtlas = [[NeatoRobotAtlas alloc] init];
     robotAtlas.robotId = [parameters valueForKey:KEY_ROBOT_ID];
-    robotAtlas.atlasMetadata = [parameters valueForKey:KEY_ATLAS_METADATA];
-    
+    NSMutableDictionary *dict = [parameters valueForKey:KEY_ATLAS_METADATA];
+    robotAtlas.atlasMetadata = [AppHelper jsonStringFromObject:dict];
     RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
     call.delegate = self;
     [call updateRobotAtlasData:robotAtlas callbackId:callbackId];
@@ -283,6 +285,153 @@
 -(void) receivedDataOverTCP:(NSData *)data callbackId:(NSString *) callbackId
 {
     debugLog(@"");
+}
+
+- (void)setRobotName2:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@",parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    NSString *robotName = [parameters objectForKey:KEY_ROBOT_NAME];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call setRobotName2:robotName forRobotWithId:robotId callbackId:callbackId];
+}
+
+- (void)failedToUpdateRobotNameWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
+    [dictionary setValue:[[NSNumber numberWithInt:error.code] stringValue] forKey:KEY_ERROR_CODE];
+    
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)robotName:(NSString *)name updatedForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *jsonRobot = [[NSMutableDictionary alloc] init];
+    [jsonRobot setObject:robotId forKey:KEY_ROBOT_ID];
+    [jsonRobot setObject:name forKey:KEY_ROBOT_NAME];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonRobot];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)getRobotDetail:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@",parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    //call callWrapper method
+    [call getDetailsForRobotWithId:robotId callbackId:callbackId];
+}
+
+- (void)gotRobotDetails:(NeatoRobot *)neatoRobot callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *jsonRobot = [[NSMutableDictionary alloc] init];
+    [jsonRobot setObject:neatoRobot.serialNumber forKey:KEY_ROBOT_ID];
+    [jsonRobot setObject:neatoRobot.name forKey:KEY_ROBOT_NAME];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonRobot];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)failedToGetRobotDetailsWihError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)getRobotOnlineStatus:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    //call callWrapper method
+    [call onlineStatusForRobotWithId:robotId callbackId:callbackId];
+}
+
+- (void)failedToGetRobotOnlineStatusWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)onlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *jsonRobot = [[NSMutableDictionary alloc] init];
+    [jsonRobot setObject:robotId forKey:KEY_ROBOT_ID];
+    [jsonRobot setObject:[NSNumber numberWithBool:[status boolValue]] forKey:KEY_ROBOT_ONLINE_STATUS];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonRobot];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)tryDirectConnection2:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters =  [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@",parameters);
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call tryDirectConnection2:[parameters valueForKey:KEY_ROBOT_ID] callbackId:callbackId];
+}
+
+- (void)failedToConnectToTCP2WithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"Error = %@", error);
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)connectedOverTCP2:(NSString*)host callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)sendCommandToRobot2:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    
+    NSString *commandId = [parameters objectForKey:KEY_COMMAND_ID];
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    NSDictionary *commandParams = [parameters objectForKey:KEY_COMMAND_PARAMETERS];
+    NSMutableDictionary *params = [commandParams objectForKey:KEY_PARAMS];
+    debugLog(@"params = %@",params);
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call sendCommandToRobot2:robotId commandId:commandId params:params callbackId:callbackId];
+}
+
+- (void)commandSentOverTCP2:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:COMMAND_SENT_SUCCESS];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)commandSentOverXMPP2:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:COMMAND_SENT_SUCCESS];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)failedToSendCommandOverTCPWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:COMMAND_SENT_FAILURE];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)failedToSendCommandOverXMPP2:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:COMMAND_SENT_FAILURE];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
 }
 
 @end

@@ -13,7 +13,7 @@
 
 @interface XMPPConnectionHelper : NSObject 
 
-@property(nonatomic, weak) id<XMPPConnectionHelperProtocol> delegate;
+@property(nonatomic, weak) id delegate;
 
 -(BOOL) connectJID:(NSString *) jid password:(NSString *) password host:(NSString *) host;
 -(void) disconnectFromRobot;

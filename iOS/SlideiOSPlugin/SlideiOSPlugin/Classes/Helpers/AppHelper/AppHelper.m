@@ -19,6 +19,21 @@
     return data;
 }
 
++ (NSString *)jsonStringFromObject:(id)object
+{
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:object
+                                                       options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
+                                                         error:&error];
+    
+    if (! jsonData) {
+        debugLog(@"Got an error: %@", error);
+        return nil;
+    } else {
+      return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+}
+
 + (NSString *)sha1:(NSString *) decodedString
 {
     NSData *data = [decodedString dataUsingEncoding:NSUTF8StringEncoding];
@@ -161,6 +176,20 @@
     [appInfo setValue:[self getCurrentServer] forKey:NEATO_KEY_SERVER_USED];
     [appInfo setValue:SLIDE_IOS_PLUGIN_VERSION forKey:NEATO_KEY_LIB_VERSION];
     return appInfo;
+}
+
++ (NSTimeInterval)currentTimeStamp
+{
+    NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
+    return timeStamp;
+}
+
++ (NSError *)nserrorWithDescription:(NSString *)description code:(NSInteger)code {
+    NSMutableDictionary* details = [NSMutableDictionary dictionary];
+    [details setValue:description forKey:NSLocalizedDescriptionKey];
+    
+    NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:[[NSNumber  numberWithInt:code] integerValue] userInfo:details];
+    return error;
 }
 
 @end

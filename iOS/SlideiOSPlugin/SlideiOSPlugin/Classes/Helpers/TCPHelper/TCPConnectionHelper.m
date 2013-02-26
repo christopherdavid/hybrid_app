@@ -181,5 +181,42 @@
     }
 }
 
+- (void)connectToRobotOverTCP2:(NeatoRobot *)robot delegate:(id)delegate {
+    debugLog(@"");
+    if (robot == nil) {
+        debugLog(@"NeatoRobot is nil. Quiting!");
+        return;
+    }
+    self.delegate = delegate;
+    self.retained_self = self;
+    self.neatoRobot = robot;
+    
+    debugLog(@"connecting to TCP...");
+    [TCPSocket getSharedTCPSocket].delegate = self;
+    [[TCPSocket getSharedTCPSocket] connectHost:self.neatoRobot.ipAddress overPort:TCP_ROBOT_SERVER_SOCKET_PORT2];
+}
 
+- (void)sendCommandToRobot2:(NSData *)command withTag:(long)tag requestId:(NSString *)requestId delegate:(id)delegate {
+    debugLog(@"");
+    self.retained_self = self;
+    self.delegate = delegate;
+    if([[TCPSocket getSharedTCPSocket] isConnected])
+    {
+        [TCPSocket getSharedTCPSocket].delegate = self;
+        [[TCPSocket getSharedTCPSocket] writeData:command withTag:tag];
+    }
+    else
+    {
+        debugLog(@"Device isn't connected to the Robot.");
+        if ([self.delegate respondsToSelector:@selector(failedToSendCommandOverTCPWithError:)])
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate performSelector:@selector(failedToSendCommandOverTCPWithError:) withObject:[AppHelper nserrorWithDescription:@"Device not connected over TCP" code:200]];
+                self.delegate = nil;
+                self.retained_self = nil;
+            });
+        }
+        self.retained_self = nil;
+    }
+}
 @end
