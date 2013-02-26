@@ -1,6 +1,6 @@
 #define KEY_EMAIL @"email"
 #define KEY_PASSWORD @"password"
-#define KEY_USER_NAME @"username"
+#define KEY_USER_NAME @"userName"
 #define KEY_USER_ID @"userId"
 #define KEY_AUTH_TOKEN @"auth_token"
 // Used by robot plugin
@@ -8,13 +8,16 @@
 #define KEY_COMMAND_PARAMETERS @"commandParams"
 #define KEY_ROBOT_ID @"robotId"
 #define KEY_USE_XMPP @"useXMPP"
-#define KEY_ROBOT_NAME @"robot_name"
+#define KEY_ROBOT_NAME @"robotName"
 #define KEY_ROBOT_IP_ADDRESS @"robot_ipaddress"
 #define KEY_ATLAS_GRID_ID @"gridId"
 #define KEY_ATLAS_METADATA @"atlasMetadata"
 #define KEY_ATLAS_VERSION @"atlasVersion"
 #define KEY_ATLAS_ID  @"atlasId"
 #define KEY_ATLAS_GRID_DATA @"gridData"
+#define KEY_ROBOT_ONLINE_STATUS @"online"
+#define KEY_PARAMS @"params"
+
 //Used for error
 #define KEY_ERROR_CODE @"errorCode"
 #define KEY_ERROR_MESSAGE @"errorMessage"

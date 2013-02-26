@@ -3,5 +3,5 @@
 
 @interface GetRobotIPHelper : NSObject <GCDAsyncUdpSocketDelegate>
 
--(void) getRobotIPAddress:(NSString *) serialId delegate:(id)delegate action:(SEL)action;
+- (void)robotIPAddress:(NSString *)serialId delegate:(id)delegate action:(SEL)action;
 @end

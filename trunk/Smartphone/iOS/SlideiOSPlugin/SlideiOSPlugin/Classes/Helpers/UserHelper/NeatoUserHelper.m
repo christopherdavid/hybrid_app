@@ -16,7 +16,7 @@
 @implementation NeatoUserHelper
 
 
-+(void) saveUserAuthToken:(NSString *)authToken
++ (void)saveUserAuthToken:(NSString *)authToken
 {
     debugLog(@"");
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -25,15 +25,14 @@
 
 }
 
-+(NSString *) getUsersAuthToken
++ (NSString *)getUsersAuthToken
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     return [userDefaults valueForKey:KEY_USER_AUTH_TOKEN];
 }
 
 // TODO: should work on BG thread
-+(void) clearUserData
-{
++ (void)clearUserData {
     
      NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setBool:NO forKey:KEY_USER_LOOGED_IN];
@@ -43,8 +42,7 @@
 }
 
 // TODO: should work on BG thread
-+(NeatoUser *) getNeatoUser
-{
++ (NeatoUser *)getNeatoUser {
     debugLog(@"");
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     
@@ -53,35 +51,15 @@
         return nil;
     }
     
-    /*NeatoUser *user = [[NeatoUser alloc] init];
-    user.userId = [userDefaults valueForKey:KEY_USER_ID];
-    user.name = [userDefaults valueForKey:KEY_USER_NAME];
-    user.email = [userDefaults valueForKey:KEY_EMAIL];
-    user.chatId = [userDefaults valueForKey:KEY_USER_CHAT_ID];
-    user.chatPassword = [userDefaults valueForKey:KEY_USER_CHAT_PASSWORD];
-    user.account_type = [userDefaults valueForKey:KEY_ACCOUNT_TYPE];
-    user.password = [userDefaults valueForKey:KEY_USER_PASSWORD];
-    user.external_social_id = [userDefaults valueForKey:KEY_EXTERNAL_SOCIAL_ID];*/
-    
-    
     // Get details from DB
     return [[NeatoDBHelper sharedNeatoDBHelper] getNeatoUser];
     //return user;
 }
 
-+(void) saveNeatoUser:(NeatoUser *) neatoUser
-{
++ (void)saveNeatoUser:(NeatoUser *)neatoUser {
     debugLog(@"");
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setBool:YES forKey:KEY_USER_LOOGED_IN];
-    /*[userDefaults setValue:neatoUser.userId forKey:KEY_USER_ID];
-    [userDefaults setValue:neatoUser.name forKey:KEY_USER_NAME];
-    [userDefaults setValue:neatoUser.email forKey:KEY_EMAIL];
-    [userDefaults setValue:neatoUser.chatId forKey:KEY_USER_CHAT_ID];
-    [userDefaults setValue:neatoUser.chatPassword forKey:KEY_USER_CHAT_PASSWORD];
-    [userDefaults setValue:neatoUser.account_type forKey:KEY_ACCOUNT_TYPE];
-    [userDefaults setValue:neatoUser.password forKey:KEY_USER_PASSWORD];
-    [userDefaults setValue:neatoUser.external_social_id forKey:KEY_EXTERNAL_SOCIAL_ID];*/
     [userDefaults synchronize];
     
     // Save details to DB
@@ -89,8 +67,7 @@
     
 }
 
-+(NSString *) getLoggedInUserEmail
-{
++ (NSString *)getLoggedInUserEmail {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     if(![userDefaults boolForKey:KEY_USER_LOOGED_IN])
     {
@@ -100,4 +77,11 @@
     return user.email;
 }
 
++ (void)dissociateAllRobotsForUserWithEmail:(NSString *)email {
+   [[NeatoDBHelper sharedNeatoDBHelper] deleteAllRobots];
+}
+
++ (void)deleteRobotWithRobotId:(NSString *)robotId forUser:(NSString *)userId {
+    [[NeatoDBHelper sharedNeatoDBHelper] deleteRobotWithSerialNumber:robotId forUser:userId];
+}
 @end

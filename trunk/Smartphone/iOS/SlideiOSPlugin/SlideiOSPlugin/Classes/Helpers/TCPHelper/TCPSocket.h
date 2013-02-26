@@ -8,10 +8,10 @@
 
 +(TCPSocket *) getSharedTCPSocket;
 
--(BOOL) connectHost:(NSString *) host overPort:(int) port;
--(void) beginReadingData;
--(BOOL) isConnected;
--(void) writeData:(NSData *) data withTag:(long) tag;
--(void) disconnect;
+- (BOOL)connectHost:(NSString *)host overPort:(int)port;
+- (void)beginReadingData;
+- (BOOL)isConnected;
+- (void)writeData:(NSData *)data withTag:(long)tag;
+- (void)disconnect;
 
 @end

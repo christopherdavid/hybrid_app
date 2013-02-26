@@ -27,13 +27,21 @@
     return [[NeatoDBHelper sharedNeatoDBHelper] getRobotForId:robotId];
 }
 
-+(void) updateUserAssociatedRobots
++ (void)updateUserAssociatedRobots
 {
     debugLog(@"");
     NeatoServerManager *serverMan = [[NeatoServerManager alloc] init];
-    [serverMan getAssociatedRobots:[NeatoUserHelper getLoggedInUserEmail] authToken:[NeatoUserHelper getUsersAuthToken]];
+    [serverMan associatedRobotsForUserWithEmail:[NeatoUserHelper getLoggedInUserEmail] authToken:[NeatoUserHelper getUsersAuthToken]];
 }
      
-
++ (void)updateName:(NSString *)name forRobotwithId:(NSString *)robotId {
+    debugLog(@"");
+    NeatoDBHelper *helper = [NeatoDBHelper sharedNeatoDBHelper];
+    NeatoRobot *robot = [helper getRobotForId:robotId];
+    if (robot) {
+        robot.name = name;
+        [helper saveNeatoRobot:robot forUser:[NeatoUserHelper getNeatoUser].userId];
+    }
+}
 
 @end

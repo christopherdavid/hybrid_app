@@ -13,6 +13,7 @@
 #define TIME_BEFORE_SOCKET_CLOSES 5
 
 #define TCP_ROBOT_SERVER_SOCKET_PORT 4444
+#define TCP_ROBOT_SERVER_SOCKET_PORT2 49001
 
 #define USER_HANDLE @"user_handle"
 
@@ -24,6 +25,7 @@
 #define NEATO_RESPONSE_ATLAS_VERSION @"version"
 #define NEATO_RESPONSE_SUCCESS @"success"
 #define NEATO_RESPONSE_ROBOT_ATLAS_ID @"robot_atlas_id"
+#define NEATO_ROBOT_ONLINE_STATUS @"online"
 
 #define FIND_NEARBY_ROBOTS_BIND_PORT 48001
 #define GET_IP_OF_SELECTED_ROBOT_FIND_PORT 48002
@@ -92,6 +94,9 @@
     #define NEATO_SET_ROBOT_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.set_user"
     #define NEATO_GET_ASSOCIATED_ROBOTS_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.get_associated_robots"
     #define NEATO_UPDATE_AUTH_TOKEN_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.update_auth_token_expiry"
+    #define NEATO_SET_ROBOT_PROFILE_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.set_profile_details"
+    #define NEATO_GET_ROBOT_ONLINE_STATUS_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.is_online"
+	#define NEATO_DISSOCIATE_ALL_ROBOTS_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.disassociate_robot"
 #elif SWITCH_TO_DEV_SERVER
     // Will use API's at http://neatodev.rajatogo.com/Server_Yii/Neato/wstest/
     #define NEATO_CREATE_USER_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=user.create"
@@ -103,6 +108,9 @@
     #define NEATO_SET_ROBOT_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robot.set_user"
     #define NEATO_GET_ASSOCIATED_ROBOTS_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=user.get_associated_robots"
     #define NEATO_UPDATE_AUTH_TOKEN_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=user.update_auth_token_expiry"
+    #define NEATO_SET_ROBOT_PROFILE_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robot.set_profile_details"
+    #define NEATO_GET_ROBOT_ONLINE_STATUS_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robot.is_online"
+	#define NEATO_DISSOCIATE_ALL_ROBOTS_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=user.disassociate_robot"
 #else
     // Will use API's at http://neatostaging.rajatogo.com/wstest/
     #define NEATO_CREATE_USER_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.create"
@@ -114,6 +122,9 @@
     #define NEATO_SET_ROBOT_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.set_user"
     #define NEATO_GET_ASSOCIATED_ROBOTS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.get_associated_robots"
     #define NEATO_UPDATE_AUTH_TOKEN_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.update_auth_token_expiry"
+    #define NEATO_SET_ROBOT_PROFILE_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.set_profile_details"
+    #define NEATO_GET_ROBOT_ONLINE_STATUS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.is_online"
+	#define NEATO_DISSOCIATE_ALL_ROBOTS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.disassociate_robot"
 #endif
 
 

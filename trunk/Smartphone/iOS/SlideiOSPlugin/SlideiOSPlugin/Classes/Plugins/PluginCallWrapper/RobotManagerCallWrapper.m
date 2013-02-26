@@ -330,6 +330,158 @@
     self.delegate = nil;
 }
 
+- (void)setRobotName2:(NSString *)robotName forRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
+  debugLog(@"");
+  self.retained_self = self;
+  self.callbackId = callbackId;
+  [NeatoRobotManager setRobotName2:robotName forRobotWithId:robotId delegate:self];
+}
 
+- (void)robotName:(NSString *)name updatedForRobotWithId:(NSString *)robotId {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(robotName:updatedForRobotWithId:callbackId:)])
+    {
+        [self.delegate robotName:name updatedForRobotWithId:robotId callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)failedToUpdateRobotNameWithError:(NSError *)error {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(failedToUpdateRobotNameWithError:callbackId:)])
+    {
+        [self.delegate failedToUpdateRobotNameWithError:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)getDetailsForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    
+    [NeatoRobotManager getDetailsForRobotWithId:robotId delegate:self];
+}
+
+-(void) failedToGetRobotDetailsWihError:(NSError *)error
+{
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(failedToGetRobotDetailsWihError:callbackId:)])
+    {
+        [self.delegate failedToGetRobotDetailsWihError:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+-(void) gotRobotDetails:(NeatoRobot *)neatoRobot
+{
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(gotRobotDetails:callbackId:)])
+    {
+        [self.delegate gotRobotDetails:neatoRobot callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)onlineStatusForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    [NeatoRobotManager onlineStatusForRobotWithId:robotId delegate:self];
+}
+
+- (void)onlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(onlineStatus:forRobotWithId:callbackId:)])
+    {
+        [self.delegate onlineStatus:status forRobotWithId:robotId callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)failedToGetRobotOnlineStatusWithError:(NSError *)error {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(failedToGetRobotOnlineStatusWithError:callbackId:)]) {
+        [self.delegate failedToGetRobotOnlineStatusWithError:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)tryDirectConnection2:(NSString *)robotId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    [NeatoRobotManager tryDirectConnection2:robotId delegate:self];
+}
+
+- (void)failedToConnectToTCP2WithError:(NSError *)error {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(failedToConnectToTCP2WithError:callbackId:)]) {
+        [self.delegate failedToConnectToTCP2WithError:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)connectedOverTCP2:(NSString*) host {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(connectedOverTCP2:callbackId:)]) {
+        [self.delegate connectedOverTCP2:host callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)sendCommandToRobot2:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    
+    [NeatoRobotManager sendCommandToRobot2:robotId commandId:commandId params:params delegate:self];
+}
+
+- (void)failedToSendCommandOverTCPWithError:(NSError *)error {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(failedToSendCommandOverTCPWithError:callbackId:)]) {
+        [self.delegate failedToSendCommandOverTCPWithError:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)commandSentOverTCP2 {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(commandSentOverTCP2:)])
+    {
+        [self.delegate commandSentOverTCP2:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)commandSentOverXMPP2 {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(commandSentOverXMPP2:)])
+    {
+        [self.delegate commandSentOverXMPP2:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)failedToSendCommandOverXMPP2 {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(failedToSendCommandOverXMPP2:)]) {
+        [self.delegate failedToSendCommandOverXMPP2:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
 
 @end

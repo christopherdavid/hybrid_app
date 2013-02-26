@@ -20,7 +20,7 @@
     //get the callback id
     NSString *callbackId = command.callbackId;
     NSDictionary *parameters = [command.arguments objectAtIndex:0];
-    debugLog(@"received parameters are : %@", parameters);
+    debugLog(@"received parameters : %@", parameters);
     
     NSString *email = [parameters valueForKey:KEY_EMAIL];
     NSString *password = [parameters valueForKey:KEY_PASSWORD];
@@ -29,8 +29,7 @@
     [callWrapper loginUserWithEmail:email password:password callbackID:callbackId];
 }
 
--(void) loginFailedWithError:(NSError *)error callbackId:(NSString *)callbackId
-{
+-(void) loginFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
@@ -40,8 +39,7 @@
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
 }
 
--(void) loginSuccess:(NeatoUser *) user  callbackId:(NSString *)callbackId
-{
+-(void) loginSuccess:(NeatoUser *) user  callbackId:(NSString *)callbackId {
     debugLog(@"");
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
     [data setValue:user.name forKey:KEY_USER_NAME];
@@ -52,8 +50,7 @@
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
--(void) userCreated:(NeatoUser *) neatoUser  callbackId:(NSString *)callbackId
-{
+-(void) userCreated:(NeatoUser *) neatoUser  callbackId:(NSString *)callbackId {
     debugLog(@"");
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
     [data setValue:neatoUser.name forKey:KEY_USER_NAME];
@@ -64,8 +61,7 @@
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
--(void) failedToCreateUserWithError:(NSError *)error callbackId:(NSString *)callbackId
-{
+-(void) failedToCreateUserWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
@@ -80,14 +76,12 @@
     debugLog(@"");
     //get the callback id
     NSString *callbackId = command.callbackId;
-    
     UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
     callWrapper.delegate = self;
     [callWrapper logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail] authToken:[NeatoUserHelper getUsersAuthToken] callbackID:callbackId];
 }
 
--(void)logoutRequestFailedWithEror:(NSError *)error callbackId:(NSString *)callbackId
-{
+-(void)logoutRequestFailedWithEror:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
@@ -97,8 +91,7 @@
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
 }
 
--(void)userCreationFailedWithError:(NSError *)error callbackId:(NSString *)callbackId
-{
+-(void)userCreationFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
@@ -112,7 +105,7 @@
     //get the callback id
     NSString *callbackId = command.callbackId;
     NSDictionary *parameters = [command.arguments objectAtIndex:0];
-    debugLog(@"received parameters are : %@",parameters);
+    debugLog(@"received parameters : %@",parameters);
     
     UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
     callWrapper.delegate = self;
@@ -125,29 +118,33 @@
     [callWrapper createUser:neatoUser callbackID:callbackId];
 }
 
-- (void) isLoggedIn:(CDVInvokedUrlCommand *)command
-{
+- (void) isLoggedIn:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
-    
     NSString *callbackId = command.callbackId;
     bool loggedIn = [[[UserManagerCallWrapper alloc] init] isUserLoggedIn];
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:[[NSNumber numberWithBool:loggedIn] intValue]];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
--(void) failedToGetUserDetailsWithError:(NSError *)error callbackId:(NSString *)callbackId
-{
+-(void) failedToGetUserDetailsWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
-    
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
 }
 
-- (void) getUserDetails:(CDVInvokedUrlCommand *)command
-{
+- (void)getUserDetails:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@",parameters);
+    
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    NSString *email = [parameters objectForKey:@"email"];
+    [callWrapper getUserDetailsForEmail:email authToken:[NeatoUserHelper getUsersAuthToken] callbackID:callbackId];
 }
 
--(void) robotAssociationFailedWithError:(NSError *)error callbackId:(NSString *)callbackId
-{
+-(void) robotAssociationFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
@@ -158,57 +155,91 @@
 }
 
 
-- (void) associateRobot:(CDVInvokedUrlCommand *)command
-{
+- (void) associateRobot:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
     NSString *callbackId = command.callbackId;   
     
-    NSString *parameters = [command.arguments objectAtIndex:0];
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
     debugLog(@"parameters = %@", parameters);
-    
-    
+
     UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
     callWrapper.delegate = self;
-    //TODO: Not using the value sent by the UI. Rather using the email stored in local storage
-    // What are we supposed to use? Whats the point of getting the value of Email from UI
-    [callWrapper setRobotUserEmail:[NeatoUserHelper getLoggedInUserEmail] serialNumber:[parameters valueForKey:KEY_ROBOT_ID] callbackID:callbackId];
+    NSString *email = [parameters objectForKey:@"email"];
+    [callWrapper setRobotUserEmail:email serialNumber:[parameters objectForKey:KEY_ROBOT_ID] callbackID:callbackId];
 }
 
--(void) failedToGetRobotDetailsWihError:(NSError *)error callbackId:(NSString *)callbackId
-{
-    debugLog(@"Error = %@", error);
-}
-
-- (void) getAssociatedRobots:(CDVInvokedUrlCommand *)command
-{
+- (void)associateRobot2:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"parameters received = %@", parameters);
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    NSString *email = [parameters objectForKey:@"email"];
+    [callWrapper setRobotUserEmail2:email forRobotId:[parameters valueForKey:KEY_ROBOT_ID] callbackID:callbackId];
+}
+
+- (void)robotAssociation2FailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"Error = %@", error);
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
+    [dictionary setValue:ERROR_TYPE_UNKNOWN forKey:KEY_ERROR_CODE];
     
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
 }
 
--(void) robotCreationFailedWithError:(NSError *)error callbackId:(NSString *)callbackId
-{
+- (void)userAssociateWithRobot:(NeatoRobot *)neatoRobot callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *jsonRobot = [[NSMutableDictionary alloc] init];
+    [jsonRobot setValue:neatoRobot.serialNumber forKey:KEY_ROBOT_ID];
+    [jsonRobot setValue:neatoRobot.name forKey:KEY_ROBOT_NAME];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonRobot];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+
+- (void)getAssociatedRobots:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"parameters = %@", parameters);
+    NSString *email = [parameters objectForKey:@"email"];
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper associatedRobotsForUserWithEmail:email authToken:[NeatoUserHelper getUsersAuthToken] callbackId:callbackId];
+
+}
+
+- (void)robotCreationFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
 }
 
-- (void) getAssociatedRobots:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
-{
+- (void)disassociateRobot:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"parameters = %@", parameters);
+    NSString *email = [parameters objectForKey:@"email"];
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper dissociateRobotWithId:robotId fromUserWithEmail:email callbackId:callbackId];
 }
 
 
-- (void) disassociateRobot:(CDVInvokedUrlCommand *)command
-{
+- (void)disassociateAllRobots:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"parameters = %@", parameters);
+    NSString *email = [parameters objectForKey:@"email"];
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper dissociateAllRobotsForUserWithEmail:email callbackID:callbackId];
 }
 
-
-- (void) disassociateAllRobots:(CDVInvokedUrlCommand *)command
-{
-    debugLog(@"");
-}
-
-- (void) debugGetConfigDetails:(CDVInvokedUrlCommand *)command
-{
+- (void)debugGetConfigDetails:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
     NSDictionary *appInfo = [AppHelper getAppDebugInfo];
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:appInfo];
@@ -218,16 +249,7 @@
 
 
 
-/*-(void) requestFailed:(NSError *) error callbackId:(NSString *)callbackId
-{
-    debugLog(@"");
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
-}*/
-
-
--(void) gotUserDetails:(NeatoUser *)neatoUser callbackId:(NSString *)callbackId
-{
+- (void)gotUserDetails:(NeatoUser *)neatoUser callbackId:(NSString *)callbackId {
     debugLog(@"");
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
     [data setValue:neatoUser.name forKey:KEY_USER_NAME];
@@ -238,21 +260,12 @@
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
-
--(void) gotRobotDetails:(NeatoRobot *)neatoRobot callbackId:(NSString *)callbackId
-{
+- (void)robotCreated:(NSString *)callbackId {
     debugLog(@"");
 }
 
 
--(void) robotCreated:(NSString *)callbackId
-{
-    debugLog(@"");
-}
-
-
--(void) robotAssociatedWithUser:(NSString *)message robotId:(NSString *) robotId callbackId:(NSString *)callbackId;
-{
+-(void) robotAssociatedWithUser:(NSString *)message robotId:(NSString *) robotId callbackId:(NSString *)callbackId {
     debugLog(@"");
     NeatoRobot *robot = [NeatoRobotHelper getRobotForId:robotId];
     NSMutableDictionary *robotDict = [[NSMutableDictionary alloc] init];
@@ -263,11 +276,54 @@
 }
 
 
--(void) userLoggedOut:(NSString *)callbackId
-{
+-(void) userLoggedOut:(NSString *)callbackId {
     debugLog(@"");
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"User logged out."];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)dissociatedAllRobots:(NSString *)message callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:message];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];   
+}
+
+- (void)failedToDissociateAllRobots:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];  
+}
+
+- (void)failedToDissociateRobotWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+- (void)robotDissociatedWithMessage:(NSString *)message callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)gotUserAssociatedRobots:(NSMutableArray *)robots callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableArray *jsonArray = [[NSMutableArray alloc] init];
+    for (int i=0 ; i<[robots count] ; i++) {
+        NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+        [data setValue:[[robots objectAtIndex:i] name] forKey:KEY_ROBOT_NAME];
+        [data setValue:[[robots objectAtIndex:i] serialNumber] forKey:KEY_ROBOT_ID];
+        [jsonArray addObject:data];
+    }
+      
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:jsonArray];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+
+}
+
+- (void)failedToGetAssociatedRobotsWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]]; 
 }
 
 @end
