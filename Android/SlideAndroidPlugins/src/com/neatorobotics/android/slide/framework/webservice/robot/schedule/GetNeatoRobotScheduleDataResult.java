@@ -1,7 +1,6 @@
 package com.neatorobotics.android.slide.framework.webservice.robot.schedule;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 
@@ -9,6 +8,10 @@ public class GetNeatoRobotScheduleDataResult extends NeatoWebserviceResult{
 
 	public GetNeatoRobotScheduleDataResult(NeatoHttpResponse response) {
 		super(response);
+	}
+	public GetNeatoRobotScheduleDataResult(int response, int responseStatusCode, String message) {
+		super(response, responseStatusCode);
+		mMessage = message;
 	}
 	public static final int RESPONSE_STATUS_SUCCESS = 0;
 

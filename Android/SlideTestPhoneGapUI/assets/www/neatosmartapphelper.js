@@ -45,7 +45,8 @@ var ACTION_TYPE_ASSOCIATE_ROBOT					= "associateRobot";
 var ACTION_TYPE_GET_ASSOCIATED_ROBOTS 			= "getAssociatedRobots"
 var ACTION_TYPE_DISASSOCIATE_ROBOT 				= "disassociateRobot";
 var ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS 		= "disassociateAllRobots";
-
+var ACTION_TYPE_FORGET_PASSWORD					= "forgetPassword";
+var ACTION_TYPE_CHANGE_PASSWORD					= "changePassword";
 // List of actions types of Robot Manager
 var ACTION_TYPE_DISCOVER_NEARBY_ROBOTS 			= "discoverNearByRobots";
 var ACTION_TYPE_TRY_CONNECT_CONNECTION 			= "tryDirectConnection";
@@ -65,6 +66,8 @@ var ACTION_TYPE_DELETE_ROBOT_SCHEDULE			= "deleteScheduleData";
 var ACTION_TYPE_SET_ROBOT_NAME_2				= "setRobotName2";
 var ACTION_TYPE_GET_ROBOT_DETAIL				= "getRobotDetail";
 var ACTION_TYPE_GET_ROBOT_ONLINE_STATUS			= "getRobotOnlineStatus";
+var ACTION_TYPE_REGISTER_ROBOT_NOTIFICATIONS    = "registerRobotNotifications";
+var ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS  = "unregisterRobotNotifications";
 
 //List of keys to send data:
 
@@ -77,7 +80,6 @@ var KEY_COMMAND = 'command';
 var KEY_ROBOT_ID = 'robotId';
 var KEY_USE_XMPP = 'useXMPP';
 var KEY_ROBOT_NAME = "robotName";
-var KEY_ROBOT_IP_ADDRESS = "robotIpaddress";
 
 var KEY_SCHEDULE_TYPE = "scheduleType";
 
@@ -101,6 +103,8 @@ var COMMAND_PAUSE_CLEANING = 107;
 var COMMAND_ENABLE_SCHEDULE = 108;
 var COMMAND_DATA_CHANGED_ON_SERVER = 109;
 var COMMAND_SET_ROBOT_TIME = 110;
+var COMMAND_REGISTER_NOTIFICATIONS = 111;
+var COMMAND_UNREGISTER_NOTIFICATIONS = 112;
 
 
 var START_CLEAN_TYPE_HIGH = 1;
@@ -160,6 +164,18 @@ UserMgr.prototype.createUser = function(email, password, name, callbackSuccess, 
 			ACTION_TYPE_CREATE_USER, [registerArray]);
 };
 
+UserMgr.prototype.changePassword = function(email, currentPassword, newPassword, callbackSuccess, callbackError) {
+	var changePassword = {'email':email, 'currentPassword':currentPassword, 'newPassword':newPassword};
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_CHANGE_PASSWORD, [changePassword]);
+};
+
+UserMgr.prototype.forgetPassword = function(email, callbackSuccess, callbackError) {
+	var forgetPassword = {'email':email};
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_FORGET_PASSWORD, [forgetPassword]);
+};
+
 UserMgr.prototype.getUserDetail = function(email, callbackSuccess, callbackError) {
 	var getUserDetailsArray = {'email': email};
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
@@ -192,6 +208,20 @@ UserMgr.prototype.disassociateAllRobots = function(email, callbackSuccess, callb
 
 
 // ***********************ROBOT PLUGIN METHODS ****************************
+
+RobotMgr.prototype.registerNotifications = function(robotId, callbackSuccess, callbackError) {
+	var commandArray = {'robotId':robotId};
+	
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_REGISTER_ROBOT_NOTIFICATIONS, [commandArray]);
+};
+
+RobotMgr.prototype.unregisterNotifications = function(robotId, callbackSuccess, callbackError) {
+	var commandArray = {'robotId':robotId};
+	
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS, [commandArray]);
+};
 
 RobotMgr.prototype.discoverNearbyRobots = function(callbackSuccess, callbackError) {
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
@@ -247,7 +277,7 @@ RobotMgr.prototype.setRobotName2 = function(robotId, robotName, callbackSuccess,
 			ACTION_TYPE_SET_ROBOT_NAME_2, [setRobotName]);
 };
 
-RobotMgr.prototype.getRobotDetail = function(robotId, robotName, callbackSuccess, callbackError) {
+RobotMgr.prototype.getRobotDetail = function(robotId, callbackSuccess, callbackError) {
 	var getRobotDetail = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_GET_ROBOT_DETAIL, [getRobotDetail]);
@@ -347,6 +377,14 @@ var UserPluginManager = (function() {
 		
 		disassociateAllRobots: function(email, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.disassociateAllRobots(email, callbackSuccess, callbackError);
+		},
+		
+		changePassword: function(email, currentPassword, newPassword, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.changePassword(email, currentPassword, newPassword, callbackSuccess, callbackError);
+		}, 
+		
+		forgetPassword: function(email, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.forgetPassword(email, callbackSuccess, callbackError);
 		}
 	}
 }());
@@ -424,6 +462,14 @@ var RobotPluginManager = (function() {
 		// TODO: We are taking robotId. Analyse if taking atlasId is a better option.
 		getAtlasGridData: function(robotId, gridId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getAtlasGridData(robotId, gridId, callbackSuccess, callbackError);
+		},
+		
+		registerNotifications: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.registerNotifications(robotId, callbackSuccess, callbackError);
+		},
+		
+		unregisterNotifications: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.unregisterNotifications(robotId, callbackSuccess, callbackError);
 		}
 }
 }());

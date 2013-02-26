@@ -9,7 +9,9 @@ import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotAssociateListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDiscoveryListener;
+import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotNotificationsListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
+import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotStateListener;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RequestPacket;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotRequests;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
@@ -178,9 +180,40 @@ public class RobotCommandServiceManager {
 			}
 		} else {
 			LogHelper.logD(TAG, "Service is not started!");
-			
 		}
-
-
+	}
+	
+	public static void registerRobotStateNotificationListener(Context context, RobotStateListener listener) {
+		LogHelper.logD(TAG, "registerRobotStateNotificationListener called");		
+		ApplicationConfig.getInstance(context).getRobotResultReceiver().addRobotStateNotificationListener(listener);
+	}
+	
+	public static void registerRobotNotificationsListener(Context context, String robotId, RobotNotificationsListener listener) {
+		LogHelper.logD(TAG, "registerRobotNotificationsListener called");		
+		ApplicationConfig.getInstance(context).getRobotResultReceiver().addRobotNotificationsListener(listener);		
+		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
+		if (neatoService != null) {
+			try {
+				neatoService.registerRobotNotifications(robotId);
+			} catch (RemoteException ex) {
+				LogHelper.logD(TAG, "RemoteException in registerRobotNotificationsListener", ex);
+			}
+		} else {
+			LogHelper.logD(TAG, "Service is not started!");
+		}
+	}
+	
+	public static void unregisteredRobotNotificationsListener(Context context, String robotId) {
+		LogHelper.logD(TAG, "unregisteredRobotNotificationsListener called");
+		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
+		if (neatoService != null) {
+			try {
+				neatoService.unregisterRobotNotifications(robotId);
+			} catch (RemoteException ex) {
+				LogHelper.logD(TAG, "RemoteException in unregisterFromRobotStatusChangeNotifications", ex);
+			}
+		} else {
+			LogHelper.logD(TAG, "Service is not started!");
+		}
 	}
 }

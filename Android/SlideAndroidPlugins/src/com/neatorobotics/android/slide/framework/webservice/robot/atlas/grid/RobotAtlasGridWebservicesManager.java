@@ -149,51 +149,7 @@ public class RobotAtlasGridWebservicesManager {
 		
 		return (!fileExist);
 	}
-	
-	//TODO: add listener.
-	public void postGridImage(final String atlas_id, final String grid_id, final String blob_data) {
-
-		if (TextUtils.isEmpty(atlas_id)) {
-			return;
-		}
-		Runnable task = new Runnable() {
-			@Override
-			public void run() {	
-				PostGridImageResult result = RobotAtlasGridWebservicesHelper.postGridImageRequest(mContext, atlas_id, grid_id, blob_data);
-				if (result.success()) {
-					LogHelper.log(TAG, "posted grid image successfully");
-				} 
-				else {
-					LogHelper.log(TAG, "Could not post grid image data");
-				}	
-				return;
-			}
-		};
-		TaskUtils.scheduleTask(task, 0);
-	}
-
-	//TODO: add listener.
-	public void updateGridImage(final String atlas_id, final String grid_id, final String blob_data) {
-
-		if (TextUtils.isEmpty(atlas_id)) {
-			return;
-		}
-		Runnable task = new Runnable() {
-			@Override
-			public void run() {	
-				UpdateGridImageResult result = RobotAtlasGridWebservicesHelper.updateGridImageRequest(mContext, atlas_id, grid_id, blob_data);
-				if (result.success()) {
-					LogHelper.log(TAG, "updated grid image successfully");
-				} 
-				else {
-					LogHelper.log(TAG, "Could not update grid data");
-				}	
-				return;
-			}
-		};
-		TaskUtils.scheduleTask(task, 0);
-	}
-	
+		
 	private void downloadGridFile(final String robotId, final String atlas_id, final String gridId, final String xmlDataUrl, final RobotGridDataDownloadListener listener) {
 
 		LogHelper.log(TAG, "downloadGridFile called");

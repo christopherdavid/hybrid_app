@@ -1,18 +1,25 @@
 package com.neatorobotics.android.slide.framework.webservice.user;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.content.Context;
 import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
+import com.neatorobotics.android.slide.framework.utils.UserAttributes;
+import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotAssociationDisassociationResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.user.listeners.AssociatedRobotDetailsListener;
 import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserDetailsListener;
+import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserForgetPasswordListener;
 import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserRobotAssociateDisassociateListener;
+import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserPasswordChangeListener;
 
 
 public class UserManager {
@@ -81,6 +88,21 @@ public class UserManager {
 		TaskUtils.scheduleTask(task, 0);
 
 	}
+	
+	public void setUserAttributesOnServer(final String authToken, final UserAttributes userAttributes) {
+
+		Runnable task = new Runnable() {
+			public void run() {
+				HashMap<String, String> attributes = new HashMap<String, String>();
+				attributes.put(NeatoUserWebServicesAttributes.SetUserAttributes.Attribute.ATTRIBUTE_NAME, userAttributes.deviceName);
+				attributes.put(NeatoUserWebServicesAttributes.SetUserAttributes.Attribute.ATTRIBUTE_OPERATING_SYSTEM, userAttributes.osName);
+				attributes.put(NeatoUserWebServicesAttributes.SetUserAttributes.Attribute.ATTRIBUTE_VERSION, userAttributes.osVersion);
+				NeatoUserWebservicesHelper.setUserAttributeRequest(mContext, authToken, attributes);
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+
 
 	public UserItem getUserDetail(final String email, final String auth_token)
 	{
@@ -295,6 +317,49 @@ public class UserManager {
 		TaskUtils.scheduleTask(task, 0);
 	}
 
+	public void sendMessageToRobot(final String userId, final String robotId, final String message) {
+		Runnable task = new Runnable() {
+			
+			@Override
+			public void run() {
+				NeatoUserWebservicesHelper.sendMessageToRobotRequest(mContext, userId, robotId, message);
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
+	public void forgetPassword(final String email, final UserForgetPasswordListener listener) {
+		Runnable task = new Runnable() {
+			
+			@Override
+			public void run() {
+				ForgetPasswordResult result = NeatoUserWebservicesHelper.forgetPasswordRequest(mContext, email);
+				if (result.success()) {
+					listener.onComplete();
+				} else {
+					listener.onServerError(result.mStatus, result.mMessage);
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
+	public void changePassword(final String authToken, final String currentPassword, final String newPassword, final UserPasswordChangeListener listener) {
+		Runnable task = new Runnable() {
+			
+			@Override
+			public void run() {
+				ChangePasswordResult result = NeatoUserWebservicesHelper.changePasswordRequest(mContext, authToken, currentPassword, newPassword);
+				if (result.success()) {
+					listener.onComplete();
+				} else {
+					listener.onServerError(result.mStatus, result.mMessage);
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
 	private UserItem convertUserDetailResultToUserItem(GetNeatoUserDetailsResult result)
 	{
 		UserItem userItem = new UserItem();

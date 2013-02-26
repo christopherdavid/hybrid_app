@@ -1,6 +1,6 @@
 package com.neatorobotics.android.slide.framework.webservice.user;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
@@ -10,11 +10,7 @@ public class CreateNeatoUserResult extends NeatoWebserviceResult {
 	
 	public static final int STATUS_SUCCESS = 0;
 	
-	@JsonProperty(value="status")
-	public int mStatus = -1; // 0 is returned as success from the webservice so we should not initialize to 0
-	
-	@JsonProperty(value="message")
-	public String mMessage;	
+
 
 	@JsonProperty(value="result")
 	public Result mResult;
@@ -25,6 +21,11 @@ public class CreateNeatoUserResult extends NeatoWebserviceResult {
 	
 	public CreateNeatoUserResult(NeatoHttpResponse response) {
 		super(response);
+	}
+	
+	public CreateNeatoUserResult(int response, int responseStatusCode, String message) {
+		super(response, responseStatusCode);
+		mMessage = message;
 	}
 	
 	@Override

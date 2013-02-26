@@ -35,6 +35,7 @@ public class NeatoWebConstants {
 	//  Responses after a http requests
 	public static final int RESPONSE_NETWORK_ERROR = 100;	
 	public static final int RESPONSE_SERVER_ERROR_REASON_UNKNOWN = -1;
+	public static final int RESPONSE_SERVER_ERROR_JSON_PARSING = -2;
 	public static final int RESPONSE_SERVER_ERROR = 101;
 	public static final int RESPONSE_SUCCESS = 0;
 

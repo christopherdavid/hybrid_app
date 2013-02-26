@@ -1,18 +1,14 @@
 package com.neatorobotics.android.slide.framework.webservice.robot.map;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 import android.content.Context;
 import android.text.TextUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
+import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.NeatoRobotMapWebServicesAttributes.DeleteNeatoRobotMapData;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.NeatoRobotMapWebServicesAttributes.GetNeatoRobotMapData;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.NeatoRobotMapWebServicesAttributes.GetNeatoRobotMaps;
@@ -21,71 +17,22 @@ import com.neatorobotics.android.slide.framework.webservice.robot.map.NeatoRobot
 
 public class NeatoRobotMapWebservicesHelper {
 	private static final String TAG = NeatoRobotMapWebservicesHelper.class.getSimpleName();
-	private static ObjectMapper resultMapper = new ObjectMapper();
 	public static final String INVALID_VERSION_NUMBER = "-1";
 
 	public static GetNeatoRobotMapsResult getNeatoRobotMapsRequest(Context context, String serial_number) {
 		GetNeatoRobotMapsResult result = null;
 		Map<String, String> getNeatoRobotMapsReqParams = new HashMap<String, String>();
 		getNeatoRobotMapsReqParams.put(GetNeatoRobotMaps.Attribute.SERIAL_NUMBER, serial_number);
-
-
 		NeatoHttpResponse getNeatoRobotMapsResponse = NeatoWebserviceHelper.executeHttpPost(context, GetNeatoRobotMaps.METHOD_NAME, getNeatoRobotMapsReqParams);
-		if (getNeatoRobotMapsResponse.completed()) { 
-			try {
-				LogHelper.logD(TAG, "Get Maps for Neato Robot completed. Reading response");
-				String json = AppUtils.convertStreamToString(getNeatoRobotMapsResponse.mResponseInputStream);
-				LogHelper.logD(TAG, "JSON = " + json);
-				result = resultMapper.readValue(json, new TypeReference<GetNeatoRobotMapsResult>() {});
-				LogHelper.log(TAG, "Get Maps for robot completed.");
-			} catch (JsonParseException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotMapsRequest" ,e);
-
-			} catch (JsonMappingException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotMapsRequest" ,e);
-
-			} catch (IOException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotMapsRequest" ,e);
-
-			}
-		}
-		else { 
-			LogHelper.log(TAG, " GetNeatoRobotMapsRequest not completed.");
-			result = new GetNeatoRobotMapsResult(getNeatoRobotMapsResponse);
-		}
-
+		result = NeatoWebserviceUtils.readValueHelper(getNeatoRobotMapsResponse, GetNeatoRobotMapsResult.class);
 		return result;
 	}
 	public static GetNeatoRobotMapDataResult getNeatoRobotMapDataRequest(Context context, String robot_map_id) {
 		GetNeatoRobotMapDataResult result = null;
 		Map<String, String> getNeatoRobotMapDataReqParams = new HashMap<String, String>();
 		getNeatoRobotMapDataReqParams.put(GetNeatoRobotMapData.Attribute.ROBOT_MAP_ID, robot_map_id);
-
-
 		NeatoHttpResponse getNeatoRobotMapDataResponse = NeatoWebserviceHelper.executeHttpPost(context, GetNeatoRobotMapData.METHOD_NAME, getNeatoRobotMapDataReqParams);
-		if (getNeatoRobotMapDataResponse.completed()) { 
-			try {
-				LogHelper.logD(TAG, "Get map data for Neato Robot completed. Reading response");
-				String json = AppUtils.convertStreamToString(getNeatoRobotMapDataResponse.mResponseInputStream);
-				LogHelper.logD(TAG, "JSON = " + json);
-				result = resultMapper.readValue(json, new TypeReference<GetNeatoRobotMapDataResult>() {});
-				LogHelper.log(TAG, "Get map data for robot completed.");
-			} catch (JsonParseException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotMapDataRequest" ,e);
-
-			} catch (JsonMappingException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotMapDataRequest" ,e);
-
-			} catch (IOException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotMapDataRequest" ,e);
-
-			}
-		}
-		else { 
-			LogHelper.log(TAG, "GetNeatoRobotMapDataRequest  not completed.");
-			result = new GetNeatoRobotMapDataResult(getNeatoRobotMapDataResponse);
-		}
-
+		result = NeatoWebserviceUtils.readValueHelper(getNeatoRobotMapDataResponse, GetNeatoRobotMapDataResult.class);
 		return result;
 	}
 
@@ -94,42 +41,16 @@ public class NeatoRobotMapWebservicesHelper {
 		AddNeatoRobotMapDataResult result = null;
 		Map<String, String> postNeatoRobotMapDataReqParams = new HashMap<String, String>();
 		postNeatoRobotMapDataReqParams.put(PostNeatoRobotMapData.Attribute.SERIAL_NUMBER, serial_number);
-
 		if (!TextUtils.isEmpty(xml_data)) {
 			postNeatoRobotMapDataReqParams.put(PostNeatoRobotMapData.Attribute.XML_DATA, xml_data);
 		}
-		
 		if (imageData != null) {
 			String blobData = AppUtils.convertToBase64(imageData);
 			// LogHelper.log(TAG, "Base64 Encoding = " + blobData);
 			postNeatoRobotMapDataReqParams.put(PostNeatoRobotMapData.Attribute.BLOB_DATA, blobData);
 		}
-
 		NeatoHttpResponse postNeatoRobotMapDataResponse = NeatoWebserviceHelper.executeHttpPost(context, PostNeatoRobotMapData.METHOD_NAME, postNeatoRobotMapDataReqParams);
-		if (postNeatoRobotMapDataResponse.completed()) { 
-			try {
-				LogHelper.logD(TAG, "Add Map data for Neato Robot completed. Reading response");
-				String json = AppUtils.convertStreamToString(postNeatoRobotMapDataResponse.mResponseInputStream);
-				LogHelper.logD(TAG, "JSON = " + json);
-
-				result = resultMapper.readValue(json, new TypeReference<AddNeatoRobotMapDataResult>() {});
-				LogHelper.log(TAG, "Get Map data for robot completed.");
-			} catch (JsonParseException e) {
-				LogHelper.log(TAG, "Exception in AddNeatoRobotMapData" ,e);
-
-			} catch (JsonMappingException e) {
-				LogHelper.log(TAG, "Exception in AddNeatoRobotMapData" ,e);
-
-			} catch (IOException e) {
-				LogHelper.log(TAG, "Exception in AddNeatoRobotMapData" ,e);
-
-			}
-		}	
-		else { 
-			LogHelper.log(TAG, "AddNeatoRobotMapData  not completed.");
-			result = new AddNeatoRobotMapDataResult(postNeatoRobotMapDataResponse);
-		}
-
+		result = NeatoWebserviceUtils.readValueHelper(postNeatoRobotMapDataResponse, AddNeatoRobotMapDataResult.class);
 		return result;
 	}
 	
@@ -144,7 +65,6 @@ public class NeatoRobotMapWebservicesHelper {
 			updateNeatoRobotMapDataReqParams.put(UpdateNeatoRobotMapData.Attribute.XML_DATA_VERSION, xmlDataVersion);
 			updateNeatoRobotMapDataReqParams.put(UpdateNeatoRobotMapData.Attribute.XML_DATA, xml_data);
 		}
-		
 		if (!imageDataVersion.equalsIgnoreCase(INVALID_VERSION_NUMBER) && (imageData != null)) {
 			LogHelper.log(TAG, "Image Version = " + imageDataVersion);
 			updateNeatoRobotMapDataReqParams.put(UpdateNeatoRobotMapData.Attribute.BLOB_DATA_VERSION, imageDataVersion);
@@ -152,31 +72,8 @@ public class NeatoRobotMapWebservicesHelper {
 			// LogHelper.log(TAG, "Base64 Encoding = " + blobData);
 			updateNeatoRobotMapDataReqParams.put(UpdateNeatoRobotMapData.Attribute.BLOB_DATA, blobData);
 		}
-
 		NeatoHttpResponse updateNeatoRobotMapDataResponse = NeatoWebserviceHelper.executeHttpPost(context, UpdateNeatoRobotMapData.METHOD_NAME, updateNeatoRobotMapDataReqParams);
-		if (updateNeatoRobotMapDataResponse.completed()) { 
-			try {
-				LogHelper.logD(TAG, "Updated Map data for Neato Robot completed. Reading response");
-				String json = AppUtils.convertStreamToString(updateNeatoRobotMapDataResponse.mResponseInputStream);
-				LogHelper.logD(TAG, "JSON = " + json);
-
-				result = resultMapper.readValue(json, new TypeReference<UpdateNeatoRobotMapResult>() {});
-				LogHelper.log(TAG, "Set Map data for robot completed.");
-			} catch (JsonParseException e) {
-				LogHelper.log(TAG, "Exception in UpdateNeatoRobotMapDataRequest" ,e);
-
-			} catch (JsonMappingException e) {
-				LogHelper.log(TAG, "Exception in UpdateNeatoRobotMapDataRequest" ,e);
-
-			} catch (IOException e) {
-				LogHelper.log(TAG, "Exception in UpdateNeatoRobotMapDataRequest" ,e);
-
-			}
-		}
-		else { 
-			LogHelper.log(TAG, "updateNeatoRobotMapDataRequest  not completed.");
-			result = new UpdateNeatoRobotMapResult(updateNeatoRobotMapDataResponse);
-		}
+		result = NeatoWebserviceUtils.readValueHelper(updateNeatoRobotMapDataResponse, UpdateNeatoRobotMapResult.class);
 
 		return result;
 	}
@@ -195,31 +92,8 @@ public class NeatoRobotMapWebservicesHelper {
 		 DeleteNeatoRobotMapsResult result = null;
 			Map<String, String> deleteNeatoRobotMapReqParams = new HashMap<String, String>();
 			deleteNeatoRobotMapReqParams.put(DeleteNeatoRobotMapData.Attribute.ROBOT_MAP_ID, mapId);
-
 			NeatoHttpResponse deleteNeatoRobotMapResponse = NeatoWebserviceHelper.executeHttpPost(context, DeleteNeatoRobotMapData.METHOD_NAME, deleteNeatoRobotMapReqParams);
-			if (deleteNeatoRobotMapResponse.completed()) { 
-				try {
-					LogHelper.logD(TAG, "Deleting Maps for Neato Robot completed. Reading response");
-					String json = AppUtils.convertStreamToString(deleteNeatoRobotMapResponse.mResponseInputStream);
-					LogHelper.logD(TAG, "JSON = " + json);
-					result = resultMapper.readValue(json, new TypeReference<DeleteNeatoRobotMapsResult>() {});
-					LogHelper.log(TAG, "Delete Map for robot completed.");
-				} catch (JsonParseException e) {
-					LogHelper.log(TAG, "Exception in deleteNeatoRobotMap" ,e);
-
-				} catch (JsonMappingException e) {
-					LogHelper.log(TAG, "Exception in deleteNeatoRobotMap" ,e);
-
-				} catch (IOException e) {
-					LogHelper.log(TAG, "Exception in deleteNeatoRobotMap" ,e);
-
-				}
-			}
-			else { 
-				LogHelper.log(TAG, " deleteNeatoRobotMap not completed.");
-				result = new DeleteNeatoRobotMapsResult(deleteNeatoRobotMapResponse);
-			}
-
+			result = NeatoWebserviceUtils.readValueHelper(deleteNeatoRobotMapResponse, DeleteNeatoRobotMapsResult.class);
 			return result;
 		}
 

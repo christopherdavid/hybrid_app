@@ -57,6 +57,13 @@ public class UserHelper {
 		return null;
 	}
 	
+	public static String getUserId(Context context) {
+		UserItem userDetails = getLoggedInUserDetails(context);
+		if (userDetails != null) {
+			return userDetails.getId();
+		}
+		return null;
+	}
 	public static void logout(Context context) {
 		if (isUserLoggedIn(context)) {
 			String email = NeatoPrefs.getUserEmailId(context);

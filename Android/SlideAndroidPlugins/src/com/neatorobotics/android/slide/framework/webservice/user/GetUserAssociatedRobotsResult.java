@@ -2,7 +2,7 @@ package com.neatorobotics.android.slide.framework.webservice.user;
 
 import java.util.ArrayList;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
@@ -15,16 +15,13 @@ public class GetUserAssociatedRobotsResult extends NeatoWebserviceResult {
 	public GetUserAssociatedRobotsResult() {
 		super();
 	}
-	
+	public GetUserAssociatedRobotsResult(int response, int responseStatusCode, String message) {
+		super(response, responseStatusCode);
+		mMessage = message;
+	}
 	public GetUserAssociatedRobotsResult(NeatoHttpResponse response) {
 		super(response);
 	}
-
-	@JsonProperty(value="status")
-	public int mStatus = -1; 
-	
-	@JsonProperty(value="message")
-	public String mMessage;	
 	
 	@JsonProperty(value="result")
 	public ArrayList<Result> mResults;

@@ -4,8 +4,12 @@ import org.apache.cordova.DroidGap;
 
 import android.os.Bundle;
 import com.neatorobotics.android.slide.framework.NeatoServiceManager;
+import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
+import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
+import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
 
 public class SlidePluginBaseActivity extends DroidGap {
 
@@ -21,6 +25,11 @@ public class SlidePluginBaseActivity extends DroidGap {
 		mServiceManager = new NeatoServiceManager(getApplicationContext());
 		
 		mServiceManager.initialize();
+		
+		if(UserHelper.isUserLoggedIn(this)) {
+			String authToken = NeatoPrefs.getNeatoUserAuthToken(this);
+			UserManager.getInstance(this).setUserAttributesOnServer(authToken, DeviceUtils.getUserAttributes(this));
+		}
 	}
 	
 	@Override

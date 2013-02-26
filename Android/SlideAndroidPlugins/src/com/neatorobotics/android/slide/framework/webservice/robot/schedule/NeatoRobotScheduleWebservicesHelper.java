@@ -1,18 +1,12 @@
 package com.neatorobotics.android.slide.framework.webservice.robot.schedule;
 
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 import android.content.Context;
-import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
+import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.DeleteNeatoRobotScheduleData;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.GetNeatoRobotScheduleData;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.GetNeatoRobotSchedules;
@@ -20,39 +14,13 @@ import com.neatorobotics.android.slide.framework.webservice.robot.schedule.Neato
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.UpdateNeatoRobotScheduleData;
 
 public class NeatoRobotScheduleWebservicesHelper {
-	private static final String TAG = NeatoRobotScheduleWebservicesHelper.class.getSimpleName();
-	private static ObjectMapper resultMapper = new ObjectMapper();
-
-
 
 	public static GetNeatoRobotSchedulesResult getNeatoRobotSchedulesRequest(Context context, String serial_number) {
 		GetNeatoRobotSchedulesResult result = null;
 		Map<String, String> getNeatoRobotSchedulesReqParams = new HashMap<String, String>();
 		getNeatoRobotSchedulesReqParams.put(GetNeatoRobotSchedules.Attribute.SERIAL_NUMBER, serial_number);
-
-
 		NeatoHttpResponse getNeatoRobotSchedulesResponse = NeatoWebserviceHelper.executeHttpPost(context, GetNeatoRobotSchedules.METHOD_NAME, getNeatoRobotSchedulesReqParams);
-		if (getNeatoRobotSchedulesResponse.completed()) { 
-			try {
-				LogHelper.logD(TAG, "Get Schedules for Neato Robot completed. Reading response");
-				result = resultMapper.readValue(getNeatoRobotSchedulesResponse.mResponseInputStream, new TypeReference<GetNeatoRobotSchedulesResult>() {});
-				LogHelper.log(TAG, "Get Schedules for robot completed.");
-			} catch (JsonParseException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotSchedulesRequest" ,e);
-
-			} catch (JsonMappingException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotSchedulesRequest" ,e);
-
-			} catch (IOException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotSchedulesRequest" ,e);
-
-			}
-		}
-		else { 
-			LogHelper.log(TAG, "GetNeatoRobotSchedulesRequest  not completed.");
-			result = new GetNeatoRobotSchedulesResult(getNeatoRobotSchedulesResponse);
-		}
-
+		result = NeatoWebserviceUtils.readValueHelper(getNeatoRobotSchedulesResponse, GetNeatoRobotSchedulesResult.class);
 		return result;
 	}
 
@@ -60,29 +28,8 @@ public class NeatoRobotScheduleWebservicesHelper {
 		GetNeatoRobotScheduleDataResult result = null;
 		Map<String, String> getNeatoRobotScheduleDataReqParams = new HashMap<String, String>();
 		getNeatoRobotScheduleDataReqParams.put(GetNeatoRobotScheduleData.Attribute.ROBOT_SCHEDULE_ID, robot_schedule_id);
-
-
 		NeatoHttpResponse getNeatoRobotScheduleDataResponse = NeatoWebserviceHelper.executeHttpPost(context, GetNeatoRobotScheduleData.METHOD_NAME, getNeatoRobotScheduleDataReqParams);
-		if (getNeatoRobotScheduleDataResponse.completed()) { 
-			try {
-				LogHelper.logD(TAG, "Get Schedule data for Neato Robot completed. Reading response");
-				result = resultMapper.readValue(getNeatoRobotScheduleDataResponse.mResponseInputStream, new TypeReference<GetNeatoRobotScheduleDataResult>() {});
-				LogHelper.log(TAG, "Get Schedule data for robot completed.");
-			} catch (JsonParseException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotScheduleDataRequest" ,e);
-
-			} catch (JsonMappingException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotScheduleDataRequest" ,e);
-
-			} catch (IOException e) {
-				LogHelper.log(TAG, "Exception in GetNeatoRobotScheduleDataRequest" ,e);
-
-			}
-		}
-		else { 
-			LogHelper.log(TAG, "GetNeatoRobotScheduleDataRequest  not completed.");
-			result = new GetNeatoRobotScheduleDataResult(getNeatoRobotScheduleDataResponse);
-		}
+		result = NeatoWebserviceUtils.readValueHelper(getNeatoRobotScheduleDataResponse, GetNeatoRobotScheduleDataResult.class);
 
 		return result;
 	}
@@ -93,30 +40,9 @@ public class NeatoRobotScheduleWebservicesHelper {
 		Map<String, String> postNeatoRobotScheduleDataReqParams = new HashMap<String, String>();
 		postNeatoRobotScheduleDataReqParams.put(PostNeatoRobotScheduleData.Attribute.SERIAL_NUMBER, serial_number);
 		postNeatoRobotScheduleDataReqParams.put(PostNeatoRobotScheduleData.Attribute.SCHEDULE_TYPE, schedule_type);
-
 		postNeatoRobotScheduleDataReqParams.put(PostNeatoRobotScheduleData.Attribute.XML_DATA, xml_data);
-
 		NeatoHttpResponse postNeatoRobotScheduleDataResponse = NeatoWebserviceHelper.executeHttpPost(context, PostNeatoRobotScheduleData.METHOD_NAME, postNeatoRobotScheduleDataReqParams);
-		if (postNeatoRobotScheduleDataResponse.completed()) { 
-			try {
-				LogHelper.logD(TAG, "Post Schedule data for Neato Robot completed. Reading response");
-				result = resultMapper.readValue(postNeatoRobotScheduleDataResponse.mResponseInputStream, new TypeReference<AddNeatoRobotScheduleDataResult>() {});
-				LogHelper.log(TAG, "Post Schedule data for robot completed.");
-			} catch (JsonParseException e) {
-				LogHelper.log(TAG, "Exception in PostNeatoRobotScheduleDataRequest" ,e);
-
-			} catch (JsonMappingException e) {
-				LogHelper.log(TAG, "Exception in PostNeatoRobotScheduleDataRequest" ,e);
-
-			} catch (IOException e) {
-				LogHelper.log(TAG, "Exception in PostNeatoRobotScheduleDataRequest" ,e);
-
-			}
-		}	else { 
-			LogHelper.log(TAG, "PostNeatoRobotScheduleDataRequest  not completed.");
-			result = new AddNeatoRobotScheduleDataResult(postNeatoRobotScheduleDataResponse);
-		}
-
+		result = NeatoWebserviceUtils.readValueHelper(postNeatoRobotScheduleDataResponse, AddNeatoRobotScheduleDataResult.class);
 		return result;
 	}
 
@@ -127,29 +53,8 @@ public class NeatoRobotScheduleWebservicesHelper {
 		updateNeatoRobotScheduleDataReqParams.put(UpdateNeatoRobotScheduleData.Attribute.SCHEDULE_TYPE, schedule_type);
 		updateNeatoRobotScheduleDataReqParams.put(UpdateNeatoRobotScheduleData.Attribute.XML_DATA_VERSION, xml_data_version);
 		updateNeatoRobotScheduleDataReqParams.put(UpdateNeatoRobotScheduleData.Attribute.XML_DATA, xml_data);
-
 		NeatoHttpResponse updateNeatoRobotScheduleDataResponse = NeatoWebserviceHelper.executeHttpPost(context, UpdateNeatoRobotScheduleData.METHOD_NAME, updateNeatoRobotScheduleDataReqParams);
-		if (updateNeatoRobotScheduleDataResponse.completed()) { 
-			try {
-				LogHelper.logD(TAG, "Update Schedule data for Neato Robot completed. Reading response");
-				result = resultMapper.readValue(updateNeatoRobotScheduleDataResponse.mResponseInputStream, new TypeReference<UpdateNeatoRobotScheduleResult>() {});
-				LogHelper.log(TAG, "Update Schedule data for robot completed.");
-			} catch (JsonParseException e) {
-				LogHelper.log(TAG, "Exception in updateNeatoRobotScheduleDataRequest" ,e);
-
-			} catch (JsonMappingException e) {
-				LogHelper.log(TAG, "Exception in updateNeatoRobotScheduleDataRequest" ,e);
-
-			} catch (IOException e) {
-				LogHelper.log(TAG, "Exception in updateNeatoRobotScheduleDataRequest" ,e);
-
-			}
-		}
-		else { 
-			LogHelper.log(TAG, "updateNeatoRobotScheduleDataRequest  not completed.");
-			result = new UpdateNeatoRobotScheduleResult(updateNeatoRobotScheduleDataResponse);
-		}
-
+		result = NeatoWebserviceUtils.readValueHelper(updateNeatoRobotScheduleDataResponse, UpdateNeatoRobotScheduleResult.class);
 		return result;
 	}
 
@@ -158,31 +63,8 @@ public class NeatoRobotScheduleWebservicesHelper {
 		 	DeleteNeatoRobotScheduleResult result = null;
 			Map<String, String> deleteNeatoRobotScheduleReqParams = new HashMap<String, String>();
 			deleteNeatoRobotScheduleReqParams.put(DeleteNeatoRobotScheduleData.Attribute.ROBOT_SCHEDULE_ID, scheduleId);
-
 			NeatoHttpResponse deleteNeatoRobotScheduleResponse = NeatoWebserviceHelper.executeHttpPost(context, DeleteNeatoRobotScheduleData.METHOD_NAME, deleteNeatoRobotScheduleReqParams);
-			if (deleteNeatoRobotScheduleResponse.completed()) { 
-				try {
-					LogHelper.logD(TAG, "Deleting schedule for Neato Robot completed. Reading response");
-					String json = AppUtils.convertStreamToString(deleteNeatoRobotScheduleResponse.mResponseInputStream);
-					LogHelper.logD(TAG, "JSON = " + json);
-					result = resultMapper.readValue(json, new TypeReference<DeleteNeatoRobotScheduleResult>() {});
-					LogHelper.log(TAG, "Delete schedule for robot completed.");
-				} catch (JsonParseException e) {
-					LogHelper.log(TAG, "Exception in DeleteNeatoRobotSchedule" ,e);
-
-				} catch (JsonMappingException e) {
-					LogHelper.log(TAG, "Exception in DeleteNeatoRobotSchedule" ,e);
-
-				} catch (IOException e) {
-					LogHelper.log(TAG, "Exception in DeleteNeatoRobotSchedule" ,e);
-
-				}
-			}
-			else { 
-				LogHelper.log(TAG, " DeleteNeatoRobotSchedule not completed.");
-				result = new DeleteNeatoRobotScheduleResult(deleteNeatoRobotScheduleResponse);
-			}
-
+			result = NeatoWebserviceUtils.readValueHelper(deleteNeatoRobotScheduleResponse, DeleteNeatoRobotScheduleResult.class);
 			return result;
 		}
 }

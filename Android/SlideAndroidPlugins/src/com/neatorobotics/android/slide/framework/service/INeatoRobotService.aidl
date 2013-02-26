@@ -14,4 +14,6 @@ interface INeatoRobotService
 	void closePeerConnection(in String robotId);
 	void cleanup();
 	void loginToXmpp();
+	void registerRobotNotifications(String robotId);
+	void unregisterRobotNotifications(String robotId);
 }
