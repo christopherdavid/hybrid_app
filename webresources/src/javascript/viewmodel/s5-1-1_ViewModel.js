@@ -1,8 +1,7 @@
-resourceHandler.registerFunction('s5-1-1_ViewModel.js', 's5-1-1_ViewModel', function(parent) {
+resourceHandler.registerFunction('s5-1-1_ViewModel.js', function(parent) {
     console.log('instance created for: s5-1-1_ViewModel');
     var that = this, mcanvas, $editPopup, geoData, gridImage;
 
-    this.id = 's5-1-1_ViewModel';
     this.conditions = {};
 
     this.floorList = ko.observableArray();

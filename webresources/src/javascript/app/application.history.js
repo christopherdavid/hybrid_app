@@ -9,7 +9,7 @@ function WorkflowHistory(parent) {
     
     /**
      * Compares the screenId with the screenId of the last history entry 
-     * @param {string} viewModelId The id of the current view model
+     * @param {string} screenlId The id of the current screen
      * @return {boolean} true if screenId matches otherwise false
      */
     this.compareLastEntry = function(screenlId) {
@@ -17,14 +17,48 @@ function WorkflowHistory(parent) {
             && entries[entries.length -1].screenId == screenlId);
     }
     /**
+     * checks if an entry in history matches the screenId and returns its index
+     * @param {string} screenlId The id of the current screen
+     * 
+     */
+    this.getIndexById = function(screenlId) {
+        for(var i = entries.length - 1; i >= 0; i--) {
+            if(entries[i].screenId == screenlId) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    this.getEntryByIndex = function(index) {
+        var temp = null;
+        // remove all entries after (including) the current one
+        if(entries.length > 0) {
+            temp = entries[index];
+            that.clearTillIndex(index);
+        }
+        return temp;
+    }
+    
+    this.clearTillIndex = function(index) {
+        for(var i = entries.length - 1; i >= index; i--) {
+            if(typeof entries[i].destroy != "undefined") {
+                entries[i].destroy();
+            }
+            delete entries[i];
+        }
+        entries = entries.slice(0, index);
+    }
+    
+    /**
      * Clear the history 
      */
     this.clear = function() {
         for(var i = entries.length - 1; i >= 0; i--) {
             if(typeof entries[i].destroy != "undefined") {
                 entries[i].destroy();
-                delete entries[i]; 
             }
+            delete entries[i];
         }
         entries.length = 0;
     }
@@ -34,6 +68,10 @@ function WorkflowHistory(parent) {
      */
     this.getLastEntry = function() {
         return entries.length > 0  ? entries[entries.length -1] : null;
+    }
+    
+    this.getLastIndex = function() {
+        return entries.length > 0  ? (entries.length -1) : -1;
     }
     
     /**

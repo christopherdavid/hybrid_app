@@ -66,6 +66,8 @@ var ACTION_TYPE_GET_ATLAS_GRID_DATA = "getAtlasGridData";
 var ACTION_TYPE_SET_ROBOT_NAME = "setRobotName";
 var ACTION_TYPE_SET_ROBOT_NAME_2                = "setRobotName2";
 var ACTION_TYPE_GET_ROBOT_DETAIL                = "getRobotDetail";
+var ACTION_TYPE_REGISTER_ROBOT_NOTIFICATIONS    = "registerRobotNotifications";
+var ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS  = "unregisterRobotNotifications";
 //List of keys to send data:
 
 var KEY_EMAIL = 'email';
@@ -94,6 +96,14 @@ var COMMAND_ROBOT_START = 101;
 var COMMAND_ROBOT_STOP = 102;
 var COMMAND_ROBOT_JABBER_DETAILS = 103;
 var COMMAND_SEND_BASE = 104;
+var COMMAND_GET_ROBOT_STATE = 105;
+var COMMAND_SEND_ROBOT_STATE = 106;
+var COMMAND_PAUSE_CLEANING = 107;
+var COMMAND_ENABLE_SCHEDULE = 108;
+var COMMAND_DATA_CHANGED_ON_SERVER = 109;
+var COMMAND_SET_ROBOT_TIME = 110;
+var COMMAND_REGISTER_NOTIFICATIONS = 111;
+var COMMAND_UNREGISTER_NOTIFICATIONS = 112;
 
 var UserPluginManager = ( function() {
         return {
@@ -201,9 +211,11 @@ var UserPluginManager = ( function() {
                 }, 1000);
                 
                 //no robots callback
+                /*
                 window.setTimeout(function() {
                     callbackSuccess([]);
                 }, 5000);
+                */
             },
 
             disassociateRobot : function(email, robotId, callbackSuccess, callbackError) {
@@ -215,13 +227,39 @@ var UserPluginManager = ( function() {
 
             disassociateAllRobots : function(email, callbackSuccess, callbackError) {
                 window.plugins.neatoPluginLayer.userMgr.disassociateAllRobots(email, callbackSuccess, callbackError);
+            },
+            
+            changePassword: function(email, currentPassword, newPassword, callbackSuccess, callbackError) {
+                window.plugins.neatoPluginLayer.userMgr.changePassword(email, currentPassword, newPassword, callbackSuccess, callbackError);
+            }, 
+            
+            forgetPassword: function(email, callbackSuccess, callbackError) {
+                window.plugins.neatoPluginLayer.userMgr.forgetPassword(email, callbackSuccess, callbackError);
             }
+            
         }
     }());
 
 var RobotPluginManager = ( function() {
-	
-		var schedulerEvents = [
+    /* neato example: Mon,Wen,Fri
+    var schedulerEvents = {
+        "schedules":[
+            {"startTime": "10:30", "area":"Kitchen", "eventType":1, "day":[1,2,5], "endTime":"12:30"}
+        ],
+        "scheduleId":"262"
+    }
+    */
+    /* neato example: Only Weekends */
+    var schedulerEvents = {
+        "schedules":[
+            {"startTime": "12:00", "area":"Kitchen", "eventType":1, "day":[6,0], "endTime":"14:00"},
+            {"startTime": "15:00", "area":"Garage", "eventType":1, "day":[6,0], "endTime":"18:00"},
+        ],
+        "scheduleId":"262"
+    }
+    
+       
+        var schedulerEvents_UID = [
 		                       {
 		                    	      "eventType":"cleaning",
 		                    	      "day":4,
@@ -605,8 +643,17 @@ var RobotPluginManager = ( function() {
                         //[{"gridId":"86","gridData":"file:///storage/emulated/0/Android/data/com.neatorobotics.android.slide.phonegap.ui/cache/atlas_data/86_nexus77/grid.xml","atlasId":"86"}]
                         [{"gridId":"86","gridData":"storage/emulated/0/Android/data/com.neatorobotics.android.slide.phonegap.ui/cache/atlas_data/86_nexus77/grid.xml","atlasId":"86"}]
                     );
-                }, 1000);
+                }, 4000);
+            },
+            
+            registerNotifications: function(robotId, callbackSuccess, callbackError) {
+                window.plugins.neatoPluginLayer.robotMgr.registerNotifications(robotId, callbackSuccess, callbackError);
+            },
+            
+            unregisterNotifications: function(robotId, callbackSuccess, callbackError) {
+                window.plugins.neatoPluginLayer.robotMgr.unregisterNotifications(robotId, callbackSuccess, callbackError);
             }
+
         }
     }());
 

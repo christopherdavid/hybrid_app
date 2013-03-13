@@ -1,7 +1,6 @@
-resourceHandler.registerFunction('s0_ViewModel.js', 's0_ViewModel', function(parent) {
+resourceHandler.registerFunction('s0_ViewModel.js', function(parent) {
     console.log('instance created for: s0_ViewModel');
     var that = this;
-    this.id = 's0_ViewModel';
     this.conditions = {};
     this.startAreaControl = null;
     this.robotStateMachine = null;

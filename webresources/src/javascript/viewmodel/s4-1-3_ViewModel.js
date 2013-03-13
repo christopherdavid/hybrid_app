@@ -1,32 +1,28 @@
-resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', function(parent) {
+resourceHandler.registerFunction('s4-1-3_ViewModel.js', function(parent) {
     console.log('instance created for: s4-1-3_ViewModel');
-    var that = this, 
-        mcanvas, $editPopup, geoData, gridImage;
-    
-    this.id = 's4-1-3_ViewModel';
+    var that = this, mcanvas, $editPopup, geoData, gridImage;
+
     this.conditions = {};
-    
+
     this.isList = ko.observable(true);
-    
+
     this.floorList = ko.observableArray();
     this.isFloorListEnabled = ko.observable(false);
     this.selectedFloor = ko.observable();
-   
- 
-    
-    this.rooms = ko.computed(function(){
-        if(typeof that.selectedFloor() != "undefined") {
+
+    this.rooms = ko.computed(function() {
+        if ( typeof that.selectedFloor() != "undefined") {
             return geoData[that.selectedFloor()].rooms;
         } else {
             return [];
         }
-    },this);
+    }, this);
     this.selectedRooms = ko.observableArray([]);
-    
-    this.isNextEnabled = ko.computed(function(){
-    	return that.selectedRooms().length > 0;
-    },this);
-    
+
+    this.isNextEnabled = ko.computed(function() {
+        return that.selectedRooms().length > 0;
+    }, this);
+
     this.selectedMode = ko.observable();
     this.cleaningModeList = ko.observableArray([{
         "text" : "normal",
@@ -35,7 +31,7 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
         "text" : "eco",
         "id" : "1"
     }]);
-    this.isModeEnabled = ko.computed(function(){
+    this.isModeEnabled = ko.computed(function() {
         return (that.selectedRooms().length > 0);
     }, this);
 
@@ -44,17 +40,17 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
         mcanvas = new MapCanvas(this);
         mcanvas.setState(mcanvas.STATES.AREA);
         mcanvas.init("canvasView");
-        
+
         $(mcanvas).on("areaSelected", function(event, rooms) {
             console.log("event triggered " + event + " rooms " + rooms);
             that.selectedRooms(rooms);
         });
-        
+
         // load the geography
         parent.communicationWrapper.exec(RobotPluginManager.getRobotAtlasMetadata, [parent.communicationWrapper.dataValues["activeRobot"].robotId], that.atlasSuccess, that.atlasError);
-        
-        if(!that.bundle.events || !that.bundle.oldEvents){
-        	parent.showError('bundle has no events or no oldEvents!!!');
+
+        if (!that.bundle.events || !that.bundle.oldEvents) {
+            parent.showError('bundle has no events or no oldEvents!!!');
         }
     }
 
@@ -64,79 +60,81 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
     }
 
     this.deinit = function() {
-    	mcanvas.deinit();
-    	mcanvas = null;
+        mcanvas.deinit();
+        mcanvas = null;
     }
     /* </enviroment functions> */
-   
+
     /* <map data functions> */
-   // register to selection change
+    // register to selection change
     this.selectedFloor.subscribe(function(newValue) {
         console.log("selected floor id: " + newValue);
-        if(typeof newValue != "undefined" && newValue) {
+        if ( typeof newValue != "undefined" && newValue) {
             parent.communicationWrapper.storeDataValue("selectedFloor", newValue);
             //mcanvas.setGeoData(jQuery.extend(true, {}, geoData[newValue]));
             mcanvas.setGeoData(geoData[newValue]);
-            if(gridImage[geoData[newValue].gridId]) {
+            if (gridImage[geoData[newValue].gridId]) {
                 mcanvas.setGridImage(gridImage[geoData[newValue].gridId]);
             }
         }
     });
-    
+
     this.atlasSuccess = function(result) {
         console.log("atlas received: " + JSON.stringify(result));
         geoData = {};
-        gridImage= {};
-        
+        gridImage = {};
+
         for (var i = 0, max = result[0].atlasMetadata.geographies.length; i < max; i++) {
-            that.floorList.push({"text":result[0].atlasMetadata.geographies[i].name, "id":result[i].atlasMetadata.geographies[i].id});
+            that.floorList.push({
+                "text" : result[0].atlasMetadata.geographies[i].name,
+                "id" : result[i].atlasMetadata.geographies[i].id
+            });
             // TODO: temorary add gridId
             result[i].atlasMetadata.geographies[i].gridId = "86";
             var id = result[i].atlasMetadata.geographies[i].id;
             geoData[id] = result[i].atlasMetadata.geographies[i];
-            
+
             //on edit only
-            //add reference of the room into selectedRooms if the room is in the loaded event  
-            if(that.bundle.oldEvents.length > 0){
-	            $.each(geoData[id].rooms, function(index, room){
-	            	$.each(that.bundle.oldEvents[0].rooms,function(index, loadedRoom){
-	            		if(loadedRoom){
-		            		if(loadedRoom.id == room.id){
-		            			//push reference
-		            			that.selectedRooms.push(room);
-		            		}
-	            		}
-	            	});
-	            });
+            //add reference of the room into selectedRooms if the room is in the loaded event
+            if (that.bundle.oldEvents.length > 0) {
+                $.each(geoData[id].rooms, function(index, room) {
+                    $.each(that.bundle.oldEvents[0].rooms, function(index, loadedRoom) {
+                        if (loadedRoom) {
+                            if (loadedRoom.id == room.id) {
+                                //push reference
+                                that.selectedRooms.push(room);
+                            }
+                        }
+                    });
+                });
             }
-            
+
             var fetchMap = $.i18n.t('communication.fetch_map');
-            
+
             // load grid image
             parent.communicationWrapper.exec(RobotPluginManager.getAtlasGridData, [parent.communicationWrapper.dataValues["activeRobot"].robotId, ""], that.gridSuccess, that.gridError, {
                 type : notificationType.OPERATION,
                 message : fetchMap,
                 callback : null
             });
-            
-            
+
         }
         //console.log("that.floorList.length " + that.floorList.length)
         // if there is just one floor or there was a previous selected floor, than select it
-        if(that.floorList().length == 1) {
+        if (that.floorList().length == 1) {
             that.selectedFloor(that.floorList()[0].id);
         } else if (parent.communicationWrapper.dataValues["selectedFloor"] && geoData[parent.communicationWrapper.dataValues["selectedFloor"]]) {
             that.selectedFloor(parent.communicationWrapper.dataValues["selectedFloor"]);
         }
-        
+
         // just enable the selection list if there is more than one entry
-        if(that.floorList().length > 1) {
+        if (that.floorList().length > 1) {
             that.isFloorListEnabled(true);
         }
     }
-    
+
     this.atlasError = function(error) {
-    	
+
         console.log(error.message);
     }
     this.gridSuccess = function(result) {
@@ -144,8 +142,8 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
         //gridImage[result[0].gridId] = result[0].gridData;
         // TODO: temorary set gridId so that it maps to atlas
         gridImage["86"] = result[0].gridData;
-        if(parent.communicationWrapper.dataValues["selectedFloor"] && geoData[parent.communicationWrapper.dataValues["selectedFloor"]]) {
-            if(geoData[parent.communicationWrapper.dataValues["selectedFloor"]].gridId = result[0].gridId) {
+        if (parent.communicationWrapper.dataValues["selectedFloor"] && geoData[parent.communicationWrapper.dataValues["selectedFloor"]]) {
+            if (geoData[parent.communicationWrapper.dataValues["selectedFloor"]].gridId = result[0].gridId) {
                 mcanvas.setGridImage(result[0].gridData);
             }
         }
@@ -162,32 +160,34 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
     };
 
     this.next = function() {
-    	
-    	var rooms = new Array(that.selectedRooms().length);			
-    	
-		ko.utils.arrayForEach(that.selectedRooms(), function(item) {
-			rooms.push(item);
-		});
-		
-		for ( var i = 0; i < that.bundle.events.length; i++) {
-			that.bundle.events[i].rooms = rooms;
-		}
-    	
+
+        var rooms = new Array(that.selectedRooms().length);
+
+        ko.utils.arrayForEach(that.selectedRooms(), function(item) {
+            rooms.push(item);
+        });
+
+        for (var i = 0; i < that.bundle.events.length; i++) {
+            that.bundle.events[i].rooms = rooms;
+        }
+
         that.conditions['next'] = true;
-        
-        
-      //remove old events and add the new ones
-		parent.communicationWrapper.exec(RobotPluginManager.removeEvent, ['robotId', 'advanced', that.bundle.oldEvents], function(success) {
-			parent.communicationWrapper.exec(RobotPluginManager.addEvent, ['robotId', 'advanced', that.bundle.events], function(success) {
-				parent.flowNavigator.next();
-			}, function(error) {
-				parent.showError(error);
-			});
-		}, function(error) {
-			parent.showError(error);
-		});
-        
-        
+
+        parent.flowNavigator.next();
+
+        //remove old events and add the new ones
+        /* temporary disabled
+         parent.communicationWrapper.exec(RobotPluginManager.removeEvent, ['robotId', 'advanced', that.bundle.oldEvents], function(success) {
+         parent.communicationWrapper.exec(RobotPluginManager.addEvent, ['robotId', 'advanced', that.bundle.events], function(success) {
+         parent.flowNavigator.next();
+         }, function(error) {
+         parent.showError(error);
+         });
+         }, function(error) {
+         parent.showError(error);
+         });
+         */
+
     };
     /* </actionbar functions> */
 
@@ -199,15 +199,15 @@ resourceHandler.registerFunction('s4-1-3_ViewModel.js', 's4-1-3_ViewModel', func
         that.isList(false);
         mcanvas.updateRooms(that.selectedRooms());
     }
-    
+
     this.selectRoom = function(item, event) {
         var tempIndex = that.selectedRooms.indexOf(item);
-        if(tempIndex == -1) {
-        	that.selectedRooms.push(item);
+        if (tempIndex == -1) {
+            that.selectedRooms.push(item);
         } else {
-        	that.selectedRooms.remove(item);
+            that.selectedRooms.remove(item);
         }
-        console.log("item " + JSON.stringify(item) + "\nselectedRooms " + JSON.stringify(that.selectedRooms()) );
+        console.log("item " + JSON.stringify(item) + "\nselectedRooms " + JSON.stringify(that.selectedRooms()));
     }
 })
-console.log('loaded file: s4-1-1_ViewModel.js'); 
+console.log('loaded file: s4-1-1_ViewModel.js');

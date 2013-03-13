@@ -1,19 +1,3 @@
-//TODO: move into utilities
-/**
- * isPointInPoly checks if a polygon contains an specified point
- * @param {Array} array with point objects, each point must have the properties
- *                x and y
- * @param {Object} point object which must have the properties x and y
- * @return {Boolean} return true if polygon contains the point
- */
-function isPointInPoly(poly, pt) {
-    var c = false;
-    for (var i = -1, l = poly.length, j = l - 1; ++i < l; j = i) {
-        ((poly[i].y <= pt.y && pt.y < poly[j].y) || (poly[j].y <= pt.y && pt.y < poly[i].y)) && (pt.x < (poly[j].x - poly[i].x) * (pt.y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x) && ( c = !c)
-    }
-    return c;
-}
-
 /**
  * MapCanvas is the class for the map view which contains also a canvas layer
  * @class Represents the MapCanvas control

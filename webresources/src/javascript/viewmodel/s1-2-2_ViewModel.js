@@ -1,7 +1,6 @@
-resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', function(parent) {
+resourceHandler.registerFunction('s1-2-2_ViewModel.js', function(parent) {
     console.log('instance created for: s1-2-2_ViewModel');
     var that = this;
-    this.id = 's1-2-2_ViewModel';
     this.title = ko.observable();
     this.conditions = {};
     this.backConditions = {};
@@ -119,10 +118,16 @@ resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', func
         }        
     };
     
-    this.updateButtons = function(){
+    this.updateButtons = function(isRefresh){
         if (that.bundle){
             that.isDeleteVisible(that.bundle == robotScreenCaller.MANAGE && that.robots().length > 0);
-            that.isBackVisible((that.bundle == robotScreenCaller.CHANGE || that.bundle == robotScreenCaller.MANAGE) && that.robots().length > 0);
+            
+            if (isRefresh){
+                that.isBackVisible((that.bundle == robotScreenCaller.CHANGE || that.bundle == robotScreenCaller.MANAGE) && that.robots().length > 0);    
+            }
+            else{
+                that.isBackVisible((that.bundle == robotScreenCaller.CHANGE || that.bundle == robotScreenCaller.MANAGE));
+            }            
         }
     };
     
@@ -168,7 +173,7 @@ resourceHandler.registerFunction('s1-2-2_ViewModel.js', 's1-2-2_ViewModel', func
         that.robots(ko.mapping.fromJS(result)());
         
     	that.updateScreenTitle();
-        that.updateButtons();
+        that.updateButtons(true);
     };  
 
     this.errorGetAssociatedRobots = function(error) {

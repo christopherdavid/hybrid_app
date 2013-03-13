@@ -34,11 +34,14 @@ $.widget("ui.resizable", $.ui.mouse, {
 		maxWidth: null,
 		minHeight: 10,
 		minWidth: 10,
-		zIndex: 1000
+		zIndex: 1000,
+		scale:1
+	},
+	setScale:function(newScale) {
+	    this.options.scale = newScale;
 	},
 	_create: function() {
-
-		var that = this, o = this.options;
+        var that = this, o = this.options;
 		this.element.addClass("ui-resizable");
 
 		$.extend(this, {
@@ -240,7 +243,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 		// bugfix for http://dev.jquery.com/ticket/1749
 		if (el.is('.ui-draggable') || (/absolute/).test(el.css('position'))) {
-			el.css({ position: 'absolute', top: iniPos.top, left: iniPos.left });
+			el.css({ position: 'absolute', top: iniPos.top/o.scale, left: iniPos.left/o.scale });
 		}
 
 		this._renderProxy();
@@ -273,15 +276,14 @@ $.widget("ui.resizable", $.ui.mouse, {
 	},
 
 	_mouseDrag: function(event) {
-
-		//Increase performance, avoid regex
+        //Increase performance, avoid regex
 		var el = this.helper, o = this.options, props = {},
 			that = this, smp = this.originalMousePosition, a = this.axis;
 
-		var dx = (event.pageX-smp.left)||0, dy = (event.pageY-smp.top)||0;
+		var dx = Math.round((event.pageX-smp.left)/o.scale)||0, dy = Math.round((event.pageY-smp.top)/o.scale)||0;
 		var trigger = this._change[a];
 		if (!trigger) return false;
-
+		
 		// Calculate the attrs that will be change
 		var data = trigger.apply(this, [event, dx, dy]);
 
@@ -294,7 +296,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 		// plugins callbacks need to be called first
 		this._propagate("resize", event);
-
+        
 		el.css({
 			top: this.position.top + "px", left: this.position.left + "px",
 			width: this.size.width + "px", height: this.size.height + "px"
@@ -307,7 +309,6 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 		// calling the user callback at the end
 		this._trigger('resize', event, this.ui());
-
 		return false;
 	},
 

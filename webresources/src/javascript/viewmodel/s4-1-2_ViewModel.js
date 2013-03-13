@@ -1,8 +1,7 @@
-resourceHandler.registerFunction('s4-1-2_ViewModel.js', 's4-1-2_ViewModel',
+resourceHandler.registerFunction('s4-1-2_ViewModel.js', 
 		function(parent) {
 			console.log('instance created for: s4-1-2_ViewModel');
 			var that = this;
-			this.id = 's4-1-2_ViewModel';
 			this.conditions = {};
 			
 			this.cleaningDays = ko.observableArray([]);
