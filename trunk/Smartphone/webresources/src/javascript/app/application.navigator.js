@@ -5,7 +5,7 @@
  * @param {object} parent Reference to the parent workflow object.
  * @param {object} parent Reference to the parent dataTemplate object.
  */
-function WorkflowNavigator(parent, workflow, dataTemplate) {
+function WorkflowNavigator(parent, workflow) {
     console.log('create WorkflowNavigator instance')
     var that = this;
     var currentScreen = {
@@ -85,7 +85,16 @@ function WorkflowNavigator(parent, workflow, dataTemplate) {
         if(parent.viewModel.backConditions) {
             var tempScreenId = getNextValidScreenId("backConditions");
             if (tempScreenId != null) {
-                that.loadScreen(tempScreenId, typeof bundle != "undefined" ? bundle : null);
+                // check if history contains an entry with the screenId
+                var historyIndex = parent.history.getIndexById(tempScreenId);
+                if(historyIndex > -1) {
+                    // disable history for current screen
+                    currentScreen.storeInHistory = false;
+                    // navigate
+                    that.loadScreenFromHistory(historyIndex, typeof bundle != "undefined" ? bundle : null);
+                } else {
+                    that.loadScreen(tempScreenId, typeof bundle != "undefined" ? bundle : null);
+                }
             } else {
                 defaultBack();
             }
@@ -97,12 +106,10 @@ function WorkflowNavigator(parent, workflow, dataTemplate) {
         if (parent.history.getLastEntry() != null) {
             // disable history for current screen
             currentScreen.storeInHistory = false;
-            // get last screen values (store strings to prevent object reference)
-            var tempScreenId = parent.history.getLastEntry().screenId;
-            // always true because it comes from history
-            var tempScreenHistory = true;
+            // get last screen history index
+            var historyIndex = parent.history.getLastIndex();
             // navigate
-            that.loadScreen(tempScreenId,null, tempScreenHistory);
+            that.loadScreenFromHistory(historyIndex, typeof bundle != "undefined" ? bundle : null);
         } else {
             that.exit();
         }
@@ -124,6 +131,29 @@ function WorkflowNavigator(parent, workflow, dataTemplate) {
             navigator.app.exitApp();
         }
     }
+    this.loadScreenFromHistory = function(historyIndex, bundle) {
+        console.log('WorkflowNavigator.loadScreenFromHistory(' + historyIndex + ')');
+         // always true because it comes from history
+        storeInHistory = true;
+        
+        that.unloadScreen();
+        
+        // get view model from history
+        var tempViewModel = parent.history.getEntryByIndex(historyIndex);
+        
+        if(typeof workflow[tempViewModel.screenId].clearHistory != "undefined" && workflow[tempViewModel.screenId].clearHistory === true) {
+            // clear history
+            parent.history.clear();
+        }
+        
+        parent.loadViewModelFromHistory(tempViewModel, bundle, function() {
+            parent.loadView(tempViewModel.screenId);
+        });
+        currentScreen.id = tempViewModel.screenId;
+        currentScreen.storeInHistory = storeInHistory;
+    }
+    
+    
     /**
      * loads a screen according to it's screenId
      * @param {string} screenId The id of the current screen which should be
@@ -135,15 +165,25 @@ function WorkflowNavigator(parent, workflow, dataTemplate) {
     this.loadScreen = function(screenId, bundle, storeInHistory) {
         console.log('WorkflowNavigator.loadScreen(' + screenId + ',' + storeInHistory + ')');
         storeInHistory = typeof storeInHistory != 'undefined' ? storeInHistory : true;
-        if (dataTemplate[screenId] && workflow[screenId]) {
+        // check if target page exists
+        if (workflow[screenId]) {
             that.unloadScreen();
             if(typeof workflow[screenId].clearHistory != "undefined" && workflow[screenId].clearHistory === true) {
                 // clear history
                 parent.history.clear();
+            } else if(typeof workflow[screenId].clearHistoryAfter != "undefined" && workflow[screenId].clearHistoryAfter === true) {
+                // check if history contains an entry with the screenId
+                var historyIndex = parent.history.getIndexById(screenId);
+                if(historyIndex > -1) {
+                    // remove all history entries
+                    parent.history.clearTillIndex(historyIndex);
+                }
             }
-            console.log('screenId found in dataTemplate and workflow');
-            parent.loadViewModel(dataTemplate[screenId].model, screenId, bundle, function() {
-                parent.loadView(dataTemplate[screenId].view);
+            
+            
+            console.log('screenId found in workflow');
+            parent.loadViewModel(screenId, bundle, function() {
+                parent.loadView(screenId);
             });
             currentScreen.id = screenId;
             currentScreen.storeInHistory = storeInHistory;

@@ -4,7 +4,7 @@
  * @class Represents the main application
  */
 function Application() {
-    var that = this, workflow, dataTemplate, pageLoadedDeferred, config;
+    var that = this, workflow, pageLoadedDeferred, config;
     this.viewModel = {
         id : 'empty'
     };
@@ -100,9 +100,9 @@ function Application() {
      * @param {string}
      *            fileName The filename which should be loaded
      */
-    this.loadView = function(fileName) {
-        console.log('loadView ' + fileName);
-        $.mobile.changePage(fileName, {
+    this.loadView = function(screenId) {
+        console.log('loadView ' + screenId);
+        $.mobile.changePage((screenId + ".html"), {
             transition : that.config.pageTransition
         });
     }
@@ -119,32 +119,27 @@ function Application() {
      *            fncCallback Callback method which should be called after the
      *            view model has been loaded.
      */
-    this.loadViewModel = function(modelId, screenId, bundle, fncCallback) {
-        console.log('loadViewModel ' + modelId);
-        // check if view model for this screen is stored in history
-        // otherwise load it
-        if (that.history.compareLastEntry(screenId)) {
-            console.log('use view model from workflow history');
-            that.viewModel = that.history.pop();
+    this.loadViewModel = function(screenId, bundle, fncCallback) {
+        console.log('loadViewModel ' + screenId + '_ViewModel');
+        resourceHandler.loadJS((screenId + '_ViewModel.js'), function() {
+            console.log('create new view model ' + screenId + '_ViewModel');
+            that.viewModel = new resourceHandler.ressources[screenId + '_ViewModel.js'].func(that);
             fncCallback();
-            if ( typeof that.viewModel.reload != "undefined") {
-                that.viewModel.reload();
-            }
-            // maybe the language has changed since that, so reassign it
+            // add screenId to view model (needed for history)
+            that.viewModel.screenId = screenId;
             that.viewModel.language = that.language;
-        } else {
-            resourceHandler.loadJS((modelId + '.js'), function() {
-                console.log('create new view model');
-                that.viewModel = new resourceHandler.ressources[modelId
-                + '.js'].func[modelId](that);
-                console.log('new view model ' + that.viewModel.id)
-                fncCallback();
-                // add screenId to view model (needed for history)
-                that.viewModel.screenId = screenId;
-                that.viewModel.language = that.language;
-                that.viewModel.bundle = bundle;
-            });
+            that.viewModel.bundle = bundle;
+        });
+    }
+    this.loadViewModelFromHistory = function(tempViewModel, bundle,fncCallback) {
+        console.log('loadViewModelFromHistory ' + JSON.stringify(tempViewModel));
+        that.viewModel = tempViewModel;
+        fncCallback();
+        if ( typeof that.viewModel.reload != "undefined") {
+            that.viewModel.reload();
         }
+        // maybe the language has changed since that, so reassign it
+        that.viewModel.language = that.language;
     }
     /**
      * Removes the view model
@@ -153,6 +148,8 @@ function Application() {
         if ( typeof that.viewModel.deinit != "undefined") {
             that.viewModel.deinit();
         }
+        // clear callbacks in communication wrapper 
+        that.communicationWrapper.callbacks = {};
         that.viewModel = null;
     }
     /**
@@ -165,11 +162,10 @@ function Application() {
      * </ul>
      */
     this.init = function() {
-        dataTemplate = that.loadDataTemplate();
         workflow = that.loadWorkflow();
 
         that.history = new WorkflowHistory(that);
-        that.flowNavigator = new WorkflowNavigator(that, workflow, dataTemplate);
+        that.flowNavigator = new WorkflowNavigator(that, workflow);
         that.communicationWrapper = new WorkflowCommunication(that);
         // that.flowNotification = new WorkflowNotification(that);
         // that.changeLanguage('de-de', function() { loadFirstPage(); });
@@ -294,10 +290,6 @@ function Application() {
 
 Application.prototype.loadWorkflow = function() {
     // console.log('called empty loadWorkflow');
-    return {}
-};
-Application.prototype.loadDataTemplate = function() {
-    // console.log('called empty loadDataTemplate');
     return {}
 };
 

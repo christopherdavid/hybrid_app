@@ -58,11 +58,10 @@ var resourceHandler = {
             callback = null;
         }
     },
-    registerFunction : function(src, functionName, functionObject) {
+    registerFunction : function(src, functionObject) {
         //console.log('registerFunction');
-        if (resourceHandler.ressources[src]) {
-            resourceHandler.ressources[src].func[functionName] = functionObject;
-            //resourceHandler.func[functionName] = resourceHandler.ressources[src].fnc[functionName];
+        if (resourceHandler.ressources[src]) {            
+            resourceHandler.ressources[src].func = functionObject;
 
             /* temporary removed unload call
              if(resourceHandler.posFile.length > resourceHandler.maxEntries) {

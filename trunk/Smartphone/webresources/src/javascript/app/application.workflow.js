@@ -207,7 +207,8 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "editEvent",
                     "value" : true
                 }]
-            }]
+            }],
+            clearHistoryAfter:true
         },
         "s4-1-2" : {
             navrules : [{

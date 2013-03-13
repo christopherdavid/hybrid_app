@@ -1,7 +1,6 @@
-resourceHandler.registerFunction('s1-2-4_ViewModel.js', 's1-2-4_ViewModel', function(parent) {
+resourceHandler.registerFunction('s1-2-4_ViewModel.js', function(parent) {
     console.log('instance created for: s1-2-4_ViewModel');
     var that = this;
-    this.id = 's1-2-4_ViewModel';
     this.conditions = {};
     this.robotName = ko.observable('');
     

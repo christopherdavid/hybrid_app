@@ -1,11 +1,10 @@
-resourceHandler.registerFunction('test_ViewModel.js', 'test_ViewModel', function(parent) {
+resourceHandler.registerFunction('test_ViewModel.js', function(parent) {
     console.log('instance created for: test_ViewModel');
     var that = this;
-    this.id = 'test_ViewModel';
     this.conditions = {};
     
     this.selectedTest =  ko.observable();
-    this.testList = ko.observableArray(["user","robot", "map", "scheduler", "canvas"]);
+    this.testList = ko.observableArray(["core","user","robot", "map", "scheduler", "canvas"]);
     
     var geoData = {"geographies" : [{
                     "id" : "0",
@@ -65,6 +64,12 @@ resourceHandler.registerFunction('test_ViewModel.js', 'test_ViewModel', function
             };
                             
     this.testScenario = {
+        "core":[
+            {label:"send 1",exe:function(){parent.communicationWrapper.exec(UserPluginManager.login, ['doh@nos.com', '1234567'], that.callbackSuccess, that.callbackError);}},
+            {label:"send 2",exe:function(){parent.communicationWrapper.exec(UserPluginManager.login, ['mrX@ade.com', '954244'], that.callbackSuccess, that.callbackError);}},
+            {label:"clear callbacks",exe:function(){ parent.communicationWrapper.callbacks = {};}}
+        ],
+        
         "user":[
             // login failed, unknown user
             {label:"login unknown user",exe:function(){UserPluginManager.login("doh@no.com","1234567", that.callbackSuccess, that.callbackError);}},
