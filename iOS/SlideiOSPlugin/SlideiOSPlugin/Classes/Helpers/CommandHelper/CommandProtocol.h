@@ -10,5 +10,6 @@
 - (id)stopRobotCommand2WithParams:(NSDictionary *)params andRequestId:(NSString *)requestId;
 - (id)pauseRobotCommandWithParams:(NSDictionary *)params andRequestId:(NSString *)requestId;
 - (id)setRobotTimeCommandWithParams:(NSDictionary *)params andRequestId:(NSString *)requestId;
-
+- (id)enableDisableScheduleCommandWithParams:(NSDictionary *)params andRequestId:(NSString *)requestId;
+- (id)sendToBaseCommandWithParams:(NSDictionary *)params andRequestId:(NSString *)requestId;
 @end

@@ -10,10 +10,12 @@
 #import "XMPPConnectionHelper.h"
 #import "XMPPCommandHelper.h"
 
-#define START_ROBOT_COMMAND_TAG     1001
-#define STOP_ROBOT_COMMAND_TAG      1002
-#define SET_TIME_ROBOT_COMMAND_TAG  1003
-#define PAUSE_ROBOT_COMMAND_TAG     1004
+#define START_ROBOT_COMMAND_TAG                 1001
+#define STOP_ROBOT_COMMAND_TAG                  1002
+#define SET_TIME_ROBOT_COMMAND_TAG              1003
+#define PAUSE_ROBOT_COMMAND_TAG                 1004
+#define ENABLE_DISABLE_SCHEDULE_COMMAND_TAG     1005
+#define SEND_TO_BASE_COMMAND_TAG                1006
 
 @interface RobotCommandHelper()
 
@@ -24,6 +26,8 @@
 - (void)sendStopCleaningTo:(NSString *)robotId withParams:(NSDictionary *)params delegate:(id)delegate;
 - (void)sendPauseCleaningTo:(NSString *)robotId withParams:(NSDictionary *)params delegate:(id)delegate;
 - (void)sendSetRobotTimeTo:(NSString *)robotId withParams:(NSDictionary *)params delegate:(id)delegate;
+- (void)sendEnableDisableScheduleTo:(NSString *)robotId withParams:(NSDictionary *)params delegate:(id)delegate;
+- (void)sendToBaseRobotWithId:(NSString *)robotId params:(NSDictionary *)params delegate:(id)delegate;
 - (NSMutableData *)tcpCommandHeaderForCommand:(NSData *)command;
 - (NSData *)formattedTCPCommandFromCommand:(NSData *)command;
 @end
@@ -49,10 +53,14 @@
         case COMMAND_SET_ROBOT_TIME:
             [self sendSetRobotTimeTo:robotId withParams:params delegate:delegate];
             break;
+        case COMMAND_ENABLE_DISABLE_SCHEDULE:
+            [self sendEnableDisableScheduleTo:robotId withParams:params delegate:delegate];
+            break;
+        case COMMAND_SEND_TO_BASE:
+            [self sendToBaseRobotWithId:robotId params:params delegate:delegate];
+            break;
         default:
-            [self failedToSendCommandOverTCPWithError:[AppHelper nserrorWithDescription:[NSString stringWithFormat:@"Command ID %d not supported!", [commandId intValue]] code:200]];
-            self.retainedSelf = nil;
-            self.delegate = nil;
+            [self failedToSendCommandOverTCPWithError:[AppHelper nserrorWithDescription:[NSString stringWithFormat:@"Command ID %d not supported!", [commandId intValue]] code:200]];        
             break;
     }
 }
@@ -170,6 +178,57 @@
         XMPPConnectionHelper *xmppHelper = [[XMPPConnectionHelper alloc] init];
         xmppHelper.delegate = self;
         [xmppHelper sendCommandToRobot:robot.chatId command:[[[XMPPCommandHelper alloc] init] setRobotTimeCommandWithParams:params andRequestId:requestId] withTag:SET_TIME_ROBOT_COMMAND_TAG];
+    }
+}
+
+- (void)sendEnableDisableScheduleTo:(NSString *)robotId withParams:(NSDictionary *)params delegate:(id)delegate {
+    // Value of "enableSchedule" key is boolean, server needs "true" or "false" string.
+    NSMutableDictionary *updatedParams = [params mutableCopy];
+    if([updatedParams objectForKey:@"enableSchedule"]) {
+        NSNumber *value = [updatedParams objectForKey:@"enableSchedule"];
+        if([value boolValue] == YES) {
+            [updatedParams setObject:@"true" forKey:@"enableSchedule"];
+        }
+        else {
+            [updatedParams setObject:@"false" forKey:@"enableSchedule"];
+        }
+    }
+    TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
+    NSString *requestId = [AppHelper generateUniqueString];
+    if ([helper isConnected]) {
+        NSData *command = [[[TCPCommandHelper alloc] init] enableDisableScheduleCommandWithParams:updatedParams andRequestId:requestId];
+        [helper sendCommandToRobot2:[self formattedTCPCommandFromCommand:command] withTag:ENABLE_DISABLE_SCHEDULE_COMMAND_TAG requestId:requestId delegate:self];
+    }
+    else {
+        NeatoRobot *robot = [NeatoRobotHelper getRobotForId:robotId];
+        if (robot == nil) {
+            debugLog(@"WHOA! No robot found with id = %@ in the local storage. Maybe the robot is not associated with the user. Will not send XMPP command to the robot.", robotId);
+            [self failedToSendCommandOverTCPWithError:[AppHelper nserrorWithDescription:[NSString stringWithFormat:@"No robot found with id = %@ in the local storage", robotId] code:200]];
+            return;
+        }
+        XMPPConnectionHelper *xmppHelper = [[XMPPConnectionHelper alloc] init];
+        xmppHelper.delegate = self;
+        [xmppHelper sendCommandToRobot:robot.chatId command:[[[XMPPCommandHelper alloc] init] enableDisableScheduleCommandWithParams:updatedParams andRequestId:requestId] withTag:ENABLE_DISABLE_SCHEDULE_COMMAND_TAG];
+    }
+}
+
+- (void)sendToBaseRobotWithId:(NSString *)robotId params:(NSDictionary *)params delegate:(id)delegate {
+    TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
+    NSString *requestId = [AppHelper generateUniqueString];
+    if ([helper isConnected]) {
+        NSData *command = [[[TCPCommandHelper alloc] init] sendToBaseCommandWithParams:params andRequestId:requestId];
+        [helper sendCommandToRobot2:[self formattedTCPCommandFromCommand:command] withTag:SEND_TO_BASE_COMMAND_TAG requestId:requestId delegate:self];
+    }
+    else {
+        NeatoRobot *robot = [NeatoRobotHelper getRobotForId:robotId];
+        if (robot == nil) {
+            debugLog(@"WHOA! No robot found with id = %@ in the local storage. Maybe the robot is not associated with the user. Will not send XMPP command to the robot.", robotId);
+            [self failedToSendCommandOverTCPWithError:[AppHelper nserrorWithDescription:[NSString stringWithFormat:@"No robot found with id = %@ in the local storage", robotId] code:200]];
+            return;
+        }
+        XMPPConnectionHelper *xmppHelper = [[XMPPConnectionHelper alloc] init];
+        xmppHelper.delegate = self;
+        [xmppHelper sendCommandToRobot:robot.chatId command:[[[XMPPCommandHelper alloc] init] sendToBaseCommandWithParams:params andRequestId:requestId] withTag:SEND_TO_BASE_COMMAND_TAG];
     }
 }
 

@@ -1,12 +1,64 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="11G63b" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="CommandTrackerEntity" syncable="YES">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="12C2034" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="BasicScheduleEventEntity" representedClassName="BasicScheduleEventEntity" syncable="YES">
+        <attribute name="scheduleEventId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="xmlData" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="ofScheduleEvent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="ScheduleEventsEntity" inverseName="hasBasicScheduleEvents" inverseEntity="ScheduleEventsEntity" syncable="YES"/>
+    </entity>
+    <entity name="CommandTrackerEntity" representedClassName="CommandTrackerEntity" syncable="YES">
         <attribute name="commandType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="creationTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="requestId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="xmlCommand" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="NeatoRobotEntity" representedClassName="NeatoRobotEntity" syncable="YES">
+        <attribute name="chatId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ipAddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="port" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="robotId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serialNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="hasSchedule" optional="YES" toMany="YES" maxCount="2" deletionRule="Cascade" destinationEntity="ScheduleEntity" inverseName="ofRobot" inverseEntity="ScheduleEntity" syncable="YES"/>
+        <relationship name="hasUsers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NeatoUserEntity" inverseName="hasRobots" inverseEntity="NeatoUserEntity" syncable="YES"/>
+    </entity>
+    <entity name="NeatoSocialNetworksEntity" representedClassName="NeatoSocialNetworksEntity" syncable="YES">
+        <attribute name="externalSocialId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="provider" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="socialNetworkOfUser" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="NeatoUserEntity" inverseName="hasSocialNetowrks" inverseEntity="NeatoUserEntity" syncable="YES"/>
+    </entity>
+    <entity name="NeatoUserEntity" representedClassName="NeatoUserEntity" syncable="YES">
+        <attribute name="account_type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="chatId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="chatPassword" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="external_social_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="hasRobots" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NeatoRobotEntity" inverseName="hasUsers" inverseEntity="NeatoRobotEntity" syncable="YES"/>
+        <relationship name="hasSocialNetowrks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NeatoSocialNetworksEntity" inverseName="socialNetworkOfUser" inverseEntity="NeatoSocialNetworksEntity" syncable="YES"/>
+    </entity>
+    <entity name="ScheduleEntity" representedClassName="ScheduleEntity" syncable="YES">
+        <attribute name="scheduleId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="scheduleType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="server_scheduleId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="xml_data_version" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="hasScheduleEvent" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="ScheduleEventsEntity" inverseName="ofSchedule" inverseEntity="ScheduleEventsEntity" syncable="YES"/>
+        <relationship name="ofRobot" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="NeatoRobotEntity" inverseName="hasSchedule" inverseEntity="NeatoRobotEntity" syncable="YES"/>
+    </entity>
+    <entity name="ScheduleEventsEntity" representedClassName="ScheduleEventsEntity" syncable="YES">
+        <relationship name="hasBasicScheduleEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="BasicScheduleEventEntity" inverseName="ofScheduleEvent" inverseEntity="BasicScheduleEventEntity" syncable="YES"/>
+        <relationship name="ofSchedule" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="ScheduleEntity" inverseName="hasScheduleEvent" inverseEntity="ScheduleEntity" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="CommandTrackerEntity" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="BasicScheduleEventEntity" positionX="-261" positionY="81" width="128" height="88"/>
+        <element name="CommandTrackerEntity" positionX="-999" positionY="-49" width="128" height="103"/>
+        <element name="NeatoRobotEntity" positionX="-1008" positionY="180" width="128" height="178"/>
+        <element name="NeatoSocialNetworksEntity" positionX="-929" positionY="491" width="128" height="103"/>
+        <element name="NeatoUserEntity" positionX="-1233" positionY="216" width="128" height="193"/>
+        <element name="ScheduleEntity" positionX="-747" positionY="216" width="128" height="133"/>
+        <element name="ScheduleEventsEntity" positionX="-477" positionY="243" width="128" height="73"/>
     </elements>
 </model>

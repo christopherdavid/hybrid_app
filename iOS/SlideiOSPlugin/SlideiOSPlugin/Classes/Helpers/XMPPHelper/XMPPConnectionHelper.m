@@ -2,6 +2,7 @@
 #import "LogHelper.h"
 #import "XMPPConnection.h"
 #import "NeatoUserHelper.h"
+#import "NeatoUser.h"
 
 @interface XMPPConnectionHelper()
 

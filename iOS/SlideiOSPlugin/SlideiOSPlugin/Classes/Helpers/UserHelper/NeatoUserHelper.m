@@ -1,5 +1,7 @@
 #import "NeatoUserHelper.h"
 #import "LogHelper.h"
+#import "NeatoDataStore.h"
+#import "NeatoUser.h"
 
 
 #define KEY_USER_LOOGED_IN @"neato_has_user_logged_in"
@@ -37,8 +39,7 @@
      NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setBool:NO forKey:KEY_USER_LOOGED_IN];
     [userDefaults synchronize];
-    
-    [[NeatoDBHelper sharedNeatoDBHelper] deleteUserDetails];
+    [[NeatoDataStore sharedNeatoDataStore] deleteUserDetails];
 }
 
 // TODO: should work on BG thread
@@ -52,8 +53,7 @@
     }
     
     // Get details from DB
-    return [[NeatoDBHelper sharedNeatoDBHelper] getNeatoUser];
-    //return user;
+    return [[NeatoDataStore sharedNeatoDataStore] getNeatoUser];
 }
 
 + (void)saveNeatoUser:(NeatoUser *)neatoUser {
@@ -63,8 +63,7 @@
     [userDefaults synchronize];
     
     // Save details to DB
-    [[NeatoDBHelper sharedNeatoDBHelper] saveNeatoUser:neatoUser];
-    
+   [[NeatoDataStore sharedNeatoDataStore] saveNeatoUser:neatoUser];
 }
 
 + (NSString *)getLoggedInUserEmail {
@@ -73,15 +72,15 @@
     {
         return nil;
     }
-    NeatoUser *user = [[NeatoDBHelper sharedNeatoDBHelper] getNeatoUser];
+    NeatoUser *user = [[NeatoDataStore sharedNeatoDataStore] getNeatoUser];
     return user.email;
 }
 
 + (void)dissociateAllRobotsForUserWithEmail:(NSString *)email {
-   [[NeatoDBHelper sharedNeatoDBHelper] deleteAllRobots];
+    [[NeatoDataStore sharedNeatoDataStore] dissociateAllRobotsForUserWithEmail:email];
 }
 
 + (void)deleteRobotWithRobotId:(NSString *)robotId forUser:(NSString *)userId {
-    [[NeatoDBHelper sharedNeatoDBHelper] deleteRobotWithSerialNumber:robotId forUser:userId];
+    [[NeatoDataStore sharedNeatoDataStore] deleteRobotForSerialNumber:robotId forUserId:userId];
 }
 @end

@@ -56,7 +56,9 @@ var ACTION_TYPE_TRY_CONNECT_CONNECTION2         = "tryDirectConnection2";
 var ACTION_TYPE_SEND_COMMAND_TO_ROBOT           = "sendCommandToRobot";
 var ACTION_TYPE_SEND_COMMAND_TO_ROBOT2          = "sendCommandToRobot2";
 var ACIION_TYPE_SET_SCHEDULE                    = "robotSetSchedule";
+var ACIION_TYPE_SET_SCHEDULE2 			= "robotSetSchedule2";
 var ACIION_TYPE_GET_ROBOT_SCHEDULE              = "getSchedule";
+var ACIION_TYPE_GET_ROBOT_SCHEDULE2 		= "getSchedule2";
 var ACTION_TYPE_GET_ROBOT_MAP                   = "getRobotMap";
 var ACTION_TYPE_SET_MAP_OVERLAY_DATA            = "setMapOverlayData";
 var ACTION_TYPE_DISCONNECT_DIRECT_CONNETION     = "disconnectDirectConnection";
@@ -65,10 +67,22 @@ var ACTION_TYPE_UPDATE_ROBOT_ATLAS_METADATA     = "updateRobotAtlasMetadata";
 var ACTION_TYPE_GET_ATLAS_GRID_DATA             = "getAtlasGridData";
 var ACTION_TYPE_SET_ROBOT_NAME                  = "setRobotName";
 var ACTION_TYPE_DELETE_ROBOT_SCHEDULE           = "deleteScheduleData";
-var ACTION_TYPE_SET_ROBOT_NAME_2                = "setRobotName2";
-var ACTION_TYPE_GET_ROBOT_DETAIL                = "getRobotDetail";
-var ACTION_TYPE_GET_ROBOT_ONLINE_STATUS         = "getRobotOnlineStatus";
+var ACTION_TYPE_DELETE_ROBOT_SCHEDULE2		= "deleteScheduleData2";
+var ACTION_TYPE_SET_ROBOT_NAME_2		= "setRobotName2";
+var ACTION_TYPE_GET_ROBOT_DETAIL		= "getRobotDetail";
+var ACTION_TYPE_GET_ROBOT_ONLINE_STATUS		= "getRobotOnlineStatus";
 
+
+//New schdule APis 
+var ACTION_TYPE_UPDATE_SCHEDULE 		= "updateSchedule";
+var ACTION_TYPE_DELETE_ROBOT_SCHEDULE_EVENT 	= "deleteScheduleEvent";
+var ACTION_TYPE_UPDATE_ROBOT_SCHEDULE_EVENT 	= "updateScheduleEvent";
+var ACTION_TYPE_GET_SCHEDULE_EVENT_DATA 	= "getScheduleEventData";
+var ACTION_TYPE_ADD_ROBOT_SCHEDULE_EVENT 	= "addScheduleEventData";
+var ACTION_TYPE_GET_SCHEDULE_EVENTS 		= "getScheduleEvents";
+var ACTION_TYPE_GET_SCHEDULE_DATA 		= "getScheduleData";
+var ACTION_TYPE_CREATE_SCHEDULE 		= "createSchedule";
+var ACTION_TYPE_SYNC_SCHEDULE_FROM_SERVER 	= "syncScheduleFromServer";
 //List of keys to send data:
 
 var KEY_EMAIL = 'email';
@@ -290,6 +304,25 @@ RobotMgr.prototype.deleteSchedule = function(robotId, scheduleType, callbackSucc
 			ACTION_TYPE_DELETE_ROBOT_SCHEDULE, [scheduleArray]);
 };
 
+RobotMgr.prototype.setSchedule2 = function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
+	var scheduleArray = {'robotId':robotId, 'scheduleType':scheduleType, 'schedule': jsonArray};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACIION_TYPE_SET_SCHEDULE2, [scheduleArray]);
+};
+
+RobotMgr.prototype.getSchedule2 = function(robotId, scheduleType, callbackSuccess, callbackError) {
+	var scheduleArray = {'robotId':robotId, 'scheduleType':scheduleType};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACIION_TYPE_GET_ROBOT_SCHEDULE2, [scheduleArray]);
+};
+
+RobotMgr.prototype.deleteSchedule2 = function(robotId, scheduleType, callbackSuccess, callbackError) {
+	var scheduleArray = {'robotId':robotId, 'scheduleType':scheduleType};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_DELETE_ROBOT_SCHEDULE2, [scheduleArray]);
+};
+
+
 RobotMgr.prototype.getMaps = function(robotId, callbackSuccess, callbackError) {
 	var mapArray = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
@@ -321,6 +354,54 @@ RobotMgr.prototype.getAtlasGridData = function(robotId, gridId, callbackSuccess,
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_GET_ATLAS_GRID_DATA, [getGridArray]);
 };
+
+RobotMgr.prototype.updateSchedule = function(scheduleId, callbackSuccess, callbackError) {
+	var updateSchedule = {'scheduleId':scheduleId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_UPDATE_SCHEDULE, [updateSchedule]);
+};
+RobotMgr.prototype.deleteScheduleEvent = function(scheduleId, scheduleEventId, callbackSuccess, callbackError) {
+	var deleteScheduleEvent = {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_DELETE_ROBOT_SCHEDULE_EVENT, [deleteScheduleEvent]);
+};
+RobotMgr.prototype.updateScheduleEvent = function(scheduleId, scheduleEventId, scheduleEventData, callbackSuccess, callbackError) {
+	var updateScheduleEvent = {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId, 'scheduleEventData':scheduleEventData};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_UPDATE_ROBOT_SCHEDULE_EVENT, [updateScheduleEvent]);
+};
+RobotMgr.prototype.getScheduleEventData = function(scheduleId, scheduleEventId, callbackSuccess, callbackError) {
+	var getScheduleEventData = {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_SCHEDULE_EVENT_DATA, [getScheduleEventData]);
+};
+RobotMgr.prototype.addScheduleEvent = function(scheduleId, scheduleEventData, callbackSuccess, callbackError) {
+	var addScheduleEventData = {'scheduleId':scheduleId, 'scheduleEventData':scheduleEventData};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_ADD_ROBOT_SCHEDULE_EVENT, [addScheduleEventData]);
+};
+RobotMgr.prototype.getScheduleEvents = function(robotId, scheduleType, callbackSuccess, callbackError) {
+	var getScheduleEvents = {'robotId':robotId, 'scheduleType':scheduleType};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_SCHEDULE_EVENTS, [getScheduleEvents]);
+};
+RobotMgr.prototype.createSchedule = function(robotId, scheduleType, callbackSuccess, callbackError) {
+	var createSchedule = {'robotId':robotId, 'scheduleType':scheduleType};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_CREATE_SCHEDULE, [createSchedule]);
+};
+RobotMgr.prototype.getScheduleData = function(scheduleId, callbackSuccess, callbackError) {
+	var updateSchedule = {'scheduleId':scheduleId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_SCHEDULE_DATA, [updateSchedule]);
+};
+
+RobotMgr.prototype.syncScheduleDataFromServer = function(scheduleId, callbackSuccess, callbackError) {
+	var syncSchedule = {'scheduleId':scheduleId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_SYNC_SCHEDULE_FROM_SERVER, [syncSchedule]);
+};
+
 
 
 var UserPluginManager = (function() {
@@ -422,6 +503,18 @@ var RobotPluginManager = (function() {
 			window.plugins.neatoPluginLayer.robotMgr.deleteSchedule(robotId, scheduleType, callbackSuccess, callbackError);
 		},
 		
+		setSchedule2: function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.setSchedule2(robotId, scheduleType, jsonArray, callbackSuccess, callbackError);
+		},
+		
+		getSchedule2: function(robotId, scheduleType, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getSchedule2(robotId, scheduleType,  callbackSuccess, callbackError);
+		},
+		
+		deleteSchedule2: function(robotId, scheduleType, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.deleteSchedule2(robotId, scheduleType, callbackSuccess, callbackError);
+		},
+		
 		getMaps: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getMaps(robotId, callbackSuccess, callbackError);
 		}, 
@@ -444,8 +537,40 @@ var RobotPluginManager = (function() {
 		// TODO: We are taking robotId. Analyse if taking atlasId is a better option.
 		getAtlasGridData: function(robotId, gridId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getAtlasGridData(robotId, gridId, callbackSuccess, callbackError);
+		},
+		//New Schedule APIs being added:
+	
+		updateSchedule: function(scheduleId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.updateSchedule(scheduleId, callbackSuccess, callbackError);
+		},
+		
+		deleteScheduleEvent: function(scheduleId, scheduleEventId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.deleteScheduleEvent(scheduleId, scheduleEventId, callbackSuccess, callbackError);
+		},
+		
+		updateScheduleEvent: function(scheduleId, scheduleEventId, scheduleEventData, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.updateScheduleEvent(scheduleId, scheduleEventId, scheduleEventData, callbackSuccess, callbackError);
+		},
+		
+		getScheduleEventData: function(scheduleId, scheduleEventId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getScheduleEventData(scheduleId, scheduleEventId, callbackSuccess, callbackError);
+		},
+		addScheduleEvent: function(scheduleId, scheduleEventData, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.addScheduleEvent(scheduleId, scheduleEventData, callbackSuccess, callbackError)
+		},
+		getScheduleEvents: function(robotId, scheduleType, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getScheduleEvents(robotId, scheduleType, callbackSuccess, callbackError);
+		},
+		createSchedule: function(robotId, scheduleType, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.createSchedule(robotId, scheduleType, callbackSuccess, callbackError);
+		},
+		getScheduleData: function(scheduleId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getScheduleData(scheduleId, callbackSuccess, callbackError);
+		},
+		syncScheduleDataFromServer: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.syncScheduleDataFromServer(robotId, callbackSuccess, callbackError);
 		}
-}
+	}
 }());
 
 var PluginManagerHelper =  (function() {
@@ -458,6 +583,52 @@ var PluginManagerHelper =  (function() {
 			scheduleJsonArray.push(schedule);
 			return scheduleJsonArray;
 		},	
+		
+		addBasicScheduleForDay: function(scheduleJsonArray, day, startTime) {
+			var schedule = {'day':day, 'startTime': startTime};
+			scheduleJsonArray.push(schedule);
+			return scheduleJsonArray;
+		},
+		
+		getBasicScheduleEvent: function(day, startTime) {
+			var schedule = {'day':day, 'startTime': startTime};
+			return schedule;
+		},
+		
+		getAdvancedScheduleEvent: function(day, startTime, endTime, eventType, area) {
+			var schedule = {'day':day, 'startTime': startTime, 
+					'endTime': endTime, 'eventType': eventType,
+					'area':area};
+			return schedule;
+		}
 	}
 }());
+
+var scheduleEventHelper =  (function() {
+			return {
+
+			removeEventId: function(eventList, eventId) {
+				var l = eventList.length;
+				var newArr = [];
+				    for(var i = 0 ;i < l; i++)
+				    {
+				        if(eventList[i] == eventId) {
+				        } else {
+				        	 newArr.push(eventList[i]);
+				        }
+				    }
+				return newArr;
+			},
+			
+			addEventId: function(eventList, eventId) {
+				eventList.push(eventId);
+				return eventList;
+			},
+			
+			getEventId: function(eventList, index) {
+				return eventList[index];
+			}
+		}
+}());
+
 

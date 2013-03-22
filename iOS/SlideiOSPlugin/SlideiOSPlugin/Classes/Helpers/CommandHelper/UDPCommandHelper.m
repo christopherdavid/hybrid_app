@@ -4,6 +4,7 @@
 #import "LogHelper.h"
 #import "NeatoUserHelper.h"
 #import "CommandTracker.h"
+#import "NeatoUser.h"
 
 
 #define TEMP_FIND_ROBOT_COMMAND_FORMAT @"<?xml version=\"1.0\" encoding=\"UTF-8\"?><packet><header><version>1</version><signature>%d</signature></header><payload><command><commandid>%d</commandid><commanddata><key_robot_discovery_device_id>%@</key_robot_discovery_device_id></commanddata></command></payload></packet>"

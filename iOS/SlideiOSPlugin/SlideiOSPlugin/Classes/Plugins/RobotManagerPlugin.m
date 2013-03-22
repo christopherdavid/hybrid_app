@@ -8,6 +8,16 @@
 #import "AppHelper.h"
 #import "RobotManagerCallWrapper.h"
 #import "PluginConstants.h"
+#import "NSDictionary+StringValueForKey.h"
+#import "ScheduleEvent.h"
+#import "Schedule.h"
+#import "ScheduleUtils.h"
+
+//PluginResult Classes
+#import "CreateSchedulePluginResult.h"
+#import "CreateScheduleEventPluginResult.h"
+#import "GetScheduleEventDataPluginResult.h"
+#import "GetScheduleDataPluginResult.h"
 
 @implementation RobotManagerPlugin
 
@@ -152,7 +162,7 @@
     NSString *callbackId = command.callbackId;
     
     NSString *parameters = [command.arguments objectAtIndex:0];
-     debugLog(@"parameters received : %@",parameters);
+    debugLog(@"parameters received : %@",parameters);
     RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
     call.delegate = self;
     [call getAtlasGridMetadata:[parameters valueForKey:KEY_ROBOT_ID] gridId:[parameters valueForKey:KEY_ATLAS_GRID_ID]  callbackId:callbackId];
@@ -431,6 +441,258 @@
 - (void)failedToSendCommandOverXMPP2:(NSString *)callbackId {
     debugLog(@"");
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:COMMAND_SENT_FAILURE];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)createSchedule:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters %@",parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    NSString *scheduleType = [parameters stringForKey:KEY_SCHEDULE_TYPE];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    id pluginResult = [call createScheduleForRobotId:robotId ofScheduleType:scheduleType];
+    if([pluginResult isKindOfClass:[NSError class]]) {
+        //Error callback.
+        NSError *error = (NSError *)pluginResult;
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+        [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    }
+    else {
+        //Success callback.
+        CreateSchedulePluginResult *successResult = (CreateSchedulePluginResult *)pluginResult;
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:successResult.toDictionary];
+        [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    }
+}
+
+- (void)addScheduleEventData:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters %@",parameters);
+    NSString *scheduleId = [parameters objectForKey:KEY_SCHEDULE_ID];
+    NSDictionary *scheduleEventData = [parameters objectForKey:KEY_SCHEDULE_EVENT_DATA];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    id pluginResult = [call addScheduleEventData:scheduleEventData forScheduleWithScheduleId:scheduleId];
+    if([pluginResult isKindOfClass:[NSError class]]) {
+        NSError *error = (NSError *)pluginResult;
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+        [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    }
+    else {
+        CreateScheduleEventPluginResult *successResult = (CreateScheduleEventPluginResult *)pluginResult;
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:successResult.toDictionary];
+        [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    }
+}
+
+- (void)updateScheduleEvent:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters %@",parameters);
+    NSString *scheduleId = [parameters objectForKey:KEY_SCHEDULE_ID];
+    NSString *scheduleEventId = [parameters objectForKey:KEY_SCHEDULE_EVENT_ID];
+    NSDictionary *scheduleEventData = [parameters objectForKey:KEY_SCHEDULE_EVENT_DATA];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    id pluginResult = [call updateScheduleEventWithScheduleEventId:scheduleEventId forScheduleId:scheduleId withScheduleEventdata:scheduleEventData];
+    if([pluginResult isKindOfClass:[NSError class]]) {
+        NSError *error = (NSError *)pluginResult;
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+        [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    }
+    else {
+        CreateScheduleEventPluginResult *successResult = (CreateScheduleEventPluginResult *)pluginResult;
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:successResult.toDictionary];
+        [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    }
+}
+
+- (void)deleteScheduleEvent:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters %@",parameters);
+    NSString *scheduleId = [parameters objectForKey:KEY_SCHEDULE_ID];
+    NSString *scheduleEventId = [parameters objectForKey:KEY_SCHEDULE_EVENT_ID];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    id pluginResult = [call deleteScheduleEventWithScheduleEventId:scheduleEventId forScheduleId:scheduleId];
+    if([pluginResult isKindOfClass:[NSError class]]) {
+        NSError *error = (NSError *)pluginResult;
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+        [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    }
+    else {
+        CreateScheduleEventPluginResult *successResult = (CreateScheduleEventPluginResult *)pluginResult;
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:successResult.toDictionary];
+        [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    }
+}
+
+- (void)getScheduleEventData:(CDVInvokedUrlCommand *)command {
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters %@",parameters);
+    NSString *scheduleId = [parameters objectForKey:KEY_SCHEDULE_ID];
+    NSString *scheduleEventId = [parameters objectForKey:KEY_SCHEDULE_EVENT_ID];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    id pluginResult = [call getScheduleEventDataWithScheduleEventId:scheduleEventId forScheduleId:scheduleId];
+    if([pluginResult isKindOfClass:[NSError class]]) {
+        NSError *error = (NSError *)pluginResult;
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+        [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    }
+    else {
+        GetScheduleEventDataPluginResult *successResult = (GetScheduleEventDataPluginResult *)pluginResult;
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:successResult.toDictionary];
+        [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    }
+}
+
+- (void)getScheduleData:(CDVInvokedUrlCommand *)command {
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters %@",parameters);
+    NSString *scheduleId = [parameters objectForKey:KEY_SCHEDULE_ID];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    id pluginResult = [call getScheduleDataForScheduleId:scheduleId];
+    if([pluginResult isKindOfClass:[NSError class]]) {
+        NSError *error = (NSError *)pluginResult;
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+        [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    }
+    else {
+        GetScheduleDataPluginResult *successResult = (GetScheduleDataPluginResult *)pluginResult;
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:successResult.toDictionary];
+        [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    }
+}
+
+- (void)getScheduleEvents:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@",parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    NSString *scheduleType = [parameters stringForKey:KEY_SCHEDULE_TYPE];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call getScheduleEventsForRobotWithId:robotId ofScheduleType:scheduleType callbackId:callbackId];
+}
+
+- (void)failedToGetScheduleEventsForRobotWithId:(NSString *)robotId error:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"failedToGetScheduleEventsForRobotWithId called. Error = %@", error);
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.description];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)gotScheduleEventsForSchedule:(Schedule *)schedule ofType:(NSInteger)scheduleType forRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *resultDictionary = [[NSMutableDictionary alloc] init];
+    [resultDictionary setValue:schedule.scheduleId forKey:KEY_SCHEDULE_ID];
+    [resultDictionary setValue:robotId forKey:KEY_ROBOT_ID];
+    [resultDictionary setValue:[NSNumber numberWithInteger:scheduleType] forKey:KEY_SCHEDULE_TYPE];
+    [resultDictionary setValue:[schedule arrayOfScheduleEventIdsForType:scheduleType] forKey:KEY_SCHEDULE_EVENTS_LIST];
+
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultDictionary];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+
+- (void) robotSetSchedule2:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"parameters received %@",parameters);
+    NSString *robotID = [parameters objectForKey:KEY_ROBOT_ID];
+    NSString *scheduleType = [parameters stringForKey:KEY_SCHEDULE_TYPE];
+    NSArray *schedulesArray = [parameters objectForKey:KEY_SCHEDULE];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call setRobotSchedule:schedulesArray forRobotId:robotID ofType:scheduleType callbackId:callbackId];
+}
+
+- (void) getSchedule2:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"parameters received %@",parameters);
+    NSString *robotID = [parameters objectForKey:KEY_ROBOT_ID];
+    NSString *scheduleType = [parameters stringForKey:KEY_SCHEDULE_TYPE];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call getRobotScheduleForRobotId:robotID ofType:scheduleType callbackId:callbackId];
+}
+
+- (void)deleteScheduleData:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    NSString *scheduleType = [parameters stringForKey:KEY_SCHEDULE_TYPE];
+    debugLog(@"received parameters %@",parameters);
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call deleteRobotScheduleForRobotId:[parameters valueForKey:KEY_ROBOT_ID] ofType:scheduleType callbackId:callbackId];
+}
+
+- (void)updateSchedule:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters %@",parameters);
+    NSString *scheduleId = [parameters objectForKey:KEY_SCHEDULE_ID];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call updateScheduleForScheduleId:scheduleId callbackId:callbackId];
+}
+
+- (void)updatedSchedule:(NSString *)scheduleId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *jsonObject = [[NSMutableDictionary alloc] init];
+    [jsonObject setObject:[AppHelper getEmptyStringIfNil:scheduleId] forKey:KEY_SCHEDULE_ID];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonObject];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)updateScheduleError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)setScheduleSuccess:(NSString *)message callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)getScheduleSuccess:(NSDictionary *)jsonObject callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonObject];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)setScheduleError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)getScheduleError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)deleteScheduleSuccess:(NSString *)message callbackId:(NSString *)callbackId {
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)deleteScheduleError:(NSError *)error callbackId:(NSString *)callbackId {
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
 }
 

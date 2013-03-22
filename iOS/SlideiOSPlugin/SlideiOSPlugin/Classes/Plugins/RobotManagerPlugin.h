@@ -24,4 +24,15 @@
 - (void)getRobotOnlineStatus:(CDVInvokedUrlCommand *)command;
 - (void)tryDirectConnection2:(CDVInvokedUrlCommand *)command;
 - (void)sendCommandToRobot2:(CDVInvokedUrlCommand *)command;
+- (void)createSchedule:(CDVInvokedUrlCommand *)command;
+- (void)addScheduleEventData:(CDVInvokedUrlCommand *)command;
+- (void)updateScheduleEvent:(CDVInvokedUrlCommand *)command;
+- (void)deleteScheduleEvent:(CDVInvokedUrlCommand *)command;
+- (void)getScheduleEventData:(CDVInvokedUrlCommand *)command;
+- (void)getScheduleData:(CDVInvokedUrlCommand *)command;
+- (void)getScheduleEvents:(CDVInvokedUrlCommand *)command;
+- (void)updateSchedule:(CDVInvokedUrlCommand *)command;
+- (void)robotSetSchedule2:(CDVInvokedUrlCommand *)command;
+- (void)getSchedule2:(CDVInvokedUrlCommand *)command;
+- (void)deleteScheduleData:(CDVInvokedUrlCommand *)command;
 @end

@@ -3,7 +3,7 @@
 #import "AppHelper.h"
 #import "CommandsHelper.h"
 #import "NeatoUserHelper.h"
-
+#import "NeatoUser.h"
 
 
 #define TEMP_XMPP_ROBOT_COMMAND_FORMAT @"<?xml version=\"1.0\" encoding=\"UTF-8\"?><packet><header><version>1</version><signature>%d</signature></header><command><commandid>%d</commandid><commanddata/></command></packet>"
@@ -61,5 +61,20 @@
     return command;
 }
 
+- (NSString *)enableDisableScheduleCommandWithParams:(NSDictionary *)params andRequestId:(NSString *)requestId {
+    debugLog(@"");
+    CommandsHelper *commandHelper = [[CommandsHelper alloc] init];
+    NSString *command = [NSString stringWithFormat:TEMP_XMPP_NEW_ROBOT_COMMAND_FORMAT, [commandHelper versionForCommand], [AppHelper getAppSignature], COMMAND_ENABLE_DISABLE_SCHEDULE, requestId, [[NSNumber numberWithDouble:[AppHelper currentTimeStamp]] stringValue], [commandHelper commandRetryCount], [commandHelper commandResponseNeeded], [NeatoUserHelper getNeatoUser].userId, [commandHelper distributionModeForCommandType:@"XMPP"], [commandHelper generateXMLForParams:params]];
+    debugLog(@"command = %@", command);
+    return command;
+}
+
+- (id)sendToBaseCommandWithParams:(NSDictionary *)params andRequestId:(NSString *)requestId {
+   debugLog(@"");
+   CommandsHelper *commandHelper = [[CommandsHelper alloc] init];
+    NSString *command = [NSString stringWithFormat:TEMP_XMPP_NEW_ROBOT_COMMAND_FORMAT, [commandHelper versionForCommand], [AppHelper getAppSignature], COMMAND_SEND_TO_BASE, requestId, [[NSNumber numberWithDouble:[AppHelper currentTimeStamp]] stringValue], [commandHelper commandRetryCount], [commandHelper commandResponseNeeded], [NeatoUserHelper getNeatoUser].userId, [commandHelper distributionModeForCommandType:@"XMPP"], [commandHelper generateXMLForParams:params]];
+    debugLog(@"command = %@", command);
+    return command;
+}
 
 @end

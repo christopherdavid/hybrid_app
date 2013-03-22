@@ -44,7 +44,26 @@
 		E195EA1B16B6B56A00E4D9C6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E195EA1916B6B56A00E4D9C6 /* InfoPlist.strings */; };
 		E195EA2216B6B65F00E4D9C6 /* NeatoDatastoreModel.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */; };
 		E198854616B2FB6400ED1AD8 /* NeatoDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E198854316B2FB6400ED1AD8 /* NeatoDataStore.m */; };
-		E198854A16B2FB8300ED1AD8 /* CommandTrackerEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E198854916B2FB8300ED1AD8 /* CommandTrackerEntity.m */; };
+		E199354316EE1432008BB353 /* NeatoRobotEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354216EE1432008BB353 /* NeatoRobotEntity.m */; };
+		E199354616EE1433008BB353 /* NeatoSocialNetworksEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354516EE1433008BB353 /* NeatoSocialNetworksEntity.m */; };
+		E199354916EE1433008BB353 /* BasicScheduleEventEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354816EE1433008BB353 /* BasicScheduleEventEntity.m */; };
+		E199354C16EE1433008BB353 /* CommandTrackerEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354B16EE1433008BB353 /* CommandTrackerEntity.m */; };
+		E199354F16EE1441008BB353 /* ScheduleEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354E16EE1441008BB353 /* ScheduleEntity.m */; };
+		E199355216EE1442008BB353 /* ScheduleEventsEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355116EE1441008BB353 /* ScheduleEventsEntity.m */; };
+		E199355516EE1442008BB353 /* NeatoUserEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355416EE1442008BB353 /* NeatoUserEntity.m */; };
+		E199357516EE14A4008BB353 /* AdvanceScheduleEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355816EE14A1008BB353 /* AdvanceScheduleEvent.m */; };
+		E199357616EE14A4008BB353 /* BasicScheduleEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355A16EE14A1008BB353 /* BasicScheduleEvent.m */; };
+		E199357816EE14A4008BB353 /* Schedule.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355E16EE14A1008BB353 /* Schedule.m */; };
+		E199357916EE14A4008BB353 /* ScheduleEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E199356016EE14A1008BB353 /* ScheduleEvent.m */; };
+		E199357A16EE14A4008BB353 /* ScheduleTimeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E199356316EE14A1008BB353 /* ScheduleTimeObject.m */; };
+		E199357B16EE14A4008BB353 /* ScheduleUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E199356516EE14A1008BB353 /* ScheduleUtils.m */; };
+		E199357C16EE14A4008BB353 /* ScheduleXMLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E199356716EE14A1008BB353 /* ScheduleXMLHelper.m */; };
+		E199357D16EE14A4008BB353 /* ScheduleDBHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E199356B16EE14A2008BB353 /* ScheduleDBHelper.m */; };
+		E199357E16EE14A4008BB353 /* CreateScheduleEventPluginResult.m in Sources */ = {isa = PBXBuildFile; fileRef = E199356E16EE14A4008BB353 /* CreateScheduleEventPluginResult.m */; };
+		E199357F16EE14A4008BB353 /* CreateSchedulePluginResult.m in Sources */ = {isa = PBXBuildFile; fileRef = E199357016EE14A4008BB353 /* CreateSchedulePluginResult.m */; };
+		E199358016EE14A4008BB353 /* GetScheduleDataPluginResult.m in Sources */ = {isa = PBXBuildFile; fileRef = E199357216EE14A4008BB353 /* GetScheduleDataPluginResult.m */; };
+		E199358116EE14A4008BB353 /* GetScheduleEventDataPluginResult.m in Sources */ = {isa = PBXBuildFile; fileRef = E199357416EE14A4008BB353 /* GetScheduleEventDataPluginResult.m */; };
+		E199358516EE14CB008BB353 /* NSDictionary+StringValueForKey.m in Sources */ = {isa = PBXBuildFile; fileRef = E199358416EE14CB008BB353 /* NSDictionary+StringValueForKey.m */; };
 		E1A064EB1695639D009C22F7 /* AppHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064BF1695639D009C22F7 /* AppHelper.m */; };
 		E1A064EC1695639D009C22F7 /* CommandsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064C31695639D009C22F7 /* CommandsHelper.m */; };
 		E1A064ED1695639D009C22F7 /* TCPCommandHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064C51695639D009C22F7 /* TCPCommandHelper.m */; };
@@ -105,6 +124,14 @@
 		E1A44BD616D3828B00898959 /* SetRobotNameListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A44BD516D3828B00898959 /* SetRobotNameListener.m */; };
 		E1A44BEF16D3BDC900898959 /* RobotAssociationListener2.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A44BEE16D3BDC900898959 /* RobotAssociationListener2.m */; };
 		E1AC0E921695BE19005601EE /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A06555169563B5009C22F7 /* libidn.a */; };
+		E1B0CF4A16EF6F99001E3360 /* GetScheduleEventsListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF4916EF6F99001E3360 /* GetScheduleEventsListener.m */; };
+		E1B0CF4D16EF6FF9001E3360 /* ScheduleServerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF4C16EF6FF9001E3360 /* ScheduleServerHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
+		E1B0CF5B16EF9C42001E3360 /* DeleteAdvancedScheduleListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF5216EF9C40001E3360 /* DeleteAdvancedScheduleListener.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
+		E1B0CF5C16EF9C42001E3360 /* GetAdvancedScheduleListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF5416EF9C41001E3360 /* GetAdvancedScheduleListener.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
+		E1B0CF5D16EF9C42001E3360 /* PostScheduleResult.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF5616EF9C41001E3360 /* PostScheduleResult.m */; };
+		E1B0CF5E16EF9C42001E3360 /* SetAdvancedScheduleListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF5816EF9C42001E3360 /* SetAdvancedScheduleListener.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
+		E1B0CF5F16EF9C42001E3360 /* UpdateBasicScheduleListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF5A16EF9C42001E3360 /* UpdateBasicScheduleListener.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
+		E1B0CF6016EF9CF8001E3360 /* RobotScheduleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355C16EE14A1008BB353 /* RobotScheduleManager.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
 		E1B60E0916B0400300342422 /* CreateUserListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0216B0400300342422 /* CreateUserListener.m */; };
 		E1B60E0A16B0400300342422 /* LoginListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0416B0400300342422 /* LoginListener.m */; };
 		E1B60E0B16B0400300342422 /* NeatoServerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0616B0400300342422 /* NeatoServerHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
@@ -228,12 +255,53 @@
 		E195EA1C16B6B56A00E4D9C6 /* NeatoDataStore-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NeatoDataStore-Prefix.pch"; sourceTree = "<group>"; };
 		E198854216B2FB6400ED1AD8 /* NeatoDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoDataStore.h; sourceTree = "<group>"; };
 		E198854316B2FB6400ED1AD8 /* NeatoDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoDataStore.m; sourceTree = "<group>"; };
-		E198854816B2FB8300ED1AD8 /* CommandTrackerEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandTrackerEntity.h; sourceTree = "<group>"; };
-		E198854916B2FB8300ED1AD8 /* CommandTrackerEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandTrackerEntity.m; sourceTree = "<group>"; };
 		E198855316B2FD7200ED1AD8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		E198855616B2FD7200ED1AD8 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		E198855716B2FD7200ED1AD8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		E198855816B2FD7200ED1AD8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		E199354116EE1432008BB353 /* NeatoRobotEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoRobotEntity.h; sourceTree = "<group>"; };
+		E199354216EE1432008BB353 /* NeatoRobotEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoRobotEntity.m; sourceTree = "<group>"; };
+		E199354416EE1433008BB353 /* NeatoSocialNetworksEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoSocialNetworksEntity.h; sourceTree = "<group>"; };
+		E199354516EE1433008BB353 /* NeatoSocialNetworksEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoSocialNetworksEntity.m; sourceTree = "<group>"; };
+		E199354716EE1433008BB353 /* BasicScheduleEventEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicScheduleEventEntity.h; sourceTree = "<group>"; };
+		E199354816EE1433008BB353 /* BasicScheduleEventEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicScheduleEventEntity.m; sourceTree = "<group>"; };
+		E199354A16EE1433008BB353 /* CommandTrackerEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandTrackerEntity.h; sourceTree = "<group>"; };
+		E199354B16EE1433008BB353 /* CommandTrackerEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandTrackerEntity.m; sourceTree = "<group>"; };
+		E199354D16EE1441008BB353 /* ScheduleEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleEntity.h; sourceTree = "<group>"; };
+		E199354E16EE1441008BB353 /* ScheduleEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleEntity.m; sourceTree = "<group>"; };
+		E199355016EE1441008BB353 /* ScheduleEventsEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleEventsEntity.h; sourceTree = "<group>"; };
+		E199355116EE1441008BB353 /* ScheduleEventsEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleEventsEntity.m; sourceTree = "<group>"; };
+		E199355316EE1442008BB353 /* NeatoUserEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoUserEntity.h; sourceTree = "<group>"; };
+		E199355416EE1442008BB353 /* NeatoUserEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoUserEntity.m; sourceTree = "<group>"; };
+		E199355716EE14A1008BB353 /* AdvanceScheduleEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvanceScheduleEvent.h; sourceTree = "<group>"; };
+		E199355816EE14A1008BB353 /* AdvanceScheduleEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdvanceScheduleEvent.m; sourceTree = "<group>"; };
+		E199355916EE14A1008BB353 /* BasicScheduleEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicScheduleEvent.h; sourceTree = "<group>"; };
+		E199355A16EE14A1008BB353 /* BasicScheduleEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicScheduleEvent.m; sourceTree = "<group>"; };
+		E199355B16EE14A1008BB353 /* RobotScheduleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotScheduleManager.h; sourceTree = "<group>"; };
+		E199355C16EE14A1008BB353 /* RobotScheduleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotScheduleManager.m; sourceTree = "<group>"; };
+		E199355D16EE14A1008BB353 /* Schedule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Schedule.h; sourceTree = "<group>"; };
+		E199355E16EE14A1008BB353 /* Schedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Schedule.m; sourceTree = "<group>"; };
+		E199355F16EE14A1008BB353 /* ScheduleEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleEvent.h; sourceTree = "<group>"; };
+		E199356016EE14A1008BB353 /* ScheduleEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleEvent.m; sourceTree = "<group>"; };
+		E199356116EE14A1008BB353 /* SchedulerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SchedulerConstants.h; sourceTree = "<group>"; };
+		E199356216EE14A1008BB353 /* ScheduleTimeObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleTimeObject.h; sourceTree = "<group>"; };
+		E199356316EE14A1008BB353 /* ScheduleTimeObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleTimeObject.m; sourceTree = "<group>"; };
+		E199356416EE14A1008BB353 /* ScheduleUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleUtils.h; sourceTree = "<group>"; };
+		E199356516EE14A1008BB353 /* ScheduleUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleUtils.m; sourceTree = "<group>"; };
+		E199356616EE14A1008BB353 /* ScheduleXMLHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleXMLHelper.h; sourceTree = "<group>"; };
+		E199356716EE14A1008BB353 /* ScheduleXMLHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleXMLHelper.m; sourceTree = "<group>"; };
+		E199356A16EE14A2008BB353 /* ScheduleDBHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleDBHelper.h; sourceTree = "<group>"; };
+		E199356B16EE14A2008BB353 /* ScheduleDBHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleDBHelper.m; sourceTree = "<group>"; };
+		E199356D16EE14A4008BB353 /* CreateScheduleEventPluginResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateScheduleEventPluginResult.h; sourceTree = "<group>"; };
+		E199356E16EE14A4008BB353 /* CreateScheduleEventPluginResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateScheduleEventPluginResult.m; sourceTree = "<group>"; };
+		E199356F16EE14A4008BB353 /* CreateSchedulePluginResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateSchedulePluginResult.h; sourceTree = "<group>"; };
+		E199357016EE14A4008BB353 /* CreateSchedulePluginResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateSchedulePluginResult.m; sourceTree = "<group>"; };
+		E199357116EE14A4008BB353 /* GetScheduleDataPluginResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetScheduleDataPluginResult.h; sourceTree = "<group>"; };
+		E199357216EE14A4008BB353 /* GetScheduleDataPluginResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetScheduleDataPluginResult.m; sourceTree = "<group>"; };
+		E199357316EE14A4008BB353 /* GetScheduleEventDataPluginResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetScheduleEventDataPluginResult.h; sourceTree = "<group>"; };
+		E199357416EE14A4008BB353 /* GetScheduleEventDataPluginResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetScheduleEventDataPluginResult.m; sourceTree = "<group>"; };
+		E199358316EE14CB008BB353 /* NSDictionary+StringValueForKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+StringValueForKey.h"; sourceTree = "<group>"; };
+		E199358416EE14CB008BB353 /* NSDictionary+StringValueForKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+StringValueForKey.m"; sourceTree = "<group>"; };
 		E1A064BE1695639D009C22F7 /* AppHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHelper.h; sourceTree = "<group>"; };
 		E1A064BF1695639D009C22F7 /* AppHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHelper.m; sourceTree = "<group>"; };
 		E1A064C11695639D009C22F7 /* CommandProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandProtocol.h; sourceTree = "<group>"; };
@@ -365,6 +433,20 @@
 		E1A44BD516D3828B00898959 /* SetRobotNameListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetRobotNameListener.m; sourceTree = "<group>"; };
 		E1A44BED16D3BDC900898959 /* RobotAssociationListener2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotAssociationListener2.h; sourceTree = "<group>"; };
 		E1A44BEE16D3BDC900898959 /* RobotAssociationListener2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotAssociationListener2.m; sourceTree = "<group>"; };
+		E1B0CF4816EF6F99001E3360 /* GetScheduleEventsListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetScheduleEventsListener.h; sourceTree = "<group>"; };
+		E1B0CF4916EF6F99001E3360 /* GetScheduleEventsListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetScheduleEventsListener.m; sourceTree = "<group>"; };
+		E1B0CF4B16EF6FF9001E3360 /* ScheduleServerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleServerHelper.h; sourceTree = "<group>"; };
+		E1B0CF4C16EF6FF9001E3360 /* ScheduleServerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleServerHelper.m; sourceTree = "<group>"; };
+		E1B0CF5116EF9C40001E3360 /* DeleteAdvancedScheduleListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteAdvancedScheduleListener.h; sourceTree = "<group>"; };
+		E1B0CF5216EF9C40001E3360 /* DeleteAdvancedScheduleListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteAdvancedScheduleListener.m; sourceTree = "<group>"; };
+		E1B0CF5316EF9C40001E3360 /* GetAdvancedScheduleListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetAdvancedScheduleListener.h; sourceTree = "<group>"; };
+		E1B0CF5416EF9C41001E3360 /* GetAdvancedScheduleListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAdvancedScheduleListener.m; sourceTree = "<group>"; };
+		E1B0CF5516EF9C41001E3360 /* PostScheduleResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostScheduleResult.h; sourceTree = "<group>"; };
+		E1B0CF5616EF9C41001E3360 /* PostScheduleResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostScheduleResult.m; sourceTree = "<group>"; };
+		E1B0CF5716EF9C42001E3360 /* SetAdvancedScheduleListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetAdvancedScheduleListener.h; sourceTree = "<group>"; };
+		E1B0CF5816EF9C42001E3360 /* SetAdvancedScheduleListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetAdvancedScheduleListener.m; sourceTree = "<group>"; };
+		E1B0CF5916EF9C42001E3360 /* UpdateBasicScheduleListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateBasicScheduleListener.h; sourceTree = "<group>"; };
+		E1B0CF5A16EF9C42001E3360 /* UpdateBasicScheduleListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateBasicScheduleListener.m; sourceTree = "<group>"; };
 		E1B60E0116B0400300342422 /* CreateUserListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateUserListener.h; sourceTree = "<group>"; };
 		E1B60E0216B0400300342422 /* CreateUserListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateUserListener.m; sourceTree = "<group>"; };
 		E1B60E0316B0400300342422 /* LoginListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginListener.h; sourceTree = "<group>"; };
@@ -518,6 +600,10 @@
 		B22BDB10168D848800FFCB76 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				E199358216EE14CA008BB353 /* Categories */,
+				E199355616EE149F008BB353 /* RobotScheduleHelper */,
+				E199356816EE14A1008BB353 /* ScheduleDBHelper */,
+				E199356C16EE14A2008BB353 /* SchedulePluginResults */,
 				E1639FD916D4EC1B0016C236 /* ConnectionManager */,
 				E15FC44716A9B68F0000AB67 /* AtlasHelper */,
 				E15FC45816A9B68F0000AB67 /* FileDownloadHelper */,
@@ -609,11 +695,23 @@
 			children = (
 				E198854216B2FB6400ED1AD8 /* NeatoDataStore.h */,
 				E198854316B2FB6400ED1AD8 /* NeatoDataStore.m */,
-				E198854816B2FB8300ED1AD8 /* CommandTrackerEntity.h */,
-				E198854916B2FB8300ED1AD8 /* CommandTrackerEntity.m */,
 				E168BBC1169D461800BA6AD3 /* NeatoDBHelper.h */,
 				E168BBC2169D461800BA6AD3 /* NeatoDBHelper.m */,
 				E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */,
+				E199355316EE1442008BB353 /* NeatoUserEntity.h */,
+				E199355416EE1442008BB353 /* NeatoUserEntity.m */,
+				E199355016EE1441008BB353 /* ScheduleEventsEntity.h */,
+				E199355116EE1441008BB353 /* ScheduleEventsEntity.m */,
+				E199354D16EE1441008BB353 /* ScheduleEntity.h */,
+				E199354E16EE1441008BB353 /* ScheduleEntity.m */,
+				E199354A16EE1433008BB353 /* CommandTrackerEntity.h */,
+				E199354B16EE1433008BB353 /* CommandTrackerEntity.m */,
+				E199354716EE1433008BB353 /* BasicScheduleEventEntity.h */,
+				E199354816EE1433008BB353 /* BasicScheduleEventEntity.m */,
+				E199354416EE1433008BB353 /* NeatoSocialNetworksEntity.h */,
+				E199354516EE1433008BB353 /* NeatoSocialNetworksEntity.m */,
+				E199354116EE1432008BB353 /* NeatoRobotEntity.h */,
+				E199354216EE1432008BB353 /* NeatoRobotEntity.m */,
 			);
 			path = DBHelper;
 			sourceTree = "<group>";
@@ -675,6 +773,77 @@
 				E198855816B2FD7200ED1AD8 /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		E199355616EE149F008BB353 /* RobotScheduleHelper */ = {
+			isa = PBXGroup;
+			children = (
+				E1B0CF5116EF9C40001E3360 /* DeleteAdvancedScheduleListener.h */,
+				E1B0CF5216EF9C40001E3360 /* DeleteAdvancedScheduleListener.m */,
+				E1B0CF5316EF9C40001E3360 /* GetAdvancedScheduleListener.h */,
+				E1B0CF5416EF9C41001E3360 /* GetAdvancedScheduleListener.m */,
+				E1B0CF5516EF9C41001E3360 /* PostScheduleResult.h */,
+				E1B0CF5616EF9C41001E3360 /* PostScheduleResult.m */,
+				E1B0CF5716EF9C42001E3360 /* SetAdvancedScheduleListener.h */,
+				E1B0CF5816EF9C42001E3360 /* SetAdvancedScheduleListener.m */,
+				E1B0CF5916EF9C42001E3360 /* UpdateBasicScheduleListener.h */,
+				E1B0CF5A16EF9C42001E3360 /* UpdateBasicScheduleListener.m */,
+				E1B0CF4B16EF6FF9001E3360 /* ScheduleServerHelper.h */,
+				E1B0CF4C16EF6FF9001E3360 /* ScheduleServerHelper.m */,
+				E1B0CF4816EF6F99001E3360 /* GetScheduleEventsListener.h */,
+				E1B0CF4916EF6F99001E3360 /* GetScheduleEventsListener.m */,
+				E199355716EE14A1008BB353 /* AdvanceScheduleEvent.h */,
+				E199355816EE14A1008BB353 /* AdvanceScheduleEvent.m */,
+				E199355916EE14A1008BB353 /* BasicScheduleEvent.h */,
+				E199355A16EE14A1008BB353 /* BasicScheduleEvent.m */,
+				E199355B16EE14A1008BB353 /* RobotScheduleManager.h */,
+				E199355C16EE14A1008BB353 /* RobotScheduleManager.m */,
+				E199355D16EE14A1008BB353 /* Schedule.h */,
+				E199355E16EE14A1008BB353 /* Schedule.m */,
+				E199355F16EE14A1008BB353 /* ScheduleEvent.h */,
+				E199356016EE14A1008BB353 /* ScheduleEvent.m */,
+				E199356116EE14A1008BB353 /* SchedulerConstants.h */,
+				E199356216EE14A1008BB353 /* ScheduleTimeObject.h */,
+				E199356316EE14A1008BB353 /* ScheduleTimeObject.m */,
+				E199356416EE14A1008BB353 /* ScheduleUtils.h */,
+				E199356516EE14A1008BB353 /* ScheduleUtils.m */,
+				E199356616EE14A1008BB353 /* ScheduleXMLHelper.h */,
+				E199356716EE14A1008BB353 /* ScheduleXMLHelper.m */,
+			);
+			path = RobotScheduleHelper;
+			sourceTree = "<group>";
+		};
+		E199356816EE14A1008BB353 /* ScheduleDBHelper */ = {
+			isa = PBXGroup;
+			children = (
+				E199356A16EE14A2008BB353 /* ScheduleDBHelper.h */,
+				E199356B16EE14A2008BB353 /* ScheduleDBHelper.m */,
+			);
+			path = ScheduleDBHelper;
+			sourceTree = "<group>";
+		};
+		E199356C16EE14A2008BB353 /* SchedulePluginResults */ = {
+			isa = PBXGroup;
+			children = (
+				E199356D16EE14A4008BB353 /* CreateScheduleEventPluginResult.h */,
+				E199356E16EE14A4008BB353 /* CreateScheduleEventPluginResult.m */,
+				E199356F16EE14A4008BB353 /* CreateSchedulePluginResult.h */,
+				E199357016EE14A4008BB353 /* CreateSchedulePluginResult.m */,
+				E199357116EE14A4008BB353 /* GetScheduleDataPluginResult.h */,
+				E199357216EE14A4008BB353 /* GetScheduleDataPluginResult.m */,
+				E199357316EE14A4008BB353 /* GetScheduleEventDataPluginResult.h */,
+				E199357416EE14A4008BB353 /* GetScheduleEventDataPluginResult.m */,
+			);
+			path = SchedulePluginResults;
+			sourceTree = "<group>";
+		};
+		E199358216EE14CA008BB353 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				E199358316EE14CB008BB353 /* NSDictionary+StringValueForKey.h */,
+				E199358416EE14CB008BB353 /* NSDictionary+StringValueForKey.m */,
+			);
+			path = Categories;
 			sourceTree = "<group>";
 		};
 		E1A064BD1695639D009C22F7 /* AppHelper */ = {
@@ -1197,6 +1366,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1B0CF6016EF9CF8001E3360 /* RobotScheduleManager.m in Sources */,
 				B22BDAB3168D7C8400FFCB76 /* SlideiOSPlugin.m in Sources */,
 				B22BDAFB168D7F3B00FFCB76 /* UserManagerPlugin.m in Sources */,
 				B22BDAFE168D7F5500FFCB76 /* RobotManagerPlugin.m in Sources */,
@@ -1282,13 +1452,39 @@
 				E1B60E0B16B0400300342422 /* NeatoServerHelper.m in Sources */,
 				E1B60E0C16B0400300342422 /* RobotAssociationListener.m in Sources */,
 				E198854616B2FB6400ED1AD8 /* NeatoDataStore.m in Sources */,
-				E198854A16B2FB8300ED1AD8 /* CommandTrackerEntity.m in Sources */,
 				E121001216B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld in Sources */,
 				E1A44BD616D3828B00898959 /* SetRobotNameListener.m in Sources */,
 				E1A44BEF16D3BDC900898959 /* RobotAssociationListener2.m in Sources */,
 				E1639FDC16D4EC1B0016C236 /* DeviceConnectionManager.m in Sources */,
 				E1639FE016D4F0AA0016C236 /* RobotCommandHelper.m in Sources */,
 				E1A2B7BD16DA52BE003DC9C8 /* RobotDissociationListener.m in Sources */,
+				E199354316EE1432008BB353 /* NeatoRobotEntity.m in Sources */,
+				E199354616EE1433008BB353 /* NeatoSocialNetworksEntity.m in Sources */,
+				E199354916EE1433008BB353 /* BasicScheduleEventEntity.m in Sources */,
+				E199354C16EE1433008BB353 /* CommandTrackerEntity.m in Sources */,
+				E199354F16EE1441008BB353 /* ScheduleEntity.m in Sources */,
+				E199355216EE1442008BB353 /* ScheduleEventsEntity.m in Sources */,
+				E199355516EE1442008BB353 /* NeatoUserEntity.m in Sources */,
+				E199357516EE14A4008BB353 /* AdvanceScheduleEvent.m in Sources */,
+				E199357616EE14A4008BB353 /* BasicScheduleEvent.m in Sources */,
+				E199357816EE14A4008BB353 /* Schedule.m in Sources */,
+				E199357916EE14A4008BB353 /* ScheduleEvent.m in Sources */,
+				E199357A16EE14A4008BB353 /* ScheduleTimeObject.m in Sources */,
+				E199357B16EE14A4008BB353 /* ScheduleUtils.m in Sources */,
+				E199357C16EE14A4008BB353 /* ScheduleXMLHelper.m in Sources */,
+				E199357D16EE14A4008BB353 /* ScheduleDBHelper.m in Sources */,
+				E199357E16EE14A4008BB353 /* CreateScheduleEventPluginResult.m in Sources */,
+				E199357F16EE14A4008BB353 /* CreateSchedulePluginResult.m in Sources */,
+				E199358016EE14A4008BB353 /* GetScheduleDataPluginResult.m in Sources */,
+				E199358116EE14A4008BB353 /* GetScheduleEventDataPluginResult.m in Sources */,
+				E199358516EE14CB008BB353 /* NSDictionary+StringValueForKey.m in Sources */,
+				E1B0CF4A16EF6F99001E3360 /* GetScheduleEventsListener.m in Sources */,
+				E1B0CF4D16EF6FF9001E3360 /* ScheduleServerHelper.m in Sources */,
+				E1B0CF5B16EF9C42001E3360 /* DeleteAdvancedScheduleListener.m in Sources */,
+				E1B0CF5C16EF9C42001E3360 /* GetAdvancedScheduleListener.m in Sources */,
+				E1B0CF5D16EF9C42001E3360 /* PostScheduleResult.m in Sources */,
+				E1B0CF5E16EF9C42001E3360 /* SetAdvancedScheduleListener.m in Sources */,
+				E1B0CF5F16EF9C42001E3360 /* UpdateBasicScheduleListener.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

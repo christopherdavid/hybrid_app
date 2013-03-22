@@ -40,10 +40,13 @@
 #define KEY_END_TIME @"endTime"
 
 
-#define KEY_SCHEDULE_TYPE @"scheduletype"
+#define KEY_SCHEDULE_TYPE @"scheduleType"
 #define KEY_SCHEDULES @"schedules"
 #define KEY_SCHEDULE_ID @"scheduleId"
-
+#define KEY_SCHEDULE_EVENT_DATA @"scheduleEventData"
+#define KEY_SCHEDULE_EVENT_ID @"scheduleEventId"
+#define KEY_SCHEDULE_EVENTS_LIST  @"scheduleEventLists"
+#define KEY_SCHEDULE @"schedule"
 //Used by robot map
 
 #define KEY_ROBOT_MAP_ID @"mapId"

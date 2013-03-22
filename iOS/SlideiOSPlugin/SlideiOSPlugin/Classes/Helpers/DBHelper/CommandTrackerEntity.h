@@ -4,7 +4,7 @@
 
 @interface CommandTrackerEntity : NSManagedObject
 
-@property (nonatomic, retain) NSNumber * commandType;
+@property (nonatomic, retain) NSString * commandType;
 @property (nonatomic, retain) NSDate * creationTime;
 @property (nonatomic, retain) NSString * requestId;
 @property (nonatomic, retain) NSString * xmlCommand;

@@ -2,6 +2,7 @@
 #import "NeatoRobot.h"
 #import "NeatoRobotManager.h"
 #import "XMPPConnectionHelper.h"
+#import "Schedule.h"
 
 @protocol RobotManagerProtocol <NSObject>
 
@@ -36,6 +37,17 @@
 - (void)failedToSendCommandOverXMPP2:(NSString *)callbackId;
 - (void)commandSentOverTCP2:(NSString *)callbackId;
 - (void)commandSentOverXMPP2:(NSString *)callbackId;
+- (void)failedToGetScheduleEventsForRobotWithId:(NSString *)robotId error:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)gotScheduleEventsForSchedule:(Schedule *)scheduleEvents ofType:(NSInteger)scheduleType forRobotWithId:(NSString *)robotId  callbackId:(NSString *)callbackId;
+- (void)setScheduleSuccess:(NSString *)message callbackId:(NSString *)callbackId;
+- (void)getScheduleSuccess:(NSDictionary *)jsonObject callbackId:(NSString *)callbackId;
+- (void)setScheduleError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)getScheduleError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)deleteScheduleSuccess:(NSString *)message callbackId:(NSString *)callbackId;
+- (void)deleteScheduleError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)updatedSchedule:(NSString *)scheduleId callbackId:(NSString *)callbackId;
+- (void)updateScheduleError:(NSError *)error callbackId:(NSString *)callbackId;
+
 @end
 
 @interface RobotManagerCallWrapper : NSObject <TCPConnectionHelperProtocol, XMPPConnectionHelperProtocol>
@@ -57,4 +69,15 @@
 - (void)onlineStatusForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
 - (void)tryDirectConnection2:(NSString *)robotId callbackId:(NSString *)callbackId;
 - (void)sendCommandToRobot2:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params callbackId:(NSString *)callbackId;
+- (id)createScheduleForRobotId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType;
+- (id)addScheduleEventData:(NSDictionary *)scheduleEventData forScheduleWithScheduleId:(NSString *)scheduleId;
+- (id)updateScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId withScheduleEventdata:(NSDictionary *)scheduleEventData;
+- (id)deleteScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId;
+- (id)getScheduleEventDataWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId;
+- (id)getScheduleDataForScheduleId:(NSString *)scheduleId;
+- (void)getScheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType callbackId:(NSString *)callbackId;
+- (void)updateScheduleForScheduleId:(NSString *)scheduleId callbackId:(NSString *)callbackId;
+- (void)setRobotSchedule:(NSArray *)schedulesArray forRobotId:(NSString *)robotId ofType:(NSString *)schedule_type callbackId:(NSString *)callbackId;
+- (void)getRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type callbackId:(NSString *) callbackId;
+- (void)deleteRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type callbackId:(NSString *)callbackId;
 @end

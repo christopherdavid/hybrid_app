@@ -20,4 +20,5 @@
 + (NSString *)jsonStringFromObject:(id)object;
 + (NSTimeInterval)currentTimeStamp;
 + (NSError *)nserrorWithDescription:(NSString *)description code:(NSInteger)code;
++ (NSString *)getEmptyStringIfNil:(NSString *)input;
 @end
