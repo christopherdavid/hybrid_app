@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleInfo2;
 import com.neatorobotics.android.slide.framework.utils.CryptoUtils;
 import com.neatorobotics.android.slide.framework.utils.FileUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
@@ -25,8 +26,8 @@ import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
  */
 public class DBHelper {
 	private static final String TAG = DBHelper.class.getSimpleName();
-	
-	private static final int DB_VERSION = 2;
+
+	private static final int DB_VERSION = 3;
 	private static final String DB_NAME = "neato_plugin_smart_apps.db";
 	
 	private static DBHelper singleInstanceObject;
@@ -67,11 +68,29 @@ public class DBHelper {
 		+ DBCommon.COL_NAME_GRID_DATA_VERSION	+ " TEXT, "		
 		+ DBCommon.COL_NAME_GRID_DATA_FILE_PATH	+ " TEXT ) ";
 	
+	private static final String CREATE_SCHEDULE_INFO_TABLE_QUERY =  "CREATE TABLE IF NOT EXISTS " +
+			DBCommon.TABLE_NAME_SCHEDULE_INFO 
+			+ "(" 
+			+ DBCommon.COL_NAME_SCHEDULE_ID			+ " TEXT PRIMARY KEY, "
+			+ DBCommon.COL_NAME_SCHEDULE_SERVER_ID		+ " TEXT, "
+			+ DBCommon.COL_NAME_SCHEDULE_VERSION		+ " TEXT, "		
+			+ DBCommon.COL_NAME_SCHEDULE_DATA			+ " TEXT, "
+			+ DBCommon.COL_NAME_SCHEDULE_TYPE 			+ " TEXT )";
+
+	private static final String CREATE_ROBOT_SCHEDULE_IDS_INFO_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " +
+			DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS
+			+ "("
+			+ DBCommon.COL_NAME_ROBOT_ID						+ " TEXT PRIMARY KEY, "
+			+ DBCommon.COL_NAME_BASIC_SCHEDULE_ID 			+ " TEXT, "
+			+ DBCommon.COL_NAME_ADVANCED_SCHEDULE_ID 			+ " TEXT ) ";
+
 	private static final String DROP_USER_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_USER_INFO;
 	private static final String DROP_ROBOT_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_ROBOT_INFO;
 	private static final String DROP_ATLAS_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_ATLAS_INFO;
 	private static final String DROP_GRID_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_GRID_INFO;
-	
+	private static final String DROP_SCHEDULE_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_SCHEDULE_INFO;
+	private static final String DROP_ROBOT_SCHEDULE_IDS_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS;
+
 	// Select query statements
 	private static final String SELECTION_USER_BY_USER_ID = DBCommon.TABLE_NAME_USER_INFO + "." + DBCommon.COL_NAME_USER_ID + " = ?";
 	private static final String SELECTION_USER_BY_USER_EMAIL = DBCommon.TABLE_NAME_USER_INFO + "." + DBCommon.COL_NAME_USER_EMAIL + " = ?";
@@ -80,7 +99,12 @@ public class DBHelper {
 	
 	private static final String SELECTION_ATLAS_BY_ID = DBCommon.TABLE_NAME_ATLAS_INFO + "." + DBCommon.COL_NAME_ATLAS_ID + " = ?";
 	private static final String SELECTION_GRID_BY_ID = DBCommon.TABLE_NAME_GRID_INFO + "." + DBCommon.COL_NAME_GRID_ID + " = ?";
-	
+
+	private static final String SELECTION_SCHEDULE_INFO_BY_ID = DBCommon.TABLE_NAME_SCHEDULE_INFO + "." + DBCommon.COL_NAME_SCHEDULE_ID + " = ?";
+	private static final String SELECTION_ROBOT_SCHEDULE_BY_ID = DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + DBCommon.COL_NAME_ROBOT_ID + " = ?";
+	private static final String SELECTION_ROBOT_BY_BASIC_SCHEDULE_ID = DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + DBCommon.COL_NAME_BASIC_SCHEDULE_ID + " = ?";
+	private static final String SELECTION_ROBOT_BY_ADVANCED_SCHEDULE_ID = DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + DBCommon.COL_NAME_ADVANCED_SCHEDULE_ID + " = ?";
+
 	private class DBOpenHelper extends SQLiteOpenHelper {
 		// private boolean mDBCreated;
 		
@@ -110,6 +134,8 @@ public class DBHelper {
 			db.execSQL(CREATE_ROBOT_INFO_TABLE_QUERY);
 			db.execSQL(CREATE_ATLAS_INFO_TABLE_QUERY);
 			db.execSQL(CREATE_GRID_TABLE_QUERY);
+			db.execSQL(CREATE_SCHEDULE_INFO_TABLE_QUERY);
+			db.execSQL(CREATE_ROBOT_SCHEDULE_IDS_INFO_TABLE_QUERY);
 		}
 		
 		private void dropTables(SQLiteDatabase db) {
@@ -117,6 +143,8 @@ public class DBHelper {
 			db.execSQL(DROP_ROBOT_INFO_TABLE_QUERY);
 			db.execSQL(DROP_ATLAS_INFO_TABLE_QUERY);
 			db.execSQL(DROP_GRID_INFO_TABLE_QUERY);
+			db.execSQL(DROP_SCHEDULE_INFO_TABLE_QUERY);
+			db.execSQL(DROP_ROBOT_SCHEDULE_IDS_INFO_TABLE_QUERY);
 		}
 	}
 	
@@ -626,7 +654,215 @@ public class DBHelper {
 		values.put(DBCommon.COL_NAME_GRID_ID, gridItem.getId());
 		values.put(DBCommon.COL_NAME_GRID_DATA_VERSION, gridItem.getDataVersion());
 		values.put(DBCommon.COL_NAME_GRID_DATA_FILE_PATH, gridItem.getDataFilePath());				
+
+		return values;
+	}
+
+	// Public helper method to return the ScheduleInfo based on the id
+	// from the database
+	public ScheduleInfo2 getScheduleInfoById(String id) {
+		ScheduleInfo2 scheduleInfo = null;
+		String[] selectionArgs = new String[] {id};
+		SQLiteDatabase db = getDatabase();
+		Cursor cursor = db.query(DBCommon.TABLE_NAME_SCHEDULE_INFO, null, SELECTION_SCHEDULE_INFO_BY_ID, selectionArgs, null, null, null);
+		if (cursor.moveToFirst()) {
+			scheduleInfo = convertToScheduleInfo(cursor);
+		}
+		cursor.close();
+		return scheduleInfo;
+	}
+
+	private ScheduleInfo2 convertToScheduleInfo(Cursor cursor) {
+		ScheduleInfo2 scheduleInfo = new ScheduleInfo2();
+		scheduleInfo.setScheduleId(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_SCHEDULE_ID)));
+		scheduleInfo.setServerId(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_SCHEDULE_SERVER_ID)));
+		scheduleInfo.setDataVersion(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_SCHEDULE_VERSION)));		
+		scheduleInfo.setScheduleType(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_SCHEDULE_TYPE)));
+		scheduleInfo.setScheduleData(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_SCHEDULE_DATA)));
+		return scheduleInfo;
+	}
+
+	// Public helper method to save the schedule information into the database
+	public ScheduleInfo2 saveScheduleInfo(String id, String serverId, String scheduleVersion, String scheduleType, String data) {	
+		LogHelper.logD(TAG, String.format("saveScheduleInfo - Input ScheduleId = %s ScheduleVersion = %s", serverId, scheduleVersion));
+		ScheduleInfo2 scheduleInfo = getScheduleInfoById(id);
+		if (scheduleInfo != null) {			
+			LogHelper.logD(TAG, String.format("saveScheduleInfo - Database ScheduleId = %s ScheduleVersion = %s ", 
+					scheduleInfo.getServerId(), scheduleInfo.getDataVersion()));		
+			scheduleInfo.setScheduleId(id);
+			scheduleInfo.setServerId(serverId);
+			scheduleInfo.setScheduleType(scheduleType);
+			scheduleInfo.setDataVersion(scheduleVersion);
+			scheduleInfo.setScheduleData(data);
+			updateScheduleInfo(scheduleInfo);
+		}
+		else {
+			LogHelper.logD(TAG, String.format("Insert schedule info -  ScheduleId = %s ScheduleVersion = %s ", 
+					serverId, scheduleVersion));
+			ContentValues values = getScheduleInfoContentValues(id, serverId, scheduleVersion, scheduleType, data);
+			SQLiteDatabase db = getDatabase();
+			long rowId = db.insert(DBCommon.TABLE_NAME_SCHEDULE_INFO, null, values);
+			if (rowId > 0) {
+				scheduleInfo = new ScheduleInfo2();
+				scheduleInfo.setScheduleId(id);
+				scheduleInfo.setServerId(serverId);
+				scheduleInfo.setScheduleType(scheduleType);  
+				scheduleInfo.setDataVersion(scheduleVersion);
+			}
+		}
+		return scheduleInfo;
+	}
 		
+	public boolean updateScheduleInfo(ScheduleInfo2 scheduleInfo) {
+		ContentValues values = getScheduleInfoContentValues(scheduleInfo);		
+		String[] selectionArgs = new String[] {scheduleInfo.getScheduleId()};
+		SQLiteDatabase db = getDatabase();
+		int count = db.update(DBCommon.TABLE_NAME_SCHEDULE_INFO, values, SELECTION_SCHEDULE_INFO_BY_ID, selectionArgs);
+		return (count > 0) ? true : false;
+	}
+
+	private ContentValues getScheduleInfoContentValues(String id, String serverId, String scheduleVersion, String scheduleType, String scheduleData) 
+	{
+		ContentValues values  = new ContentValues();
+		values.put(DBCommon.COL_NAME_SCHEDULE_ID, id);
+		values.put(DBCommon.COL_NAME_SCHEDULE_SERVER_ID, serverId);
+		values.put(DBCommon.COL_NAME_SCHEDULE_VERSION, scheduleVersion);
+		values.put(DBCommon.COL_NAME_SCHEDULE_TYPE, scheduleType);
+		values.put(DBCommon.COL_NAME_SCHEDULE_DATA, scheduleData);
+		return values;
+	}
+
+	private ContentValues getScheduleInfoContentValues(ScheduleInfo2 scheduleInfo) {
+		ContentValues values  = new ContentValues();
+		values.put(DBCommon.COL_NAME_SCHEDULE_ID, scheduleInfo.getScheduleId());
+		values.put(DBCommon.COL_NAME_SCHEDULE_SERVER_ID, scheduleInfo.getServerId());
+		values.put(DBCommon.COL_NAME_SCHEDULE_VERSION, scheduleInfo.getDataVersion());
+		values.put(DBCommon.COL_NAME_SCHEDULE_TYPE, scheduleInfo.getScheduleType());
+		values.put(DBCommon.COL_NAME_SCHEDULE_DATA, scheduleInfo.getScheduleData());
+		return values;
+	}
+
+	public boolean isScheduleInfoExistsForRobot(String robotId) {
+		String[] selectionArgs = new String[] {robotId};
+		SQLiteDatabase db = getDatabase();
+		Cursor cursor = db.query(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
+		return cursor.moveToFirst();
+	} 
+
+	// Robot schedule IDs helper function
+	public String getAdvancedScheduleIdForRobot(String robotId) {
+		String scheduleId = null;
+		String[] selectionArgs = new String[] {robotId};
+
+		SQLiteDatabase db = getDatabase();
+		Cursor cursor = db.query(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
+		if (cursor.moveToFirst()) {
+			scheduleId = getAdvancedScheduleId(cursor);
+		}
+		cursor.close();
+		return scheduleId;
+	}
+
+
+	public String getBasicScheduleIdForRobot(String robotId) {
+		String scheduleId = null;
+		String[] selectionArgs = new String[] {robotId};
+
+		SQLiteDatabase db = getDatabase();
+		Cursor cursor = db.query(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
+		if (cursor.moveToFirst()) {
+			scheduleId = getBasicScheduleId(cursor);
+		}
+		cursor.close();
+		return scheduleId;
+	}
+
+	private String getAdvancedScheduleId(Cursor cursor) {
+		return (cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ADVANCED_SCHEDULE_ID)));
+	}
+
+	private String getBasicScheduleId(Cursor cursor) {
+		return (cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_BASIC_SCHEDULE_ID)));
+	}
+
+	private String getRobotId(Cursor cursor) {
+		return (cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_ID)));
+	}
+
+	public boolean updateBasicScheduleId(String robotId, String basicScheduleId) {
+		ContentValues values = getBasicContentValues(robotId, basicScheduleId);		
+		String[] selectionArgs = new String[] {robotId};
+		SQLiteDatabase db = getDatabase();
+		int count = db.update(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, values, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs);
+		return (count > 0) ? true : false;
+	}
+
+	public boolean updateAdvancedScheduleId(String robotId, String advacnedScheduleId) {
+		ContentValues values = getAdvancedContentValues(robotId, advacnedScheduleId);		
+		String[] selectionArgs = new String[] {robotId};
+		SQLiteDatabase db = getDatabase();
+		int count = db.update(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, values, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs);
+		return (count > 0) ? true : false;
+	}
+
+	public void saveAdvancedScheduleId(String robotId, String id) {	
+		if (isScheduleInfoExistsForRobot(robotId)) {			
+			updateAdvancedScheduleId(robotId, id);
+		}
+		else {
+			ContentValues values = getAdvancedContentValues(robotId, id);
+			SQLiteDatabase db = getDatabase();
+			db.insert(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, values);
+		}
+	}
+
+	public void saveBasicScheduleId(String robotId, String id) {	
+		if (isScheduleInfoExistsForRobot(robotId)) {			
+			updateBasicScheduleId(robotId, id);
+		}
+		else {
+			ContentValues values = getBasicContentValues(robotId, id);
+			SQLiteDatabase db = getDatabase();
+			db.insert(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, values);
+			LogHelper.logD(TAG, "Added Basic Schedule Id for the robot successfully");
+		}
+	}
+
+	public String getRobotIdForBasicSchedule(String id) {
+		String[] selectionArgs = new String[] {id};
+		String robotId = null;
+		SQLiteDatabase db = getDatabase();
+		Cursor cursor = db.query(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_BY_BASIC_SCHEDULE_ID, selectionArgs, null, null, null);
+		if (cursor.moveToFirst()) {
+			robotId = getRobotId(cursor);
+		}
+		cursor.close();
+		return robotId;
+	}
+
+	public String getRobotIdForAdvancedSchedule(String id) {
+		String[] selectionArgs = new String[] {id};
+		String robotId = null;
+		SQLiteDatabase db = getDatabase();
+		Cursor cursor = db.query(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_BY_ADVANCED_SCHEDULE_ID, selectionArgs, null, null, null);
+		if (cursor.moveToFirst()) {
+			robotId = getRobotId(cursor);
+		}
+		cursor.close();
+		return robotId;
+
+	}
+	private ContentValues getBasicContentValues(String robotId,  String id) {
+		ContentValues values  = new ContentValues();
+		values.put(DBCommon.COL_NAME_ROBOT_ID, robotId);
+		values.put(DBCommon.COL_NAME_BASIC_SCHEDULE_ID, id);
+		return values;
+	}
+
+	private ContentValues getAdvancedContentValues(String robotId, String id) {
+		ContentValues values  = new ContentValues();
+		values.put(DBCommon.COL_NAME_ROBOT_ID, robotId);
+		values.put(DBCommon.COL_NAME_ADVANCED_SCHEDULE_ID, id);
 		return values;
 	}
 }

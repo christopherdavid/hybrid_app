@@ -45,6 +45,9 @@ public class JsonMapKeys {
 	public static final String KEY_SCHEDULE_TYPE = "scheduleType";
 	public static final String KEY_SCHEDULES = "schedules";
 	public static final String KEY_SCHEDULE_ID = "scheduleId";
+	public static final String KEY_SCHEDULE_EVENTS_LIST = "scheduleEventLists";
+	public static final String KEY_SCHEDULE_EVENT_ID = "scheduleEventId";
+	public static final String KEY_SCHEDULE_EVENT_DATA = "scheduleEventData";
 	
 	//Used by robot map
 	
