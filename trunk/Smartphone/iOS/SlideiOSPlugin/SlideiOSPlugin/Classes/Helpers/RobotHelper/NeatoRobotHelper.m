@@ -1,8 +1,8 @@
 #import "NeatoRobotHelper.h"
 #import "LogHelper.h"
-#import "NeatoDBHelper.h"
 #import "NeatoServerManager.h"
 #import "NeatoUserHelper.h"
+#import "NeatoDataStore.h"
 
 @implementation NeatoRobotHelper
 
@@ -10,7 +10,7 @@
 +(void) saveNeatoRobot:(NeatoRobot *) neatoRobot
 {
     debugLog(@"");
-    NeatoDBHelper *helper = [NeatoDBHelper sharedNeatoDBHelper];
+    NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
     [helper saveNeatoRobot:neatoRobot forUser:[NeatoUserHelper getNeatoUser].userId];
 }
 
@@ -24,7 +24,7 @@
 +(NeatoRobot *) getRobotForId:(NSString *) robotId
 {
     debugLog(@"");
-    return [[NeatoDBHelper sharedNeatoDBHelper] getRobotForId:robotId];
+  return [[NeatoDataStore sharedNeatoDataStore] getRobotForId:robotId];
 }
 
 + (void)updateUserAssociatedRobots
@@ -36,7 +36,7 @@
      
 + (void)updateName:(NSString *)name forRobotwithId:(NSString *)robotId {
     debugLog(@"");
-    NeatoDBHelper *helper = [NeatoDBHelper sharedNeatoDBHelper];
+    NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
     NeatoRobot *robot = [helper getRobotForId:robotId];
     if (robot) {
         robot.name = name;

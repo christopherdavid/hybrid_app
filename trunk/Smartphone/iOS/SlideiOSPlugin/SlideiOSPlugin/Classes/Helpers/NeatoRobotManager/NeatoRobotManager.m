@@ -12,7 +12,7 @@
 #import "DeviceConnectionManager.h"
 #import "RobotCommandHelper.h"
 #import "CommandsHelper.h"
-
+#import "RobotScheduleManager.h"
 
 @implementation NeatoRobotManager
 
@@ -93,22 +93,22 @@
         [helper startCleaning:robot.chatId delegate:delegate];
     }
     
-        /*            NeatoUser *user = [NeatoUserHelper getNeatoUser];
-            if (user)
-            {
-                [connectectionHelper connectJID:user.chatId password:user.chatPassword host:NEATO_XMPP_SERVER_ADDRESS];
-                NeatoRobot *robot = [NeatoRobotHelper getRobotForId:roboId];
-                if (robot == nil)
-                {
-                    debugLog(@"WHOA! No robot found with id = %@ in the local storage. Maybe the robot is not associated with the user. Will not send XMPP command to the robot.", roboId);
-                    return;
-                }
-                [helper startCleaning:robot.chatId];
-            }
-            else
-            {
-                debugLog(@"User not logged-in. Will not connect over XMPP!");
-            }*/
+    /*            NeatoUser *user = [NeatoUserHelper getNeatoUser];
+     if (user)
+     {
+     [connectectionHelper connectJID:user.chatId password:user.chatPassword host:NEATO_XMPP_SERVER_ADDRESS];
+     NeatoRobot *robot = [NeatoRobotHelper getRobotForId:roboId];
+     if (robot == nil)
+     {
+     debugLog(@"WHOA! No robot found with id = %@ in the local storage. Maybe the robot is not associated with the user. Will not send XMPP command to the robot.", roboId);
+     return;
+     }
+     [helper startCleaning:robot.chatId];
+     }
+     else
+     {
+     debugLog(@"User not logged-in. Will not connect over XMPP!");
+     }*/
 }
 
 // AS of now we allow only one TCP connection
@@ -138,26 +138,26 @@
         }
         [helper stopCleaning:robot.chatId delegate:delegate];
         /*}
-        else
-        {
-            debugLog(@"Not connected over XMPP. Will connect and send command.");
-            NeatoUser *user = [NeatoUserHelper getNeatoUser];
-            if (user)
-            {
-                [connectectionHelper connectJID:user.chatId password:user.chatPassword host:NEATO_XMPP_SERVER_ADDRESS];
-                NeatoRobot *robot = [NeatoRobotHelper getRobotForId:roboId];
-                if (robot == nil)
-                {
-                    debugLog(@"WHOA! No robot found with id = %@ in the local storage. Maybe the robot is not associated with the user. Will not send XMPP command to the robot.", roboId);
-                    return;
-                }
-                [helper stopCleaning:robot.chatId];
-            }
-            else
-            {
-                debugLog(@"User not logged-in. Will not connect over XMPP!");
-            }
-        }*/
+         else
+         {
+         debugLog(@"Not connected over XMPP. Will connect and send command.");
+         NeatoUser *user = [NeatoUserHelper getNeatoUser];
+         if (user)
+         {
+         [connectectionHelper connectJID:user.chatId password:user.chatPassword host:NEATO_XMPP_SERVER_ADDRESS];
+         NeatoRobot *robot = [NeatoRobotHelper getRobotForId:roboId];
+         if (robot == nil)
+         {
+         debugLog(@"WHOA! No robot found with id = %@ in the local storage. Maybe the robot is not associated with the user. Will not send XMPP command to the robot.", roboId);
+         return;
+         }
+         [helper stopCleaning:robot.chatId];
+         }
+         else
+         {
+         debugLog(@"User not logged-in. Will not connect over XMPP!");
+         }
+         }*/
     }
 }
 
@@ -202,6 +202,62 @@
 + (void)sendCommandToRobot2:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate {
     RobotCommandHelper *robotCommandHelper = [[RobotCommandHelper alloc] init];
     [robotCommandHelper sendCommandToRobot2:robotId commandId:commandId params:params delegate:delegate];
+}
+
++ (id)createScheduleForRobotId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType {
+    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
+    return [scheduleManager createScheduleForRobotId:robotId forScheduleType:scheduleType];
+}
+
++ (id)addScheduleEventData:(NSDictionary *)scheduleEventData forScheduleWithScheduleId:(NSString *)scheduleId {
+    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
+    return [scheduleManager addScheduleEventData:scheduleEventData forScheduleWithScheduleId:scheduleId];
+}
+
++ (id)updateScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId withScheduleEventdata:(NSDictionary *)scheduleEventData {
+    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
+    return [scheduleManager updateScheduleEventWithScheduleEventId:scheduleEventId forScheduleId:scheduleId withScheduleEventdata:scheduleEventData];
+}
+
++ (id)deleteScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
+    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
+    return [scheduleManager deleteScheduleEventWithScheduleEventId:scheduleEventId forScheduleId:scheduleId];
+}
+
++ (id)getSchedueEventDataWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
+    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
+    return [scheduleManager getSchedueEventDataWithScheduleEventId:scheduleEventId withScheduleId:scheduleId];
+}
+
++ (id)getScheduleDataForScheduleId:(NSString *)scheduleId {
+    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
+    return [scheduleManager getScheduleDataForScheduleId:scheduleId];
+}
+
++ (void)getScheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType delegate:(id)delegate {
+    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
+    [scheduleManager getScheduleEventsForRobotWithId:robotId ofScheduleType:scheduleType delegate:delegate];
+}
+
+// TODO: Fix parameter names
++ (void)updateScheduleForScheduleId:(NSString *)scheduleId delegate:(id)delegate {
+    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
+    [scheduleManager updateScheduleForScheduleId:scheduleId delegate:delegate];
+}
+
++ (void)setRobotSchedule:(NSArray *)schedulesArray forRobotId:(NSString *)robotId ofType:(NSString *)schedule_type delegate:(id)delegate {
+    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
+    [scheduleManager setRobotSchedule:schedulesArray forRobotId:robotId ofType:schedule_type delegate:delegate];
+}
+
++ (void)getRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type delegate:(id)delegate {
+    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
+    [scheduleManager getSchedulesForRobotId:robotId OfType:schedule_type delegate:delegate];
+}
+
++(void) deleteRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type delegate:(id)delegate {
+    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
+    [scheduleManager deleteScheduleForRobotId:robotId OfType:schedule_type delegate:delegate];
 }
 
 @end

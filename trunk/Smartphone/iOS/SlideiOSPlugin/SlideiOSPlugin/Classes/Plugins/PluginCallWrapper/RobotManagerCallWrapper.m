@@ -331,10 +331,10 @@
 }
 
 - (void)setRobotName2:(NSString *)robotName forRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
-  debugLog(@"");
-  self.retained_self = self;
-  self.callbackId = callbackId;
-  [NeatoRobotManager setRobotName2:robotName forRobotWithId:robotId delegate:self];
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    [NeatoRobotManager setRobotName2:robotName forRobotWithId:robotId delegate:self];
 }
 
 - (void)robotName:(NSString *)name updatedForRobotWithId:(NSString *)robotId {
@@ -479,6 +479,152 @@
     debugLog(@"");
     if ([self.delegate respondsToSelector:@selector(failedToSendCommandOverXMPP2:)]) {
         [self.delegate failedToSendCommandOverXMPP2:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (id)createScheduleForRobotId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType {
+    debugLog(@"");
+    return  [NeatoRobotManager createScheduleForRobotId:robotId ofScheduleType:scheduleType];
+}
+
+- (id)addScheduleEventData:(NSDictionary *)scheduleEventData forScheduleWithScheduleId:(NSString *)scheduleId {
+    debugLog(@"");
+    return [NeatoRobotManager addScheduleEventData:scheduleEventData forScheduleWithScheduleId:scheduleId];
+}
+
+- (id)updateScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId withScheduleEventdata:(NSDictionary *)scheduleEventData {
+    debugLog(@"");
+    return [NeatoRobotManager updateScheduleEventWithScheduleEventId:scheduleEventId forScheduleId:scheduleId withScheduleEventdata:scheduleEventData];
+}
+
+- (id)deleteScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
+    debugLog(@"");
+    return [NeatoRobotManager deleteScheduleEventWithScheduleEventId:scheduleEventId forScheduleId:scheduleId];
+}
+
+- (id)getScheduleEventDataWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
+    debugLog(@"");
+    return [NeatoRobotManager getSchedueEventDataWithScheduleEventId:scheduleEventId forScheduleId:scheduleId];
+}
+
+- (id)getScheduleDataForScheduleId:(NSString *)scheduleId {
+    debugLog(@"");
+    return [NeatoRobotManager getScheduleDataForScheduleId:scheduleId];
+}
+
+- (void)getScheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType callbackId:(NSString *)callbackId {
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    [NeatoRobotManager getScheduleEventsForRobotWithId:robotId ofScheduleType:scheduleType delegate:self];
+}
+
+- (void)failedToGetScheduleEventsForRobotWithId:(NSString *)robotId error:(NSError *)error {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(failedToGetScheduleEventsForRobotWithId:error:callbackId:)]) {
+        [self.delegate failedToGetScheduleEventsForRobotWithId:robotId error:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)gotScheduleEventsForSchedule:(Schedule *)schedule ofType:(NSInteger)scheduleType forRobotWithId:(NSString *)robotId {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(gotScheduleEventsForSchedule:ofType:forRobotWithId:callbackId:)]) {
+        [self.delegate gotScheduleEventsForSchedule:schedule ofType:scheduleType forRobotWithId:robotId callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)updateScheduleForScheduleId:(NSString *)scheduleId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    [NeatoRobotManager updateScheduleForScheduleId:scheduleId delegate:self];
+}
+
+- (void)updatedSchedule:(NSString *)scheduleId {
+    if ([self.delegate respondsToSelector:@selector(updatedSchedule:callbackId:)]) {
+        [self.delegate updatedSchedule:scheduleId callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)updateScheduleError:(NSError *)error {
+    if ([self.delegate respondsToSelector:@selector(updateScheduleError:callbackId:)]) {
+        [self.delegate updateScheduleError:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)setRobotSchedule:(NSArray *)schedulesArray forRobotId:(NSString *)robotId ofType:(NSString *)schedule_type callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    [NeatoRobotManager setRobotSchedule:schedulesArray forRobotId:robotId ofType:schedule_type delegate:self];
+}
+
+- (void)getRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type callbackId:(NSString *) callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    [NeatoRobotManager getRobotScheduleForRobotId:robotId ofType:schedule_type delegate:self];
+}
+
+- (void)deleteRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    [NeatoRobotManager deleteRobotScheduleForRobotId:robotId ofType:schedule_type delegate:self];
+}
+
+- (void)setScheduleSuccess:(NSString *)message {
+    if ([self.delegate respondsToSelector:@selector(setScheduleSuccess:callbackId:)]) {
+        [self.delegate setScheduleSuccess:message callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)getScheduleSuccess:(NSDictionary *)jsonObject {
+    if ([self.delegate respondsToSelector:@selector(getScheduleSuccess:callbackId:)]) {
+        [self.delegate getScheduleSuccess:jsonObject callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)setScheduleError:(NSError *)error {
+    if ([self.delegate respondsToSelector:@selector(setScheduleError:callbackId:)]) {
+        [self.delegate setScheduleError:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)getScheduleError:(NSError *)error {
+    if ([self.delegate respondsToSelector:@selector(getScheduleError:callbackId:)]) {
+        [self.delegate getScheduleError:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)deleteScheduleSuccess:(NSString *)message {
+    if ([self.delegate respondsToSelector:@selector(deleteScheduleSuccess:callbackId:)]) {
+        [self.delegate deleteScheduleSuccess:message callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)deleteScheduleError:(NSError *)error {
+    if ([self.delegate respondsToSelector:@selector(deleteScheduleError:callbackId:)]) {
+        [self.delegate deleteScheduleError:error callbackId:self.callbackId];
     }
     self.retained_self = nil;
     self.delegate = nil;

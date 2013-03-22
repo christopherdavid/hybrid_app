@@ -9,7 +9,7 @@
     if ((self = [super init]))
     {
         self.atlasId = [dictionary valueForKey:NEATO_RESPONSE_ATLAS_ID];
-        self.xmlDataUrl = [dictionary valueForKey:NEATO_RESPONSE_ATLAS_XML_DATA_URL];
+        self.xmlDataUrl = [dictionary valueForKey:NEATO_RESPONSE_XML_DATA_URL];
         self.version = [dictionary valueForKey:NEATO_RESPONSE_ATLAS_VERSION];
     }
     return self;

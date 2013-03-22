@@ -21,11 +21,17 @@
 #define NEATO_RESPONSE_MESSAGE @"message"
 #define NEATO_RESPONSE_RESULT @"result"
 #define NEATO_RESPONSE_ATLAS_ID @"atlas_id"
-#define NEATO_RESPONSE_ATLAS_XML_DATA_URL @"xml_data_url"
+#define NEATO_RESPONSE_XML_DATA_URL @"xml_data_url"
 #define NEATO_RESPONSE_ATLAS_VERSION @"version"
 #define NEATO_RESPONSE_SUCCESS @"success"
 #define NEATO_RESPONSE_ROBOT_ATLAS_ID @"robot_atlas_id"
 #define NEATO_ROBOT_ONLINE_STATUS @"online"
+
+#define NEATO_SCHEDULE_ADVANCE @"Advanced"
+#define NEATO_SCHEDULE_BASIC @"Basic"
+
+#define NEATO_SCHEDULE_ADVANCE_INT 1
+#define NEATO_SCHEDULE_BASIC_INT 0
 
 #define FIND_NEARBY_ROBOTS_BIND_PORT 48001
 #define GET_IP_OF_SELECTED_ROBOT_FIND_PORT 48002
@@ -154,12 +160,25 @@
 #endif
 
 
-
 #ifdef ROBOT_SCHEDULE_SERVER_PROD
-    // Will use API's at http://neato.rajatogo.com/wstest/robot_schedule.php
-    // TODO: Define all urls related to schedule API here
+    #define NEATO_GET_SCHEDULES_URL @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.get_schedules"
+    #define NEATO_GET_SCHEDULE_DATA_URL @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.get_data"
+    #define NEATO_POST_ROBOT_SCHEDULE_DATA @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.post_data"
+    #define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.update_data"
+    #define NEATO_DELETE_SCHEDULE_DATA @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.delete_data"
+#elif SWITCH_TO_DEV_SERVER
+    #define NEATO_GET_SCHEDULES_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robotschedule.get_schedules"
+    #define NEATO_GET_SCHEDULE_DATA_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robotschedule.get_data"
+    #define NEATO_POST_ROBOT_SCHEDULE_DATA @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json/?method=robotschedule.post_data"
+    #define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json/?method=robotschedule.update_data"
+    #define NEATO_DELETE_SCHEDULE_DATA @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json/?method=robotschedule.delete_data"
+
 #else
-    // Will use API's at http://neatostaging.rajatogo.com/wstest/robot_schedule.php
-    // TODO: Define all urls related to schedule API here
+    #define NEATO_GET_SCHEDULES_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.get_schedules"
+    #define NEATO_GET_SCHEDULE_DATA_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.get_data"
+    #define NEATO_POST_ROBOT_SCHEDULE_DATA @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.post_data"
+    #define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.update_data"
+    #define NEATO_DELETE_SCHEDULE_DATA @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.delete_data"
+
 #endif
 

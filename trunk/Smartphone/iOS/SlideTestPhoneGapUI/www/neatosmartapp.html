@@ -90,6 +90,7 @@
 			</center>
 			
 			<br><br><input type="button" id="btnGoToDebug" value="Test APIs" class="gradientButton">
+			<br><br><input type="button" id="btnGoToNewSchedule" value="Test Schedule APIs" class="gradientButton">
 			<br><input type="button" id="btnLogout" value="Logout" class="gradientButton"></input>
            <br><input type="button" id="aboutButton" value="About" class="gradientButton"></input>
 		<br>
@@ -143,8 +144,8 @@
 		<br><input type="button" id="btnSendStartStopCleanCommand" value="Start Cleaning" class="gradientButton" disabled=true></input>
 		<br><input type="button" id="btnSendStartStopCleanCommand2" value="Start Cleaning (New)" class="gradientButton"></input>
 		<br><input type="button" id="btnPauseCleaningCommand" value="Pause Cleaning (New)" class="gradientButton"></input>
-		<br><input type="button" id="btnEnableSchedule" value="Enable Schedule (New)" class="gradientButton" disabled=true></input>
-		<br><input type="button" id="btnDisableSchedule" value="Disable Schedule (New)" class="gradientButton" disabled=true></input>
+		<br><input type="button" id="btnEnableSchedule" value="Enable Schedule (New)" class="gradientButton"></input>
+		<br><input type="button" id="btnDisableSchedule" value="Disable Schedule (New)" class="gradientButton"></input>
 		<br><input type="button" id="btnSetRobotClock" value="Set Robot Clock (New)" class="gradientButton"></input>
 		<br><input type="button" id="btnTestGoToRobotMap" value="Show Robot Map" class="gradientButton" disabled=true></input>
 		<br><input type="button" id="btnTestDissociateRobot" value="Dissociate Robot" class="gradientButton"></input>
@@ -157,7 +158,7 @@
 	<section id="robotCommands"  aria-hidden=true>
 		<div class="defaultSectionHeader">Robot Commands</div>
 		<br><br><input type="button" id="btnStartStopCleaning" value="Start Cleaning" class="gradientButton"></input>
-		<br><input type="button" id="btnSendToBase" value="Send to base" class="gradientButton" disabled=true></input>
+		<br><input type="button" id="btnSendToBase" value="Send to base" class="gradientButton"></input>
 	</section>
 		
 	<section id="settings"  aria-hidden=true>
@@ -237,13 +238,15 @@
 	<section id="scheduleRobot"  aria-hidden=true>
 		<div class="defaultSectionHeader">Robot Schedule</div>
 		
-		<br><input type="button" id="btnScheduleAlternateWeekdays" value="Mon, Wed, Fri" class="gradientButton" disabled=true></input> 
-		<br><input type="button" id="btnScheduleBabyNap" value="Weekdays(Baby Nap)" class="gradientButton" disabled=true></input> 
-		<br><input type="button" id="btnScheduleOnlyWeekends" value="Only Weekends" class="gradientButton" disabled=true></input> 
-		<br><input type="button" id="btnScheduleWorkingCouple" value="Working Couples" class="gradientButton" disabled=true></input> 
-		<br><input type="button" id="btnScheduleClear" value="Clear Schedule" class="gradientButton"  disabled=true></input> 
-		<br><input type="button" id="btnGetSchedule" value="Get Schedule" class="gradientButton" disabled=true></input>
-		
+		<br><input type="button" id="btnScheduleAlternateWeekdays" value="Mon, Wed, Fri" class="gradientButton"></input> 
+		<br><input type="button" id="btnScheduleBabyNap" value="Weekdays(Baby Nap)" class="gradientButton"></input> 
+		<br><input type="button" id="btnScheduleOnlyWeekends" value="Only Weekends" class="gradientButton"></input> 
+		<br><input type="button" id="btnScheduleWorkingCouple" value="Working Couples" class="gradientButton"></input> 
+		<br><input type="button" id="btnScheduleClear" value="Clear Schedule" class="gradientButton"></input> 
+		<br><input type="button" id="btnGetSchedule" value="Get Schedule" class="gradientButton"></input>
+        <br>
+		<br>
+		<input type="checkbox" name="scheduleType" value="Use Basic Schedule" id="useBasicSchedule"/>Use Basic Schedule</input>
 	</section>
 	
 	<!-- Map section -->
@@ -288,6 +291,22 @@
                     <tr><td><lable>Server: </lable><b><lable id="serverUsed"></lable></b></td></tr>
                 </table>
             </center>
+        </section>
+        <!-- New Schedule Section -->
+        <section id="newScheduleRobot"  aria-hidden=true>
+            <div class="defaultSectionHeader">New Robot Schedule</div>
+            <br><input type="button" id="btnCreateSchedue" value="Create Schedule" class="gradientButton"></input>
+            <br><input type="button" id="btnGetScheduleEvents" value="Get Schedule Events" class="gradientButton"></input>
+            <br><input type="button" id="btnAddScheduleEvent" value="Add Schedule Event" class="gradientButton"></input>
+            <br><input type="button" id="btnUpdateScheduleEvent" value="Update Schedule Event" class="gradientButton" ></input>
+            <br><input type="button" id="getScheduleEventData" value="Get Schedule Event Data" class="gradientButton" ></input>
+            <br><input type="button" id="btnDeleteScheduleEvent" value="Delete Schedule Event" class="gradientButton" ></input>
+            <br><input type="button" id="updateSchedule" value="Update Schedule" class="gradientButton"></input>
+            <br><input type="button" id="btnGetScheduleData" value="Get Schedule Data" class="gradientButton" ></input>
+            <br>
+            <br>
+            <input type="checkbox" name="scheduleType" value="Use Basic Schedule" id="newUseBasicSchedule"/>Use Basic Schedule</input>
+            
         </section>
 <input type="button" id="backbutton" value="Back" class="gradientButton"></input>
 <label id="responseText"></label>

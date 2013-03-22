@@ -192,4 +192,11 @@
     return error;
 }
 
++ (NSString *)getEmptyStringIfNil:(NSString *)input {
+    if(input) {
+        return input;
+    }
+    return @"";
+}
+
 @end

@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
-#import "NeatoDBHelper.h"
+
+@class NeatoUser;
 
 @interface NeatoUserHelper : NSObject
 
