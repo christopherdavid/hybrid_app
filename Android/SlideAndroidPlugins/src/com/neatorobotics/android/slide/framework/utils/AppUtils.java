@@ -61,33 +61,51 @@ public class AppUtils {
 		return encodedString;
 	}
 	
-	 public static String convertStreamToString(InputStream is) {
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-	        StringBuilder sb = new StringBuilder();
-	 
-	        String line = null;
-	        try {
-	            while ((line = reader.readLine()) != null) {
-	                sb.append(line + "\n");
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        } finally {
-	            try {
-	                is.close();
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        return sb.toString();
+	public static String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+ 
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
 	 }
 	 
-	 public static String generateNewRequestId(Context context)
-	 {
-		 String requestId = UUID.randomUUID().toString();
-		 return requestId;
-	 }
+	public static String generateNewRequestId(Context context)
+	{
+		String requestId = UUID.randomUUID().toString();
+		return requestId;
+	}
 	
+
+	private static String generateUuid()
+	{
+		return UUID.randomUUID().toString();
+	}
+	
+	public static String generateNewScheduleEventId() 
+	{
+		String eventId = generateUuid();
+		return eventId;
+	}
+
+	public static String generateScheduleUUId() 
+	{
+		String scheduleId = generateUuid();
+		return scheduleId;
+	}
+
 	public static String getLoggedInUserId(Context context)
 	{
 		String userId = null;

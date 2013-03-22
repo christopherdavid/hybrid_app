@@ -146,6 +146,44 @@ label {
  background-image: linear-gradient(top, #bababa, #575757);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#bababa, endColorstr=#575757);
 }
 
+
+.gradientButtonSchedule{
+	 width: 70%;
+	 height: 40px;	
+	 margin-left: 15%;
+	 margin-right: 15%;
+	 margin-top: 5px;
+	 margin-bottom : 5px;
+	 border:1px solid #b7b7b7; 
+	 -webkit-border-radius: 3px; 
+	 -moz-border-radius: 3px;
+	 border-radius: 3px;
+	 font-family:arial, helvetica, sans-serif; 
+	 padding: 10px 10px 10px 10px; 
+	 text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+	 font-weight:bold; 
+	 text-align: center; 
+	 color: #FFFFFF; 
+	 background-color: #d3d3d3;
+	 background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d3d3d3), color-stop(100%, #707070));
+	 background-image: -webkit-linear-gradient(top, #d3d3d3, #707070);
+	 background-image: -moz-linear-gradient(top, #d3d3d3, #707070);
+	 background-image: -ms-linear-gradient(top, #d3d3d3, #707070);
+	 background-image: -o-linear-gradient(top, #d3d3d3, #707070);
+	 background-image: linear-gradient(top, #d3d3d3, #707070);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#d3d3d3, endColorstr=#707070);
+}
+
+.gradientButtonSchedule:hover{
+ border:1px solid #a0a0a0; 
+ background-color: #bababa;
+ background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#bababa), color-stop(100%, #575757));
+ background-image: -webkit-linear-gradient(top, #bababa, #575757);
+ background-image: -moz-linear-gradient(top, #bababa, #575757);
+ background-image: -ms-linear-gradient(top, #bababa, #575757);
+ background-image: -o-linear-gradient(top, #bababa, #575757);
+ background-image: linear-gradient(top, #bababa, #575757);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#bababa, endColorstr=#575757);
+}
+
 /* DISPLAY ROBOT LIST */
 .robotItemButton {
 		width: 60%;

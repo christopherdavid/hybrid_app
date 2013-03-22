@@ -1,8 +1,11 @@
 package com.neatorobotics.android.slide.framework.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -73,5 +76,15 @@ public class DataConversionUtils {
 		}
 		jObject = new JSONObject(hash);
 		return jObject;
+	}
+	
+	public static JSONArray toJsonArray(ArrayList<String> arrayList) {
+		JSONArray array = new JSONArray();
+		if (arrayList != null) {
+			for (int i = 0; i < arrayList.size(); i++) {
+				array.put(arrayList.get(i));
+			}
+		}
+		return array;
 	}
 }
