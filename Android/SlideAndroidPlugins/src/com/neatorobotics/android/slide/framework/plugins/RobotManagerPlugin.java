@@ -1457,7 +1457,7 @@ public class RobotManagerPlugin extends Plugin {
 					}
 					commandObj.put(JsonMapKeys.KEY_COMMAND_PARAMETERS, paramsObj);					
 				} catch (JSONException e) {
-					LogHelper.logD(TAG, "Exception in getEventJsonObject", e);
+					LogHelper.logD(TAG, "Exception in onRobotCommandReceived", e);
 				}
 			}
 			

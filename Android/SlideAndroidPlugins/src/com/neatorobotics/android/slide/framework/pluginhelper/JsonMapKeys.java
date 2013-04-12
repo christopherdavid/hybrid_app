@@ -48,7 +48,8 @@ public class JsonMapKeys {
 	public static final String KEY_SCHEDULE_EVENTS_LIST = "scheduleEventLists";
 	public static final String KEY_SCHEDULE_EVENT_ID = "scheduleEventId";
 	public static final String KEY_SCHEDULE_EVENT_DATA = "scheduleEventData";
-	
+	public static final String KEY_CLEANING_MODE = "cleaningMode";
+
 	//Used by robot map
 	
 	public static final String KEY_ROBOT_MAP_ID = "mapId";

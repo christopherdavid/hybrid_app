@@ -45,6 +45,7 @@ var neatoSmartApp = (function() {
 	
 	var CURRENT_PAGE = USER_HOME_PAGE;
 	var eventIdList = [];
+	var cleaningModeForBasicSchedule = CLEANING_MODE_ECO;
 	
 	return {
 
@@ -904,6 +905,35 @@ var neatoSmartApp = (function() {
 			}
 		},
 		
+		// TODO: We should have separate buttons to add event items
+		addScheduleEventNew: function() {
+			neatoSmartApp.showProgressBar();
+			var robotId = localStorage.getItem('robotId');
+			if (robotId == null) {
+				alert("Robot is not assocaited. Cannot retrieve schedule.");
+				neatoSmartApp.hideProgressBar();
+				return;
+			}
+			var scheduleId = localStorage.getItem('scheduleId');
+			if (scheduleId == null || (scheduleId.length == 0)) {
+				alert("Get Schedule Details");
+				neatoSmartApp.hideProgressBar();
+				return;
+			}
+			if (neatoSmartApp.useBasicScheduleNew()) {
+				var	scheduleJson = PluginManagerHelper.createBasicScheduleEventObject(1, "10:30", cleaningModeForBasicSchedule);
+				RobotPluginManager.addScheduleEvent(scheduleId, scheduleJson, neatoSmartApp.addScheduleEventSuccess, neatoSmartApp.addScheduleEventError);
+				cleaningModeForBasicSchedule++;
+				if (cleaningModeForBasicSchedule == 3) {
+					// reset the value
+					cleaningModeForBasicSchedule = CLEANING_MODE_ECO;
+				}
+			} else {
+				var	scheduleJson = PluginManagerHelper.getAdvancedScheduleEvent(2, "02:30", "4:30", 0, "Kitchen");
+				RobotPluginManager.addScheduleEvent(scheduleId, scheduleJson, neatoSmartApp.addScheduleEventSuccess, neatoSmartApp.addScheduleEventError);
+			}
+		},
+		
 		addScheduleEventSuccess: function(result) {
 			neatoSmartApp.hideProgressBar();
 			eventIdList = scheduleEventHelper.addEventId(eventIdList, result.scheduleEventId);
@@ -945,6 +975,36 @@ var neatoSmartApp = (function() {
 				RobotPluginManager.updateScheduleEvent(scheduleId, scheduleEventId, scheduleJson, neatoSmartApp.updateScheduleEventSuccess, neatoSmartApp.updateScheduleEventError);
 			}
 		},
+		updateScheduleEventNew: function() {
+			neatoSmartApp.showProgressBar();
+			var robotId = localStorage.getItem('robotId');
+			if (robotId == null) {
+				alert("Robot is not assocaited. Cannot retrieve schedule.");
+				neatoSmartApp.hideProgressBar();
+				return;
+			}
+			var scheduleId = localStorage.getItem('scheduleId');
+			if (scheduleId == null) {
+				alert("Get Schedule Details");
+				neatoSmartApp.hideProgressBar();
+				return;
+			}
+			
+			//var scheduleEventId = localStorage.getItem('scheduleEventId');
+			var scheduleEventId = scheduleEventHelper.getEventId(eventIdList, 0);
+			if (scheduleEventId == null || (scheduleEventId.length == 0) || (typeof scheduleEventId === 'undefined')) {
+				alert("No schedule events");
+				neatoSmartApp.hideProgressBar();
+				return;
+			}
+			if (neatoSmartApp.useBasicScheduleNew()) {
+				var	scheduleJson = PluginManagerHelper.createBasicScheduleEventObject(2, "12:30", CLEANING_MODE_NORMAL);
+				RobotPluginManager.updateScheduleEvent(scheduleId, scheduleEventId, scheduleJson, neatoSmartApp.updateScheduleEventSuccess, neatoSmartApp.updateScheduleEventError);
+			} else {
+				var	scheduleJson = PluginManagerHelper.getAdvancedScheduleEvent(2, "04:30", "6:30", 0, "Kitchen");
+				RobotPluginManager.updateScheduleEvent(scheduleId, scheduleEventId, scheduleJson, neatoSmartApp.updateScheduleEventSuccess, neatoSmartApp.updateScheduleEventError);
+			}
+		},		
 		updateScheduleEventSuccess: function(result) {
 			neatoSmartApp.hideProgressBar();
 			//localStorage.setItem('scheduleEventId', result.scheduleEventId);
@@ -1513,7 +1573,9 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnCreateSchedue').addEventListener('click', neatoSmartApp.createSchedule , true);
 			document.querySelector('#btnGetScheduleEvents').addEventListener('click', neatoSmartApp.getScheduleEvents , true);
 			document.querySelector('#btnAddScheduleEvent').addEventListener('click', neatoSmartApp.addScheduleEvent , true);
+			document.querySelector('#btnAddScheduleEventNew').addEventListener('click', neatoSmartApp.addScheduleEventNew, true);
 			document.querySelector('#btnUpdateScheduleEvent').addEventListener('click', neatoSmartApp.updateScheduleEvent , true);
+			document.querySelector('#btnUpdateScheduleEventNew').addEventListener('click', neatoSmartApp.updateScheduleEventNew , true);
 			document.querySelector('#getScheduleEventData').addEventListener('click', neatoSmartApp.getScheduleEventData , true);			
 			document.querySelector('#btnDeleteScheduleEvent').addEventListener('click', neatoSmartApp.deleteScheduleEvent , true);
 			document.querySelector('#updateSchedule').addEventListener('click', neatoSmartApp.updateSchedule , true);
@@ -1528,7 +1590,9 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnCreateSchedue').removeEventListener('click', neatoSmartApp.createSchedule , true);
 			document.querySelector('#btnGetScheduleEvents').removeEventListener('click', neatoSmartApp.getScheduleEvents , true);
 			document.querySelector('#btnAddScheduleEvent').removeEventListener('click', neatoSmartApp.addScheduleEvent , true);
+			document.querySelector('#btnAddScheduleEventNew').removeEventListener('click', neatoSmartApp.addScheduleEventNew , true);
 			document.querySelector('#btnUpdateScheduleEvent').removeEventListener('click', neatoSmartApp.updateScheduleEvent , true);
+			document.querySelector('#btnUpdateScheduleEventNew').removeEventListener('click', neatoSmartApp.updateScheduleEventNew , true);
 			document.querySelector('#getScheduleEventData').removeEventListener('click', neatoSmartApp.getScheduleEventData , true);			
 			document.querySelector('#btnDeleteScheduleEvent').removeEventListener('click', neatoSmartApp.deleteScheduleEvent , true);
 			document.querySelector('#updateSchedule').removeEventListener('click', neatoSmartApp.updateSchedule , true);

@@ -42,10 +42,21 @@ public class ScheduleJsonDataHelper2 {
 		try {
 			int dayInt = jsonObject.getInt(JsonMapKeys.KEY_DAY);
 			Day day = SchedulerConstants2.detrmineDay(dayInt);
+			// If "cleaning mode" is not provided in the JSON then we use default cleaning mode
+			String cleaningMode = String.valueOf(SchedulerConstants2.CLEANING_MODE_NORMAL); // default to normal mode
 			
 			String startTimeStr = jsonObject.getString(JsonMapKeys.KEY_START_TIME);
 			ScheduleTimeObject2 startTime = new ScheduleTimeObject2(startTimeStr);
-			schedule = new BasicScheduleEvent2(eventId, day, startTime);
+
+			if (!jsonObject.isNull(JsonMapKeys.KEY_CLEANING_MODE)) {
+				cleaningMode = jsonObject.getString(JsonMapKeys.KEY_CLEANING_MODE);
+				LogHelper.log(TAG, "Cleaning Mode : " + cleaningMode);
+			}
+			else {
+				LogHelper.log(TAG, "Cleaning Mode NOT FOUND");
+			}
+
+			schedule = new BasicScheduleEvent2(eventId, day, startTime, cleaningMode);
 		} catch (JSONException e) {
 			LogHelper.log(TAG, "Exception in jsonToSchedule", e);
 		}
