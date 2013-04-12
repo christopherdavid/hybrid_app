@@ -157,7 +157,10 @@ public class ScheduleXmlHelper2 {
 				} else if (nodeName.equals(SchedulerConstants2.XML_TAG_STARTTIME)) {
 					mStartTime = new ScheduleTimeObject2(chars);
 					mCurrentSchedule.setStartScheduleTime(mStartTime);
-				} 
+				}
+				else if (nodeName.equals(SchedulerConstants2.XML_TAG_CLEANING_MODE)) {
+					mCurrentSchedule.setCleaningMode(chars);
+				}
 			}
 			mElementValueMap.put(nodeName, chars);
 		} 

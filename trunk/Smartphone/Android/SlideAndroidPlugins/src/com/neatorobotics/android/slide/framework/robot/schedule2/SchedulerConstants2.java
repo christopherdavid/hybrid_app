@@ -21,8 +21,11 @@ public class SchedulerConstants2 {
 
 	public static final String XML_TAG_STARTTIME = "StartTime";
 	public static final String XML_TAG_ENDTIME = "EndTime";
+	public static final String XML_TAG_CLEANING_MODE = "CleaningMode";
 	public static final int SCHEDULE_TYPE_BASIC = 0;
 	public static final int SCHEDULE_TYPE_ADVANCED = 1;
+	public static final int CLEANING_MODE_ECO = 1;
+	public static final int CLEANING_MODE_NORMAL = 2;	
 
 	public static enum Day {SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY};
 	public static enum SchedularEvent {QUIET, CLEAN, NONE};	

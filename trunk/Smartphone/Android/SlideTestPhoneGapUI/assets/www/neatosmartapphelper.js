@@ -121,6 +121,10 @@ var START_CLEAN_TYPE_HIGH = 1;
 var START_CLEAN_TYPE_NORMAL = 2;
 var START_CLEAN_TYPE_SPOT = 3;
 
+// Cleaning Mode
+var CLEANING_MODE_ECO = 1;
+var CLEANING_MODE_NORMAL = 2;
+
 if(!window.plugins) {
 	window.plugins = {};
 }
@@ -567,6 +571,11 @@ var PluginManagerHelper =  (function() {
 		},	
 		getBasicScheduleEvent: function(day, startTime) {
 			var schedule = {'day':day, 'startTime': startTime};
+			return schedule;
+		},
+		
+		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {
+			var schedule = {'day':day, 'startTime': startTime, 'cleaningMode':cleaningMode};
 			return schedule;
 		},
 		

@@ -21,15 +21,18 @@ public class BasicScheduleEvent2 implements Schedule2 {
 	private String mEventId;
 	private Day mDay;
 	private ScheduleTimeObject2 mStartTime;
+	private String mCleaningMode;
 
 	public BasicScheduleEvent2(String eventId) {	
 		mEventId = eventId;
 	}
 	
-	public BasicScheduleEvent2(String eventId, Day day, ScheduleTimeObject2 startTime) {
+	public BasicScheduleEvent2(String eventId, Day day, ScheduleTimeObject2 startTime, 
+			String cleaningMode) {
 		mEventId = eventId;
 		mDay = day;
 		mStartTime = startTime;
+		mCleaningMode = cleaningMode;
 	}
 
 
@@ -56,6 +59,10 @@ public class BasicScheduleEvent2 implements Schedule2 {
 		String startTime = mStartTime.toString();
 		startTimeNode.appendChild(doc.createTextNode(startTime));
 		schedule.appendChild(startTimeNode);
+		// Add cleaning mode
+		Node cleaningModeNode = doc.createElement(SchedulerConstants2.XML_TAG_CLEANING_MODE);
+		cleaningModeNode.appendChild(doc.createTextNode(mCleaningMode));
+		schedule.appendChild(cleaningModeNode);
 
 		return schedule;
 	}
@@ -67,6 +74,8 @@ public class BasicScheduleEvent2 implements Schedule2 {
 			schedule.put(JsonMapKeys.KEY_DAY, mDay.ordinal());
 			//Put start-time HH:MM
 			schedule.put(JsonMapKeys.KEY_START_TIME, mStartTime.toString());
+			// Put cleaning mode			
+			schedule.put(JsonMapKeys.KEY_CLEANING_MODE, mCleaningMode);
 		} 
 		catch (JSONException e) {
 			LogHelper.log(TAG, "Exception in toJsonObject", e);
@@ -95,5 +104,13 @@ public class BasicScheduleEvent2 implements Schedule2 {
 
 	public String getEventId() {
 		return mEventId;		
+	}
+
+	public String getCleaningMode() {
+		return mCleaningMode;
+	}
+
+	public void setCleaningMode(String cleaningMode) {
+		mCleaningMode = cleaningMode;
 	}
 }
