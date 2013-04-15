@@ -65,8 +65,16 @@ resourceHandler.registerFunction('test_ViewModel.js', function(parent) {
                             
     this.testScenario = {
         "core":[
-            {label:"send 1",exe:function(){parent.communicationWrapper.exec(UserPluginManager.login, ['doh@nos.com', '1234567'], that.callbackSuccess, that.callbackError);}},
-            {label:"send 2",exe:function(){parent.communicationWrapper.exec(UserPluginManager.login, ['mrX@ade.com', '954244'], that.callbackSuccess, that.callbackError);}},
+            {label:"send 1",exe:function(){
+                var tDeffer = parent.communicationWrapper.exec(UserPluginManager.login, ['doh@nos.com', '1234567']);
+                tDeffer.done(that.callbackSuccess);
+                tDeffer.fail(that.callbackError);
+                }},
+            {label:"send 2",exe:function(){
+                var tDeffer = parent.communicationWrapper.exec(UserPluginManager.login, ['mrX@ade.com', '954244']);
+                tDeffer.done(that.callbackSuccess);
+                tDeffer.fail(that.callbackError);
+                }},
             {label:"clear callbacks",exe:function(){ parent.communicationWrapper.callbacks = {};}}
         ],
         

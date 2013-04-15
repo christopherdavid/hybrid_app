@@ -1,0 +1,24 @@
+/**
+ *   Create an image definition with (optional) additional classes that are attached to the
+ *   img-imgFile name. i.e. if the imgFile name is "myPicture" and the additional classes are ".bright" the resulting
+ *   CSS will contain ".img-myPicture .bright {...}"
+ */
+/**
+ *   Create a simple image with the given dimensions.
+ */
+/**
+ *  Creates the sprite position offset styles for a specific image
+ *  using the states name supplied.
+ */
+/**
+ *   Create a sprite for a certain row with the defined states.
+ *   By default the names for the states are "up", "down", "disabled".
+ *   The name of the states can be set. Currently only three states are available.
+ *   @spriteName: The name for this sprite 
+ *   @width: width of one sprite
+ *   @height: height of one sprite
+ *   @stateAmount: The amount of states within this image
+ *   @state1: The name of the first state (default: up)
+ *   @state2: The name of the second state (default: down)
+ *   @state3: The name of the thrid state (default:disabled)
+ */

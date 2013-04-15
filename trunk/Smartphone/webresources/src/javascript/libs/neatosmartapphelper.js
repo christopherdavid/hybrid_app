@@ -68,6 +68,17 @@ var ACTION_TYPE_SET_ROBOT_NAME_2                = "setRobotName2";
 var ACTION_TYPE_GET_ROBOT_DETAIL                = "getRobotDetail";
 var ACTION_TYPE_REGISTER_ROBOT_NOTIFICATIONS    = "registerRobotNotifications";
 var ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS  = "unregisterRobotNotifications";
+
+// New schedule APis 
+var ACTION_TYPE_UPDATE_SCHEDULE                 = "updateSchedule";
+var ACTION_TYPE_DELETE_ROBOT_SCHEDULE_EVENT     = "deleteScheduleEvent";
+var ACTION_TYPE_UPDATE_ROBOT_SCHEDULE_EVENT     = "updateScheduleEvent";
+var ACTION_TYPE_GET_SCHEDULE_EVENT_DATA         = "getScheduleEventData";
+var ACTION_TYPE_ADD_ROBOT_SCHEDULE_EVENT        = "addScheduleEventData";
+var ACTION_TYPE_GET_SCHEDULE_EVENTS             = "getScheduleEvents";
+var ACTION_TYPE_GET_SCHEDULE_DATA               = "getScheduleData";
+var ACTION_TYPE_CREATE_SCHEDULE                 = "createSchedule";
+
 //List of keys to send data:
 
 var KEY_EMAIL = 'email';
@@ -104,6 +115,16 @@ var COMMAND_DATA_CHANGED_ON_SERVER = 109;
 var COMMAND_SET_ROBOT_TIME = 110;
 var COMMAND_REGISTER_NOTIFICATIONS = 111;
 var COMMAND_UNREGISTER_NOTIFICATIONS = 112;
+
+
+var START_CLEAN_TYPE_HIGH = 1;
+var START_CLEAN_TYPE_NORMAL = 2;
+var START_CLEAN_TYPE_SPOT = 3;
+
+// Cleaning Mode
+var CLEANING_MODE_ECO = 1;
+var CLEANING_MODE_NORMAL = 2;
+
 
 var UserPluginManager = ( function() {
         return {
@@ -652,8 +673,124 @@ var RobotPluginManager = ( function() {
             
             unregisterNotifications: function(robotId, callbackSuccess, callbackError) {
                 window.plugins.neatoPluginLayer.robotMgr.unregisterNotifications(robotId, callbackSuccess, callbackError);
+            },
+            
+            // New Schedule APIs being added:
+            getScheduleEvents: function(robotId, scheduleType, callbackSuccess, callbackError) {
+                window.setTimeout(function() {
+                    callbackSuccess(
+                        {   'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
+                            'robotId': 'transformer23', 
+                            'scheduleType':0 , //0: basic 1:advanced 
+                            'scheduleEventLists': [
+                                "76d784e0-78a2-45e0-a67a-3f404eecafc8",
+                                "5d31a4e8-5eca-41b8-87bc-fa10a13c4152"
+                            ]
+                        }
+                    );
+                }, 1000);
+            },
+            // updateScheduleEvent('955fe88b-061f-4cc0-9f2b-c4baa73b156a', '76d784e0-78a2-45e0-a67a-3f404eecafc8', {'startTime':'12:30','day':2}, callbackSuccess, callbackError)
+            updateScheduleEvent: function(scheduleId, scheduleEventId, scheduleEventData, callbackSuccess, callbackError) {
+                //window.plugins.neatoPluginLayer.robotMgr.updateScheduleEvent(scheduleId, scheduleEventId, scheduleEventData, callbackSuccess, callbackError);
+                callbackSuccess(true);
+            },
+            deleteScheduleEvent: function(scheduleId, scheduleEventId, callbackSuccess, callbackError) {
+                //window.plugins.neatoPluginLayer.robotMgr.deleteScheduleEvent(scheduleId, scheduleEventId, callbackSuccess, callbackError);
+                switch(scheduleEventId) {
+                    case "76d784e0-78a2-45e0-a67a-3f404eecafc8":
+                        window.setTimeout(function() {
+                            callbackSuccess(
+                                {   
+                                    'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
+                                    'scheduleEventId':'76d784e0-78a2-45e0-a67a-3f404eecafc8'
+                                }
+                            );
+                        }, 5000);
+                    break;
+                    case "5d31a4e8-5eca-41b8-87bc-fa10a13c4152":
+                        window.setTimeout(function() {
+                            callbackSuccess(
+                                {   
+                                    'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
+                                    'scheduleEventId':'5d31a4e8-5eca-41b8-87bc-fa10a13c4152'
+                                    
+                                }
+                            );
+                        }, 1500);
+                    break;
+                }
+                
+            },
+            // addScheduleEvent('955fe88b-061f-4cc0-9f2b-c4baa73b156a', {'startTime':'10:30','day':1}, callbackSuccess, callbackError)
+            addScheduleEvent: function(scheduleId, scheduleEventData, callbackSuccess, callbackError) {
+                window.setTimeout(function() {
+                    callbackSuccess(
+                        {   
+                            'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
+                            'scheduleEventId':'5d31a4e8-5eca-41b8-87bc-fa10a13c4152'
+                        }
+                    );
+                }, 1000);
+            },
+            
+            getScheduleEventData: function(scheduleId, scheduleEventId, callbackSuccess, callbackError) {
+                // Sunday – 0
+                // Monday– 1
+                // Tuesday – 2
+                // Wednesday – 3
+                // Thursday – 4
+                // Friday – 5
+                // Saturday – 6
+                switch(scheduleEventId) {
+                    case "76d784e0-78a2-45e0-a67a-3f404eecafc8":
+                        window.setTimeout(function() {
+                            callbackSuccess(
+                                {   
+                                    'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
+                                    'scheduleEventId':'76d784e0-78a2-45e0-a67a-3f404eecafc8', 
+                                    'scheduleEventData': {'startTime':'1:15','day':1, 'cleaningMode':'1'}
+                                }
+                            );
+                        }, 1500);
+                    break;
+                    case "5d31a4e8-5eca-41b8-87bc-fa10a13c4152":
+                        window.setTimeout(function() {
+                            callbackSuccess(
+                                {   
+                                    'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
+                                    'scheduleEventId':'5d31a4e8-5eca-41b8-87bc-fa10a13c4152', 
+                                    'scheduleEventData': {'startTime':'5:15','day':2, 'cleaningMode':'1'}
+                                }
+                            );
+                        }, 1000);
+                    break;
+                }
+                
+            },
+            createSchedule: function(robotId, scheduleType, callbackSuccess, callbackError) {
+                window.plugins.neatoPluginLayer.robotMgr.createSchedule(robotId, scheduleType, callbackSuccess, callbackError);
+            },
+            updateSchedule: function(scheduleId, callbackSuccess, callbackError) {
+                //window.plugins.neatoPluginLayer.robotMgr.updateSchedule(scheduleId, callbackSuccess, callbackError);
+                window.setTimeout(function() {
+                    callbackSuccess(true);
+                }, 1000);
+            },
+            
+            // helper functions
+            getScheduleData: function(scheduleId, callbackSuccess, callbackError) {
+                window.setTimeout(function() {
+                    callbackSuccess(
+                        {   'scheduleType':0 , //0: basic 1:advanced
+                            'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
+                            'schedules': [
+                                {'startTime':'10:30','day':1}
+                            ]
+                        }
+                    );
+                }, 1000);
             }
-
         }
     }());
 
@@ -672,6 +809,21 @@ var PluginManagerHelper = ( function() {
                 //scheduleJsonObject["schedule"] = schedule;
                 return scheduleJsonArray;
             },
+            getBasicScheduleEvent: function(day, startTime) {
+                var schedule = {'day':day, 'startTime': startTime};
+                return schedule;
+            },
+            createBasicScheduleEventObject: function(day, startTime, cleaningMode) {
+                var schedule = {'day':day, 'startTime': startTime, 'cleaningMode':cleaningMode};
+                return schedule;
+            },
+            
+            getAdvancedScheduleEvent: function(day, startTime, endTime, eventType, area) {
+                var schedule = {'day':day, 'startTime': startTime, 
+                        'endTime': endTime, 'eventType': eventType,
+                        'area':area};
+                return schedule;
+            }
         }
     }());
 

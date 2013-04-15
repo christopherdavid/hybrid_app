@@ -1,291 +1,210 @@
 Application.prototype.loadWorkflow = function() {
     return {
-    	"s0":{
+        "home" : {
             navrules : [{
-                targetScreenId : "s1-1",
+                targetScreenId : "start",
                 conditions : [{
                     "key" : "logout",
                     "value" : true
                 }]
-            },
-            {
-                targetScreenId : "s1-2-2",
+            }, {
+                targetScreenId : "robotSelection",
                 conditions : [{
                     "key" : "changeRobot",
                     "value" : true
                 }]
-            },
-            {
-                targetScreenId : "s4-1-1",
+            }, {
+                targetScreenId : "basicScheduler",
                 conditions : [{
                     "key" : "schedule",
                     "value" : true
                 }]
-            },
-            {
-                targetScreenId : "s3-1-1",
+            }, {
+                targetScreenId : "settings",
                 conditions : [{
                     "key" : "settings",
                     "value" : true
                 }]
-            },
-            {
-                targetScreenId : "s5-1-1",
-                conditions : [{
-                    "key" : "cleaning",
-                    "value" : true
-                }]
-            },
-            {
-                targetScreenId : "s6-1-1",
+            }, {
+                targetScreenId : "remote",
                 conditions : [{
                     "key" : "remote",
                     "value" : true
                 }]
             }],
-            clearHistory:true
-    	},
-        "s1-1" : {
+            clearHistory : true
+        },
+        "start" : {
             navrules : [{
-                targetScreenId : "s1-2-1",
+                targetScreenId : "createAccount",
                 conditions : [{
                     "key" : "register",
                     "value" : true
                 }]
-            },
-            {
-                targetScreenId : "s1-3-1",
+            }, {
+                targetScreenId : "loginUser",
                 conditions : [{
                     "key" : "login",
                     "value" : true
                 }]
-            },
-            {
-                targetScreenId : "s3-2-1",
-                conditions : [{
-                    "key" : "map",
-                    "value" : true
-                }]
-            },
-            {
-                targetScreenId : "s4-1-1",
+            }, {
+                targetScreenId : "basicScheduler",
                 conditions : [{
                     "key" : "schedule",
                     "value" : true
                 }]
             }],
-            clearHistory:true
+            clearHistory : true
         },
-        "s1-2-1" : {
+        "createAccount" : {
             navrules : [{
-                targetScreenId : "s1-2-2",
+                targetScreenId : "robotSelection",
                 conditions : [{
                     "key" : "valid",
                     "value" : true
                 }]
             }]
         },
-        "s1-2-2" : {
+        "robotSelection" : {
             navrules : [{
-                targetScreenId : "s1-1",
+                targetScreenId : "start",
                 conditions : [{
                     "key" : "back",
                     "value" : true
                 }]
             }, {
-                targetScreenId : "s1-2-3",
+                targetScreenId : "robotActivationId",
                 conditions : [{
                     "key" : "addRobot",
                     "value" : true
                 }]
             }, {
-                targetScreenId : "s0",
+                targetScreenId : "home",
                 conditions : [{
                     "key" : "robotSelected",
                     "value" : true
                 }]
-        	}, {
-                targetScreenId : "s1-1",
+            }, {
+                targetScreenId : "start",
                 backConditions : [{
                     "key" : "logout",
                     "value" : true
                 }]
             }]
         },
-        "s1-2-3" : {
+        "robotActivationId" : {
             navrules : [{
-                targetScreenId : "s1-2-4",
+                targetScreenId : "robotActivationName",
                 conditions : [{
                     "key" : "robotIdValid",
                     "value" : true
                 }]
-			}]
+            }]
         },
-        "s1-2-4" : {
+        "robotActivationName" : {
             navrules : [{
-                targetScreenId : "s1-2-6",
+                targetScreenId : "robotActivationDone",
                 conditions : [{
                     "key" : "robotNameValid",
                     "value" : true
                 }]
-			}]
+            }]
         },
-        "s1-2-6" : {
+        "robotActivationDone" : {
             navrules : [{
-                targetScreenId : "s0",
+                targetScreenId : "home",
                 conditions : [{
                     "key" : "homeScreen",
                     "value" : true
                 }]
-			}]
+            }]
         },
-         "s1-3-1" : {
+        "loginUser" : {
             navrules : [{
-                targetScreenId : "s1-2-2",
+                targetScreenId : "robotSelection",
                 conditions : [{
                     "key" : "valid",
                     "value" : true
                 }]
             }]
         },
-        "s3-1-1" : {
+        "settings" : {
             navrules : [{
-                targetScreenId : "s3-2-1",
-                conditions : [{
-                    "key" : "rooms",
-                    "value" : true
-                }]
-            },
-            {
-                targetScreenId : "s1-2-2",
+                targetScreenId : "robotSelection",
                 conditions : [{
                     "key" : "robots",
                     "value" : true
                 }]
-            }
-            ,{
+            }, {
                 targetScreenId : "test",
                 conditions : [{
                     "key" : "test",
                     "value" : true
                 }]
-            }
-            ,{
-                targetScreenId : "s4-2-1",
+            }, {
+                targetScreenId : "basicScheduler",
                 conditions : [{
                     "key" : "basicSchedule",
                     "value" : true
                 }]
-            }
-            ]
-        },        
-        "s3-2-1" : {
-            navrules : [{
-                targetScreenId : "s1-1",
-                conditions : [{
-                    "key" : "back",
-                    "value" : true
-                }]
             }]
         },
-        "s4-1-1" : {
+        "basicScheduler" : {
             navrules : [{
-                targetScreenId : "s0",
+                targetScreenId : "home",
                 backConditions : [{
                     "key" : "home",
                     "value" : true
                 }]
-            },{
-                targetScreenId : "s4-1-2",
+            }, {
+                targetScreenId : "basicSchedulerDate",
                 conditions : [{
                     "key" : "addEvent",
                     "value" : true
                 }]
-            },{
-                targetScreenId : "s4-1-2",
+            }, {
+                targetScreenId : "basicSchedulerDate",
                 conditions : [{
                     "key" : "editEvent",
                     "value" : true
                 }]
             }],
-            clearHistoryAfter:true
+            clearHistoryAfter : true
         },
-        "s4-1-2" : {
+        "basicSchedulerDate" : {
             navrules : [{
-                targetScreenId : "s4-1-1",
+                targetScreenId : "basicScheduler",
                 conditions : [{
                     "key" : "cancel",
                     "value" : true
                 }]
-            },
-            {
-                targetScreenId : "s4-1-3",
-                conditions : [{
-                    "key" : "cleaning",
-                    "value" : true
-                }]
-            },
-            {
-                targetScreenId : "s4-1-1",
-                conditions : [{
-                    "key" : "quiet",
-                    "value" : true
-                }]
-            }]
-        },
-        "s4-1-3" : {
-            navrules : [{
-                targetScreenId : "s4-1-2",
-                conditions : [{
-                    "key" : "back",
-                    "value" : true
-                }]
-            },
-            {
-                targetScreenId : "s4-1-1",
+            }, {
+                targetScreenId : "basicScheduler",
                 conditions : [{
                     "key" : "next",
                     "value" : true
                 }]
             }]
         },
-        "s4-2-1" : {
+        "remote" : {
             navrules : [{
-                targetScreenId : "s3-1-1",
-                conditions : [{
-                    "key" : "back",
-                    "value" : true
-                }]
-            }]
-        },
-        "s5-1-1" : {
-            navrules : [{
-                targetScreenId : "s0",
-                conditions : [{
-                    "key" : "back",
-                    "value" : true
-                }]
-            }]
-        },
-        "s6-1-1" : {
-            navrules : [{
-                targetScreenId : "s0",
+                targetScreenId : "home",
                 backConditions : [{
                     "key" : "home",
                     "value" : true
                 }]
             }]
         },
-        
+
         "test" : {
             navrules : [{
-                targetScreenId : "s0",
+                targetScreenId : "home",
                 conditions : [{
                     "key" : "add",
                     "value" : true
                 }]
             }]
         }
-        
+
     };
 };

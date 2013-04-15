@@ -999,7 +999,7 @@ box-shadow: inset 0px 0px 3px #387BBE, 0px 0px 9px #387BBE;
             border-left-width: 0px;
         }
         
-        .ui-icon-tick{
+        .ui-icon-tick, .ui-icon-cross {
             display: none;
             height: 24px;
             width: 25px;
@@ -1010,15 +1010,22 @@ box-shadow: inset 0px 0px 3px #387BBE, 0px 0px 9px #387BBE;
             left: 50%;
             background-size: 25px auto;
         }
-        
-        &.checked{
+         &.disabled {
+            color: @color_text_disabled;
+            
+            .ui-icon-cross {
+                display: block;
+                opacity: 0.8;
+            }
+        }
+        &.checked {
             font-weight: 800;
             color: @color_green_bright;
             
-            .ui-icon-tick{
+            .ui-icon-tick {
                 display: block;
             }
-        }       
+        }
     }
 }
 

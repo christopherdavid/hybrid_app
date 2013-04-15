@@ -1,32 +1,50 @@
 {
-	"common": {
-		"back": "zurück",
-		"next": "weiter",
-		"ok" : "OK",
-		"cancel" : "Abbrechen",
-		"edit" : "bearbeiten",
-		"delete" : "löschen"
-	},
-	"communication": {
-	   "fetch_robots" : "Roboterliste wird abgerufen...",
-	   "fetch_map" : "Kartendaten werden abgerufen..."
-	},
-	"s0": {
-		"cleaning": "Reinigung",
-		"remote": "Fernbedienung",
-		"schedule": "Wochenplan",
-		"settings": "Einstellungen",
-		"logout": "Abmelden",
-		"change_robot" : "Roboter wechseln",
-		"send_to_base": "Zur Basis schicken"
-	},
-    "s1-1": {
+    "pattern": {
+        "week":"1,2,3,4,5,6,0",
+        "time":"HHii"
+    },
+    "common": {
+        "back": "zurück",
+        "next": "weiter",
+        "ok": "OK",
+        "cancel": "Abbrechen",
+        "edit": "bearbeiten",
+        "delete": "löschen",
+        "cleaningMode": {
+            "1": "eco",
+            "2": "normal"
+        },
+        "day": {
+            "0": "Sonntag",
+            "1": "Montag",
+            "2": "Dienstag",
+            "3": "Mittwoch",
+            "4": "Donnerstag",
+            "5": "Freitag",
+            "6": "Samstag"
+        }
+    },
+    
+    "communication": {
+        "fetch_robots": "Roboterliste wird abgerufen...",
+        "fetch_map": "Kartendaten werden abgerufen..."
+    },
+    "home": {
+        "cleaning": "Reinigung",
+        "remote": "Fernbedienung",
+        "schedule": "Wochenplan",
+        "settings": "Einstellungen",
+        "logout": "Abmelden",
+        "change_robot": "Roboter wechseln",
+        "send_to_base": "Zur Basis schicken"
+    },
+    "start": {
         "login": "Bitte einloggen!",
         "login_question": "Haben Sie schon einen Account?",
         "register": "Jetzt Registrieren.",
         "register_question": "Haben Sie bisher noch keinen Account?"
     },
-    "s1-2-1": {
+    "createAccount": {
         "navi": {
             "back": "zurück",
             "title": "Benutzer Account erstellen",
@@ -40,39 +58,39 @@
             "password_verify": "Passwort verifizieren"
         }
     },
-    "s1-2-2": {
+    "robotSelection": {
         "navi": {
             "title": "Auswahl eines Saugroboters",
             "logout": "Abmelden"
         },
         "page": {
             "register": "Registrierung abgeschlossen. Willkommen!",
-            "login" : "Willkommen!",
+            "login": "Willkommen!",
             "no_robot": "Sie haben noch keinen Roboter registriert.<br>Bitte fügen Sie einen neuen Roboter hinzu.",
-            "select_robot" : "Bitte wählen sie einen Roboter aus:"
+            "select_robot": "Bitte wählen sie einen Roboter aus:"
         }
     },
-    "s1-2-3": {
-    	"navi": {
+    "robotActivationId": {
+        "navi": {
             "title": "Roboter aktivieren"
         },
         "page": {
-	        "wifisetup" : "Bitte geben sie die Roboter ID ein.</br>Sie finden sie unter:</br><span class=\"companyColoredTxt\">Wifi Einstellungen / Registrierung</span> im Anzeige Menü des Roboters, oder auf der Rückseite Ihres Gerätes.",	
+            "wifisetup": "Bitte geben sie die Roboter ID ein.</br>Sie finden sie unter:</br><span class=\"companyColoredTxt\">Wifi Einstellungen / Registrierung</span> im Anzeige Menü des Roboters, oder auf der Rückseite Ihres Gerätes.",
             "robotId": "Roboter ID"
         }
     },
-    "s1-2-4":{
-    	"page":{
-    		"id_accepted" : "Ihre Roboter ID wurde akzeptiert.</br></br>Sie können nun bei Bedarf den Namen Ihres Roboters personalisieren.",
-    		"robot_name": "Roboter Name"
-		}
+    "robotActivationName": {
+        "page": {
+            "id_accepted": "Ihre Roboter ID wurde akzeptiert.</br></br>Sie können nun bei Bedarf den Namen Ihres Roboters personalisieren.",
+            "robot_name": "Roboter Name"
+        }
     },
-    "s1-2-6":{
-    	"page":{
-    		"reg_complete" : "Yay! Robot Registration is complete.</br></br>Thank you for choosing this product. Happy Cleaning!"
-		}
+    "robotActivationDone": {
+        "page": {
+            "reg_complete": "Yay! Robot Registration is complete.</br></br>Thank you for choosing this product. Happy Cleaning!"
+        }
     },
-    "s1-3-1": {
+    "loginUser": {
         "navi": {
             "back": "zurück",
             "title": "Benutzer anmelden",
@@ -86,57 +104,31 @@
             "tap_here": "Hier berühren."
         }
     },
-    "s3-1-1": {
+    "settings": {
         "navi": {
             "title": "Einstellungen"
         },
-        "page" : {
-            "room_management": "Raum Management",
+        "page": {
             "robot_management": "Robot Management",
-            "user_settings": "Benutzereinstellungen"
+            "user_settings": "Benutzereinstellungen",
+            "general_settings": "Allgemeine Einstellungen"
         }
     },
-    "s3-2-1": {
-        "navi": {
-            "title": "Raum Management",
-            "title_area": "Bereich auswählen",
-            "cut": "teilen",
-            "cut_multiple": "zusammenfügen",
-            "edit": "bearbeiten",
-            "edit_area": "OK"
-        },
-        "dialog": {
-            "title":"Bereich bearbeiten",
-            "area":"Cleaning Area",
-            "nogo":"No-Go-Area",
-            "color":"Farbe",
-            "category":"Kategorie"
-        }
-    },
-    "s4-1-1": {
+    "basicScheduler": {
         "navi": {
             "back": "zurück",
             "title": "Wochenplan",
             "add": "hinzufügen",
             "edit": "bearbeiten"
-        },
-        
-        "day": {
-            "1": "Montag",
-            "2": "Dienstag",
-            "3": "Mittwoch",
-            "4": "Donnerstag",
-            "5": "Freitag",
-            "6": "Samstag",
-            "7": "Sonntag"
         }
     },
-    "s4-1-2": {
+    "basicSchedulerDate": {
         "navi": {
             "title": "Wochenplan"
         },
         "page": {
             "cleaning_event": "Reinigungsevent",
+            "cleaning_mode": "Reinigungsmodus",
             "quiet_time": "Ruhezeit",
             "starting_time": "Startzeit",
             "clean_every": "Sauge jeden...",
@@ -145,24 +137,7 @@
             "dnd_on": "Nicht stören am ..."
         }
     },
-    
-    "s4-1-3": {
-        "navi": {
-            "title": "Wochenplan"
-        },
-        "page": {
-            "list": "Liste",
-            "map": "Karte"
-        }
-    },
-    "s5-1-1": {
-        "navi": {
-            "title": "Cleaning",
-            "start": "starten",
-            "pause": "pausieren"
-        }
-    },
-    "s6-1-1": {
+    "remote": {
         "navi": {
             "title": "Remote"
         }
