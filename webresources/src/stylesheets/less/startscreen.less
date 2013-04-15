@@ -22,27 +22,27 @@
 }
 
 // Gradient startbtn border
-.gradient-definition("gradient-startBtnBorder", @s0_btn_border_gradient_start, @s0_btn_border_gradient_end);
+.gradient-definition("gradient-startBtnBorder", @home_btn_border_gradient_start, @home_btn_border_gradient_end);
 
 // Gradient for the border of the category buttons
 .categoryBtnBorder{
   border-radius:5px;
   display: inline-block;
   padding:2px;
-  .vertical-gradient(@s0_btn_border_gradient_start, @s0_btn_border_gradient_end);
+  .vertical-gradient(@home_btn_border_gradient_start, @home_btn_border_gradient_end);
 }
 
 .categoryBtnBorder.flipped{
-  .vertical-gradient(@s0_btn_border_gradient_end, @s0_btn_border_gradient_start);
+  .vertical-gradient(@home_btn_border_gradient_end, @home_btn_border_gradient_start);
 }
 
 .categoryBtnBorder.disabled{
-  .vertical-gradient25(@s0_btn_border_gradient_disabled_start, @s0_btn_border_gradient_disabled_quarter, @s0_btn_border_gradient_disabled_end);
+  .vertical-gradient25(@home_btn_border_gradient_disabled_start, @home_btn_border_gradient_disabled_quarter, @home_btn_border_gradient_disabled_end);
 }
 
 // Gradient for the category button background
 .categoryBtnGradient{
-    .vertical-gradient(@s0_btn_gradient_start, @s0_btn_gradient_end);
+    .vertical-gradient(@home_btn_gradient_start, @home_btn_gradient_end);
      border:none;
      border-radius:5px;
      width:100%;
@@ -52,11 +52,11 @@
 }
 
 .categoryBtnGradient.flipped{
-  .vertical-gradient(@s0_btn_gradient_end, @s0_btn_gradient_start);
+  .vertical-gradient(@home_btn_gradient_end, @home_btn_gradient_start);
 }
 
 .categoryBtnGradient.disabled{
-    .vertical-gradient(@s0_btn_gradient_disabled_start, @s0_btn_gradient_disabled_end);
+    .vertical-gradient(@home_btn_gradient_disabled_start, @home_btn_gradient_disabled_end);
 }
 
 // Icon within the category button

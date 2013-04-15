@@ -14,8 +14,6 @@
         <js>/../../javascript/utils/scheduler.js</js>
         <js>/../../javascript/utils/remoteControl.js</js>
         <js>/../../javascript/utils/makeScrollable.js</js>
-        <!-- has to be removed when the real geo data is supplied from neato -->
-        <js>/../../javascript/utils/geodata.js</js>
     </group>
     <group name="cordova.min">
       <js>/../../javascript/libs/ios/cordova-2.1.0.js</js>

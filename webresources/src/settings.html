@@ -1,0 +1,42 @@
+<div data-role="page" id="settings" style="background-repeat: no-repeat; background-image: url(img/icons/company_logo_225x126.png); background-position: 0% 100%">
+    <div data-role="header" data-theme="b" data-position="fixed" data-tap-toggle="false">
+       <a href="#" class="ui-btn-left" data-role="button" data-theme="b" data-mini="true" data-inline="true" data-icon="back" data-i18n="common.back" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>                        
+       <h1 data-i18n="settings.navi.title" data-bind="translate:{obs:language()}">Settings</h1>
+
+    </div>
+    
+    <div data-role="content">
+        <ul data-role="listview" data-divider-theme="a" data-inset="true">
+            <li>
+                <a href="javascript:void(0);" data-bind="click:robotManagement">
+                    <h3 class="bigListItem" data-i18n="settings.page.robot_management" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">
+                        Robot Management
+                    </h3>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" data-bind="click:userSettings">
+                    <h3 class="bigListItem" data-i18n="settings.page.user_settings" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">
+                        User Settings
+                    </h3>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" data-bind="click:generalSettings">
+                    <h3 class="bigListItem" data-i18n="settings.page.general_settings" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">
+                        General Settings
+                    </h3>
+                </a>
+            </li>
+            
+            <!-- TODO: remove test area >
+            <li>
+                <a href="javascript:void(0);" data-bind="click:testArea">
+                    <h3 class="bigListItem">
+                        Testing area
+                    </h3>
+                </a>
+            </li> -->
+        </ul>
+    </div><!-- /content -->
+</div><!-- /page -->

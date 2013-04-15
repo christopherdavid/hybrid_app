@@ -1,0 +1,16 @@
+@font-face {
+  font-family: TazText;
+  src: url("../../fonts/TazTextWt05-RegularG083.otf") format("opentype");
+}
+@font-face {
+  font-family: TazText;
+  font-weight: bold;
+  src: url("../../fonts/TazTextWt07-Bold.otf") format("opentype");
+}
+*,
+body .ui-body-c,
+.ui-btn-up-c,
+.ui-btn-hover-c,
+.ui-btn-down-c {
+  font-family: "TazText";
+}

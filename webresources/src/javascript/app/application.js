@@ -14,7 +14,7 @@ function Application() {
     this.communicationWrapper;
     // configuration for the application
     this.config = {
-        firstScreen : "s1-1",
+        firstScreen : "start",
         pageTransition : "none"
     };
     // user object

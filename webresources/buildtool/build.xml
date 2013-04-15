@@ -104,6 +104,7 @@
     <arg line="-jar ${wro4j} --wroFile ${platform}.xml --contextFolder ${srcFolder} 
             --destinationFolder ${copyFolder} -m -c jsMin"></arg>
     </exec>
+    <!--  -m -c jsMin  -->
     
     <!-- step 2: copy already minified lib files (file name contains 'min' )-->
     <copy todir="${copyFolder}" overwrite="true">
