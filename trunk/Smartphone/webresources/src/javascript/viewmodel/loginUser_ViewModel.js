@@ -2,8 +2,8 @@ resourceHandler.registerFunction('loginUser_ViewModel.js', function(parent) {
     console.log('instance created for: loginUser_ViewModel');
     var that = this;
     this.conditions = {};
-    //this.email = ko.observable();
-    //this.password = ko.observable();
+    this.email = ko.observable();
+    this.password = ko.observable();
     //this.email = ko.observable('demo1@demo.com');
     //this.password = ko.observable('demo123');
     // this.email = ko.observable('bart@uid.com');
