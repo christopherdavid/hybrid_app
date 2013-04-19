@@ -5,12 +5,16 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
     this.email = ko.observable('');
     this.password = ko.observable('');
     this.password_verify = ko.observable('');
+    this.showPassword = ko.observable(false);
+    
     this.mailValid = ko.computed(function() {
         return !isEmailValid();
     }, this);
+    
     this.passwordComplex = ko.computed(function() {
         return !isPasswordComplex();
     }, this);
+    
     this.passwordValid = ko.computed(function() {
         return !isPasswordValid();
     }, this);
@@ -19,6 +23,7 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
     var USERNAME_LENGTH = 4;
 
     var emailRegEx = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+    // regex from happy: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
 
     this.back = function() {
         that.conditions['back'] = true;
@@ -30,9 +35,7 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
     }, this);
 
     this.isValid = ko.computed(function() {
-
         return isPasswordValid() && isEmailValid() && isPasswordComplex();
-
     }, this);
 
     this.next = function() {

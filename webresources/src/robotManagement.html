@@ -1,0 +1,84 @@
+<div data-role="page" id="loginUser" style="height: 100%">
+    
+    <div data-role="header" class="page-header" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+        </div>
+        <h1>
+            <div class="robotName">
+                <span data-bind="click:changeRobot, text: robot().robotName">[robot name]</span>
+            </div>
+            <div class="screenTitle">
+                <span data-i18n="robotManagement.navi.title" data-bind="translate: language">[navi title]</span>
+            </div>
+        </h1>
+        <div class="ui-btn-right">
+            <a href="#" data-role="button" class="ui-disabled" data-theme="b" data-mini="false" data-inline="true" 
+                data-i18n="common.delete"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: deleteRobot">[delete]</a>
+        </div>
+    </div>
+
+    <div data-role="content">
+        
+        <fieldset>
+            <h2 data-i18n="robotManagement.page.robot_name"
+                data-bind="translate: language">[robot_name]</h2>
+            
+            <p data-bind="text: robot().robotName, visible: !editName()"></p>
+            <input type="text" data-bind="value: newRobotName, valueUpdate: 'afterkeydown', visible: editName"/>
+            
+            <div class="ui-grid-solo" data-bind="visible: !editName()">
+                <div class="ui-block-a">
+                    <a href="#" data-role="button" data-theme="b" data-mini="false" 
+                        data-i18n="common.change"
+                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: changeName">[change]</a>
+                </div>
+            </div>
+                    
+            <div class="ui-grid-a" data-bind="visible: editName">
+                <div class="ui-block-a">
+                    <a href="#" data-role="button" data-theme="b" data-mini="false" 
+                        data-i18n="common.cancel"
+                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: cancelEdit">[cancel]</a>
+                </div>
+                <div class="ui-block-b">
+                    <a href="#" data-role="button" data-theme="b" data-mini="false" 
+                        data-i18n="common.ok"
+                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: newRobotName().length != '', click: commitEdit">[ok]</a>
+                </div>
+            </div>
+            
+        </fieldset>
+        
+        <fieldset>
+            <h2 data-i18n="robotManagement.page.robot_id"
+                data-bind="translate: language">[robot_id]</h2>
+            <p data-bind="text: robot().robotId">asd</p>
+        </fieldset>
+        
+        <fieldset>
+            <h2 data-i18n="robotManagement.page.robot_type"
+                data-bind="translate: language">[robot_id]</h2>
+            <span>Neato Premium</span>
+        </fieldset>
+        
+        <fieldset>
+            <h2 data-i18n="robotManagement.page.cleaning_options.title"
+                data-bind="translate: language">[cleaning title]</h2>
+            
+            <div data-role="fieldcontain">
+                <span style="padding-right:15px;" data-i18n="robotManagement.page.cleaning_options.schedule" 
+                        data-bind="translate: language">[schedulde]</span>
+                
+                <select name="flip-1" id="flip-1" data-role="slider">
+                        <option value="off">Off</option>
+                        <option value="on">On</option>
+                    </select> 
+            </div>
+        </fieldset>
+        
+    </div>
+</div>

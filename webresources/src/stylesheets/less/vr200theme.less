@@ -53,6 +53,15 @@ label{
   margin-bottom: 8px;
 }
 
+#menuPopup-popup {
+  left:20px!important;
+  right:20px!important;
+  max-width:616px!important;
+  max-height:616px!important;
+  min-width:280px!important;
+  margin:auto;
+}
+
 /* === PAGE BACKGROUND AND GENERICS === */
 /*http://jsfiddle.net/tvjTy/ http://jsfiddle.net/tvjTy/1/ */
 
@@ -83,30 +92,34 @@ label{
     border-radius: 10px;
     box-shadow: none;
     background-clip: padding-box;
-}
-.ui-btn.ui-btn-plain .ui-btn-inner {
-    background: #FFF;
-    box-shadow: none;
-    border-radius: 10px;
-}
-.ui-btn.ui-btn-plain .ui-btn-inner .ui-collapsible-heading-toggle {
-    background: none;
-    padding: 15px 0;
-}
-.ui-btn.ui-btn-plain .ui-btn-text {
-    font-weight: bold;
-    font-size: 17px;
-    color: #000;
-    text-shadow: none;
-}
-.ui-btn.ui-btn-plain.ui-disabled {
-    opacity: 1;
-}
-.ui-btn.ui-btn-plain[disabled] {
-    cursor: default;
-}
-.ui-btn.ui-btn-plain[disabled].ui-btn-down-c .ui-btn-inner {
-    background: #FFF;
+    
+    .ui-btn-inner {
+        background: #FFF;
+        box-shadow: none;
+        border-radius: 10px;
+        .ui-collapsible-heading-toggle {
+            background: none;
+            padding: 15px 0;
+        }
+    }
+    
+    .ui-btn-text {
+        font-weight: bold;
+        font-size: 17px;
+        color: #000;
+        text-shadow: none;
+    }
+    
+    &.ui-disabled {
+        opacity: 1;
+    }
+    
+    &[disabled] {
+        cursor: default;
+        &.ui-btn-down-c .ui-btn-inner {
+            background: #FFF;
+        }
+    }
 }
 
 .ui-btn-hover-c:hover a.ui-link-inherit{
@@ -792,6 +805,87 @@ box-shadow: inset 0px 0px 3px #387BBE, 0px 0px 9px #387BBE;
     color: #FFF;
     text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
 }
+
+/* header button left and right */
+@button_height:40px;
+@buton_width:70px;
+.ui-header.page-header {
+    height:55px;
+    margin-top:3px;
+    .ui-title {
+        margin:10px (@buton_width + @button_height/2 + 10) 0;
+        .robotName {
+            color:#a8a8a8;
+            font-size: 14px;
+            font-weight: normal;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap
+        }
+        .screenTitle {
+            font-size: 18px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap
+        }
+    }
+    .ui-btn-left {
+        left:0;
+        top:0; 
+        .ui-btn {
+            margin:0;
+            height:@button_height;
+            border-radius:0 @button_height/2 @button_height/2 0;
+            width:@buton_width + @button_height/4;
+            padding-right:@button_height/4;
+            float:right;
+            .ui-btn-inner {
+              padding-left:0;
+              padding-right:0;
+            }
+        }
+        &.two-buttons {
+            .ui-btn.first-button {
+                width:(@buton_width + @button_height/4)/2;
+                padding-right:@button_height/4 - 2;// minus border width
+            }
+            .ui-btn.second-button {
+                width:@buton_width/2;
+                padding-right:0px;
+                border-radius:0;
+            }
+        }
+    }
+  
+    .ui-btn-right { 
+        right:0;
+        top:0;
+        .ui-btn {
+            margin:0;
+            height:@button_height;
+            border-radius:@button_height/2 0 0 @button_height/2;
+            width:@buton_width + @button_height/4;
+            padding-left:@button_height/4;
+            float:left;
+            .ui-btn-inner {
+              padding-left:0;
+              padding-right:0;
+            }
+        }
+        &.two-buttons {
+            .ui-btn.first-button {
+                width:(@buton_width + @button_height/4)/2;
+                padding-left:@button_height/4 - 2;// minus border width
+            }
+            .ui-btn.second-button {
+                width:@buton_width/2;
+                padding-left:0px;
+                border-radius:0;
+            }
+        }
+    }
+}
+
 
 /* transparent header*/
 .ui-header .ui-btn-up-transparent, .ui-header .ui-btn-hover-transparent  {

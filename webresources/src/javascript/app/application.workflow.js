@@ -1,39 +1,5 @@
 Application.prototype.loadWorkflow = function() {
     return {
-        "home" : {
-            navrules : [{
-                targetScreenId : "start",
-                conditions : [{
-                    "key" : "logout",
-                    "value" : true
-                }]
-            }, {
-                targetScreenId : "robotSelection",
-                conditions : [{
-                    "key" : "changeRobot",
-                    "value" : true
-                }]
-            }, {
-                targetScreenId : "basicScheduler",
-                conditions : [{
-                    "key" : "schedule",
-                    "value" : true
-                }]
-            }, {
-                targetScreenId : "settings",
-                conditions : [{
-                    "key" : "settings",
-                    "value" : true
-                }]
-            }, {
-                targetScreenId : "remote",
-                conditions : [{
-                    "key" : "remote",
-                    "value" : true
-                }]
-            }],
-            clearHistory : true
-        },
         "start" : {
             navrules : [{
                 targetScreenId : "createAccount",
@@ -45,12 +11,6 @@ Application.prototype.loadWorkflow = function() {
                 targetScreenId : "loginUser",
                 conditions : [{
                     "key" : "login",
-                    "value" : true
-                }]
-            }, {
-                targetScreenId : "basicScheduler",
-                conditions : [{
-                    "key" : "schedule",
                     "value" : true
                 }]
             }],
@@ -79,7 +39,7 @@ Application.prototype.loadWorkflow = function() {
                     "value" : true
                 }]
             }, {
-                targetScreenId : "home",
+                targetScreenId : "cleaning",
                 conditions : [{
                     "key" : "robotSelected",
                     "value" : true
@@ -112,7 +72,7 @@ Application.prototype.loadWorkflow = function() {
         },
         "robotActivationDone" : {
             navrules : [{
-                targetScreenId : "home",
+                targetScreenId : "cleaning",
                 conditions : [{
                     "key" : "homeScreen",
                     "value" : true
@@ -128,32 +88,100 @@ Application.prototype.loadWorkflow = function() {
                 }]
             }]
         },
-        "settings" : {
+        "cleaning" : {
             navrules : [{
-                targetScreenId : "robotSelection",
+                targetScreenId : "start",
                 conditions : [{
-                    "key" : "robots",
+                    "key" : "logout",
                     "value" : true
                 }]
             }, {
-                targetScreenId : "test",
+                targetScreenId : "robotSelection",
                 conditions : [{
-                    "key" : "test",
+                    "key" : "changeRobot",
                     "value" : true
                 }]
             }, {
                 targetScreenId : "basicScheduler",
                 conditions : [{
-                    "key" : "basicSchedule",
+                    "key" : "schedule",
+                    "value" : true
+                }]
+            }, {
+                targetScreenId : "settings",
+                conditions : [{
+                    "key" : "settings",
+                    "value" : true
+                }]
+            }],
+            clearHistory : true
+        },
+        "settings" : {
+            navrules : [{
+                targetScreenId : "robotSelection",
+                conditions : [{
+                    "key" : "changeRobot",
+                    "value" : true
+                }]
+            }, {
+                targetScreenId : "robotManagement",
+                conditions : [{
+                    "key" : "robotManagement",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "userSettings",
+                conditions : [{
+                    "key" : "userSettings",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "generalSettings",
+                conditions : [{
+                    "key" : "generalSettings",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "basicScheduler",
+                conditions : [{
+                    "key" : "schedule",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "cleaning",
+                conditions : [{
+                    "key" : "cleaning",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "start",
+                backConditions : [{
+                    "key" : "logout",
+                    "value" : true
+                }]
+            }],
+            clearHistory : true
+        },
+        "robotManagement" : {
+            navrules : [{
+                targetScreenId : "robotSelection",
+                conditions : [{
+                    "key" : "changeRobot",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "cleaning",
+                backConditions : [{
+                    "key" : "home",
                     "value" : true
                 }]
             }]
         },
         "basicScheduler" : {
             navrules : [{
-                targetScreenId : "home",
-                backConditions : [{
-                    "key" : "home",
+                targetScreenId : "cleaning",
+                conditions : [{
+                    "key" : "cleaning",
                     "value" : true
                 }]
             }, {
@@ -166,6 +194,18 @@ Application.prototype.loadWorkflow = function() {
                 targetScreenId : "basicSchedulerDate",
                 conditions : [{
                     "key" : "editEvent",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "settings",
+                conditions : [{
+                    "key" : "settings",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "robotSelection",
+                conditions : [{
+                    "key" : "changeRobot",
                     "value" : true
                 }]
             }],
@@ -184,21 +224,17 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "next",
                     "value" : true
                 }]
-            }]
-        },
-        "remote" : {
-            navrules : [{
-                targetScreenId : "home",
-                backConditions : [{
-                    "key" : "home",
+            },{
+                targetScreenId : "robotSelection",
+                conditions : [{
+                    "key" : "changeRobot",
                     "value" : true
                 }]
             }]
         },
-
         "test" : {
             navrules : [{
-                targetScreenId : "home",
+                targetScreenId : "cleaning",
                 conditions : [{
                     "key" : "add",
                     "value" : true

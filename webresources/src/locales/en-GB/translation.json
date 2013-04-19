@@ -10,6 +10,8 @@
         "cancel": "Cancel",
         "edit": "Edit",
         "delete": "delete",
+        "change": "change",
+        "logout": "Logout",
         "cleaningMode": {
             "1": "eco",
             "2": "normal"
@@ -28,14 +30,19 @@
         "fetch_robots": "Robot list is being fetched...",
         "fetch_map": "Maps are being fetched..."
     },
-    "home": {
-        "cleaning": "Cleaning",
-        "remote": "Remote",
-        "schedule": "Schedule",
-        "settings": "Settings",
-        "logout": "Logout",
-        "change_robot": "Change",
-        "send_to_base": "Send to base"
+    "cleaning": {
+        "navi": {
+            "title": "Cleaning"
+        },
+        "page": {
+            "cleaning": "Cleaning",
+            "remote": "Remote",
+            "schedule": "Schedule",
+            "settings": "Settings",
+            "logout": "Logout",
+            "change_robot": "Change",
+            "send_to_base": "Send to base"
+        }
     },
     "start": {
         "login": "So please login!",
@@ -45,16 +52,15 @@
     },
     "createAccount": {
         "navi": {
-            "back": "back",
-            "title": "Create User Account",
-            "next": "continue"
+            "title": "Create User Account"
         },
         "page": {
             "title": "Welcome to the registration.<br/>We need some information to continue",
             "name": "User Name",
             "email": "Email Address",
             "password": "Password",
-            "password_verify": "Password verification"
+            "password_verify": "Password verification",
+            "password_show": "Show password"
         }
     },
     "robotSelection": {
@@ -100,6 +106,7 @@
             "email": "Email Address",
             "password": "Password",
             "password_lost": "Lost your password?",
+            "password_show": "Show password",
             "tap_here": "Tap here."
         }
     },
@@ -111,6 +118,20 @@
             "robot_management": "Robot Management",
             "user_settings": "User Settings",
             "general_settings": "General Settings"
+        }
+    },
+    "robotManagement": {
+        "navi": {
+            "title": "Robot Management"
+        },
+        "page": {
+            "robot_name": "Robot Name",
+            "robot_id": "Robot ID",
+            "robot_type": "Type",
+            "cleaning_options": {
+                "title": "Cleaning Options",
+                "schedule":"Use Scheduled Cleaning"
+            }
         }
     },
     "basicScheduler": {

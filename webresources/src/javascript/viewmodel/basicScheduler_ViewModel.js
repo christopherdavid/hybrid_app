@@ -3,13 +3,14 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     var that = this, schedulerModified = false;
     this.conditions = {};
     this.backConditions = {};
-
+    this.robot = ko.observable();
+    
     this.scheduler = 'undefined';
-    this.isBackVisible = ko.observable(true);
     this.blockedDays = [];
 
     /* <enviroment functions> */
     this.init = function() {
+        that.robot(ko.mapping.fromJS(parent.communicationWrapper.dataValues["activeRobot"]), null, that.robot);
         that.scheduler = new Scheduler($('#schedulerTarget'), 0);
         console.log("getScheduleEvents for robot with id: " + parent.communicationWrapper.dataValues["activeRobot"].robotId)
         that.loadScheduler();
@@ -42,12 +43,18 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         that.scheduler.destroy();
     }
     /* </enviroment functions> */
+   
+   this.changeRobot = function() {
+        // Switch to robot selection dialog
+        that.conditions['changeRobot'] = true;
+        parent.flowNavigator.next(robotScreenCaller.CHANGE);
+    };
 
     this.loadScheduler = function() {
         //RobotPluginManager.getScheduleEvents(robotId, scheduleType, callbackSuccess, callbackError)
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getScheduleEvents, [parent.communicationWrapper.dataValues["activeRobot"].robotId, 0]);
-        tDeffer.done(that.loadScheduleEventsSuccess);
-        tDeffer.fail(that.loadScheduleEventsError);
+        tDeffer.done(that.getScheduleEventsSuccess);
+        tDeffer.fail(that.getScheduleEventsError);
     }
     this.updateSchedule = function() {
         //RobotPluginManager.updateSchedule(scheduleId, callbackSuccess, callbackError)
@@ -56,9 +63,10 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         tDeffer.fail(that.updateScheduleError);
     }
     // callbacks
-    this.loadScheduleEventsSuccess = function(result) {
-        console.log("loadScheduleEventsSuccess:\n" +JSON.stringify(result));
+    this.getScheduleEventsSuccess = function(result) {
+        console.log("getScheduleEventsSuccess:\n" +JSON.stringify(result));
         parent.communicationWrapper.storeDataValue("scheduleId", result.scheduleId);
+        $('#addButton').removeClass("ui-disabled");
         var aDeffer = [];
 
         // load event data
@@ -76,8 +84,22 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             parent.showLoadingArea(false, notificationOptions.type);
         });
     }
-    this.loadScheduleEventsError = function(error) {
+    this.getScheduleEventsError = function(error) {
+        // Server Error create an empty scheduler
+        if(error && error.errorCode == 1003) {
+            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.createSchedule, [parent.communicationWrapper.dataValues["activeRobot"].robotId, 0]);
+            tDeffer.done(that.createScheduleEventsSuccess);
+            tDeffer.fail(that.createScheduleEventsError);
+        }
         console.log(error);
+    }
+    this.createScheduleEventsSuccess = function(result) {
+        console.log("createScheduleEventsSuccess\n" +JSON.stringify(result));
+        parent.communicationWrapper.storeDataValue("scheduleId", result.scheduleId);
+        $('#addButton').removeClass("ui-disabled");
+    }
+    this.createScheduleEventsError = function(error) {
+         console.log(error);
     }
     this.loadScheduleDataSuccess = function(result) {
         console.log("loadScheduleDataSuccess\n" + JSON.stringify(result));
@@ -148,5 +170,20 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         });
     }
     /* </actionbar functions> */
+   
+   // popup links
+    this.cleaning = function() {
+        that.conditions['cleaning'] = true;
+        parent.flowNavigator.next();
+    }
+    this.schedule = function() {
+        that.conditions['schedule'] = true;
+        parent.flowNavigator.next();
+    }
+    this.settings = function() {
+        // switch to settings workflow
+        that.conditions['settings'] = true;
+        parent.flowNavigator.next();
+    }
 })
 console.log('loaded file: basicScheduler_ViewModel.js');

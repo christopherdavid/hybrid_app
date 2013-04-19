@@ -1,35 +1,42 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name = "format-detection" content = "telephone=no"/>
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width;" />
-        <style type="text/css">
-        	.ui-li-has-count .ui-li-count { position: absolute; font-size: 11px; font-weight: bold; padding: .2em .5em; top: 25%; margin-top: -.9em; left: 10px; }
-        	.ui-li-has-arrow.ui-li-has-count .ui-li-count { right: auto; }
-        	.ui-btn-text {
-        		padding-top:22px;
-        		padding-bottom:11px;
-        	}
-        </style>
-        <title>CleaningRobotApp</title>
-    </head>
-    <body>
-        <div data-role="page" id="createAccount">
-            <div data-role="header" data-theme="b" data-position="fixed" data-tap-toggle="false">   
-                    <a href="#" data-role="button" data-theme="b" data-mini="true" data-inline="true" data-icon="back" data-i18n="createAccount.navi.back" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
-                    <h1 data-i18n="createAccount.navi.title" data-bind="translate: language">Create User Account</h1>
-                    <a href="#"  data-role="button" data-theme="b" data-mini="true" data-inline="true" data-i18n="createAccount.navi.next" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: isFilledOut() && isValid(), click:next"> continue</a>
-            </div>
-            <div data-role="content">
-                <h2 data-i18n="createAccount.page.title" data-bind="translate: language">welcome</h2>
-                <fieldset>
-                    <input type="text" data-i18n="createAccount.page.email" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'onblur', css: {invalid: mailValid}"/>
-                    <input type="password" data-i18n="createAccount.page.password" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'onblur', css: {invalid: passwordComplex}"/>
-                    <input type="password" data-i18n="createAccount.page.password_verify" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', css: {invalid: passwordValid}"/>
-                </fieldset>
-            </div><!-- /content -->
+<div data-role="page" id="createAccount">
+    
+    <div data-role="header" class="page-header" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
         </div>
-        
-    </body>
-</html>
+        <h1>
+            <div class="robotName">
+                <span>&#160;</span>
+            </div>
+            <div class="screenTitle">
+                <span data-i18n="createAccount.navi.title" data-bind="translate: language">[navi title]</span>
+            </div>
+        </h1>
+        <div class="ui-btn-right">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.ok" 
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: isFilledOut() && isValid(), click:next">next</a>
+        </div>
+    </div>
+    
+    <div data-role="content">
+        <h2 data-i18n="createAccount.page.title" data-bind="translate: language">welcome</h2>
+        <fieldset>
+            <input type="text" data-i18n="createAccount.page.email" 
+                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'onblur', css: {invalid: mailValid}"/>
+            <input type="password" data-i18n="createAccount.page.password" 
+                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'onblur', css: {invalid: passwordComplex},  visible:!showPassword()"/>
+            <input type="password" data-i18n="createAccount.page.password_verify" 
+                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', css: {invalid: passwordValid},  visible:!showPassword()"/>
+            <input type="text" data-i18n="createAccount.page.password" 
+                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'onblur', css: {invalid: passwordComplex},  visible:showPassword()"/>
+            <input type="text" data-i18n="createAccount.page.password_verify" 
+                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', css: {invalid: passwordValid},  visible:showPassword()"/>
+            <input type="checkbox" name="togglePassword" id="togglePassword" class="custom" data-bind="checked: showPassword" />
+            <label for="togglePassword" data-i18n="loginUser.page.password_show" 
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[show pwd]</label>
+        </fieldset>
+    </div><!-- /content -->
+</div>

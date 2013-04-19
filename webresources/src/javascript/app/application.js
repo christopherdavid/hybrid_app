@@ -8,7 +8,7 @@ function Application() {
     this.viewModel = {
         id : 'empty'
     };
-    this.flowNavigator
+    this.flowNavigator;
     this.language = '';
     this.history;
     this.communicationWrapper;
@@ -24,7 +24,7 @@ function Application() {
 
     this.scheduler;
     this.flowNotification;
-    
+
     // loading
     this.$loadingSpinner;
     this.$notificationArea;
@@ -40,14 +40,14 @@ function Application() {
      */
     this.showLoadingArea = function(show, type, message, force) {
         if (show) {
-            
+
             // show the simple spinner by default
-            if (!type){
+            if (!type) {
                 that.$loadingSpinner.show();
             }
-            
+
             //cue the page loader
-            switch(type){
+            switch(type) {
                 case notificationType.SPINNER:
                     that.$loadingSpinner.show();
                     break;
@@ -57,18 +57,17 @@ function Application() {
                     break;
             }
         } else {
-            
-            if (force){
+
+            if (force) {
                 // hide all notification displays
                 that.$loadingSpinner.hide();
                 that.$notificationArea.notificationbar("hide", type, force);
-            }
-            else{
+            } else {
                 // hide the simple spinner by default
-                if (!type){
+                if (!type) {
                     that.$loadingSpinner.hide();
                 }
-                
+
                 switch(type) {
                     case notificationType.SPINNER:
                         that.$loadingSpinner.hide();
@@ -76,24 +75,31 @@ function Application() {
                     case notificationType.OPERATION:
                     case notificationType.HINT:
                         that.$notificationArea.notificationbar("hide", type);
-                        break;                                                
+                        break;
                 }
             }
         }
     }
-    
     /**
      * Shows an error message on the screen (and blocks all other interaction).
-     * Whenever there's an error (i.e. "Wifi lost", "User name not valid") there will be an error Popup 
+     * Whenever there's an error (i.e. "Wifi lost", "User name not valid") there will be an error Popup
      * in the middle of the screen with an "OK" button to be dismissed by the user. The other content on the screen is blocked.
      */
-    this.showError = function (error){//errorTitle, errorText, callback) {
-    	
-    	//TODO fix that! there is no result...
-        alert("An Error occurred while contacting the server:\n" + error.errorMessage);
-        console.log("error: " + result.errorCode + " msg: " + result.errorMessage);        
+    this.showError = function(error) {//errorTitle, errorText, callback) {
+
+        //TODO fix that! there is no result...
+        if (error && error.errorMessage) {
+            alert("An Error occurred while contacting the server:\n" + error.errorMessage);
+            if (error.errorCode) {
+                console.log("error: " + error.errorCode + " msg: " + error.errorMessage);
+            } else {
+                console.log("error msg: " + error.errorMessage + "\n error object: " + JSON.stringify(error));
+            }
+        } else {
+            alert("An Error occurred while contacting the server!");
+            console.log("error object: " + JSON.stringify(error));
+        }
     }
-    
     /**
      * loads a view according to it's filename
      *
@@ -131,7 +137,7 @@ function Application() {
             that.viewModel.bundle = bundle;
         });
     }
-    this.loadViewModelFromHistory = function(tempViewModel, bundle,fncCallback) {
+    this.loadViewModelFromHistory = function(tempViewModel, bundle, fncCallback) {
         console.log('loadViewModelFromHistory ' + JSON.stringify(tempViewModel));
         that.viewModel = tempViewModel;
         fncCallback();
@@ -148,7 +154,7 @@ function Application() {
         if ( typeof that.viewModel.deinit != "undefined") {
             that.viewModel.deinit();
         }
-        // clear callbacks in communication wrapper 
+        // clear callbacks in communication wrapper
         that.communicationWrapper.callbacks = {};
         that.viewModel = null;
     }
@@ -182,16 +188,15 @@ function Application() {
                 loadFirstPage()
             });
         });
-        
+
         // Initialize the loading spinner and notification area
         initializeUserFeedbackControls();
     }
-    
-    function initializeUserFeedbackControls(){
+    function initializeUserFeedbackControls() {
         that.$loadingSpinner = $('#loadingArea');
         that.$notificationArea = $('#notificationArea');
     }
-    
+
     /**
      * Load the first page when the application starts
      */
