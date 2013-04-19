@@ -1,0 +1,125 @@
+<div data-role="page" id="cleaning">
+
+    <div data-role="header" class="page-header" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">Menu</a>
+        </div>
+        <h1>
+            <div class="robotName">
+                <span data-bind="click:changeRobot, text: robot().robotName">[robot name]</span>
+            </div>
+            <div class="screenTitle">
+                <span data-i18n="cleaning.navi.title" data-bind="translate: language">[navi title]</span>
+            </div>
+        </h1>
+        
+        <div class="ui-btn-right">
+            <a href="#" class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="cleaning.page.send_to_base"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:sendToBase">[send to base]</a>
+        </div>
+        <!--
+        <div class="ui-btn-right two-buttons">
+            <a href="#" class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true">+</a>
+            <a href="#" class="second-button" data-role="button" data-theme="b" data-mini="false" data-inline="true">-</a>
+        </div>
+        -->
+    </div>
+
+    <div data-role="content">
+        
+        <div id="startContent" style="position: relative; display:block;">
+        </div>
+
+        <div class="categoryArea">
+            <!-- button area -->
+            <div class="categoryTable">
+                <!-- table -->
+                <div style="display: table-row; visibility:hidden;">
+                    <!-- cleaning button-->
+                    <div class="categoryCell" id="cleaning">
+                        <div class="categoryBtnBorder" style="margin-right:5px; margin-bottom:5px;">
+                            <div class="categoryBtnGradient">
+                                <div class="img-categoryimg cleaningimg-up categoryBtnIcon">
+                                    <div class="categoryBtnTxt" data-align="top">
+                                        cleaning
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="categoryCell" id="remote">
+                        <div class="categoryBtnBorder" style="margin-left:5px; margin-bottom:5px;">
+                            <div class="categoryBtnGradient">
+                                <div class="img-categoryimg remoteimg-up categoryBtnIcon">
+                                    <div class="categoryBtnTxt" data-align="top">
+                                        remote
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: table-row; visibility:hidden;">
+
+                    <div class="categoryCell" id="schedule">
+                        <div class="categoryBtnBorder" style="margin-right:5px; margin-top:5px;">
+                            <div class="categoryBtnGradient">
+                                <div class="img-categoryimg scheduleimg-up categoryBtnIcon">
+                                    <div class="categoryBtnTxt" data-align="bottom">
+                                        remote
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="categoryCell" id="settings">
+                        <div class="categoryBtnBorder" style="margin-left:5px; margin-top:5px;">
+                            <div class="categoryBtnGradient">
+                                <div class="img-categoryimg settingsimg-up categoryBtnIcon">
+                                    <div class="categoryBtnTxt" data-align="bottom">
+                                        remote
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="startBtn" class="img-startstopbtn startbtn-up" data-state="inactive" data-bind="click:startBtnClick" style="position:absolute; margin-left:50%; margin-top:50%; left: -172px; top: -178px;"></div>
+                <!-- /startbtn -->
+                <div id="startArea" style="position:absolute;left:0px;top:0px;width:100%;height:100%;"></div>
+            </div>
+            <!-- /table -->
+        </div><!-- /category area -->
+    </div><!-- /content -->
+    
+    <div id="menuPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport">
+        <ul data-role="listview" data-divider-theme="a" data-inset="true">
+            <li>
+                <a href="javascript:void(0);" data-bind="click: schedule">
+                    <h3 class="companyColoredTxt" data-i18n="cleaning.page.schedule" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                        login
+                    </h3>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" data-bind="click: cleaning">
+                    <h3 class="companyColoredTxt" data-i18n="cleaning.page.cleaning" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                        register
+                    </h3>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" data-bind="click: settings">
+                    <h3 class="companyColoredTxt" data-i18n="cleaning.page.settings" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                        register
+                    </h3>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div><!-- /page -->

@@ -677,6 +677,15 @@ var RobotPluginManager = ( function() {
             
             // New Schedule APIs being added:
             getScheduleEvents: function(robotId, scheduleType, callbackSuccess, callbackError) {
+                /*
+                window.setTimeout(function() {
+                    callbackError(
+                        {   'errorMessage':'No schedule exists for the given robot.',
+                            'errorCode': 1003
+                        }
+                    );
+                }, 500);
+                */  
                 window.setTimeout(function() {
                     callbackSuccess(
                         {   'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
@@ -684,7 +693,9 @@ var RobotPluginManager = ( function() {
                             'scheduleType':0 , //0: basic 1:advanced 
                             'scheduleEventLists': [
                                 "76d784e0-78a2-45e0-a67a-3f404eecafc8",
-                                "5d31a4e8-5eca-41b8-87bc-fa10a13c4152"
+                                "5d31a4e8-5eca-41b8-87bc-fa10a13c4152",
+                                "5d31a4e8-5eca-41b8-87bc-fa10a13c4151",
+                                
                             ]
                         }
                     );
@@ -765,11 +776,30 @@ var RobotPluginManager = ( function() {
                             );
                         }, 1000);
                     break;
+                    case "5d31a4e8-5eca-41b8-87bc-fa10a13c4151":
+                        window.setTimeout(function() {
+                            callbackSuccess(
+                                {   
+                                    'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
+                                    'scheduleEventId':'5d31a4e8-5eca-41b8-87bc-fa10a13c4151', 
+                                    'scheduleEventData': {'startTime':'1:15','day':0, 'cleaningMode':'1'}
+                                }
+                            );
+                        }, 1000);
+                    break;
                 }
                 
             },
             createSchedule: function(robotId, scheduleType, callbackSuccess, callbackError) {
-                window.plugins.neatoPluginLayer.robotMgr.createSchedule(robotId, scheduleType, callbackSuccess, callbackError);
+                //window.plugins.neatoPluginLayer.robotMgr.createSchedule(robotId, scheduleType, callbackSuccess, callbackError);
+                window.setTimeout(function() {
+                    callbackSuccess(
+                        {   'scheduleType':0 , //0: basic 1:advanced
+                            'robotId': robotId,
+                            'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a'
+                        }
+                    );
+                }, 1000);
             },
             updateSchedule: function(scheduleId, callbackSuccess, callbackError) {
                 //window.plugins.neatoPluginLayer.robotMgr.updateSchedule(scheduleId, callbackSuccess, callbackError);

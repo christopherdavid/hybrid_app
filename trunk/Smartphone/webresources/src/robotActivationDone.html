@@ -1,10 +1,26 @@
 <div data-role="page" id="robotActivationDone">
-    <div data-role="header" data-position="fixed" data-theme="b" data-tap-toggle="false">
-            <a href="#" data-role="button" data-theme="b" data-mini="true" data-icon="back" data-inline="true" data-i18n="common.back" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
-            <h1 data-i18n="robotActivationId.navi.title" data-bind="translate: language">New Account</h1>
-            <a href="#"  data-role="button" data-theme="b" data-mini="true" data-inline="true" data-i18n="common.ok" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:next">ok</a>
+    <div data-role="header" class="page-header" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">[back]</a>
+        </div>
+        <h1>
+            <div class="robotName">
+                <span>&#160;</span>
+            </div>
+            <div class="screenTitle">
+                <span data-i18n="robotActivationId.navi.title" data-bind="translate: language">[navi title]</span>
+            </div>
+        </h1>
+        <div class="ui-btn-right">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.ok" 
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:next">[ok]</a>
+        </div>
     </div>
+    
     <div data-role="content">
-    	<h2 data-i18n="robotActivationDone.page.reg_complete" data-bind="translate: language">Registration complete...</h2>
+        <h2 data-i18n="robotActivationDone.page.reg_complete" data-bind="translate: language">Registration complete...</h2>
     </div>
 </div>

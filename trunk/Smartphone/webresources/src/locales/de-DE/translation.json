@@ -10,6 +10,8 @@
         "cancel": "Abbrechen",
         "edit": "bearbeiten",
         "delete": "löschen",
+        "change": "ändern",
+        "logout": "Abmelden",
         "cleaningMode": {
             "1": "eco",
             "2": "normal"
@@ -24,19 +26,23 @@
             "6": "Samstag"
         }
     },
-    
     "communication": {
         "fetch_robots": "Roboterliste wird abgerufen...",
         "fetch_map": "Kartendaten werden abgerufen..."
     },
-    "home": {
-        "cleaning": "Reinigung",
-        "remote": "Fernbedienung",
-        "schedule": "Wochenplan",
-        "settings": "Einstellungen",
-        "logout": "Abmelden",
-        "change_robot": "Roboter wechseln",
-        "send_to_base": "Zur Basis schicken"
+    "cleaning": {
+        "navi": {
+            "title": "Reinigung"
+        },
+        "page": {
+            "cleaning": "Reinigung",
+            "remote": "Fernbedienung",
+            "schedule": "Wochenplan",
+            "settings": "Einstellungen",
+            "logout": "Abmelden",
+            "change_robot": "Roboter wechseln",
+            "send_to_base": "Zur Basis schicken"
+        }
     },
     "start": {
         "login": "Bitte einloggen!",
@@ -46,16 +52,15 @@
     },
     "createAccount": {
         "navi": {
-            "back": "zurück",
-            "title": "Benutzer Account erstellen",
-            "next": "weiter"
+            "title": "Benutzer Account erstellen"
         },
         "page": {
             "title": "Willkommen bei der Registrierung.<br/>Zum weiterkommen werden noch ein paar Informationen benötigt.",
             "name": "Benutzername",
             "email": "Email Addresse",
             "password": "Passwort",
-            "password_verify": "Passwort verifizieren"
+            "password_verify": "Passwort verifizieren",
+            "password_show": "Passwort anzeigen"
         }
     },
     "robotSelection": {
@@ -101,6 +106,7 @@
             "email": "Email Adresse",
             "password": "Passwort",
             "password_lost": "Passwort vergessen?",
+            "password_show": "Passwort anzeigen",
             "tap_here": "Hier berühren."
         }
     },
@@ -109,9 +115,23 @@
             "title": "Einstellungen"
         },
         "page": {
-            "robot_management": "Robot Management",
+            "robot_management": "Roboter Einstellungen",
             "user_settings": "Benutzereinstellungen",
             "general_settings": "Allgemeine Einstellungen"
+        }
+    },
+    "robotManagement": {
+        "navi": {
+            "title": "Roboter Einstellungen"
+        },
+        "page": {
+            "robot_name": "Roboter Name",
+            "robot_id": "Roboter ID",
+            "robot_type": "Type",
+            "cleaning_options": {
+                "title": "Reinigungs Einstellungen",
+                "schedule":"Zeitplan zum Reinigen benutzen"
+            }
         }
     },
     "basicScheduler": {

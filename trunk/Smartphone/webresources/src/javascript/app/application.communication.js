@@ -21,7 +21,7 @@ function WorkflowCommunication(parent) {
                 parent.showLoadingArea(false, that.callbacks[guid].notifyOptions.type);
             }
             if (success){
-                if (storeKey){
+                if (storeKey && result){
                     that.dataValues[storeKey] = result;
                 }
                 that.callbacks[guid].oDeferred.resolve(result, that.callbacks[guid].notifyOptions);

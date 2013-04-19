@@ -11,6 +11,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     this.selectedCleaningDays = ko.observableArray([]);
     this.blockedDays = ko.observableArray([]);
     this.cleaningMode = ko.observable();
+    this.robot = ko.observable();
     
     this.isNextEnabled = ko.computed(function() {
         return (that.selectedCleaningDays().length > 0 && this.cleaningMode() != null);
@@ -18,6 +19,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     
     /* <enviroment functions> */
     this.init = function() {
+        that.robot(ko.mapping.fromJS(parent.communicationWrapper.dataValues["activeRobot"]), null, that.robot);
         if (that.cleaningDays().length == 0) {
             for (var i = 0; i < weekIndex.length; i++) {
                 that.cleaningDays.push({
@@ -73,7 +75,13 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
                 });
                 if(!eventDiffers) {
                     that.cleaningMode(eventMode);
+                } else {
+                    // set eco as default
+                    that.cleaningMode(1);
                 }
+            } else {
+                // set eco as default
+                that.cleaningMode(1);
             }
         }
         
@@ -96,6 +104,17 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     /* </enviroment functions> */
 
     /* <actionbar functions> */
+    this.changeRobot = function() {
+        // Switch to robot selection dialog
+        that.conditions['changeRobot'] = true;
+        parent.flowNavigator.next(robotScreenCaller.CHANGE);
+    };
+    
+    this.back = function() {
+        that.conditions['back'] = true;
+        parent.flowNavigator.previous();
+    };
+    
     this.cancel = function() {
         that.conditions['cancel'] = true;
         parent.flowNavigator.previous(that.bundle);

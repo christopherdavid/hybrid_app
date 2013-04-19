@@ -33,27 +33,6 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         parent.flowNavigator.next(that.bundle);
     };
 
-    this.removeRobot = function(robot) {
-        var userEmail = parent.communicationWrapper.dataValues["user"].email;
-        //var tDeffer = parent.communicationWrapper.exec(UserPluginManager.disassociateRobot, [userEmail, robot.robotId()]);
-        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.disassociateAllRobots, [userEmail, robot.robotId()]);
-        tDeffer.done(that.successRemoveRobot);
-        tDeffer.fail(that.errorRemoveRobot);
-    };
-
-    this.successRemoveRobot = function(result) {
-        console.log("Result" + result);
-
-        // ToDo: notify the user
-
-        // Query the new robot list on success
-        that.getRobotList();
-    };
-
-    this.errorRemoveRobot = function(error) {
-        console.log("Error: " + error.errorMessage);
-    };
-
     this.reload = function() {
         that.conditions = {};
         that.backConditions = {};
@@ -149,17 +128,6 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         tDeffer.fail(that.errorGetAssociatedRobots);
 
     };
-
-    /**
-     *  Called when the delete button has been pressed. A robot needs to be selected before
-     */
-    this.deleteRobot = function() {
-
-        if (that.selectedRobot()) {
-            // Remove the selected robot
-            that.removeRobot(that.selectedRobot());
-        }
-    }
 
     this.init = function() {
 
