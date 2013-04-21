@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleInfo2;
+import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
 import com.neatorobotics.android.slide.framework.utils.CryptoUtils;
 import com.neatorobotics.android.slide.framework.utils.FileUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
@@ -27,7 +28,7 @@ import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 public class DBHelper {
 	private static final String TAG = DBHelper.class.getSimpleName();
 
-	private static final int DB_VERSION = 3;
+	private static final int DB_VERSION = 4;
 	private static final String DB_NAME = "neato_plugin_smart_apps.db";
 	
 	private static DBHelper singleInstanceObject;
@@ -84,13 +85,21 @@ public class DBHelper {
 			+ DBCommon.COL_NAME_BASIC_SCHEDULE_ID 			+ " TEXT, "
 			+ DBCommon.COL_NAME_ADVANCED_SCHEDULE_ID 			+ " TEXT ) ";
 
+	private static final String CREATE_CLEANING_SETTINGS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " +
+		DBCommon.TABLE_NAME_CLEANING_SETTINGS
+		+ "("
+		+ DBCommon.COL_NAME_ROBOT_ID			+ " TEXT PRIMARY KEY, "
+		+ DBCommon.COL_NAME_SPOT_AREA_LENGTH	+ " INTEGER, "
+		+ DBCommon.COL_NAME_SPOT_AREA_HEIGHT	+ " INTEGER )";
+
 	private static final String DROP_USER_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_USER_INFO;
 	private static final String DROP_ROBOT_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_ROBOT_INFO;
 	private static final String DROP_ATLAS_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_ATLAS_INFO;
 	private static final String DROP_GRID_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_GRID_INFO;
 	private static final String DROP_SCHEDULE_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_SCHEDULE_INFO;
 	private static final String DROP_ROBOT_SCHEDULE_IDS_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS;
-
+	private static final String DROP_CLEANING_SETTINGS_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_CLEANING_SETTINGS;
+	
 	// Select query statements
 	private static final String SELECTION_USER_BY_USER_ID = DBCommon.TABLE_NAME_USER_INFO + "." + DBCommon.COL_NAME_USER_ID + " = ?";
 	private static final String SELECTION_USER_BY_USER_EMAIL = DBCommon.TABLE_NAME_USER_INFO + "." + DBCommon.COL_NAME_USER_EMAIL + " = ?";
@@ -104,6 +113,7 @@ public class DBHelper {
 	private static final String SELECTION_ROBOT_SCHEDULE_BY_ID = DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + DBCommon.COL_NAME_ROBOT_ID + " = ?";
 	private static final String SELECTION_ROBOT_BY_BASIC_SCHEDULE_ID = DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + DBCommon.COL_NAME_BASIC_SCHEDULE_ID + " = ?";
 	private static final String SELECTION_ROBOT_BY_ADVANCED_SCHEDULE_ID = DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + DBCommon.COL_NAME_ADVANCED_SCHEDULE_ID + " = ?";
+	private static final String SELECTION_CLEANING_SETTINGS_BY_ROBOTID = DBCommon.TABLE_NAME_CLEANING_SETTINGS + "." + DBCommon.COL_NAME_ROBOT_ID + " = ?";
 
 	private class DBOpenHelper extends SQLiteOpenHelper {
 		// private boolean mDBCreated;
@@ -136,6 +146,7 @@ public class DBHelper {
 			db.execSQL(CREATE_GRID_TABLE_QUERY);
 			db.execSQL(CREATE_SCHEDULE_INFO_TABLE_QUERY);
 			db.execSQL(CREATE_ROBOT_SCHEDULE_IDS_INFO_TABLE_QUERY);
+			db.execSQL(CREATE_CLEANING_SETTINGS_TABLE_QUERY);
 		}
 		
 		private void dropTables(SQLiteDatabase db) {
@@ -145,6 +156,7 @@ public class DBHelper {
 			db.execSQL(DROP_GRID_INFO_TABLE_QUERY);
 			db.execSQL(DROP_SCHEDULE_INFO_TABLE_QUERY);
 			db.execSQL(DROP_ROBOT_SCHEDULE_IDS_INFO_TABLE_QUERY);
+			db.execSQL(DROP_CLEANING_SETTINGS_TABLE_QUERY);
 		}
 	}
 	
@@ -864,5 +876,64 @@ public class DBHelper {
 		values.put(DBCommon.COL_NAME_ROBOT_ID, robotId);
 		values.put(DBCommon.COL_NAME_ADVANCED_SCHEDULE_ID, id);
 		return values;
+	}
+	
+	private CleaningSettings convertToCleaningSettingsObject(Cursor cursor) {
+		CleaningSettings cleaningSettings = new CleaningSettings();
+
+		cleaningSettings.setSpotAreaLength(cursor.getInt(cursor.getColumnIndex(DBCommon.COL_NAME_SPOT_AREA_LENGTH)));
+		cleaningSettings.setSpotAreaHeight(cursor.getInt(cursor.getColumnIndex(DBCommon.COL_NAME_SPOT_AREA_HEIGHT)));
+
+		return cleaningSettings;
+	}
+
+	private ContentValues getContentValues(CleaningSettings cleaningSettings) {
+		ContentValues values  = new ContentValues();
+
+		values.put(DBCommon.COL_NAME_SPOT_AREA_LENGTH, cleaningSettings.getSpotAreaLength());
+		values.put(DBCommon.COL_NAME_SPOT_AREA_HEIGHT, cleaningSettings.getSpotAreaHeight());
+
+		return values;
+	}
+
+	// Public helper method to return robot cleaning settings
+	public CleaningSettings getCleaningSettings(String robotId) {
+		CleaningSettings robotSettings = null;
+
+		String[] selectionArgs = new String[] {robotId};
+
+		SQLiteDatabase db = getDatabase();
+		Cursor cursor = db.query(DBCommon.TABLE_NAME_CLEANING_SETTINGS, null, SELECTION_CLEANING_SETTINGS_BY_ROBOTID,
+				selectionArgs, null, null, null);
+		if (cursor.moveToFirst()) {
+			robotSettings = convertToCleaningSettingsObject(cursor);
+		}
+		cursor.close();
+
+		return robotSettings;
+	}
+
+	// Public helper method to update cleaning settings
+	public boolean updateCleaningSettings(String robotId, CleaningSettings cleaningSettings) {
+		int count = 0;
+
+		String[] selectionArgs = new String[] {robotId};
+
+		ContentValues values = getContentValues(cleaningSettings);
+
+		SQLiteDatabase db = getDatabase();
+
+		Cursor cursor = db.query(DBCommon.TABLE_NAME_CLEANING_SETTINGS, null, SELECTION_CLEANING_SETTINGS_BY_ROBOTID, 
+				selectionArgs, null, null, null);
+		if (!cursor.moveToFirst()) {
+			// Entry does not exist add one
+			values.put(DBCommon.COL_NAME_ROBOT_ID, robotId);
+			count = (int) db.insert(DBCommon.TABLE_NAME_CLEANING_SETTINGS, null, values);
+		}
+		else {
+			count = db.update(DBCommon.TABLE_NAME_CLEANING_SETTINGS, values, SELECTION_CLEANING_SETTINGS_BY_ROBOTID, selectionArgs);
+		}
+
+		return (count > 0) ? true : false;
 	}
 }

@@ -8,10 +8,8 @@ import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.utils.UserAttributes;
-import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotAssociationDisassociationResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
@@ -112,6 +110,11 @@ public class UserManager {
 			userItem = convertUserDetailResultToUserItem(result);
 		}
 		return userItem;
+	}
+	
+	// TODO: Need to call the Web API
+	public boolean isUserValidated(final String email) {
+		return true;
 	}
 
 	public void getUserDetails(final String email, final String auth_token, final UserDetailsListener listener) {

@@ -47,11 +47,14 @@ public class UserManagerPlugin extends Plugin {
 	private static enum UserManagerPluginMethods {CREATE_USER, LOGIN, LOGOUT, ISLOGGEDIN, GET_USER_DETAILS, 
 										ASSOCIATE_ROBOT, DISASSOCIATE_ROBOT, GET_ASSOCIATED_ROBOTS, 
 										DISASSOCAITE_ALL_ROBOTS, REGISTER_NETWORK_STATE_LISTENER, 
-										FORGET_PASSWORD, CHANGE_PASSWORD};
+										FORGET_PASSWORD, CHANGE_PASSWORD, CREATE_USER2, RESEND_VALIDATION_MAIL,
+										IS_USER_VALIDATED};
 	static {
 		ACTION_MAP.put(ActionTypes.LOGIN, UserManagerPluginMethods.LOGIN);
 		ACTION_MAP.put(ActionTypes.IS_USER_LOGGEDIN, UserManagerPluginMethods.ISLOGGEDIN);
 		ACTION_MAP.put(ActionTypes.CREATE_USER, UserManagerPluginMethods.CREATE_USER);
+		ACTION_MAP.put(ActionTypes.CREATE_USER2, UserManagerPluginMethods.CREATE_USER2);
+		ACTION_MAP.put(ActionTypes.RESEND_VALIDATION_MAIL, UserManagerPluginMethods.RESEND_VALIDATION_MAIL);
 		ACTION_MAP.put(ActionTypes.LOGOUT, UserManagerPluginMethods.LOGOUT);
 		ACTION_MAP.put(ActionTypes.GET_USER_DETAILS, UserManagerPluginMethods.GET_USER_DETAILS);
 		ACTION_MAP.put(ActionTypes.ASSOCIATE_ROBOT, UserManagerPluginMethods.ASSOCIATE_ROBOT);
@@ -61,7 +64,7 @@ public class UserManagerPlugin extends Plugin {
 		ACTION_MAP.put(ActionTypes.REGISTER_NETWORK_STATE_LISTENER, UserManagerPluginMethods.REGISTER_NETWORK_STATE_LISTENER);
 		ACTION_MAP.put(ActionTypes.FORGET_PASSWORD, UserManagerPluginMethods.FORGET_PASSWORD);
 		ACTION_MAP.put(ActionTypes.CHANGE_PASSWORD, UserManagerPluginMethods.CHANGE_PASSWORD);
-	
+		ACTION_MAP.put(ActionTypes.IS_USER_VALIDATED, UserManagerPluginMethods.IS_USER_VALIDATED);
 	}
 
 	private RobotDetailsPluginListener mRobotDetailsPluginListener;
@@ -106,7 +109,21 @@ public class UserManagerPlugin extends Plugin {
 			LogHelper.log(TAG, "Register action initiated");
 			createUser(context, jsonData, callbackId);
 			break;
-
+			
+		case CREATE_USER2:
+			LogHelper.log(TAG, "Register with email validation action initiated");
+			createUser2(context, jsonData, callbackId);
+			break;
+			
+		case RESEND_VALIDATION_MAIL:
+			LogHelper.log(TAG, "Resending validation mail to your account");
+			resendValidationMail(context, jsonData, callbackId);
+			break;
+		case IS_USER_VALIDATED:
+			LogHelper.log(TAG, "Checking if User is validated or not");
+			isUserValidated(context, jsonData, callbackId);
+			break;
+		
 		case LOGOUT:
 			LogHelper.log(TAG, "LOGOUT action initiated");
 			logoutUser(context, jsonData, callbackId);
@@ -214,19 +231,13 @@ public class UserManagerPlugin extends Plugin {
 			}
 		});
 	}
+	
 	private void isUserLoggedIn(Context context, UserJsonData jsonData, String callbackId) {
-
 		String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
-		if (TextUtils.isEmpty(authToken)) {
-			PluginResult pluginLogoutResult = new PluginResult(PluginResult.Status.OK, false);
-			pluginLogoutResult.setKeepCallback(false);
-			success(pluginLogoutResult, callbackId);
-		} 
-		else {
-			PluginResult pluginLogoutResult = new PluginResult(PluginResult.Status.OK, true);
-			pluginLogoutResult.setKeepCallback(false);
-			success(pluginLogoutResult, callbackId);
-		}
+		boolean isUserLoggedIn = !TextUtils.isEmpty(authToken);
+		PluginResult pluginLogoutResult = new PluginResult(PluginResult.Status.OK, isUserLoggedIn);
+		pluginLogoutResult.setKeepCallback(false);
+		success(pluginLogoutResult, callbackId);
 	}
 
 	private void loginUser(final Context context, final UserJsonData jsonData, final String callbackId) {
@@ -252,7 +263,7 @@ public class UserManagerPlugin extends Plugin {
 						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
 						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
 						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());
-						
+						userDetails.put(JsonMapKeys.KEY_IS_VALIDATED_USER, userItem.isValidated());
 						RobotCommandServiceManager.loginToXmpp(context);
 						PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
 						LogHelper.logD(TAG, "Login successful. Start service and send Success plugin to user with user details");
@@ -351,8 +362,9 @@ public class UserManagerPlugin extends Plugin {
 					if (userItem != null) {
 						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
 						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
-						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());						
-					
+						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());		
+						userDetails.put(JsonMapKeys.KEY_IS_VALIDATED_USER, true);
+						
 						RobotCommandServiceManager.loginToXmpp(context);
 						PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
 						LogHelper.logD(TAG, "User created");
@@ -390,6 +402,100 @@ public class UserManagerPlugin extends Plugin {
 		});
 	}
 	
+	private void createUser2(final Context context, final UserJsonData jsonData, final String callbackId) {		
+		LogHelper.logD(TAG, "createUser2 Called");
+//		LogHelper.logD(TAG, "Password = " + password);
+		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
+		String password = jsonData.getString(JsonMapKeys.KEY_PASSWORD);
+		String name = jsonData.getString(JsonMapKeys.KEY_USER_NAME);
+
+		LogHelper.logD(TAG, "JSON String: " + jsonData);
+
+		LogHelper.logD(TAG, "Email:" + email + " Name: " + name);
+		
+		UserManager.getInstance(context).createUser(name, email, password,  new UserDetailsListener() {
+
+			@Override
+			public void onUserDetailsReceived(UserItem userItem) {
+				JSONObject userDetails = new JSONObject();
+				
+				try {
+					if (userItem != null) {
+						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
+						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
+						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());	
+						userDetails.put(JsonMapKeys.KEY_IS_VALIDATED_USER, userItem.isValidated());
+					
+						RobotCommandServiceManager.loginToXmpp(context);
+						PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
+						LogHelper.logD(TAG, "User created");
+						success(loginUserPluginResult, callbackId);
+						String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
+						UserManager.getInstance(context).setUserAttributesOnServer(authToken, DeviceUtils.getUserAttributes(context));
+					}
+					else {
+						sendError(callbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
+					}
+				} 
+				catch (JSONException e) {
+					LogHelper.log(TAG, "Exception in createUser", e);
+					sendError(callbackId, ErrorTypes.JSON_PARSING_ERROR, e.getMessage());
+				}
+
+				
+			}
+
+			@Override
+			public void onNetworkError(String errMessage) {
+				NeatoPrefs.saveUserEmailId(context, null);
+				LogHelper.logD(TAG, "Failed to create new user. Network Error");
+				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
+				
+			}
+
+			@Override
+			public void onServerError(String errMessage) {
+				NeatoPrefs.saveUserEmailId(context, null);
+				LogHelper.logD(TAG, "Failed to create new user. Server Error");
+				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
+
+			}
+		});
+	}	
+	
+	private void isUserValidated(final Context context, UserJsonData jsonData, final String callbackId) {
+		LogHelper.logD(TAG, "checking if user is authenticated");
+		LogHelper.logD(TAG, "JSON String: " + jsonData);
+		
+		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
+		LogHelper.logD(TAG, "Email: " + email);
+		
+		boolean result = UserManager.getInstance(context).isUserValidated(email);
+		
+		JSONObject validUser = new JSONObject();
+		try {
+			validUser.put(JsonMapKeys.KEY_IS_VALIDATED_USER, result);
+		} catch (JSONException e) {
+			LogHelper.logD(TAG, "Exception in is user validated");
+			sendError(callbackId, ErrorTypes.JSON_PARSING_ERROR, e.getMessage());
+			return;
+		}
+		
+		// TODO: Need to call the WebAPI to send error cases from server
+		PluginResult validUserPluginResult = new PluginResult(PluginResult.Status.OK, validUser);
+		success(validUserPluginResult, callbackId);					
+	}
+	
+	private void resendValidationMail(final Context context, UserJsonData jsonData, final String callbackId) {
+		LogHelper.logD(TAG, "resend Validation Mail called");
+		LogHelper.logD(TAG, "JSON String: " + jsonData);
+		
+		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
+		LogHelper.logD(TAG, "Email: " + email);
+		// TODO: Need to call the WebAPI to send the actual result
+		PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+		success(pluginResult, callbackId);
+	}
 	
 	public void getUserDetails(final Context context, UserJsonData jsonData, final String callbackId) {
 
@@ -606,6 +712,9 @@ public class UserManagerPlugin extends Plugin {
 	private static class ActionTypes {
 		public static final String LOGIN = "login";
 		public static final String CREATE_USER = "createUser";
+		public static final String CREATE_USER2 = "createUser2";
+		public static final String RESEND_VALIDATION_MAIL = "resendValidationMail";
+		public static final String IS_USER_VALIDATED = "isUserValidated";
 		public static final String LOGOUT = "logout";
 		public static final String IS_USER_LOGGEDIN = "isLoggedIn";
 		public static final String GET_USER_DETAILS = "getUserDetails";
