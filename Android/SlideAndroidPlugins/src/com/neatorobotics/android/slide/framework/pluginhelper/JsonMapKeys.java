@@ -12,6 +12,8 @@ public class JsonMapKeys {
 	public static final String KEY_AUTH_TOKEN = "authToken";
 	public static final String KEY_CURRENT_PASSWORD = "currentPassword";
 	public static final String KEY_NEW_PASSWORD = "newPassword";
+	public static final String KEY_IS_VALIDATED_USER = "isValidated";
+	
 	// Used by robot plugin
 	public static final String KEY_COMMAND_ID = "commandId";
 	public static final String KEY_COMMAND_PARAMETERS = "commandParams";
@@ -21,6 +23,11 @@ public class JsonMapKeys {
 	public static final String KEY_ROBOT_IP_ADDRESS = "robotIpaddress";
 	public static final String KEY_ROBOT_ONLINE_STATUS = "online";
 	
+	// Cleaning API params
+	public static final String KEY_SPOT_CLEANING_CATEGORY = "cleaningCategory";
+	public static final String KEY_SPOT_CLEANING_AREA_LENGTH = "spotCleaningAreaLength";
+	public static final String KEY_SPOT_CLEANING_AREA_HEIGHT = "spotCleaningAreaHeight";
+
 	// Used for notification in robot plugin
 	public static final String KEY_RESPONSE_STATUS = "responseStatus";
 	public static final String KEY_RESPONSE_PARAMS = "responseParams";

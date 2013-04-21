@@ -9,11 +9,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.database.ScheduleHelper;
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.json.JsonHelper;
@@ -40,7 +40,10 @@ import com.neatorobotics.android.slide.framework.webservice.robot.RobotDetailLis
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotOnlineStatusListener;
+import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
+import com.neatorobotics.android.slide.framework.robot.settings.SettingsManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.SetRobotProfileDetailsListener;
+import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettingsListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.RobotAtlasWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.RobotAtlasGridWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.listeners.RobotGridDataDownloadListener;
@@ -78,7 +81,8 @@ public class RobotManagerPlugin extends Plugin {
 		REGISTER_ROBOT_NOTIFICATIONS, UNREGISTER_ROBOT_NOTIFICATIONS,
 		GET_SCHEDULE_DATA, GET_SCHEDULE_EVENTS, ADD_ROBOT_SCHEDULE_EVENT,
 		GET_SCHEDULE_EVENT_DATA, UPDATE_ROBOT_SCHEDULE_EVENT, DELETE_ROBOT_SCHEDULE_EVENT, 
-		UPDATE_SCHEDULE, CREATE_SCHEDULE, SYNC_SCHEDULE_FROM_SERVER};
+		UPDATE_SCHEDULE, CREATE_SCHEDULE, SYNC_SCHEDULE_FROM_SERVER, SET_SPOT_DEFINITION,
+		GET_SPOT_DEFINITION, START_CLEANING, STOP_CLEANING, PAUSE_CLEANING, RESUME_CLEANING};
 
 		static {
 			ACTION_MAP.put(ActionTypes.DISCOVER_NEAR_BY_ROBOTS, RobotManagerPluginMethods.DISCOVER_NEAR_BY_ROBOTS);
@@ -110,6 +114,13 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_MAP.put(ActionTypes.UPDATE_SCHEDULE, RobotManagerPluginMethods.UPDATE_SCHEDULE);
 			ACTION_MAP.put(ActionTypes.CREATE_SCHEDULE, RobotManagerPluginMethods.CREATE_SCHEDULE);
 			ACTION_MAP.put(ActionTypes.SYNC_SCHEDULE_FROM_SERVER, RobotManagerPluginMethods.SYNC_SCHEDULE_FROM_SERVER);
+			ACTION_MAP.put(ActionTypes.SET_SPOT_DEFINITION, RobotManagerPluginMethods.SET_SPOT_DEFINITION);
+			ACTION_MAP.put(ActionTypes.GET_SPOT_DEFINITION, RobotManagerPluginMethods.GET_SPOT_DEFINITION);
+			
+			ACTION_MAP.put(ActionTypes.START_CLEANING, RobotManagerPluginMethods.START_CLEANING);
+			ACTION_MAP.put(ActionTypes.STOP_CLEANING, RobotManagerPluginMethods.STOP_CLEANING);
+			ACTION_MAP.put(ActionTypes.PAUSE_CLEANING, RobotManagerPluginMethods.PAUSE_CLEANING);
+			ACTION_MAP.put(ActionTypes.RESUME_CLEANING, RobotManagerPluginMethods.RESUME_CLEANING);
 		}
 
 		private RobotPluginDiscoveryListener mRobotPluginDiscoveryListener;
@@ -142,9 +153,8 @@ public class RobotManagerPlugin extends Plugin {
 		private void handlePluginExecute(String action, JSONArray data, String callbackId) {
 			RobotJsonData jsonData = new RobotJsonData(data);
 			Context context = cordova.getActivity();
-
-			switch(convertToInternalAction(action)) {
-
+			RobotManagerPluginMethods commandId = convertToInternalAction(action);
+			switch(commandId) {
 			case DISCOVER_NEAR_BY_ROBOTS:
 				LogHelper.log(TAG, "DISCOVER action initiated");
 				discoverRobot(context, jsonData , callbackId);
@@ -271,7 +281,64 @@ public class RobotManagerPlugin extends Plugin {
 				LogHelper.log(TAG, "SYNC_SCHEDULE_FROM_SERVER action initiated");
 				syncScheduleFromServer(context, jsonData, callbackId);
 				break;
+			case SET_SPOT_DEFINITION:
+				LogHelper.log(TAG, "SET_SPOT_DEFINITION action initiated");
+				setSpotDefinition(context, jsonData, callbackId);
+				break;
+			case GET_SPOT_DEFINITION:
+				LogHelper.log(TAG, "GET_SPOT_DEFINITION action initiated");
+				getSpotDefinition(context, jsonData, callbackId);
+				break;
+			case START_CLEANING:
+				LogHelper.log(TAG, "START_CLEANING COMMAND initiated");
+				sendCleaningCommandToRobot(context, RobotCommandPacketConstants.COMMAND_ROBOT_START, jsonData, callbackId);
+				break;
+			case STOP_CLEANING:
+				LogHelper.log(TAG, "STOP_CLEANING COMMAND initiated");
+				sendCleaningCommandToRobot(context, RobotCommandPacketConstants.COMMAND_ROBOT_STOP, jsonData, callbackId);
+				break;
+			case PAUSE_CLEANING:
+				LogHelper.log(TAG, "PAUSE_CLEANING COMMAND initiated");
+				sendCleaningCommandToRobot(context, RobotCommandPacketConstants.COMMAND_PAUSE_CLEANING, jsonData, callbackId);
+				break;
+			case RESUME_CLEANING:
+				LogHelper.log(TAG, "RESUME_CLEANING COMMAND initiated");
+				sendCleaningCommandToRobot(context, RobotCommandPacketConstants.COMMAND_RESUME_CLEANING, jsonData, callbackId);
+				break;
 			}
+		}
+		
+		// Private helper method to send the cleaning commands. Keeping Cleaning command helper method separate so that
+		// we can detect the kind of cleaning and the extra params required for the cleaning command
+		private void sendCleaningCommandToRobot(Context context, int commandId, RobotJsonData jsonData,
+				final String callbackId) {
+			
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
+			HashMap<String, String> commadParamsMap = getCommandParams(commandParams);
+			LogHelper.logD(TAG, "sendCommand2 - COMMAND_ROBOT_START");
+			// Get cleaning category
+			int cleaningCategory = 0;
+			if (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_START) {
+				if (!TextUtils.isEmpty(commadParamsMap.get(JsonMapKeys.KEY_SPOT_CLEANING_CATEGORY))) {
+					cleaningCategory = Integer.valueOf(commadParamsMap.get(JsonMapKeys.KEY_SPOT_CLEANING_CATEGORY));
+				}
+				if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_SPOT) {
+					CleaningSettings cleaningSettings = RobotHelper.getCleaningSettings(context, robotId);
+					if (cleaningSettings == null) {
+						LogHelper.log(TAG, "Spot definition not set. Callback Id = " + callbackId);
+						sendError(callbackId, ErrorTypes.INVALID_PARAMETER, "Spot Definition Not Set");
+						return;
+					}
+					String spotAreaLength = String.valueOf(cleaningSettings.getSpotAreaLength());
+					String spotAreaHeight = String.valueOf(cleaningSettings.getSpotAreaHeight());
+					commadParamsMap.put(JsonMapKeys.KEY_SPOT_CLEANING_AREA_LENGTH, spotAreaLength);
+					commadParamsMap.put(JsonMapKeys.KEY_SPOT_CLEANING_AREA_HEIGHT, spotAreaHeight);
+				}
+			}
+			
+			sendCommandHelper(context, robotId, commandId, commadParamsMap, callbackId);
+			
 		}
 
 		private void updateSchedule(Context context, RobotJsonData jsonData,
@@ -620,6 +687,88 @@ public class RobotManagerPlugin extends Plugin {
 				}
 			});
 		}
+
+		private void setSpotDefinition(Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "setSpotDefinition action initiated in Robot plugin");	
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			int spotCleaningAreaLength = 0;
+			int spotCleaningAreaHeight = 0;
+			
+			try {
+				if (!TextUtils.isEmpty(jsonData.getString(JsonMapKeys.KEY_SPOT_CLEANING_AREA_LENGTH))) {
+					spotCleaningAreaLength = Integer.valueOf(jsonData.getString(JsonMapKeys.KEY_SPOT_CLEANING_AREA_LENGTH));
+				}
+				if (!TextUtils.isEmpty(jsonData.getString(JsonMapKeys.KEY_SPOT_CLEANING_AREA_HEIGHT))) {
+					spotCleaningAreaHeight = Integer.valueOf(jsonData.getString(JsonMapKeys.KEY_SPOT_CLEANING_AREA_HEIGHT));
+				}
+				
+				LogHelper.logD(TAG, "Params\n\tRobotId= " + robotId + "\n\tSpot Area Length = " + spotCleaningAreaLength + 
+						"\n\tSpot Area Height = " + spotCleaningAreaHeight);
+				
+				SettingsManager.getInstance(context).updateSpotDefinition(robotId, spotCleaningAreaLength, 
+						spotCleaningAreaHeight, new CleaningSettingsListener() {
+					@Override
+					public void onSuccess(CleaningSettings cleaningSettings) {
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+						pluginResult.setKeepCallback(false);
+						success(pluginResult, callbackId);
+					}
+
+					@Override
+					public void onError() {
+						LogHelper.log(TAG, "Unable to update robot spot definition");
+						sendError(callbackId, ErrorTypes.ERROR_DB_ERROR, "Unable to update robot spot definition");
+					}
+				});
+			}
+			catch (NumberFormatException e) {
+				LogHelper.logD(TAG, "Exception in setSpotDefinition", e);
+				sendError(callbackId, ErrorTypes.INVALID_PARAMETER, "Invalid spot definition parameters specified");
+			}
+		}
+		
+		private JSONObject getSpotDefinitionJsonObject(CleaningSettings cleaningSettings) {
+			JSONObject spotDefinitionJsonObj = null;
+			try {
+				spotDefinitionJsonObj = new JSONObject();
+				spotDefinitionJsonObj.put(JsonMapKeys.KEY_SPOT_CLEANING_AREA_LENGTH, cleaningSettings.getSpotAreaLength());
+				spotDefinitionJsonObj.put(JsonMapKeys.KEY_SPOT_CLEANING_AREA_HEIGHT, cleaningSettings.getSpotAreaHeight());				
+			}
+			catch (JSONException e) {
+				LogHelper.logD(TAG, "Exception in getSpotDefinitionJsonObject", e);
+			}
+			
+			return spotDefinitionJsonObj;	
+		}
+		
+		private void getSpotDefinition(Context context, RobotJsonData jsonData,
+				final String callbackId) {
+			LogHelper.logD(TAG, "getSpotDefinition action initiated in Robot plugin");	
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			LogHelper.logD(TAG, "Params\nRobotId=" + robotId);
+			
+			SettingsManager.getInstance(context).getCleaningSettings(robotId, new CleaningSettingsListener() {				
+				@Override
+				public void onSuccess(CleaningSettings cleaningSettings) {
+					JSONObject spotDefinitionJsonObj = getSpotDefinitionJsonObject(cleaningSettings);
+					if (spotDefinitionJsonObj != null) {
+						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, spotDefinitionJsonObj);
+						pluginResult.setKeepCallback(false);
+						success(pluginResult, callbackId);
+					}
+					else {
+						LogHelper.log(TAG, "Unable to get spot definition JSON object");
+						sendError(callbackId, ErrorTypes.JSON_CREATION_ERROR, "Unable to get spot definition JSON object");
+					}
+				}
+
+				@Override
+				public void onError() {
+					LogHelper.log(TAG, "Unable to get robot spot definition");
+					sendError(callbackId, ErrorTypes.ERROR_DB_ERROR, "Unable to get robot spot definition");
+				}
+			});
+		}
 		
 		private void registerRobotNotifications(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "registerRobotNotifications action initiated in Robot plugin");
@@ -867,12 +1016,9 @@ public class RobotManagerPlugin extends Plugin {
 			pluginStartResult.setKeepCallback(false);
 			success(pluginStartResult, callbackId);
 		} 
-
-		private void sendCommand2(Context context, RobotJsonData jsonData, String callbackId) {
-			LogHelper.logD(TAG, "Send command action initiated in Robot plugin " + jsonData.toString());
-			int commandId = jsonData.getInt(JsonMapKeys.KEY_COMMAND_ID);
-			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-			
+		
+		
+		private void sendCommandHelper(Context context, String robotId, int commandId, HashMap<String, String> params, String callbackId) {
 			// Create Robot state notification listener to notify when we get a robot state info
 			// from the robot
 			if (commandId == RobotCommandPacketConstants.COMMAND_GET_ROBOT_STATE) {
@@ -882,17 +1028,22 @@ public class RobotManagerPlugin extends Plugin {
 				}
 				
 				mRobotStateNotificationPluginListener.addCallbackId(robotId, callbackId);
-			}	
-			
-			JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
-			HashMap<String, String> commadParamsMap = getCommandParams(commandParams);
-			RobotCommandServiceManager.sendCommand2(context, robotId, commandId, commadParamsMap);
+			}
+			RobotCommandServiceManager.sendCommand2(context, robotId, commandId, params);
 			if (commandId != RobotCommandPacketConstants.COMMAND_GET_ROBOT_STATE) {
-				// TODO: Success should be send in a thread way.
 				PluginResult pluginStartResult = new PluginResult(PluginResult.Status.OK);
 				pluginStartResult.setKeepCallback(false);
 				success(pluginStartResult,callbackId);
 			}
+		}
+
+		private void sendCommand2(Context context, RobotJsonData jsonData, String callbackId) {
+			LogHelper.logD(TAG, "Send command action initiated in Robot plugin " + jsonData.toString());
+			int commandId = jsonData.getInt(JsonMapKeys.KEY_COMMAND_ID);
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
+			HashMap<String, String> commadParamsMap = getCommandParams(commandParams);
+			sendCommandHelper(context, robotId, commandId, commadParamsMap, callbackId);
 		} 
 
 		private void discoverRobot(Context context, RobotJsonData jsonData, String callbackId) {
@@ -1217,6 +1368,12 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String GET_SCHEDULE_DATA = "getScheduleData";
 			public static final String CREATE_SCHEDULE = "createSchedule";
 			public static final String SYNC_SCHEDULE_FROM_SERVER = "syncScheduleFromServer";
+			public static final String SET_SPOT_DEFINITION = "setSpotDefinition";
+			public static final String GET_SPOT_DEFINITION = "getSpotDefinition";
+			public static final String START_CLEANING = "startCleaning";
+			public static final String STOP_CLEANING = "stopCleaning";
+			public static final String PAUSE_CLEANING = "pauseCleaning";
+			public static final String RESUME_CLEANING = "resumeCleaning";
 		}
 
 		private JSONObject getErrorJsonObject(int errorCode, String errMessage) {
@@ -1527,7 +1684,7 @@ public class RobotManagerPlugin extends Plugin {
 		}
 		
 		
-		private HashMap<String, String> getCommandParams(JSONObject jObject) {
+		private static HashMap<String, String> getCommandParams(JSONObject jObject) {
 			HashMap<String, String> commandParamsMap = null;
 			if (jObject == null) {
 				return new HashMap<String, String>();

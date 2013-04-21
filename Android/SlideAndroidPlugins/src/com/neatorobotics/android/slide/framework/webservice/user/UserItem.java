@@ -11,6 +11,8 @@ public class UserItem {
 	private String email;
 	private String chatId;
 	private String chatPwd;
+	private boolean isValidated = true;
+	
 	@SuppressWarnings("unused")
 	private ArrayList<String> social_networks = new ArrayList<String>();	
 	// TODO : Add list of robot items details associated. Right now only adding the robot names.
@@ -64,6 +66,12 @@ public class UserItem {
 	public int getAssociateRobotCount()
 	{
 		return robots.size();
+	}
+	
+	// TODO: As of now always returns true
+	// When we have new server API, we need to revisit this
+	public boolean isValidated() {
+		return true;
 	}
 	
 	public String toString()

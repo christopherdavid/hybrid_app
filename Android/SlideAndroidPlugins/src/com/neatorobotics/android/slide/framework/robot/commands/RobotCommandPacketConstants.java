@@ -20,11 +20,17 @@ public class RobotCommandPacketConstants {
 	public static final int COMMAND_REGISTER_STATUS_NOTIFICATIONS = 111;
 	public static final int COMMAND_UNREGISTER_STATUS_NOTIFICATIONS = 112;
 	public static final int COMMAND_STATUS_NOTIFICATION = 113;
+	public static final int COMMAND_RESUME_CLEANING = 114;
 	
 	//Special notifications have base 20000;
 	public static final int COMMAND_ROBOT_STUCK = 20001;
 	public static final int COMMAND_DIRT_BAG_FULL = 20002;
-	
+
+	// Cleaning Category
+	public static final int CLEANING_CATEGORY_MANUAL = 1;
+	public static final int CLEANING_CATEGORY_ALL = 2;
+	public static final int CLEANING_CATEGORY_SPOT = 3;
+
 	public static final String KEY_ROBOT_ID 								= "robotId";
 	public static final String KEY_ROBOT_SERIAL_ID 							= "serialId";
 	public static final String KEY_ROBOT_IP_ADDRESS 						= "robotIpAddress";

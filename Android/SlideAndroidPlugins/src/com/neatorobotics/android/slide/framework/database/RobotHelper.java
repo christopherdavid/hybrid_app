@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
+import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 
 public class RobotHelper {	
@@ -91,5 +92,22 @@ public class RobotHelper {
 			robotItem = DBHelper.getInstance(context).updateRobotNameBySerialId(robotSerialNo, name);
 		}
 		return robotItem;
+	}
+
+	public static boolean updateCleaningSettings(Context context, String robotId, 
+			CleaningSettings cleaningSettings) {
+		boolean updated = false;
+		if (!TextUtils.isEmpty(robotId) && (cleaningSettings != null)) {
+			updated = DBHelper.getInstance(context).updateCleaningSettings(robotId, cleaningSettings);
+		}
+		return updated;
+	}
+
+	public static CleaningSettings getCleaningSettings(Context context, String robotId) {
+		CleaningSettings cleaningSettings = null;
+		if (!TextUtils.isEmpty(robotId)) {
+			cleaningSettings = DBHelper.getInstance(context).getCleaningSettings(robotId);
+		}
+		return cleaningSettings;
 	}
 }
