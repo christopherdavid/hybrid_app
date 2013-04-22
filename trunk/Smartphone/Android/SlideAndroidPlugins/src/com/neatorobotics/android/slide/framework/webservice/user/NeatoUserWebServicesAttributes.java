@@ -73,6 +73,24 @@ public class NeatoUserWebServicesAttributes {
 		}
 	}
 	
+	public static class RegisterPushNotifications {
+		public static final String METHOD_NAME = "message.notification_registration";
+		public static class Attribute {
+			public static final String API_KEY = "api_key";
+			public static final String EMAIL = "user_email";
+			public static final String REGISTRATION_ID = "registration_id";
+			public static final String DEVICE_TYPE = "device_type";
+		}
+	}
+	
+	public static class UnregisterPushNotifications {
+		public static final String METHOD_NAME = "message.notification_unregistration";
+		public static class Attribute {
+			public static final String API_KEY = "api_key";
+			public static final String REGISTRATION_ID = "registration_id";
+		}
+	}
+	
 	public static class ChangePassword {
 		public static final String METHOD_NAME = "user.change_password";
 		public static class Attribute {
