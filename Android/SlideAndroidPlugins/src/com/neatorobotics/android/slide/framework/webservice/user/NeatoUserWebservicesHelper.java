@@ -3,9 +3,7 @@ package com.neatorobotics.android.slide.framework.webservice.user;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import android.content.Context;
-
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.MobileWebServiceClient;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
@@ -21,9 +19,10 @@ import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebSer
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.GetNeatoUserDetails;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.GetUserAssociatedRobots;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.LoginNeatoUser;
+import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.RegisterPushNotifications;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.SendMessageToRobot;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.SetUserAttributes;
-
+import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.UnregisterPushNotifications;
 public class NeatoUserWebservicesHelper {
 	
 	public static GetNeatoUserDetailsResult getNeatoUserDetails(Context context, String email, String authToken) 
@@ -135,6 +134,26 @@ public class NeatoUserWebservicesHelper {
 		
 		String response = MobileWebServiceClient.executeHttpPost(context, ForgetPassword.METHOD_NAME, changePasswordParams);
 		return checkResponseResult(response, ForgetPasswordResult.class);
+	}
+	
+	public static RegisterPushNotificationResult registerPushNotification(Context context, String email, int deviceType, String registrationId)
+				throws UserUnauthorizedException, NeatoServerException, IOException {
+		Map<String, String> registerPushNotificationParams = new HashMap<String, String>();
+		registerPushNotificationParams.put(RegisterPushNotifications.Attribute.EMAIL, email);
+		registerPushNotificationParams.put(RegisterPushNotifications.Attribute.DEVICE_TYPE, Integer.toString(deviceType));
+		registerPushNotificationParams.put(RegisterPushNotifications.Attribute.REGISTRATION_ID, registrationId);
+		
+		String response = MobileWebServiceClient.executeHttpPost(context, RegisterPushNotifications.METHOD_NAME, registerPushNotificationParams);
+		return checkResponseResult(response, RegisterPushNotificationResult.class);
+	}
+	
+	public static UnregisterPushNotificationResult unregisterPushNotification(Context context, String registrationId)
+				throws UserUnauthorizedException, NeatoServerException, IOException {
+		Map<String, String> unregisterPushNotificationParams = new HashMap<String, String>();
+		unregisterPushNotificationParams.put(UnregisterPushNotifications.Attribute.REGISTRATION_ID, registrationId);
+		
+		String response = MobileWebServiceClient.executeHttpPost(context, UnregisterPushNotifications.METHOD_NAME, unregisterPushNotificationParams);
+		return checkResponseResult(response, UnregisterPushNotificationResult.class);
 	}
 	
 	public static ChangePasswordResult changePasswordRequest(Context context, String authToken, String oldPassword, String newPassword)

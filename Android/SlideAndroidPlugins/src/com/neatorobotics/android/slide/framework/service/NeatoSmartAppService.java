@@ -27,6 +27,7 @@ import android.util.SparseBooleanArray;
 import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.R;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
+import com.neatorobotics.android.slide.framework.gcm.PushNotificationConstants;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
 import com.neatorobotics.android.slide.framework.plugins.RobotConstants;
@@ -606,6 +607,18 @@ public class NeatoSmartAppService extends Service {
 		registerReceiver(mResultReceiverBroadcast, new IntentFilter(NEATO_RESULT_RECEIVER_ACTION));
 	}
 
+
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		LogHelper.logD(TAG, "startId is " + startId);
+		Bundle bundle = intent.getBundleExtra(PushNotificationConstants.EXTRA_NOTIFICATION_BUNDLE);
+		if(bundle != null) {
+			LogHelper.logD(TAG, "called from notification, bundle message is " + bundle.getString(PushNotificationConstants.NOTIFICATION_TICKER_KEY));
+//			sendPushNotificationToUI(bundle);
+		}
+		return super.onStartCommand(intent, flags, startId);
+	}
 
 
 	@Override

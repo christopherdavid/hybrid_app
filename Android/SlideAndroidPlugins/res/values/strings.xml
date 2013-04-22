@@ -7,6 +7,6 @@
     <string name="notification_text_dirt_bag_full">Dirt bag full</string>
     <string name="notification_text_robot_stuck">Help!!! I am stuck</string>
     <string name="notification_text_robot_state">See Robot Information</string>
-    
+    <string name="notification_text_title">Robot Alert</string>    
 
 </resources>

@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.text.TextUtils;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
+import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
@@ -205,7 +206,8 @@ public class UserManagerPlugin extends Plugin {
 					userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.name);
 					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);
 					
-					RobotCommandServiceManager.loginToXmpp(context);												
+					RobotCommandServiceManager.loginToXmpp(context);
+					PushNotificationUtils.registerForPushNotification(context);
 				}					
 				
 				return userDetails;
@@ -244,6 +246,7 @@ public class UserManagerPlugin extends Plugin {
 				PluginResult logoutPluginResult = new  PluginResult(PluginResult.Status.OK);
 				LogHelper.logD(TAG, "Logout successful.");
 				success(logoutPluginResult, callbackId);
+				PushNotificationUtils.unregisterPushNotification(context);
 			}
 		};
 		
@@ -273,7 +276,8 @@ public class UserManagerPlugin extends Plugin {
 					userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.name);
 					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);						
 				
-					RobotCommandServiceManager.loginToXmpp(context);					
+					RobotCommandServiceManager.loginToXmpp(context);
+					PushNotificationUtils.registerForPushNotification(context);
 				}				
 				
 				return userDetails;
@@ -305,6 +309,7 @@ public class UserManagerPlugin extends Plugin {
 					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);						
 				
 					RobotCommandServiceManager.loginToXmpp(context);
+					PushNotificationUtils.registerForPushNotification(context);
 				}		
 				
 				return userDetails;

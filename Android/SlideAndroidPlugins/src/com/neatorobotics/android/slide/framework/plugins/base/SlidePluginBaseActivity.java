@@ -5,6 +5,7 @@ import org.apache.cordova.DroidGap;
 import android.os.Bundle;
 import com.neatorobotics.android.slide.framework.NeatoServiceManager;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
+import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
@@ -26,9 +27,11 @@ public class SlidePluginBaseActivity extends DroidGap {
 		
 		mServiceManager.initialize();
 		
+		
 		if(UserHelper.isUserLoggedIn(this)) {
 			String authToken = NeatoPrefs.getNeatoUserAuthToken(this);
 			UserManager.getInstance(this).setUserAttributesOnServer(authToken, DeviceUtils.getUserAttributes(this));
+			PushNotificationUtils.registerForPushNotification(this);
 		}
 	}
 	

@@ -7,9 +7,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
-import android.database.sqlite.SQLiteOpenHelper;
 
+import com.neatorobotics.android.slide.framework.database.NeatoDatabase.AtlasInfoColumns;
+import com.neatorobotics.android.slide.framework.database.NeatoDatabase.CleaningSettingsColumns;
+import com.neatorobotics.android.slide.framework.database.NeatoDatabase.GridInfoColumns;
+import com.neatorobotics.android.slide.framework.database.NeatoDatabase.RobotInfoColumns;
+import com.neatorobotics.android.slide.framework.database.NeatoDatabase.ScheduleIdsColumns;
+import com.neatorobotics.android.slide.framework.database.NeatoDatabase.ScheduleInfoColumns;
+import com.neatorobotics.android.slide.framework.database.NeatoDatabase.Tables;
+import com.neatorobotics.android.slide.framework.database.NeatoDatabase.UserInfoColumns;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleInfo2;
 import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
@@ -27,138 +33,26 @@ import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
  */
 public class DBHelper {
 	private static final String TAG = DBHelper.class.getSimpleName();
-
-	private static final int DB_VERSION = 4;
-	private static final String DB_NAME = "neato_plugin_smart_apps.db";
 	
 	private static DBHelper singleInstanceObject;
 	
 	private SQLiteDatabase mNeatoDB;
 	private Context mContext;
 	
-	private static final String CREATE_USER_INFO_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " +
-		DBCommon.TABLE_NAME_USER_INFO 
-		+ "(" 
-		+ DBCommon.COL_NAME_USER_DB_ID			+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
-		+ DBCommon.COL_NAME_USER_ID				+ " TEXT, "
-		+ DBCommon.COL_NAME_USER_NAME			+ " TEXT, "
-		+ DBCommon.COL_NAME_USER_EMAIL			+ " TEXT, "
-		+ DBCommon.COL_NAME_USER_CHAT_ID		+ " TEXT, "
-		+ DBCommon.COL_NAME_USER_CHAT_PWD		+ " TEXT )";
-	
-	private static final String CREATE_ROBOT_INFO_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " +
-		DBCommon.TABLE_NAME_ROBOT_INFO 
-		+ "(" 
-		+ DBCommon.COL_NAME_ROBOT_DB_ID			+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
-		+ DBCommon.COL_NAME_ROBOT_ID			+ " TEXT, "
-		+ DBCommon.COL_NAME_ROBOT_SERIAL_ID		+ " TEXT, "
-		+ DBCommon.COL_NAME_ROBOT_NAME			+ " TEXT, "	
-		+ DBCommon.COL_NAME_ROBOT_CHAT_ID		+ " TEXT ) ";
-	
-	private static final String CREATE_ATLAS_INFO_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " +
-		DBCommon.TABLE_NAME_ATLAS_INFO 
-		+ "(" 
-		+ DBCommon.COL_NAME_ATLAS_ID			+ " TEXT PRIMARY KEY, "
-		+ DBCommon.COL_NAME_ATLAS_XML_VERSION	+ " TEXT, "		
-		+ DBCommon.COL_NAME_ATLAS_XML_FILE_PATH		+ " TEXT ) ";
-	
-	private static final String CREATE_GRID_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " +
-		DBCommon.TABLE_NAME_GRID_INFO 
-		+ "(" 
-		+ DBCommon.COL_NAME_GRID_ID				+ " TEXT PRIMARY KEY, "
-		+ DBCommon.COL_NAME_GRID_DATA_VERSION	+ " TEXT, "		
-		+ DBCommon.COL_NAME_GRID_DATA_FILE_PATH	+ " TEXT ) ";
-	
-	private static final String CREATE_SCHEDULE_INFO_TABLE_QUERY =  "CREATE TABLE IF NOT EXISTS " +
-			DBCommon.TABLE_NAME_SCHEDULE_INFO 
-			+ "(" 
-			+ DBCommon.COL_NAME_SCHEDULE_ID			+ " TEXT PRIMARY KEY, "
-			+ DBCommon.COL_NAME_SCHEDULE_SERVER_ID		+ " TEXT, "
-			+ DBCommon.COL_NAME_SCHEDULE_VERSION		+ " TEXT, "		
-			+ DBCommon.COL_NAME_SCHEDULE_DATA			+ " TEXT, "
-			+ DBCommon.COL_NAME_SCHEDULE_TYPE 			+ " TEXT )";
-
-	private static final String CREATE_ROBOT_SCHEDULE_IDS_INFO_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " +
-			DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS
-			+ "("
-			+ DBCommon.COL_NAME_ROBOT_ID						+ " TEXT PRIMARY KEY, "
-			+ DBCommon.COL_NAME_BASIC_SCHEDULE_ID 			+ " TEXT, "
-			+ DBCommon.COL_NAME_ADVANCED_SCHEDULE_ID 			+ " TEXT ) ";
-
-	private static final String CREATE_CLEANING_SETTINGS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " +
-		DBCommon.TABLE_NAME_CLEANING_SETTINGS
-		+ "("
-		+ DBCommon.COL_NAME_ROBOT_ID			+ " TEXT PRIMARY KEY, "
-		+ DBCommon.COL_NAME_SPOT_AREA_LENGTH	+ " INTEGER, "
-		+ DBCommon.COL_NAME_SPOT_AREA_HEIGHT	+ " INTEGER )";
-
-	private static final String DROP_USER_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_USER_INFO;
-	private static final String DROP_ROBOT_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_ROBOT_INFO;
-	private static final String DROP_ATLAS_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_ATLAS_INFO;
-	private static final String DROP_GRID_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_GRID_INFO;
-	private static final String DROP_SCHEDULE_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_SCHEDULE_INFO;
-	private static final String DROP_ROBOT_SCHEDULE_IDS_INFO_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS;
-	private static final String DROP_CLEANING_SETTINGS_TABLE_QUERY = "DROP TABLE IF EXISTS " + DBCommon.TABLE_NAME_CLEANING_SETTINGS;
-	
 	// Select query statements
-	private static final String SELECTION_USER_BY_USER_ID = DBCommon.TABLE_NAME_USER_INFO + "." + DBCommon.COL_NAME_USER_ID + " = ?";
-	private static final String SELECTION_USER_BY_USER_EMAIL = DBCommon.TABLE_NAME_USER_INFO + "." + DBCommon.COL_NAME_USER_EMAIL + " = ?";
+	private static final String SELECTION_USER_BY_USER_ID = Tables.TABLE_NAME_USER_INFO + "." + UserInfoColumns.COL_NAME_USER_ID + " = ?";
+	private static final String SELECTION_USER_BY_USER_EMAIL = Tables.TABLE_NAME_USER_INFO + "." + UserInfoColumns.COL_NAME_USER_EMAIL + " = ?";
 	
-	private static final String SELECTION_ROBOT_BY_SERIAL_ID = DBCommon.TABLE_NAME_ROBOT_INFO + "." + DBCommon.COL_NAME_ROBOT_SERIAL_ID + " = ?";
+	private static final String SELECTION_ROBOT_BY_SERIAL_ID = Tables.TABLE_NAME_ROBOT_INFO + "." + RobotInfoColumns.COL_NAME_ROBOT_SERIAL_ID + " = ?";
 	
-	private static final String SELECTION_ATLAS_BY_ID = DBCommon.TABLE_NAME_ATLAS_INFO + "." + DBCommon.COL_NAME_ATLAS_ID + " = ?";
-	private static final String SELECTION_GRID_BY_ID = DBCommon.TABLE_NAME_GRID_INFO + "." + DBCommon.COL_NAME_GRID_ID + " = ?";
+	private static final String SELECTION_ATLAS_BY_ID = Tables.TABLE_NAME_ATLAS_INFO + "." + AtlasInfoColumns.COL_NAME_ATLAS_ID + " = ?";
+	private static final String SELECTION_GRID_BY_ID = Tables.TABLE_NAME_GRID_INFO + "." + GridInfoColumns.COL_NAME_GRID_ID + " = ?";
 
-	private static final String SELECTION_SCHEDULE_INFO_BY_ID = DBCommon.TABLE_NAME_SCHEDULE_INFO + "." + DBCommon.COL_NAME_SCHEDULE_ID + " = ?";
-	private static final String SELECTION_ROBOT_SCHEDULE_BY_ID = DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + DBCommon.COL_NAME_ROBOT_ID + " = ?";
-	private static final String SELECTION_ROBOT_BY_BASIC_SCHEDULE_ID = DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + DBCommon.COL_NAME_BASIC_SCHEDULE_ID + " = ?";
-	private static final String SELECTION_ROBOT_BY_ADVANCED_SCHEDULE_ID = DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + DBCommon.COL_NAME_ADVANCED_SCHEDULE_ID + " = ?";
-	private static final String SELECTION_CLEANING_SETTINGS_BY_ROBOTID = DBCommon.TABLE_NAME_CLEANING_SETTINGS + "." + DBCommon.COL_NAME_ROBOT_ID + " = ?";
-
-	private class DBOpenHelper extends SQLiteOpenHelper {
-		// private boolean mDBCreated;
-		
-		public DBOpenHelper(Context context, String name, CursorFactory factory, int version) {
-			super(context, name, factory, version);
-			LogHelper.log(TAG, "Neato DBOpenHelper - DB Version = " + version);
-		}
-		
-		@Override
-		public void onCreate(SQLiteDatabase db) {			
-			createTables(db);			
-		}
-		
-		
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			LogHelper.log(TAG, "The Neato database code expects a newer version of the database. Old db version - " + oldVersion + ", New db version - " + 
-			newVersion + ". The old database will be dropped and a new database will be created");
-			
-			dropTables(db);
-			
-			onCreate(db);
-		}
-		
-		private void createTables(SQLiteDatabase db) {
-			db.execSQL(CREATE_USER_INFO_TABLE_QUERY);
-			db.execSQL(CREATE_ROBOT_INFO_TABLE_QUERY);
-			db.execSQL(CREATE_ATLAS_INFO_TABLE_QUERY);
-			db.execSQL(CREATE_GRID_TABLE_QUERY);
-			db.execSQL(CREATE_SCHEDULE_INFO_TABLE_QUERY);
-			db.execSQL(CREATE_ROBOT_SCHEDULE_IDS_INFO_TABLE_QUERY);
-			db.execSQL(CREATE_CLEANING_SETTINGS_TABLE_QUERY);
-		}
-		
-		private void dropTables(SQLiteDatabase db) {
-			db.execSQL(DROP_USER_INFO_TABLE_QUERY);
-			db.execSQL(DROP_ROBOT_INFO_TABLE_QUERY);
-			db.execSQL(DROP_ATLAS_INFO_TABLE_QUERY);
-			db.execSQL(DROP_GRID_INFO_TABLE_QUERY);
-			db.execSQL(DROP_SCHEDULE_INFO_TABLE_QUERY);
-			db.execSQL(DROP_ROBOT_SCHEDULE_IDS_INFO_TABLE_QUERY);
-			db.execSQL(DROP_CLEANING_SETTINGS_TABLE_QUERY);
-		}
-	}
+	private static final String SELECTION_SCHEDULE_INFO_BY_ID = Tables.TABLE_NAME_SCHEDULE_INFO + "." + ScheduleInfoColumns.COL_NAME_SCHEDULE_ID + " = ?";
+	private static final String SELECTION_ROBOT_SCHEDULE_BY_ID = Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_ROBOT_ID + " = ?";
+	private static final String SELECTION_ROBOT_BY_BASIC_SCHEDULE_ID = Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_BASIC_SCHEDULE_ID + " = ?";
+	private static final String SELECTION_ROBOT_BY_ADVANCED_SCHEDULE_ID = Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_ADVANCED_SCHEDULE_ID + " = ?";
+	private static final String SELECTION_CLEANING_SETTINGS_BY_ROBOTID = Tables.TABLE_NAME_CLEANING_SETTINGS + "." + CleaningSettingsColumns.COL_NAME_ROBOT_ID + " = ?";
 	
 	private DBHelper (Context context) {
 		mContext = context;
@@ -169,7 +63,7 @@ public class DBHelper {
 			return mNeatoDB;
 		}
 		
-		DBOpenHelper dbOpenHelper = new DBOpenHelper(mContext, DB_NAME, null, DB_VERSION);
+		NeatoDatabase dbOpenHelper = new NeatoDatabase(mContext);
 		SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
 				
 		mNeatoDB = db;
@@ -190,6 +84,9 @@ public class DBHelper {
 		clearAllAssociatedRobots();
 		clearAllAtlasData();
 		clearAllGridData();
+		clearAllScheduleInfo();
+		clearAllScheduleIds();
+		clearAllCleaningSettings();
 	}
 	
 	@Override
@@ -211,7 +108,7 @@ public class DBHelper {
 		ContentValues values = getContentValues(userItem);
 		
 		SQLiteDatabase db = getDatabase();
-		long rowId = db.insert(DBCommon.TABLE_NAME_USER_INFO, null, values);
+		long rowId = db.insert(Tables.TABLE_NAME_USER_INFO, null, values);
 		
 		boolean saved = (rowId > 0) ? true : false;		
 		// Save associated robots info
@@ -240,7 +137,7 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {userId};
 		
 		SQLiteDatabase db = getDatabase();		
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_USER_INFO, null, SELECTION_USER_BY_USER_ID, selectionArgs, null, null, null);
+		Cursor cursor = db.query(Tables.TABLE_NAME_USER_INFO, null, SELECTION_USER_BY_USER_ID, selectionArgs, null, null, null);
 		if (cursor.moveToFirst()) {
 			userInfo = convertToUserItem(cursor);
 		}
@@ -255,7 +152,7 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {email};
 		
 		SQLiteDatabase db = getDatabase();		
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_USER_INFO, null, SELECTION_USER_BY_USER_EMAIL, selectionArgs, null, null, null);
+		Cursor cursor = db.query(Tables.TABLE_NAME_USER_INFO, null, SELECTION_USER_BY_USER_EMAIL, selectionArgs, null, null, null);
 		if (cursor.moveToFirst()) {
 			userInfo = convertToUserItem(cursor);
 		}
@@ -269,7 +166,7 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {userId};
 		
 		SQLiteDatabase db = getDatabase();		
-		int count = db.delete(DBCommon.TABLE_NAME_USER_INFO, SELECTION_USER_BY_USER_ID, selectionArgs);
+		int count = db.delete(Tables.TABLE_NAME_USER_INFO, SELECTION_USER_BY_USER_ID, selectionArgs);
 		
 		return (count > 0) ? true : false;
 	}
@@ -278,7 +175,7 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {userEmail};
 		
 		SQLiteDatabase db = getDatabase();		
-		int count = db.delete(DBCommon.TABLE_NAME_USER_INFO, SELECTION_USER_BY_USER_EMAIL, selectionArgs);
+		int count = db.delete(Tables.TABLE_NAME_USER_INFO, SELECTION_USER_BY_USER_EMAIL, selectionArgs);
 		
 		return (count > 0) ? true : false;
 	}
@@ -286,13 +183,13 @@ public class DBHelper {
 	private UserItem convertToUserItem(Cursor cursor) {
 		UserItem userItem = new UserItem();
 		
-		userItem.id = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_ID));
-		userItem.name = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_NAME));
-		userItem.email = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_EMAIL));
-		userItem.chat_id = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_CHAT_ID));		
+		userItem.id = cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_ID));
+		userItem.name = cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_NAME));
+		userItem.email = cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_EMAIL));
+		userItem.chat_id = cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_CHAT_ID));		
 		
 		try {			
-			String decryptedPwd = CryptoUtils.decrypt(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_CHAT_PWD)));
+			String decryptedPwd = CryptoUtils.decrypt(cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_CHAT_PWD)));
 			userItem.chat_pwd = decryptedPwd;			
 		}
 		catch (Exception ex) {
@@ -304,14 +201,14 @@ public class DBHelper {
 	
 	private ContentValues getContentValues(UserItem userItem) {
 		ContentValues values  = new ContentValues();
-		values.put(DBCommon.COL_NAME_USER_ID, userItem.id);
-		values.put(DBCommon.COL_NAME_USER_NAME, userItem.name);
-		values.put(DBCommon.COL_NAME_USER_EMAIL, userItem.email);
-		values.put(DBCommon.COL_NAME_USER_CHAT_ID, userItem.chat_id);
+		values.put(UserInfoColumns.COL_NAME_USER_ID, userItem.id);
+		values.put(UserInfoColumns.COL_NAME_USER_NAME, userItem.name);
+		values.put(UserInfoColumns.COL_NAME_USER_EMAIL, userItem.email);
+		values.put(UserInfoColumns.COL_NAME_USER_CHAT_ID, userItem.chat_id);
 		
 		try {			
 			String encryptedPwd = CryptoUtils.encrypt(userItem.chat_pwd);			
-			values.put(DBCommon.COL_NAME_USER_CHAT_PWD, encryptedPwd);
+			values.put(UserInfoColumns.COL_NAME_USER_CHAT_PWD, encryptedPwd);
 		}
 		catch (Exception ex) {
 			LogHelper.log(TAG, "Exception in password encryption");			
@@ -330,7 +227,7 @@ public class DBHelper {
 		ContentValues values = getContentValues(robotItem);
 		
 		SQLiteDatabase db = getDatabase();
-		long rowId = db.insert(DBCommon.TABLE_NAME_ROBOT_INFO, null, values);
+		long rowId = db.insert(Tables.TABLE_NAME_ROBOT_INFO, null, values);
 		
 		LogHelper.log(TAG, String.format("saveRobot SerialId [%s] - %d", robotItem.serial_number, rowId));
 		
@@ -360,7 +257,7 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {serialId};
 		
 		SQLiteDatabase db = getDatabase();		
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_ROBOT_INFO, null, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs, null, null, null);
+		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_INFO, null, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs, null, null, null);
 		if (cursor.moveToFirst()) {
 			robotItem = convertToRobotItem(cursor);
 		}
@@ -374,7 +271,7 @@ public class DBHelper {
 		RobotItem robotItem = null;		
 		
 		SQLiteDatabase db = getDatabase();		
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_ROBOT_INFO, null, null, null, null, null, null);
+		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_INFO, null, null, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			robotItem = convertToRobotItem(cursor);
 		}
@@ -388,7 +285,7 @@ public class DBHelper {
 		List<RobotItem> robotList = new ArrayList<RobotItem>();
 		
 		SQLiteDatabase db = getDatabase();		
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_ROBOT_INFO, null, null, null, null, null, null);
+		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_INFO, null, null, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				RobotItem robotItem = convertToRobotItem(cursor);
@@ -405,10 +302,10 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {serialId};
 		
 		ContentValues values = new ContentValues();
-		values.put(DBCommon.COL_NAME_ROBOT_NAME, name);
+		values.put(RobotInfoColumns.COL_NAME_ROBOT_NAME, name);
 		
 		SQLiteDatabase db = getDatabase();		
-		db.update(DBCommon.TABLE_NAME_ROBOT_INFO, values, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs);
+		db.update(Tables.TABLE_NAME_ROBOT_INFO, values, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs);
 		RobotItem robotItem = getRobotBySerialId(serialId);		
 		
 		return robotItem;
@@ -416,7 +313,7 @@ public class DBHelper {
 	
 	public boolean clearAllAssociatedRobots() {
 		SQLiteDatabase db = getDatabase();		
-		int count = db.delete(DBCommon.TABLE_NAME_ROBOT_INFO, null, null);
+		int count = db.delete(Tables.TABLE_NAME_ROBOT_INFO, null, null);
 		
 		LogHelper.log(TAG, String.format("clearAllAssociatedRobots - %d", count));
 		
@@ -427,7 +324,7 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {serialId};
 		
 		SQLiteDatabase db = getDatabase();		
-		int count = db.delete(DBCommon.TABLE_NAME_ROBOT_INFO, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs);
+		int count = db.delete(Tables.TABLE_NAME_ROBOT_INFO, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs);
 		
 		LogHelper.log(TAG, String.format("deleteRobotBySerialId [%s] - %d", serialId, count));
 		
@@ -437,20 +334,20 @@ public class DBHelper {
 	private RobotItem convertToRobotItem(Cursor cursor) {
 		RobotItem robotItem = new RobotItem();
 		
-		robotItem.id = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_ID));
-		robotItem.serial_number = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_SERIAL_ID));
-		robotItem.name = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_NAME));
-		robotItem.chat_id = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_CHAT_ID));		
+		robotItem.id = cursor.getString(cursor.getColumnIndex(RobotInfoColumns.COL_NAME_ROBOT_ID));
+		robotItem.serial_number = cursor.getString(cursor.getColumnIndex(RobotInfoColumns.COL_NAME_ROBOT_SERIAL_ID));
+		robotItem.name = cursor.getString(cursor.getColumnIndex(RobotInfoColumns.COL_NAME_ROBOT_NAME));
+		robotItem.chat_id = cursor.getString(cursor.getColumnIndex(RobotInfoColumns.COL_NAME_ROBOT_CHAT_ID));		
 		
 		return robotItem;
 	}
 	
 	private ContentValues getContentValues(RobotItem robotItem) {
 		ContentValues values  = new ContentValues();
-		values.put(DBCommon.COL_NAME_ROBOT_ID, robotItem.id);
-		values.put(DBCommon.COL_NAME_ROBOT_SERIAL_ID, robotItem.serial_number);
-		values.put(DBCommon.COL_NAME_ROBOT_NAME, robotItem.name);
-		values.put(DBCommon.COL_NAME_ROBOT_CHAT_ID, robotItem.chat_id);		
+		values.put(RobotInfoColumns.COL_NAME_ROBOT_ID, robotItem.id);
+		values.put(RobotInfoColumns.COL_NAME_ROBOT_SERIAL_ID, robotItem.serial_number);
+		values.put(RobotInfoColumns.COL_NAME_ROBOT_NAME, robotItem.name);
+		values.put(RobotInfoColumns.COL_NAME_ROBOT_CHAT_ID, robotItem.chat_id);		
 		
 		return values;
 	}
@@ -478,7 +375,7 @@ public class DBHelper {
 		else {
 			ContentValues values = getAtlasContentValues(atlasId, xmlVersion);
 			SQLiteDatabase db = getDatabase();
-			long rowId = db.insert(DBCommon.TABLE_NAME_ATLAS_INFO, null, values);
+			long rowId = db.insert(Tables.TABLE_NAME_ATLAS_INFO, null, values);
 			if (rowId > 0) {
 				atlasItem = new AtlasItem();
 				atlasItem.setId(atlasId);
@@ -494,7 +391,7 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {atlasId};
 		
 		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_ATLAS_INFO, null, SELECTION_ATLAS_BY_ID, selectionArgs, null, null, null);
+		Cursor cursor = db.query(Tables.TABLE_NAME_ATLAS_INFO, null, SELECTION_ATLAS_BY_ID, selectionArgs, null, null, null);
 		if (cursor.moveToFirst()) {
 			atlasItem = convertToAtlasItem(cursor);
 		}
@@ -507,12 +404,12 @@ public class DBHelper {
 	public boolean updateAtlasXmlFilePath(String atlasId, String xmlFilePath) {
 		LogHelper.logD(TAG, String.format("updateAtlasXmlFilePath - AtlasId = [%s] Path = [%s] ", atlasId, xmlFilePath));
 		ContentValues values = new ContentValues();
-		values.put(DBCommon.COL_NAME_ATLAS_XML_FILE_PATH, xmlFilePath);		
+		values.put(AtlasInfoColumns.COL_NAME_ATLAS_XML_FILE_PATH, xmlFilePath);		
 		
 		String[] selectionArgs = new String[] {atlasId};
 		
 		SQLiteDatabase db = getDatabase();
-		int count = db.update(DBCommon.TABLE_NAME_ATLAS_INFO, values, SELECTION_ATLAS_BY_ID, selectionArgs);
+		int count = db.update(Tables.TABLE_NAME_ATLAS_INFO, values, SELECTION_ATLAS_BY_ID, selectionArgs);
 		
 		return (count > 0) ? true : false;
 	}
@@ -523,40 +420,40 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {atlasItem.getId()};
 		
 		SQLiteDatabase db = getDatabase();
-		int count = db.update(DBCommon.TABLE_NAME_ATLAS_INFO, values, SELECTION_ATLAS_BY_ID, selectionArgs);
+		int count = db.update(Tables.TABLE_NAME_ATLAS_INFO, values, SELECTION_ATLAS_BY_ID, selectionArgs);
 		
 		return (count > 0) ? true : false;
 	}
 	
 	public void clearAllAtlasData() {
 		SQLiteDatabase db = getDatabase();
-		int count = db.delete(DBCommon.TABLE_NAME_ATLAS_INFO, null, null);
+		int count = db.delete(Tables.TABLE_NAME_ATLAS_INFO, null, null);
 		LogHelper.logD(TAG, "clearAllAtlasData - " + count);
 	}
 	
 	private AtlasItem convertToAtlasItem(Cursor cursor) {
 		AtlasItem atlasItem = new AtlasItem();
 		
-		atlasItem.setId(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ATLAS_ID)));
-		atlasItem.setXmlVersion(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ATLAS_XML_VERSION)));		
-		atlasItem.setXmlFilePath(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ATLAS_XML_FILE_PATH)));		
+		atlasItem.setId(cursor.getString(cursor.getColumnIndex(AtlasInfoColumns.COL_NAME_ATLAS_ID)));
+		atlasItem.setXmlVersion(cursor.getString(cursor.getColumnIndex(AtlasInfoColumns.COL_NAME_ATLAS_XML_VERSION)));		
+		atlasItem.setXmlFilePath(cursor.getString(cursor.getColumnIndex(AtlasInfoColumns.COL_NAME_ATLAS_XML_FILE_PATH)));		
 		
 		return atlasItem;
 	}
 	
 	private ContentValues getAtlasContentValues(String atlasId, String xmlVersion) {
 		ContentValues values  = new ContentValues();
-		values.put(DBCommon.COL_NAME_ATLAS_ID, atlasId);
-		values.put(DBCommon.COL_NAME_ATLAS_XML_VERSION, xmlVersion);
+		values.put(AtlasInfoColumns.COL_NAME_ATLAS_ID, atlasId);
+		values.put(AtlasInfoColumns.COL_NAME_ATLAS_XML_VERSION, xmlVersion);
 		
 		return values;
 	}
 	
 	private ContentValues getContentValues(AtlasItem atlasItem) {
 		ContentValues values  = new ContentValues();
-		values.put(DBCommon.COL_NAME_ATLAS_ID, atlasItem.getId());
-		values.put(DBCommon.COL_NAME_ATLAS_XML_VERSION, atlasItem.getXmlVersion());
-		values.put(DBCommon.COL_NAME_ATLAS_XML_FILE_PATH, atlasItem.getXmlFilePath());				
+		values.put(AtlasInfoColumns.COL_NAME_ATLAS_ID, atlasItem.getId());
+		values.put(AtlasInfoColumns.COL_NAME_ATLAS_XML_VERSION, atlasItem.getXmlVersion());
+		values.put(AtlasInfoColumns.COL_NAME_ATLAS_XML_FILE_PATH, atlasItem.getXmlFilePath());				
 		
 		return values;
 	}
@@ -587,7 +484,7 @@ public class DBHelper {
 		else {
 			ContentValues values = getGridContentValues(gridId, dataVersion);
 			SQLiteDatabase db = getDatabase();
-			long rowId = db.insert(DBCommon.TABLE_NAME_GRID_INFO, null, values);
+			long rowId = db.insert(Tables.TABLE_NAME_GRID_INFO, null, values);
 			if (rowId > 0) {
 				gridItem = new GridItem();
 				gridItem.setId(gridId);
@@ -603,7 +500,7 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {gridId};
 		
 		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_GRID_INFO, null, SELECTION_GRID_BY_ID, selectionArgs, null, null, null);
+		Cursor cursor = db.query(Tables.TABLE_NAME_GRID_INFO, null, SELECTION_GRID_BY_ID, selectionArgs, null, null, null);
 		if (cursor.moveToFirst()) {
 			gridItem = convertToGridItem(cursor);
 		}
@@ -616,12 +513,12 @@ public class DBHelper {
 	public boolean updateGridDataFilePath(String gridId, String dataFilePath) {
 		LogHelper.logD(TAG, String.format("updateGridDataFilePath - GridId = [%s] Path = [%s] ", gridId, dataFilePath));
 		ContentValues values = new ContentValues();
-		values.put(DBCommon.COL_NAME_GRID_DATA_FILE_PATH, dataFilePath);		
+		values.put(GridInfoColumns.COL_NAME_GRID_DATA_FILE_PATH, dataFilePath);		
 		
 		String[] selectionArgs = new String[] {gridId};
 		
 		SQLiteDatabase db = getDatabase();
-		int count = db.update(DBCommon.TABLE_NAME_GRID_INFO, values, SELECTION_GRID_BY_ID, selectionArgs);
+		int count = db.update(Tables.TABLE_NAME_GRID_INFO, values, SELECTION_GRID_BY_ID, selectionArgs);
 		
 		return (count > 0) ? true : false;
 	}
@@ -632,40 +529,40 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {gridItem.getId()};
 		
 		SQLiteDatabase db = getDatabase();
-		int count = db.update(DBCommon.TABLE_NAME_GRID_INFO, values, SELECTION_GRID_BY_ID, selectionArgs);
+		int count = db.update(Tables.TABLE_NAME_GRID_INFO, values, SELECTION_GRID_BY_ID, selectionArgs);
 		
 		return (count > 0) ? true : false;
 	}
 	
 	public void clearAllGridData() {
 		SQLiteDatabase db = getDatabase();
-		int count = db.delete(DBCommon.TABLE_NAME_GRID_INFO, null, null);
+		int count = db.delete(Tables.TABLE_NAME_GRID_INFO, null, null);
 		LogHelper.logD(TAG, "clearAllGridData - " + count);
 	}
 	
 	private GridItem convertToGridItem(Cursor cursor) {
 		GridItem gridItem = new GridItem();
 		
-		gridItem.setId(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_GRID_ID)));
-		gridItem.setDataVersion(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_GRID_DATA_VERSION)));		
-		gridItem.setDataFilePath(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_GRID_DATA_FILE_PATH)));		
+		gridItem.setId(cursor.getString(cursor.getColumnIndex(GridInfoColumns.COL_NAME_GRID_ID)));
+		gridItem.setDataVersion(cursor.getString(cursor.getColumnIndex(GridInfoColumns.COL_NAME_GRID_DATA_VERSION)));		
+		gridItem.setDataFilePath(cursor.getString(cursor.getColumnIndex(GridInfoColumns.COL_NAME_GRID_DATA_FILE_PATH)));		
 		
 		return gridItem;
 	}
 	
 	private ContentValues getGridContentValues(String gridId, String dataVersion) {
 		ContentValues values  = new ContentValues();
-		values.put(DBCommon.COL_NAME_GRID_ID, gridId);
-		values.put(DBCommon.COL_NAME_GRID_DATA_VERSION, dataVersion);
+		values.put(GridInfoColumns.COL_NAME_GRID_ID, gridId);
+		values.put(GridInfoColumns.COL_NAME_GRID_DATA_VERSION, dataVersion);
 		
 		return values;
 	}
 	
 	private ContentValues getContentValues(GridItem gridItem) {
 		ContentValues values  = new ContentValues();
-		values.put(DBCommon.COL_NAME_GRID_ID, gridItem.getId());
-		values.put(DBCommon.COL_NAME_GRID_DATA_VERSION, gridItem.getDataVersion());
-		values.put(DBCommon.COL_NAME_GRID_DATA_FILE_PATH, gridItem.getDataFilePath());				
+		values.put(GridInfoColumns.COL_NAME_GRID_ID, gridItem.getId());
+		values.put(GridInfoColumns.COL_NAME_GRID_DATA_VERSION, gridItem.getDataVersion());
+		values.put(GridInfoColumns.COL_NAME_GRID_DATA_FILE_PATH, gridItem.getDataFilePath());				
 
 		return values;
 	}
@@ -676,7 +573,7 @@ public class DBHelper {
 		ScheduleInfo2 scheduleInfo = null;
 		String[] selectionArgs = new String[] {id};
 		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_SCHEDULE_INFO, null, SELECTION_SCHEDULE_INFO_BY_ID, selectionArgs, null, null, null);
+		Cursor cursor = db.query(Tables.TABLE_NAME_SCHEDULE_INFO, null, SELECTION_SCHEDULE_INFO_BY_ID, selectionArgs, null, null, null);
 		if (cursor.moveToFirst()) {
 			scheduleInfo = convertToScheduleInfo(cursor);
 		}
@@ -686,11 +583,11 @@ public class DBHelper {
 
 	private ScheduleInfo2 convertToScheduleInfo(Cursor cursor) {
 		ScheduleInfo2 scheduleInfo = new ScheduleInfo2();
-		scheduleInfo.setScheduleId(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_SCHEDULE_ID)));
-		scheduleInfo.setServerId(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_SCHEDULE_SERVER_ID)));
-		scheduleInfo.setDataVersion(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_SCHEDULE_VERSION)));		
-		scheduleInfo.setScheduleType(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_SCHEDULE_TYPE)));
-		scheduleInfo.setScheduleData(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_SCHEDULE_DATA)));
+		scheduleInfo.setScheduleId(cursor.getString(cursor.getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_ID)));
+		scheduleInfo.setServerId(cursor.getString(cursor.getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_SERVER_ID)));
+		scheduleInfo.setDataVersion(cursor.getString(cursor.getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_VERSION)));		
+		scheduleInfo.setScheduleType(cursor.getString(cursor.getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_TYPE)));
+		scheduleInfo.setScheduleData(cursor.getString(cursor.getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_DATA)));
 		return scheduleInfo;
 	}
 
@@ -713,7 +610,7 @@ public class DBHelper {
 					serverId, scheduleVersion));
 			ContentValues values = getScheduleInfoContentValues(id, serverId, scheduleVersion, scheduleType, data);
 			SQLiteDatabase db = getDatabase();
-			long rowId = db.insert(DBCommon.TABLE_NAME_SCHEDULE_INFO, null, values);
+			long rowId = db.insert(Tables.TABLE_NAME_SCHEDULE_INFO, null, values);
 			if (rowId > 0) {
 				scheduleInfo = new ScheduleInfo2();
 				scheduleInfo.setScheduleId(id);
@@ -729,35 +626,41 @@ public class DBHelper {
 		ContentValues values = getScheduleInfoContentValues(scheduleInfo);		
 		String[] selectionArgs = new String[] {scheduleInfo.getScheduleId()};
 		SQLiteDatabase db = getDatabase();
-		int count = db.update(DBCommon.TABLE_NAME_SCHEDULE_INFO, values, SELECTION_SCHEDULE_INFO_BY_ID, selectionArgs);
+		int count = db.update(Tables.TABLE_NAME_SCHEDULE_INFO, values, SELECTION_SCHEDULE_INFO_BY_ID, selectionArgs);
 		return (count > 0) ? true : false;
 	}
 
 	private ContentValues getScheduleInfoContentValues(String id, String serverId, String scheduleVersion, String scheduleType, String scheduleData) 
 	{
 		ContentValues values  = new ContentValues();
-		values.put(DBCommon.COL_NAME_SCHEDULE_ID, id);
-		values.put(DBCommon.COL_NAME_SCHEDULE_SERVER_ID, serverId);
-		values.put(DBCommon.COL_NAME_SCHEDULE_VERSION, scheduleVersion);
-		values.put(DBCommon.COL_NAME_SCHEDULE_TYPE, scheduleType);
-		values.put(DBCommon.COL_NAME_SCHEDULE_DATA, scheduleData);
+		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_ID, id);
+		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_SERVER_ID, serverId);
+		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_VERSION, scheduleVersion);
+		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_TYPE, scheduleType);
+		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_DATA, scheduleData);
 		return values;
 	}
 
 	private ContentValues getScheduleInfoContentValues(ScheduleInfo2 scheduleInfo) {
 		ContentValues values  = new ContentValues();
-		values.put(DBCommon.COL_NAME_SCHEDULE_ID, scheduleInfo.getScheduleId());
-		values.put(DBCommon.COL_NAME_SCHEDULE_SERVER_ID, scheduleInfo.getServerId());
-		values.put(DBCommon.COL_NAME_SCHEDULE_VERSION, scheduleInfo.getDataVersion());
-		values.put(DBCommon.COL_NAME_SCHEDULE_TYPE, scheduleInfo.getScheduleType());
-		values.put(DBCommon.COL_NAME_SCHEDULE_DATA, scheduleInfo.getScheduleData());
+		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_ID, scheduleInfo.getScheduleId());
+		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_SERVER_ID, scheduleInfo.getServerId());
+		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_VERSION, scheduleInfo.getDataVersion());
+		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_TYPE, scheduleInfo.getScheduleType());
+		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_DATA, scheduleInfo.getScheduleData());
 		return values;
 	}
 
+	public void clearAllScheduleInfo() {
+		SQLiteDatabase db = getDatabase();
+		int count = db.delete(Tables.TABLE_NAME_SCHEDULE_INFO, null, null);
+		LogHelper.logD(TAG, "clearAllScheduleInfo - " + count);
+	}
+	
 	public boolean isScheduleInfoExistsForRobot(String robotId) {
 		String[] selectionArgs = new String[] {robotId};
 		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
+		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
 		return cursor.moveToFirst();
 	} 
 
@@ -767,7 +670,7 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {robotId};
 
 		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
+		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
 		if (cursor.moveToFirst()) {
 			scheduleId = getAdvancedScheduleId(cursor);
 		}
@@ -781,7 +684,7 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {robotId};
 
 		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
+		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
 		if (cursor.moveToFirst()) {
 			scheduleId = getBasicScheduleId(cursor);
 		}
@@ -790,22 +693,22 @@ public class DBHelper {
 	}
 
 	private String getAdvancedScheduleId(Cursor cursor) {
-		return (cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ADVANCED_SCHEDULE_ID)));
+		return (cursor.getString(cursor.getColumnIndex(ScheduleIdsColumns.COL_NAME_ADVANCED_SCHEDULE_ID)));
 	}
 
 	private String getBasicScheduleId(Cursor cursor) {
-		return (cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_BASIC_SCHEDULE_ID)));
+		return (cursor.getString(cursor.getColumnIndex(ScheduleIdsColumns.COL_NAME_BASIC_SCHEDULE_ID)));
 	}
 
 	private String getRobotId(Cursor cursor) {
-		return (cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_ID)));
+		return (cursor.getString(cursor.getColumnIndex(ScheduleIdsColumns.COL_NAME_ROBOT_ID)));
 	}
 
 	public boolean updateBasicScheduleId(String robotId, String basicScheduleId) {
 		ContentValues values = getBasicContentValues(robotId, basicScheduleId);		
 		String[] selectionArgs = new String[] {robotId};
 		SQLiteDatabase db = getDatabase();
-		int count = db.update(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, values, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs);
+		int count = db.update(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, values, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs);
 		return (count > 0) ? true : false;
 	}
 
@@ -813,7 +716,7 @@ public class DBHelper {
 		ContentValues values = getAdvancedContentValues(robotId, advacnedScheduleId);		
 		String[] selectionArgs = new String[] {robotId};
 		SQLiteDatabase db = getDatabase();
-		int count = db.update(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, values, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs);
+		int count = db.update(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, values, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs);
 		return (count > 0) ? true : false;
 	}
 
@@ -824,7 +727,7 @@ public class DBHelper {
 		else {
 			ContentValues values = getAdvancedContentValues(robotId, id);
 			SQLiteDatabase db = getDatabase();
-			db.insert(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, values);
+			db.insert(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, values);
 		}
 	}
 
@@ -835,7 +738,7 @@ public class DBHelper {
 		else {
 			ContentValues values = getBasicContentValues(robotId, id);
 			SQLiteDatabase db = getDatabase();
-			db.insert(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, values);
+			db.insert(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, values);
 			LogHelper.logD(TAG, "Added Basic Schedule Id for the robot successfully");
 		}
 	}
@@ -844,7 +747,7 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {id};
 		String robotId = null;
 		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_BY_BASIC_SCHEDULE_ID, selectionArgs, null, null, null);
+		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_BY_BASIC_SCHEDULE_ID, selectionArgs, null, null, null);
 		if (cursor.moveToFirst()) {
 			robotId = getRobotId(cursor);
 		}
@@ -856,7 +759,7 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {id};
 		String robotId = null;
 		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_BY_ADVANCED_SCHEDULE_ID, selectionArgs, null, null, null);
+		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_BY_ADVANCED_SCHEDULE_ID, selectionArgs, null, null, null);
 		if (cursor.moveToFirst()) {
 			robotId = getRobotId(cursor);
 		}
@@ -866,23 +769,29 @@ public class DBHelper {
 	}
 	private ContentValues getBasicContentValues(String robotId,  String id) {
 		ContentValues values  = new ContentValues();
-		values.put(DBCommon.COL_NAME_ROBOT_ID, robotId);
-		values.put(DBCommon.COL_NAME_BASIC_SCHEDULE_ID, id);
+		values.put(ScheduleIdsColumns.COL_NAME_ROBOT_ID, robotId);
+		values.put(ScheduleIdsColumns.COL_NAME_BASIC_SCHEDULE_ID, id);
 		return values;
 	}
 
 	private ContentValues getAdvancedContentValues(String robotId, String id) {
 		ContentValues values  = new ContentValues();
-		values.put(DBCommon.COL_NAME_ROBOT_ID, robotId);
-		values.put(DBCommon.COL_NAME_ADVANCED_SCHEDULE_ID, id);
+		values.put(ScheduleIdsColumns.COL_NAME_ROBOT_ID, robotId);
+		values.put(ScheduleIdsColumns.COL_NAME_ADVANCED_SCHEDULE_ID, id);
 		return values;
+	}
+	
+	public void clearAllScheduleIds() {
+		SQLiteDatabase db = getDatabase();
+		int count = db.delete(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, null);
+		LogHelper.logD(TAG, "clearAllScheduleIds - " + count);
 	}
 	
 	private CleaningSettings convertToCleaningSettingsObject(Cursor cursor) {
 		CleaningSettings cleaningSettings = new CleaningSettings();
 
-		cleaningSettings.setSpotAreaLength(cursor.getInt(cursor.getColumnIndex(DBCommon.COL_NAME_SPOT_AREA_LENGTH)));
-		cleaningSettings.setSpotAreaHeight(cursor.getInt(cursor.getColumnIndex(DBCommon.COL_NAME_SPOT_AREA_HEIGHT)));
+		cleaningSettings.setSpotAreaLength(cursor.getInt(cursor.getColumnIndex(CleaningSettingsColumns.COL_NAME_SPOT_AREA_LENGTH)));
+		cleaningSettings.setSpotAreaHeight(cursor.getInt(cursor.getColumnIndex(CleaningSettingsColumns.COL_NAME_SPOT_AREA_HEIGHT)));
 
 		return cleaningSettings;
 	}
@@ -890,8 +799,8 @@ public class DBHelper {
 	private ContentValues getContentValues(CleaningSettings cleaningSettings) {
 		ContentValues values  = new ContentValues();
 
-		values.put(DBCommon.COL_NAME_SPOT_AREA_LENGTH, cleaningSettings.getSpotAreaLength());
-		values.put(DBCommon.COL_NAME_SPOT_AREA_HEIGHT, cleaningSettings.getSpotAreaHeight());
+		values.put(CleaningSettingsColumns.COL_NAME_SPOT_AREA_LENGTH, cleaningSettings.getSpotAreaLength());
+		values.put(CleaningSettingsColumns.COL_NAME_SPOT_AREA_HEIGHT, cleaningSettings.getSpotAreaHeight());
 
 		return values;
 	}
@@ -903,7 +812,7 @@ public class DBHelper {
 		String[] selectionArgs = new String[] {robotId};
 
 		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_CLEANING_SETTINGS, null, SELECTION_CLEANING_SETTINGS_BY_ROBOTID,
+		Cursor cursor = db.query(Tables.TABLE_NAME_CLEANING_SETTINGS, null, SELECTION_CLEANING_SETTINGS_BY_ROBOTID,
 				selectionArgs, null, null, null);
 		if (cursor.moveToFirst()) {
 			robotSettings = convertToCleaningSettingsObject(cursor);
@@ -923,17 +832,23 @@ public class DBHelper {
 
 		SQLiteDatabase db = getDatabase();
 
-		Cursor cursor = db.query(DBCommon.TABLE_NAME_CLEANING_SETTINGS, null, SELECTION_CLEANING_SETTINGS_BY_ROBOTID, 
+		Cursor cursor = db.query(Tables.TABLE_NAME_CLEANING_SETTINGS, null, SELECTION_CLEANING_SETTINGS_BY_ROBOTID, 
 				selectionArgs, null, null, null);
 		if (!cursor.moveToFirst()) {
 			// Entry does not exist add one
-			values.put(DBCommon.COL_NAME_ROBOT_ID, robotId);
-			count = (int) db.insert(DBCommon.TABLE_NAME_CLEANING_SETTINGS, null, values);
+			values.put(CleaningSettingsColumns.COL_NAME_ROBOT_ID, robotId);
+			count = (int) db.insert(Tables.TABLE_NAME_CLEANING_SETTINGS, null, values);
 		}
 		else {
-			count = db.update(DBCommon.TABLE_NAME_CLEANING_SETTINGS, values, SELECTION_CLEANING_SETTINGS_BY_ROBOTID, selectionArgs);
+			count = db.update(Tables.TABLE_NAME_CLEANING_SETTINGS, values, SELECTION_CLEANING_SETTINGS_BY_ROBOTID, selectionArgs);
 		}
 
 		return (count > 0) ? true : false;
+	}
+	
+	public void clearAllCleaningSettings() {
+		SQLiteDatabase db = getDatabase();
+		int count = db.delete(Tables.TABLE_NAME_CLEANING_SETTINGS, null, null);
+		LogHelper.logD(TAG, "clearAllCleaningSettings - " + count);
 	}
 }

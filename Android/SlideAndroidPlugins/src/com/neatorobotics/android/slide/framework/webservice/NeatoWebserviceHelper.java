@@ -64,15 +64,15 @@ public class NeatoWebserviceHelper {
 			}	    
 
 		} catch (UnsupportedEncodingException e) {
-			LogHelper.log(TAG, "Exception in doing HTTP Post request", e);
+			LogHelper.log(TAG, "UnsupportedEncodingException in doing HTTP Post request", e);
 			result = new NeatoHttpResponse(NeatoWebConstants.RESPONSE_SERVER_ERROR, NeatoWebConstants.RESPONSE_SERVER_ERROR_REASON_UNKNOWN);
 		}
 		catch (IllegalStateException e) {
-			LogHelper.log(TAG, "Exception in doing HTTP Post request", e);
+			LogHelper.log(TAG, "IllegalStateException in doing HTTP Post request", e);
 			result = new NeatoHttpResponse(NeatoWebConstants.RESPONSE_SERVER_ERROR, NeatoWebConstants.RESPONSE_SERVER_ERROR_REASON_UNKNOWN);
 
 		} catch (IOException e) {
-			LogHelper.log(TAG, "Exception in doing HTTP Post request", e);
+			LogHelper.log(TAG, "IOException in doing HTTP Post request", e);
 			result = new NeatoHttpResponse(NeatoWebConstants.RESPONSE_NETWORK_ERROR);
 		}
 		return result;

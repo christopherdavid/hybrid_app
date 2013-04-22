@@ -1,30 +1,18 @@
 package com.neatorobotics.android.slide.framework.webservice.robot;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 
-public class RobotAssociationDisassociationResult extends NeatoWebserviceResult{
-
-
-	
+public class RobotAssociationDisassociationResult extends NeatoWebserviceResult{	
 	public RobotAssociationDisassociationResult(NeatoHttpResponse response) {
 		super(response);
 	}
-	public RobotAssociationDisassociationResult(int response, int responseStatusCode, String message) {
+	public RobotAssociationDisassociationResult(int response, int responseStatusCode, String msg) {
 		super(response, responseStatusCode);
-		mMessage = message;
-	}
-	public static final int RESPONSE_STATUS_SUCCESS = 0;
+		message = msg;
+	}	
 	
-	@JsonProperty(value="status")
-	public int mStatus = -1; 
-	
-	@JsonProperty(value="message")
-	public String mMessage;	
-
-	@JsonProperty(value="result")
-	public Result mResult;
+	public Result result;
 
 	public RobotAssociationDisassociationResult() {
 		super();
@@ -32,17 +20,10 @@ public class RobotAssociationDisassociationResult extends NeatoWebserviceResult{
 	
 	@Override
 	public boolean success() {
-		return ((mStatus == RESPONSE_STATUS_SUCCESS) && ((mResult != null) && mResult.mSuccess));
+		return ((status == RESPONSE_STATUS_SUCCESS) && ((result != null) && result.success));
 	}
-	public class Result {
-		@JsonProperty(value="success")
-		public boolean mSuccess;
-		
-		@JsonProperty(value="message")
-		public String mMessage;	
+	public class Result {		
+		public boolean success;
+		public String message;	
 	}
-
-
-
-
 }
