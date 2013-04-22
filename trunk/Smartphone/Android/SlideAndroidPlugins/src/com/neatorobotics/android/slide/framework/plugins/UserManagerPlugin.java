@@ -8,32 +8,23 @@ import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
-import com.neatorobotics.android.slide.framework.pluginhelper.EventTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.UserJsonData;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
-import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
+import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
+import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
+import com.neatorobotics.android.slide.framework.webservice.user.GetNeatoUserDetailsResult;
+import com.neatorobotics.android.slide.framework.webservice.user.GetUserAssociatedRobotsResult;
 import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
-import com.neatorobotics.android.slide.framework.webservice.user.listeners.AssociatedRobotDetailsListener;
-import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserDetailsListener;
-import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserForgetPasswordListener;
-import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserRobotAssociateDisassociateListener;
-import com.neatorobotics.android.slide.framework.webservice.user.listeners.UserPasswordChangeListener;
 
 
 public class UserManagerPlugin extends Plugin {
@@ -46,7 +37,7 @@ public class UserManagerPlugin extends Plugin {
 	// If we add more action type, please ensure to add it into the ACTION_MAP
 	private static enum UserManagerPluginMethods {CREATE_USER, LOGIN, LOGOUT, ISLOGGEDIN, GET_USER_DETAILS, 
 										ASSOCIATE_ROBOT, DISASSOCIATE_ROBOT, GET_ASSOCIATED_ROBOTS, 
-										DISASSOCAITE_ALL_ROBOTS, REGISTER_NETWORK_STATE_LISTENER, 
+										DISASSOCAITE_ALL_ROBOTS, 
 										FORGET_PASSWORD, CHANGE_PASSWORD, CREATE_USER2, RESEND_VALIDATION_MAIL,
 										IS_USER_VALIDATED};
 	static {
@@ -61,13 +52,11 @@ public class UserManagerPlugin extends Plugin {
 		ACTION_MAP.put(ActionTypes.DISASSOCIATE_ROBOT, UserManagerPluginMethods.DISASSOCIATE_ROBOT);
 		ACTION_MAP.put(ActionTypes.GET_ASSOCIATED_ROBOTS, UserManagerPluginMethods.GET_ASSOCIATED_ROBOTS);
 		ACTION_MAP.put(ActionTypes.DISASSOCAITE_ALL_ROBOTS, UserManagerPluginMethods.DISASSOCAITE_ALL_ROBOTS);
-		ACTION_MAP.put(ActionTypes.REGISTER_NETWORK_STATE_LISTENER, UserManagerPluginMethods.REGISTER_NETWORK_STATE_LISTENER);
 		ACTION_MAP.put(ActionTypes.FORGET_PASSWORD, UserManagerPluginMethods.FORGET_PASSWORD);
 		ACTION_MAP.put(ActionTypes.CHANGE_PASSWORD, UserManagerPluginMethods.CHANGE_PASSWORD);
 		ACTION_MAP.put(ActionTypes.IS_USER_VALIDATED, UserManagerPluginMethods.IS_USER_VALIDATED);
 	}
-
-	private RobotDetailsPluginListener mRobotDetailsPluginListener;
+	
 	@Override       
 	public PluginResult execute(final String action, final JSONArray data, final String callbackId) {
 
@@ -156,10 +145,6 @@ public class UserManagerPlugin extends Plugin {
 			LogHelper.log(TAG, "DISASSOCAITE_ALL_ROBOTS action initiated");
 			disassociateAllRobots(context, jsonData, callbackId);
 			break;
-		case REGISTER_NETWORK_STATE_LISTENER:
-			LogHelper.log(TAG, "REGISTER_NETWORK_STATE_LISTENER action initiated");
-			registerNetworkStateListener(context, jsonData, callbackId);
-			break;	
 		case FORGET_PASSWORD:
 			LogHelper.log(TAG, "FORGET_PASSWORD action initiated");
 			forgetPassword(context, jsonData, callbackId);
@@ -179,27 +164,7 @@ public class UserManagerPlugin extends Plugin {
 
 	private void forgetPassword (Context context, UserJsonData jsonData, final String callbackId) {
 		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
-		UserManager.getInstance(context).forgetPassword(email, new UserForgetPasswordListener() {
-			
-			@Override
-			public void onComplete() {
-				PluginResult result = new PluginResult(PluginResult.Status.OK);
-				result.setKeepCallback(false);
-				success(result, callbackId);
-			}
-			
-			@Override
-			public void onServerError(int statusCode, String errorMessage) {
-				LogHelper.logD(TAG, "forgetPassword unsuccessful. Server Error");
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
-			}
-			
-			@Override
-			public void onNetworkError(String errorMessage) {
-				LogHelper.logD(TAG, "forgetPassword unsuccessful. Network Error");
-				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errorMessage);
-			}
-		});
+		UserManager.getInstance(context).forgetPassword(email, new UserRequestListenerWrapper(callbackId));		
 	}
 	
 	private void changePassword(Context context, UserJsonData jsonData, final String callbackId) {
@@ -208,30 +173,9 @@ public class UserManagerPlugin extends Plugin {
 		String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
 		String currentPassword = jsonData.getString(JsonMapKeys.KEY_CURRENT_PASSWORD);
 		String newPassword = jsonData.getString(JsonMapKeys.KEY_NEW_PASSWORD);
-		UserManager.getInstance(context).changePassword(authToken, currentPassword, newPassword, new UserPasswordChangeListener() {
-			
-			@Override
-			public void onComplete() {
-				PluginResult result = new PluginResult(PluginResult.Status.OK);
-				result.setKeepCallback(false);
-				success(result, callbackId);
-			}
-			
-			@Override
-			public void onServerError(int statusCode, String errorMessage) {
-				LogHelper.logD(TAG, "changePassword unsuccessful. Server Error");
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
-			}
-			
-			@Override
-			public void onNetworkError(String errorMessage) {
-				LogHelper.logD(TAG, "changePassword unsuccessful. Network Error");
-				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errorMessage);
-
-			}
-		});
+		UserManager.getInstance(context).changePassword(authToken, currentPassword, newPassword, new UserRequestListenerWrapper(callbackId));
 	}
-	
+		
 	private void isUserLoggedIn(Context context, UserJsonData jsonData, String callbackId) {
 		String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
 		boolean isUserLoggedIn = !TextUtils.isEmpty(authToken);
@@ -245,58 +189,27 @@ public class UserManagerPlugin extends Plugin {
 		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
 		String password = jsonData.getString(JsonMapKeys.KEY_PASSWORD);
 		
-		LogHelper.logD(TAG, "JSON String: " + jsonData);
-		
+		LogHelper.logD(TAG, "JSON String: " + jsonData);		
 		LogHelper.logD(TAG, "Email = " + email);
-//		LogHelper.logD(TAG, "Password = " + password);
 		
-		UserManager.getInstance(context).loginUser(email, password, new UserDetailsListener() {
-
+		UserManager.getInstance(context).loginUser(email, password, new UserRequestListenerWrapper(callbackId) {
 			@Override
-			public void onUserDetailsReceived(UserItem userItem) {
-				JSONObject userDetails = new JSONObject();
+			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+				UserItem userItem = getUserItemFromResponse(responseResult);
 				
-				try {
-					if (userItem != null) {
-						LogHelper.logD(TAG, "User Item = " + userItem);
-						
-						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
-						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
-						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());
-						userDetails.put(JsonMapKeys.KEY_IS_VALIDATED_USER, userItem.isValidated());
-						RobotCommandServiceManager.loginToXmpp(context);
-						PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
-						LogHelper.logD(TAG, "Login successful. Start service and send Success plugin to user with user details");
-						success(loginUserPluginResult, callbackId);
-						String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
-						UserManager.getInstance(context).setUserAttributesOnServer(authToken, DeviceUtils.getUserAttributes(context));
-					}
-					else {
-						sendError(callbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
-					}
-				} 
-				catch (JSONException e) {
-					LogHelper.log(TAG, "Exception in login", e);
-					sendError(callbackId, ErrorTypes.JSON_PARSING_ERROR, e.getMessage());
-				}
-
+				JSONObject userDetails = null;
+				if (userItem != null) {
+					LogHelper.logD(TAG, "Login successful. Start service and send Success plugin to user with user details");						
+					userDetails = new JSONObject();
+					userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.email);
+					userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.name);
+					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);
+					
+					RobotCommandServiceManager.loginToXmpp(context);												
+				}					
 				
+				return userDetails;
 			}
-
-			@Override
-			public void onNetworkError(String errMessage) {
-				NeatoPrefs.saveUserEmailId(context, null);
-				LogHelper.logD(TAG, "Login unsuccessful. Network Error");
-				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-			}
-
-			@Override
-			public void onServerError(String errMessage) {
-				NeatoPrefs.saveUserEmailId(context, null);
-				LogHelper.logD(TAG, "Login unsuccessful. Server Error");
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-			}
-			
 		});
 	}
 	
@@ -319,7 +232,6 @@ public class UserManagerPlugin extends Plugin {
 			
 			@Override
 			public void run() {
-				
 				String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
 				if (TextUtils.isEmpty(authToken)) {
 					PluginResult logoutPluginResult = new  PluginResult(PluginResult.Status.ERROR);
@@ -339,72 +251,38 @@ public class UserManagerPlugin extends Plugin {
 		
 	}
 
-	private void createUser(final Context context, final UserJsonData jsonData, final String callbackId) {
-		
+	private void createUser(final Context context, final UserJsonData jsonData, final String callbackId) {		
 		LogHelper.logD(TAG, "createUser Called");
-//		LogHelper.logD(TAG, "Password = " + password);
 		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
 		String password = jsonData.getString(JsonMapKeys.KEY_PASSWORD);
 		String name = jsonData.getString(JsonMapKeys.KEY_USER_NAME);
 
 		LogHelper.logD(TAG, "JSON String: " + jsonData);
-
 		LogHelper.logD(TAG, "Email:" + email + " Name: " + name);
-
 		
-		UserManager.getInstance(context).createUser(name, email, password,  new UserDetailsListener() {
-
+		UserManager.getInstance(context).createUser(name, email, password,  new UserRequestListenerWrapper(callbackId) {
+			
 			@Override
-			public void onUserDetailsReceived(UserItem userItem) {
-				JSONObject userDetails = new JSONObject();
+			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {	
+				UserItem userItem = getUserItemFromResponse(responseResult);
+					
+				JSONObject userDetails = null;				
+				if (userItem != null) {					
+					userDetails = new JSONObject();
+					userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.email);
+					userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.name);
+					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);						
 				
-				try {
-					if (userItem != null) {
-						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
-						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
-						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());		
-						userDetails.put(JsonMapKeys.KEY_IS_VALIDATED_USER, true);
-						
-						RobotCommandServiceManager.loginToXmpp(context);
-						PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
-						LogHelper.logD(TAG, "User created");
-						success(loginUserPluginResult, callbackId);
-						String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
-						UserManager.getInstance(context).setUserAttributesOnServer(authToken, DeviceUtils.getUserAttributes(context));
-					}
-					else {
-						sendError(callbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
-					}
-				} 
-				catch (JSONException e) {
-					LogHelper.log(TAG, "Exception in createUser", e);
-					sendError(callbackId, ErrorTypes.JSON_PARSING_ERROR, e.getMessage());
-				}
-
+					RobotCommandServiceManager.loginToXmpp(context);					
+				}				
 				
-			}
-
-			@Override
-			public void onNetworkError(String errMessage) {
-				NeatoPrefs.saveUserEmailId(context, null);
-				LogHelper.logD(TAG, "Failed to create new user. Network Error");
-				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-				
-			}
-
-			@Override
-			public void onServerError(String errMessage) {
-				NeatoPrefs.saveUserEmailId(context, null);
-				LogHelper.logD(TAG, "Failed to create new user. Server Error");
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-
+				return userDetails;
 			}
 		});
 	}
 	
 	private void createUser2(final Context context, final UserJsonData jsonData, final String callbackId) {		
 		LogHelper.logD(TAG, "createUser2 Called");
-//		LogHelper.logD(TAG, "Password = " + password);
 		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
 		String password = jsonData.getString(JsonMapKeys.KEY_PASSWORD);
 		String name = jsonData.getString(JsonMapKeys.KEY_USER_NAME);
@@ -413,52 +291,23 @@ public class UserManagerPlugin extends Plugin {
 
 		LogHelper.logD(TAG, "Email:" + email + " Name: " + name);
 		
-		UserManager.getInstance(context).createUser(name, email, password,  new UserDetailsListener() {
+		UserManager.getInstance(context).createUser(name, email, password,  new UserRequestListenerWrapper(callbackId) {
 
 			@Override
-			public void onUserDetailsReceived(UserItem userItem) {
-				JSONObject userDetails = new JSONObject();
+			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {	
+				UserItem userItem = getUserItemFromResponse(responseResult);
 				
-				try {
-					if (userItem != null) {
-						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
-						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
-						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());	
-						userDetails.put(JsonMapKeys.KEY_IS_VALIDATED_USER, userItem.isValidated());
-					
-						RobotCommandServiceManager.loginToXmpp(context);
-						PluginResult loginUserPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
-						LogHelper.logD(TAG, "User created");
-						success(loginUserPluginResult, callbackId);
-						String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
-						UserManager.getInstance(context).setUserAttributesOnServer(authToken, DeviceUtils.getUserAttributes(context));
-					}
-					else {
-						sendError(callbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
-					}
-				} 
-				catch (JSONException e) {
-					LogHelper.log(TAG, "Exception in createUser", e);
-					sendError(callbackId, ErrorTypes.JSON_PARSING_ERROR, e.getMessage());
-				}
-
+				JSONObject userDetails = null;
+				if (userItem != null) {
+					userDetails = new JSONObject();
+					userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.email);
+					userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.name);
+					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);						
 				
-			}
-
-			@Override
-			public void onNetworkError(String errMessage) {
-				NeatoPrefs.saveUserEmailId(context, null);
-				LogHelper.logD(TAG, "Failed to create new user. Network Error");
-				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
+					RobotCommandServiceManager.loginToXmpp(context);
+				}		
 				
-			}
-
-			@Override
-			public void onServerError(String errMessage) {
-				NeatoPrefs.saveUserEmailId(context, null);
-				LogHelper.logD(TAG, "Failed to create new user. Server Error");
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-
+				return userDetails;
 			}
 		});
 	}	
@@ -498,7 +347,6 @@ public class UserManagerPlugin extends Plugin {
 	}
 	
 	public void getUserDetails(final Context context, UserJsonData jsonData, final String callbackId) {
-
 		LogHelper.logD(TAG, "getUserDetails Called");
 		LogHelper.logD(TAG, "JSON String: " + jsonData);
 
@@ -506,51 +354,20 @@ public class UserManagerPlugin extends Plugin {
 		String authKey = NeatoPrefs.getNeatoUserAuthToken(context);
 		LogHelper.logD(TAG, "Email:" + email + " authKey: " + authKey);		
 
-		UserManager.getInstance(context).getUserDetails(email, authKey,  new UserDetailsListener() {
+		UserManager.getInstance(context).getUserDetails(email, authKey,  new UserRequestListenerWrapper(callbackId) {
 			@Override
-			public void onUserDetailsReceived(UserItem userItem) {
-				JSONObject userDetails = new JSONObject();
+			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+				UserItem userItem = getUserItemFromResponse(responseResult);
+					
+				JSONObject userDetails = null;
 				if (userItem != null) {
-					try {
-						
-						userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.getEmail());
-						userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.getName());
-						userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.getId());
-						//Not quite sure whether we should save this at this time. As it is it is going to 
-						//be saved at the time of login. Still doing it for safety.
-						
-
-						PluginResult getUserDetailsPluginResult = new  PluginResult(PluginResult.Status.OK, userDetails);
-						LogHelper.logD(TAG, "Get User detail succeeded.");
-						success(getUserDetailsPluginResult, callbackId);
-						return;
-					} 
-					catch (JSONException e) { 
-						LogHelper.log(TAG, "Exception in getUserDetails", e);
-						sendError(callbackId, ErrorTypes.JSON_PARSING_ERROR, e.getMessage());
-						return;
-					}
-
-				}
-				else {
-					sendError(callbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
+					userDetails = new JSONObject();
+					userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.email);
+					userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.name);
+					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);												
 				}	
-			}
-
-			@Override
-			public void onNetworkError(String errMessage) {
-				NeatoPrefs.saveUserEmailId(context, null);
-				LogHelper.logD(TAG, "Failed to get user details. Network Error");
-				sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-
-			}
-
-			@Override
-			public void onServerError(String errMessage) {
-				NeatoPrefs.saveUserEmailId(context, null);
-				LogHelper.logD(TAG, "Failed to get user details. Server Error");
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-
+				
+				return userDetails;
 			}
 		});
 	}
@@ -569,28 +386,7 @@ public class UserManagerPlugin extends Plugin {
 		LogHelper.logD(TAG, "JSON String: " + jsonData);		
 		LogHelper.logD(TAG, "Associate action initiated in Robot plugin for robot Id: " + robotId + " and email id: " + email);
 
-		UserManager.getInstance(context).associateRobot(robotId, email, new UserRobotAssociateDisassociateListener() {
-			
-			@Override
-			public void onServerError(String errorMessage) {
-				LogHelper.logD(TAG, "associateRobot robot Error: " + errorMessage);
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, "Server Error");
-			}
-			
-			@Override
-			public void onNetworkError(String errorMessage) {
-				LogHelper.logD(TAG, "associateRobot network Error: " + errorMessage);
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, "Network Error");
-			}
-			
-			@Override
-			public void onComplete() {
-				PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK);
-				LogHelper.logD(TAG, "associateRobot successful");
-				success(pluginResult, callbackId);
-			}
-		});
-
+		UserManager.getInstance(context).associateRobot(robotId, email, new UserRequestListenerWrapper(callbackId));
 	}
 
 	private void disassociateAllRobots(Context context, UserJsonData jsonData, final String callbackId) {		
@@ -603,27 +399,7 @@ public class UserManagerPlugin extends Plugin {
 		LogHelper.logD(TAG, "JSON String: " + jsonData);
 		
 		LogHelper.logD(TAG, "Disassociate all robots for email id: " + email);
-		UserManager.getInstance(context).disassociateAllRobots(email, new UserRobotAssociateDisassociateListener() {
-			
-			@Override
-			public void onServerError(String errorMessage) {
-				LogHelper.logD(TAG, "disassociateAllRobots robot Error: " + errorMessage);
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
-			}
-			
-			@Override
-			public void onNetworkError(String errorMessage) {
-				LogHelper.logD(TAG, "disassociateAllRobots network Error: " + errorMessage);
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
-			}
-			
-			@Override
-			public void onComplete() {
-				PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK);
-				LogHelper.logD(TAG, "disassociateAllRobots successful");
-				success(pluginResult, callbackId);
-			}
-		});
+		UserManager.getInstance(context).disassociateAllRobots(email, new UserRequestListenerWrapper(callbackId));
 	}
 
 	private void disassociateRobot(Context context, UserJsonData jsonData, final String callbackId) {		
@@ -638,76 +414,36 @@ public class UserManagerPlugin extends Plugin {
 		LogHelper.logD(TAG, "JSON String: " + jsonData);
 		LogHelper.logD(TAG, "Disassociate action initiated in Robot plugin for robot Id: " + robotId + " and email id: " + email);
 
-		UserManager.getInstance(context).disassociateRobot(robotId, email, new UserRobotAssociateDisassociateListener() {
-			
-			@Override
-			public void onServerError(String errorMessage) {
-				LogHelper.logD(TAG, "disassociateRobot robot Error: " + errorMessage);
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
-			}
-			
-			@Override
-			public void onNetworkError(String errorMessage) {
-				LogHelper.logD(TAG, "disassociateRobot network Error: " + errorMessage);
-				sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
-			}
-			
-			@Override
-			public void onComplete() {
-				PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK);
-				LogHelper.logD(TAG, "disassociateRobot successful");
-				success(pluginResult, callbackId);
-			}
-		});
+		UserManager.getInstance(context).disassociateRobot(robotId, email, new UserRequestListenerWrapper(callbackId));
 	}
 
-	private void getAssociatedRobots(Context context, UserJsonData jsonData, String callbackId) {
+	private void getAssociatedRobots(Context context, UserJsonData jsonData, final String callbackId) {
 		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);		
 		
 		if (TextUtils.isEmpty(email)) {
 			email = NeatoPrefs.getUserEmailId(context);
 		}
 		
-		String auth_token = NeatoPrefs.getNeatoUserAuthToken(context);
+		String auth_token = NeatoPrefs.getNeatoUserAuthToken(context);		
+		LogHelper.logD(TAG, "getAssociatedRobots - JSON String: " + jsonData);		
 		
-		LogHelper.logD(TAG, "getAssociatedRobots - JSON String: " + jsonData);
-		
-		mRobotDetailsPluginListener = new RobotDetailsPluginListener(callbackId);
-		UserManager.getInstance(context).getAssociatedRobots(email, auth_token, mRobotDetailsPluginListener);
+		UserManager.getInstance(context).getAssociatedRobots(email, auth_token, new UserRequestListenerWrapper(callbackId) {
+			
+			@Override
+			public void onReceived(NeatoWebserviceResult responseResult) {
+				ArrayList<RobotItem> robotList = null; 
+				
+				if ((responseResult != null) && (responseResult instanceof GetUserAssociatedRobotsResult)) {
+					robotList = ((GetUserAssociatedRobotsResult)responseResult).result;
+				}
+				
+				JSONArray robots = convertRobotItemsToJSONArray(robotList);
+				PluginResult pluginResult =  new  PluginResult(PluginResult.Status.OK, robots);
+				success(pluginResult, callbackId);
+			}
+		});
 	}
 	
-	// TODO: for now this is in UserManager. Should be moved to appropriate plugin.
-	private void registerNetworkStateListener(Context context, UserJsonData jsonData, String callbackId) {
-		
-		// TODO : Club all the Broadcast listeners for network state change together.
-		BroadcastReceiver mWifiStateChange = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-
-				if(intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
-					NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-					if(networkInfo.isConnected()) {
-						// Network is connected
-						LogHelper.logD(TAG, "Connected to a network");
-						dispatchEvent(EventTypes.WIFI_CONNECTED);
-					}
-				} 
-				else if(intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-					NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-					if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI && ! networkInfo.isConnected()) {
-						// Network is disconnected
-						LogHelper.logD(TAG, "Disconnecting from the network");
-						dispatchEvent(EventTypes.WIFI_DISCONNECTED);
-					}
-				}
-			}
-		};
-		context.registerReceiver(mWifiStateChange, new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
-		context.registerReceiver(mWifiStateChange, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-		PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK);
-		LogHelper.logD(TAG, "Network state listener registerred");
-		success(pluginResult, callbackId);
-	}
 	
 	private static class ActionTypes {
 		public static final String LOGIN = "login";
@@ -722,7 +458,6 @@ public class UserManagerPlugin extends Plugin {
 		public static final String GET_ASSOCIATED_ROBOTS = "getAssociatedRobots";
 		public static final String DISASSOCIATE_ROBOT = "disassociateRobot";
 		public static final String DISASSOCAITE_ALL_ROBOTS = "disassociateAllRobots";
-		public static final String REGISTER_NETWORK_STATE_LISTENER = "registerNetworkStateListener";
 		public static final String FORGET_PASSWORD	= "forgetPassword";
 		public static final String CHANGE_PASSWORD	= "changePassword";
 	}
@@ -738,61 +473,79 @@ public class UserManagerPlugin extends Plugin {
 		return error;
 	}
 	
-	private void dispatchEvent(String eventName) {
-		LogHelper.log(TAG, "Event called");
-		String javascriptTemplate = "var e = document.createEvent('Events');\n" +
-				"e.initEvent('"+eventName+"');\n" +	                    
-				"document.dispatchEvent(e);";
-		this.sendJavascript(javascriptTemplate);		
+
+	private UserItem getUserItemFromResponse(NeatoWebserviceResult responseResult) {
+		UserItem userItem = null;		
+		if ((responseResult != null) && (responseResult instanceof GetNeatoUserDetailsResult)) {
+			userItem = ((GetNeatoUserDetailsResult)responseResult).result;
+		}
+		
+		return userItem;
 	}
 	
-	private class RobotDetailsPluginListener implements AssociatedRobotDetailsListener {
+	private JSONArray convertRobotItemsToJSONArray(ArrayList<RobotItem> robotList) {
+		JSONArray robots = new JSONArray();
+		if ((robotList != null) && (robotList.size() > 0)) {
+			for (RobotItem item: robotList) {
+				try {
 
-		private String mCallBackId;
-
-		RobotDetailsPluginListener(String callbackId) {
-			mCallBackId = callbackId;
-		}
-		@Override
-		public void onRobotDetailsReceived(ArrayList<RobotItem> robotList) {
-
-			JSONArray robots = new JSONArray();
-			PluginResult pluginResult;
-			if (robotList != null) {
-				for (RobotItem item: robotList) {
-					try {
-
-						JSONObject robot = new JSONObject();
-						robot.put(JsonMapKeys.KEY_ROBOT_ID, item.getSerialNumber());
-						robot.put(JsonMapKeys.KEY_ROBOT_NAME, item.getName());
-						robots.put(robot);
-					} catch (JSONException e) {
-						LogHelper.log(TAG, "Exception in RobotDetailsPluginListener", e);
-					}
+					JSONObject robot = new JSONObject();
+					robot.put(JsonMapKeys.KEY_ROBOT_ID, item.serial_number);
+					robot.put(JsonMapKeys.KEY_ROBOT_NAME, item.name);
+					robots.put(robot);
+				} catch (JSONException e) {
+					LogHelper.log(TAG, "Exception in RobotDetailsPluginListener", e);
 				}
-				LogHelper.logD(TAG, "Success");
-			} 
-			else {
-				LogHelper.logD(TAG, "No robots associated");
+			}					
+		} 
+		else {
+			LogHelper.logD(TAG, "No robots associated");
+		}
+		return robots;
+	}
+
+
+	private class UserRequestListenerWrapper implements WebServiceBaseRequestListener {
+		private String mCallbackId;
+		
+		public UserRequestListenerWrapper(String callbackId) {
+			mCallbackId = callbackId;
+		}
+		
+		@Override
+		public void onServerError(String errorMessage) {
+			LogHelper.logD(TAG, "Server Error: " + errorMessage);
+			sendError(mCallbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
+		}
+		
+		@Override
+		public void onNetworkError(String errorMessage) {
+			LogHelper.logD(TAG, "Network Error: " + errorMessage);
+			sendError(mCallbackId, ErrorTypes.ERROR_NETWORK_ERROR, errorMessage);
+		}
+		
+		@Override
+		public void onReceived(NeatoWebserviceResult responseResult) {
+			LogHelper.logD(TAG, "Request processed successfully");
+			try {
+				JSONObject resultObj = getResultObject(responseResult);
+				if (resultObj != null) {
+					PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, resultObj);		
+					success(pluginResult, mCallbackId);
+				}
+				else {
+					LogHelper.logD(TAG, "Unknown Error");
+					sendError(mCallbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
+				}
 			}
-			pluginResult=  new  PluginResult(PluginResult.Status.OK, robots);
-			success(pluginResult, mCallBackId);
-		}
-
-		@Override
-		public void onNetworkError(String errMessage) {
-			JSONObject error = getErrorJsonObject(ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-			PluginResult robotDetailsPluginResult = new  PluginResult(PluginResult.Status.ERROR, error);
-			LogHelper.logD(TAG, "Error: " + errMessage);
-			error(robotDetailsPluginResult, mCallBackId);
-		}
-
-		@Override
-		public void onServerError(String errMessage) {
-			JSONObject error = getErrorJsonObject(ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-			PluginResult associateRobotPluginResult = new  PluginResult(PluginResult.Status.ERROR, error);
-			LogHelper.logD(TAG, "get robot details Error: " +errMessage);
-			error(associateRobotPluginResult, mCallBackId);
+			catch (JSONException ex) {
+				LogHelper.logD(TAG, "JSON Error");
+				sendError(mCallbackId, ErrorTypes.JSON_PARSING_ERROR, ex.getMessage());
+			}
+		}	
+		
+		public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+			return new JSONObject(); 
 		}
 	}
 }

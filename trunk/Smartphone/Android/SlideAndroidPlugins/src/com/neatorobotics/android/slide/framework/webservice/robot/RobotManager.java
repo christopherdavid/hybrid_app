@@ -132,11 +132,11 @@ public class RobotManager {
 	private RobotItem convertRobotDetailResultToRobotItem(RobotDetailResult result)
 	{
 		RobotItem robotItem = new RobotItem();
-		robotItem.setId(result.mResult.mId);
-		robotItem.setName(result.mResult.mName);
-		robotItem.setSerialNumber(result.mResult.mSerialNumber);
-		robotItem.setChatId(result.mResult.mChat_id);
-		robotItem.setChatPwd(result.mResult.mChat_pwd);
+		robotItem.id = result.mResult.mId;
+		robotItem.name = result.mResult.mName;
+		robotItem.serial_number = result.mResult.mSerialNumber;
+		robotItem.chat_id = result.mResult.mChat_id;
+		robotItem.chatPwd = result.mResult.mChat_pwd;
 		return robotItem;
 	}
 

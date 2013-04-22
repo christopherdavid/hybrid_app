@@ -9,11 +9,6 @@ public class TcpUtils {
 
 	private static String TAG = TcpUtils.class.getSimpleName();
 
-	public static InetAddress getRobotInetAddressFromRobotId(String RobotId) {
-		// TODO: To be implemented
-		return null;
-	} 
-
 	public static InetAddress getInetAddressFromIp(String IpAdress) {
 		try {
 			return InetAddress.getByName(IpAdress);

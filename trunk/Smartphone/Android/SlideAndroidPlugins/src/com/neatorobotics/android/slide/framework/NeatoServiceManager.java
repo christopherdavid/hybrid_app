@@ -16,6 +16,7 @@ import com.neatorobotics.android.slide.framework.utils.AppUtils;
 public class NeatoServiceManager {
 
 	private static final String TAG = NeatoServiceManager.class.getSimpleName();
+	
 	private  INeatoRobotService mNeatoRobotService;
 	private  boolean mServiceBound = false;	
 	private   ResultReceiver mResultReciever;
@@ -45,10 +46,9 @@ public class NeatoServiceManager {
 			mContext.sendBroadcast(resultReceiverIntent);
 		}
 	};
-
 	
 	public void initialize() {
-		LogHelper.logD(TAG, " Initialise");
+		LogHelper.logD(TAG, "Initialise Neato Service");
 		String version = AppUtils.getVersionWithBuildNumber(mContext);
 		LogHelper.log(TAG, "Build Number = " + version);
 		mResultReciever = new NeatoRobotResultReceiver(mHandler);

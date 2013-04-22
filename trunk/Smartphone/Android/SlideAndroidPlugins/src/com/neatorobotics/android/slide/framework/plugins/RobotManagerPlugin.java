@@ -808,7 +808,7 @@ public class RobotManagerPlugin extends Plugin {
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
 					pluginResult.setKeepCallback(false);
 					success(pluginResult, callbackId);
-					sendDataChangedCommand(context, item.getSerialNumber(), RobotCommandPacketConstants.KEY_ROBOT_DETAILS_CHANGED);
+					sendDataChangedCommand(context, item.serial_number, RobotCommandPacketConstants.KEY_ROBOT_DETAILS_CHANGED);
 				}
 
 				@Override
@@ -838,7 +838,7 @@ public class RobotManagerPlugin extends Plugin {
 					PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, robotJsonObj);	
 					pluginResult.setKeepCallback(false);
 					success(pluginResult, callbackId);
-					sendDataChangedCommand(context, robotItem.getSerialNumber(), RobotCommandPacketConstants.KEY_ROBOT_DETAILS_CHANGED);
+					sendDataChangedCommand(context, robotItem.serial_number, RobotCommandPacketConstants.KEY_ROBOT_DETAILS_CHANGED);
 				}
 
 				@Override
@@ -922,8 +922,8 @@ public class RobotManagerPlugin extends Plugin {
 		private JSONObject getRobotDetailJsonObject(RobotItem robotItem) {
 			JSONObject robotJsonObj = new JSONObject();
 			try {
-				robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotItem.getSerialNumber());
-				robotJsonObj.put(JsonMapKeys.KEY_ROBOT_NAME, robotItem.getName());				
+				robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotItem.serial_number);
+				robotJsonObj.put(JsonMapKeys.KEY_ROBOT_NAME, robotItem.name);				
 			}
 			catch (JSONException e) {
 				LogHelper.logD(TAG, "Exception in getRobotDetailJsonObject", e);

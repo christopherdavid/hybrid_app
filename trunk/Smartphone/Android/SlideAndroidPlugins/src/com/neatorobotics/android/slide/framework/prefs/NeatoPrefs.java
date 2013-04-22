@@ -63,16 +63,11 @@ public class NeatoPrefs {
 		boolean result = prefsEditor.commit();
 		return result;
 	}
-	
 
-	
-	
 	public static String getUserEmailId(Context context)
 	{
 		return getPreferenceStrValue(context, USER_EMAIL_ID_KEY);
 	}
-	
-	
 	
 	public static void saveUserEmailId(Context context, String emailId)
 	{

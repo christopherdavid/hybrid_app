@@ -1,36 +1,18 @@
 package com.neatorobotics.android.slide.framework.webservice.user;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 
 public class SetUserAttributesResult extends NeatoWebserviceResult {
-	
-	public static final int STATUS_SUCCESS = 0;
-	
-	@JsonProperty(value="result")
-	public Result mResult;
-	
-	public SetUserAttributesResult() {
-		super();
-	}
-	
-	public SetUserAttributesResult(NeatoHttpResponse response) {
-		super(response);
-	}
+	public Result result;
 	
 	@Override
 	public boolean success() {
-		return ((mStatus == STATUS_SUCCESS) && ((mResult != null) && mResult.mSuccess));
+		return ((status == RESPONSE_STATUS_SUCCESS) && ((result != null) && result.success));
 	}
 	
 	public class Result {
-		@JsonProperty(value="success")
-		public boolean mSuccess;
-		
-		@JsonProperty(value="message")
-		public String mMessage;	
+		public boolean success;
+		public String message;	
 	}
 }
 

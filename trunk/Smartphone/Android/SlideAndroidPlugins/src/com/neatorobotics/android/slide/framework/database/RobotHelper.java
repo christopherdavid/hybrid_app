@@ -48,7 +48,7 @@ public class RobotHelper {
 	
 	public static void setRobotToManage(Context context, RobotItem robotItem) {
 		if (robotItem != null) {
-			NeatoPrefs.saveManagedRobotSerialId(context, robotItem.getSerialNumber());
+			NeatoPrefs.saveManagedRobotSerialId(context, robotItem.serial_number);
 		}
 	}
 	

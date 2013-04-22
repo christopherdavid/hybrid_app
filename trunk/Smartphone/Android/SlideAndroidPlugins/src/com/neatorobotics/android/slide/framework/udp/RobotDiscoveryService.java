@@ -27,8 +27,9 @@ public class RobotDiscoveryService {
 
 	private Handler mHandler;
 	private Context mContext;
-	private static final int MAX_DISCOVERY_TIME_OUT = (5 * 1000); // 5 seconds is the max discovery time for the robots
 	
+	private static final int MAX_DISCOVERY_TIME_OUT = (5 * 1000); // 5 seconds is the max discovery time for the robots
+
 	private static final int UDP_SEND_GLOBAL_ROBOT_DISCOVERY_BROADCAST_PORT = 48001;
 	private static final int UDP_SEND_ROBOT_DISCOVERY_BROADCAST_PORT = 48002;
 	private static final int UDP_ROBOT_DISCOVERY_BROADCAST_PORT = 48003;
@@ -77,10 +78,6 @@ public class RobotDiscoveryService {
 		mUserId = userId;
 		mListener = listener;
 	}
-
-
-
-
 	
 	public static void startRobotsDiscovery(Context context, String userId, RobotDiscoveryListener listener)
 	{
@@ -99,7 +96,6 @@ public class RobotDiscoveryService {
 		RobotDiscoveryService robotDiscoverService = new RobotDiscoveryService(context, localBindPort, userId, robotId, listener);
 		robotDiscoverService.startDiscovery();
 	}
-	
 	
 	private void startDiscovery()
 	{
@@ -167,8 +163,6 @@ public class RobotDiscoveryService {
 		return mTrasport;
 	}
 
-	
-
 	private RobotDiscoveryCommandPacket getRobotDiscoveryPacket()
 	{
 		
@@ -212,7 +206,6 @@ public class RobotDiscoveryService {
 			LogHelper.log(TAG, "Exception in sendDiscoveryPacket", e);
 		}
 	}
-
 
 	private RobotDiscoveryInternal readData(Transport transport) throws IOException
 	{
@@ -294,8 +287,6 @@ public class RobotDiscoveryService {
 			LogHelper.logD(TAG, "Exception in forming a string in logPacket", e);
 		}
 	}
-	
-	 
 
 	private void notifyRobotDiscovery(final RobotInfo robotInfo) {
 
@@ -393,7 +384,6 @@ public class RobotDiscoveryService {
 		synchronized (mRobotMapLock) {
 			robotMap.put(robotInfo.getSerialId(), robotInfo);	
 		}
-		
 	}
 	
 	private RobotInfo convertResponseToRobotInfo(String fromIpAddress, RobotDiscoveryResponsePacket response)

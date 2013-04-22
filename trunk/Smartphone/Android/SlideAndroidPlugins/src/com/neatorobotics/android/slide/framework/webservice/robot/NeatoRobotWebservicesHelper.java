@@ -8,7 +8,6 @@ import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.AssociateNeatoRobotToUser;
-import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.CreateNeatoRobot;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotDetails;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotOnlineStatus;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.SetRobotProfileDetails;
@@ -16,17 +15,6 @@ import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebS
 
 public class NeatoRobotWebservicesHelper {
 	
-	public static CreateNeatoRobotResult createNeatoRobotRequest(Context context, String name, String serial_number) {
-		CreateNeatoRobotResult result = null;
-		Map<String, String> createRobotReqParams = new HashMap<String, String>();
-		createRobotReqParams.put(CreateNeatoRobot.Attribute.NAME, name);
-		createRobotReqParams.put(CreateNeatoRobot.Attribute.SERIAL_NUMBER, serial_number);
-		NeatoHttpResponse createRobotResponse = NeatoWebserviceHelper.executeHttpPost(context, CreateNeatoRobot.METHOD_NAME, createRobotReqParams);
-		result = NeatoWebserviceUtils.readValueHelper(createRobotResponse, CreateNeatoRobotResult.class);
-		
-		return result;
-	}
-
 	public static RobotAssociationDisassociationResult associateNeatoRobotRequest(Context context, String email, String serial_number) {
 		RobotAssociationDisassociationResult result = null;
 		Map<String, String> associateRobotReqParams = new HashMap<String, String>();

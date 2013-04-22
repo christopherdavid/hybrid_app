@@ -204,8 +204,8 @@ public class DBHelper {
 	
 	public boolean saveUser(UserItem userItem) {
 		
-		if (isUserExist(userItem.getId())) {
-			deleteUserById(userItem.getId());
+		if (isUserExist(userItem.id)) {
+			deleteUserById(userItem.id);
 		}
 		
 		ContentValues values = getContentValues(userItem);
@@ -286,14 +286,14 @@ public class DBHelper {
 	private UserItem convertToUserItem(Cursor cursor) {
 		UserItem userItem = new UserItem();
 		
-		userItem.setId(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_ID)));
-		userItem.setName(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_NAME)));
-		userItem.setEmail(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_EMAIL)));
-		userItem.setChatId(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_CHAT_ID)));		
+		userItem.id = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_ID));
+		userItem.name = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_NAME));
+		userItem.email = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_EMAIL));
+		userItem.chat_id = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_CHAT_ID));		
 		
 		try {			
 			String decryptedPwd = CryptoUtils.decrypt(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_USER_CHAT_PWD)));
-			userItem.setChatPwd(decryptedPwd);			
+			userItem.chat_pwd = decryptedPwd;			
 		}
 		catch (Exception ex) {
 			LogHelper.log(TAG, "Exception in password decryption");			
@@ -304,13 +304,13 @@ public class DBHelper {
 	
 	private ContentValues getContentValues(UserItem userItem) {
 		ContentValues values  = new ContentValues();
-		values.put(DBCommon.COL_NAME_USER_ID, userItem.getId());
-		values.put(DBCommon.COL_NAME_USER_NAME, userItem.getName());
-		values.put(DBCommon.COL_NAME_USER_EMAIL, userItem.getEmail());
-		values.put(DBCommon.COL_NAME_USER_CHAT_ID, userItem.getChatId());
+		values.put(DBCommon.COL_NAME_USER_ID, userItem.id);
+		values.put(DBCommon.COL_NAME_USER_NAME, userItem.name);
+		values.put(DBCommon.COL_NAME_USER_EMAIL, userItem.email);
+		values.put(DBCommon.COL_NAME_USER_CHAT_ID, userItem.chat_id);
 		
 		try {			
-			String encryptedPwd = CryptoUtils.encrypt(userItem.getChatPwd());			
+			String encryptedPwd = CryptoUtils.encrypt(userItem.chat_pwd);			
 			values.put(DBCommon.COL_NAME_USER_CHAT_PWD, encryptedPwd);
 		}
 		catch (Exception ex) {
@@ -323,8 +323,8 @@ public class DBHelper {
 	// Robot related functions ---------------------------------------------------------------------------
 	
 	public boolean saveRobot(RobotItem robotItem) {
-		if (isRobotExist(robotItem.getSerialNumber())) {
-			deleteRobotBySerialId(robotItem.getSerialNumber());
+		if (isRobotExist(robotItem.serial_number)) {
+			deleteRobotBySerialId(robotItem.serial_number);
 		}
 		
 		ContentValues values = getContentValues(robotItem);
@@ -332,7 +332,7 @@ public class DBHelper {
 		SQLiteDatabase db = getDatabase();
 		long rowId = db.insert(DBCommon.TABLE_NAME_ROBOT_INFO, null, values);
 		
-		LogHelper.log(TAG, String.format("saveRobot SerialId [%s] - %d", robotItem.getSerialNumber(), rowId));
+		LogHelper.log(TAG, String.format("saveRobot SerialId [%s] - %d", robotItem.serial_number, rowId));
 		
 		boolean saved = (rowId > 0) ? true : false; 
 		
@@ -437,20 +437,20 @@ public class DBHelper {
 	private RobotItem convertToRobotItem(Cursor cursor) {
 		RobotItem robotItem = new RobotItem();
 		
-		robotItem.setId(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_ID)));
-		robotItem.setSerialNumber(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_SERIAL_ID)));
-		robotItem.setName(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_NAME)));
-		robotItem.setChatId(cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_CHAT_ID)));		
+		robotItem.id = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_ID));
+		robotItem.serial_number = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_SERIAL_ID));
+		robotItem.name = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_NAME));
+		robotItem.chat_id = cursor.getString(cursor.getColumnIndex(DBCommon.COL_NAME_ROBOT_CHAT_ID));		
 		
 		return robotItem;
 	}
 	
 	private ContentValues getContentValues(RobotItem robotItem) {
 		ContentValues values  = new ContentValues();
-		values.put(DBCommon.COL_NAME_ROBOT_ID, robotItem.getId());
-		values.put(DBCommon.COL_NAME_ROBOT_SERIAL_ID, robotItem.getSerialNumber());
-		values.put(DBCommon.COL_NAME_ROBOT_NAME, robotItem.getName());
-		values.put(DBCommon.COL_NAME_ROBOT_CHAT_ID, robotItem.getChatId());		
+		values.put(DBCommon.COL_NAME_ROBOT_ID, robotItem.id);
+		values.put(DBCommon.COL_NAME_ROBOT_SERIAL_ID, robotItem.serial_number);
+		values.put(DBCommon.COL_NAME_ROBOT_NAME, robotItem.name);
+		values.put(DBCommon.COL_NAME_ROBOT_CHAT_ID, robotItem.chat_id);		
 		
 		return values;
 	}

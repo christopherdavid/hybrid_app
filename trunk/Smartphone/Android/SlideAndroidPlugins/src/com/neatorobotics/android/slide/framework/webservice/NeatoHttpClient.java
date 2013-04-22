@@ -24,7 +24,6 @@ import android.content.Context;
 import android.net.SSLCertificateSocketFactory;
 import android.net.SSLSessionCache;
 
-//TODO Re-write!!!!!!!!!!!!!!!!
 
 
 public class NeatoHttpClient {
@@ -43,7 +42,7 @@ public class NeatoHttpClient {
 	        HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MILLIS);
 	        HttpConnectionParams.setSocketBufferSize(params, 8192);
 	        HttpClientParams.setRedirecting(params, false);
-	        SSLSessionCache sessionCache = context == null ? null : new SSLSessionCache(context);
+	        SSLSessionCache sessionCache = (context != null) ? new SSLSessionCache(context) : null;
 	        HttpProtocolParams.setContentCharset(params, "UTF-8");
 	        SchemeRegistry schemeRegistry = new SchemeRegistry();
 	        schemeRegistry.register(new Scheme("http",

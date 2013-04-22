@@ -22,7 +22,7 @@ public class UserHelper {
 	public static boolean saveLoggedInUserDetails(Context context, UserItem userItem, String authKey) {
 		boolean result = saveUserDetails(context, userItem);
 		if (result) {
-			NeatoPrefs.saveUserEmailId(context, userItem.getEmail());
+			NeatoPrefs.saveUserEmailId(context, userItem.email);
 			NeatoPrefs.saveNeatoUserAuthToken(context, authKey);
 		}
 		
@@ -42,7 +42,7 @@ public class UserHelper {
 	public static String getChatId(Context context) {
 		UserItem userDetails = getLoggedInUserDetails(context);
 		if (userDetails != null) {
-			return userDetails.getChatId();
+			return userDetails.chat_id;
 		}
 		
 		return null;
@@ -51,7 +51,7 @@ public class UserHelper {
 	public static String getChatPwd(Context context) {
 		UserItem userDetails = getLoggedInUserDetails(context);
 		if (userDetails != null) {
-			return userDetails.getChatPwd();
+			return userDetails.chat_pwd;
 		}
 		
 		return null;
@@ -60,7 +60,7 @@ public class UserHelper {
 	public static String getUserId(Context context) {
 		UserItem userDetails = getLoggedInUserDetails(context);
 		if (userDetails != null) {
-			return userDetails.getId();
+			return userDetails.id;
 		}
 		return null;
 	}

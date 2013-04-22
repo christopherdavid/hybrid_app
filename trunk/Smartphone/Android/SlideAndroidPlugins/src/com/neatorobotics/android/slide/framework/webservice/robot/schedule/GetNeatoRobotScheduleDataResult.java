@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 
-public class GetNeatoRobotScheduleDataResult extends NeatoWebserviceResult{
+public class GetNeatoRobotScheduleDataResult extends NeatoWebserviceResult {
 
 	public GetNeatoRobotScheduleDataResult(NeatoHttpResponse response) {
 		super(response);

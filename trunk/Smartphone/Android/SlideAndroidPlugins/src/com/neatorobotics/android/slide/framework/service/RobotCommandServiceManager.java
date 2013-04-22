@@ -7,7 +7,6 @@ import android.os.RemoteException;
 
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotAssociateListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDiscoveryListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotNotificationsListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
@@ -19,7 +18,6 @@ import com.neatorobotics.android.slide.framework.utils.AppUtils;
 public class RobotCommandServiceManager {
 	private static final String TAG = RobotCommandServiceManager.class.getSimpleName();
 	
-
 	public static void sendCommand(Context context, String robotId, int commandId) {
 		LogHelper.logD(TAG, "Send command action initiated in Robot plugin internal - RobotSerialId = " + robotId);
 
@@ -35,7 +33,6 @@ public class RobotCommandServiceManager {
 
 		}
 	}
-
 	
 	public static void sendCommand2(Context context, String robotId, int commandId, HashMap<String, String> commandParams) {
 		LogHelper.logD(TAG, "Send command action initiated in Robot plugin internal - RobotSerialId = " + robotId);
@@ -70,26 +67,6 @@ public class RobotCommandServiceManager {
 		request.setTimestamp(String.valueOf(System.currentTimeMillis()));
 		
 		return request;
-	}
-
-	public static void associateRobot(Context context, String email, String robotId, RobotAssociateListener robotAssociateListener) {
-
-		LogHelper.logD(TAG, "Associate action initiated in Robot plugin internal");
-
-		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-		ApplicationConfig.getInstance(context).getRobotResultReceiver().addRobotAssociationListener(robotAssociateListener);
-
-		if (neatoService != null) {
-			try {
-				// neatoService.associateRobot(robotId, email);
-			} catch (Exception e) {
-				LogHelper.logD(TAG, "Could not initiate associateRobot action");
-			}
-		} else {
-			LogHelper.logD(TAG, "Service is not started!");
-			
-		}
-
 	}
 
 	public static void discoverRobot(Context context, RobotDiscoveryListener listener) {
