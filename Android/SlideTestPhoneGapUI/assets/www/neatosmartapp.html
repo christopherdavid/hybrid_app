@@ -62,6 +62,8 @@
 	<input type="password" id="regpasskeyconfirm" placeholder="Re-Enter Password" class="defaultInputText"></input>
 	<br>
 	<input type="button" id="registerUserButton" value="Register" class="gradientButton"></input> 
+	<input type="button" id="registerUserEmailValidationButton" value="Register (Valid Email)" class="gradientButton"></input>
+	<input type="button" id="resendValidationMailButton" value="Resend Mail" class="gradientButton"></input>
 	</section>
 	
 	<!-- Change password screen -->
@@ -115,7 +117,8 @@
 			</center>
 			
 			<br><br><input type="button" id="btnGoToDebug" value="Test APIs" class="gradientButton">
-			<br><br><input type="button" id="btnGoToNewSchedule" value="Test Schedule APIs" class="gradientButton">
+			<br><input type="button" id="btnGoToTestCleaningPage" value="Test Cleaning APIs" class="gradientButton">
+			<br><input type="button" id="btnGoToNewSchedule" value="Test Schedule APIs" class="gradientButton">
 			<br><input type="button" id="btnLogout" value="Logout" class="gradientButton"></input>
 		<br>
 		
@@ -166,8 +169,8 @@
 		<br><input type="button" id="btnOpenClosePeerConn" value="Open Connection" class="gradientButton"></input>
 		<br><input type="button" id="btnOpenClosePeerConn2" value="Open Connection (New)" class="gradientButton"></input>
 		<br><input type="button" id="btnSendStartStopCleanCommand" value="Start Cleaning" class="gradientButton"></input>
-		<br><input type="button" id="btnSendStartStopCleanCommand2" value="Start Cleaning (New)" class="gradientButton"></input>
-		<br><input type="button" id="btnPauseCleaningCommand" value="Pause Cleaning (New)" class="gradientButton"></input>
+		<br><input type="button" id="btnSendStartStopCleanCommand2" value="Start Cleaning (Deprecated)" class="gradientButton"></input>
+		<br><input type="button" id="btnPauseCleaningCommand" value="Pause Cleaning (Deprecated)" class="gradientButton"></input>
 		<br><input type="button" id="btnEnableSchedule" value="Enable Schedule (New)" class="gradientButton"></input>
 		<br><input type="button" id="btnDisableSchedule" value="Disable Schedule (New)" class="gradientButton"></input>
 		<br><input type="button" id="btnSetRobotClock" value="Set Robot Clock (New)" class="gradientButton"></input>
@@ -176,10 +179,57 @@
 		<br><input type="button" id="btnTestAllAssociatedRobots" value="All Associated Robots" class="gradientButton"></input>
 		<br><input type="button" id="btnTestRobotDetail" value="Robot Detail" class="gradientButton"></input>
 		<br><input type="button" id="btnTestUserDetail" value="User Detail" class="gradientButton"></input>	
-		<br><input type="button" id="btnRefreshUI" value="Refresh UI" class="gradientButton" ></input>						
+		<br><input type="button" id="btnRefreshUI" value="Refresh UI" class="gradientButton" ></input>
+		<br><input type="button" id="btnValidateUser" value="Is User Validated" class="gradientButton" ></input>						
 		
 	</section>
 	
+	<section id="cleaningAPIs"  aria-hidden=true>
+		<div class="defaultSectionHeader">Test Cleaning APIs</div>
+		<div class="cmdParams">
+			<label for="CleaningCategoryList">Cleaning Category:</label>
+			<br>
+			<select name="CleaningCategoryList" id="CleaningCategoryList">
+			</select>
+		</div>	
+		<div class="cmdParams">
+			<label for="CleaningModeList">Cleaning Mode:</label>
+			<br>
+			<select name="CleaningModeList" id="CleaningModeList">
+			</select>
+		</div>
+		<div class="cmdParams">
+			<label>Modifier:</label>
+			<input type="radio" name="radioCleaningModifier" id="radioCleaningModifier1x" value="1x">1x
+			<input type="radio" name="radioCleaningModifier" id="radioCleaningModifier2x" value="2x">2x
+		</div>
+		
+		<input type="button" id="btnSendStartStopCleanCommand3" value="Start Cleaning" class="gradientButton"></input>
+		<br><input type="button" id="btnPauseResumeCleaningCommand3" value="Pause Cleaning" class="gradientButton"></input>
+		<br><input type="button" id="btnGoToSpotDefinitionAPIPage" value="Test Spot APIs" class="gradientButton">
+
+		<div id="divNavigationControls" class="cmdParams" style="visibility:hidden;">
+			<label for="NavigationControlList">Control Id:</label>
+			<select name="NavigationControlList" id="NavigationControlList">
+			</select>
+			<input type="button" id="btnNavigateRobot" value="Navigate" class="gradientButton"></input>
+		</div>	
+	</section>
+	
+	<section id="spotDefinitionAPIs"  aria-hidden=true>
+		<div class="defaultSectionHeader">Test Spot Definition APIs</div>
+		<div class="cmdParams">
+			<label for="SpotAreaLengthList">Area:</label>
+			<select name="SpotAreaLengthList" id="SpotAreaLengthList">
+			</select>
+			<label for="SpotAreaHeightList"> x </label>
+			<select name="SpotAreaHeightList" id="SpotAreaHeightList">
+			</select>
+		</div>
+		<br><input type="button" id="btnSetSpotDefinition" value="Set Spot Definition" class="gradientButton"></input>
+		<br><input type="button" id="btnGetSpotDefinition" value="Get Spot Definition" class="gradientButton"></input>
+	</section>
+
 	<section id="robotCommands"  aria-hidden=true>
 		<div class="defaultSectionHeader">Robot Commands</div>
 		<br><br><input type="button" id="btnStartStopCleaning" value="Start Cleaning" class="gradientButton"></input>
