@@ -70,6 +70,16 @@ label {
 	border-radius: 5px;
 }
 
+.cmdParams{
+	width: 70%;
+	margin-left: 15%;
+	margin-right: 15%;
+	margin-top: 5px;
+	margin-bottom : 5px;
+	overflow: hidden;
+	text-align: center;
+}
+
 .defaultButton {
 	width: 70%;
 	height: 40px;
@@ -110,10 +120,10 @@ label {
 }
 
 .gradientButton{
-	 width: 60%;
+	 width: 80%;
 	 height: 40px;	
-	 margin-left: 20%;
-	 margin-right: 20%;
+	 margin-left: 10%;
+	 margin-right: 10%;
 	 margin-top: 5px;
 	 margin-bottom : 5px;
 	 border:1px solid #b7b7b7; 
