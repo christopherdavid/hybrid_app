@@ -55,6 +55,32 @@ public class NeatoWebserviceUtils {
 		}
 		return result;
 	}
+	
+	public static <T extends NeatoWebserviceResult> T readValueHelper(String jsonResponse, Class<T> responseClassType) {
+		T result = null;
+		
+		try {
+			LogHelper.logD(TAG, "Reading response");
+			LogHelper.logD(TAG, "JSON Response= " + jsonResponse);
+			result = resultMapper.readValue(jsonResponse, responseClassType);
+		} 
+		catch (JsonParseException e) {
+			LogHelper.log(TAG, "Exception in readValueHelper" ,e);
+
+		} catch (JsonMappingException e) {
+			LogHelper.log(TAG, "Exception in readValueHelper" ,e);
+
+		} catch (IOException e) {
+			LogHelper.log(TAG, "Exception in readValueHelper" ,e);
+		}
+		finally {
+			if (result == null) {
+				result = createErrorResponseObject2(responseClassType);
+			}
+		}		
+	
+		return result;
+	}
 
 	// Private helper method to create the XXXResult object 
 	private static <T> T createErrorResponseObject(NeatoHttpResponse response, Class<T> responseClassType) {
@@ -113,6 +139,29 @@ public class NeatoWebserviceUtils {
 		catch (NoSuchMethodException e) {
 			LogHelper.log(TAG, "Exception in readValueHelper", e);
 		}
+		return result;
+	}
+	
+	// Private helper method to create the NeatoWebserviceResult and sets the error code
+	// This method is called when JSON parsing fails. 
+	private static <T extends NeatoWebserviceResult> T createErrorResponseObject2(Class<T> responseClassType) {
+		T result = null;
+		try {
+			result = responseClassType.newInstance();
+			result.setResult(NeatoWebConstants.RESPONSE_SERVER_ERROR, NeatoWebConstants.RESPONSE_SERVER_ERROR_JSON_PARSING, "JSON Exception");
+		} 
+		catch (InstantiationException e) {
+			LogHelper.log(TAG, "Exception in readValueHelper", e);
+		} 
+		catch (IllegalAccessException e) {
+			LogHelper.log(TAG, "Exception in readValueHelper", e);
+		}
+		catch (IllegalArgumentException e) {
+			LogHelper.log(TAG, "Exception in readValueHelper", e);
+		} 
+		catch (SecurityException e) {
+			LogHelper.log(TAG, "Exception in readValueHelper", e);
+		} 
 		return result;
 	}
 }

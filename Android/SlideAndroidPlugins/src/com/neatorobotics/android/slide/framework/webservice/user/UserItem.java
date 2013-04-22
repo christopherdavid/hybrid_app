@@ -6,49 +6,15 @@ import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 
 public class UserItem {
 
-	private String id;
-	private String name;	
-	private String email;
-	private String chatId;
-	private String chatPwd;
-	private boolean isValidated = true;
-	
-	@SuppressWarnings("unused")
-	private ArrayList<String> social_networks = new ArrayList<String>();	
+	public String id;
+	public String name;	
+	public String email;
+	public String chat_id;
+	public String chat_pwd;	
+	public ArrayList<String> social_networks; // = new ArrayList<String>();	
 	// TODO : Add list of robot items details associated. Right now only adding the robot names.
 	
-	private ArrayList<RobotItem> robots = new ArrayList<RobotItem>();
-	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getChatId() {
-		return chatId;
-	}
-	public void setChatId(String chatId) {
-		this.chatId = chatId;
-	}
-	public String getChatPwd() {
-		return chatPwd;
-	}
-	public void setChatPwd(String chatPwd) {
-		this.chatPwd = chatPwd;
-	}
+	public ArrayList<RobotItem> robots = new ArrayList<RobotItem>();
 	
 	public void addAssociatedRobot(RobotItem robot)	{
 		robots.add(robot);
@@ -81,7 +47,7 @@ public class UserItem {
 		sb.append("Name = " + name);
 		sb.append("\nEmail = " + email);
 		sb.append("\nid = " + id);
-		sb.append("\nchatId = " + chatId);
+		sb.append("\nchatId = " + chat_id);
 		return sb.toString();
 	}
 	

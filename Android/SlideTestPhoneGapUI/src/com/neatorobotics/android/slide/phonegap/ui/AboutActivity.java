@@ -47,7 +47,7 @@ public class AboutActivity extends Activity {
 			UserItem userItem = UserHelper.getLoggedInUserDetails(getApplicationContext());
 			if (userItem != null) {
 				TextView txtInfo = (TextView)findViewById(R.id.txt_about_user);
-				String textUser = String.format(getString(R.string.text_about_user_info), userItem.getName(), userItem.getEmail());
+				String textUser = String.format(getString(R.string.text_about_user_info), userItem.name, userItem.email);
 				txtInfo.setText(textUser);
 			}
 		}

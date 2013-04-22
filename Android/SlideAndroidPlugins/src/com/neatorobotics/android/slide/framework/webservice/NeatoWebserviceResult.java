@@ -1,21 +1,15 @@
 package com.neatorobotics.android.slide.framework.webservice;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-
-
-
 
 public abstract class NeatoWebserviceResult {
+	
+	public static final int RESPONSE_STATUS_SUCCESS = 0;
 	
 	public int mResponseStatus;
 	public int mResponseErrorReason;
 	
-	@JsonProperty(value="status")
-	public int mStatus = -1; // 0 is returned as success from the webservice so we should not initialize to 0
-	
-	@JsonProperty(value="message")
-	public String mMessage;
+	public int status = -1; // 0 is returned as success from the webservice so we should not initialize to 0
+	public String message;
 	
 	public NeatoWebserviceResult () 
 	{
@@ -35,7 +29,7 @@ public abstract class NeatoWebserviceResult {
 	{
 		mResponseStatus = status;
 		mResponseErrorReason = reason;
-		mMessage = message;
+		this.message = message;
 	}
 	
 	
@@ -50,8 +44,10 @@ public abstract class NeatoWebserviceResult {
 	public final boolean isServerError() {
 		return (mResponseStatus == NeatoWebConstants.RESPONSE_SERVER_ERROR) || (mResponseStatus == NeatoWebConstants.RESPONSE_SERVER_ERROR_REASON_UNKNOWN) ;
 	}
-
-	public abstract boolean success();
+	
+	public boolean success() {
+		return (status == RESPONSE_STATUS_SUCCESS);
+	}
 
 
 }

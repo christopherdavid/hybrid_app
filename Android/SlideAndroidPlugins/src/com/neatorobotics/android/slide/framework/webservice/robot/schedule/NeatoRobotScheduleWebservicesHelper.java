@@ -34,7 +34,7 @@ public class NeatoRobotScheduleWebservicesHelper {
 		return result;
 	}
 
-	//TODO : right now i have set blog data type to String. Not really sure.
+	// TODO : right now i have set blob data type to String. Not really sure.
 	public static AddNeatoRobotScheduleDataResult addNeatoRobotScheduleDataRequest(Context context, String serial_number,String schedule_type ,String xml_data, String blob_data) {
 		AddNeatoRobotScheduleDataResult result = null;
 		Map<String, String> postNeatoRobotScheduleDataReqParams = new HashMap<String, String>();
@@ -60,11 +60,11 @@ public class NeatoRobotScheduleWebservicesHelper {
 
 
 	 public static DeleteNeatoRobotScheduleResult deleteNeatoRobotSchedule(Context context, String scheduleId) {
-		 	DeleteNeatoRobotScheduleResult result = null;
-			Map<String, String> deleteNeatoRobotScheduleReqParams = new HashMap<String, String>();
-			deleteNeatoRobotScheduleReqParams.put(DeleteNeatoRobotScheduleData.Attribute.ROBOT_SCHEDULE_ID, scheduleId);
-			NeatoHttpResponse deleteNeatoRobotScheduleResponse = NeatoWebserviceHelper.executeHttpPost(context, DeleteNeatoRobotScheduleData.METHOD_NAME, deleteNeatoRobotScheduleReqParams);
-			result = NeatoWebserviceUtils.readValueHelper(deleteNeatoRobotScheduleResponse, DeleteNeatoRobotScheduleResult.class);
-			return result;
-		}
+	 	DeleteNeatoRobotScheduleResult result = null;
+		Map<String, String> deleteNeatoRobotScheduleReqParams = new HashMap<String, String>();
+		deleteNeatoRobotScheduleReqParams.put(DeleteNeatoRobotScheduleData.Attribute.ROBOT_SCHEDULE_ID, scheduleId);
+		NeatoHttpResponse deleteNeatoRobotScheduleResponse = NeatoWebserviceHelper.executeHttpPost(context, DeleteNeatoRobotScheduleData.METHOD_NAME, deleteNeatoRobotScheduleReqParams);
+		result = NeatoWebserviceUtils.readValueHelper(deleteNeatoRobotScheduleResponse, DeleteNeatoRobotScheduleResult.class);
+		return result;
+	}
 }

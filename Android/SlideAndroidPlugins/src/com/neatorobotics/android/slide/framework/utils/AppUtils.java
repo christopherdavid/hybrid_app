@@ -111,7 +111,7 @@ public class AppUtils {
 		String userId = null;
 		UserItem userItem = UserHelper.getLoggedInUserDetails(context);
 		if (userItem != null) {
-			userId = userItem.getId();
+			userId = userItem.id;
 		}
 		return userId;
 	}

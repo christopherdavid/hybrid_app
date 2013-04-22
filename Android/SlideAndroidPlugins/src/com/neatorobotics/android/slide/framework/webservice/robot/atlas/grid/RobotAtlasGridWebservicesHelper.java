@@ -8,8 +8,6 @@ import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.RobotAtlasGridWebServicesAttributes.GetAtlasGridMetadata;
-import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.RobotAtlasGridWebServicesAttributes.PostGridImage;
-import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.RobotAtlasGridWebServicesAttributes.UpdateGridImage;
 
 public class RobotAtlasGridWebservicesHelper {
 

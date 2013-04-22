@@ -2,45 +2,13 @@ package com.neatorobotics.android.slide.framework.webservice.robot;
 
 import java.util.ArrayList;
 
-
-
 public class RobotItem {
-	private String id;
-	private String name;	
-	private String serialNumber;
-	private String chatId;
-	private String chatPwd;
-	private ArrayList<String> users = new ArrayList<String>();
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getSerialNumber() {
-		return serialNumber;
-	}
-	public void setSerialNumber(String serialNumber) {
-		this.serialNumber = serialNumber;
-	}
-	public String getChatId() {
-		return chatId;
-	}
-	public void setChatId(String chatId) {
-		this.chatId = chatId;
-	}
-	public String getChatPwd() {
-		return chatPwd;
-	}
-	public void setChatPwd(String chatPwd) {
-		this.chatPwd = chatPwd;
-	}
+	public String id;
+	public String name;	
+	public String serial_number;
+	public String chat_id;
+	public String chatPwd;
+	public ArrayList<String> users = new ArrayList<String>();
 	
 	public void addAssociatedUser(String user)
 	{
@@ -74,11 +42,11 @@ public class RobotItem {
 		sb.append("\n");
 		
 		sb.append("serialNumber = ");
-		sb.append(serialNumber);
+		sb.append(serial_number);
 		sb.append("\n");
 		
 		sb.append("chatId = ");
-		sb.append(chatId);
+		sb.append(chat_id);
 		sb.append("\n");
 		return sb.toString();
 	}

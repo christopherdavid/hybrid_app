@@ -18,7 +18,7 @@ public class XMPPUtils {
 			return null;
 		}
 		else {
-			String chatId = robotItem.getChatId();
+			String chatId = robotItem.chat_id;
 			LogHelper.log(TAG, "Robot Chat id = " + chatId);
 			return chatId;
 		}
@@ -38,8 +38,4 @@ public class XMPPUtils {
 		return userId;
 
 	}
-	public static String  appendJabberDomain(String userId, String domain) {
-		return userId + domain;
-	}
-
 }

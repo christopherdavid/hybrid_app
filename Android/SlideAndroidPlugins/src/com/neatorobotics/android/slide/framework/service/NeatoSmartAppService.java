@@ -56,30 +56,31 @@ import com.neatorobotics.android.slide.framework.xmpp.XMPPUtils;
 
 public class NeatoSmartAppService extends Service {
 	
-	public static final String EXTRA_ROBOT_ASSOCIATION_START = "extra.robot.association.start";
-	public static final String EXTRA_ROBOT_ASSOCIATION_STATUS = "extra.robot.association.status";
+	private static final String TAG = NeatoSmartAppService.class.getSimpleName();
+	
 	public static final String EXTRA_RESULT_RECEIVER = "extra.result_receiver";
 	public static final String DISCOVERY_ROBOT_INFO = "robot.info";
 	public static final String NEATO_RESULT_RECEIVER_ACTION = "com.neato.simulator.result_receiver.action";
-	public static final String NEATO_UI_UPDATE_ACTION = "com.neato.simulator.ui.update.action";
-	private static final String TAG = NeatoSmartAppService.class.getSimpleName();
+	
 	private TcpConnectionHelper mTcpConnectionHelper;
 	private XMPPConnectionHelper mXMPPConnectionHelper;
 	private RobotPeerConnection mRobotPeerConnection;
+	
 	private static final int COMMAND_PACKET_SIGNATURE = 0xCafeBabe;
 	private static final int COMMAND_PACKET_VERSION = 1;
+	private static final int ROBOT_NOTIFICATION_ID = 100; // arbitrary number
+	
 	private Handler mHandler = new Handler();
 	private ResultReceiver mResultReceiver;
-	private static final int ROBOT_NOTIFICATION_ID = 100; // arbitrary number
-	private static SparseBooleanArray notificationComamnds = new SparseBooleanArray();
+	private static SparseBooleanArray notificationCommands = new SparseBooleanArray();
 	
 	static {
 		// Add more notification commands here
 		// Notification commands are always sent to the plugin layers
-		notificationComamnds.append(RobotCommandPacketConstants.COMMAND_GET_ROBOT_STATE, true);
-		notificationComamnds.append(RobotCommandPacketConstants.COMMAND_STATUS_NOTIFICATION, true);
-		notificationComamnds.append(RobotCommandPacketConstants.COMMAND_REGISTER_STATUS_NOTIFICATIONS, true);
-		notificationComamnds.append(RobotCommandPacketConstants.COMMAND_UNREGISTER_STATUS_NOTIFICATIONS, true);
+		notificationCommands.append(RobotCommandPacketConstants.COMMAND_GET_ROBOT_STATE, true);
+		notificationCommands.append(RobotCommandPacketConstants.COMMAND_STATUS_NOTIFICATION, true);
+		notificationCommands.append(RobotCommandPacketConstants.COMMAND_REGISTER_STATUS_NOTIFICATIONS, true);
+		notificationCommands.append(RobotCommandPacketConstants.COMMAND_UNREGISTER_STATUS_NOTIFICATIONS, true);
 	}
 
 
@@ -88,7 +89,6 @@ public class NeatoSmartAppService extends Service {
 		@Override
 		public void onConnectFailed() {
 			LogHelper.log(TAG, "XMPP Connection failed");
-			
 		}
 
 		@Override
@@ -255,7 +255,7 @@ public class NeatoSmartAppService extends Service {
 			LogHelper.log(TAG, "isNotificationCommandResponse - Command = " + commandData);
 			if (!TextUtils.isEmpty(commandData)) {
 				int commandId = Integer.valueOf(commandData);	
-				return notificationComamnds.get(commandId);
+				return notificationCommands.get(commandId);
 			}
 		} 
 		return false;
@@ -504,8 +504,8 @@ public class NeatoSmartAppService extends Service {
 			LogHelper.logD(TAG, "registerRobotNotifications called for RobotId = " + robotId);
 			UserItem userItem = UserHelper.getLoggedInUserDetails(NeatoSmartAppService.this);			
 			Map<String, String> requestParams = new HashMap<String, String>();
-			requestParams.put(RobotCommandPacketConstants.KEY_USER_ID, userItem.getId());
-			requestParams.put(RobotCommandPacketConstants.KEY_CHAT_ID, userItem.getChatId());
+			requestParams.put(RobotCommandPacketConstants.KEY_USER_ID, userItem.id);
+			requestParams.put(RobotCommandPacketConstants.KEY_CHAT_ID, userItem.chat_id);
 			
 			RequestPacket request = RequestPacket.createRobotCommandWithParams(RobotCommandPacketConstants.COMMAND_REGISTER_STATUS_NOTIFICATIONS, requestParams);
 			String requestId = AppUtils.generateNewRequestId(getApplicationContext()); 
@@ -520,7 +520,7 @@ public class NeatoSmartAppService extends Service {
 			LogHelper.logD(TAG, "unregisterRobotNotifications called for RobotId = " + robotId);
 			UserItem userItem = UserHelper.getLoggedInUserDetails(NeatoSmartAppService.this);
 			Map<String, String> requestParams = new HashMap<String, String>();
-			requestParams.put(RobotCommandPacketConstants.KEY_USER_ID, userItem.getId());			
+			requestParams.put(RobotCommandPacketConstants.KEY_USER_ID, userItem.id);			
 			
 			RequestPacket request = RequestPacket.createRobotCommandWithParams(RobotCommandPacketConstants.COMMAND_UNREGISTER_STATUS_NOTIFICATIONS,
 																				requestParams);

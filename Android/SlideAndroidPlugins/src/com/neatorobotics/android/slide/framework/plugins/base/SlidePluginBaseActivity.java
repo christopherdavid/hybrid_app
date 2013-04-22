@@ -42,6 +42,6 @@ public class SlidePluginBaseActivity extends DroidGap {
 	// Prevent back button from the activity and implement the behaviour in the UI.
 	@Override
 	public void onBackPressed() {
-		
+		LogHelper.logD(TAG, "onBackPressed called");
 	}
 }

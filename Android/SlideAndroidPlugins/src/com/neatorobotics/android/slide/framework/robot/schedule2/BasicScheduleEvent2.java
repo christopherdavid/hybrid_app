@@ -25,6 +25,7 @@ public class BasicScheduleEvent2 implements Schedule2 {
 
 	public BasicScheduleEvent2(String eventId) {	
 		mEventId = eventId;
+		mCleaningMode = String.valueOf(SchedulerConstants2.CLEANING_MODE_NORMAL);
 	}
 	
 	public BasicScheduleEvent2(String eventId, Day day, ScheduleTimeObject2 startTime, 

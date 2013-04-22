@@ -285,8 +285,9 @@ public class RobotSchedulerManager2 {
 	// To be called from secondary thread. This is a temp function. Later when
 	// webservice starts sending version along with schedule data
 	// This function can be removed.
-	private String getCurrentScheduleVerion(String serverId) {
-		String robotId = ScheduleHelper.getRobotIdForSchedule(mContext, serverId);
+	private String getCurrentScheduleVerion(String localId) {
+		String robotId = ScheduleHelper.getRobotIdForSchedule(mContext, localId);
+		String serverId = ScheduleHelper.getScheduleServerId(mContext, localId);
 		String currentVersion = null;
 		GetNeatoRobotSchedulesResult schedulesResult = NeatoRobotScheduleWebservicesHelper.getNeatoRobotSchedulesRequest(mContext, robotId);
 		if (schedulesResult.success()) {

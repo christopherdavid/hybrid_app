@@ -17,10 +17,10 @@ public class NeatoWebConstants {
 	
 	
 	public static final int DEV_SERVER_ID = 1003;
-	private static final String DEV_BASE_JSON_URL = "http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json";
+	private static final String DEV_BASE_JSON_URL = "http://neatodev.rajatogo.com/api/rest/json";
 	private static final String DEV_API_KEY = "1e26686d806d82144a71ea9a99d1b3169adaad917";
 	private static final String DEV_XMPP_SERVER_DOMAIN = "rajatogo.com";
-	private static final String DEV_SERVER_URL = "http://neatodev.rajatogo.com/Server_Yii/Neato";
+	private static final String DEV_SERVER_URL = "http://neatodev.rajatogo.com";
 	
 	
 	public static final int DEMO_SERVER_ID = 1004;
