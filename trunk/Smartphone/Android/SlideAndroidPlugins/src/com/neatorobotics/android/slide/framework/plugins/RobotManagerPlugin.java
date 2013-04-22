@@ -82,7 +82,8 @@ public class RobotManagerPlugin extends Plugin {
 		GET_SCHEDULE_DATA, GET_SCHEDULE_EVENTS, ADD_ROBOT_SCHEDULE_EVENT,
 		GET_SCHEDULE_EVENT_DATA, UPDATE_ROBOT_SCHEDULE_EVENT, DELETE_ROBOT_SCHEDULE_EVENT, 
 		UPDATE_SCHEDULE, CREATE_SCHEDULE, SYNC_SCHEDULE_FROM_SERVER, SET_SPOT_DEFINITION,
-		GET_SPOT_DEFINITION, START_CLEANING, STOP_CLEANING, PAUSE_CLEANING, RESUME_CLEANING};
+		GET_SPOT_DEFINITION, START_CLEANING, STOP_CLEANING, PAUSE_CLEANING, RESUME_CLEANING,
+		DRIVE_ROBOT};
 
 		static {
 			ACTION_MAP.put(ActionTypes.DISCOVER_NEAR_BY_ROBOTS, RobotManagerPluginMethods.DISCOVER_NEAR_BY_ROBOTS);
@@ -121,6 +122,8 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_MAP.put(ActionTypes.STOP_CLEANING, RobotManagerPluginMethods.STOP_CLEANING);
 			ACTION_MAP.put(ActionTypes.PAUSE_CLEANING, RobotManagerPluginMethods.PAUSE_CLEANING);
 			ACTION_MAP.put(ActionTypes.RESUME_CLEANING, RobotManagerPluginMethods.RESUME_CLEANING);
+
+			ACTION_MAP.put(ActionTypes.DRIVE_ROBOT, RobotManagerPluginMethods.DRIVE_ROBOT);
 		}
 
 		private RobotPluginDiscoveryListener mRobotPluginDiscoveryListener;
@@ -131,19 +134,9 @@ public class RobotManagerPlugin extends Plugin {
 		public PluginResult execute(final String action, final JSONArray data, final String callbackId) {
 
 			LogHelper.logD(TAG, "RobotManagerPlugin execute with action :" + action);
+			LogHelper.logD(TAG, "\tdata :" + data);
 
-			// Plugin's execute method gets called in secondary thread. So Async tasks will fail
-			// For now we run the execute commands in the UI thread and each request does its work in background
-			// thread. We need to remove the Async tasks and run these requests in the secondary threads
-			Activity currentActivity = cordova.getActivity();
-			currentActivity.runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					handlePluginExecute(action, data, callbackId);
-				}
-			});
-
+			handlePluginExecute(action, data, callbackId);
 			PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
 			pluginResult.setKeepCallback(true);
 			return pluginResult;
@@ -305,6 +298,10 @@ public class RobotManagerPlugin extends Plugin {
 				LogHelper.log(TAG, "RESUME_CLEANING COMMAND initiated");
 				sendCleaningCommandToRobot(context, RobotCommandPacketConstants.COMMAND_RESUME_CLEANING, jsonData, callbackId);
 				break;
+			case DRIVE_ROBOT:
+				LogHelper.log(TAG, "DRIVE_ROBOT action initiated");
+				driveRobot(context, jsonData, callbackId);
+				break;
 			}
 		}
 		
@@ -339,6 +336,20 @@ public class RobotManagerPlugin extends Plugin {
 			
 			sendCommandHelper(context, robotId, commandId, commadParamsMap, callbackId);
 			
+		}
+
+		private void driveRobot(Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "driveRobot action initiated in Robot plugin");	
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			String navigationControlId = jsonData.getString(JsonMapKeys.KEY_NAVIGATION_CONTROL_ID);
+			LogHelper.logD(TAG, "Params\n\tRobotId=" + robotId);
+			LogHelper.logD(TAG, "\n\tNavigation Control Id = " + navigationControlId);
+			
+			HashMap<String, String> commandParams = new HashMap<String, String>();
+			commandParams.put(JsonMapKeys.KEY_NAVIGATION_CONTROL_ID, navigationControlId);
+			
+			sendCommandHelper(context, robotId, RobotCommandPacketConstants.COMMAND_DRIVE_ROBOT, 
+					commandParams, callbackId);
 		}
 
 		private void updateSchedule(Context context, RobotJsonData jsonData,
@@ -1374,6 +1385,7 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String STOP_CLEANING = "stopCleaning";
 			public static final String PAUSE_CLEANING = "pauseCleaning";
 			public static final String RESUME_CLEANING = "resumeCleaning";
+			public static final String DRIVE_ROBOT = "driveRobot";
 		}
 
 		private JSONObject getErrorJsonObject(int errorCode, String errMessage) {

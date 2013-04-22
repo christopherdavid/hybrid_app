@@ -105,4 +105,7 @@ public class JsonMapKeys {
 	
 	public static final String KEY_REGISTER_RESULT		= "register";
 	public static final String KEY_UNREGISTER_RESULT 	= "unregister";
+	
+	// Used by navigation APIs
+	public static final String KEY_NAVIGATION_CONTROL_ID = "navigationControlId";
 }

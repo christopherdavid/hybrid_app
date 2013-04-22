@@ -285,7 +285,7 @@ public class RobotSchedulerManager2 {
 	// To be called from secondary thread. This is a temp function. Later when
 	// webservice starts sending version along with schedule data
 	// This function can be removed.
-	private String getCurrentScheduleVerion(String localId) {
+	private String getCurrentScheduleVersion(String localId) {
 		String robotId = ScheduleHelper.getRobotIdForSchedule(mContext, localId);
 		String serverId = ScheduleHelper.getScheduleServerId(mContext, localId);
 		String currentVersion = null;
@@ -335,7 +335,7 @@ public class RobotSchedulerManager2 {
 						LogHelper.log(TAG, "Sucessfully updated scheduling data with robot schedule id: " + serverId);
 						// TODO: Server should send a new version of the schedule saved after updating.
 						if (listener != null) {
-							String newVersion = getCurrentScheduleVerion(localId);
+							String newVersion = getCurrentScheduleVersion(localId);
 							ScheduleHelper.updateScheduleVersion(mContext, localId, newVersion);
 							listener.onSuccess();
 						}
