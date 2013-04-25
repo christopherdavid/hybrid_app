@@ -10,7 +10,7 @@ public class SendMessageToRobotResult extends NeatoWebserviceResult {
 		return ((status == RESPONSE_STATUS_SUCCESS) && ((result != null) && result.success));
 	}
 	
-	public class Result {
+	public static class Result {
 		public boolean success;
 		public String message;	
 	}

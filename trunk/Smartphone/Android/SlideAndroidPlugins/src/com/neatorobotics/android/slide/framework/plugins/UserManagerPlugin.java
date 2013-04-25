@@ -21,11 +21,14 @@ import com.neatorobotics.android.slide.framework.service.RobotCommandServiceMana
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
-import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
 import com.neatorobotics.android.slide.framework.webservice.user.GetNeatoUserDetailsResult;
 import com.neatorobotics.android.slide.framework.webservice.user.GetUserAssociatedRobotsResult;
+import com.neatorobotics.android.slide.framework.webservice.user.IsUserValidatedResult;
+import com.neatorobotics.android.slide.framework.webservice.user.ResendValidationMailResult;
 import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
+import com.neatorobotics.android.slide.framework.webservice.user.UserValidationHelper;
+import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
 
 
 public class UserManagerPlugin extends Plugin {
@@ -205,6 +208,8 @@ public class UserManagerPlugin extends Plugin {
 					userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.email);
 					userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.name);
 					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);
+					int validationCode = UserValidationHelper.getUserValidationStatus(userItem.validation_status);
+					userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
 					
 					RobotCommandServiceManager.loginToXmpp(context);
 					PushNotificationUtils.registerForPushNotification(context);
@@ -274,8 +279,9 @@ public class UserManagerPlugin extends Plugin {
 					userDetails = new JSONObject();
 					userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.email);
 					userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.name);
-					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);						
-				
+					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);
+					int validationCode = UserValidationHelper.getUserValidationStatus(userItem.validation_status);
+					userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
 					RobotCommandServiceManager.loginToXmpp(context);
 					PushNotificationUtils.registerForPushNotification(context);
 				}				
@@ -288,14 +294,14 @@ public class UserManagerPlugin extends Plugin {
 	private void createUser2(final Context context, final UserJsonData jsonData, final String callbackId) {		
 		LogHelper.logD(TAG, "createUser2 Called");
 		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
+		String alternateEmail = jsonData.getString(JsonMapKeys.KEY_ALTERNATE_EMAIL);
 		String password = jsonData.getString(JsonMapKeys.KEY_PASSWORD);
 		String name = jsonData.getString(JsonMapKeys.KEY_USER_NAME);
 
 		LogHelper.logD(TAG, "JSON String: " + jsonData);
-
-		LogHelper.logD(TAG, "Email:" + email + " Name: " + name);
+		LogHelper.logD(TAG, "Email:" + email + " Name: " + name + " Alternate Email: " + alternateEmail);
 		
-		UserManager.getInstance(context).createUser(name, email, password,  new UserRequestListenerWrapper(callbackId) {
+		UserManager.getInstance(context).createUser2(name, email, alternateEmail, password, new UserRequestListenerWrapper(callbackId) {
 
 			@Override
 			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {	
@@ -305,9 +311,11 @@ public class UserManagerPlugin extends Plugin {
 				if (userItem != null) {
 					userDetails = new JSONObject();
 					userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.email);
+					userDetails.put(JsonMapKeys.KEY_ALTERNATE_EMAIL, userItem.alternate_email);
 					userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.name);
-					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);						
-				
+					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);
+					int validationCode = UserValidationHelper.getUserValidationStatus(userItem.validation_status);
+					userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
 					RobotCommandServiceManager.loginToXmpp(context);
 					PushNotificationUtils.registerForPushNotification(context);
 				}		
@@ -324,20 +332,20 @@ public class UserManagerPlugin extends Plugin {
 		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
 		LogHelper.logD(TAG, "Email: " + email);
 		
-		boolean result = UserManager.getInstance(context).isUserValidated(email);
-		
-		JSONObject validUser = new JSONObject();
-		try {
-			validUser.put(JsonMapKeys.KEY_IS_VALIDATED_USER, result);
-		} catch (JSONException e) {
-			LogHelper.logD(TAG, "Exception in is user validated");
-			sendError(callbackId, ErrorTypes.JSON_PARSING_ERROR, e.getMessage());
-			return;
-		}
-		
-		// TODO: Need to call the WebAPI to send error cases from server
-		PluginResult validUserPluginResult = new PluginResult(PluginResult.Status.OK, validUser);
-		success(validUserPluginResult, callbackId);					
+		UserManager.getInstance(context).isUserValidated(email, new UserRequestListenerWrapper(callbackId) {
+			@Override
+			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+				JSONObject resultObj = new JSONObject(); 
+				if ((responseResult != null) && (responseResult instanceof IsUserValidatedResult)) {
+					IsUserValidatedResult validationResult = (IsUserValidatedResult)responseResult;
+					int userValidationCode = UserValidationHelper.getUserValidationStatus(validationResult.result.validation_status);
+					resultObj.put(JsonMapKeys.KEY_VALIDATION_STATUS, userValidationCode);
+					resultObj.put(JsonMapKeys.KEY_MESSAGE, validationResult.result.message);
+				}
+				
+				return resultObj;
+			}
+		});			
 	}
 	
 	private void resendValidationMail(final Context context, UserJsonData jsonData, final String callbackId) {
@@ -346,9 +354,19 @@ public class UserManagerPlugin extends Plugin {
 		
 		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
 		LogHelper.logD(TAG, "Email: " + email);
-		// TODO: Need to call the WebAPI to send the actual result
-		PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
-		success(pluginResult, callbackId);
+		
+		UserManager.getInstance(context).resendValidationMail(email, new UserRequestListenerWrapper(callbackId) {
+			@Override
+			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+				JSONObject resultObj = new JSONObject(); 
+				if ((responseResult != null) && (responseResult instanceof ResendValidationMailResult)) {
+					ResendValidationMailResult resendResult = (ResendValidationMailResult)responseResult;				
+					resultObj.put(JsonMapKeys.KEY_MESSAGE, resendResult.result.message);
+				}
+				
+				return resultObj;
+			}
+		});		
 	}
 	
 	public void getUserDetails(final Context context, UserJsonData jsonData, final String callbackId) {
@@ -507,8 +525,7 @@ public class UserManagerPlugin extends Plugin {
 			LogHelper.logD(TAG, "No robots associated");
 		}
 		return robots;
-	}
-
+	}	
 
 	private class UserRequestListenerWrapper implements WebServiceBaseRequestListener {
 		private String mCallbackId;
@@ -521,6 +538,12 @@ public class UserManagerPlugin extends Plugin {
 		public void onServerError(String errorMessage) {
 			LogHelper.logD(TAG, "Server Error: " + errorMessage);
 			sendError(mCallbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
+		}
+		
+		@Override
+		public void onServerError(int errorType, String errMessage) {
+			LogHelper.logD(TAG, String.format("Server ErrorType = [%d] Message = %s", errorType, errMessage));
+			sendError(mCallbackId, errorType, errMessage);
 		}
 		
 		@Override
