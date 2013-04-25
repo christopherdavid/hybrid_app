@@ -9,6 +9,10 @@ var KEY_MAP_TYPE_BLOB = 2;
 var SCHEDULAR_EVENT_TYPE_QUIET = 0;
 var SCHEDULAR_EVENT_TYPE_CLEAN = 1;
 
+var USER_STATUS_VALIDATED = 0;
+var USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD = -1;
+var USER_STATUS_NOT_VALIDATED = -2;
+
 var DAY_SUNDAY = 0;
 var DAY_MONDAY = 1;
 var DAY_TUEDAY = 2;
@@ -191,7 +195,10 @@ function RobotMgr() {
  * Login using the email and password provided. If credentials matches logs in and returns
  * the User JSON object
  * User JSON object – represents a user, and returned by methods dealing with users.
- * {userId:<userId>, email:<emailId>, username:<username>, isValidated:<isValidated>}
+ * {userId:<userId>, email:<emailId>, username:<username>, alternate_email:<alternate_email>, validation_status:<validation_status>}
+ * validation_status is will be one of the following value
+ * USER_STATUS_VALIDATED, USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD or USER_STATUS_NOT_VALIDATED
+ * If validation_status is USER_STATUS_NOT_VALIDATED, we should not allow user to use the application
  * In case user fails to login error is returned in callbackError
  * All errors are represented by JSON object 
  * {errorCode:<code>, errorMessage:<errorMessage>}
@@ -253,11 +260,12 @@ UserMgr.prototype.createUser = function(email, password, name, callbackSuccess, 
  *  - Email
  *  - password
  *  - UserName
+ *  - alternateEmail (optional)
  *  Returns the User JSON object if successful
  * In case of error callbackError gets called
  */
-UserMgr.prototype.createUser2 = function(email, password, name, callbackSuccess, callbackError) {
-	var registerArray = {'email':email, 'password':password, 'userName':name};
+UserMgr.prototype.createUser2 = function(email, password, name, alternateEmail, callbackSuccess, callbackError) {
+	var registerArray = {'email':email, 'password':password, 'userName':name, 'alternate_email':alternateEmail};
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_CREATE_USER2, [registerArray]);
 };
@@ -285,7 +293,10 @@ UserMgr.prototype.resendValidationMail = function(email, callbackSuccess, callba
  * Name: isUserValidated
  * checks if a user is validated or not
  * returns JSON in success callback
- * {"isValid":"true" or "false"}
+ * {"validation_status":<validation_status>, message:<message>}
+ * validation_status is will be one of the following value
+ * USER_STATUS_VALIDATED, USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD or USER_STATUS_NOT_VALIDATED
+ * If validation_status is USER_STATUS_NOT_VALIDATED, we should not allow user to use the application
  * 
  */
 
@@ -921,7 +932,10 @@ var UserPluginManager = (function() {
 		 * Login using the email and password provided. If credentials matches logs in and returns
 		 * the User JSON object
 		 * User JSON object – represents a user, and returned by methods dealing with users.
-		 * {userId:<userId>, email:<emailId>, username:<username>, isValidated:<isValidated>}
+		 * {userId:<userId>, email:<emailId>, username:<username>, alternate_email:<alternate_email>, validation_status:<validation_status>}
+		 * validation_status is will be one of the following value
+		 * USER_STATUS_VALIDATED, USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD or USER_STATUS_NOT_VALIDATED
+		 * If validation_status is USER_STATUS_NOT_VALIDATED, we should not allow user to use the application
 		 * In case user fails to login error is returned in callbackError
 		 * All errors are represented by JSON object 
 		 * {errorCode:<code>, errorMessage:<errorMessage>}
@@ -966,8 +980,8 @@ var UserPluginManager = (function() {
 		 * In case of error callbackError gets called
 		 */
 		
-		createUser2: function(email, password, name, callbackSuccess, callbackError) {
-			window.plugins.neatoPluginLayer.userMgr.createUser2(email, password, name, callbackSuccess, callbackError);
+		createUser2: function(email, password, name, alternateEmail, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.createUser2(email, password, name, alternateEmail, callbackSuccess, callbackError);
 		},
 		
 		/*
@@ -989,7 +1003,10 @@ var UserPluginManager = (function() {
 		 * Name: isUserValidated
 		 * checks if a user is validated or not
 		 * returns JSON in success callback
-		 * {"isValid":"true" or "false"}
+		 * {"validation_status":<validation_status>, message:<message>}
+		 * validation_status is will be one of the following value
+		 * USER_STATUS_VALIDATED, USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD or USER_STATUS_NOT_VALIDATED
+		 * If validation_status is USER_STATUS_NOT_VALIDATED, we should not allow user to use the application
 		 * 
 		 */
 		

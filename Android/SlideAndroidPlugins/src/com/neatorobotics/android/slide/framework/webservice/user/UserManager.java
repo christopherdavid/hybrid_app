@@ -8,6 +8,7 @@ import android.content.Context;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.utils.UserAttributes;
@@ -42,12 +43,54 @@ public class UserManager {
 		}
 
 		return sUserManager;
+	}	
+	
+	public void isUserValidated(final String email, final WebServiceBaseRequestListener listener) {
+		Runnable task = new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					IsUserValidatedResult validateUserResult = NeatoUserWebservicesHelper.isUserValidatedRequest(mContext, email);
+					LogHelper.logD(TAG, "validation status value is " + validateUserResult.result.validation_status);
+					listener.onReceived(validateUserResult);
+				} 
+				catch (UserUnauthorizedException e) {
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
+				} 
+				catch (NeatoServerException e) {
+					listener.onServerError(e.getErrorMessage());
+				}
+				catch (IOException e) {
+					listener.onNetworkError(e.getMessage());
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
 	}
 	
-	// TODO: Need to call the Web API
-	public boolean isUserValidated(final String email) {
-		return true;
-	}	
+	public void resendValidationMail(final String email, final WebServiceBaseRequestListener listener) {
+		Runnable task = new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					ResendValidationMailResult resendValidationMailResult = NeatoUserWebservicesHelper.resendValidationMailResult(mContext, email);
+					listener.onReceived(resendValidationMailResult);
+				} 
+				catch (UserUnauthorizedException e) {
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
+				} 
+				catch (NeatoServerException e) {
+					listener.onServerError(e.getErrorMessage());
+				} 
+				catch (IOException e) {
+					listener.onNetworkError(e.getMessage());
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
 	
 	public void getUserDetails(final String email, final String auth_token, final WebServiceBaseRequestListener listener) {		
 		Runnable task = new Runnable() {
@@ -57,7 +100,7 @@ public class UserManager {
 					listener.onReceived(result);
 				}
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
 					listener.onServerError(ex.getErrorMessage());
@@ -75,13 +118,14 @@ public class UserManager {
 			public void run() {
 				try {					
 					LoginNeatoUserTokenResult loginResult = NeatoUserWebservicesHelper.loginNeatoUserToken(mContext, email, password);
-					GetNeatoUserDetailsResult result = NeatoUserWebservicesHelper.getNeatoUserDetails(mContext, email , loginResult.mUserAuthToken);						
-					UserHelper.saveLoggedInUserDetails(mContext, result.result, loginResult.mUserAuthToken);
-					setUserAttributesOnServer(loginResult.mUserAuthToken, DeviceUtils.getUserAttributes(mContext));
-					listener.onReceived(result);											
+					LogHelper.logD(TAG, "user validation status is " + loginResult.extra_params.validation_status);
+					GetNeatoUserDetailsResult userDetailsResult = NeatoUserWebservicesHelper.getNeatoUserDetails(mContext, email , loginResult.getAuthToken());
+					UserHelper.saveLoggedInUserDetails(mContext, userDetailsResult.result, loginResult.getAuthToken());
+					setUserAttributesOnServer(loginResult.getAuthToken(), DeviceUtils.getUserAttributes(mContext));
+					listener.onReceived(userDetailsResult);											
 				}
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
 					listener.onServerError(ex.getErrorMessage());
@@ -100,19 +144,48 @@ public class UserManager {
 			public void run() {
 				try {
 					CreateNeatoUserResult createUserResult = NeatoUserWebservicesHelper.createNeatoUserRequestNative(mContext, username, email, password);
-					GetNeatoUserDetailsResult result = NeatoUserWebservicesHelper.getNeatoUserDetails(mContext, email , createUserResult.result.user_handle);
-					UserHelper.saveLoggedInUserDetails(mContext, result.result, createUserResult.result.user_handle);
+					LogHelper.logD(TAG, "user validation status is " + createUserResult.result.validation_status);
+					GetNeatoUserDetailsResult userDetailsResult = NeatoUserWebservicesHelper.getNeatoUserDetails(mContext, email , createUserResult.result.user_handle);
+					UserHelper.saveLoggedInUserDetails(mContext, userDetailsResult.result, createUserResult.result.user_handle);
 					setUserAttributesOnServer(createUserResult.result.user_handle, DeviceUtils.getUserAttributes(mContext));
-					listener.onReceived(result);
+					listener.onReceived(userDetailsResult);
 				}
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
 					listener.onServerError(ex.getErrorMessage());
 				}
 				catch (IOException ex) {
 					listener.onNetworkError(ex.getMessage());
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
+	public void createUser2(final String username, final String email, final String alternateEmail, final String password, 
+			 final WebServiceBaseRequestListener listener) {
+		Runnable task = new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					CreateNeatoUserResult createUserResult = NeatoUserWebservicesHelper.createNeatoUser2RequestNative(mContext, username, email, alternateEmail, password);
+					LogHelper.logD(TAG, "user validation status is " + createUserResult.result.validation_status);
+					GetNeatoUserDetailsResult userDetailsResult = NeatoUserWebservicesHelper.getNeatoUserDetails(mContext, email, createUserResult.result.user_handle);
+					UserHelper.saveLoggedInUserDetails(mContext, userDetailsResult.result, createUserResult.result.user_handle);
+					setUserAttributesOnServer(createUserResult.result.user_handle, DeviceUtils.getUserAttributes(mContext));
+					listener.onReceived(userDetailsResult);
+				} 
+				catch (UserUnauthorizedException e) {
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
+				}
+				catch (NeatoServerException e) {
+					listener.onServerError(e.getErrorMessage());
+				}
+				catch (IOException e) {
+					listener.onNetworkError(e.getMessage());
 				}
 			}
 		};
@@ -137,7 +210,7 @@ public class UserManager {
 					}
 				}
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
 					listener.onServerError(ex.getErrorMessage());
@@ -160,7 +233,7 @@ public class UserManager {
 					listener.onReceived(result);										
 				}
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
 					listener.onServerError(ex.getErrorMessage());
@@ -184,7 +257,7 @@ public class UserManager {
 					listener.onReceived(result);										
 				}
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
 					listener.onServerError(ex.getErrorMessage());
@@ -208,7 +281,7 @@ public class UserManager {
 					listener.onReceived(result);					
 				}
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
 					listener.onServerError(ex.getErrorMessage());
@@ -251,7 +324,7 @@ public class UserManager {
 					listener.onReceived(result);
 				}
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
 					listener.onServerError(ex.getErrorMessage());
@@ -273,7 +346,7 @@ public class UserManager {
 					listener.onReceived(result);
 				}				
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
 					listener.onServerError(ex.getErrorMessage());

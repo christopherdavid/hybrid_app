@@ -184,10 +184,11 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.showProgressBar();
 			
 			var passwordConfirm = document.querySelector('#regpasskeyconfirm').value;
-			UserPluginManager.createUser2(email, password, name, neatoSmartApp.successRegister, neatoSmartApp.errorRegister);
+			UserPluginManager.createUser2(email, password, name, "", neatoSmartApp.successRegister, neatoSmartApp.errorRegister);
 		},
 
 		successRegister: function(result) {
+			localStorage.setItem('loggedIn', 1);
 			neatoSmartApp.setResponseText(result);
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.hideRegisterShowHomePage();
@@ -2588,10 +2589,16 @@ var neatoSmartApp = (function() {
 		},
 		loaded: function() {	
 			if (neatoSmartApp.isLoggedIn() == 1) {
-				// TODO: right now checking in JS. Has to check within native.
-
-				neatoSmartApp.showUserHomepage();
-				//neatoSmartApp.showWelcomePage();
+				
+				var email = localStorage.getItem('email');
+				if (email != null) {
+					neatoSmartApp.showProgressBar();
+					UserPluginManager.isUserValidated(email, neatoSmartApp.successUserValidation, neatoSmartApp.errorUserValidation);
+				}				
+				else {
+					localStorage.setItem('loggedIn', 0);
+					neatoSmartApp.showWelcomePage();
+				}
 			}
 			else {
 				neatoSmartApp.showWelcomePage();
@@ -2622,6 +2629,26 @@ var neatoSmartApp = (function() {
 			document.addEventListener("menubutton", neatoSmartApp.menuButtonPressed, false);
 		},
 
+		successUserValidation: function(result) {
+			neatoSmartApp.setResponseText(result);
+			neatoSmartApp.hideProgressBar();
+			// If validation status code is -2 means logged-in email address has not been validated.
+			// then display Welcome screen 
+			var validationStatus = result['validation_status'];
+			if (validationStatus != USER_STATUS_NOT_VALIDATED) {
+				neatoSmartApp.showUserHomepage();
+			}
+			else {
+				neatoSmartApp.showWelcomePage();
+			}			
+		},
+		
+		errorUserValidation: function(error) {
+			neatoSmartApp.setResponseText(error);
+			neatoSmartApp.hideProgressBar();
+			neatoSmartApp.showWelcomePage();
+		},
+		
 		isLoggedIn: function() {
 			return localStorage.getItem('loggedIn');
 		},

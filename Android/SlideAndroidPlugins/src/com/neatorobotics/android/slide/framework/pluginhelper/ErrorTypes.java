@@ -16,4 +16,5 @@ public class ErrorTypes {
 	public static final int ERROR_DB_ERROR = 1011;
 	public static final int JSON_CREATION_ERROR = 1012;
 	public static final int INVALID_PARAMETER = 1013;
+	public static final int ERROR_TYPE_USER_UNAUTHORIZED = 1014;
 }

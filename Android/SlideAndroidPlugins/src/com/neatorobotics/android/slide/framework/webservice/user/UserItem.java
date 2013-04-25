@@ -16,6 +16,9 @@ public class UserItem {
 	
 	public ArrayList<RobotItem> robots = new ArrayList<RobotItem>();
 	
+	public String alternate_email;
+	public int validation_status;
+	
 	public void addAssociatedRobot(RobotItem robot)	{
 		robots.add(robot);
 	}
@@ -32,12 +35,6 @@ public class UserItem {
 	public int getAssociateRobotCount()
 	{
 		return robots.size();
-	}
-	
-	// TODO: As of now always returns true
-	// When we have new server API, we need to revisit this
-	public boolean isValidated() {
-		return true;
 	}
 	
 	public String toString()

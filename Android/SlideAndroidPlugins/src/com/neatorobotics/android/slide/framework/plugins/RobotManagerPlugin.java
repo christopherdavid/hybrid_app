@@ -2,14 +2,12 @@ package com.neatorobotics.android.slide.framework.plugins;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.cordova.api.Plugin;
 import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;

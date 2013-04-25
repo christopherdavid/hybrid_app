@@ -1,16 +1,25 @@
 package com.neatorobotics.android.slide.framework.webservice.user;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import android.text.TextUtils;
+
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 
 
-public class LoginNeatoUserTokenResult extends NeatoWebserviceResult{
+public class LoginNeatoUserTokenResult extends NeatoWebserviceResult{	
+	public ExtraParams extra_params;	
 	
-	@JsonProperty(value="result")
-	public String mUserAuthToken;
+	public String result;
+	
+	public String getAuthToken() {
+		return result;
+	}
 	
 	public boolean success() {
-		return ((status == RESPONSE_STATUS_SUCCESS) && (mUserAuthToken != null));
+		return ((status == RESPONSE_STATUS_SUCCESS) && (!TextUtils.isEmpty(result)));
 	}
-
+	
+	public static class ExtraParams {
+		public int validation_status;
+		public String message;
+	}
 }
