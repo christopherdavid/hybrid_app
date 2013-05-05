@@ -78,6 +78,11 @@ var ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS  = "unregisterRobotNotifications"
 var ACTION_TYPE_SET_SPOT_DEFINITION				= "setSpotDefinition";
 var ACTION_TYPE_GET_SPOT_DEFINITION				= "getSpotDefinition";
 var ACTION_TYPE_DRIVE_ROBOT						= "driveRobot";
+var ACTION_TYPE_TURN_VACUUM_ON_OFF				= "turnVacuumOnOff";
+var ACTION_TYPE_TURN_WIFI_ON_OFF				= "turnWiFiOnOff";
+var ACTION_TYPE_TURN_NOTIFICATION_ON_OFF		= "turnNotificationOnOff";
+var ACTION_TYPE_IS_NOTIFICATION_ENABLED			= "isNotificationEnabled";
+var ACTION_TYPE_GET_NOTIFICATION_SETTINGS		= "getNotificationSettings";
 
 var ACTION_TYPE_START_CLEANING					= "startCleaning";
 var ACTION_TYPE_STOP_CLEANING					= "stopCleaning";
@@ -95,7 +100,8 @@ var ACTION_TYPE_ADD_ROBOT_SCHEDULE_EVENT 		= "addScheduleEventData";
 var ACTION_TYPE_GET_SCHEDULE_EVENTS 			= "getScheduleEvents";
 var ACTION_TYPE_GET_SCHEDULE_DATA 				= "getScheduleData";
 var ACTION_TYPE_CREATE_SCHEDULE 				= "createSchedule";
-
+var ACTION_TYPE_IS_SCHEDULE_ENABLED 			= "isScheduleEnabled";
+var ACTION_TYPE_ENABLE_SCHEDUL					= "enableSchedule";
 
 
 
@@ -159,6 +165,15 @@ var NAVIGATION_CONTROL_3 = 3;
 var NAVIGATION_CONTROL_4 = 4;
 var NAVIGATION_CONTROL_5 = 5;
 var NAVIGATION_CONTROL_BACK = 6;
+var FLAG_ON = 1;
+var FLAG_OFF = 0;
+
+//Special notification Ids - Must be 2 to power N (same values must be defined
+//in Plug-in and Robot)
+var NOTIFICATIONS_GLOBAL_OPTION = "global";
+var NOTIFICATION_ROBOT_STUCK = "101";
+var NOTIFICATION_DIRT_BIN_FULL = "102";
+var NOTIFICATION_CLEANING_DONE = "103";
 
 if(!window.plugins) {
 	window.plugins = {};
@@ -413,6 +428,39 @@ UserMgr.prototype.disassociateAllRobots = function(email, callbackSuccess, callb
 			ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS, [disassociateAllRobotsArray]);
 };
 
+/*
+ * Name: turnNotificationOnoff  
+ * Switch on/off the global & individual push notification settings
+ * In error case error callback gets called with error JSON object
+ */
+UserMgr.prototype.turnNotificationOnoff = function(email, notificationId, enableNotification, 
+		callbackSuccess, callbackError) {
+	var commandParams = {'email':email, 'notificationId':notificationId, 'on':enableNotification};
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_TURN_NOTIFICATION_ON_OFF, [commandParams]);
+};
+
+/*
+ * Name: isNotificationEnabled  
+ * Fetch the single push notification setting (Enable/Disable) based on NotificationId
+ * In error case error callback gets called with error JSON object
+ */
+UserMgr.prototype.isNotificationEnabled = function(email, notificationId, callbackSuccess, callbackError) {
+	var commandParams = {'email':email, 'notificationId':notificationId};
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_IS_NOTIFICATION_ENABLED, [commandParams]);
+};
+
+/*
+ * Name: getNotificationSettings  
+ * Fetch all global & individual push notification options settings
+ * In error case error callback gets called with error JSON object
+ */
+UserMgr.prototype.getNotificationSettings = function(email, callbackSuccess, callbackError) {	
+	var commandParams = {'email':email};
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_NOTIFICATION_SETTINGS, [commandParams]);
+};
 
 // ***********************ROBOT PLUGIN METHODS ****************************
 
@@ -850,6 +898,42 @@ RobotMgr.prototype.driveRobot = function(robotId, navigationControlId, callbackS
 };
 
 /*
+ * Name: turnVaccumOnOff
+ * Turn Vacuum On or Off on the robot
+ * Params
+ *  - robotId: Value as string. (Must be a valid robotId)
+ *  - flag: Value as integer. Value Must be one of FLAG_ON or FLAG_OFF
+ * In case of success, callbackSuccess is called with response as OK.
+ * In case of an error, callbackError is called with error JSON below:
+ * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+ */
+RobotMgr.prototype.turnVaccumOnOff = function(robotId, on, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId, 'on':on};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_TURN_VACUUM_ON_OFF, [commandParams]);
+};
+
+/*
+ * Name: turnWiFiOnOff
+ * Turn WiFi On or Off on the robot. If WiFi is to be turned off then duration
+ * must be specified (in secs)
+ * Params
+ *  - robotId: Value as string. (Must be a valid robotId)
+ *  - flag: Value as integer. Value musMust be one of FLAG_ON or FLAG_OFF
+ *  - wiFiTurnOffDurationInSec: Value as integer. Must be secs.
+ * In case of success, callbackSuccess is called with response as OK.
+ * In case of an error, callbackError is called with error JSON below:
+ * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+ */
+RobotMgr.prototype.turnWiFiOnOff = function(robotId, on, wiFiTurnOnDurationInSec, callbackSuccess, callbackError) {
+	var onoffInfo = {'flagOnOff': on, 'wiFiTurnOffDurationInSec': wiFiTurnOnDurationInSec};
+	var params = {'params': onoffInfo};
+	var commandArray = {'robotId':robotId, 'commandParams':params};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_TURN_WIFI_ON_OFF, [commandArray]);
+};
+
+/*
  * Name: startCleaning
  * Sends "start cleaning" command to the robot. 
  *  - robotId: Value as string. (Must be a valid robotId)
@@ -924,6 +1008,43 @@ RobotMgr.prototype.resumeCleaning = function(robotId, callbackSuccess, callbackE
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_RESUME_CLEANING, [commandArray]);
 };
+
+/*
+* Name: isScheduleEnabled
+* Checks if Schedule is enabled on Server for the specific robot
+* Params
+*  - robotId: Value as string. (Must be a valid robotId)
+*  - scheduleType (0 for Basic and 1 for Advanced). As of now only basic type is supported
+*  Returns: a JSON Object
+*  {“isScheduleEnabled”:true/false, "scheduleType":<scheduleType>, "robotId":<robotId>}
+*  
+*/
+RobotMgr.prototype.isScheduleEnabled = function (robotId, scheduleType, callbackSuccess, callbackError) {
+	var params = {'robotId':robotId, 'scheduleType':scheduleType};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_IS_SCHEDULE_ENABLED, [params]);
+};
+
+
+/*
+* Name: enableSchedule
+* Enable/Disable Schedule on the Server for the specific robot
+* Params
+*  - robotId: Value as string. (Must be a valid robotId)
+*  - scheduleType (0 for Basic and 1 for Advanced). As of now only basic type is supported
+*  - enable true to enable and false to disable the schedule
+*  Returns: a JSON Object
+*  {“isScheduleEnabled”:true/false, "scheduleType":<scheduleType>, "robotId":<robotId>}
+*  
+*/
+RobotMgr.prototype.enableSchedule = function (robotId, scheduleType, enable, callbackSuccess, callbackError) {
+	var params = {'robotId':robotId, 'scheduleType':scheduleType, 'enableSchedule':enable};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_ENABLE_SCHEDUL, [params]);
+};
+
+
+
 
 var UserPluginManager = (function() {
 	return {
@@ -1116,6 +1237,20 @@ var UserPluginManager = (function() {
 
 		forgetPassword: function(email, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.forgetPassword(email, callbackSuccess, callbackError);
+		},		
+		
+		turnNotificationOnoff: function(email, notificationId, enableNotification, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.turnNotificationOnoff(email, notificationId, enableNotification, 
+						callbackSuccess, callbackError);
+		},
+
+		isNotificationEnabled: function(email, notificationId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.isNotificationEnabled(email, notificationId, 
+						callbackSuccess, callbackError);
+		},
+		
+		getNotificationSettings: function(email, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.getNotificationSettings(email, callbackSuccess, callbackError);
 		}
 	}
 }());
@@ -1318,6 +1453,39 @@ var RobotPluginManager = (function() {
 					callbackSuccess, callbackError);
 		},
 
+		/*
+		 * Name: turnVaccumOnOff
+		 * Turn Vacuum On or Off on the robot. This internally calls turnVaccumOnOff 
+		 * method of "window.plugins.neatoPluginLayer.robotMgr" 
+		 * Params
+		 *  - robotId: Value as string. (Must be a valid robotId)
+		 *  - flag: Value as integer. Value Must be one of FLAG_ON or FLAG_OFF
+		 * In case of success, callbackSuccess is called with response as OK.
+		 * In case of an error, callbackError is called with error JSON below:
+		 * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+		 */
+		turnVaccumOnOff: function(robotId, flag, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.turnVaccumOnOff(robotId, flag, callbackSuccess, callbackError);
+		},
+
+		/*
+		 * Name: turnWiFiOnOff
+		 * Turn WiFi On or Off on the robot. If WiFi is to be turned off then duration
+		 * must be specified (in secs). This internally calls turnWiFiOnOff method of 
+		 * "window.plugins.neatoPluginLayer.robotMgr" 
+		 * Params
+		 *  - robotId: Value as string. (Must be a valid robotId)
+		 *  - flag: Value as integer. Value Must be one of FLAG_ON or FLAG_OFF
+		 *  - wiFiTurnOnDurationInSec: Value as integer. Must be secs.
+		 * In case of success, callbackSuccess is called with response as OK.
+		 * In case of an error, callbackError is called with error JSON below:
+		 * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+		 */
+		turnWiFiOnOff: function(robotId, flag, wiFiTurnOnDurationInSec, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.turnWiFiOnOff(robotId, flag, wiFiTurnOnDurationInSec, 
+					callbackSuccess, callbackError);
+		},
+		
 		/*
 		 * Name: setRobotName (Deprecated use setRobotName2). setRobotName2 returns the updated Robot infomration
 		 * Set the Robot Name
@@ -1544,6 +1712,34 @@ var RobotPluginManager = (function() {
 		 */
 		getScheduleData: function(scheduleId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getScheduleData(scheduleId, callbackSuccess, callbackError);
+		},
+		/*
+ 		* Name: isScheduleEnabled
+ 		* Checks if Schedule is enabled on Server for the specific robot
+ 		* Params
+ 		*  - robotId: Value as string. (Must be a valid robotId)
+ 		*  - scheduleType (0 for Basic and 1 for Advanced). As of now only basic type is supported
+ 		*  Returns: a JSON Object
+ 		*  {“isScheduleEnabled”:true/false, "scheduleType":<scheduleType>, "robotId":<robotId>}
+ 		*  
+ 		*/
+		isScheduleEnabled: function(robotId, scheduleType, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.isScheduleEnabled(robotId, scheduleType, callbackSuccess, callbackError);
+		}, 
+		
+		/*
+		* Name: enableSchedule
+		* Enable/Disable Schedule on the Server for the specific robot
+		* Params
+		*  - robotId: Value as string. (Must be a valid robotId)
+		*  - scheduleType (0 for Basic and 1 for Advanced). As of now only basic type is supported
+		*  - enable true to enable and false to disable the schedule
+		*  Returns: a JSON Object
+		*  {“isScheduleEnabled”:true/false, "scheduleType":<scheduleType>, "robotId":<robotId>}
+		*  
+		*/
+		enableSchedule: function(robotId, scheduleType, enable, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.enableSchedule(robotId, scheduleType, enable, callbackSuccess, callbackError);
 		}
 		
 	}

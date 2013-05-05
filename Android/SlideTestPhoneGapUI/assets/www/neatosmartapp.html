@@ -173,6 +173,7 @@
 		<br><input type="button" id="btnPauseCleaningCommand" value="Pause Cleaning (Deprecated)" class="gradientButton"></input>
 		<br><input type="button" id="btnEnableSchedule" value="Enable Schedule (New)" class="gradientButton"></input>
 		<br><input type="button" id="btnDisableSchedule" value="Disable Schedule (New)" class="gradientButton"></input>
+		<br><input type="button" id="btnIsScheduleEnabled" value="Is Schedule Enabled (New)" class="gradientButton"></input>
 		<br><input type="button" id="btnSetRobotClock" value="Set Robot Clock (New)" class="gradientButton"></input>
 		<br><input type="button" id="btnTestGoToRobotMap" value="Show Robot Map" class="gradientButton"></input>
 		<br><input type="button" id="btnTestDissociateRobot" value="Dissociate Robot" class="gradientButton"></input>	
@@ -181,7 +182,8 @@
 		<br><input type="button" id="btnTestUserDetail" value="User Detail" class="gradientButton"></input>	
 		<br><input type="button" id="btnRefreshUI" value="Refresh UI" class="gradientButton" ></input>
 		<br><input type="button" id="btnValidateUser" value="Is User Validated" class="gradientButton" ></input>						
-		
+		<br><input type="button" id="btnTurnVacuumOnOff" value="Turn Robot Vacuum ON" class="gradientButton" ></input>
+		<br><input type="button" id="btnManageRobotWiFi" value="Manage Robot WiFi" class="gradientButton" ></input>
 	</section>
 	
 	<section id="cleaningAPIs"  aria-hidden=true>
@@ -247,10 +249,52 @@
 		<div class="defaultSectionHeader">Robot Settings</div>		 		
 		<br><br><input type="button" id="btnGoToSetRobotName" value="Set Name" class="gradientButton"></input>
 		<br><input type="button" id="btnGetRobotDetail" value="Robot Detail" class="gradientButton"></input>
-		<br><input type="button" id="btnEnableNotifications" value="Notifications ON" class="gradientButton"></input>		
+		<br><input type="button" id="btnEnableNotifications" value="Notifications ON" class="gradientButton"></input>	
+		<br><input type="button" id="btnNotificationSettings" value="Notifications" class="gradientButton"></input>			
 		<br><input type="button" id="btnGoToAtlas" value="Atlas" class="gradientButton"></input>					
 	</section>
 	
+	<section id="notificationSettings"  aria-hidden=true>
+		<div class="defaultSectionHeader">Notification Settings</div>
+		<input type="button" id="btnEnableGlobalNotifications" value="Notifications ON" class="gradientButton"></input>
+		<br>
+		<br>
+		<div>
+			<label class="headerLabel">Notify me when...</label>
+			<br>
+			<br>
+			<table>
+				<tr class="spaceBelow">			
+					<td width="40%">
+						<label>Robot needs to be cleaned</label>
+					</td>
+					<td>
+						<input type="radio" name="radioDirtBinNotification" id="radioDBNotificationON" value="ON">ON
+						<input type="radio" name="radioDirtBinNotification" id="radioDBNotificationOFF" value="OFF">OFF
+					</td>
+				</tr>
+				<tr class="spaceBelow">			
+					<td width="40%">
+						<label>Cleaning is done</label>
+					</td>
+					<td>
+						<input type="radio" name="radioCleaningDone" id="radioCDNotificationON" value="ON">ON
+						<input type="radio" name="radioCleaningDone" id="radioCDNotificationOFF" value="OFF">OFF
+					</td>
+				</tr>
+				<tr class="spaceBelow">			
+					<td width="40%">
+						<label>Robot is stuck</label>
+					</td>
+					<td>
+						<input type="radio" name="radioRobotStuck" id="radioRSNotificationON" value="ON">ON
+						<input type="radio" name="radioRobotStuck" id="radioRSNotificationOFF" value="OFF">OFF
+					</td>
+				</tr>
+			</table>
+		</div>
+	</section>
+		
 	<section id="setRobotName"  aria-hidden=true>
 		<div class="defaultSectionHeader">Set Robot name</div>
 		<br><br><input type="text" id="robotName" placeholder="Robot name" class="defaultInputText"></input> 		
@@ -370,6 +414,17 @@
 		
 	</section>
 
+	<section id="manageRobotWiFi"  aria-hidden=true>
+		<div class="defaultSectionHeader">Manage Robot WiFi</div>
+		<br>
+		<div id="divRobotWiFiOffDuration" class="cmdParams" style="text-align: left;">
+			<label>WiFi Turn-Off Duration</label>
+			<br><input type="radio" name="time_period" id="time_5mins">5 Minutes
+			<br><input type="radio" name="time_period" id="time_10mins">10 Minutes
+			<br><input type="radio" name="time_period" id="time_15mins">15 Minutes
+		</div>		
+		<br><input type="button" id="btnTurnWiFiOnOff" value="Turn Robot WiFi ON" class="gradientButton" ></input>
+	</section>
 <label id="responseText"></label>
 <div><center><img src="spinner.gif" id="spinnerImg" style="display:none;" /></center></div>
 	</body>
