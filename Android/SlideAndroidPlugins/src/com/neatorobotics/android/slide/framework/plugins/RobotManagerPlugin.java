@@ -22,6 +22,7 @@ import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
 import com.neatorobotics.android.slide.framework.pluginhelper.ScheduleJsonDataHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ScheduleJsonDataHelper2;
+import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDiscoveryListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotNotificationsListener;
@@ -80,9 +81,10 @@ public class RobotManagerPlugin extends Plugin {
 		REGISTER_ROBOT_NOTIFICATIONS, UNREGISTER_ROBOT_NOTIFICATIONS,
 		GET_SCHEDULE_DATA, GET_SCHEDULE_EVENTS, ADD_ROBOT_SCHEDULE_EVENT,
 		GET_SCHEDULE_EVENT_DATA, UPDATE_ROBOT_SCHEDULE_EVENT, DELETE_ROBOT_SCHEDULE_EVENT, 
-		UPDATE_SCHEDULE, CREATE_SCHEDULE, SYNC_SCHEDULE_FROM_SERVER, SET_SPOT_DEFINITION,
+		UPDATE_SCHEDULE, CREATE_SCHEDULE, SYNC_SCHEDULE_FROM_SERVER, IS_SCHEDULE_ENABLED, 
+		ENABLE_SCHEDULE, SET_SPOT_DEFINITION,
 		GET_SPOT_DEFINITION, START_CLEANING, STOP_CLEANING, PAUSE_CLEANING, RESUME_CLEANING,
-		DRIVE_ROBOT};
+		DRIVE_ROBOT, TURN_VACUUM_ON_OFF, TURN_WIFI_ON_OFF};
 
 		static {
 			ACTION_MAP.put(ActionTypes.DISCOVER_NEAR_BY_ROBOTS, RobotManagerPluginMethods.DISCOVER_NEAR_BY_ROBOTS);
@@ -114,6 +116,9 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_MAP.put(ActionTypes.UPDATE_SCHEDULE, RobotManagerPluginMethods.UPDATE_SCHEDULE);
 			ACTION_MAP.put(ActionTypes.CREATE_SCHEDULE, RobotManagerPluginMethods.CREATE_SCHEDULE);
 			ACTION_MAP.put(ActionTypes.SYNC_SCHEDULE_FROM_SERVER, RobotManagerPluginMethods.SYNC_SCHEDULE_FROM_SERVER);
+			ACTION_MAP.put(ActionTypes.IS_SCHEDULE_ENABLED, RobotManagerPluginMethods.IS_SCHEDULE_ENABLED);
+			ACTION_MAP.put(ActionTypes.ENABLE_SCHEDULE, RobotManagerPluginMethods.ENABLE_SCHEDULE);
+
 			ACTION_MAP.put(ActionTypes.SET_SPOT_DEFINITION, RobotManagerPluginMethods.SET_SPOT_DEFINITION);
 			ACTION_MAP.put(ActionTypes.GET_SPOT_DEFINITION, RobotManagerPluginMethods.GET_SPOT_DEFINITION);
 			
@@ -123,6 +128,9 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_MAP.put(ActionTypes.RESUME_CLEANING, RobotManagerPluginMethods.RESUME_CLEANING);
 
 			ACTION_MAP.put(ActionTypes.DRIVE_ROBOT, RobotManagerPluginMethods.DRIVE_ROBOT);
+			
+			ACTION_MAP.put(ActionTypes.TURN_VACUUM_ON_OFF, RobotManagerPluginMethods.TURN_VACUUM_ON_OFF);
+			ACTION_MAP.put(ActionTypes.TURN_WIFI_ON_OFF, RobotManagerPluginMethods.TURN_WIFI_ON_OFF);			
 		}
 
 		private RobotPluginDiscoveryListener mRobotPluginDiscoveryListener;
@@ -301,9 +309,26 @@ public class RobotManagerPlugin extends Plugin {
 				LogHelper.log(TAG, "DRIVE_ROBOT action initiated");
 				driveRobot(context, jsonData, callbackId);
 				break;
+			case IS_SCHEDULE_ENABLED:
+				LogHelper.log(TAG, "IS_SCHEDULE_ENABLED action initiated");
+				isScheduleEnabled(context, jsonData, callbackId);
+				break;
+			case ENABLE_SCHEDULE:
+				LogHelper.log(TAG, "ENABLE_SCHEDULE action initiated");
+				enableSchedule(context, jsonData, callbackId);
+				break;
+			case TURN_VACUUM_ON_OFF:
+				LogHelper.log(TAG, "TURN_VACUUM_ON_OFF action initiated");
+				turnVacuumOnOff(context, jsonData, callbackId);
+				break;
+			case TURN_WIFI_ON_OFF:
+				LogHelper.log(TAG, "TURN_WIFI_ON_OFF action Initiated");
+				turnWiFiOnOff(context, jsonData, callbackId);
+				break;		
 			}
 		}
 		
+
 		// Private helper method to send the cleaning commands. Keeping Cleaning command helper method separate so that
 		// we can detect the kind of cleaning and the extra params required for the cleaning command
 		private void sendCleaningCommandToRobot(Context context, int commandId, RobotJsonData jsonData,
@@ -350,7 +375,44 @@ public class RobotManagerPlugin extends Plugin {
 			sendCommandHelper(context, robotId, RobotCommandPacketConstants.COMMAND_DRIVE_ROBOT, 
 					commandParams, callbackId);
 		}
+		
+		// Private helper method to turn on/off vacuum
+		// These are utilities functions and can be used by the PhoneGap plugin to turn on/off the
+		// vacuum. As of now there is no UI to turn on/off the vacuum
+		// TODO: We directly send this information to the robot via XMPP. We may want to send
+		// this information to the robot via server
+		// There is no API for get the vacuum state as of now
+		private void turnVacuumOnOff(Context context, RobotJsonData jsonData, String callbackId) {
+			LogHelper.logD(TAG, "turnVacuumOnOff called");
 
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			String flagOn = jsonData.getString(JsonMapKeys.KEY_FLAG_ON);
+
+			HashMap<String, String> commandParamsMap = new HashMap<String, String>();
+			commandParamsMap.put(JsonMapKeys.KEY_FLAG_ON_OFF, flagOn);
+						
+			sendCommandHelper(context, robotId, RobotCommandPacketConstants.COMMAND_TURN_VACUUM_ONOFF, 
+					commandParamsMap, callbackId);
+		}
+
+		// Private helper method to turn on/off WiFi
+		// When switching on the WiFi we also except duration in milliseconds to keep the 
+		// WiFi on. After this time out WiFi may turn off
+		// These are utilities functions and can be used by the PhoneGap plugin to turn on/off the
+		// vacuum. As of now there is no UI to turn on/off the vacuum
+		// TODO: We directly send this information to the robot via XMPP. We may want to send
+		// this information to the robot via server
+		private void turnWiFiOnOff(Context context, RobotJsonData jsonData, String callbackId) {
+			LogHelper.logD(TAG, "turnWiFiOnOff called");
+			
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
+			HashMap<String, String> commadParamsMap = getCommandParams(commandParams);
+			
+			sendCommandHelper(context, robotId, RobotCommandPacketConstants.COMMAND_TURN_WIFI_ONOFF, 
+					commadParamsMap, callbackId);
+		}
+		
 		private void updateSchedule(Context context, RobotJsonData jsonData,
 				final String callbackId) {
 			final String scheduleId = jsonData.getString(JsonMapKeys.KEY_SCHEDULE_ID);
@@ -697,6 +759,49 @@ public class RobotManagerPlugin extends Plugin {
 				}
 			});
 		}
+		
+		// Private helper method to return the schedule enable/disable state.
+		// TODO: Use webservice calls for isScheduleEnabled.
+		private void isScheduleEnabled(Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "isScheduleEnabled action initiated in Robot plugin");
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			int scheduleType = jsonData.getInt(JsonMapKeys.KEY_SCHEDULE_TYPE);
+			JSONObject jsonResult = new JSONObject();
+			try {
+				jsonResult.put(JsonMapKeys.KEY_IS_SCHEDULE_ENABLED, NeatoPrefs.getIsScheduleEnabled(context, scheduleType));
+				jsonResult.put(JsonMapKeys.KEY_SCHEDULE_TYPE, scheduleType);
+				jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+			} catch (JSONException e) {
+				LogHelper.logD(TAG, "Exception in getSpotDefinitionJsonObject", e);
+			}
+			PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
+			pluginResult.setKeepCallback(false);
+			success(pluginResult, callbackId);
+		}
+		
+		// Private helper method to return the schedule enable/disable state.
+		// As of now we are storing the enable/disable status in shared preferences
+		// later we need to call the Web API to enable/disable schedule
+		// TODO: revisit once web service is implemented
+		private void enableSchedule(Context context, RobotJsonData jsonData, String callbackId) {
+			LogHelper.logD(TAG, "enableSchedule called");
+			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			int scheduleType = jsonData.getInt(JsonMapKeys.KEY_SCHEDULE_TYPE);
+			boolean enableSchedule = jsonData.getBoolean(JsonMapKeys.KEY_ENABLE_SCHEDULE);
+			NeatoPrefs.saveIsScheduleEnabled(context, scheduleType, enableSchedule);
+			JSONObject jsonResult = new JSONObject();
+			try {
+				jsonResult.put(JsonMapKeys.KEY_IS_SCHEDULE_ENABLED, NeatoPrefs.getIsScheduleEnabled(context, scheduleType));
+				jsonResult.put(JsonMapKeys.KEY_SCHEDULE_TYPE, scheduleType);
+				jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+			} catch (JSONException e) {
+				LogHelper.logD(TAG, "Exception in getSpotDefinitionJsonObject", e);
+			}
+			PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
+			pluginResult.setKeepCallback(false);
+			success(pluginResult, callbackId);
+			
+		}
 
 		private void setSpotDefinition(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "setSpotDefinition action initiated in Robot plugin");	
@@ -1006,11 +1111,30 @@ public class RobotManagerPlugin extends Plugin {
 				mRobotStateNotificationPluginListener.addCallbackId(robotId, callbackId);
 			}
 			RobotCommandServiceManager.sendCommand2(context, robotId, commandId, params);
+			
+			if (commandId == RobotCommandPacketConstants.COMMAND_ENABLE_SCHEDULE) {
+				saveEnableDisableScheduleState(context, params);
+			}
+			
 			if (commandId != RobotCommandPacketConstants.COMMAND_GET_ROBOT_STATE) {
 				PluginResult pluginStartResult = new PluginResult(PluginResult.Status.OK);
 				pluginStartResult.setKeepCallback(false);
 				success(pluginStartResult,callbackId);
+			} 
+		}
+		
+		// Private helper method to save the schedule enable/disable information
+		// TODO: We need to eventually use the web service to enable/disable schedule
+		private void saveEnableDisableScheduleState(Context context, HashMap<String, String> params) {
+			String scheduleType = params.get(JsonMapKeys.KEY_SCHEDULE_TYPE);
+			String enableSchedule = params.get(JsonMapKeys.KEY_ENABLE_SCHEDULE);
+			if (scheduleType == null || enableSchedule == null) {
+				return;
 			}
+			
+			int type = Integer.valueOf(scheduleType);
+			boolean enable = Boolean.valueOf(enableSchedule);
+			NeatoPrefs.saveIsScheduleEnabled(context, type, enable);
 		}
 
 		private void sendCommand2(Context context, RobotJsonData jsonData, String callbackId) {
@@ -1351,6 +1475,10 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String PAUSE_CLEANING = "pauseCleaning";
 			public static final String RESUME_CLEANING = "resumeCleaning";
 			public static final String DRIVE_ROBOT = "driveRobot";
+			public static final String TURN_VACUUM_ON_OFF = "turnVacuumOnOff";
+			public static final String TURN_WIFI_ON_OFF = "turnWiFiOnOff";
+			public static final String IS_SCHEDULE_ENABLED = "isScheduleEnabled";
+			public static final String ENABLE_SCHEDULE = "enableSchedule";
 		}
 
 		private JSONObject getErrorJsonObject(int errorCode, String errMessage) {

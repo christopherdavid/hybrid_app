@@ -52,6 +52,8 @@ public class JsonMapKeys {
 	public static final String KEY_START_TIME = "startTime";
 	public static final String KEY_END_TIME = "endTime";
 	
+	public static final String KEY_IS_SCHEDULE_ENABLED = "isScheduleEnabled";
+	public static final String KEY_ENABLE_SCHEDULE = "enableSchedule";
 	
 	public static final String KEY_SCHEDULE_TYPE = "scheduleType";
 	public static final String KEY_SCHEDULES = "schedules";
@@ -115,6 +117,8 @@ public class JsonMapKeys {
 	public static final String KEY_NAVIGATION_CONTROL_ID = "navigationControlId";
 	
 	public static final String KEY_FLAG_ON = "on";
+	public static final String KEY_WIFI_TURN_ON_DURATION_INSEC = "wiFiTurnOnDurationInSec";
+	
 	// Used by notifications APIs
 	public static final String KEY_GLOBAL_NOTIFICATIONS = "global";
 	public static final String KEY_NOTIFICATIONS = "notifications";

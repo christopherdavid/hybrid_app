@@ -1,5 +1,8 @@
 package com.neatorobotics.android.slide.framework.prefs;
 
+import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -16,6 +19,11 @@ public class NeatoPrefs {
 	// 
 	private static final String USE_NEW_COMMAND_STRUCTURE = "useNewCommandStructure";
 	private static final boolean DEFAULT_USE_NEW_COMMAND_PACKET_STRUCTURE = false;
+	
+	//TODO: Temporay arrangement till new webservice APIs are exposed for enable/disable schedule
+	private static final String IS_BASIC_SCHEDULE_ENABLED = "isBasicScheduleEnabled";
+	private static final String IS_ADVANCED_SCHEDULE_ENABLED = "isAdvancedScheduleEnabled";
+	private static final boolean DEFAULT_IS_SCHEDULE_ENABLED = true;
 
 	public static boolean savePreferenceBooleanValue(Context context, String preferenceName, boolean preferenceValue) {
 		SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
@@ -124,4 +132,39 @@ public class NeatoPrefs {
 	public static boolean clearManagedRobotSerialId(Context context) {
 		return savePreference(context, NeatoPrefs.MANAGED_ROBOT_SERIAL_ID, "");
 	}
+	
+	// Public static helper to save the schedule enable/disable status
+	// As of now we are saving it in the shared preferences but later we need to
+	// save it on server 
+	// TODO: Needs to revisit once Web API is exposed.
+	public static boolean saveIsScheduleEnabled(Context context, int type, boolean enableSchedule) {
+		
+		if (type == SchedulerConstants2.SCHEDULE_TYPE_BASIC) {
+			return savePreferenceBooleanValue(context,
+					IS_BASIC_SCHEDULE_ENABLED, enableSchedule);
+		} else if (type == SchedulerConstants2.SCHEDULE_TYPE_ADVANCED) {
+			return savePreferenceBooleanValue(context,
+					IS_ADVANCED_SCHEDULE_ENABLED, enableSchedule);
+		}
+		return false;
+	}
+	
+	// Public static helper to return the schedule enable/disable status
+	// As of now we are saving it in the shared preferences but later we need to
+	// save it on server 
+	// TODO: Needs to revisit once Web API is exposed.
+	public static boolean getIsScheduleEnabled(Context context, int type) {
+		if (type == SchedulerConstants2.SCHEDULE_TYPE_BASIC) {
+			LogHelper.log("CHECK", "SCHEDULE_TYPE_BASIC:");
+			return getPreferenceBooleanValue(context,
+					IS_BASIC_SCHEDULE_ENABLED, DEFAULT_IS_SCHEDULE_ENABLED);
+		} else if (type == SchedulerConstants2.SCHEDULE_TYPE_ADVANCED) {
+			LogHelper.log("CHECK", "SCHEDULE_TYPE_ADVANCED:");
+			return getPreferenceBooleanValue(context,
+					IS_ADVANCED_SCHEDULE_ENABLED, DEFAULT_IS_SCHEDULE_ENABLED);
+		}
+		LogHelper.log("CHECK", "false:");
+		return false;
+	}
+	
 }
