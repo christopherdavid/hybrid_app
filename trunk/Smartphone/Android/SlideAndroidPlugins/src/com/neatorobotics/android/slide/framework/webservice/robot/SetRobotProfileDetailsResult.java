@@ -9,22 +9,15 @@ public class SetRobotProfileDetailsResult extends NeatoWebserviceResult {
 	public SetRobotProfileDetailsResult(NeatoHttpResponse response) {
 		super(response);
 	}
-	public SetRobotProfileDetailsResult(int response, int responseStatusCode, String message) {
+	public SetRobotProfileDetailsResult(int response, int responseStatusCode, String msg) {
 		super(response, responseStatusCode);
-		mMessage = message;
-	}
+		message = msg;
+	}	
 	
-	public static final int RESPONSE_STATUS_SUCCESS = 0;
 	public static final int RESULT_STATUS_SUCCESS = 1;
-	
-	@JsonProperty(value="status")
-	public int mStatus = -1; 
-	
-	@JsonProperty(value="message")
-	public String mMessage;	
 
 	@JsonProperty(value="result")
-	public int mResult;
+	public int result;
 
 	public SetRobotProfileDetailsResult() {
 		super();
@@ -32,6 +25,6 @@ public class SetRobotProfileDetailsResult extends NeatoWebserviceResult {
 	
 	@Override
 	public boolean success() {
-		return ((mStatus == RESPONSE_STATUS_SUCCESS) && (mResult == RESULT_STATUS_SUCCESS));
+		return ((status == RESPONSE_STATUS_SUCCESS) && (result == RESULT_STATUS_SUCCESS));
 	}
 }

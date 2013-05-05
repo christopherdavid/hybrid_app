@@ -9,7 +9,7 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 public class NeatoDatabase extends SQLiteOpenHelper {
 	private static final String TAG = NeatoDatabase.class.getSimpleName();
 
-	private static final int DB_VERSION = 4;
+	private static final int DB_VERSION = 5;
 	private static final String DB_NAME = "neato_plugin_smart_apps.db";
 	
 	// Table names
@@ -17,6 +17,7 @@ public class NeatoDatabase extends SQLiteOpenHelper {
 		public static final String TABLE_NAME_USER_INFO  = "user_info";
 		public static final String TABLE_NAME_ROBOT_INFO = "robot_info";
 		public static final String TABLE_NAME_CLEANING_SETTINGS = "cleaning_settings";
+		public static final String TABLE_NAME_NOTIFICATION_SETTINGS = "notification_settings";
 		public static final String TABLE_NAME_ATLAS_INFO = "atlas_info";
 		public static final String TABLE_NAME_GRID_INFO  = "grid_info";
 		public static final String TABLE_NAME_ROBOT_SCHEDULE_IDS = "robot_schedule_ids";
@@ -47,6 +48,12 @@ public class NeatoDatabase extends SQLiteOpenHelper {
 		public static final String COL_NAME_ROBOT_ID 			= "robotId";
 		public static final String COL_NAME_SPOT_AREA_LENGTH 	= "spotAreaLength";
 		public static final String COL_NAME_SPOT_AREA_HEIGHT 	= "spotAreaHeight";
+	}
+	
+	// notification_settings table column names
+	public interface NotificationSettingsColumns {
+		public static final String COL_NAME_EMAIL 			= "email";		
+		public static final String COL_NAME_NOTIFICATION_JSON = "notificationsJson";
 	}
 	
 	// atlas_info table column names
@@ -158,7 +165,13 @@ public class NeatoDatabase extends SQLiteOpenHelper {
 				+ CleaningSettingsColumns.COL_NAME_ROBOT_ID			+ " TEXT PRIMARY KEY, "
 				+ CleaningSettingsColumns.COL_NAME_SPOT_AREA_LENGTH	+ " INTEGER, "
 				+ CleaningSettingsColumns.COL_NAME_SPOT_AREA_HEIGHT	+ " INTEGER )");			
-			
+
+			db.execSQL("CREATE TABLE IF NOT EXISTS " +
+					Tables.TABLE_NAME_NOTIFICATION_SETTINGS
+					+ "("
+					+ NotificationSettingsColumns.COL_NAME_EMAIL			+ " TEXT PRIMARY KEY, "
+					+ NotificationSettingsColumns.COL_NAME_NOTIFICATION_JSON	+ " TEXT )");
+	
 			db.setTransactionSuccessful();
 		}
 		finally {
@@ -176,6 +189,7 @@ public class NeatoDatabase extends SQLiteOpenHelper {
 			db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_SCHEDULE_INFO);
 			db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS);
 			db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_CLEANING_SETTINGS);			
+			db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_NOTIFICATION_SETTINGS);			
 			db.setTransactionSuccessful();
 		}
 		finally {

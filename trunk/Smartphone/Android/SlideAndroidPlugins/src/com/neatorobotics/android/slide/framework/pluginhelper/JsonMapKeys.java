@@ -106,10 +106,24 @@ public class JsonMapKeys {
 	
 	public static final String KEY_EVENT_NOTIFICATION_ID 		= "eventId";
 	public static final String KEY_EVENT_NOTIFICATION_PARAMS 	= "params";
+	public static final String KEY_NOTIFICATION_ID  = "notificationId";	
 	
 	public static final String KEY_REGISTER_RESULT		= "register";
 	public static final String KEY_UNREGISTER_RESULT 	= "unregister";
 	
 	// Used by navigation APIs
 	public static final String KEY_NAVIGATION_CONTROL_ID = "navigationControlId";
+	
+	public static final String KEY_FLAG_ON = "on";
+	// Used by notifications APIs
+	public static final String KEY_GLOBAL_NOTIFICATIONS = "global";
+	public static final String KEY_NOTIFICATIONS = "notifications";
+	public static final String KEY_NOTIFICATION_KEY = "key";
+	public static final String KEY_NOTIFICATION_VALUE = "value";
+	
+	// Used by push notification APIs
+	public static final String KEY_REGISTER_PUSH_NOTIFICATION = "registerPushNotification";
+	public static final String KEY_PUSH_NOTIFICATION_TYPES = "pushNotificationTypes";
+	
+	public static final String KEY_FLAG_ON_OFF = "flagOnOff";
 }

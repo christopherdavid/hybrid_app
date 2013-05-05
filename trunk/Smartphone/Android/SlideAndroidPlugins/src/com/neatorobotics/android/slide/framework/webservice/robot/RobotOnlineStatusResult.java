@@ -1,6 +1,5 @@
 package com.neatorobotics.android.slide.framework.webservice.robot;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 
@@ -12,15 +11,15 @@ import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResul
  * else it will be instantiated from the NeatoHttpResponse object so that only the
  * NeatoWebserviceResult attributes are filled with the error status and reason 
  */
-public class RobotOnlineStatusResult extends NeatoWebserviceResult {
-	public static final int RESPONSE_STATUS_SUCCESS = 0;
+public class RobotOnlineStatusResult extends NeatoWebserviceResult {	
 	
 	public RobotOnlineStatusResult(NeatoHttpResponse response) {
 		super(response);
 	}
-	public RobotOnlineStatusResult(int response, int responseStatusCode, String message) {
+	
+	public RobotOnlineStatusResult(int response, int responseStatusCode, String msg) {
 		super(response, responseStatusCode);
-		mMessage = message;
+		message = msg;
 	}
 	
 	public RobotOnlineStatusResult() {
@@ -29,23 +28,13 @@ public class RobotOnlineStatusResult extends NeatoWebserviceResult {
 	
 	@Override
 	public boolean success() {
-		return ((mStatus == RESPONSE_STATUS_SUCCESS) && (mResult != null));
+		return ((status == RESPONSE_STATUS_SUCCESS) && (result != null));
 	}
 	
-	@JsonProperty(value="status")
-	public int mStatus = -1; 
-	
-	@JsonProperty(value="message")
-	public String mMessage;	
+	public Result result;
 
-	@JsonProperty(value="result")
-	public Result mResult;
-
-	public static class Result {
-		@JsonProperty(value="online")
-		public boolean mOnline;
-		
-		@JsonProperty(value="message")
-		public String mMessage;	
+	public static class Result {		
+		public boolean online;
+		public String message;	
 	}
 }

@@ -17,6 +17,7 @@ import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.UserJsonData;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
+import com.neatorobotics.android.slide.framework.robot.settings.SettingsManager;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
@@ -29,6 +30,7 @@ import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
 import com.neatorobotics.android.slide.framework.webservice.user.UserValidationHelper;
 import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
+import com.neatorobotics.android.slide.framework.webservice.user.settings.RobotNotificationSettingsResult;
 
 
 public class UserManagerPlugin extends Plugin {
@@ -43,7 +45,8 @@ public class UserManagerPlugin extends Plugin {
 										ASSOCIATE_ROBOT, DISASSOCIATE_ROBOT, GET_ASSOCIATED_ROBOTS, 
 										DISASSOCAITE_ALL_ROBOTS, 
 										FORGET_PASSWORD, CHANGE_PASSWORD, CREATE_USER2, RESEND_VALIDATION_MAIL,
-										IS_USER_VALIDATED};
+										IS_USER_VALIDATED, TURN_NOTIFICATION_ON_OFF, 
+										IS_NOTIFICATION_ENABLED, GET_NOTIFICATION_SETTINGS};
 	static {
 		ACTION_MAP.put(ActionTypes.LOGIN, UserManagerPluginMethods.LOGIN);
 		ACTION_MAP.put(ActionTypes.IS_USER_LOGGEDIN, UserManagerPluginMethods.ISLOGGEDIN);
@@ -59,6 +62,9 @@ public class UserManagerPlugin extends Plugin {
 		ACTION_MAP.put(ActionTypes.FORGET_PASSWORD, UserManagerPluginMethods.FORGET_PASSWORD);
 		ACTION_MAP.put(ActionTypes.CHANGE_PASSWORD, UserManagerPluginMethods.CHANGE_PASSWORD);
 		ACTION_MAP.put(ActionTypes.IS_USER_VALIDATED, UserManagerPluginMethods.IS_USER_VALIDATED);
+		ACTION_MAP.put(ActionTypes.TURN_NOTIFICATION_ON_OFF, UserManagerPluginMethods.TURN_NOTIFICATION_ON_OFF);
+		ACTION_MAP.put(ActionTypes.IS_NOTIFICATION_ENABLED, UserManagerPluginMethods.IS_NOTIFICATION_ENABLED);
+		ACTION_MAP.put(ActionTypes.GET_NOTIFICATION_SETTINGS, UserManagerPluginMethods.GET_NOTIFICATION_SETTINGS);
 	}
 	
 	@Override       
@@ -157,6 +163,18 @@ public class UserManagerPlugin extends Plugin {
 			LogHelper.log(TAG, "CHANGE_PASSWORD action initiated");
 			changePassword(context, jsonData, callbackId);
 			break;
+		case TURN_NOTIFICATION_ON_OFF:
+			LogHelper.log(TAG, "TURN_NOTIFICATION_ON_OFF action initiated");
+			turnNotificationOnOff(context, jsonData, callbackId);
+			break;
+		case IS_NOTIFICATION_ENABLED:
+			LogHelper.log(TAG, "IS_NOTIFICATION_ENABLED action initiated");
+			isNotificationEnabled(context, jsonData, callbackId);
+			break;				
+		case GET_NOTIFICATION_SETTINGS:
+			LogHelper.log(TAG, "GET_NOTIFICATION_SETTINGS action initiated");
+			getNotificationSettings(context, jsonData, callbackId);
+			break;
  		}
 	}
 
@@ -166,6 +184,76 @@ public class UserManagerPlugin extends Plugin {
 	}
 
 
+	// Helper method to get the notifications settings
+	public void getNotificationSettings(final Context context, final UserJsonData jsonData, final String callbackId) {
+		LogHelper.logD(TAG, "getNotificationSettings action initiated in Robot plugin");
+		
+		final String emailId = jsonData.getString(JsonMapKeys.KEY_EMAIL);
+		LogHelper.logD(TAG, String.format("Email = %s", emailId));			
+	
+		SettingsManager.getInstance(context).getNotificationSettings(emailId, new UserRequestListenerWrapper(callbackId) {				
+				
+			@Override
+			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+				JSONObject notificationSettings = null;
+				if (responseResult instanceof RobotNotificationSettingsResult) {
+					RobotNotificationSettingsResult result = (RobotNotificationSettingsResult)responseResult;
+					notificationSettings = result.getNotificationsJson();
+				}
+				
+				return notificationSettings;
+			}
+		});		
+	}
+	
+	// Helper method to turn on/off the notifications
+	// Enabling and disabling the notification settings on the server
+	private void turnNotificationOnOff(final Context context, final UserJsonData jsonData, final String callbackId) {
+		LogHelper.logD(TAG, "turnNotificationOnOff action initiated in Robot plugin");
+		final String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
+		
+
+		final String notificationId = jsonData.getString(JsonMapKeys.KEY_NOTIFICATION_ID);
+		// TODO: Add notificationID validation check 
+		
+		final boolean onOffFlag = jsonData.getBoolean(JsonMapKeys.KEY_FLAG_ON);
+
+		LogHelper.logD(TAG, String.format("Email = %s NotificationId = %s Enable = %s", email, notificationId, onOffFlag));
+
+		SettingsManager.getInstance(context).updateNotificationState(email, notificationId, onOffFlag, new UserRequestListenerWrapper(callbackId) {
+			@Override
+			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+				JSONObject notificationSetting = new JSONObject();
+				notificationSetting.put(JsonMapKeys.KEY_NOTIFICATION_KEY, notificationId);
+				notificationSetting.put(JsonMapKeys.KEY_NOTIFICATION_VALUE, onOffFlag);
+				return notificationSetting;
+			}
+		});
+	}
+	
+	private void isNotificationEnabled(Context context, UserJsonData jsonData, final String callbackId) {
+		LogHelper.logD(TAG, "isNotificationEnabled action initiated in Robot plugin");	
+		
+		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
+		final String notificationId = jsonData.getString(JsonMapKeys.KEY_NOTIFICATION_ID);
+		// TODO: Add notificationID validation check
+		LogHelper.logD(TAG, String.format("Email = %s NotificationId = %s", email, notificationId));			
+		
+		SettingsManager.getInstance(context).getNotificationSettings(email, new UserRequestListenerWrapper(callbackId) {				
+			@Override
+			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+				JSONObject notificationSetting = new JSONObject();
+				if (responseResult instanceof RobotNotificationSettingsResult) {
+					RobotNotificationSettingsResult result = (RobotNotificationSettingsResult)responseResult;
+					notificationSetting.put(JsonMapKeys.KEY_NOTIFICATION_KEY, notificationId);
+					notificationSetting.put(JsonMapKeys.KEY_NOTIFICATION_VALUE, result.isNotificationEnable(notificationId));
+				}
+				
+				return notificationSetting;
+			}
+		});
+	}
+	
 	private void forgetPassword (Context context, UserJsonData jsonData, final String callbackId) {
 		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
 		UserManager.getInstance(context).forgetPassword(email, new UserRequestListenerWrapper(callbackId));		
@@ -483,6 +571,9 @@ public class UserManagerPlugin extends Plugin {
 		public static final String DISASSOCAITE_ALL_ROBOTS = "disassociateAllRobots";
 		public static final String FORGET_PASSWORD	= "forgetPassword";
 		public static final String CHANGE_PASSWORD	= "changePassword";
+		public static final String TURN_NOTIFICATION_ON_OFF	= "turnNotificationOnOff";
+		public static final String IS_NOTIFICATION_ENABLED	= "isNotificationEnabled";
+		public static final String GET_NOTIFICATION_SETTINGS = "getNotificationSettings";
 	}
 
 	private JSONObject getErrorJsonObject(int errorCode, String errMessage) {

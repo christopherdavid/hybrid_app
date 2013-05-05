@@ -34,13 +34,13 @@ import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConsta
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.DataConversionUtils;
-import com.neatorobotics.android.slide.framework.webservice.robot.RobotDetailListener;
+import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
+import com.neatorobotics.android.slide.framework.webservice.robot.RobotDetailResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
-import com.neatorobotics.android.slide.framework.webservice.robot.RobotOnlineStatusListener;
+import com.neatorobotics.android.slide.framework.webservice.robot.RobotOnlineStatusResult;
 import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
 import com.neatorobotics.android.slide.framework.robot.settings.SettingsManager;
-import com.neatorobotics.android.slide.framework.webservice.robot.SetRobotProfileDetailsListener;
 import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettingsListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.RobotAtlasWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.RobotAtlasGridWebservicesManager;
@@ -59,6 +59,7 @@ import com.neatorobotics.android.slide.framework.webservice.robot.schedule.Robot
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.RobotSchedulerManager2;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.ScheduleEventListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.ScheduleWebserviceListener;
+import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
 
 
 public class RobotManagerPlugin extends Plugin {
@@ -807,63 +808,44 @@ public class RobotManagerPlugin extends Plugin {
 		private void setRobotName(final Context context, RobotJsonData jsonData,
 				final String callbackId) {
 			LogHelper.logD(TAG, "setRobotName action initiated in Robot plugin");	
-			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			String robotName = jsonData.getString(JsonMapKeys.KEY_ROBOT_NAME);
 			
-			RobotManager.getInstance(context).setRobotName(robotId, robotName, new SetRobotProfileDetailsListener() {
+			RobotManager.getInstance(context).setRobotName(robotId, robotName, new RobotRequestListenerWrapper(callbackId) {
 				
 				@Override
-				public void onComplete(RobotItem item) {
+				public void onReceived(NeatoWebserviceResult responseResult) {	
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
 					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);
-					sendDataChangedCommand(context, item.serial_number, RobotCommandPacketConstants.KEY_ROBOT_DETAILS_CHANGED);
-				}
-
-				@Override
-				public void onServerError(String errMessage) {
-					LogHelper.log(TAG, "Unable to update  robot profile");
-					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "Unable to update  robot profile");
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
+					success(pluginResult, callbackId);					
+					
+					sendDataChangedCommand(context, robotId, RobotCommandPacketConstants.KEY_ROBOT_DETAILS_CHANGED);					
 				}
 			});
 		}
 		
 		private void setRobotName2(final Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "setRobotName2 action initiated in Robot plugin");	
-			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			String robotName = jsonData.getString(JsonMapKeys.KEY_ROBOT_NAME);
 			
-			RobotManager.getInstance(context).setRobotName(robotId, robotName, new SetRobotProfileDetailsListener() {
+			RobotManager.getInstance(context).setRobotName(robotId, robotName, new RobotRequestListenerWrapper(callbackId) {
 				
 				@Override
-				public void onComplete(RobotItem robotItem) {
-					JSONObject robotJsonObj = getRobotDetailJsonObject(robotItem);
-					PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, robotJsonObj);	
-					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);
-					sendDataChangedCommand(context, robotItem.serial_number, RobotCommandPacketConstants.KEY_ROBOT_DETAILS_CHANGED);
-				}
-
-				@Override
-				public void onServerError(String errMessage) {
-					LogHelper.log(TAG, "setRobotName2 - onServerError. Error message = " + errMessage);
-					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, jsonError);
-					pluginResult.setKeepCallback(false);
-					error(pluginResult, callbackId);	
-					
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "setRobotName2 - onNetworkError. Error message = " + errMessage);
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
+				public void onReceived(NeatoWebserviceResult responseResult) {					
+					RobotItem robotItem = RobotHelper.getRobotItem(context, robotId);
+					if (robotItem != null) {
+						JSONObject robotJsonObj = getRobotDetailJsonObject(robotItem);
+						
+						PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, robotJsonObj);	
+						pluginResult.setKeepCallback(false);
+						success(pluginResult, callbackId);
+						
+						sendDataChangedCommand(context, robotItem.serial_number, RobotCommandPacketConstants.KEY_ROBOT_DETAILS_CHANGED);
+					}
+					else {
+						sendError(callbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
+					}
 				}
 			});	
 		}
@@ -872,30 +854,12 @@ public class RobotManagerPlugin extends Plugin {
 			LogHelper.logD(TAG, "getRobotDetail action initiated in Robot plugin");	
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			
-			RobotManager.getInstance(context).getRobotDetail(robotId, new RobotDetailListener() {
+			RobotManager.getInstance(context).getRobotDetail(robotId, new RobotRequestListenerWrapper(callbackId) {
 				
 				@Override
-				public void onRobotDetailReceived(RobotItem robotItem) {
-					LogHelper.log(TAG, "getRobotDetail - onRobotDetailReceived");
-					JSONObject robotJsonObj = getRobotDetailJsonObject(robotItem);
-					PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, robotJsonObj);			
-					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);
-				}
-				
-				@Override
-				public void onServerError(String errMessage) {
-					LogHelper.log(TAG, "getRobotDetail - onServerError");
-					JSONObject jsonError = getErrorJsonObject(ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-					PluginResult pluginResult = new  PluginResult(PluginResult.Status.ERROR, jsonError);
-					pluginResult.setKeepCallback(false);
-					error(pluginResult, callbackId);
-				}
-				
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "getRobotDetail - onNetworkError");
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
+				public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+					JSONObject robotDetail = getRobotDetailJsonObject(responseResult);
+					return robotDetail;
 				}
 			});
 		}
@@ -904,52 +868,55 @@ public class RobotManagerPlugin extends Plugin {
 			LogHelper.logD(TAG, "getRobotOnlineStatus action initiated in Robot plugin");	
 			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			
-			RobotManager.getInstance(context).getRobotOnlineStatus(robotId, new RobotOnlineStatusListener() {
-				@Override
-				public void onComplete(boolean isOnline) {
-					LogHelper.log(TAG, "getRobotOnlineStatus - onComplete = " + isOnline);
-					JSONObject robotOnlineStatusJsonObj = getRobotOnlineStatusJsonObject(robotId, isOnline);
-					PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, robotOnlineStatusJsonObj);			
-					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);
-				}
+			RobotManager.getInstance(context).getRobotOnlineStatus(robotId, new RobotRequestListenerWrapper(callbackId) {
 				
 				@Override
-				public void onServerError(String errMessage) {
-					LogHelper.log(TAG, "getRobotOnlineStatus - onServerError = " + errMessage);					
-					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-				}
-				
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "getRobotOnlineStatus - onNetworkError = " + errMessage);
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-				}				
+				public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+					JSONObject resultJsonObj = null;
+					if (responseResult instanceof RobotOnlineStatusResult) {
+						resultJsonObj = getRobotOnlineStatusJsonObject(robotId, 
+									((RobotOnlineStatusResult)responseResult).result.online);
+						
+					}
+					return resultJsonObj;
+				}						
 			});
 		}
 		
 		private JSONObject getRobotDetailJsonObject(RobotItem robotItem) {
 			JSONObject robotJsonObj = new JSONObject();
-			try {
-				robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotItem.serial_number);
-				robotJsonObj.put(JsonMapKeys.KEY_ROBOT_NAME, robotItem.name);				
-			}
-			catch (JSONException e) {
-				LogHelper.logD(TAG, "Exception in getRobotDetailJsonObject", e);
+			
+			if (robotItem != null) {				
+				try {
+					robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotItem.serial_number);
+					robotJsonObj.put(JsonMapKeys.KEY_ROBOT_NAME, robotItem.name);				
+				}
+				catch (JSONException e) {
+					LogHelper.logD(TAG, "Exception in getRobotDetailJsonObject", e);
+				}
 			}
 			
 			return robotJsonObj;
 		}
 		
-		private JSONObject getRobotOnlineStatusJsonObject(String robotId, boolean online) {
-			JSONObject robotJsonObj = new JSONObject();
-			try {
-				robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
-				robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ONLINE_STATUS, online);				
+		private JSONObject getRobotDetailJsonObject(NeatoWebserviceResult responseResult) throws JSONException {
+			JSONObject robotJsonObj = null;					
+			if ((responseResult != null) && (responseResult instanceof RobotDetailResult)) {
+				RobotItem  robotItem = ((RobotDetailResult)responseResult).result;
+				if (robotItem != null) {
+					robotJsonObj = new JSONObject();
+					robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotItem.serial_number);
+					robotJsonObj.put(JsonMapKeys.KEY_ROBOT_NAME, robotItem.name);	
+				}
 			}
-			catch (JSONException e) {
-				LogHelper.logD(TAG, "Exception in getRobotOnlineStatusJsonObject", e);
-			}
+			
+			return robotJsonObj;
+		}
+		
+		private JSONObject getRobotOnlineStatusJsonObject(String robotId, boolean online) throws JSONException {
+			JSONObject robotJsonObj = new JSONObject();			
+			robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+			robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ONLINE_STATUS, online);				
 			
 			return robotJsonObj;
 		}
@@ -1722,6 +1689,57 @@ public class RobotManagerPlugin extends Plugin {
 		public int getScheduleTypeFromId(Context context, String id) {
 			String scheduleType = ScheduleHelper.getScheduleType(context, id);
 			return SchedulerConstants2.getScheduleIntType(scheduleType);
+		}
+		
+		
+		private class RobotRequestListenerWrapper implements WebServiceBaseRequestListener {
+			private String mCallbackId;
+			
+			public RobotRequestListenerWrapper(String callbackId) {
+				mCallbackId = callbackId;
+			}
+			
+			@Override
+			public void onServerError(String errorMessage) {
+				LogHelper.logD(TAG, "Server Error: " + errorMessage);
+				sendError(mCallbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
+			}
+			
+			@Override
+			public void onNetworkError(String errorMessage) {
+				LogHelper.logD(TAG, "Network Error: " + errorMessage);
+				sendError(mCallbackId, ErrorTypes.ERROR_NETWORK_ERROR, errorMessage);
+			}
+			
+			@Override
+			public void onReceived(NeatoWebserviceResult responseResult) {
+				LogHelper.logD(TAG, "Request processed successfully");
+				try {
+					JSONObject resultObj = getResultObject(responseResult);
+					if (resultObj != null) {
+						PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, resultObj);		
+						success(pluginResult, mCallbackId);
+					}
+					else {
+						LogHelper.logD(TAG, "Unknown Error");
+						sendError(mCallbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
+					}
+				}
+				catch (JSONException ex) {
+					LogHelper.logD(TAG, "JSON Error");
+					sendError(mCallbackId, ErrorTypes.JSON_PARSING_ERROR, ex.getMessage());
+				}
+			}	
+			
+			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+				return new JSONObject(); 
+			}
+
+			@Override
+			public void onServerError(int errorType, String errorMessage) {
+				LogHelper.logD(TAG, "Server Error: " + errorMessage);
+				sendError(mCallbackId, errorType, errorMessage);
+			}
 		}
 }
 
