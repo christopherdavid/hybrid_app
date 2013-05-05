@@ -2,15 +2,14 @@ package com.neatorobotics.android.slide.framework.database;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.AtlasInfoColumns;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.CleaningSettingsColumns;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.GridInfoColumns;
+import com.neatorobotics.android.slide.framework.database.NeatoDatabase.NotificationSettingsColumns;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.RobotInfoColumns;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.ScheduleIdsColumns;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.ScheduleInfoColumns;
@@ -53,6 +52,7 @@ public class DBHelper {
 	private static final String SELECTION_ROBOT_BY_BASIC_SCHEDULE_ID = Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_BASIC_SCHEDULE_ID + " = ?";
 	private static final String SELECTION_ROBOT_BY_ADVANCED_SCHEDULE_ID = Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_ADVANCED_SCHEDULE_ID + " = ?";
 	private static final String SELECTION_CLEANING_SETTINGS_BY_ROBOTID = Tables.TABLE_NAME_CLEANING_SETTINGS + "." + CleaningSettingsColumns.COL_NAME_ROBOT_ID + " = ?";
+	private static final String SELECTION_NOTIFICATION_SETTINGS_BY_ROBOTID = Tables.TABLE_NAME_NOTIFICATION_SETTINGS + "." + NotificationSettingsColumns.COL_NAME_EMAIL + " = ?";
 	
 	private DBHelper (Context context) {
 		mContext = context;
@@ -87,6 +87,7 @@ public class DBHelper {
 		clearAllScheduleInfo();
 		clearAllScheduleIds();
 		clearAllCleaningSettings();
+		clearAllNotificationSettings();
 	}
 	
 	@Override
@@ -850,5 +851,64 @@ public class DBHelper {
 		SQLiteDatabase db = getDatabase();
 		int count = db.delete(Tables.TABLE_NAME_CLEANING_SETTINGS, null, null);
 		LogHelper.logD(TAG, "clearAllCleaningSettings - " + count);
+	}	
+	
+	// Public helper method to update notification settings JSON
+	public boolean saveNotificationSettingsJson(String email, String notificationSettingsJson) {
+		long count = 0;
+
+		ContentValues values = getContentValues(email, notificationSettingsJson);
+		
+		String[] selectionArgs = new String[] {email};
+		SQLiteDatabase db = getDatabase();
+
+		Cursor cursor = db.query(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, 
+				SELECTION_NOTIFICATION_SETTINGS_BY_ROBOTID, selectionArgs, null, null, null);
+		if (cursor.moveToFirst()) {			
+			// Entry exist update it
+			count = db.update(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, values, 
+					SELECTION_NOTIFICATION_SETTINGS_BY_ROBOTID, selectionArgs);
+		}
+		else {
+			// Entry does not exist add one
+			values.put(NotificationSettingsColumns.COL_NAME_EMAIL, email);
+			count = db.insert(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, values);
+		}
+		
+		cursor.close();
+		
+		return (count > 0) ? true : false;
+	}	
+	
+	// Public helper method to return robot notification settings JSON string
+	public String getNotificationSettingsJson(String email) {
+		String notificationsJson = "";
+		
+		SQLiteDatabase db = getDatabase();
+		String[] selectionArgs = new String[] {email};
+		Cursor cursor = db.query(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, 
+				SELECTION_NOTIFICATION_SETTINGS_BY_ROBOTID, selectionArgs, null, null, null);
+		
+		if (cursor.moveToFirst()) {
+			notificationsJson = cursor.getString(cursor.getColumnIndex(NotificationSettingsColumns.COL_NAME_NOTIFICATION_JSON));
+		}
+		cursor.close();
+		
+		return notificationsJson;
+	}
+	
+	public void clearAllNotificationSettings() {
+		SQLiteDatabase db = getDatabase();
+		int count = db.delete(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, null);
+		LogHelper.logD(TAG, "clearAllNotificationSettings - " + count);
+	}	
+	
+	private ContentValues getContentValues(String email, String settingsJson) {
+		ContentValues values  = new ContentValues();
+
+		LogHelper.logD(TAG, "Saving notificationSettings JSON- " + settingsJson);		
+		values.put(NotificationSettingsColumns.COL_NAME_NOTIFICATION_JSON, settingsJson);
+
+		return values;
 	}
 }

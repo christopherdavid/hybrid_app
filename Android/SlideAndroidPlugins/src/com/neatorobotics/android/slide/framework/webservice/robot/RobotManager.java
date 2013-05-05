@@ -1,14 +1,17 @@
 package com.neatorobotics.android.slide.framework.webservice.robot;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import android.content.Context;
 
-import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
+import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
+import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.SetRobotProfileDetails;
+import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
 
 public class RobotManager {
 	private static final String TAG = RobotManager.class.getSimpleName();
@@ -33,111 +36,101 @@ public class RobotManager {
 		return sRobotManager;
 	}
 	
-	public void getRobotDetail(final String serialId, final RobotDetailListener listener)	{
+	public void getRobotDetail(final String serialId, final WebServiceBaseRequestListener listener)	{
 		Runnable task = new Runnable() {
-			
 			public void run() {
-				RobotDetailResult result = NeatoRobotWebservicesHelper.getRobotDetail(mContext, serialId);				
-				if (result != null) {
-					if (result.success()) {
-						RobotItem robotItem = convertRobotDetailResultToRobotItem(result);
-						// Update the robot data if anything changed
-						RobotHelper.saveRobotDetails(mContext, robotItem);
-						if (listener != null) {
-							listener.onRobotDetailReceived(robotItem);
-						}
-					}
-					else {
-						if (listener != null) {
-							listener.onServerError(result.mMessage);
-						}
-					}
+				try {				
+					RobotDetailResult result = NeatoRobotWebservicesHelper.getRobotDetail(mContext, serialId);
+					
+					// Update the robot data if anything changed										
+					RobotHelper.saveRobotDetails(mContext, result.result);
+					
+					listener.onReceived(result);
 				}
-				else {
-					if (listener != null) {
-						listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
-					}
+				catch (UserUnauthorizedException ex) {
+					listener.onServerError(ex.getErrorMessage());
 				}
+				catch (NeatoServerException ex) {
+					listener.onServerError(ex.getErrorMessage());
+				}
+				catch (IOException ex) {
+					listener.onNetworkError(ex.getMessage());
+				}				
 			}
 		};
 		TaskUtils.scheduleTask(task, 0);
 	}
 	
-	public RobotItem getRobotDetail(final String serialId)
-	{
+	public RobotItem getRobotDetail(final String serialId)	{
 		RobotItem robotItem = null;
-		RobotDetailResult result = NeatoRobotWebservicesHelper.getRobotDetail(mContext, serialId);
-		if (result != null && result.success()) {
-			robotItem = convertRobotDetailResultToRobotItem(result);
+		try {		
+			RobotDetailResult result = NeatoRobotWebservicesHelper.getRobotDetail(mContext, serialId);
+			robotItem = result.result;
 		}
+		catch (UserUnauthorizedException ex) {
+			LogHelper.log(TAG, "UserUnauthorizedException in getRobotDetail - " + ex.getErrorMessage());
+		}
+		catch (NeatoServerException ex) {
+			LogHelper.log(TAG, "NeatoServerException in getRobotDetail - " + ex.getErrorMessage());
+		}
+		catch (IOException ex) {
+			LogHelper.log(TAG, "IOException in getRobotDetail - " + ex);
+		}	
+		
 		return robotItem;
 	}
 
-	public void setRobotName(final String robotId, final String robotName, final SetRobotProfileDetailsListener listener) 
-	{
+	public void setRobotName(final String robotId, final String robotName, final WebServiceBaseRequestListener listener) {
 		LogHelper.logD(TAG, "setRobotName called");
 		LogHelper.logD(TAG, "Robot Id = " + robotId + " New Name = " + robotName);
+		
 		Runnable task = new Runnable() {
 			public void run() {
-				HashMap<String, String> profileParams = new HashMap<String, String>();
-				profileParams.put(SetRobotProfileDetails.Attribute.ROBOT_NAME, robotName);
-				SetRobotProfileDetailsResult result = NeatoRobotWebservicesHelper.setRobotProfileDetailsRequest(mContext, robotId, profileParams);
-				if (result == null) {
-					listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
-					return;
-				}
-				
-				if(result.success()) {
+				try {
+					HashMap<String, String> profileParams = new HashMap<String, String>();
+					profileParams.put(SetRobotProfileDetails.Attribute.ROBOT_NAME, robotName);					
+					SetRobotProfileDetailsResult result = NeatoRobotWebservicesHelper.setRobotProfileDetailsRequest(mContext, robotId, profileParams);
+					
 					// Robot Name updated on the server, we now update the name in the database
-					RobotItem robotItem = RobotHelper.updateRobotName(mContext, robotId, robotName);	
-					listener.onComplete(robotItem);
+					RobotHelper.updateRobotName(mContext, robotId, robotName);
+					listener.onReceived(result);
 				}
-				else {
-					listener.onServerError(result.mMessage);
+				catch (UserUnauthorizedException ex) {
+					listener.onServerError(ex.getErrorMessage());
 				}
-				
+				catch (NeatoServerException ex) {
+					listener.onServerError(ex.getErrorMessage());
+				}
+				catch (IOException ex) {
+					listener.onNetworkError(ex.getMessage());
+				}	
 			}
 		};
 		TaskUtils.scheduleTask(task, 0);
 	}
 	
-	public void getRobotOnlineStatus(final String robotId, final RobotOnlineStatusListener listener) {
+	public void getRobotOnlineStatus(final String robotId, final WebServiceBaseRequestListener listener) {
 		LogHelper.logD(TAG, "getRobotOnlineStatus called for RobotID = " + robotId);
 		
 		Runnable task = new Runnable() {			
 			@Override
 			public void run() {
-				RobotOnlineStatusResult result = NeatoRobotWebservicesHelper.getRobotOnlineStatus(mContext, robotId);
-				if (listener == null) {					
-					return;
+				try {
+					RobotOnlineStatusResult result = NeatoRobotWebservicesHelper.getRobotOnlineStatus(mContext, robotId);
+					listener.onReceived(result);
 				}
-				
-				if (result != null) {
-					if (result.success()) {
-						listener.onComplete(result.mResult.mOnline);
-					}
-					else {
-						listener.onServerError(result.mMessage);
-					}
+				catch (UserUnauthorizedException ex) {
+					listener.onServerError(ex.getErrorMessage());
 				}
-				else {
-					listener.onNetworkError(AppConstants.NETWORK_ERROR_STRING);
+				catch (NeatoServerException ex) {
+					listener.onServerError(ex.getErrorMessage());
+				}
+				catch (IOException ex) {
+					listener.onNetworkError(ex.getMessage());
 				}
 			}
 		};
 		
 		TaskUtils.scheduleTask(task, 0);
 	}
-	
-	private RobotItem convertRobotDetailResultToRobotItem(RobotDetailResult result)
-	{
-		RobotItem robotItem = new RobotItem();
-		robotItem.id = result.mResult.mId;
-		robotItem.name = result.mResult.mName;
-		robotItem.serial_number = result.mResult.mSerialNumber;
-		robotItem.chat_id = result.mResult.mChat_id;
-		robotItem.chatPwd = result.mResult.mChat_pwd;
-		return robotItem;
-	}
-
 }

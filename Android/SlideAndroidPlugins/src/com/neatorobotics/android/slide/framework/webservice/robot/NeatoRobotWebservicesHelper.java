@@ -1,13 +1,14 @@
 package com.neatorobotics.android.slide.framework.webservice.robot;
 
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import android.content.Context;
-import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
-import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
-import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceUtils;
-import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.AssociateNeatoRobotToUser;
+import com.neatorobotics.android.slide.framework.utils.AppUtils;
+import com.neatorobotics.android.slide.framework.webservice.MobileWebServiceClient;
+import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
+import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotDetails;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotOnlineStatus;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.SetRobotProfileDetails;
@@ -15,25 +16,14 @@ import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebS
 
 public class NeatoRobotWebservicesHelper {
 	
-	public static RobotAssociationDisassociationResult associateNeatoRobotRequest(Context context, String email, String serial_number) {
-		RobotAssociationDisassociationResult result = null;
-		Map<String, String> associateRobotReqParams = new HashMap<String, String>();
-		associateRobotReqParams.put(AssociateNeatoRobotToUser.Attribute.EMAIL, email);
-		associateRobotReqParams.put(AssociateNeatoRobotToUser.Attribute.SERIAL_NUMBER, serial_number);
-		NeatoHttpResponse associateRobotResponse = NeatoWebserviceHelper.executeHttpPost(context, AssociateNeatoRobotToUser.METHOD_NAME, associateRobotReqParams);
-		result = NeatoWebserviceUtils.readValueHelper(associateRobotResponse, RobotAssociationDisassociationResult.class);
-		return result;
-	}
-	
 	public static SetRobotProfileDetailsResult setRobotProfileDetailsRequest(Context context, String robotId, HashMap<String, String> profileDetailsParams) 
-	{
-		SetRobotProfileDetailsResult result = null;
+			throws UserUnauthorizedException, NeatoServerException, IOException {		
+		
 		Map<String, String> robotSetDetailParams = new HashMap<String, String>();
 		robotSetDetailParams.put(SetRobotProfileDetails.Attribute.SERIAL_NUMBER, robotId);
 		robotSetDetailParams.putAll(addProfilePrefix(profileDetailsParams));
-		NeatoHttpResponse robotSetDetailResponse = NeatoWebserviceHelper.executeHttpPost(context, SetRobotProfileDetails.METHOD_NAME, robotSetDetailParams);
-		result = NeatoWebserviceUtils.readValueHelper(robotSetDetailResponse, SetRobotProfileDetailsResult.class);
-		return result;
+		String response = MobileWebServiceClient.executeHttpPost(context, SetRobotProfileDetails.METHOD_NAME, robotSetDetailParams);
+		return AppUtils.checkResponseResult(response, SetRobotProfileDetailsResult.class);
 	}
 	
 	private static HashMap<String, String> addProfilePrefix(HashMap<String, String> profileParams) {
@@ -46,21 +36,21 @@ public class NeatoRobotWebservicesHelper {
 		return profile;
 	}
 	
-	public static RobotDetailResult getRobotDetail(Context context, String serialNumber) {
-		RobotDetailResult result = null;
+	public static RobotDetailResult getRobotDetail(Context context, String serialNumber) 
+			throws UserUnauthorizedException, NeatoServerException, IOException {		
+		
 		Map<String, String> robotGetDetailParams = new HashMap<String, String>();
 		robotGetDetailParams.put(GetRobotDetails.Attribute.SERIAL_NUMBER, serialNumber);
-		NeatoHttpResponse robotDetailResponse = NeatoWebserviceHelper.executeHttpPost(context, GetRobotDetails.METHOD_NAME, robotGetDetailParams);
-		result = NeatoWebserviceUtils.readValueHelper(robotDetailResponse, RobotDetailResult.class);
-		return result;
+		String response = MobileWebServiceClient.executeHttpPost(context, GetRobotDetails.METHOD_NAME, robotGetDetailParams);
+		return AppUtils.checkResponseResult(response, RobotDetailResult.class);
 	}
 	
-	public static RobotOnlineStatusResult getRobotOnlineStatus(Context context, String serialNumber) {
-		RobotOnlineStatusResult result = null;
+	public static RobotOnlineStatusResult getRobotOnlineStatus(Context context, String serialNumber)
+			throws UserUnauthorizedException, NeatoServerException, IOException {
+		
 		Map<String, String> robotGetOnlineStatus = new HashMap<String, String>();
 		robotGetOnlineStatus.put(GetRobotOnlineStatus.Attribute.SERIAL_NUMBER, serialNumber);	
-		NeatoHttpResponse robotStatusResponse = NeatoWebserviceHelper.executeHttpPost(context, GetRobotOnlineStatus.METHOD_NAME, robotGetOnlineStatus);
-		result = NeatoWebserviceUtils.readValueHelper(robotStatusResponse, RobotOnlineStatusResult.class);
-		return result;
+		String response =  MobileWebServiceClient.executeHttpPost(context, GetRobotOnlineStatus.METHOD_NAME, robotGetOnlineStatus);
+		return AppUtils.checkResponseResult(response, RobotOnlineStatusResult.class);		
 	}	
 }

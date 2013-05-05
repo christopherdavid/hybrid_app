@@ -138,4 +138,22 @@ public class NeatoUserWebServicesAttributes {
 		}
 	}
 	
+	public static class SetRobotPushNotificationOptions {
+		public static final String METHOD_NAME = "message.set_user_push_notification_options"; 
+
+		public static class Attribute {
+			public static final String API_KEY = "api_key";
+			public static final String EMAIL = "email";			
+			public static final String JSON_OBJECT = "json_object";
+		}
+	}
+	
+	public static class GetRobotPushNotificationOptions {
+		public static final String METHOD_NAME = "message.get_user_push_notification_options"; 
+
+		public static class Attribute {
+			public static final String API_KEY = "api_key";
+			public static final String EMAIL = "email";			
+		}
+	}
 }
