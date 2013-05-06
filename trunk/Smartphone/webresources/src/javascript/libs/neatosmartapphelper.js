@@ -577,6 +577,127 @@ var RobotPluginManager = ( function() {
                  }, 2000);
                  */
             },
+            /*
+         * Name: startCleaning
+         * Sends "start cleaning" command to the robot. 
+         *  - robotId: Value as string. (Must be a valid robotId)
+         *  - cleaningCategoryId: Value as predefined integer value (Must be one
+         *    of CLEANING_CATEGORY_MANUAL, CLEANING_CATEGORY_ALL Or CLEANING_CATEGORY_SPOT)
+         *  - cleaningModeId : Value as predefined integer value (Must be one CLEANING_MODE_ECO
+         *    Or CLEANING_MODE_NORMAL)
+         *  - cleaningModifier - Value as String (for e.g. 1, 2)
+         * In case of success, callbackSuccess is called with response as OK.
+         * In case of an error, callbackError is called with error JSON below:
+         *  {'errorCode':<error code>, 'errorMessage':<error msg>}
+         */
+        startCleaning: function(robotId, cleaningCategoryId, cleaningModeId, cleaningModifier,
+                    callbackSuccess, callbackError) {
+             window.setTimeout(function() {
+                callbackSuccess("OK");
+            }, 1000);
+        },
+        
+        /*
+         * Name: stopCleaning
+         * Sends "stop cleaning" command to the robot. 
+         * Params
+         *  - robotId: Value as string. (Must be a valid robotId)
+         * In case of success, callbackSuccess is called with response as OK.
+         * In case of an error, callbackError is called with error JSON below:
+         *  {'errorCode':<error code>, 'errorMessage':<error msg>}
+         */
+        stopCleaning: function(robotId, callbackSuccess, callbackError) {
+             window.setTimeout(function() {
+                callbackSuccess("OK");
+            }, 1000);
+        },
+        
+        /*
+         * Name: pauseCleaning
+         * Sends "pause cleaning" command to the robot. This internally calls 
+         * sendCommandToRobot2 method of "window.plugins.neatoPluginLayer.robotMgr"
+         * Params
+         *  - robotId: Value as string. (Must be a valid robotId)
+         * In case of success, callbackSuccess is called with response as OK.
+         * In case of an error, callbackError is called with error JSON below:
+         *  {'errorCode':<error code>, 'errorMessage':<error msg>}
+         */
+        pauseCleaning: function(robotId, callbackSuccess, callbackError) {
+             window.setTimeout(function() {
+                callbackSuccess("OK");
+            }, 1000);
+        },
+
+        /*
+         * Name: resumeCleaning
+         * Sends "resume cleaning" command to the robot. This internally calls 
+         * sendCommandToRobot2 method of "window.plugins.neatoPluginLayer.robotMgr" 
+         * Params
+         *  - robotId: Value as string. (Must be a valid robotId)
+         * In case of success, callbackSuccess is called with response as OK.
+         * In case of an error, callbackError is called with error JSON below:
+         *  {'errorCode':<error code>, 'errorMessage':<error msg>}
+         */ 
+        resumeCleaning: function(robotId, callbackSuccess, callbackError) {
+             window.setTimeout(function() {
+                callbackSuccess("OK");
+            }, 1000);
+        },
+    
+        /*
+         * Name: setSpotDefinition
+         * Saves the spot definition to the DB. This internally calls setSpotDefinition
+         * method of "window.plugins.neatoPluginLayer.robotMgr" 
+         * Params
+         *  - robotId : Value as string. (Must be a valid robotId)
+         *  - spotCleaningAreaLength : Value as integer.
+         *  - spotCleaningAreaHeight : Value as integer.
+         * In case of success, callbackSuccess is called with response as OK.
+         * In case of an error, callbackError is called with error JSON below:
+         *  {'errorCode':<error code>, 'errorMessage':<error msg>}
+        */  
+        setSpotDefinition: function(robotId, spotCleaningAreaLength, spotCleaningAreaHeight, 
+                    callbackSuccess, callbackError) {
+             window.setTimeout(function() {
+                callbackSuccess("OK");
+            }, 1000);
+        },
+        
+        /*
+         * Name: getSpotDefinition
+         * Saves the spot definition to the DB. This internally calls getSpotDefinition
+         * method of "window.plugins.neatoPluginLayer.robotMgr" 
+         * Params
+         *  - robotId: Value as string. (Must be a valid robotId)
+         * In case of success, callbackSuccess is called with following JSON:
+         *  {'spotCleaningAreaLength':<area length>, 'spotCleaningAreaHeight':<area height>}
+         * In case of an error, callbackError is called with error JSON below:
+         *  {'errorCode':<error code>, 'errorMessage':<error msg>}
+         */
+        getSpotDefinition: function(robotId, callbackSuccess, callbackError) {
+            window.setTimeout(function() {
+                callbackError({"errorCode":1101, "errorMessage":"no spot size defined yet"});
+            }, 1000);
+        },
+
+        /*
+         * Name: driveRobot
+         * Sends "drive" command to the robot. This internally calls driveRobot 
+         * method of "window.plugins.neatoPluginLayer.robotMgr" 
+         * Params
+         *  - robotId: Value as string. (Must be a valid robotId)
+         *  - navigationControlId: Valuse as integer. Value must (Must be one of
+         *    NAVIGATION_CONTROL_1, NAVIGATION_CONTROL_2, NAVIGATION_CONTROL_3
+         *    NAVIGATION_CONTROL_4, NAVIGATION_CONTROL_5 and NAVIGATION_CONTROL_6)
+         * In case of success, callbackSuccess is called with response as OK.
+         * In case of an error, callbackError is called with error JSON below:
+         *  {'errorCode':<error code>, 'errorMessage':<error msg>}
+         */
+            driveRobot: function(robotId, navigationControlId, callbackSuccess, callbackError) {
+                window.setTimeout(function() {
+                    callbackSuccess(true);
+                }, 1000);
+            },
 
             setMapOverlayData : function(robotId, mapId, mapOverlayInfo, callbackSuccess, callbackError) {
                 window.plugins.neatoPluginLayer.robotMgr.setMapOverlayData(robotId, mapId, mapOverlayInfo, callbackSuccess, callbackError);
@@ -668,11 +789,25 @@ var RobotPluginManager = ( function() {
             },
             
             registerNotifications: function(robotId, callbackSuccess, callbackError) {
-                window.plugins.neatoPluginLayer.robotMgr.registerNotifications(robotId, callbackSuccess, callbackError);
+              window.setTimeout(function() {
+                    callbackSuccess(
+                        {   'eventId': '20001',
+                            'robotId': 'transformer23', 
+                            'params': {"register" : true}
+                        }
+                    );
+                }, 1000);
             },
             
             unregisterNotifications: function(robotId, callbackSuccess, callbackError) {
-                window.plugins.neatoPluginLayer.robotMgr.unregisterNotifications(robotId, callbackSuccess, callbackError);
+                window.setTimeout(function() {
+                    callbackSuccess(
+                        {   'eventId': '20001',
+                            'robotId': 'transformer23', 
+                            'params': {"unregister" : true}
+                        }
+                    );
+                }, 1000);
             },
             
             // New Schedule APIs being added:

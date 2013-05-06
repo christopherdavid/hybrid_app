@@ -2,10 +2,8 @@ package com.uid.robot;
 
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
-
 import com.neatorobotics.android.slide.framework.plugins.base.SlidePluginBaseActivity;
-import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
+//import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
 
 public class CleaningRobotAppActivity extends SlidePluginBaseActivity {
 	/**
@@ -22,7 +20,7 @@ public class CleaningRobotAppActivity extends SlidePluginBaseActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.PROD_SERVER_ID);
+		//NeatoWebConstants.setServerEnvironment(NeatoWebConstants.PROD_SERVER_ID);
 
 		super.loadUrl("file:///android_asset/www/index.html");
 		

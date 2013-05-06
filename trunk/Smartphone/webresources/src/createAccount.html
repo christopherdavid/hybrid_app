@@ -1,6 +1,6 @@
 <div data-role="page" id="createAccount">
     
-    <div data-role="header" class="page-header" data-position="fixed" data-tap-toggle="false">
+    <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
         <div class="ui-btn-left">
             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
                 data-i18n="common.back"
@@ -27,7 +27,7 @@
             <input type="text" data-i18n="createAccount.page.email" 
                 data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'onblur', css: {invalid: mailValid}"/>
             <input type="password" data-i18n="createAccount.page.password" 
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'onblur', css: {invalid: passwordComplex},  visible:!showPassword()"/>
+                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'afterkeydown', css: {invalid: passwordComplex},  visible:!showPassword()"/>
             <input type="password" data-i18n="createAccount.page.password_verify" 
                 data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', css: {invalid: passwordValid},  visible:!showPassword()"/>
             <input type="text" data-i18n="createAccount.page.password" 

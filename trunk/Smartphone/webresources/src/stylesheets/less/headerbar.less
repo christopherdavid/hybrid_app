@@ -1,0 +1,159 @@
+/* header button left and right */
+@button_height:40px;
+@buton_width:88px;
+.ui-header.headerbar {
+    height:61px;
+    margin-top:3px;
+    .ui-title {
+        margin:10px (@buton_width + @button_height/2 + 10) 0;
+        .robotName {
+            color:#a8a8a8;
+            font-size: 14px;
+            font-weight: normal;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap
+        }
+        .screenTitle {
+            font-size: 18px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap
+        }
+    }
+    
+    .ui-btn-left,.ui-btn-right {
+        top:0; 
+        
+        .ui-btn {
+            margin:0;
+            height:@button_height;
+            width:@buton_width;
+            float:left;
+            
+            .ui-btn-inner {
+                display: table-cell;
+                height: @button_height;
+                width:@buton_width;
+                white-space: normal;
+                vertical-align: middle;
+                text-align: center;
+            }
+        }
+    }
+    
+    .ui-btn-left {
+        left:0;
+        
+        .ui-btn {
+            border-radius:0 @button_height/2 @button_height/2 0;
+            float:right;
+            
+            .ui-btn-inner {
+                 padding: 0 @button_height/4 0 0;
+            }
+        }
+        &.two-buttons {
+            .ui-btn.first-button {
+                width:(@buton_width + @button_height/4)/2 - 5;// minus to get visual half
+            }
+            
+            .ui-btn.second-button {
+                width:@buton_width/2 - 3;// minus to get visual half
+                padding-right:0px;
+                border-radius:0;
+                margin-right:1px;
+                
+                .ui-btn-inner {
+                     padding: 0;
+                }
+            }
+        }
+    }
+    
+    .ui-btn-right {
+        right:0;
+        
+        .ui-btn {
+            border-radius:@button_height/2 0 0 @button_height/2;
+            
+            .ui-btn-inner {
+                 padding: 0 0 0 @button_height/4;
+            }
+        }
+        
+        &.two-buttons {
+            .ui-btn.first-button {
+                width:(@buton_width + @button_height/4)/2 - 5;// minus to get visual half
+            }
+            
+            .ui-btn.second-button {
+                width:@buton_width/2 - 3;// minus to get visual half
+                padding-left:0px;
+                border-radius:0;
+                margin-left:1px;
+                
+                .ui-btn-inner {
+                     padding: 0;
+                }
+            }
+        }
+    }
+    /*
+    .ui-btn-left {
+        left:0;
+        top:0; 
+        .ui-btn {
+            margin:0;
+            height:@button_height;
+            border-radius:0 @button_height/2 @button_height/2 0;
+            width:@buton_width + @button_height/4;
+            padding-right:@button_height/4;
+            float:right;
+            .ui-btn-inner {
+              padding-left:0;
+              padding-right:0;
+            }
+        }
+        &.two-buttons {
+            .ui-btn.first-button {
+                width:(@buton_width + @button_height/4)/2;
+                padding-right:@button_height/4 - 2;// minus border width
+            }
+            .ui-btn.second-button {
+                width:@buton_width/2;
+                padding-right:0px;
+                border-radius:0;
+            }
+        }
+    }
+  
+    .ui-btn-right { 
+        right:0;
+        top:0;
+        .ui-btn {
+            margin:0;
+            height:@button_height;
+            border-radius:@button_height/2 0 0 @button_height/2;
+            width:@buton_width + @button_height/4;
+            padding-left:@button_height/4;
+            float:left;
+            .ui-btn-inner {
+              padding-left:0;
+              padding-right:0;
+            }
+        }
+        &.two-buttons {
+            .ui-btn.first-button {
+                width:(@buton_width + @button_height/4)/2;
+                padding-left:@button_height/4 - 2;// minus border width
+            }
+            .ui-btn.second-button {
+                width:@buton_width/2;
+                padding-left:0px;
+                border-radius:0;
+            }
+        }
+    }
+    */
+}

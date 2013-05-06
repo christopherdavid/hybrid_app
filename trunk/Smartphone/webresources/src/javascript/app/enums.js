@@ -7,7 +7,9 @@ var textTarget = {
     FIRSTCHILD : "1",
     VALUE : "2",
     PLACEHOLDER : "3",
-    jqLinkButton : "4"
+    jqLinkButton : "4",
+    SLIDER_LABEL_A : "5",
+    SLIDER_LABEL_B : "6"
 };
 
 var ICON = ["cat-bath", "cat-baby", "cat-children","cat-cat", "cat-garage", "cat-dog"];
@@ -42,4 +44,5 @@ var notificationType = {
     SPINNER : "0", // simple loading spinner in the center of the screen
     OPERATION : "1", // Notification area with text display and spinner, will be displayed until dismissed. 
     HINT: "2", // short displayed hint text (will be visible for ~ 2 sec. and disappear automatically)
+    NONE:"3" // no notification will be displayed 
 }

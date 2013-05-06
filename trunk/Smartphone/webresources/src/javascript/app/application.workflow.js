@@ -177,6 +177,36 @@ Application.prototype.loadWorkflow = function() {
                 }]
             }]
         },
+        "userSettings" : {
+            navrules : [{
+                targetScreenId : "robotSelection",
+                conditions : [{
+                    "key" : "changeRobot",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "cleaning",
+                backConditions : [{
+                    "key" : "home",
+                    "value" : true
+                }]
+            }]
+        },
+        "generalSettings" : {
+            navrules : [{
+                targetScreenId : "robotSelection",
+                conditions : [{
+                    "key" : "changeRobot",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "cleaning",
+                backConditions : [{
+                    "key" : "home",
+                    "value" : true
+                }]
+            }]
+        },
         "basicScheduler" : {
             navrules : [{
                 targetScreenId : "cleaning",
@@ -209,7 +239,7 @@ Application.prototype.loadWorkflow = function() {
                     "value" : true
                 }]
             }],
-            clearHistoryAfter : true
+            clearHistory : true
         },
         "basicSchedulerDate" : {
             navrules : [{

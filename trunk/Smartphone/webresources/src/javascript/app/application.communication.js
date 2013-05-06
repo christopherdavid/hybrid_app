@@ -17,7 +17,7 @@ function WorkflowCommunication(parent) {
             // TODO: Hide loading indicator AFTER the success and error handling. For now
             //       put here to prevent error alert from not hiding the notification area.
             //parent.showLoadingArea(false, notificationOptions.type);
-            if(typeof that.callbacks[guid].notifyOptions.bHide == "undefined" || that.callbacks[guid].notifyOptions.bHide === true) {
+            if(that.callbacks[guid].notifyOptions.type != notificationType.NONE && typeof that.callbacks[guid].notifyOptions.bHide == "undefined" || that.callbacks[guid].notifyOptions.bHide === true) {
                 parent.showLoadingArea(false, that.callbacks[guid].notifyOptions.type);
             }
             if (success){
@@ -49,8 +49,9 @@ function WorkflowCommunication(parent) {
         if (!notificationOptions || !notificationOptions.type){
             notifyOptions = { type: notificationType.SPINNER, message: "" , callback: null, bHide: true };
         }
-        
-        parent.showLoadingArea(true, notifyOptions.type, notifyOptions.message);
+        if(notifyOptions.type != notificationType.NONE) { 
+            parent.showLoadingArea(true, notifyOptions.type, notifyOptions.message);
+        }
         
         var callGuid = guid();
         // store defferd object for callbacks and notification options (using guid) to avoid references to cordova plugin 

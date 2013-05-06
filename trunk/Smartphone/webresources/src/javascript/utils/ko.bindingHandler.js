@@ -43,6 +43,12 @@ ko.bindingHandlers.translate = {
             case textTarget.jqLinkButton:
                 jQElement.find("span.ui-btn-text").text(translatedValue);
                 break;
+            case textTarget.SLIDER_LABEL_A:
+                jQElement.parent().next().find("span.ui-slider-label-a").text(translatedValue);
+                break;
+            case textTarget.SLIDER_LABEL_B:
+                jQElement.parent().next().find("span.ui-slider-label-b").text(translatedValue);
+                break;
         }
     }
 }
@@ -75,6 +81,10 @@ ko.bindingHandlers.jqButtonEnable = {
     }
 }
 
+/**
+ * 
+ * example: <select data-bind="jqmOptions: [property bind to]"> 
+ */
 ko.bindingHandlers.jqmOptions = {
     update : function(element, valueAccessor, allBindingsAccessor, context) {
         ko.bindingHandlers.options.update(element, valueAccessor, allBindingsAccessor, context);
@@ -82,6 +92,43 @@ ko.bindingHandlers.jqmOptions = {
     }
 };
 
+
+/**
+ * binding to checked property for jquery mobile radio button 
+ * example: <input type="radio" data-bind="checked: [property bind to], jqRadioChecked: [property bind to]" /> 
+ */
+ko.bindingHandlers.jqRadioChecked = {
+    update : function(element, valueAccessor, allBindingsAccessor, context) {
+        var value = valueAccessor();
+        var valueUnwrapped = ko.utils.unwrapObservable(value);
+        if (valueUnwrapped == $(element).val()) {
+            $(element).prop("checked", "true").checkboxradio("refresh");
+        } else {
+            $(element).removeProp("checked").checkboxradio("refresh");
+        }
+    }
+};
+
+/**
+ * binding to class attribute of rendered jquery mobile button of a select element
+ * example: <select id="[!IMPORTANT!]" data-bind="jqmButtonClass:'first-button'">
+ * !IMPORTANT! the select needs to have an id otherwise the rendered button couldn't be find 
+ */
+ko.bindingHandlers.jqmButtonClass = {
+    update : function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        // First get the latest data that we're bound to
+        var value = valueAccessor(), allBindings = allBindingsAccessor();
+        
+        var valueUnwrapped = ko.utils.unwrapObservable(valueAccessor());
+        //console.log($("#"+element.id+"-button"));
+        $("#"+element.id+"-button").addClass(value);
+    }
+};
+
+/**
+ * binding to enabaled property for jquery mobile select
+ * <select data-bind="jqmOptions: cleaningType"> 
+ */
 ko.bindingHandlers.jqOptionsEnable = {
     update : function(element, valueAccessor) {
         ko.bindingHandlers.enable.update(element, valueAccessor);

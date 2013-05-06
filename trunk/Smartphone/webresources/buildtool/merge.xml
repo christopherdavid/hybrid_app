@@ -1,35 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <groups xmlns="http://www.isdc.ro/wro">
-    <group name="notificationbar">
-      <css>/notificationbar.less</css>
-    </group>
-    <group name="carousel">
-      <css>/carousel.less</css>
+    <group name="fonts">
+        <css>/fonts.less</css>
     </group>
     <group name="icons">
         <css>/icons.less</css>
     </group>
-    <group name="fonts">
-        <css>/fonts.less</css>
-    </group>
     <group name="colors">
         <css>/colors.less</css>
     </group>
+    <group name="notificationbar">
+      <css>/notificationbar.less</css>
+    </group>
+    <group name="headerbar">
+      <css>/headerbar.less</css>
+    </group>
+    <group name="cleaningscreen">
+      <css>/cleaningscreen.less</css>
+    </group>
+    <group name="scheduler">
+        <css>/scheduler.less</css>
+    </group>
+    <group name="vr200theme">
+        <css>/vr200theme.less</css>
+    </group>
+    <group name="forms">
+        <css>/forms.less</css>
+    </group>
+    
+    
     <group name="map">
         <css>/map.less</css>
     </group>
     <group name="startscreen">
     	<css>/startscreen.less</css>
     </group>
-    <group name="scheduler">
-        <css>/scheduler.less</css>
-    </group>
-    <group name="remoteControl">
-        <css>/remoteControl.less</css>
-    </group>
-    <group name="vr200theme">
-        <css>/vr200theme.less</css>
-    </group>
+    
+    
     <group name="libs">
       <js>/../../../bin/copymin/cordova.min.js</js>
       <js>/../../../bin/copymin/plugins.js</js>
