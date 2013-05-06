@@ -1,0 +1,128 @@
+@font-face {
+  font-family: TazText;
+  src: url("../../fonts/TazTextWt05-RegularG083.otf") format("opentype");
+}
+@font-face {
+  font-family: TazText;
+  font-weight: bold;
+  src: url("../../fonts/TazTextWt07-Bold.otf") format("opentype");
+}
+*,
+body .ui-body-c,
+.ui-btn-up-c,
+.ui-btn-hover-c,
+.ui-btn-down-c {
+  font-family: "TazText";
+}
+/**
+ *   Create an image definition with (optional) additional classes that are attached to the
+ *   img-imgFile name. i.e. if the imgFile name is "myPicture" and the additional classes are ".bright" the resulting
+ *   CSS will contain ".img-myPicture .bright {...}"
+ */
+/**
+ *   Create a simple image with the given dimensions.
+ */
+/**
+ *  Creates the sprite position offset styles for a specific image
+ *  using the states name supplied.
+ */
+/**
+ *   Create a sprite for a certain row with the defined states.
+ *   By default the names for the states are "up", "down", "disabled".
+ *   The name of the states can be set. Currently only three states are available.
+ *   @spriteName: The name for this sprite 
+ *   @width: width of one sprite
+ *   @height: height of one sprite
+ *   @stateAmount: The amount of states within this image
+ *   @state1: The name of the first state (default: up)
+ *   @state2: The name of the second state (default: down)
+ *   @state3: The name of the thrid state (default:disabled)
+ */
+/*@listview_lastCell_gradient_mid: #353535:
+@listview_lastCell_gradient_end: #353535:*/
+#grid {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0px;
+  display: none;
+  z-index: 800;
+}
+#grid #selection-area {
+  position: absolute;
+  z-index: 801;
+}
+#grid #selection-area .ui-resizable-ne {
+  right: -25px;
+  top: -25px;
+  z-index: 802;
+}
+#grid #selection-area .ui-resizable-se {
+  right: -25px;
+  bottom: -25px;
+  z-index: 802;
+}
+#grid #selection-area .ui-resizable-nw {
+  left: -25px;
+  top: -25px;
+  z-index: 802;
+}
+#grid #selection-area .ui-resizable-sw {
+  left: -25px;
+  bottom: -25px;
+  z-index: 802;
+}
+#grid #selection-area.selectionarea-spot {
+  background-color: rgba(149, 193, 28, 0.33);
+}
+#grid #selection-area.selectionarea-spot.resize {
+  border: 2px solid #95a11c;
+  background-color: transparent;
+}
+#grid #selection-area.selectionarea-spot .ui-resizable-handle {
+  background-position: 0px 0px;
+}
+#grid #selection-area.selectionarea-cut {
+  background-color: rgba(252, 255, 2, 0.33);
+}
+#grid #selection-area.selectionarea-cut.resize {
+  border: 2px solid #fcdf02;
+  background-color: transparent;
+}
+#grid #selection-area.selectionarea-cut .ui-resizable-handle {
+  background-position: -50px 0px;
+}
+#editPopup-popup {
+  left: 20px!important;
+  right: 20px!important;
+  max-width: 616px!important;
+  max-height: 616px!important;
+  min-width: 280px!important;
+  margin: auto;
+}
+.chooseBox {
+  position: relative;
+  font-size: initial;
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+  margin-left: 2px;
+  border: 10px solid #404040;
+  background-color: #404040;
+  background-size: cover;
+}
+.chooseBox.selected {
+  border: 10px solid #95c11c;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.chooseBox:first-child {
+  margin-left: 0px;
+}
+.dialog.ui-popup {
+  border: 2px solid #191919;
+}
+#infoPopup {
+  border: 1px solid #000;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+}

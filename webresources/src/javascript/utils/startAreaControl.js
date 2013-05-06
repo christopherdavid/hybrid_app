@@ -1,13 +1,19 @@
-function StartAreaControl(startArea, categoryArea, startBtn, categoryTable, categoryCells) {
+function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote, remoteCells) {
     var posX = null;
     var startBtnDown = false;
-    var categoryCellDown = null;
+    this.remoteButtonDown = null;
     var posY = null;
-    var radius = 32;
+    var radius = 147;
     var centerX = null;
     var centerY = null;
-    var scaleFactor = 1.0;
+    var scaleFactor = 0.5;
+    var BTN_RADIUS = 147;
+    this.isRemoteDisabled = ko.observable(true);
+    this.eventMouseDown = false;
     that = this;
+    this.pressedIntervall = 250;
+    this.pressedTimer;
+    
 
     var centerInParentContainer = function(element) {
         element.css({
@@ -20,11 +26,16 @@ function StartAreaControl(startArea, categoryArea, startBtn, categoryTable, cate
 
     // Checks if a specific dom element contains a point x,y
     var rectContainsPoint = function(x, y, element) {
-
         var leftEdge = element.offset().left;
-        var rightEdge = leftEdge + element.outerWidth();
+        var rightEdge = leftEdge + element.outerWidth()*scaleFactor;
         var topEdge = element.offset().top;
-        var bottomEdge = topEdge + element.outerWidth();
+        var bottomEdge = topEdge + element.outerHeight()*scaleFactor;
+        /*
+        console.log("rectContainsPoint x:" + x + " y " + y 
+            + "\nleftEdge " + leftEdge + " rightEdge " + rightEdge
+            + "\ntopEdge " + topEdge + " bottomEdge " + bottomEdge
+        )
+        */
 
         if (leftEdge <= x && rightEdge >= x && topEdge <= y && bottomEdge >= y) {
             return true;
@@ -42,7 +53,7 @@ function StartAreaControl(startArea, categoryArea, startBtn, categoryTable, cate
     this.updatePosition = function() {
         centerX = (startArea.width() * scaleFactor) / 2;
         centerY = (startArea.height() * scaleFactor) / 2;
-        radius = 0.95 * ((startBtn.width() * scaleFactor) / 2);
+        radius = BTN_RADIUS * scaleFactor;
         posX = startArea.offset().left;
         posY = startArea.offset().top;
     };
@@ -51,6 +62,7 @@ function StartAreaControl(startArea, categoryArea, startBtn, categoryTable, cate
         var content = $("#startContent");
 
         // Scale the container
+        /*
         if (categoryTable.width() > content.width()) {
 
             scaleFactor = content.width() / categoryTable.width();
@@ -77,16 +89,17 @@ function StartAreaControl(startArea, categoryArea, startBtn, categoryTable, cate
 
             scaleFactor = 1.0;
         }
+        */
 
         // Scale the surrounding category area to prevent scrolling
-        categoryArea.css({
-            'height' : (categoryTable.height() * scaleFactor)
+        startContainer.css({
+            'height' : (startArea.height() * scaleFactor)
         });
     }
 
     this.updateLayout = function() {
-        that.scaleStartArea();
-        centerInParentContainer(startBtn);
+        //that.scaleStartArea();
+        //centerInParentContainer(startBtn);
         that.updatePosition();
     };
 
@@ -95,97 +108,126 @@ function StartAreaControl(startArea, categoryArea, startBtn, categoryTable, cate
         startBtn.attr("data-state", state);
         that.updateBtnState(startBtn, false);
     };
+    
+    this.pressing = function() {
+        if(that.remoteButtonDown) {
+            remote.triggerHandler("remotePressed", that.remoteButtonDown);
+            this.pressedTimer = window.setTimeout(function() {that.pressing()}, this.pressedIntervall);
+        }
+    }
 
     this.init = function() {
         /**
          * bind to event handlers
          */
-        startArea.on("vclick", function(event) {
+        eventArea.on("vmousedown", function(event) {
             if (!event.isDefaultPrevented()) {
+                /*
                 if (posX == null || posY == null) {
                     that.updatePosition();
                 }
-
-                // Within the start button area
-                if (containsPoint((event.pageX - posX), (event.pageY - posY), centerX, centerY, radius)) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    event.stopImmediatePropagation();
-                }
-            }
-        })
-
-        startArea.on("vmousedown", function(event) {
-            if (!event.isDefaultPrevented()) {
-                if (posX == null || posY == null) {
-                    that.updatePosition();
-                }
-
+                */
+               
+                // console.log("vmousedown px " + event.pageX + " py " + event.pageY);                
                 if (containsPoint((event.pageX - posX), (event.pageY - posY), centerX, centerY, radius)) {
                     event.preventDefault();
                     event.stopPropagation();
                     event.stopImmediatePropagation();
 
                     that.updateBtnState(startBtn, true);
-                } else {
-                    // Check which category button has been pressed and update the state
-                    for (var i = categoryCells.length - 1; i >= 0; i--) {
+                } else if(!that.isRemoteDisabled()) {
+                    // Check which remote button has been pressed and update the state
+                    for (var i = remoteCells.length - 1; i >= 0; i--) {
 
-                        if (rectContainsPoint(event.pageX, event.pageY, categoryCells[i])) {
-                            that.updateCategoryBtnState(categoryCells[i], true);
+                        if (rectContainsPoint(event.pageX, event.pageY, remoteCells[i])) {
+                            that.eventMouseDown = true;
+                            that.updateRemoteBtnState(remoteCells[i], true);
+                            //remote.triggerHandler("remotePressed", [remoteCells[i]]);
                             break;
                         }
                     }
                 }
             }
         })
-
-        startArea.on("vmouseout", function(event) {
+        
+        
+        eventArea.on("vmouseout", function(event) {
             if (!event.isDefaultPrevented()) {
-
+                // console.log("vmouseout px " + event.pageX + " py " + event.pageY);                
                 // Reset start Btn state
                 that.updateBtnState(startBtn, false);
 
-                that.categoryCellDown = null;
+                that.remoteButtonDown = null;
+                window.clearTimeout(this.pressedTimer);
+                
+                that.eventMouseDown = false;
 
-                // Check which category button has been pressed and update the state
-                for (var i = categoryCells.length - 1; i >= 0; i--) {
-                    that.updateCategoryBtnState(categoryCells[i], false);
+                // Check which remote button has been pressed and update the state
+                if(!that.isRemoteDisabled()) {
+                    for (var i = remoteCells.length - 1; i >= 0; i--) {
+                        that.updateRemoteBtnState(remoteCells[i], false);
+                    }
                 }
             }
         });
 
-        startArea.on("vmouseup", function(event) {
+        eventArea.on("vmouseup", function(event) {
             if (!event.isDefaultPrevented()) {
+                /*
                 if (posX == null || posY == null) {
                     that.updatePosition();
                 }
+                */
+                event.preventDefault();
+                event.stopPropagation();
+                event.stopImmediatePropagation();
 
                 if (containsPoint((event.pageX - posX), (event.pageY - posY), centerX, centerY, radius)) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    event.stopImmediatePropagation();
 
                     // Trigger start Button
                     if (that.startBtnDown) {
-                        startBtn.triggerHandler("click");
+                        startBtn.triggerHandler("startClick");
                     }
-                } else if (that.categoryCellDown) {
-                    that.categoryCellDown.triggerHandler("click");
                 }
 
                 // Reset the button states
                 that.updateBtnState(startBtn, false);
-
-                // Reset category cell
-                that.categoryCellDown = null;
-
-                for (var i = categoryCells.length - 1; i >= 0; i--) {
-                    that.updateCategoryBtnState(categoryCells[i], false);
+                
+                that.eventMouseDown = false;
+                
+                if(that.remoteButtonDown) {
+                    that.updateRemoteBtnState(that.remoteButtonDown, false);
+                    that.remoteButtonDown = null;
+                    window.clearTimeout(this.pressedTimer);
                 }
             }
-        })
-
+        });
+        
+        eventArea.on("vmousemove", function(event) {
+            if (!event.isDefaultPrevented()) {
+                // console.log("vmousemove px " + event.pageX + " py " + event.pageY);
+                // console.log(that.remoteButtonDown)
+                if(!that.isRemoteDisabled()) {
+                    if(that.remoteButtonDown) {
+                        // check if button is still pressed
+                        if (!rectContainsPoint(event.pageX, event.pageY, that.remoteButtonDown)) {
+                            that.updateRemoteBtnState(that.remoteButtonDown, false);
+                            that.remoteButtonDown = null;
+                            window.clearTimeout(this.pressedTimer);
+                        }
+                    } else if(that.remoteButtonDown == null && that.eventMouseDown) {
+                        // Check which remote button has been pressed and update the state
+                        for (var i = remoteCells.length - 1; i >= 0; i--) {
+                            if (rectContainsPoint(event.pageX, event.pageY, remoteCells[i])) {
+                                that.updateRemoteBtnState(remoteCells[i], true);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
         $(window).on("resize.startArea", function() {
             that.updateLayout();
         });
@@ -200,10 +242,10 @@ function StartAreaControl(startArea, categoryArea, startBtn, categoryTable, cate
 
         // Initially update the layout
         that.updateLayout();
-
+        
         // And the buttons
-        for (var i = categoryCells.length - 1; i >= 0; i--) {
-            that.updateCategoryBtnState(categoryCells[i], false);
+        for (var i = remoteCells.length - 1; i >= 0; i--) {
+            that.updateRemoteBtnState(remoteCells[i], false);
         }
     };
 
@@ -213,41 +255,19 @@ function StartAreaControl(startArea, categoryArea, startBtn, categoryTable, cate
         $(window).off(".startArea");
     };
 
-    this.updateCategoryBtnState = function(element, isMouseDown) {
-
-        // Get the specific elements for the category
-        var categoryBorder = element.children();
-        var categoryGradient = categoryBorder.children();
-        var categoryBtn = categoryGradient.children();
-        var categoryBtnTxt = categoryBtn.children();
-
-        var categoryName = element.attr('id');
-
-        // Set the correct state when disabled
-        if (element.attr('aria-disabled')) {
-            categoryBtnTxt.addClass("disabled");
-            categoryGradient.addClass("disabled");
-            categoryBorder.addClass("disabled");
-
-            categoryBtn.removeClass(categoryName + "img-up");
-            categoryBtn.addClass(categoryName + "img-disabled");
-        } else {
-            categoryBtn.removeClass(categoryName + "img-disabled");
-            categoryBtn.addClass(categoryName + "img-up");
-
-            categoryBorder.removeClass("disabled");
-            categoryGradient.removeClass("disabled");
-            categoryBtnTxt.removeClass("disabled");
-
-            // Flip the gradient and the border
-            if (isMouseDown) {
-                that.categoryCellDown = categoryBtn;
-                categoryBorder.addClass("flipped");
-                categoryGradient.addClass("flipped");
-            } else {
-                categoryBorder.removeClass("flipped");
-                categoryGradient.removeClass("flipped");
+    this.updateRemoteBtnState = function(element, isMouseDown) {
+        var buttonName = element.attr('id');
+        
+        if(isMouseDown) {
+            element.addClass(buttonName+"-down");
+            element.removeClass(buttonName+"-up");
+            if(that.remotButtonDown != element) {
+                that.remoteButtonDown = element;
+                that.pressing();
             }
+        } else {
+            element.addClass(buttonName+"-up");
+            element.removeClass(buttonName+"-down");
         }
     }
 
@@ -275,19 +295,14 @@ function StartAreaControl(startArea, categoryArea, startBtn, categoryTable, cate
                 case "paused":
                     className += " startbtn_paused";
                     break;
-                case "stop":
-                    className += "stopbtn";
-                    break;
             }
 
             if (state != "disabled") {
                 className += isMouseDown ? "-down" : "-up";
                 that.startBtnDown = isMouseDown;
             }
-
             divElement[0].className = className;
         }
-
     }
 }
 

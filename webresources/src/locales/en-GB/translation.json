@@ -12,6 +12,8 @@
         "delete": "delete",
         "change": "change",
         "logout": "Logout",
+        "on": "On",
+        "off": "Off",
         "cleaningMode": {
             "1": "eco",
             "2": "normal"
@@ -41,7 +43,12 @@
             "settings": "Settings",
             "logout": "Logout",
             "change_robot": "Change",
-            "send_to_base": "Send to base"
+            "send_to_base": "Send to base",
+            "cleaningType": {
+                "1":"Manual",
+                "2":"All",
+                "3":"Spot"
+            }
         }
     },
     "start": {
@@ -132,6 +139,37 @@
                 "title": "Cleaning Options",
                 "schedule":"Use Scheduled Cleaning"
             }
+        }
+    },
+    "userSettings": {
+        "navi": {
+            "title": "User Settings"
+        },
+        "page": {
+            "email_adress": "eMail Adress",
+            "password": "Password",
+            "old_password" : "Old password",
+            "new_password" : "New password",
+            "new_password_verify" : "New password verification",
+            "password_is_being_changed" : "Password is being changed",
+            "password_was_not_changed" : "Password was not changed"
+        },
+        "message" : {
+        	"title" : "Unable to change password",
+        	"no_server" : "The server could not be reached, your password couldn't be changed."
+        }
+    },
+    "generalSettings": {
+        "navi": {
+            "title": "General Settings"
+        },
+        "page": {
+         	"notify_with" : "Notify me with...",
+         	"notify_when" : "Notify me when...",
+         	"push_on_phone" : "Push Notification on my Phone",
+         	"robot_need_cleaning" : "Robot needs to be cleaned",
+         	"cleaning_done" : "Cleaning is done",
+         	"robot_stuck" : "Robot is stuck"
         }
     },
     "basicScheduler": {

@@ -20,10 +20,9 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
     }, this);
 
     var PASSWORD_LENGTH = 6;
-    var USERNAME_LENGTH = 4;
 
     var emailRegEx = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    // regex from happy: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+    // regex : /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
 
     this.back = function() {
         that.conditions['back'] = true;
@@ -55,9 +54,9 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
         console.log("error: " + error);
     }
     function isPasswordComplex() {
-        if (that.password() == '')
-            return true;
-        return (that.password().length >= PASSWORD_LENGTH);
+        // if (that.password() == '')
+            // return true;
+        // return (that.password().length >= PASSWORD_LENGTH);        return true;
     }
 
     function isPasswordValid() {

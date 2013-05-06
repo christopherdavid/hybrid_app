@@ -1,0 +1,242 @@
+@font-face {
+  font-family: TazText;
+  src: url("../../fonts/TazTextWt05-RegularG083.otf") format("opentype");
+}
+@font-face {
+  font-family: TazText;
+  font-weight: bold;
+  src: url("../../fonts/TazTextWt07-Bold.otf") format("opentype");
+}
+*,
+body .ui-body-c,
+.ui-btn-up-c,
+.ui-btn-hover-c,
+.ui-btn-down-c {
+  font-family: "TazText";
+}
+/**
+ *   Create an image definition with (optional) additional classes that are attached to the
+ *   img-imgFile name. i.e. if the imgFile name is "myPicture" and the additional classes are ".bright" the resulting
+ *   CSS will contain ".img-myPicture .bright {...}"
+ */
+/**
+ *   Create a simple image with the given dimensions.
+ */
+/**
+ *  Creates the sprite position offset styles for a specific image
+ *  using the states name supplied.
+ */
+/**
+ *   Create a sprite for a certain row with the defined states.
+ *   By default the names for the states are "up", "down", "disabled".
+ *   The name of the states can be set. Currently only three states are available.
+ *   @spriteName: The name for this sprite 
+ *   @width: width of one sprite
+ *   @height: height of one sprite
+ *   @stateAmount: The amount of states within this image
+ *   @state1: The name of the first state (default: up)
+ *   @state2: The name of the second state (default: down)
+ *   @state3: The name of the thrid state (default:disabled)
+ */
+/*@listview_lastCell_gradient_mid: #353535:
+@listview_lastCell_gradient_end: #353535:*/
+/* header button left and right */
+.ui-bar-flyout-button {
+  height: 54px;
+  position: relative;
+  margin-top: 10px;
+}
+.ui-bar-flyout-button .ui-btn-left,
+.ui-bar-flyout-button .ui-btn-right {
+  top: 0;
+  width: 124px;
+  height: 54px;
+  background-image: url(../../img/bg_cleaning_button.png);
+  background-repeat: no-repeat;
+  background-size: 124px 54px;
+  position: absolute;
+}
+.ui-bar-flyout-button .ui-btn-left .ui-btn,
+.ui-bar-flyout-button .ui-btn-right .ui-btn {
+  margin: 0;
+  top: 6px;
+  height: 40px;
+  border-radius: 20px;
+  width: 110px;
+  left: 6px;
+  float: left;
+}
+.ui-bar-flyout-button .ui-btn-left .ui-btn .ui-btn-inner,
+.ui-bar-flyout-button .ui-btn-right .ui-btn .ui-btn-inner {
+  display: table-cell;
+  height: 40px;
+  width: 80px;
+  white-space: normal;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0 10px 0 10px;
+  background-image: url(../../img/icons/flyoutArrow_14x30.png);
+  background-repeat: no-repeat;
+  background-size: 10px;
+  background-position: right center;
+  max-width: 90px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ui-bar-flyout-button .ui-btn-left.two-buttons .ui-btn.first-button,
+.ui-bar-flyout-button .ui-btn-right.two-buttons .ui-btn.first-button {
+  width: 54px;
+  border-radius: 20px 0 0 20px;
+}
+.ui-bar-flyout-button .ui-btn-left.two-buttons .ui-btn.first-button .ui-btn-inner,
+.ui-bar-flyout-button .ui-btn-right.two-buttons .ui-btn.first-button .ui-btn-inner {
+  padding: 0 10px 0 5px;
+  width: 34px;
+  max-width: 34px;
+}
+.ui-bar-flyout-button .ui-btn-left.two-buttons .ui-btn.second-button,
+.ui-bar-flyout-button .ui-btn-right.two-buttons .ui-btn.second-button {
+  width: 53px;
+  margin-left: 1px;
+  border-radius: 0 20px 20px 0;
+}
+.ui-bar-flyout-button .ui-btn-left.two-buttons .ui-btn.second-button .ui-btn-inner,
+.ui-bar-flyout-button .ui-btn-right.two-buttons .ui-btn.second-button .ui-btn-inner {
+  padding: 0 0 0 3px;
+  width: 43px;
+  max-width: 43px;
+}
+.ui-bar-flyout-button .ui-btn-left.two-buttons .ui-btn.second-button .ui-btn-inner .ui-btn-text,
+.ui-bar-flyout-button .ui-btn-right.two-buttons .ui-btn.second-button .ui-btn-inner .ui-btn-text {
+  padding-right: 5px;
+}
+.ui-bar-flyout-button .ui-btn-left {
+  left: 0;
+}
+.ui-bar-flyout-button .ui-btn-right {
+  right: 0;
+}
+#statusTxt {
+  color: #009a3d;
+  font-size: 18px;
+  font-weight: normal;
+  padding-left: 30px;
+  background-image: url(../../img/icons/robot_status_52x60.png);
+  background-repeat: no-repeat;
+  background-size: 26px 30px;
+}
+#spotSize-popup {
+  left: 20px!important;
+  right: 20px!important;
+  max-width: 616px!important;
+  max-height: 616px!important;
+  min-width: 280px!important;
+  margin: auto;
+}
+#startContainer {
+  width: 550px;
+  height: 274px;
+  position: relative;
+  overflow: hidden;
+}
+#startContainer #startArea {
+  width: 550px;
+  height: 548px;
+  -webkit-transform: scale(0.5);
+  -webkit-transform-origin: 0 0 0;
+  background-image: url(../../img/bg_startbtn.png);
+  background-repeat: no-repeat;
+  /*
+        background-position: -467px -186px;
+        */
+
+  overflow: visible;
+  display: table-cell;
+  vertical-align: middle;
+}
+#startContainer #startArea #remote {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+#startContainer #startArea #remote #remoteUp {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -40px;
+  width: 80px;
+  height: 60px;
+}
+#startContainer #startArea #remote #remoteUp.remoteUp-down {
+  margin-left: -75px;
+  width: 150px;
+  height: 88px;
+}
+#startContainer #startArea #remote #remoteDown {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  margin-left: -40px;
+  width: 80px;
+  height: 60px;
+}
+#startContainer #startArea #remote #remoteDown.remoteDown-down {
+  margin-left: -75px;
+  width: 150px;
+  height: 88px;
+}
+#startContainer #startArea #remote #remoteLeft {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -40px;
+  width: 60px;
+  height: 80px;
+}
+#startContainer #startArea #remote #remoteLeft.remoteLeft-down {
+  margin-top: -75px;
+  width: 88px;
+  height: 150px;
+}
+#startContainer #startArea #remote #remoteRight {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -40px;
+  width: 60px;
+  height: 80px;
+}
+#startContainer #startArea #remote #remoteRight.remoteRight-down {
+  margin-top: -75px;
+  width: 88px;
+  height: 150px;
+}
+#startContainer #startArea #remote #remoteDiagLeft {
+  position: absolute;
+  left: 73px;
+  top: 67px;
+  width: 60px;
+  height: 60px;
+}
+#startContainer #startArea #remote #remoteDiagRight {
+  position: absolute;
+  right: 73px;
+  top: 67px;
+  width: 60px;
+  height: 60px;
+}
+#startContainer #startArea #startBtn {
+  margin: auto;
+}
+#startContainer #startArea #eventArea {
+  position: absolute;
+  width: 550px;
+  height: 548px;
+  top: 0;
+  left: 0;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+}

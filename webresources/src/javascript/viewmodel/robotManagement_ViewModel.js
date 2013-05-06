@@ -3,7 +3,6 @@ resourceHandler.registerFunction('robotManagement_ViewModel.js', function(parent
     var that = this;
     this.conditions = {};
     this.robot = ko.observable();
-    this.editName = ko.observable(false);
     this.newRobotName = ko.observable("");
     
     this.init = function() {
@@ -19,12 +18,10 @@ resourceHandler.registerFunction('robotManagement_ViewModel.js', function(parent
     this.changeName = function() {
         // set robot name
         that.newRobotName(that.robot().robotName());
-        that.editName(true);
+        //open popup
+        $("#changeNamePopup").popup("open");
     };
     
-    this.cancelEdit = function() {
-        this.editName(false);
-    }
     this.commitEdit = function() {
         console.log("change name of robot with id: " + that.robot().robotId() + " to " + that.newRobotName());
         //check if name has really changed
@@ -34,7 +31,8 @@ resourceHandler.registerFunction('robotManagement_ViewModel.js', function(parent
             tDeffer.done(that.successSetRobotName);
             tDeffer.fail(that.errorSetRobotName);
         }
-        this.editName(false);
+        
+        $("#changeNamePopup").popup("close");
     }
     
     this.successSetRobotName = function(result) {

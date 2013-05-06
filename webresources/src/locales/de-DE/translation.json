@@ -12,6 +12,8 @@
         "delete": "löschen",
         "change": "ändern",
         "logout": "Abmelden",
+        "on": "An",
+        "off": "Aus",
         "cleaningMode": {
             "1": "eco",
             "2": "normal"
@@ -41,7 +43,12 @@
             "settings": "Einstellungen",
             "logout": "Abmelden",
             "change_robot": "Roboter wechseln",
-            "send_to_base": "Zur Basis schicken"
+            "send_to_base": "Zur Basis schicken",
+            "cleaningType": {
+                "1":"Manuell",
+                "2":"Alles",
+                "3":"Spot"
+            }
         }
     },
     "start": {
@@ -132,6 +139,37 @@
                 "title": "Reinigungs Einstellungen",
                 "schedule":"Zeitplan zum Reinigen benutzen"
             }
+        }
+    },
+    "userSettings": {
+        "navi": {
+            "title": "Benutzereinstellungen"
+        },
+        "page": {
+            "email_adress": "E-Mail Addresse",
+            "password": "Passwort",
+            "old_password" : "Altes Passwort",
+            "new_password" : "Neues Passwort",
+            "new_password_verify" : "Neues Passwort verifizieren",
+            "password_is_being_changed" : "Passwort wird geändert",
+            "password_was_not_changed" : "Passwort wurde nicht geändert"
+        },
+        "message" : {
+        	"title" : "Passwort konnte nicht geändert werden",
+        	"no_server" : "Der Server ist nicht erreichbar, Ihr Passwort konnte nicht geändert werden."
+        }
+    },
+    "generalSettings": {
+        "navi": {
+            "title": "Allgemeine Einstellungen"
+        },
+        "page": {
+         	"notify_with" : "Benachrichtige mich mit...",
+         	"notify_when" : "Benachrichtige mich, wenn...",
+         	"push_on_phone" : "Push-Benachrichtigung auf meinem Handy",
+         	"robot_need_cleaning" : "Roboter muss gereinigt werden",
+         	"cleaning_done" : "Reinigung abgeschlossen",
+         	"robot_stuck" : "Roboter sitzt fest"
         }
     },
     "basicScheduler": {

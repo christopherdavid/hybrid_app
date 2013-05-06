@@ -1,9 +1,15 @@
 <div data-role="page" id="cleaning">
 
-    <div data-role="header" class="page-header" data-position="fixed" data-tap-toggle="false">
+    <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
         <div class="ui-btn-left">
             <a data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">Menu</a>
         </div>
+        <!--
+         <div class="ui-btn-left two-buttons">
+            <a href="#" class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true">+</a>
+            <a href="#" class="second-button" data-role="button" data-theme="b" data-mini="false" data-inline="true">-</a>
+        </div>
+        -->
         <h1>
             <div class="robotName">
                 <span data-bind="click:changeRobot, text: robot().robotName">[robot name]</span>
@@ -12,7 +18,6 @@
                 <span data-i18n="cleaning.navi.title" data-bind="translate: language">[navi title]</span>
             </div>
         </h1>
-        
         <div class="ui-btn-right">
             <a href="#" class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true"
                 data-i18n="cleaning.page.send_to_base"
@@ -25,97 +30,199 @@
         </div>
         -->
     </div>
+    
+    
+    
 
     <div data-role="content">
+        <div>
+        <div id="statusTxt" data-bind="text:robotServerState"></div>
         
-        <div id="startContent" style="position: relative; display:block;">
+        <!--
+        <div class="ui-bar-flyout-button">
+            <div class="ui-btn-left two-buttons">
+                    <a class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">one</a>
+                    <a class="second-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">two</a>
+                
+            </div>
+            <div class="ui-btn-right two-buttons">
+                <a class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">one</a>
+                <a class="second-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">two</a>
+            </div>
+        </div>
+        
+        <div class="ui-bar-flyout-button">
+            <div class="ui-btn-left">
+                    <a class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">one</a>
+                
+            </div>
+            <div class="ui-btn-right two-buttons">
+                <a class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">one</a>
+                <a class="second-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">two</a>
+            </div>
+        </div>
+        
+        <div class="ui-bar-flyout-button">
+            <div class="ui-btn-left two-buttons">
+                    <a class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">one</a>
+                    <a class="second-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">two</a>
+            </div>
+            <div class="ui-btn-right">
+                <a class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">one</a>
+            </div>
+        </div>
+        
+        <div class="ui-bar-flyout-button">
+            <div class="ui-btn-left">
+                    <a class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">one</a>
+                
+            </div>
+            <div class="ui-btn-right">
+                <a class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">one</a>
+            </div>
         </div>
 
-        <div class="categoryArea">
-            <!-- button area -->
-            <div class="categoryTable">
-                <!-- table -->
-                <div style="display: table-row; visibility:hidden;">
-                    <!-- cleaning button-->
-                    <div class="categoryCell" id="cleaning">
-                        <div class="categoryBtnBorder" style="margin-right:5px; margin-bottom:5px;">
-                            <div class="categoryBtnGradient">
-                                <div class="img-categoryimg cleaningimg-up categoryBtnIcon">
-                                    <div class="categoryBtnTxt" data-align="top">
-                                        cleaning
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="categoryCell" id="remote">
-                        <div class="categoryBtnBorder" style="margin-left:5px; margin-bottom:5px;">
-                            <div class="categoryBtnGradient">
-                                <div class="img-categoryimg remoteimg-up categoryBtnIcon">
-                                    <div class="categoryBtnTxt" data-align="top">
-                                        remote
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display: table-row; visibility:hidden;">
-
-                    <div class="categoryCell" id="schedule">
-                        <div class="categoryBtnBorder" style="margin-right:5px; margin-top:5px;">
-                            <div class="categoryBtnGradient">
-                                <div class="img-categoryimg scheduleimg-up categoryBtnIcon">
-                                    <div class="categoryBtnTxt" data-align="bottom">
-                                        remote
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="categoryCell" id="settings">
-                        <div class="categoryBtnBorder" style="margin-left:5px; margin-top:5px;">
-                            <div class="categoryBtnGradient">
-                                <div class="img-categoryimg settingsimg-up categoryBtnIcon">
-                                    <div class="categoryBtnTxt" data-align="bottom">
-                                        remote
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="startBtn" class="img-startstopbtn startbtn-up" data-state="inactive" data-bind="click:startBtnClick" style="position:absolute; margin-left:50%; margin-top:50%; left: -172px; top: -178px;"></div>
-                <!-- /startbtn -->
-                <div id="startArea" style="position:absolute;left:0px;top:0px;width:100%;height:100%;"></div>
+        <div class="ui-bar-flyout-button">
+            <div class="ui-btn-left two-buttons">
+                    <a class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">oneas dad asd</a>
+                    <a class="second-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">two ada sdasd </a>
+                
             </div>
-            <!-- /table -->
-        </div><!-- /category area -->
+            <div class="ui-btn-right two-buttons">
+                <a class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">on asd ade</a>
+                <a class="second-button" data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">twoasd asd asd asd </a>
+            </div>
+        </div>
+        -->
+
+        <div style="margin:auto; width:275px;">
+            <div id="startContainer">
+                <div id="startArea">
+                    <div id="remote" data-bind="visible: isRemoteSelected()">
+                        <div id="remoteUp" class="img-remote_vertical" data-bind="css: {'remoteUp-disabled':isRemoteDisabled()}"></div>
+                        <div id="remoteDown" class="img-remote_vertical" data-bind="css: {'remoteDown-disabled':isRemoteDisabled()}"></div>
+                        <div id="remoteLeft" class="img-remote_horizontal" data-bind="css: {'remoteLeft-disabled':isRemoteDisabled()}"></div>
+                        <div id="remoteRight" class="img-remote_horizontal" data-bind="css: {'remoteRight-disabled':isRemoteDisabled()}"></div>
+                        <div id="remoteDiagLeft" class="img-remote_diagonal" data-bind="css: {'remoteDiagLeft-disabled':isRemoteDisabled()}"></div>
+                        <div id="remoteDiagRight" class="img-remote_diagonal" data-bind="css: {'remoteDiagRight-disabled':isRemoteDisabled()}"></div>
+                    </div>
+                    
+                    <div id="startBtn" class="img-startstopbtn startbtn-up" data-state="inactive"></div>
+                    
+                    <div id="eventArea"></div>
+                    
+                </div>
+            </div>
+            
+            <div class="ui-bar-flyout-button">
+                <div class="ui-btn-left" data-bind="css:{'two-buttons':isSpotSelected()}">
+                        <select data-native-menu="false" data-corners="false" data-icon="false" id="cleaningType"
+                            data-bind="jqmOptions: cleaningType, optionsText: 'text', optionsValue : 'id', value: selectedType, optionsCaption: ' ', jqmButtonClass:'first-button'">
+                        </select>
+                        
+                        <a data-role="button" class="second-button" data-theme="b" data-mini="false" data-inline="true" href="#"
+                            data-bind="visible:isSpotSelected(), jqLinkButtonText:spotSize, click:editSpotSize"
+                        >[spot]</a>
+                </div>
+                <div class="ui-btn-right">
+                    <select data-native-menu="false" data-corners="false" data-icon="false"
+                        data-bind="jqmOptions: cleaningMode, optionsText: 'text', optionsValue : 'id', value: selectedMode, optionsCaption: ' '">
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
     </div><!-- /content -->
+    <div id="spotSize" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport">
+        <h1>Choose Spot size</h1>
+            
+        <fieldset data-role="controlgroup">
+            <div class="ui-grid-b">
+                <div class="ui-block-a">
+                    <legend>Size length</legend>
+                    <input type="radio" name="spotSize-from" id="spotSize-from-1" value="1" data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
+                    <label for="spotSize-from-1">1</label>
+    
+                    <input type="radio" name="spotSize-from" id="spotSize-from-2" value="2"  data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
+                    <label for="spotSize-from-2">2</label>
+    
+                    <input type="radio" name="spotSize-from" id="spotSize-from-3" value="3"  data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
+                    <label for="spotSize-from-3">3</label>
+    
+                    <input type="radio" name="spotSize-from" id="spotSize-from-4" value="4"  data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
+                    <label for="spotSize-from-4">4</label>
+                    
+                    <input type="radio" name="spotSize-from" id="spotSize-from-5" value="5"  data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
+                    <label for="spotSize-from-5">5</label>
+                </div>
+                <div class="ui-block-b">
+                    
+                </div>
+                <div class="ui-block-c">
+                    <legend>Size height</legend>
+                    <input type="radio" name="spotSize-to" id="spotSize-to-1" value="1" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
+                    <label for="spotSize-to-1">1</label>
+    
+                    <input type="radio" name="spotSize-to" id="spotSize-to-2" value="2" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
+                    <label for="spotSize-to-2">2</label>
+    
+                    <input type="radio" name="spotSize-to" id="spotSize-to-3" value="3" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
+                    <label for="spotSize-to-3">3</label>
+    
+                    <input type="radio" name="spotSize-to" id="spotSize-to-4" value="4" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
+                    <label for="spotSize-to-4">4</label>
+                    
+                    <input type="radio" name="spotSize-to" id="spotSize-to-5" value="5" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
+                    <label for="spotSize-to-5">5</label>
+                </div>
+        </fieldset>
+        
+        <div class="ui-grid-a">
+            <div class="ui-block-a">
+                <div class="ui-bar-flyout-button">
+                    <div class="ui-btn-left">
+                            <select data-native-menu="false" data-corners="false" data-icon="false"
+                                data-bind="jqmOptions: cleaningFrequency, optionsText: $data, optionsValue : $data, value: selectedFrequency, optionsCaption: ' '">
+                            </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ui-block-b">
+                <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                    data-i18n="common.ok"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:popupOk">[send to base]</a>
+                
+                <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                    data-i18n="common.cancel"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:popupCancel">[send to base]</a>
+                
+            </div>
+        </div>
+    </div>
     
     <div id="menuPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport">
         <ul data-role="listview" data-divider-theme="a" data-inset="true">
             <li>
                 <a href="javascript:void(0);" data-bind="click: schedule">
                     <h3 class="companyColoredTxt" data-i18n="cleaning.page.schedule" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
-                        login
+                        [schedule]
                     </h3>
                 </a>
             </li>
             <li>
                 <a href="javascript:void(0);" data-bind="click: cleaning">
                     <h3 class="companyColoredTxt" data-i18n="cleaning.page.cleaning" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
-                        register
+                        [cleaning]
                     </h3>
                 </a>
             </li>
             <li>
                 <a href="javascript:void(0);" data-bind="click: settings">
                     <h3 class="companyColoredTxt" data-i18n="cleaning.page.settings" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
-                        register
+                        [settings]
                     </h3>
                 </a>
             </li>
