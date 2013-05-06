@@ -612,6 +612,12 @@ public class NeatoSmartAppService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		LogHelper.logD(TAG, "startId is " + startId);
+		
+		if (intent == null) {
+			LogHelper.logD(TAG, "intent is null");
+			return super.onStartCommand(intent, flags, startId);
+		}
+		
 		Bundle bundle = intent.getBundleExtra(PushNotificationConstants.EXTRA_NOTIFICATION_BUNDLE);
 		if(bundle != null) {
 			LogHelper.logD(TAG, "called from notification, bundle message is " + bundle.getString(PushNotificationConstants.NOTIFICATION_TICKER_KEY));
