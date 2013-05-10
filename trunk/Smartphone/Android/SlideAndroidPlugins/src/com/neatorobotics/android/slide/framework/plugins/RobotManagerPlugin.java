@@ -10,9 +10,12 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.database.ScheduleHelper;
+import com.neatorobotics.android.slide.framework.gcm.PushNotificationConstants;
+import com.neatorobotics.android.slide.framework.gcm.PushNotificationListener;
+import com.neatorobotics.android.slide.framework.gcm.PushNotificationMessageHandler;
+import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.json.JsonHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
@@ -47,7 +50,6 @@ import com.neatorobotics.android.slide.framework.webservice.robot.atlas.listener
 import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapDataDownloadListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.UpdateRobotMapListener;
-import com.neatorobotics.android.slide.framework.webservice.robot.schedule.DeleteScheduleListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.RobotSchedulerManager2;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.ScheduleRequestListener;
 import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
@@ -74,7 +76,7 @@ public class RobotManagerPlugin extends Plugin {
 		UPDATE_SCHEDULE, CREATE_SCHEDULE, SYNC_SCHEDULE_FROM_SERVER, IS_SCHEDULE_ENABLED, 
 		ENABLE_SCHEDULE, SET_SPOT_DEFINITION,
 		GET_SPOT_DEFINITION, START_CLEANING, STOP_CLEANING, PAUSE_CLEANING, RESUME_CLEANING,
-		DRIVE_ROBOT, TURN_VACUUM_ON_OFF, TURN_WIFI_ON_OFF};
+		DRIVE_ROBOT, TURN_VACUUM_ON_OFF, TURN_WIFI_ON_OFF, REGISTER_FOR_ROBOT_MESSAGES};
 
 		static {
 			ACTION_MAP.put(ActionTypes.DISCOVER_NEAR_BY_ROBOTS, RobotManagerPluginMethods.DISCOVER_NEAR_BY_ROBOTS);
@@ -121,6 +123,8 @@ public class RobotManagerPlugin extends Plugin {
 			
 			ACTION_MAP.put(ActionTypes.TURN_VACUUM_ON_OFF, RobotManagerPluginMethods.TURN_VACUUM_ON_OFF);
 			ACTION_MAP.put(ActionTypes.TURN_WIFI_ON_OFF, RobotManagerPluginMethods.TURN_WIFI_ON_OFF);			
+			
+			ACTION_MAP.put(ActionTypes.REGISTER_FOR_ROBOT_MESSAGES, RobotManagerPluginMethods.REGISTER_FOR_ROBOT_MESSAGES);		
 		}
 
 		private RobotPluginDiscoveryListener mRobotPluginDiscoveryListener;
@@ -314,11 +318,19 @@ public class RobotManagerPlugin extends Plugin {
 			case TURN_WIFI_ON_OFF:
 				LogHelper.log(TAG, "TURN_WIFI_ON_OFF action Initiated");
 				turnWiFiOnOff(context, jsonData, callbackId);
-				break;		
+				break;			
+			case REGISTER_FOR_ROBOT_MESSAGES:
+				LogHelper.log(TAG, "REGISTER_FOR_ROBOT_MESSAGES initiated");
+				registerForRobotsMessages(context, jsonData, callbackId);
+				break;
 			}
 		}
 		
-
+		private void registerForRobotsMessages(Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "registerForRobotsMessages called");
+			PushNotificationMessageHandler.getInstance(context).addPushNotificationListener(new RobotPushNotificationListener(callbackId));
+		}
+		
 		// Private helper method to send the cleaning commands. Keeping Cleaning command helper method separate so that
 		// we can detect the kind of cleaning and the extra params required for the cleaning command
 		private void sendCleaningCommandToRobot(Context context, int commandId, RobotJsonData jsonData,
@@ -1103,6 +1115,7 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String TURN_WIFI_ON_OFF = "turnWiFiOnOff";
 			public static final String IS_SCHEDULE_ENABLED = "isScheduleEnabled";
 			public static final String ENABLE_SCHEDULE = "enableSchedule";
+			public static final String REGISTER_FOR_ROBOT_MESSAGES = "registerForRobotMessges";
 		}
 
 		private JSONObject getErrorJsonObject(int errorCode, String errMessage) {
@@ -1551,6 +1564,38 @@ public class RobotManagerPlugin extends Plugin {
 				pluginResult.setKeepCallback(false);
 				success(pluginResult, mCallbackId);
 			}
+		}
+		
+		private class RobotPushNotificationListener implements PushNotificationListener {
+			private String mCallbackId;
+			
+			public RobotPushNotificationListener(String callbackId) {
+				mCallbackId = callbackId;
+			}
+
+			@Override
+			public void onShowPushNotification(Bundle bundle) {
+				LogHelper.log(TAG, "onShowPushNotification: " + bundle);
+				JSONObject jsonObject = convertBundleToJsonObject(bundle);
+				PluginResult pluginPushNotificationResult = new PluginResult(PluginResult.Status.OK, jsonObject);
+				pluginPushNotificationResult.setKeepCallback(true);
+				success(pluginPushNotificationResult, mCallbackId);
+			}
+		}
+		
+		
+		private static final JSONObject convertBundleToJsonObject(Bundle bundle) {
+			JSONObject jsonObject = new JSONObject();
+			// bundle.
+			
+			if (bundle != null) {
+				String notificationId = bundle.getString(PushNotificationConstants.NOTIFICATION_ID_KEY);
+				String message = bundle.getString(PushNotificationConstants.NOTIFICATION_MESSAGE_KEY);
+				AppUtils.addToJsonObjectIfNotEmpty(jsonObject, PushNotificationConstants.NOTIFICATION_ID_KEY, notificationId);
+				AppUtils.addToJsonObjectIfNotEmpty(jsonObject, PushNotificationConstants.NOTIFICATION_MESSAGE_KEY, message);
+			}
+			
+			return jsonObject;
 		}
 }
 

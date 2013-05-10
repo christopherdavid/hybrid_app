@@ -620,7 +620,7 @@ public class NeatoSmartAppService extends Service {
 		
 		Bundle bundle = intent.getBundleExtra(PushNotificationConstants.EXTRA_NOTIFICATION_BUNDLE);
 		if(bundle != null) {
-			LogHelper.logD(TAG, "called from notification, bundle message is " + bundle.getString(PushNotificationConstants.NOTIFICATION_TICKER_KEY));
+			LogHelper.logD(TAG, "called from notification, bundle message is " + bundle.getString(PushNotificationConstants.NOTIFICATION_MESSAGE_KEY));
 //			sendPushNotificationToUI(bundle);
 		}
 		return super.onStartCommand(intent, flags, startId);

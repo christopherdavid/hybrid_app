@@ -11,6 +11,7 @@ public class ApplicationConfig {
 	private Context mContext;
 	private static ApplicationConfig sApplicationConfig;
 	private static final Object INSTANCE_LOCK = new Object();
+	private static boolean sActivityVisible;
 
 	private INeatoRobotService mNeatoRobotService;
 	private NeatoRobotResultReceiver mNeatoRobotResultReceiver;
@@ -46,5 +47,17 @@ public class ApplicationConfig {
 
 	public NeatoRobotResultReceiver getRobotResultReceiver() {
 		return mNeatoRobotResultReceiver;
+	}
+	
+	public boolean isApplicationForeground() {
+		return sActivityVisible;
+	}
+
+	public void activityResumed() {
+		sActivityVisible = true;
+	}
+
+	public void activityPaused() {
+		sActivityVisible = false;
 	}
 }

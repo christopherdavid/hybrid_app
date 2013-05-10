@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.UUID;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
@@ -14,6 +17,7 @@ import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.text.TextUtils;
 import android.util.Base64;
 
 public class AppUtils {
@@ -125,5 +129,17 @@ public class AppUtils {
 			throw new NeatoServerException(result.mResponseStatus, result.message);
 		}
 		return result;
+	}
+	
+	public static void addToJsonObjectIfNotEmpty(JSONObject jsonObject, String jsonKey, String value) {
+		try {
+			if (!TextUtils.isEmpty(value)) {
+				jsonObject.put(jsonKey, value);
+			}
+		}
+		catch (JSONException e) {
+			
+		}
+		
 	}
 }

@@ -104,6 +104,7 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(result);
 			localStorage.setItem('email', result.email);
 			localStorage.setItem('loggedIn', 1);
+			neatoSmartApp.registerForRobotMessages();
 			neatoSmartApp.hideWelcomeShowHomePage();
 		},
 
@@ -125,6 +126,7 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(result);
 			localStorage.setItem('loggedIn', 1);
 			neatoSmartApp.hideProgressBar();
+			neatoSmartApp.registerForRobotMessages();
 			neatoSmartApp.hideLoginShowHomePage();
 		},
 
@@ -167,6 +169,19 @@ var neatoSmartApp = (function() {
 		
 		changePassErr: function() {
 			neatoSmartApp.hideProgressBar();
+			neatoSmartApp.setResponseText(error);
+		},
+		
+		registerForRobotMessages: function() {
+			RobotPluginManager.registerForRobotMessages(neatoSmartApp.successNotifyPushMessage, neatoSmartApp.errorNotifyPushMessage);
+		},
+		
+		successNotifyPushMessage: function(result) {
+			neatoSmartApp.setResponseText(result);
+			alert(JSON.stringify(result));
+		},
+		
+		errorNotifyPushMessage: function(error) {
 			neatoSmartApp.setResponseText(error);
 		},
 		
@@ -3116,11 +3131,12 @@ var neatoSmartApp = (function() {
 			// then display Welcome screen 
 			var validationStatus = result['validation_status'];
 			if (validationStatus != USER_STATUS_NOT_VALIDATED) {
+				neatoSmartApp.registerForRobotMessages();
 				neatoSmartApp.showUserHomepage();
 			}
 			else {
 				neatoSmartApp.showWelcomePage();
-			}			
+			}	
 		},
 		
 		errorUserValidation: function(error) {
