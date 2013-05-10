@@ -109,10 +109,19 @@ public class RobotHelper {
 		return updated;
 	}
 
+	private static CleaningSettings getDefaultCleaningSettings() {
+		CleaningSettings cleaningSettings = new CleaningSettings();
+		cleaningSettings.setSpotAreaLength(RobotCommandPacketConstants.DEFAULT_SPOT_CLEANING_LENGTH);
+		cleaningSettings.setSpotAreaHeight(RobotCommandPacketConstants.DEFAULT_SPOT_CLEANING_HEIGHT);
+		return cleaningSettings;
+	}
 	public static CleaningSettings getCleaningSettings(Context context, String robotId) {
 		CleaningSettings cleaningSettings = null;
 		if (!TextUtils.isEmpty(robotId)) {
 			cleaningSettings = DBHelper.getInstance(context).getCleaningSettings(robotId);
+			if (cleaningSettings == null) {
+				cleaningSettings = getDefaultCleaningSettings();
+			}
 		}
 		return cleaningSettings;
 	}	
