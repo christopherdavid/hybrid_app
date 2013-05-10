@@ -136,97 +136,121 @@
     </div>
     </div><!-- /content -->
     <div id="spotSize" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport">
-        <h1>Choose Spot size</h1>
-            
-        <fieldset data-role="controlgroup">
-            <div class="ui-grid-b">
-                <div class="ui-block-a">
-                    <legend>Size length</legend>
-                    <input type="radio" name="spotSize-from" id="spotSize-from-1" value="1" data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
-                    <label for="spotSize-from-1">1</label>
-    
-                    <input type="radio" name="spotSize-from" id="spotSize-from-2" value="2"  data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
-                    <label for="spotSize-from-2">2</label>
-    
-                    <input type="radio" name="spotSize-from" id="spotSize-from-3" value="3"  data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
-                    <label for="spotSize-from-3">3</label>
-    
-                    <input type="radio" name="spotSize-from" id="spotSize-from-4" value="4"  data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
-                    <label for="spotSize-from-4">4</label>
-                    
-                    <input type="radio" name="spotSize-from" id="spotSize-from-5" value="5"  data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
-                    <label for="spotSize-from-5">5</label>
-                </div>
-                <div class="ui-block-b">
-                    
-                </div>
-                <div class="ui-block-c">
-                    <legend>Size height</legend>
-                    <input type="radio" name="spotSize-to" id="spotSize-to-1" value="1" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
-                    <label for="spotSize-to-1">1</label>
-    
-                    <input type="radio" name="spotSize-to" id="spotSize-to-2" value="2" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
-                    <label for="spotSize-to-2">2</label>
-    
-                    <input type="radio" name="spotSize-to" id="spotSize-to-3" value="3" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
-                    <label for="spotSize-to-3">3</label>
-    
-                    <input type="radio" name="spotSize-to" id="spotSize-to-4" value="4" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
-                    <label for="spotSize-to-4">4</label>
-                    
-                    <input type="radio" name="spotSize-to" id="spotSize-to-5" value="5" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
-                    <label for="spotSize-to-5">5</label>
-                </div>
-        </fieldset>
+        <div data-role="header" data-theme="b">
+            <h1 class="ui-title" role="heading" aria-level="1" data-i18n="cleaning.page.spot_size_title" data-bind="translate:{obs:language(),target: textTarget.FIRSTCHILD}">[edit] 
+                    <span class="selected-value" data-bind="text:newSpotSize">[1x1]</span></h1>
+        </div>
         
-        <div class="ui-grid-a">
-            <div class="ui-block-a">
-                <div class="ui-bar-flyout-button">
+        <div data-role="content">
+            <div id="spotContainer">
+                <div id="spotGridContainer">
+                    <div id="spotSizeContainer">
+                        <div id="leftSpotContainer">
+                            <div class="border"></div>
+                        </div>
+                        <div id="rightSpotContainer" class="img-selectionarea">
+                            <div class="border"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="spotRobot"></div>
+            </div>
+            
+            <!--
+            <fieldset data-role="controlgroup">
+                <div class="ui-grid-b">
+                    <div class="ui-block-a">
+                        <legend>Size length</legend>
+                        <input type="radio" name="spotSize-from" id="spotSize-from-1" value="1" data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
+                        <label for="spotSize-from-1">1</label>
+        
+                        <input type="radio" name="spotSize-from" id="spotSize-from-2" value="2"  data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
+                        <label for="spotSize-from-2">2</label>
+        
+                        <input type="radio" name="spotSize-from" id="spotSize-from-3" value="3"  data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
+                        <label for="spotSize-from-3">3</label>
+        
+                        <input type="radio" name="spotSize-from" id="spotSize-from-4" value="4"  data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
+                        <label for="spotSize-from-4">4</label>
+                        
+                        <input type="radio" name="spotSize-from" id="spotSize-from-5" value="5"  data-bind="checked: newSpotSizeLength, jqRadioChecked: newSpotSizeLength " />
+                        <label for="spotSize-from-5">5</label>
+                    </div>
+                    <div class="ui-block-b">
+                        
+                    </div>
+                    <div class="ui-block-c">
+                        <legend>Size height</legend>
+                        <input type="radio" name="spotSize-to" id="spotSize-to-1" value="1" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
+                        <label for="spotSize-to-1">1</label>
+        
+                        <input type="radio" name="spotSize-to" id="spotSize-to-2" value="2" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
+                        <label for="spotSize-to-2">2</label>
+        
+                        <input type="radio" name="spotSize-to" id="spotSize-to-3" value="3" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
+                        <label for="spotSize-to-3">3</label>
+        
+                        <input type="radio" name="spotSize-to" id="spotSize-to-4" value="4" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
+                        <label for="spotSize-to-4">4</label>
+                        
+                        <input type="radio" name="spotSize-to" id="spotSize-to-5" value="5" data-bind="checked: newSpotSizeHeight, jqRadioChecked: newSpotSizeHeight" />
+                        <label for="spotSize-to-5">5</label>
+                    </div>
+            </fieldset>
+            -->
+        
+            <div >
+                
+                <div class="ui-bar-flyout-button" style="float:left">
                     <div class="ui-btn-left">
                             <select data-native-menu="false" data-corners="false" data-icon="false"
                                 data-bind="jqmOptions: cleaningFrequency, optionsText: $data, optionsValue : $data, value: selectedFrequency, optionsCaption: ' '">
                             </select>
                     </div>
                 </div>
-            </div>
-            
-            <div class="ui-block-b">
-                <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
-                    data-i18n="common.ok"
-                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:popupOk">[send to base]</a>
                 
-                <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
-                    data-i18n="common.cancel"
-                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:popupCancel">[send to base]</a>
+                
+                
+                <div class="ui-popup-double-button" style="float:right">
+                    <div class="ui-btn-left two-buttons">
+                        <a class="first-button" href="#" data-role="button" data-theme="b" data-mini="false" 
+                            data-i18n="common.ok" 
+                            data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: popupOk">[ok]</a>
+                        <a class="second-button" href="#" data-role="button" data-theme="b" data-mini="false" 
+                            data-i18n="common.cancel"
+                            data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: popupCancel">[cancel]</a>
+                    </div>
+                </div>
                 
             </div>
         </div>
     </div>
     
     <div id="menuPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport">
-        <ul data-role="listview" data-divider-theme="a" data-inset="true">
-            <li>
-                <a href="javascript:void(0);" data-bind="click: schedule">
-                    <h3 class="companyColoredTxt" data-i18n="cleaning.page.schedule" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
-                        [schedule]
-                    </h3>
-                </a>
-            </li>
-            <li>
-                <a href="javascript:void(0);" data-bind="click: cleaning">
-                    <h3 class="companyColoredTxt" data-i18n="cleaning.page.cleaning" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
-                        [cleaning]
-                    </h3>
-                </a>
-            </li>
-            <li>
-                <a href="javascript:void(0);" data-bind="click: settings">
-                    <h3 class="companyColoredTxt" data-i18n="cleaning.page.settings" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
-                        [settings]
-                    </h3>
-                </a>
-            </li>
-        </ul>
+	    
+	    <h3 class="menuPopupTitle" data-i18n="common.menu" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+	            [menu]
+        </h3> 
+	    <div class="menuPopupTitleLine"></div>
+
+	    <a href="javascript:void(0);" data-bind="click: cleaning" class="active cleaning">
+	        <h3 class="menuPopupBtn cleaning" data-i18n="cleaning.page.cleaning" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+	            [cleaning]
+	        </h3>
+	    </a>
+	    <a href="javascript:void(0);" data-bind="click: schedule" class="schedule">
+	        <h3 class="menuPopupBtn" data-i18n="cleaning.page.schedule" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+	            [schedule]
+	        </h3>
+	    </a>
+	    <a href="javascript:void(0);" data-bind="click: settings" class="settings">
+	        <h3 class="menuPopupBtn" data-i18n="cleaning.page.settings" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+	            [settings]
+	        </h3>
+	    </a>
+	    
+	    <span class="link">www.vorwerk.com</span>
+	    
     </div>
 
 </div><!-- /page -->

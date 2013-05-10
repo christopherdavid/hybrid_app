@@ -137,3 +137,10 @@ ko.bindingHandlers.jqOptionsEnable = {
         $(element).selectmenu( value ? "enable" : "disable");
     }
 }
+
+ko.bindingHandlers.jqmFlipValue = {
+    update : function(element, valueAccessor, allBindingsAccessor, context) {
+        ko.bindingHandlers.value.update(element, valueAccessor, allBindingsAccessor, context);
+        $(element).slider("refresh");
+    }
+};

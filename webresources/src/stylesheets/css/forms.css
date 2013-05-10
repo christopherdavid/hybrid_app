@@ -1,14 +1,39 @@
+.ui-icon-checkbox-on {
+  background-position: 0 0;
+  background-image: url("../../img/icons/tick_34x35.png");
+  background-size: 18px 18px;
+}
+.ui-checkbox-on .ui-icon,
+.ui-checkbox-off .ui-icon {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+.editWithButton {
+  max-width: 500px;
+}
+.editWithButton .ui-button-block {
+  float: right;
+  position: relative;
+  height: 0px;
+  top: -53px;
+}
+.editWithButton div.ui-slider.ui-slider-switch {
+  float: right;
+  top: -41px;
+}
+fieldset p.label {
+  font-weight: bold;
+  margin-left: 10px;
+}
 div.ui-slider.ui-slider-switch {
   border-color: #7A7A7A;
   background: #808080;
-  float: right;
-  top: -6px;
 }
 div.ui-slider.ui-slider-switch.ui-btn-corner-all {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
   width: 60px;
+  margin: 0;
 }
 div.ui-slider.ui-slider-switch.ui-focus,
 div.ui-slider.ui-slider-switch ui-btn:focus {
@@ -71,4 +96,98 @@ div.ui-slider.ui-slider-switch a.ui-slider-handle .ui-btn-inner {
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fdfdfd), color-stop(100%, #c0c0c0));
   background: -webkit-linear-gradient(top, #fdfdfd 0%, #c0c0c0 100%);
   background: linear-gradient(to bottom, #fdfdfd 0%, #c0c0c0 100%);
+}
+/* header button left and right */
+.ui-popup-container .ui-bar-double-button {
+  position: relative;
+  left: 18px;
+  margin: 10px auto;
+  width: 261px;
+  height: 54px;
+}
+.ui-popup-container .ui-bar-double-button .ui-btn-left,
+.ui-popup-container .ui-bar-double-button .ui-btn-right {
+  top: 0;
+  width: 156px;
+  height: 54px;
+  position: absolute;
+}
+.ui-popup-container .ui-bar-double-button .ui-btn-left .ui-btn,
+.ui-popup-container .ui-bar-double-button .ui-btn-right .ui-btn {
+  margin: 0;
+  top: 6px;
+  height: 40px;
+  border-radius: 20px;
+  width: 208px;
+  left: 6px;
+  float: left;
+}
+.ui-popup-container .ui-bar-double-button .ui-btn-left .ui-btn .ui-btn-inner,
+.ui-popup-container .ui-bar-double-button .ui-btn-right .ui-btn .ui-btn-inner {
+  display: table-cell;
+  height: 40px;
+  width: 188px;
+  white-space: normal;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0 10px 0 10px;
+  max-width: 188px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ui-popup-container .ui-bar-double-button .ui-btn-left.two-buttons .ui-btn.first-button,
+.ui-popup-container .ui-bar-double-button .ui-btn-right.two-buttons .ui-btn.first-button {
+  width: 103px;
+  border-radius: 20px 0 0 20px;
+}
+.ui-popup-container .ui-bar-double-button .ui-btn-left.two-buttons .ui-btn.first-button .ui-btn-inner,
+.ui-popup-container .ui-bar-double-button .ui-btn-right.two-buttons .ui-btn.first-button .ui-btn-inner {
+  padding: 0 10px 0 5px;
+  width: 93px;
+  max-width: 93px;
+}
+.ui-popup-container .ui-bar-double-button .ui-btn-left.two-buttons .ui-btn.second-button,
+.ui-popup-container .ui-bar-double-button .ui-btn-right.two-buttons .ui-btn.second-button {
+  width: 102px;
+  margin-left: 1px;
+  border-radius: 0 20px 20px 0;
+}
+.ui-popup-container .ui-bar-double-button .ui-btn-left.two-buttons .ui-btn.second-button .ui-btn-inner,
+.ui-popup-container .ui-bar-double-button .ui-btn-right.two-buttons .ui-btn.second-button .ui-btn-inner {
+  padding: 0 0 0 3px;
+  width: 92px;
+  max-width: 92px;
+}
+.ui-popup-container .ui-bar-double-button .ui-btn-left.two-buttons .ui-btn.second-button .ui-btn-inner .ui-btn-text,
+.ui-popup-container .ui-bar-double-button .ui-btn-right.two-buttons .ui-btn.second-button .ui-btn-inner .ui-btn-text {
+  padding-right: 5px;
+}
+.ui-popup-container .ui-bar-double-button .ui-btn-left {
+  left: 0;
+}
+.ui-popup-container .ui-bar-double-button .ui-btn-right {
+  right: 0;
+}
+.ui-popup-screen.in {
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+  background-color: #666;
+}
+.ui-popup-container.ui-popup-active {
+  min-width: 285px;
+  max-width: 500px;
+}
+.ui-popup-container.ui-popup-active .dialog.ui-popup {
+  border: 0 none;
+  box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.4);
+}
+.ui-popup-container.ui-popup-active h1.ui-title {
+  font-size: 20px;
+}
+.ui-popup-container.ui-popup-active .ui-content h2 {
+  padding: 0;
+  margin: 10px 0 0 0;
+  line-height: 8px;
+  font-size: 16px;
 }

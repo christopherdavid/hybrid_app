@@ -134,6 +134,13 @@ body .ui-body-c,
   min-width: 280px!important;
   margin: auto;
 }
+#spotSize-popup .selected-value {
+  color: #009a3d;
+}
+.ui-popup-container .ui-header .ui-title {
+  margin-right: 3%;
+  margin-left: 3%;
+}
 #startContainer {
   width: 550px;
   height: 274px;
@@ -239,4 +246,161 @@ body .ui-body-c,
   left: 0;
   -webkit-user-drag: none;
   -webkit-user-select: none;
+}
+#spotContainer {
+  width: 258px;
+  height: 278px;
+  position: relative;
+  margin: auto;
+}
+#spotContainer #spotRobot {
+  position: absolute;
+  bottom: 0px;
+  width: 54px;
+  height: 56px;
+  left: 50%;
+  margin-left: -27px;
+  background-image: url(../../img/icons/spot_robot_108x112.png);
+  background-repeat: no-repeat;
+  background-size: 54px 56px;
+  z-index: 999;
+}
+#spotContainer #spotGridContainer {
+  position: relative;
+  width: 258px;
+  height: 258px;
+  background-image: url(../../img/bg_spot_grid.png);
+  background-repeat: repeat;
+}
+#spotContainer #spotGridContainer #spotSizeContainer {
+  position: relative;
+  width: 246px;
+  height: 246px;
+  border: 2px solid #3e3e3e;
+  left: 4px;
+  top: 4px;
+  background-color: rgba(60, 60, 60, 0.5);
+}
+#spotContainer #spotGridContainer #spotSizeContainer .border {
+  border-top: 1px solid rgba(149, 193, 28, 0.7);
+  border-bottom: 1px solid rgba(149, 193, 28, 0.7);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+#spotContainer #spotGridContainer #spotSizeContainer #leftSpotContainer {
+  position: absolute;
+  bottom: -2px;
+  left: 75px;
+  margin-left: -2px;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(187, 255, 0, 0.3);
+  z-index: 801;
+}
+#spotContainer #spotGridContainer #spotSizeContainer #leftSpotContainer .border {
+  border-left: 1px solid rgba(149, 193, 28, 0.7);
+}
+#spotContainer #spotGridContainer #spotSizeContainer #rightSpotContainer {
+  position: absolute;
+  bottom: -2px;
+  width: 50px;
+  height: 50px;
+  left: 125px;
+  margin-left: -2px;
+  background-color: rgba(187, 255, 0, 0.3);
+  z-index: 801;
+}
+#spotContainer #spotGridContainer #spotSizeContainer #rightSpotContainer .border {
+  border-right: 1px solid rgba(149, 193, 28, 0.7);
+}
+#spotContainer #spotGridContainer #spotSizeContainer #rightSpotContainer .ui-resizable-ne {
+  right: -25px;
+  top: -25px;
+  z-index: 802;
+}
+#spotContainer #spotGridContainer #spotSizeContainer #rightSpotContainer .ui-resizable-se {
+  right: -25px;
+  bottom: -25px;
+  z-index: 802;
+}
+#spotContainer #spotGridContainer #spotSizeContainer #rightSpotContainer .ui-resizable-nw {
+  left: -25px;
+  top: -25px;
+  z-index: 802;
+}
+#spotContainer #spotGridContainer #spotSizeContainer #rightSpotContainer .ui-resizable-sw {
+  left: -25px;
+  bottom: -25px;
+  z-index: 802;
+}
+.ui-popup-double-button {
+  position: relative;
+  margin: 10px auto;
+  width: 162px;
+  height: 54px;
+}
+.ui-popup-double-button .ui-btn-left,
+.ui-popup-double-button .ui-btn-right {
+  top: 0;
+  height: 54px;
+  position: absolute;
+}
+.ui-popup-double-button .ui-btn-left .ui-btn,
+.ui-popup-double-button .ui-btn-right .ui-btn {
+  margin: 0;
+  top: 6px;
+  height: 40px;
+  border-radius: 20px;
+  width: 160px;
+  float: left;
+}
+.ui-popup-double-button .ui-btn-left .ui-btn .ui-btn-inner,
+.ui-popup-double-button .ui-btn-right .ui-btn .ui-btn-inner {
+  display: table-cell;
+  height: 40px;
+  width: 140px;
+  white-space: normal;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0 10px 0 10px;
+  max-width: 140px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ui-popup-double-button .ui-btn-left.two-buttons .ui-btn.first-button,
+.ui-popup-double-button .ui-btn-right.two-buttons .ui-btn.first-button {
+  width: 79px;
+  border-radius: 20px 0 0 20px;
+}
+.ui-popup-double-button .ui-btn-left.two-buttons .ui-btn.first-button .ui-btn-inner,
+.ui-popup-double-button .ui-btn-right.two-buttons .ui-btn.first-button .ui-btn-inner {
+  padding: 0 10px 0 5px;
+  width: 69px;
+  max-width: 69px;
+}
+.ui-popup-double-button .ui-btn-left.two-buttons .ui-btn.second-button,
+.ui-popup-double-button .ui-btn-right.two-buttons .ui-btn.second-button {
+  width: 78px;
+  margin-left: 1px;
+  border-radius: 0 20px 20px 0;
+}
+.ui-popup-double-button .ui-btn-left.two-buttons .ui-btn.second-button .ui-btn-inner,
+.ui-popup-double-button .ui-btn-right.two-buttons .ui-btn.second-button .ui-btn-inner {
+  padding: 0 0 0 3px;
+  width: 68px;
+  max-width: 68px;
+}
+.ui-popup-double-button .ui-btn-left.two-buttons .ui-btn.second-button .ui-btn-inner .ui-btn-text,
+.ui-popup-double-button .ui-btn-right.two-buttons .ui-btn.second-button .ui-btn-inner .ui-btn-text {
+  padding-right: 5px;
+}
+.ui-popup-double-button .ui-btn-left {
+  left: 0;
+}
+.ui-popup-double-button .ui-btn-right {
+  right: 0;
 }
