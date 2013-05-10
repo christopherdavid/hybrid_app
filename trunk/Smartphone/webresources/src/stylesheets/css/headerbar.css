@@ -1,3 +1,7 @@
+.ui-header:before {
+  position: absolute;
+  z-index: 10;
+}
 /* header button left and right */
 .ui-header.headerbar {
   height: 61px;
@@ -68,15 +72,41 @@
   color: #a8a8a8;
   font-size: 14px;
   font-weight: normal;
+  border: 1px solid black;
+  border-radius: 30px;
+  position: absolute;
+  width: auto;
+  height: 60px;
+  top: -38px;
+  left: 90px;
+  right: 90px;
+  margin: 0 auto;
+  padding: 0 20px;
+  max-width: 450px;
+  background: #707070;
+  background: -moz-linear-gradient(top, #707070 0%, #707070 60%, #303030 90%, #000000 110%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #707070), color-stop(60%, #707070), color-stop(90%, #303030), color-stop(110%, #000000));
+  background: -webkit-linear-gradient(top, #707070 0%, #707070 60%, #303030 90%, #000000 110%);
+  background: linear-gradient(to bottom, #707070 0%, #707070 60%, #303030 90%, #000000 110%);
+  -webkit-box-shadow: rgba(255, 255, 255, 0.360784) 0 1px 0 0, rgba(0, 0, 0, 0.247059) 0 1px 0 0 inset;
+}
+.ui-header.headerbar .ui-title .robotName span {
+  position: relative;
+  top: 40px;
+  width: 100%;
+  height: 100%;
+  text-shadow: 0 -1px #000000;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  display: block;
 }
 .ui-header.headerbar .ui-title .screenTitle {
   font-size: 18px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  margin-top: 18px;
 }
 .ui-header.headerbar .ui-btn-left,
 .ui-header.headerbar .ui-btn-right {
@@ -140,4 +170,82 @@
 }
 .ui-header.headerbar .ui-btn-right.two-buttons .ui-btn.second-button .ui-btn-inner {
   padding: 0;
+}
+#menuPopup-popup.ui-popup-container.ui-popup-active {
+  box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.4);
+  background-color: transparent;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+#menuPopup-popup.ui-popup-container.ui-popup-active #menuPopup {
+  border: 1px solid #535353;
+  border-radius: 10px;
+  box-shadow: 0 0 1px 1px #2E2E2E inset;
+  background: #393838;
+  background: -moz-linear-gradient(top, #393838 0%, #111111 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #393838), color-stop(100%, #111111));
+  background: -webkit-linear-gradient(top, #393838 0%, #111111 100%);
+  background: linear-gradient(to bottom, #393838 0%, #111111 100%);
+  padding: 0 20px;
+}
+#menuPopup-popup.ui-popup-container.ui-popup-active #menuPopup .menuPopupTitle {
+  margin: 20px 0 10px;
+  font-size: 20pt;
+  font-weight: normal;
+}
+#menuPopup-popup.ui-popup-container.ui-popup-active #menuPopup a {
+  display: block;
+  float: left;
+  width: 31%;
+  height: 190px;
+  margin: 20px 10px 0 0;
+  background-image: url('../../img/categoryimg_303x303.png'), url('../../img/menu_active_bg.png');
+  background-size: 505px 909px, 175px 183px;
+  background-repeat: no-repeat, no-repeat;
+  text-decoration: none;
+}
+#menuPopup-popup.ui-popup-container.ui-popup-active #menuPopup a.settings {
+  background-position: -50px -490px, -500px -500px;
+}
+#menuPopup-popup.ui-popup-container.ui-popup-active #menuPopup a.settings.active {
+  background-position: -50px -490px, 0 0;
+}
+#menuPopup-popup.ui-popup-container.ui-popup-active #menuPopup a.schedule {
+  background-position: -25px -715px, -500px -500px;
+}
+#menuPopup-popup.ui-popup-container.ui-popup-active #menuPopup a.schedule.active {
+  background-position: -25px -715px, 0 0;
+}
+#menuPopup-popup.ui-popup-container.ui-popup-active #menuPopup a.cleaning {
+  background-position: -15px -50px, -500px -500px;
+}
+#menuPopup-popup.ui-popup-container.ui-popup-active #menuPopup a.cleaning.active {
+  background-position: -15px -50px, 0 0;
+}
+#menuPopup-popup.ui-popup-container.ui-popup-active #menuPopup a h3 {
+  position: relative;
+  top: 110px;
+  text-align: center;
+  color: white;
+  text-shadow: none;
+  font-weight: normal;
+}
+#menuPopup-popup.ui-popup-container.ui-popup-active #menuPopup .link {
+  display: block;
+  margin: .5em 7px;
+  float: right;
+  clear: both;
+  font-weight: normal;
+  color: #009a3d;
+  text-shadow: none;
+  margin-bottom: 20px;
+}
+#menuPopup-popup.ui-popup-container.ui-popup-active #menuPopup .menuPopupTitleLine {
+  content: "";
+  height: 3px;
+  background: #009a3d;
+  background: -moz-linear-gradient(top, #009a3d 0%, #00bf4c 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #009a3d), color-stop(100%, #00bf4c));
+  background: -webkit-linear-gradient(top, #009a3d 0%, #00bf4c 100%);
+  background: linear-gradient(to bottom, #009a3d 0%, #00bf4c 100%);
 }

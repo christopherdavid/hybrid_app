@@ -12,8 +12,9 @@
         "delete": "löschen",
         "change": "ändern",
         "logout": "Abmelden",
-        "on": "An",
-        "off": "Aus",
+        "on": "On",
+        "off": "Off",
+        "menu": "Menu",
         "cleaningMode": {
             "1": "eco",
             "2": "normal"
@@ -44,6 +45,7 @@
             "logout": "Abmelden",
             "change_robot": "Roboter wechseln",
             "send_to_base": "Zur Basis schicken",
+            "spot_size_title": "Spot size: ",
             "cleaningType": {
                 "1":"Manuell",
                 "2":"Alles",

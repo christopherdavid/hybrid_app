@@ -1,6 +1,13 @@
 resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     console.log('instance created for: cleaning_ViewModel');
-    var that = this, $spotPopup;
+    var that = this, $spotPopup, 
+        $leftSpotContainer,$rightSpotContainer,
+        spotGridSize = {
+            cellWidth:25,
+            cellHeight:50,
+            maxWidth:125,
+            maxHeight:250,
+        };
     this.conditions = {};
     this.startAreaControl = null;
     this.robotStateMachine = null;
@@ -61,10 +68,12 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     this.newSpotSizeLength = ko.observable();
     this.newSpotSizeHeight = ko.observable();
+    this.newSpotSize = ko.computed(function() {
+         return (that.newSpotSizeLength()  + "x" + that.newSpotSizeHeight() + " m");
+    }, this);  
     
-    this.spotSizeLength = ko.observable("5");
-    this.spotSizeHeight = ko.observable("3");
-    
+    this.spotSizeLength = ko.observable(1);
+    this.spotSizeHeight = ko.observable(1);
     this.spotSize = ko.computed(function() {
          return (that.spotSizeLength()  + "x" + that.spotSizeHeight());
     }, this); 
@@ -73,6 +82,18 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         // set currentSpot Size
         that.newSpotSizeLength(that.spotSizeLength());
         that.newSpotSizeHeight(that.spotSizeHeight());
+        
+        $leftSpotContainer.css({
+            "left": (spotGridSize.maxWidth - (that.spotSizeLength() * spotGridSize.cellWidth)) + "px",
+            "width" : (that.spotSizeLength() * spotGridSize.cellWidth) + 'px',
+            "height": (that.spotSizeHeight() * spotGridSize.cellHeight) + 'px'
+        });
+        $rightSpotContainer.css({
+            "width" : (that.spotSizeLength() * spotGridSize.cellWidth) + 'px',
+            "height": (that.spotSizeHeight() * spotGridSize.cellHeight) + 'px',
+            "top": 'auto'
+        });
+        
         $spotPopup.popup("open");
     }
     this.popupOk = function() {
@@ -193,18 +214,45 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             that.robotServerState(result.currentStateString)
         }
     }
-    
+    this.oldSpotSizeWidth = 0;
+    this.oldSpotSizeHeight = 0;
     /**
      * Called when the viewmodel is initialized (after the view has been loaded, before bindings are applied)
      */
     this.init = function() {
+        $leftSpotContainer = $('#leftSpotContainer');
+        $rightSpotContainer = $('#rightSpotContainer');
+        
+        $rightSpotContainer.resizable({
+            gridWithEvent : [spotGridSize.cellWidth,spotGridSize.cellHeight],
+            handles : "ne",
+            maxHeight: spotGridSize.maxHeight,
+            maxWidth:  spotGridSize.maxWidth,
+            minHeight: spotGridSize.cellHeight,
+            minWidth: spotGridSize.cellWidth,
+            gridSnapEvent:function(event, ui, coords) {
+                //console.log("gridSnapEvent");
+                //console.log(coords)
+                $leftSpotContainer.css({
+                    "left": (spotGridSize.maxWidth - coords.w) + "px",
+                    "width" : coords.w + 'px',
+                    "height": coords.h + 'px'
+                });
+                that.newSpotSizeLength(coords.w/spotGridSize.cellWidth);
+                that.newSpotSizeHeight(coords.h/spotGridSize.cellHeight);
+            }
+        });
+        
+        $rightSpotContainer.on('resize', function (e) {
+            e.stopPropagation(); 
+        });
+        
         that.robot(ko.mapping.fromJS(parent.communicationWrapper.dataValues["activeRobot"]), null, that.robot);
         //that.getRobotState();
         
         // getSpotDefinition
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getSpotDefinition, [that.robot().robotId()]);
-        tDeffer.done(that.successSendToBase);
-        tDeffer.fail(that.errorSendToBase);
+        tDeffer.done(that.successGetSpotDefinition);
         
         $spotPopup = $("#spotSize");
         

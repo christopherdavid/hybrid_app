@@ -4,7 +4,6 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     this.conditions = {};
     this.robot = ko.observable();
     
-    this.editPassword = ko.observable(false);
     this.showPassword = ko.observable(false);
 
     this.newPassword = ko.observable("");
@@ -53,12 +52,13 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     };
     
     this.changePassword = function() {
-        that.editPassword(true);
+        $("#changePasswordPopup").popup("open");
     };
     
     this.cancelEdit = function() {
-        this.editPassword(false);
+        $("#changePasswordPopup").popup("close");
     }
+    
     this.commitEdit = function() {
         console.log("change password of user with email: " + that.user().email() + " to " + that.newPassword());
         
@@ -66,7 +66,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
         tDeffer.done(that.successChangePassword);
         tDeffer.fail(that.errorChangePassword);
 
-        this.editPassword(false);
+        $("#changePasswordPopup").popup("close");
     }
     
     this.successChangePassword = function(result) {

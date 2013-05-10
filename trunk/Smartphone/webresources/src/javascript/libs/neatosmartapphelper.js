@@ -24,6 +24,11 @@ var DAY_SATURDAY = 6;
 var SCHEDULE_TYPE_BASIC = 0;
 var SCHEDULE_TYPE_ADVANCED = 1;
 
+var NOTIFICATIONS_GLOBAL_OPTION = "global";
+var NOTIFICATION_ROBOT_STUCK = "101";
+var NOTIFICATION_DIRT_BIN_FULL = "102";
+var NOTIFICATION_CLEANING_DONE = "103";
+
 var PLUGIN_JSON_KEYS = (function() {
     var keys = {
         'DISCOVERY_NOTIFICATION_KEY' : 'notificationType',
@@ -256,6 +261,19 @@ var UserPluginManager = ( function() {
             
             forgetPassword: function(email, callbackSuccess, callbackError) {
                 window.plugins.neatoPluginLayer.userMgr.forgetPassword(email, callbackSuccess, callbackError);
+            },
+            
+            
+            turnNotificationOnoff: function(email, notificationId, enableNotification, callbackSuccess, callbackError) {
+                window.setTimeout(function() {
+                    callbackSuccess("OK");
+                }, 500);
+            },
+            
+            getNotificationSettings: function(email, callbackSuccess, callbackError) {
+                window.setTimeout(function() {
+                    callbackSuccess({"notifications":[{"value":false,"key":"102"},{"value":true,"key":"101"},{"value":false,"key":"103"}],"global":true});
+                }, 500);
             }
             
         }
@@ -675,9 +693,13 @@ var RobotPluginManager = ( function() {
          *  {'errorCode':<error code>, 'errorMessage':<error msg>}
          */
         getSpotDefinition: function(robotId, callbackSuccess, callbackError) {
+            // window.setTimeout(function() {
+                // callbackError({"errorCode":1101, "errorMessage":"no spot size defined yet"});
+            // }, 1000);
             window.setTimeout(function() {
-                callbackError({"errorCode":1101, "errorMessage":"no spot size defined yet"});
+                callbackSuccess({'spotCleaningAreaLength':2, 'spotCleaningAreaHeight':3});
             }, 1000);
+            
         },
 
         /*

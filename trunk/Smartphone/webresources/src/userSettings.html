@@ -21,66 +21,73 @@
         <fieldset>
             <h2 data-i18n="userSettings.page.email_adress"
                 data-bind="translate: language">[robot_id]</h2>
-            <p data-bind="text: user().email">asd</p>
+            <p class="label" data-bind="text: user().email">asd</p>
         </fieldset>
                 
-        <fieldset>
+        <fieldset class="editWithButton">
         
             <h2 data-i18n="userSettings.page.password"
                 data-bind="translate: language">[password]</h2>
             
-            <p data-bind="visible: !editPassword()"></p>
-            <input type="password"
-            	data-i18n="userSettings.page.old_password" 
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'afterkeydown', visible: editPassword() && !showPassword()"/>
-            <input type="text"
-            	data-i18n="userSettings.page.old_password" 
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'afterkeydown', visible: editPassword() && showPassword()"/>
-            
-            <p data-bind="visible: !editPassword()"></p>
-            <input type="password"
-            	data-i18n="userSettings.page.new_password" 
-            	data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'afterkeydown', visible: editPassword() && !showPassword(), css: {invalid: passwordValid}"/>
-            <input type="text"
-            	data-i18n="userSettings.page.new_password" 
-            	data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'afterkeydown', visible: editPassword() && showPassword(), css: {invalid: passwordValid}"/>
-            
-            <p data-bind="visible: !editPassword()"></p>
-            <input type="password"
-            	data-i18n="userSettings.page.new_password_verify" 
-            	data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', visible: editPassword()  && !showPassword(), css: {invalid: passwordValid}"/>
-            <input type="text"
-            	data-i18n="userSettings.page.new_password_verify" 
-            	data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', visible: editPassword() && showPassword(), css: {invalid: passwordValid}"/>
-
-            
-            <input type="checkbox" name="togglePassword" id="togglePassword" class="custom" data-bind="checked: showPassword, visible: editPassword" />
-            <label for="togglePassword" data-i18n="loginUser.page.password_show" 
-            	data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, visible: editPassword">[show pwd]</label>
-            
-            
-            <div class="ui-grid-solo" data-bind="visible: !editPassword()">
-                <div class="ui-block-a">
-                    <a href="#" data-role="button" data-theme="b" data-mini="false" 
-                        data-i18n="common.change"
-                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: changePassword">[change]</a> 
-                </div>
-            </div>
-                    
-            <div class="ui-grid-a" data-bind="visible: editPassword">
-                <div class="ui-block-a">
-                    <a href="#" data-role="button" data-theme="b" data-mini="false" 
-                        data-i18n="common.cancel"
-                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: cancelEdit">[cancel]</a>
-                </div>
-                <div class="ui-block-b"> 
-                    <a href="#" data-role="button" data-theme="b" data-mini="false" 
-                        data-i18n="common.ok" 
-                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: okEnabled(), click: commitEdit">[ok]</a>
-                </div>
+            <p class="label">*****</p>
+            <div class="ui-button-block">
+                <a href="#" data-role="button" data-theme="b" data-mini="false" 
+                    data-i18n="common.change"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: changePassword">[change]</a> 
             </div>
             
         </fieldset>        
         
     </div>
+    
+	<div id="changePasswordPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport">
+		<div data-role="header" data-theme="b">
+			<h1 class="ui-title" role="heading" aria-level="1" data-i18n="common.edit" data-bind="translate: language">[edit]</h1>
+		</div>
+		<div data-role="content">
+
+            <h2 data-i18n="userSettings.page.password"
+                data-bind="translate: language">[password]</h2>
+            
+            <input type="password"
+            	data-i18n="userSettings.page.old_password" 
+                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'afterkeydown', visible: !showPassword()"/>
+            <input type="text"
+            	data-i18n="userSettings.page.old_password" 
+                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'afterkeydown', visible: showPassword()"/>
+            
+            <input type="password"
+            	data-i18n="userSettings.page.new_password" 
+            	data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'afterkeydown', visible: !showPassword(), css: {invalid: passwordValid}"/>
+            <input type="text"
+            	data-i18n="userSettings.page.new_password" 
+            	data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'afterkeydown', visible: showPassword(), css: {invalid: passwordValid}"/>
+            
+            <input type="password"
+            	data-i18n="userSettings.page.new_password_verify" 
+            	data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', visible: !showPassword(), css: {invalid: passwordValid}"/>
+            <input type="text"
+            	data-i18n="userSettings.page.new_password_verify" 
+            	data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', visible: showPassword(), css: {invalid: passwordValid}"/>
+
+            <input type="checkbox" name="togglePassword" id="togglePassword" class="custom" data-bind="checked: showPassword" />
+            <label for="togglePassword" data-i18n="loginUser.page.password_show" 
+            	data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[show pwd]</label>
+
+            <div class="ui-bar-double-button">
+                <div class="ui-btn-left two-buttons">
+                    <a class="first-button" href="#" data-role="button" data-theme="b" data-mini="false" 
+	                    data-i18n="common.ok" 
+	                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: okEnabled(), click: commitEdit">[ok]</a>
+                </div>
+                <div class="ui-btn-right two-buttons">
+                    <a class="second-button" href="#" data-role="button" data-theme="b" data-mini="false" 
+                        data-i18n="common.cancel"
+                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: cancelEdit">[cancel]</a>
+                </div>
+            </div>
+            
+		</div>
+	</div>
+    
 </div>

@@ -100,6 +100,17 @@
     max-height: 616px!important;
     min-width: 280px!important;
     margin: auto;
+    
+    .selected-value {
+      color:@color_robot_status;
+    }
+}
+
+.ui-popup-container {
+    .ui-header .ui-title {
+        margin-right:3%;
+        margin-left:3%;
+    }
 }
 
 // remote
@@ -223,3 +234,178 @@
     }
 }
 
+@spot_container_height:250px;
+@spot_container_width:250px;
+@spot_robot_icon_height:56px;
+@spot_robot_icon_width:54px;
+@spot_grid_icon_size:8px;
+@spot_border:2px;
+// spot size grid
+#spotContainer {
+    width:@spot_container_width + @spot_grid_icon_size;
+    height:@spot_container_height + @spot_robot_icon_height/2;
+    position:relative;
+    margin:auto;
+    
+    #spotRobot {
+        position:absolute;
+        bottom:0px;
+        width:@spot_robot_icon_width ;
+        height:@spot_robot_icon_height;
+        left:50%;
+        margin-left:-(@spot_robot_icon_width/2);
+        background-image:url(../../img/icons/spot_robot_108x112.png);
+        background-repeat:no-repeat;
+        background-size:@spot_robot_icon_width @spot_robot_icon_height;
+        z-index:999;
+    }
+    #spotGridContainer {
+        position: relative;
+        width:@spot_container_width + @spot_grid_icon_size;
+        height:@spot_container_height + @spot_grid_icon_size;
+        background-image:url(../../img/bg_spot_grid.png);
+        background-repeat:repeat;
+        
+        #spotSizeContainer {
+            position: relative;
+            width:@spot_container_width - @spot_grid_icon_size/2;
+            height:@spot_container_height - @spot_grid_icon_size/2;
+            border:2px solid #3e3e3e;
+            left:@spot_grid_icon_size/2;
+            top:@spot_grid_icon_size/2;
+            background-color:rgba(60,60,60,0.5);
+            // we need an extra element for the border to avoid calculation issues with jquery UI and border of an element
+            .border {
+                border-top:1px solid rgba(149,193,28,0.7);
+                border-bottom:1px solid rgba(149,193,28,0.7);
+                position:absolute;
+                top:0;
+                bottom:0;
+                left:0;
+                right:0;
+            }
+            
+            #leftSpotContainer {
+                position:absolute;
+                bottom:-@spot_border;
+                left:75px;
+                margin-left:-@spot_border;
+                width:50px;
+                height:50px;
+                background-color:rgba(187,255,0,0.3);
+                z-index:801;
+                .border {
+                    border-left:1px solid rgba(149,193,28,0.7);
+                }
+            }
+            
+            #rightSpotContainer {
+                position:absolute;
+                bottom:-@spot_border;
+                width:50px;
+                height:50px;
+                left:125px;
+                margin-left:-@spot_border;
+                background-color:rgba(187,255,0,0.3);
+                z-index:801;
+                .border {
+                    border-right:1px solid rgba(149,193,28,0.7);
+                }
+                .ui-resizable-ne {
+                    right:-25px;
+                    top:-25px;
+                    z-index:802;
+                }
+                .ui-resizable-se {
+                    right:-25px;
+                    bottom:-25px;
+                    z-index:802;
+                }
+                .ui-resizable-nw {
+                    left:-25px;
+                    top:-25px;
+                    z-index:802;
+                }
+                .ui-resizable-sw {
+                    left:-25px;
+                    bottom:-25px;
+                    z-index:802;
+                }
+            }
+        }
+    }
+}
+
+// popup buttons
+@pop_button_height:40px;
+@pop_buton_width:160px;
+.ui-popup-double-button {
+    position: relative;
+    margin:10px auto;
+    width: @pop_buton_width + 2;
+    height:54px;
+    
+    .ui-btn-left,.ui-btn-right {
+        top:0; 
+        height:54px;
+        position:absolute;
+        
+        .ui-btn {
+            margin:0;
+            top:6px;
+            height:@pop_button_height;
+            border-radius:@pop_button_height/2;
+            width:@pop_buton_width;
+            float:left;
+            
+            .ui-btn-inner {
+                display: table-cell;
+                height: @button_height;
+                width:@pop_buton_width - @pop_button_height/2;
+                white-space: normal;
+                vertical-align: middle;
+                text-align: center;
+                padding: 0 @button_height/4 0 @pop_button_height/4;
+                max-width: @pop_buton_width - @pop_button_height/2;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+        &.two-buttons {
+            .ui-btn.first-button {
+                width:(@pop_buton_width)/2 - 1; // minus border-width
+                border-radius:@pop_button_height/2 0 0 @pop_button_height/2;
+        
+                .ui-btn-inner {
+                    padding: 0 @pop_button_height/4 0 @pop_button_height/8; // small buttons cut in half the padding
+                    width:(@pop_buton_width)/2 - 1 - @pop_button_height/4; // minus border-width - (padding-left + padding-right)
+                    max-width:(@pop_buton_width)/2 - 1 - @pop_button_height/4;
+                }
+            }
+            .ui-btn.second-button {
+                width:@pop_buton_width/2 - 2; // minus border-width - margin-left
+                margin-left:1px;
+                border-radius:0 @pop_button_height/2 @pop_button_height/2 0;
+                
+                .ui-btn-inner {
+                    padding: 0 0 0 @pop_button_height/8 - 2; // small buttons cut in half the padding
+                    width:(@pop_buton_width)/2 - 2 - @pop_button_height/4; // minus border-width - margin-left - (padding-left + padding-right)
+                    max-width:(@pop_buton_width)/2 - 2 - @pop_button_height/4;
+                            
+                .ui-btn-text {
+                        padding-right:5px;
+                    }
+                }
+            }
+        }
+    }
+    
+    .ui-btn-left {
+        left:0;
+    }
+    
+    .ui-btn-right {
+        right:0;
+    }
+}

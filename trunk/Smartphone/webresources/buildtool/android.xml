@@ -15,6 +15,9 @@
         <js>/../../javascript/utils/remoteControl.js</js>
         <js>/../../javascript/utils/makeScrollable.js</js>
     </group>
+    <group name="jquery.ui.plugins">
+        <js>/../../javascript/utils/jqui.plugins.js</js>
+    </group>
     <group name="cordova.min">
       <js>/../../javascript/libs/android/cordova-2.1.0.js</js>
     </group>

@@ -1,15 +1,50 @@
+.ui-icon-checkbox-on {
+  background-position: 0 0;
+  background-image: url("../../img/icons/tick_34x35.png");
+  background-size: 18px 18px;
+}
+
+.ui-checkbox-on .ui-icon, .ui-checkbox-off .ui-icon {
+  background-color: rgba(0,0,0,0.8);
+}
+
+.editWithButton{
+
+  max-width:500px;
+
+  .ui-button-block{
+    float: right;
+    position: relative;
+    height: 0px;
+    top: -53px;
+  }
+
+  div.ui-slider.ui-slider-switch{
+    float:right;
+    top: -41px;
+  }
+  
+}
+
+
+fieldset p.label {
+  font-weight: bold;
+  margin-left: 10px;
+}
+
 div.ui-slider.ui-slider-switch{
 
   border-color: #7A7A7A;
   background: #808080;
-  float:right;
-  top: -6px;
 
   &.ui-btn-corner-all{
+    
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+    
     width:60px;  
+    margin:0;
   }
   
   &.ui-focus, ui-btn:focus
@@ -18,7 +53,6 @@ div.ui-slider.ui-slider-switch{
     -moz-box-shadow: none;
     box-shadow: none;
   }
-
 
   .ui-slider-inneroffset{
     width: 33px;
@@ -93,8 +127,118 @@ div.ui-slider.ui-slider-switch{
       background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(253,253,253,1)), color-stop(100%,rgba(192,192,192,1)));
       background: -webkit-linear-gradient(top,  rgba(253,253,253,1) 0%,rgba(192,192,192,1) 100%);
       background: linear-gradient(to bottom,  rgba(253,253,253,1) 0%,rgba(192,192,192,1) 100%);    
-    }
 
+    }
+  }
+}
+
+
+/* header button left and right */
+@button_height:40px;
+@buton_width:208px;
+.ui-popup-container
+{  
+
+  .ui-bar-double-button {
+    
+    position: relative;
+    left: 18px;
+    margin:10px auto;
+    width: 261px;
+    height:54px;
+    
+    .ui-btn-left,.ui-btn-right {
+        top:0; 
+        width:156px;
+        height:54px;
+        position:absolute;
+        
+        .ui-btn {
+            margin:0;
+            top:6px;
+            height:@button_height;
+            border-radius:@button_height/2;
+            width:@buton_width;
+            left:6px;
+            float:left;
+            
+            .ui-btn-inner {
+                display: table-cell;
+                height: @button_height;
+                width:@buton_width - @button_height/2;
+                white-space: normal;
+                vertical-align: middle;
+                text-align: center;
+                padding: 0 @button_height/4 0 @button_height/4;
+                max-width: @buton_width - @button_height/2;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+        &.two-buttons {
+            .ui-btn.first-button {
+                width:(@buton_width)/2 - 1; // minus border-width
+                border-radius:@button_height/2 0 0 @button_height/2;
+        
+                .ui-btn-inner {
+                    padding: 0 @button_height/4 0 @button_height/8; // small buttons cut in half the padding
+                    width:(@buton_width)/2 - 1 - @button_height/4; // minus border-width - (padding-left + padding-right)
+                    max-width:(@buton_width)/2 - 1 - @button_height/4;
+                }
+            }
+            .ui-btn.second-button {
+                width:@buton_width/2 - 2; // minus border-width - margin-left
+                margin-left:1px;
+                border-radius:0 @button_height/2 @button_height/2 0;
+                
+                .ui-btn-inner {
+                    padding: 0 0 0 @button_height/8 - 2; // small buttons cut in half the padding
+                    width:(@buton_width)/2 - 2 - @button_height/4; // minus border-width - margin-left - (padding-left + padding-right)
+                    max-width:(@buton_width)/2 - 2 - @button_height/4;
+                            
+                .ui-btn-text {
+                        padding-right:5px;
+                    }
+                }
+            }
+        }
+    }
+    
+    .ui-btn-left {
+        left:0;
+    }
+    
+    .ui-btn-right {
+        right:0;
+    }
+  }
+}
+
+.ui-popup-screen.in {
+  opacity: 0.7;
+  filter: Alpha(Opacity=70);
+  background-color: #666;
+}
+
+.ui-popup-container.ui-popup-active{
+  min-width: 285px;
+  max-width: 500px;
+
+  .dialog.ui-popup {
+    border: 0 none;
+    box-shadow: 0 0 8px 2px rgba(0,0,0,0.4);
   }
   
+  h1.ui-title{
+    font-size:20px;
+  }
+  
+  .ui-content h2
+  {
+    padding: 0;
+    margin: 10px 0 0 0;
+    line-height: 8px;
+    font-size: 16px;
+  }
 }
