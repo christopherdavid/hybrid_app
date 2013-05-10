@@ -54,6 +54,7 @@ var ACTION_TYPE_DISASSOCIATE_ROBOT 				= "disassociateRobot";
 var ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS 		= "disassociateAllRobots";
 var ACTION_TYPE_FORGET_PASSWORD					= "forgetPassword";
 var ACTION_TYPE_CHANGE_PASSWORD					= "changePassword";
+var ACTION_TYPE_REGISTER_FOR_ROBOT_MESSAGES		= "registerForRobotMessges";
 // List of actions types of Robot Manager
 var ACTION_TYPE_DISCOVER_NEARBY_ROBOTS 			= "discoverNearByRobots";
 var ACTION_TYPE_TRY_CONNECT_CONNECTION 			= "tryDirectConnection";
@@ -1042,9 +1043,16 @@ RobotMgr.prototype.enableSchedule = function (robotId, scheduleType, enable, cal
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_ENABLE_SCHEDUL, [params]);
 };
+/*
+ * Name: registerForRobotMessages
+ * Support to notify push messages sent by server to UI.
+ * In error case error callback gets called with error JSON object
+ */
 
-
-
+RobotMgr.prototype.registerForRobotMessages = function(callbackSuccess, callbackError) {
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_REGISTER_FOR_ROBOT_MESSAGES, []);
+};
 
 var UserPluginManager = (function() {
 	return {
@@ -1595,6 +1603,16 @@ var RobotPluginManager = (function() {
 		unregisterNotifications: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.unregisterNotifications(robotId, callbackSuccess, callbackError);
 		},
+		
+		/*
+		 * Name: registerForRobotMessages
+		 * Support to notify push messages sent by server to UI.
+		 * In error case error callback gets called with error JSON object
+		 */
+		registerForRobotMessages: function(callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.registerForRobotMessages(callbackSuccess, callbackError);
+		},
+		
 		// New Schedule APIs being added:
 		
 		

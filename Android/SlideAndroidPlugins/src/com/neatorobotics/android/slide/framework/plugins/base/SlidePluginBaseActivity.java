@@ -3,6 +3,8 @@ package com.neatorobotics.android.slide.framework.plugins.base;
 import org.apache.cordova.DroidGap;
 
 import android.os.Bundle;
+
+import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.NeatoServiceManager;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
@@ -46,5 +48,17 @@ public class SlidePluginBaseActivity extends DroidGap {
 	@Override
 	public void onBackPressed() {
 		LogHelper.logD(TAG, "onBackPressed called");
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		ApplicationConfig.getInstance(getApplicationContext()).activityResumed();
+	}
+	
+	@Override
+	public void onPause() {
+		ApplicationConfig.getInstance(getApplicationContext()).activityPaused();
+		super.onPause();
 	}
 }

@@ -5,13 +5,15 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 public class PushNotificationUtils {
 	private static final String TAG = PushNotificationUtils.class.getSimpleName();
 	
 	private static int ANDROID_DEVICE = 1;
-	
+
+	private static Bundle mPendingPushNotificationBundle;
 	public static int getDeviceType() {
 		return ANDROID_DEVICE;
 	}
@@ -62,5 +64,17 @@ public class PushNotificationUtils {
 	public static void unregisterPushNotification(Context context) {
 		// unregistering from push notifications at logout
 		GCMRegistrar.unregister(context);
+	}
+	
+	public static Bundle getPendingPushNotification() {
+		return mPendingPushNotificationBundle;
+	}
+	
+	public static void setPendingPushNotification(Bundle pushNotificationBundle) {
+		mPendingPushNotificationBundle = pushNotificationBundle;
+	}
+	
+	public static void clearPendingPushNotification() {
+		mPendingPushNotificationBundle = null;
 	}
 }

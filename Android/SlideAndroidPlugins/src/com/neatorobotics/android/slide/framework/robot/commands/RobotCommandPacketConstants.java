@@ -31,6 +31,7 @@ public class RobotCommandPacketConstants {
 	public static final String NOTIFICATION_ID_ROBOT_STUCK 		= "101";
 	public static final String NOTIFICATION_ID_DIRT_BIN_FULL 	= "102";
 	public static final String NOTIFICATION_ID_CLEANING_DONE 	= "103";
+	public static final String NOTIFICATION_ID_GENERIC 			= "999";
 	
 	//Special notifications have base 20000;
 	public static final int COMMAND_ROBOT_STUCK = 20001;
