@@ -1,6 +1,5 @@
 package com.neatorobotics.android.slide.framework.webservice.robot.schedule;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 
@@ -9,20 +8,12 @@ public class UpdateNeatoRobotScheduleResult  extends NeatoWebserviceResult{
 	public UpdateNeatoRobotScheduleResult(NeatoHttpResponse response) {
 		super(response);
 	}
-	public UpdateNeatoRobotScheduleResult(int response, int responseStatusCode, String message) {
+	public UpdateNeatoRobotScheduleResult(int response, int responseStatusCode, String msg) {
 		super(response, responseStatusCode);
-		mMessage = message;
-	}
-	public static final int RESPONSE_STATUS_SUCCESS = 0;
-
-	@JsonProperty(value="status")
-	public int mStatus = -1; 
-
-	@JsonProperty(value="message")
-	public String mMessage;	
-
-	@JsonProperty(value="result")
-	public Result mResult;
+		message = msg;
+	}	
+	
+	public Result result;
 
 	public UpdateNeatoRobotScheduleResult() {
 		super();
@@ -30,17 +21,13 @@ public class UpdateNeatoRobotScheduleResult  extends NeatoWebserviceResult{
 
 	@Override
 	public boolean success() {
-		return ((mStatus == RESPONSE_STATUS_SUCCESS) && (mResult.mSuccess));
+		return ((status == RESPONSE_STATUS_SUCCESS) && (result != null) && (result.success));
 	}
 
-
-	public class Result {
-		@JsonProperty(value="success")
-		public boolean mSuccess;	
-
-		@JsonProperty(value="message")
-		public String mMessage;	
-
+	public class Result {		
+		public boolean success;		
+		public String message;	
+		public String schedule_version;
 	}
 }
 

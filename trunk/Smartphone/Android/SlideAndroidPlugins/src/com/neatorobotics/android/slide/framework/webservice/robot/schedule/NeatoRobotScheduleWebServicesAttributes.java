@@ -56,5 +56,14 @@ public class NeatoRobotScheduleWebServicesAttributes {
 			public static final String ROBOT_SCHEDULE_ID = "robot_schedule_id";
 		}
 	}
+	
+	public static class GetScheduleBasedOnType {
+		public static final String METHOD_NAME = "robotschedule.get_schedule_based_on_type";
+		public static class Attribute {
+			public static final String API_KEY = "api_key";
+			public static final String ROBOT_SERIAL_NUMBER = "robot_serial_number";
+			public static final String SCHEDULE_TYPE = "schedule_type";
+		}
+	}
 
 }

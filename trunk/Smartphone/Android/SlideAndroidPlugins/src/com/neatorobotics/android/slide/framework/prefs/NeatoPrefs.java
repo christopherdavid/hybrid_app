@@ -1,8 +1,6 @@
 package com.neatorobotics.android.slide.framework.prefs;
 
-import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -20,7 +18,7 @@ public class NeatoPrefs {
 	private static final String USE_NEW_COMMAND_STRUCTURE = "useNewCommandStructure";
 	private static final boolean DEFAULT_USE_NEW_COMMAND_PACKET_STRUCTURE = false;
 	
-	//TODO: Temporay arrangement till new webservice APIs are exposed for enable/disable schedule
+	// TODO: Temporary arrangement till new webservice APIs are exposed for enable/disable schedule
 	private static final String IS_BASIC_SCHEDULE_ENABLED = "isBasicScheduleEnabled";
 	private static final String IS_ADVANCED_SCHEDULE_ENABLED = "isAdvancedScheduleEnabled";
 	private static final boolean DEFAULT_IS_SCHEDULE_ENABLED = true;
@@ -155,15 +153,15 @@ public class NeatoPrefs {
 	// TODO: Needs to revisit once Web API is exposed.
 	public static boolean getIsScheduleEnabled(Context context, int type) {
 		if (type == SchedulerConstants2.SCHEDULE_TYPE_BASIC) {
-			LogHelper.log("CHECK", "SCHEDULE_TYPE_BASIC:");
+			
 			return getPreferenceBooleanValue(context,
 					IS_BASIC_SCHEDULE_ENABLED, DEFAULT_IS_SCHEDULE_ENABLED);
 		} else if (type == SchedulerConstants2.SCHEDULE_TYPE_ADVANCED) {
-			LogHelper.log("CHECK", "SCHEDULE_TYPE_ADVANCED:");
+			
 			return getPreferenceBooleanValue(context,
 					IS_ADVANCED_SCHEDULE_ENABLED, DEFAULT_IS_SCHEDULE_ENABLED);
 		}
-		LogHelper.log("CHECK", "false:");
+		
 		return false;
 	}
 	

@@ -1,22 +1,13 @@
 package com.neatorobotics.android.slide.framework.robot.schedule2;
 
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2.Day;
-import com.neatorobotics.android.slide.framework.utils.DataConversionUtils;
-import com.neatorobotics.android.slide.framework.xml.XmlHelper;
 
-public class BasicScheduleEvent2 implements Schedule2 {
+public class BasicScheduleEvent2 implements ScheduleEvent {
 	private static final String TAG = AdvancedScheduleEvent2.class.getSimpleName();
 	private String mEventId;
 	private Day mDay;
@@ -37,37 +28,6 @@ public class BasicScheduleEvent2 implements Schedule2 {
 	}
 
 
-	public Node toXmlNode() {
-
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = null;
-		try {
-			docBuilder = docFactory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-
-		}
-		Document doc = docBuilder.newDocument();
-
-		Node schedule = doc.createElement(SchedulerConstants2.XML_TAG_SCHEDULE);
-		Node scheduleId = doc.createElement(SchedulerConstants2.XML_TAG_SCHEDULE_EVENT_ID);
-		scheduleId.appendChild(doc.createTextNode(mEventId));
-		schedule.appendChild(scheduleId);
-		Node startDayNode = doc.createElement(SchedulerConstants2.XML_TAG_DAY);
-		String day = DataConversionUtils.convertIntToString(mDay.ordinal());
-		startDayNode.appendChild(doc.createTextNode(day));
-		schedule.appendChild(startDayNode);
-		Node startTimeNode = doc.createElement(SchedulerConstants2.XML_TAG_STARTTIME);
-		String startTime = mStartTime.toString();
-		startTimeNode.appendChild(doc.createTextNode(startTime));
-		schedule.appendChild(startTimeNode);
-		// Add cleaning mode
-		Node cleaningModeNode = doc.createElement(SchedulerConstants2.XML_TAG_CLEANING_MODE);
-		cleaningModeNode.appendChild(doc.createTextNode(mCleaningMode));
-		schedule.appendChild(cleaningModeNode);
-
-		return schedule;
-	}
-
 	public JSONObject toJsonObject() {
 		JSONObject schedule = new JSONObject();		
 		try {
@@ -83,14 +43,25 @@ public class BasicScheduleEvent2 implements Schedule2 {
 		}
 		return schedule;
 	}
-
-	public String getXml() {
-		return XmlHelper.NodeToXmlString(this.toXmlNode());
-	}
 	
-	public String getBlobData() {
-		return "";
+	public JSONObject toJson() {
+		JSONObject eventObj = new JSONObject();		
+		try {
+			//Put day array
+			eventObj.put(JsonMapKeys.KEY_DAY, mDay.ordinal());
+			//Put start-time HH:MM
+			eventObj.put(JsonMapKeys.KEY_START_TIME, mStartTime.toString());
+			// Put cleaning mode			
+			eventObj.put(JsonMapKeys.KEY_CLEANING_MODE, mCleaningMode);
+			// Put event id			
+			eventObj.put(JsonMapKeys.KEY_SCHEDULE_EVENT_ID, mEventId);
+		} 
+		catch (JSONException e) {
+			LogHelper.log(TAG, "Exception in toJsonData", e);
+		}
+		return eventObj;
 	}
+
 	public void setDay(Day day) {
 		mDay = day;
 	}

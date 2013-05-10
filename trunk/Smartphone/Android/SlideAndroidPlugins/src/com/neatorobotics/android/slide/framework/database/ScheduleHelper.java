@@ -2,71 +2,37 @@ package com.neatorobotics.android.slide.framework.database;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.robot.schedule2.Schedule2;
-import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleGroup2;
+import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleJsonHelper;
+import com.neatorobotics.android.slide.framework.robot.schedule2.Schedules;
 import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleInfo2;
-import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleXmlHelper2;
 import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2;
+import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes;
 
 public class ScheduleHelper {
 	
 	private static final String TAG = ScheduleHelper.class.getSimpleName();
-	public static ScheduleGroup2 getScheduleFromDB(Context context, String robotId, int type) {
-		ScheduleGroup2 schedule = null;
-		String id = getScheduleIdFromDB(context, robotId, type);
-		if (!TextUtils.isEmpty(id)) {
-			schedule = getScheduleFromId(context, id);
-		}
-		return schedule;
+	
+	
+	public static ScheduleInfo2 getScheduleInfoById(Context context, String id) {
+		ScheduleInfo2 scheduleInfo = DBHelper.getInstance(context).getScheduleInfoById(id);		
+		return scheduleInfo;
 	}
 	
-	public static ScheduleGroup2 getScheduleFromId(Context context, String id) {
-		String data = getScheduleData(context, id);
-		LogHelper.logD(TAG, "Schedule in DB: " + data);
-		String scheduleType = getScheduleType(context, id);
-		ScheduleGroup2 schedule = ScheduleXmlHelper2.readXmlString(scheduleType, data);
-		return schedule;
+	
+	public static Schedules getScheduleGroupById(Context context, String id) {
+		ScheduleInfo2 scheduleInfo = DBHelper.getInstance(context).getScheduleInfoById(id);
+		if ((scheduleInfo != null) && 
+			(scheduleInfo.getScheduleType().equals(NeatoRobotScheduleWebServicesAttributes.SCHEDULE_TYPE_BASIC))) {
+			return ScheduleJsonHelper.readJsonToBasicSchedule(scheduleInfo.getScheduleData());
+		} 
+		else {
+			// TODO: Add support for Advance schedule 
+		}
+		
+		return null;
 	}
 
-	
-	public static boolean addScheduleEvent(Context context, String id, Schedule2 event) {
-		ScheduleGroup2 schedule = getScheduleFromId(context, id);
-		boolean success = false;
-		if (schedule != null) {
-			success = schedule.addSchedule(event);
-			String scheduleData = schedule.getXml();
-			saveScheduleData(context, id, scheduleData);
-			LogHelper.logD(TAG, schedule.toJsonArray().toString());
-		}
-		return success;
-	}
-	
-	public static boolean deleteScheduleEvent(Context context, String id, String eventId) {
-		ScheduleGroup2 schedule = getScheduleFromId(context, id);
-		boolean success = false;
-		if (schedule != null) {
-			success = schedule.removeScheduleEvent(eventId);
-			String scheduleData = schedule.getXml();
-			saveScheduleData(context, id, scheduleData);
-			LogHelper.logD(TAG, schedule.toJsonArray().toString());
-		}
-		return success;
-	}
-	
-	public static boolean updateScheduleEvent(Context context, String id, Schedule2 event) {
-		ScheduleGroup2 schedule = getScheduleFromId(context, id);
-		boolean success = false;
-		if (schedule != null) {
-			success = schedule.updateScheduleEvent(event);
-			String scheduleData = schedule.getXml();
-			saveScheduleData(context, id, scheduleData);
-			LogHelper.log(TAG, schedule.toJsonArray().toString());
-		}
-		return success;
-	}
-	
 	public static String getScheduleIdFromDB(Context context, String robotId, int type) {
 		String scheduleId = null;
 		if (type == SchedulerConstants2.SCHEDULE_TYPE_BASIC) {
