@@ -49,6 +49,10 @@ public class JsonMapKeys {
 	public static final String KEY_EVENT_TYPE = "eventType";
 	public static final String KEY_AREA = "area";
 	
+	public static final String KEY_SCHEDULE_GROUP = "scheduleGroup";
+	public static final String KEY_SCHEDULE_UUID = "scheduleUUID";
+	public static final String KEY_EVENTS = "events";
+	
 	public static final String KEY_START_TIME = "startTime";
 	public static final String KEY_END_TIME = "endTime";
 	

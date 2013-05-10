@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.schedule2.AdvancedScheduleEvent2;
 import com.neatorobotics.android.slide.framework.robot.schedule2.BasicScheduleEvent2;
-import com.neatorobotics.android.slide.framework.robot.schedule2.Schedule2;
+import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleEvent;
 import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleTimeObject2;
 import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2.Day;
 import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2.SchedularEvent;
@@ -15,7 +15,7 @@ import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConsta
 
 public class ScheduleJsonDataHelper2 {
 
-	private static final String TAG = ScheduleJsonDataHelper.class.getSimpleName();
+	private static final String TAG = ScheduleJsonDataHelper2.class.getSimpleName();
 	
 	private static AdvancedScheduleEvent2 jsonToAdvancedSchedule(JSONObject jsonObject, String eventId) 
 	{
@@ -64,7 +64,7 @@ public class ScheduleJsonDataHelper2 {
 	}
 	
 	
-	public static Schedule2 jsonToSchedule(JSONObject jsonObject, String eventId, int scheduleType) {
+	public static ScheduleEvent jsonToSchedule(JSONObject jsonObject, String eventId, int scheduleType) {
 		if (scheduleType == SchedulerConstants2.SCHEDULE_TYPE_ADVANCED) {
 			return jsonToAdvancedSchedule(jsonObject, eventId);
 		} else if (scheduleType == SchedulerConstants2.SCHEDULE_TYPE_BASIC) {

@@ -7,20 +7,18 @@ import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.ArrayList;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.database.ScheduleHelper;
-import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.json.JsonHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
-import com.neatorobotics.android.slide.framework.pluginhelper.ScheduleJsonDataHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ScheduleJsonDataHelper2;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
@@ -28,10 +26,11 @@ import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotD
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotNotificationsListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotStateListener;
-import com.neatorobotics.android.slide.framework.robot.schedule.AdvancedScheduleGroup;
-import com.neatorobotics.android.slide.framework.robot.schedule2.Schedule2;
-import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleGroup2;
+import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleEvent;
 import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2;
+import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
+import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettingsListener;
+import com.neatorobotics.android.slide.framework.robot.settings.SettingsManager;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.DataConversionUtils;
@@ -40,9 +39,6 @@ import com.neatorobotics.android.slide.framework.webservice.robot.RobotDetailRes
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotOnlineStatusResult;
-import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
-import com.neatorobotics.android.slide.framework.robot.settings.SettingsManager;
-import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettingsListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.RobotAtlasWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.RobotAtlasGridWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.listeners.RobotGridDataDownloadListener;
@@ -52,14 +48,8 @@ import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapDa
 import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.UpdateRobotMapListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.DeleteScheduleListener;
-import com.neatorobotics.android.slide.framework.webservice.robot.schedule.GetScheduleEventData;
-import com.neatorobotics.android.slide.framework.webservice.robot.schedule.GetScheduleEventsListener;
-import com.neatorobotics.android.slide.framework.webservice.robot.schedule.GetScheduleListener;
-import com.neatorobotics.android.slide.framework.webservice.robot.schedule.GetScheduleListener2;
-import com.neatorobotics.android.slide.framework.webservice.robot.schedule.RobotSchedulerManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.RobotSchedulerManager2;
-import com.neatorobotics.android.slide.framework.webservice.robot.schedule.ScheduleEventListener;
-import com.neatorobotics.android.slide.framework.webservice.robot.schedule.ScheduleWebserviceListener;
+import com.neatorobotics.android.slide.framework.webservice.robot.schedule.ScheduleRequestListener;
 import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
 
 
@@ -416,348 +406,67 @@ public class RobotManagerPlugin extends Plugin {
 		private void updateSchedule(Context context, RobotJsonData jsonData,
 				final String callbackId) {
 			final String scheduleId = jsonData.getString(JsonMapKeys.KEY_SCHEDULE_ID);
-			RobotSchedulerManager2.getInstance(context).updateSchedule(scheduleId, new ScheduleWebserviceListener() {
-
-				@Override
-				public void onSuccess() {
-					JSONObject jsonResult = new JSONObject();
-					try {
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-					} catch (JSONException e) {
-						LogHelper.log(TAG, "Exception in createSchedule", e);
-					}
-
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
-					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);
-				}
-
-				@Override
-				public void onServerError(String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-				}
-			});
+			RobotSchedulerManager2.getInstance(context).addUpdateSchedule(scheduleId, new ScheduleRequestListenerWrapper(callbackId));
 		}
 
-		private void createSchedule(Context context, RobotJsonData jsonData, final String callbackId) {
-			
+		private void createSchedule(Context context, RobotJsonData jsonData, final String callbackId) {			
 			int scheduleType = jsonData.getInt(JsonMapKeys.KEY_SCHEDULE_TYPE);
-			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-			RobotSchedulerManager2.getInstance(context).createSchedule(robotId, scheduleType, new GetScheduleListener2() {
-
-				@Override
-				public void onSuccess(ScheduleGroup2 group, String scheduleId, int scheduleType, 
-						String scheduleVersion) {
-					JSONObject jsonResult = new JSONObject();
-					try {
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-						jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_TYPE, scheduleType);
-					} catch (JSONException e) {
-						LogHelper.log(TAG, "Exception in createSchedule", e);
-					}
-
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
-					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);
-				}
-
-				@Override
-				public void onServerError(int errorCode, String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-
-				}
-			});
-		}
-
-
-
+			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);			
+			RobotSchedulerManager2.getInstance(context).createSchedule(robotId, scheduleType, new ScheduleRequestListenerWrapper(callbackId));
+		}		
+		
 		private void getScheduleEventData(Context context, RobotJsonData jsonData, final String callbackId) {
-			
 			String scheduleId = jsonData.getString(JsonMapKeys.KEY_SCHEDULE_ID);
-			String scheduleEventId = jsonData.getString(JsonMapKeys.KEY_SCHEDULE_EVENT_ID);
-			RobotSchedulerManager2.getInstance(context).getScheduleEventData(scheduleId, scheduleEventId, new GetScheduleEventData() {
-
-				@Override
-				public void onSuccess(String scheduleId, String eventId, Schedule2 schedule) {
-					JSONObject jsonResult = new JSONObject();
-					try {
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_EVENT_ID, eventId);
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_EVENT_DATA, schedule.toJsonObject());
-					} catch (JSONException e) {
-						LogHelper.log(TAG, "Exception in getScheduleEventData", e);
-					}
-
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
-					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);
-
-				}
-
-				@Override
-				public void onServerError(int errorCode, String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-				}
-			});
-		}
-
+			final String scheduleEventId = jsonData.getString(JsonMapKeys.KEY_SCHEDULE_EVENT_ID);
+			RobotSchedulerManager2.getInstance(context).getScheduleEventData(scheduleId, scheduleEventId, new ScheduleRequestListenerWrapper(callbackId));
+		}			
+		
 		private void updateScheduleEvent(Context context, RobotJsonData jsonData,
 				final String callbackId) {
 			final String scheduleId = jsonData.getString(JsonMapKeys.KEY_SCHEDULE_ID);
 			final String scheduleEventId = jsonData.getString(JsonMapKeys.KEY_SCHEDULE_EVENT_ID);
 			JSONObject event = jsonData.getJsonObject(JsonMapKeys.KEY_SCHEDULE_EVENT_DATA);
 			int scheduleType = getScheduleTypeFromId(context, scheduleId);
-			Schedule2 scheduleEvent = ScheduleJsonDataHelper2.jsonToSchedule(event, scheduleEventId, scheduleType);
-			RobotSchedulerManager2.getInstance(context).updateScheduleEvent(scheduleEvent, scheduleId, new ScheduleEventListener() {
-
-				@Override
-				public void onSuccess() {
-					JSONObject jsonResult = new JSONObject();
-					try {
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_EVENT_ID, scheduleEventId);
-					} catch (JSONException e) {
-						LogHelper.log(TAG, "Exception in updateScheduleEvent", e);
-					}
-
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
-					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);
-
-				}
-
-				@Override
-				public void onServerError(int errorCode, String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-				}
-			});
+			ScheduleEvent scheduleEvent = ScheduleJsonDataHelper2.jsonToSchedule(event, scheduleEventId, scheduleType);
+			RobotSchedulerManager2.getInstance(context).updateScheduleEvent(scheduleEvent, scheduleId, new ScheduleRequestListenerWrapper(callbackId));
 		}
 
 		private void deleteScheduleEvent(Context context, RobotJsonData jsonData, final String callbackId) {
-			
 			final String scheduleId = jsonData.getString(JsonMapKeys.KEY_SCHEDULE_ID);
 			final String scheduleEventId = jsonData.getString(JsonMapKeys.KEY_SCHEDULE_EVENT_ID);
-			RobotSchedulerManager2.getInstance(context).deleteScheduleEvent(scheduleId, scheduleEventId, new ScheduleEventListener() {
-
-				@Override
-				public void onSuccess() {
-					JSONObject jsonResult = new JSONObject();
-					try {
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_EVENT_ID, scheduleEventId);
-					} catch (JSONException e) {
-						LogHelper.log(TAG, "Exception in deleteScheduleEvent", e);
-					}
-
-					// TODO Auto-generated method stub
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
-					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);
-					LogHelper.log(TAG, "delete event success");
-				}
-
-				@Override
-				public void onServerError(int errorCode, String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-				}
-			});
+			RobotSchedulerManager2.getInstance(context).deleteScheduleEvent(scheduleId, scheduleEventId, new ScheduleRequestListenerWrapper(callbackId));
 		}
 
-		private void addScheduleEvent(Context context, RobotJsonData jsonData,
-				final String callbackId) {
+		private void addScheduleEvent(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.log(TAG, "JSON Received: "+ jsonData.toString());
+			
 			final String scheduleId = jsonData.getString(JsonMapKeys.KEY_SCHEDULE_ID);
 			JSONObject event = jsonData.getJsonObject(JsonMapKeys.KEY_SCHEDULE_EVENT_DATA);
 			final String eventId = AppUtils.generateNewScheduleEventId();
 			int scheduleType = getScheduleTypeFromId(context, scheduleId);
-			Schedule2 scheduleEvent = ScheduleJsonDataHelper2.jsonToSchedule(event, eventId, scheduleType);
-			RobotSchedulerManager2.getInstance(context).addScheduleEvent(scheduleEvent, scheduleId, new ScheduleEventListener() {
-				@Override
-				public void onSuccess() {
-					JSONObject jsonResult = new JSONObject();
-					try {
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_EVENT_ID, eventId);
-					} catch (JSONException e) {
-						LogHelper.log(TAG, "Exception in updateScheduleEvent", e);
-					}
-
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
-					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);
-					LogHelper.log(TAG, "Add event success");
-				}
-
-				@Override
-				public void onServerError(int errorCode, String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-				}
-			});
+			ScheduleEvent scheduleEvent = ScheduleJsonDataHelper2.jsonToSchedule(event, eventId, scheduleType);
+			RobotSchedulerManager2.getInstance(context).addScheduleEvent(scheduleEvent, scheduleId, new ScheduleRequestListenerWrapper(callbackId));
 		}
 
-		private void getScheduleEvents(Context context, RobotJsonData jsonData,
-				final String callbackId) 
-		{
+		
+		
+		private void getScheduleEvents(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.log(TAG, "getScheduleEvents");
 			final int scheduleType = jsonData.getInt(JsonMapKeys.KEY_SCHEDULE_TYPE);
 			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-			RobotSchedulerManager2.getInstance(context).getScheduleEvents(robotId, scheduleType, new GetScheduleEventsListener() {
-
-				@Override
-				public void onSuccess(String scheduleId, ArrayList<String> events) {
-					// TODO Auto-generated method stub
-					LogHelper.log(TAG, scheduleId);
-					JSONObject jsonResult = new JSONObject();
-					try {
-						JSONArray eventsArray = DataConversionUtils.toJsonArray(events);
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-						jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_TYPE, scheduleType);
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_EVENTS_LIST, eventsArray);
-					} catch (JSONException e) {
-						LogHelper.log(TAG, "Exception in createSchedule", e);
-					}
-
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
-					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);
-				}
-
-				@Override
-				public void onServerError(int errorCode, String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-				}
-			});
+			RobotSchedulerManager2.getInstance(context).getScheduleByType(robotId, scheduleType, new ScheduleRequestListenerWrapper(callbackId));				
 		}
 		
 		// Newly added methods for new schedule pattern.
 		private void getScheduleData(Context context, RobotJsonData jsonData, final String callbackId) {
-
 			String scheduleId = jsonData.getString(JsonMapKeys.KEY_SCHEDULE_ID);
-			RobotSchedulerManager2.getInstance(context).getSchedule(scheduleId, new GetScheduleListener2() {
-
-				@Override
-				public void onSuccess(ScheduleGroup2 group, String scheduleId, int scheduleType, String scheduleVersion) {
-					JSONObject jsonResult = new JSONObject();
-					try {
-						if (group != null) {
-							jsonResult.put(JsonMapKeys.KEY_SCHEDULES, group.toJsonArray());
-						}
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_TYPE, scheduleType);
-						
-					} catch (JSONException e) {
-						LogHelper.log(TAG, "Exception in createSchedule", e);
-					}
-
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
-					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);					
-				}
-
-				@Override
-				public void onServerError(int errorCode, String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-				}
-			});
+			RobotSchedulerManager2.getInstance(context).getSchedule(scheduleId, new ScheduleRequestListenerWrapper(callbackId));			
 		}
 
-		private void syncScheduleFromServer(Context context, RobotJsonData jsonData,
-				final String callbackId) {
+		private void syncScheduleFromServer(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "syncScheduleFromServer action initiated in Robot plugin");	
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-			RobotSchedulerManager2.getInstance(context).syncSchedulesFromServer(robotId, new GetScheduleListener2() {
-
-				@Override
-				public void onSuccess(ScheduleGroup2 group,
-						String scheduleId, int scheduleType, String scheduleVersion) {
-					JSONObject jsonResult = new JSONObject();
-					try {
-						if (group != null) {
-							jsonResult.put(JsonMapKeys.KEY_SCHEDULES, group.toJsonArray());
-						}
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_TYPE, scheduleType);
-						
-					} catch (JSONException e) {
-						LogHelper.log(TAG, "Exception in createSchedule", e);
-					}
-
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
-					pluginResult.setKeepCallback(false);
-					success(pluginResult, callbackId);					
-				}
-
-				@Override
-				public void onServerError(int errorCode, String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-				}
-			});
+			RobotSchedulerManager2.getInstance(context).syncSchedulesFromServer(robotId, new ScheduleRequestListenerWrapper(callbackId));
 		}
 		
 		// Private helper method to return the schedule enable/disable state.
@@ -1053,34 +762,9 @@ public class RobotManagerPlugin extends Plugin {
 
 		private void setAdvancedSchedule(final Context context, RobotJsonData jsonData, final String callbackId) {
 
-			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-			JSONArray scheduleArray= jsonData.getJsonArray("schedule");
-			AdvancedScheduleGroup schedules = ScheduleJsonDataHelper.jsonToScheduleGroup(scheduleArray);
-			RobotSchedulerManager schedulerManager = RobotSchedulerManager.getInstance(context);
-			schedulerManager.sendRobotSchedule(schedules, robotId, new ScheduleWebserviceListener() {
-				@Override
-				public void onSuccess() {
-					LogHelper.log(TAG, "ScheduleDetailsPluginListener onSuccess Callback Id = " + callbackId);
-					PluginResult scheduleRobotPluginResult = new  PluginResult(PluginResult.Status.OK);
-					success(scheduleRobotPluginResult, callbackId);
-					sendDataChangedCommand(context, robotId, RobotCommandPacketConstants.KEY_ROBOT_SCHEDULE_CHANGED);
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "ScheduleDetailsPluginListener onNetworkError Callback Id = " + callbackId);
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-				}
-
-				@Override
-				public void onServerError(String errMessage) {
-					JSONObject error = getErrorJsonObject(0, "Server Error");
-					LogHelper.log(TAG, "ScheduleDetailsPluginListener onServerError Callback Id = " + callbackId);
-					PluginResult scheduleRobotPluginResult = new  PluginResult(PluginResult.Status.ERROR, error);
-					error(scheduleRobotPluginResult, callbackId);
-				}
-
-			});
+			PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+			pluginResult.setKeepCallback(false);
+			sendError(callbackId, ErrorTypes.ERROR_NOT_SUPPORTED, "This API is not supported");
 		}
 
 		private void sendCommand(Context context, RobotJsonData jsonData, String callbackId) {
@@ -1155,77 +839,17 @@ public class RobotManagerPlugin extends Plugin {
 
 		private void getRobotSchedule(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "getRobotSchedule action initiated in Robot plugin");
-			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-			
-			RobotSchedulerManager.getInstance(context).getRobotSchedule(robotId, new GetScheduleListener() {
-
-				
-				@Override
-				public void onSuccess(AdvancedScheduleGroup schedules, String scheduleId) {
-					JSONObject schedule = new JSONObject();
-					try {
-						LogHelper.log(TAG, "Schedule retrieved. Sending PluginResult");
-						schedule.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-						// If there is no schedule set on the Robot then "schedules" may be null
-						if (schedules != null) {
-							schedule.put(JsonMapKeys.KEY_SCHEDULES, schedules.toJsonArray());
-						}
-						else {
-							JSONArray emptySchedule = new JSONArray();
-							schedule.put(JsonMapKeys.KEY_SCHEDULES, emptySchedule);
-						}
-					} catch (JSONException e) {
-						LogHelper.log(TAG, "Exception in GetScheduleListener", e);
-					}
-
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, schedule);
-					pluginResult.setKeepCallback(false);
-					success(pluginResult,callbackId);
-				}
-
-				@Override
-				public void onServerError(String errMessage) {
-					LogHelper.log(TAG, "Schedule not retrieved. Sending Error PluginResult");
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR);
-					pluginResult.setKeepCallback(false);
-					error(pluginResult, callbackId);
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "Schedule not retrieved. Sending Error PluginResult");
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-					
-				}
-			});
+			PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+			pluginResult.setKeepCallback(false);
+			sendError(callbackId, ErrorTypes.ERROR_NOT_SUPPORTED, "This API is not supported");
 		}
 		
 		private void deleteRobotSchedule(final Context context, final RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "Delete robot schedule action initiated in Robot plugin");
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			
-			RobotSchedulerManager.getInstance(context).deleteRobotSchedule(robotId, new DeleteScheduleListener() {
-				
-				@Override
-				public void onSuccess(String robotId) {					
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
-					pluginResult.setKeepCallback(false);
-					success(pluginResult,callbackId);
-				}
-				
-				@Override
-				public void onServerError(String errMessage) {
-					LogHelper.log(TAG, "DeleteScheduleListener:onServerError - " + errMessage);
-					sendError(callbackId, ErrorTypes.ERROR_SERVER_ERROR, errMessage);
-				}
-
-				@Override
-				public void onNetworkError(String errMessage) {
-					LogHelper.log(TAG, "DeleteScheduleListener:onNetworkError - " + errMessage);
-					sendError(callbackId, ErrorTypes.ERROR_NETWORK_ERROR, errMessage);
-					
-				}
-			});
+			// TODO: Needs to be implemented
+			
 		}
 
 		private void getRobotMaps(final Context context, final RobotJsonData jsonData, final String callbackId) {
@@ -1867,6 +1491,65 @@ public class RobotManagerPlugin extends Plugin {
 			public void onServerError(int errorType, String errorMessage) {
 				LogHelper.logD(TAG, "Server Error: " + errorMessage);
 				sendError(mCallbackId, errorType, errorMessage);
+			}
+		}
+		
+		private class ScheduleRequestListenerWrapper implements ScheduleRequestListener {
+			private String mCallbackId;
+			
+			public ScheduleRequestListenerWrapper(String callbackId) {
+				mCallbackId = callbackId;
+			}
+			
+			@Override
+			public void onReceived(NeatoWebserviceResult responseResult) {
+				LogHelper.logD(TAG, "Request processed successfully");
+				try {
+					JSONObject resultObj = getResultObject(responseResult);
+					if (resultObj != null) {						
+						PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, resultObj);
+						pluginResult.setKeepCallback(false);
+						success(pluginResult, mCallbackId);
+					}
+					else {
+						LogHelper.logD(TAG, "Unknown Error");
+						sendError(mCallbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
+					}
+				}
+				catch (JSONException ex) {
+					LogHelper.logD(TAG, "JSON Error");
+					sendError(mCallbackId, ErrorTypes.JSON_PARSING_ERROR, ex.getMessage());
+				}
+			}	
+			
+			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+				return new JSONObject(); 
+			}
+
+			@Override
+			public void onServerError(String errorMessage) {
+				LogHelper.logD(TAG, "Server Error: " + errorMessage);
+				sendError(mCallbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
+			}			
+			
+			@Override
+			public void onServerError(int errorType, String errMessage) {
+				LogHelper.logD(TAG, "Server Error: " + errMessage);
+				sendError(mCallbackId, errorType, errMessage);
+			}
+			
+			@Override
+			public void onNetworkError(String errorMessage) {
+				LogHelper.logD(TAG, "Network Error: " + errorMessage);
+				sendError(mCallbackId, ErrorTypes.ERROR_NETWORK_ERROR, errorMessage);
+			}
+			
+			@Override
+			public void onScheduleData(JSONObject scheduleJson) {			
+				LogHelper.logD(TAG, "Received schedule data");
+				PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, scheduleJson);
+				pluginResult.setKeepCallback(false);
+				success(pluginResult, mCallbackId);
 			}
 		}
 }

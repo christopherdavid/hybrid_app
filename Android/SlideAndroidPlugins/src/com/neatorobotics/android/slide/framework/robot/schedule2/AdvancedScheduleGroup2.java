@@ -2,17 +2,9 @@ package com.neatorobotics.android.slide.framework.robot.schedule2;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.json.JSONArray;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import com.neatorobotics.android.slide.framework.xml.XmlHelper;
 
-public class AdvancedScheduleGroup2 implements ScheduleGroup2 {
+public class AdvancedScheduleGroup2 implements Schedules {
 	private String mUuid;
 	private ArrayList<AdvancedScheduleEvent2> mScheduleList = new ArrayList<AdvancedScheduleEvent2>();;
 	public AdvancedScheduleGroup2(String uuid) {
@@ -22,7 +14,7 @@ public class AdvancedScheduleGroup2 implements ScheduleGroup2 {
 		
 	} 
 	
-	public boolean addSchedule(Schedule2 schedule) {
+	public boolean addSchedule(ScheduleEvent schedule) {
 		if (schedule instanceof AdvancedScheduleEvent2) {
 			return mScheduleList.add((AdvancedScheduleEvent2) schedule);
 		}
@@ -48,7 +40,7 @@ public class AdvancedScheduleGroup2 implements ScheduleGroup2 {
 		return false;
 	}
 	
-	public boolean updateScheduleEvent(Schedule2 event) {
+	public boolean updateScheduleEvent(ScheduleEvent event) {
 		if (event instanceof AdvancedScheduleEvent2) {
 			Iterator<AdvancedScheduleEvent2> iterator = mScheduleList.iterator();
 			while (iterator.hasNext()) {
@@ -63,31 +55,6 @@ public class AdvancedScheduleGroup2 implements ScheduleGroup2 {
 		return false;
 	}
 	
-	public Node toXmlNode() {
-		
-		int groupSize = getSize();
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = null;
-		try {
-			docBuilder = docFactory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-
-		}
-		Document doc = docBuilder.newDocument();
-		
-		Node schedules = doc.createElement(SchedulerConstants2.XML_TAG_SCHEDULES);
-		Node scheduleUUID = doc.createElement(SchedulerConstants2.XML_TAG_SCHEDULE_UUID);
-		scheduleUUID.appendChild(doc.createTextNode(mUuid));
-		schedules.appendChild(scheduleUUID);
-		for (int scheduleIterator =0; scheduleIterator< groupSize; scheduleIterator++){
-			Node scheduleNode = getSchedule(scheduleIterator).toXmlNode();
-			Node addScheduleNode = doc.adoptNode(scheduleNode);
-			schedules.appendChild(addScheduleNode);
-		}
-		return schedules;
-	
-	}
-	
 	public JSONArray toJsonArray() {
 		JSONArray scheduleItems = new JSONArray();
 		for (AdvancedScheduleEvent2 schedule: mScheduleList) {
@@ -96,14 +63,6 @@ public class AdvancedScheduleGroup2 implements ScheduleGroup2 {
 		return scheduleItems;	
 	}
 	
-	public String getXml() {
-		return XmlHelper.NodeToXmlString(this.toXmlNode());
-	}
-
-	public String getBlobData() {
-		return "";
-	}
-
 	@Override
 	public ArrayList<String> getEventIds() {
 		ArrayList<String> eventIds = new ArrayList<String>();
@@ -114,8 +73,8 @@ public class AdvancedScheduleGroup2 implements ScheduleGroup2 {
 	}
 
 	@Override
-	public Schedule2 getEvent(String eventId) {
-		Schedule2 event = null;
+	public ScheduleEvent getEvent(String eventId) {
+		ScheduleEvent event = null;
 		for (AdvancedScheduleEvent2 schedule: mScheduleList) {
 			if (eventId.equals(schedule.getEventId())) {
 				event = schedule;
@@ -134,5 +93,25 @@ public class AdvancedScheduleGroup2 implements ScheduleGroup2 {
 	@Override
 	public void setUUID(String uuid) {
 		mUuid = uuid;
+	}
+	
+	@Override
+	public String getJSON() {		
+		return toJsonArray().toString();
+	}
+	
+	@Override
+	public int getScheduleType() {		
+		return SchedulerConstants2.SCHEDULE_TYPE_ADVANCED;
+	}
+	
+	@Override
+	public int eventCount() {		
+		return mScheduleList.size();
+	}
+	
+	@Override
+	public ScheduleEvent getEvent(int index) {
+		return mScheduleList.get(index);
 	}
 }

@@ -1,9 +1,9 @@
 package com.neatorobotics.android.slide.framework.robot.schedule2;
 
+import android.os.Environment;
+
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes;
-
-import android.os.Environment;
 
 
 
@@ -26,6 +26,9 @@ public class SchedulerConstants2 {
 	public static final int SCHEDULE_TYPE_ADVANCED = 1;
 	public static final int CLEANING_MODE_ECO = 1;
 	public static final int CLEANING_MODE_NORMAL = 2;	
+	
+	public static final int SERVER_SCHEDULE_TYPE_BASIC = 1;
+	public static final int SERVER_SCHEDULE_TYPE_ADVANCED = 2;
 
 	public static enum Day {SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY};
 	public static enum SchedularEvent {QUIET, CLEAN, NONE};	
@@ -82,8 +85,8 @@ public class SchedulerConstants2 {
 		return scheduleVal;
 	}
 	
-	public static ScheduleGroup2 getEmptySchedule(int type) {
-		ScheduleGroup2 group = null;
+	public static Schedules getEmptySchedule(int type) {
+		Schedules group = null;
 		String uuid = AppUtils.generateScheduleUUId();
 		if (type == SCHEDULE_TYPE_BASIC) {
 			group = new BasicScheduleGroup2(uuid);
@@ -93,8 +96,8 @@ public class SchedulerConstants2 {
 		return group;
 	}
 	
-	public static ScheduleGroup2 getEmptySchedule(String type) {
-		ScheduleGroup2 group = null;
+	public static Schedules getEmptySchedule(String type) {
+		Schedules group = null;
 		String uuid = AppUtils.generateScheduleUUId();
 		if (type.equals(NeatoRobotScheduleWebServicesAttributes.SCHEDULE_TYPE_BASIC)) {
 			group = new BasicScheduleGroup2(uuid);
@@ -102,5 +105,22 @@ public class SchedulerConstants2 {
 			group = new AdvancedScheduleGroup2(uuid);
 		} 
 		return group;
+	}
+	
+	public static int convertToServerConstants(int scheduleType) {
+		int scheduleVal = -1;
+		switch (scheduleType) {
+			case SchedulerConstants2.SCHEDULE_TYPE_BASIC:				
+				scheduleVal = SchedulerConstants2.SERVER_SCHEDULE_TYPE_BASIC;
+				break;
+				
+			case SchedulerConstants2.SCHEDULE_TYPE_ADVANCED:
+				scheduleVal = SchedulerConstants2.SERVER_SCHEDULE_TYPE_ADVANCED;
+				break;
+	
+			default:
+				break;
+		}
+		return scheduleVal;
 	}
 }
