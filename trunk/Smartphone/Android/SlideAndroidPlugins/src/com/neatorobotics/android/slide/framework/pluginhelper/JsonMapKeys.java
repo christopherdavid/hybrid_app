@@ -134,4 +134,12 @@ public class JsonMapKeys {
 	public static final String KEY_PUSH_NOTIFICATION_TYPES = "pushNotificationTypes";
 	
 	public static final String KEY_FLAG_ON_OFF = "flagOnOff";
+	// Timed Mode 
+	public static final String KEY_EXPECTED_TIME_TO_EXECUTE = "expectedTimeToExecute";
+	public static final String KEY_ROBOT_DATA_ID = "robotDataKeyId"; 
+	public static final String KEY_ROBOT_DATA = "robotData";
+	
+	public static final String KEY_ROBOT_CURRENT_STATE = "robotCurrentState";
+	//Virtual
+	public static final String KEY_ROBOT_STATE = "robotState";
 }

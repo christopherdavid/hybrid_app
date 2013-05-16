@@ -2,6 +2,9 @@ package com.neatorobotics.android.slide.framework.robot.commands;
 
 public class RobotCommandPacketConstants {
 	
+	public static final int COMMAND_PACKET_SIGNATURE = 0xCafeBabe;
+	public static final int COMMAND_PACKET_VERSION = 1;
+	
 	//TODO: Base 1000 for replies. change commandIds.
 	public static final int PACKET_TYPE_ROBOT_DISCOVERY = 1;
 	public static final int PACKET_TYPE_ROBOT_DISCOVERY_RESPONSE = 2;
@@ -26,6 +29,7 @@ public class RobotCommandPacketConstants {
 	public static final int COMMAND_TURN_VACUUM_ONOFF = 116;
 	public static final int COMMAND_TURN_WIFI_ONOFF = 117;
 
+	public static final int COMMAND_ROBOT_PROFILE_DATA_CHANGED = 5001;
 	// Notification Ids
 	public static final String NOTIFICATIONS_ID_GLOBAL	 		= "global";
 	public static final String NOTIFICATION_ID_ROBOT_STUCK 		= "101";

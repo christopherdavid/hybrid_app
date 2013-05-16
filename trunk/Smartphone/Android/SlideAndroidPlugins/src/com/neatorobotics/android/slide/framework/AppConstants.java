@@ -16,4 +16,17 @@ public class AppConstants {
 	
 	public static final String NETWORK_ERROR_STRING = "Network Error";
 	
+	/*
+	 * The support for saving Robot Commands on server instead of sending it VIA XMPP/TCP
+	 * is added. To use this functionality, the value of DEFAULT_IS_SERVER_DATA_MODE_ENABLED constant
+	 * should be set to true.
+     * If set to TRUE the robot commands will be saved on the server and will be accessed by robot from the
+	 * the server.
+	 * If set to false, the commands will be sent VIA XMPP/TCP connection and server won't be involved.
+	 */
+	private static final boolean IS_SERVER_DATA_MODE_ENABLED = false;
+	
+	public static boolean isServerDataModeEnabled() {
+		return IS_SERVER_DATA_MODE_ENABLED;
+	}
 }

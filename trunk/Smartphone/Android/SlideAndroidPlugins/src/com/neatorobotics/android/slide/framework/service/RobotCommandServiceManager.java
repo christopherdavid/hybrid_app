@@ -13,7 +13,6 @@ import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotP
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotStateListener;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RequestPacket;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotRequests;
-import com.neatorobotics.android.slide.framework.utils.AppUtils;
 
 public class RobotCommandServiceManager {
 	private static final String TAG = RobotCommandServiceManager.class.getSimpleName();
@@ -38,9 +37,10 @@ public class RobotCommandServiceManager {
 		LogHelper.logD(TAG, "Send command action initiated in Robot plugin internal - RobotSerialId = " + robotId);
 
 		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-		RequestPacket request = createRequestPacket(context, commandId, commandParams);
+		RequestPacket request = RequestPacket.createRequestPacket(context, commandId, commandParams);
 		RobotRequests requests = new RobotRequests();
 		requests.addCommand(request);
+		
 		if (neatoService != null) {
 			try {
 				neatoService.sendCommand2(robotId, requests);
@@ -53,22 +53,6 @@ public class RobotCommandServiceManager {
 		}
 	}
 	
-	private static RequestPacket createRequestPacket(Context context, int commandId, HashMap<String, String> commandParams)
-	{
-		RequestPacket request = null;
-		if (commandParams != null) {
-			request = RequestPacket.createRobotCommandWithParams(commandId, commandParams);
-		} else {
-			request = RequestPacket.createRobotCommand(commandId);
-		}
-		
-		request.setRequestId(AppUtils.generateNewRequestId(context));
-		request.setReplyToAddress(AppUtils.getLoggedInUserId(context));
-		request.setTimestamp(String.valueOf(System.currentTimeMillis()));
-		
-		return request;
-	}
-
 	public static void discoverRobot(Context context, RobotDiscoveryListener listener) {
 		LogHelper.logD(TAG, "Discovery action initiated internal");
 		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();

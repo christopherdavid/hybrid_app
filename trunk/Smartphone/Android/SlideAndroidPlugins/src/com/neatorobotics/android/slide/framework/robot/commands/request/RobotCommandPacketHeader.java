@@ -31,5 +31,12 @@ public class RobotCommandPacketHeader {
 		sb.append("signature = " + signature);
 		return sb.toString();
 	}
-
+	
+	//Method to create header depending on signature and version.
+	public static RobotCommandPacketHeader getRobotCommandHeader(int signature, int version) {
+		RobotCommandPacketHeader header = new RobotCommandPacketHeader();
+		header.setSignature(signature);
+		header.setVersion(version);
+		return header;
+	}
 }

@@ -3,6 +3,9 @@ package com.neatorobotics.android.slide.framework.robot.commands.request;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.neatorobotics.android.slide.framework.utils.AppUtils;
+
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -194,4 +197,21 @@ public class RequestPacket implements Parcelable {
 			return new RequestPacket[size];
 		}
 	};
+	
+	//Method to create request packet based on parameters.
+	public static RequestPacket createRequestPacket(Context context, int commandId, HashMap<String, String> commandParams)
+	{
+		RequestPacket request = null;
+		if (commandParams != null) {
+			request = RequestPacket.createRobotCommandWithParams(commandId, commandParams);
+		} else {
+			request = RequestPacket.createRobotCommand(commandId);
+		}
+		
+		request.setRequestId(AppUtils.generateNewRequestId(context));
+		request.setReplyToAddress(AppUtils.getLoggedInUserId(context));
+		request.setTimestamp(String.valueOf(System.currentTimeMillis()));
+		return request;
+	}
+	
 }
