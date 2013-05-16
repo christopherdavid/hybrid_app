@@ -49,7 +49,7 @@ var ACTION_TYPE_RESEND_VALIDATION_MAIL			= "resendValidationMail";
 var ACTION_TYPE_IS_USER_VALIDATED				= "isUserValidated";
 var ACTION_TYPE_GET_USER_DETAILS 				= "getUserDetails";
 var ACTION_TYPE_ASSOCIATE_ROBOT					= "associateRobot";
-var ACTION_TYPE_GET_ASSOCIATED_ROBOTS 			= "getAssociatedRobots"
+var ACTION_TYPE_GET_ASSOCIATED_ROBOTS 			= "getAssociatedRobots";
 var ACTION_TYPE_DISASSOCIATE_ROBOT 				= "disassociateRobot";
 var ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS 		= "disassociateAllRobots";
 var ACTION_TYPE_FORGET_PASSWORD					= "forgetPassword";
@@ -75,8 +75,11 @@ var ACTION_TYPE_DELETE_ROBOT_SCHEDULE			= "deleteScheduleData";
 var ACTION_TYPE_SET_ROBOT_NAME_2				= "setRobotName2";
 var ACTION_TYPE_GET_ROBOT_DETAIL				= "getRobotDetail";
 var ACTION_TYPE_GET_ROBOT_ONLINE_STATUS			= "getRobotOnlineStatus";
-var ACTION_TYPE_REGISTER_ROBOT_NOTIFICATIONS    = "registerRobotNotifications";
-var ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS  = "unregisterRobotNotifications";
+var ACTION_TYPE_GET_ROBOT_VIRTUAL_ONLINE_STATUS 	= "getRobotVirtualOnlineStatus";
+var ACTION_TYPE_REGISTER_ROBOT_NOTIFICATIONS    	= "registerRobotNotifications";
+var ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS  	= "unregisterRobotNotifications";
+var ACTION_TYPE_REGISTER_ROBOT_NOTIFICATIONS_2    	= "registerRobotNotifications2";
+var ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS_2  	= "unregisterRobotNotifications2";
 var ACTION_TYPE_SET_SPOT_DEFINITION				= "setSpotDefinition";
 var ACTION_TYPE_GET_SPOT_DEFINITION				= "getSpotDefinition";
 var ACTION_TYPE_DRIVE_ROBOT						= "driveRobot";
@@ -207,61 +210,98 @@ function RobotMgr() {
 
 };
 
-/*
- * Name: loginUser
- * Login using the email and password provided. If credentials matches logs in and returns
- * the User JSON object
- * User JSON object – represents a user, and returned by methods dealing with users.
- * {userId:<userId>, email:<emailId>, username:<username>, alternate_email:<alternate_email>, validation_status:<validation_status>}
- * validation_status is will be one of the following value
- * USER_STATUS_VALIDATED, USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD or USER_STATUS_NOT_VALIDATED
- * If validation_status is USER_STATUS_NOT_VALIDATED, we should not allow user to use the application
- * In case user fails to login error is returned in callbackError
- * All errors are represented by JSON object 
- * {errorCode:<code>, errorMessage:<errorMessage>}
+/**
+ * This API logs the user in using the email and password provided by the user.
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{email:"emailAddress, userName:"userName", userId:"userId", validation_status:"validationStatus"}
+ * <br>where emailAddress is user email address
+ * <br>userName is the user's name
+ * <br>userId is the user's Id 
+ * <br>validation status would be among the following values
+ * <br>USER_STATUS_VALIDATED - user is validated and logged into the app
+ * <br>USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD - user is not validated but can log in for a brief amount of time into the app
+ * <br>USER_STATUS_NOT_VALIDATED - user is not validated and cannot log into the app
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode
+ * 
+ * @param email				the email address of the user
+ * @param password			the password of the user
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ * @returns					returns JSON Object
  */
-
 UserMgr.prototype.loginUser = function(email, password, callbackSuccess, callbackError) {
 	var loginArray = {'email':email, 'password':password};
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_LOGIN, [loginArray]);
 };
 
-/*
- * Name: logoutUser
- * Logout the user from the system. Clear all the logged in user information locally
- * Does not contain any return value 
+/**
+ * This API logs the user out of the system. It also clears all the user logged in
+ * information locally. This API does not return any value
+ * 
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
  */
 UserMgr.prototype.logoutUser = function(callbackSuccess, callbackError) {
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_LOGOUT, []);
 };
 
-/*
- * Name: isUserLoggedIn
- * checks if a user is already logged in
- * returns true if user is logged in, false otherwise
- * Error callback is not called.
+/**
+ * This API checks if a user is already logged into the app
+ * 
+ * @param email				the email address of the user
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API 
+ * @returns					true if the user is logged in, false otherwise
  */
-
 UserMgr.prototype.isUserLoggedIn = function(email, callbackSuccess, callbackError) {
 	var isUserLoggedInArray = {'email':email};
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_ISLOGGEDIN, [isUserLoggedInArray]);
 };
 
-
-/*
- * Name: createUser
- * Creates a new user. This API does not trigger the email validation.
- * Server assumes whatever email is provided does exists. This API will be depreicated
- * Once we have the email validation infrastructure in place
- * Params
- *  - Email
- *  - password
- *  - UserName
- *  Returns the User JSON object if successful
- * In case of error callbackError gets called
+/**
+ * This API creates a new user. It does not trigger email validation. Server
+ * assumes whatever email is provided is already validated if it exists. Use
+ * createUser2 to create user instead
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{email:"emailAddress", userName:"userName", userId:"userId", validation_status:"validationStatus"}
+ * <br>where emailAddress is the email address of the user
+ * <br>userName is the user's name
+ * <br>userId is the user id
+ * <br>validation status can be among the following values
+ * <br>USER_STATUS_VALIDATED - user is validated and logged into the app
+ * <br>USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD - user is not validated but can log in for a brief amount of time into the app
+ * <br>USER_STATUS_NOT_VALIDATED - user is not validated and cannot log into the app
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode
+ * 
+ * @param email				the email address of the user
+ * @param password			the password of the user
+ * @param name 				name of the user
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ * @returns					returns a json object
+ * @deprecated				replaced by {@link #createUser2(email, password, name, alternateEmail, callbackSuccess, callbackError)}
+ * @see						#createUser2(email, password, name, alternateEmail, callbackSuccess, callbackError)
  */
 UserMgr.prototype.createUser = function(email, password, name, callbackSuccess, callbackError) {
 	var registerArray = {'email':email, 'password':password, 'userName':name};
@@ -269,17 +309,37 @@ UserMgr.prototype.createUser = function(email, password, name, callbackSuccess, 
 			ACTION_TYPE_CREATE_USER, [registerArray]);
 };
 
-
-/*
- * Name: createUser2
- * Creates a new user. This API will trigger the email validation.
- * Params
- *  - Email
- *  - password
- *  - UserName
- *  - alternateEmail (optional)
- *  Returns the User JSON object if successful
- * In case of error callbackError gets called
+/**
+ * This API creates a new user by triggering email validation. Use 
+ * this API to create new users.
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{email:"emailAddress", alternate_email:"alternateEmailAddress", userName:"userName", userId:"userId", validation_status:"validationStatus"}
+ * <br>where emailAddress is the email Address of the user
+ * <br>alternateEmailAddress is the alternate email Address of the user
+ * <br>userName is the name of the user
+ * <br>userId is the user id of the user 
+ * <br>validation status could be among the following values
+ * <br>USER_STATUS_VALIDATED - user is validated and logged into the app
+ * <br>USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD - user is not validated but can log in for a brief amount of time into the app
+ * <br>USER_STATUS_NOT_VALIDATED - user is not validated and cannot log into the app
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode
+ * 
+ * @param email				the email address of the user
+ * @param password			the password of the user
+ * @param name				name of the user
+ * @param alternateEmail	the alternate email id of the user (optional parameter)
+ * @param callbackSuccess 	the success callback for this API
+ * @param callbackError 	the error callback for this API
+ * @returns					returns a json object
  */
 UserMgr.prototype.createUser2 = function(email, password, name, alternateEmail, callbackSuccess, callbackError) {
 	var registerArray = {'email':email, 'password':password, 'userName':name, 'alternate_email':alternateEmail};
@@ -287,17 +347,24 @@ UserMgr.prototype.createUser2 = function(email, password, name, alternateEmail, 
 			ACTION_TYPE_CREATE_USER2, [registerArray]);
 };
 
-
-/*
- * Name: resendValidationMail
- * Resend the validation email to the user email id
-
- * Params
- *  - Email
- *  - password
- *  - UserName
- *  Returns the User JSON object if successful
- * In case of error callbackError gets called
+/**
+ * Resend the validation email to the user email id.
+ * <p>
+ * on success this API returns a JSON Object {message:"We have resent validation mail"}
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errorMessage:"errorMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode
+ * 
+ * @param email				the email address of the user
+ * @param callbackSuccess 	the success callback for this API
+ * @param callbackError 	the error callback for this API
+ * @returns					a json object containing a message string
  */
 UserMgr.prototype.resendValidationMail = function(email, callbackSuccess, callbackError) {
 	var registerArray = {'email':email};
@@ -305,34 +372,53 @@ UserMgr.prototype.resendValidationMail = function(email, callbackSuccess, callba
 			ACTION_TYPE_RESEND_VALIDATION_MAIL, [registerArray]);
 };
 
-
-/*
- * Name: isUserValidated
- * checks if a user is validated or not
- * returns JSON in success callback
- * {"validation_status":<validation_status>, message:<message>}
- * validation_status is will be one of the following value
- * USER_STATUS_VALIDATED, USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD or USER_STATUS_NOT_VALIDATED
- * If validation_status is USER_STATUS_NOT_VALIDATED, we should not allow user to use the application
+/**
+ * This API checks if a user is validated or not
+ * <p>
+ * on success this API returns a JSON Object {validation_status:"validationStatus", message:"message"}
+ * <br>validationStatus would be one among the following values
+ * <br>USER_STATUS_VALIDATED - user is validated and logged into the app
+ * <br>USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD - user is not validated but can log in for a brief amount of time into the app
+ * <br>USER_STATUS_NOT_VALIDATED - user is not validated and cannot log into the app
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode
  * 
+ * @param email				the email address of the user
+ * @param callbackSuccess	the success callback for this API
+ * @param callbackError 	the error callback for this API
+ * @returns					a json object
  */
-
 UserMgr.prototype.isUserValidated = function(email, callbackSuccess, callbackError) {
 	var isUserValidJsonArray = {'email':email};
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_IS_USER_VALIDATED, [isUserValidJsonArray]);
 };
 
-/*
- * Name: changePassword
- * Change the password of the user
- * Params
- *  - email
- *  - user's current password
- *  - new password
- * returns None in case of success
- * In error case error callback gets called with the Error JSON object
+/**
+ * This API changes the user's password.
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode 
  * 
+ * @param email				the email address of the user
+ * @param currentPassword 	the old password of the user
+ * @param newPassword		the new password of the user
+ * @param callbackSuccess 	the success callback of this API
+ * @param callbackError 	the error callback of this API
+ * @returns					a JSON Object on error
  */
 UserMgr.prototype.changePassword = function(email, currentPassword, newPassword, callbackSuccess, callbackError) {
 	var changePassword = {'email':email, 'currentPassword':currentPassword, 'newPassword':newPassword};
@@ -340,14 +426,23 @@ UserMgr.prototype.changePassword = function(email, currentPassword, newPassword,
 			ACTION_TYPE_CHANGE_PASSWORD, [changePassword]);
 };
 
-/*
- * Name: forgetPassword
- * Server sends the email to the user email id
- * Params
- *  - email
- * returns None in case of success
- * In error case error callback gets called with the Error JSON object
+/**
+ * This API takes user email address and asks server to send a mail to recover password
+ * for this user.
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode
  * 
+ * @param email				the email address of the user
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					JSON Object on error
  */
 UserMgr.prototype.forgetPassword = function(email, callbackSuccess, callbackError) {
 	var forgetPassword = {'email':email};
@@ -355,13 +450,27 @@ UserMgr.prototype.forgetPassword = function(email, callbackSuccess, callbackErro
 			ACTION_TYPE_FORGET_PASSWORD, [forgetPassword]);
 };
 
-/*
- * Name: getUserDetail
- * Returns the User JSON object
- * Params
- *  - email
- * Gets the user details information from server
+/**
+ * This API returns a JSON Object containing user details.
+ * <p>
+ * result is {email:"emailAddress", userName:"userName", userId:"userId"}
+ * <br>where emailAddress is user email address
+ * <br>userName is the name of the user
+ * <br>userId is the id of the user
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode
  * 
+ * @param email				the email address of the user
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					JSON Object
  */
 UserMgr.prototype.getUserDetail = function(email, callbackSuccess, callbackError) {
 	var getUserDetailsArray = {'email': email};
@@ -369,71 +478,131 @@ UserMgr.prototype.getUserDetail = function(email, callbackSuccess, callbackError
 			ACTION_TYPE_GET_USER_DETAILS, [getUserDetailsArray]);
 };
 
-
-/*
- * Name: associateRobotCommand
- * Associates the robot with the user. 
- * Returns none
- * Params
- *  - email
- *  - robotId (which needs to be associated)
+/**
+ * This API associates a robot with a user
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode
+ * 
+ * @param email				the email address of the user
+ * @param robotId			the robotId of the robot to be associated
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ * @returns					JSON Object on error
  */
-
 UserMgr.prototype.associateRobotCommand = function(email, robotId, callbackSuccess, callbackError) {
 	var associateArray = {'email':email, 'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_ASSOCIATE_ROBOT, [associateArray]);
 };
 
-/*
- * Name: getAssociatedRobots
- * Get the associated robots list in JSON 
- * Returns a JSONArray of associated robots.
- * [{robotId:<robotId>,  robot_name: <robot_name>},{ robotId: <robotId>,  robot_name:<robot_name>}]
- * Params
- *  - email
+/**
+ * This API gets a list of associated robots for a user in JSON
+ * <p>
+ * This API returns on success a JSON Array of which each element is like
+ * <br>{robotId:"robotId", robotName:"robotName"}
+ * <br>where robotId is robot's id
+ * <br>robotName is robot's name
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode 
+ * 
+ * @param email 			the email address of the user
+ * @param callbackSuccess 	success callback of the API
+ * @param callbackError 	error callback of the API
+ * @returns					a JSON Array on success or a JSON Object on error
  */
-
 UserMgr.prototype.getAssociatedRobots = function(email, callbackSuccess, callbackError) {
 	var getAssociatedRobotsArray = {'email':email};
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_GET_ASSOCIATED_ROBOTS, [getAssociatedRobotsArray]);
 };
 
-/*
- * Name: disassociateRobot
- * disassociate the robot from the specified user 
- * Returns None
- * Params
- *  - email
- *  - robotId
+/**
+ * Disassociate a robot from a specified user.
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode 
+ * 
+ * @param email 			the email address of the user
+ * @param robotId			the robot Id of the robot (robot serial number)
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					A JSON Object on error
  */
-
 UserMgr.prototype.disassociateRobot = function(email, robotId, callbackSuccess, callbackError) {
 	var disassociateRobotArray = {'email':email, 'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_DISASSOCIATE_ROBOT, [disassociateRobotArray]);
 };
 
-
-/*
- * Name: disassociateAllRobots
- * disassociates all the robots from the specified user 
- * Returns None
- * Params
- *  - email
+/**
+ * This API disassociates all the robots for the specified user
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode 
+ * 
+ * @param email 			the email address of the user
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					a JSON Object on error
  */
-
 UserMgr.prototype.disassociateAllRobots = function(email, callbackSuccess, callbackError) {
 	var disassociateAllRobotsArray = {'email':email};
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS, [disassociateAllRobotsArray]);
 };
 
-/*
- * Name: turnNotificationOnoff  
- * Switch on/off the global & individual push notification settings
- * In error case error callback gets called with error JSON object
+/**
+ * This API is used to switch on/off global and individual push notification settings
+ * <br>Notification ID specifies three types of notifications currently supported
+ * <br>101 - Robot needs cleaning
+ * <br>102 - Cleaning is done
+ * <br>103 - Robot is stuck
+ * <p>
+ * on success this API returns a JSON Object {key:"notificationId", value:"value"}
+ * <br>where notificationId can be one of those described above
+ * <br>value is the boolean value for that notification id (true/false)
+ * <p> 
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode 
+ * 
+ * @param email					the email address of the user
+ * @param notificationId		notification id
+ * @param enableNotification 	boolean flag to turn notifications on or off
+ * @param callbackSuccess 		success callback for the API
+ * @param callbackError 		error callback for the API
+ * @returns						a JSON Object
  */
 UserMgr.prototype.turnNotificationOnoff = function(email, notificationId, enableNotification, 
 		callbackSuccess, callbackError) {
@@ -442,10 +611,31 @@ UserMgr.prototype.turnNotificationOnoff = function(email, notificationId, enable
 			ACTION_TYPE_TURN_NOTIFICATION_ON_OFF, [commandParams]);
 };
 
-/*
- * Name: isNotificationEnabled  
- * Fetch the single push notification setting (Enable/Disable) based on NotificationId
- * In error case error callback gets called with error JSON object
+/**
+ * This API fetches a single push notification setting (enable/disable) based on the notification id
+ * <br>Notification ID specifies three types of notifications currently supported
+ * <br>101 - Robot needs cleaning
+ * <br>102 - Cleaning is done
+ * <br>103 - Robot is stuck
+ * <p>
+ * on success this API returns a JSON Object {key:"notificationId", value:"value"}
+ * <br>where notificationId can be one of those described above
+ * <br>value is the boolean value for that notification id (true/false)
+ * <p> 
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode 
+ * 
+ * @param email				the email address of the user
+ * @param notificationId	the notification id
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					a JSON Object
  */
 UserMgr.prototype.isNotificationEnabled = function(email, notificationId, callbackSuccess, callbackError) {
 	var commandParams = {'email':email, 'notificationId':notificationId};
@@ -453,10 +643,31 @@ UserMgr.prototype.isNotificationEnabled = function(email, notificationId, callba
 			ACTION_TYPE_IS_NOTIFICATION_ENABLED, [commandParams]);
 };
 
-/*
- * Name: getNotificationSettings  
- * Fetch all global & individual push notification options settings
- * In error case error callback gets called with error JSON object
+/**
+ * This API fetches all global and individual push notification options setting 
+ * <br>Notification ID specifies three types of notifications currently supported
+ * <br>101 - Robot needs cleaning
+ * <br>102 - Cleaning is done
+ * <br>103 - Robot is stuck
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{global:"global", notifications:[{key:101, value:"value"},{key:102, value:"value"},{key:103, value:"value"}]}
+ * <br>where global is a boolean describing if notification type is glabal or not
+ * <br>value is boolean value (true/false) for that particular notification id
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode 
+ * 
+ * @param email				the email address of the user
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					a JSON Object
  */
 UserMgr.prototype.getNotificationSettings = function(email, callbackSuccess, callbackError) {	
 	var commandParams = {'email':email};
@@ -465,16 +676,17 @@ UserMgr.prototype.getNotificationSettings = function(email, callbackSuccess, cal
 };
 
 // ***********************ROBOT PLUGIN METHODS ****************************
-
-/*
- * Name: registerNotifications
- * Register for the notifications from the Robot. As of now this API
- * register for all type of notifications. 
- * Params
- *  - robotId
- *  Returns: None
+/**
+ * This API registers for notifications from the robot. For now it registers
+ * all notifications for the robot i.e. robot needs cleaning, cleaning is done,
+ * robot is stuck
+ * <p>
+ * The API calls Neato Smart App Service
+ * 
+ * @param robotId			the serial number of the robot
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
  */
-
 RobotMgr.prototype.registerNotifications = function(robotId, callbackSuccess, callbackError) {
 	var commandArray = {'robotId':robotId};
 	
@@ -482,14 +694,17 @@ RobotMgr.prototype.registerNotifications = function(robotId, callbackSuccess, ca
 			ACTION_TYPE_REGISTER_ROBOT_NOTIFICATIONS, [commandArray]);
 };
 
-/*
- * Name: unregisterNotifications
- * Unregister for the notifications from the Robot. 
- * Params
- *  - robotId
- *  Returns: None
+/**
+ * This API unregisters for notifications from the robot. Currently it 
+ * unregisters for all notifications for the robot i.e. robot needs cleaning,
+ * cleaning is done, and robot is stuck
+ * <p>
+ * This API calls Neato Smart App Service.
+ * 
+ * @param robotId			the serial number of the robot
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
  */
-
 RobotMgr.prototype.unregisterNotifications = function(robotId, callbackSuccess, callbackError) {
 	var commandArray = {'robotId':robotId};
 	
@@ -497,25 +712,64 @@ RobotMgr.prototype.unregisterNotifications = function(robotId, callbackSuccess, 
 			ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS, [commandArray]);
 };
 
-/*
- * Name: discoverNearbyRobots
- * starts discovering nearby robots that are on the same subnet.
- * Params: None
- * Returns a JSONArray of discovered robots
- * [{robotId:<robotId>,  robot_name: <robot_name>},{ robotId: <robotId>,  robot_name:<robot_name>}]
+/**
+ * This API registers for notifications. As of now this API registers for all type of
+ * notifications. This API does not make a webservice call.
+ * <p>
+ * on success this API returns a JSON Object {robotDataKeyId:"robotDataKeyId", robotId:"robotId", robotData:"robotData"}
+ * <br>where robotDataKeyId is the data key id for the robot
+ * <br>robotId is the id of the robot
+ * <br>robotData is the data sent by robot
+ * 
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API 
+ * @returns					a JSON Object on success
  */
+RobotMgr.prototype.registerNotifications2 = function(callbackSuccess, callbackError) {
+	var commandArray = {};
+	
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_REGISTER_ROBOT_NOTIFICATIONS_2, [commandArray]);
+};
 
+/**
+ * This API unregisters for all notifications from the robot.
+ * 
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError  	error callback for this API
+ */
+RobotMgr.prototype.unregisterNotifications2 = function(callbackSuccess, callbackError) {
+	var commandArray = {};
+	
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS_2, [commandArray]);
+};
+
+/**
+ * This API starts discovering nearby robots that are available and online.
+ * This API calls Neato Smart App Service to discover robots.
+ * 
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError  	error callback for the API
+ */
 RobotMgr.prototype.discoverNearbyRobots = function(callbackSuccess, callbackError) {
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_DISCOVER_NEARBY_ROBOTS, []);
 };
 
-/*
- * Name: tryDirectConnection (Deprecated because it uses the old port number to connect). Use tryDirectConnection2
- * tries to establish a direct peer-to-peer connection with the robot. 
- * The robot and the smart app need to be on the same subnet for this connection to work.
- * Params: Robot id
- * Returns an error if connection cannot be established
+/**
+ * This API tries to establish a direct peer-to-peer connection with the robot. For a successful
+ * connection robot and smart app need to be on the same network. This API is deprecated. Please
+ * use tryDirectConnection2 instead.
+ * <p>
+ * This API calls Neato Smart App Service to make a TCP connection with the robot. This API
+ * returns an error if connection could not be established.
+ * 
+ * @param robotId			the serial number of the robot
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @deprecated				Replaced by {@link #tryDirectConnection2(robotId, callbackSuccess, callbackError)}
+ * @see						#tryDirectConnection2(robotId, callbackSuccess, callbackError)
  */
 RobotMgr.prototype.tryDirectConnection = function(robotId, callbackSuccess, callbackError) {
 	var connectPeerCommandArray = {'robotId':robotId};
@@ -523,12 +777,16 @@ RobotMgr.prototype.tryDirectConnection = function(robotId, callbackSuccess, call
 			ACTION_TYPE_TRY_CONNECT_CONNECTION, [connectPeerCommandArray]);
 };
 
-/*
- * Name: tryDirectConnection2
- * tries to establish a direct peer-to-peer connection with the robot. 
- * The robot and the smart app need to be on the same subnet for this connection to work.
- * Params: Robot id
- * Returns an error if connection cannot be established
+/**
+ * This API tries to establish a direct peer-to-peer connection with the robot. The robot
+ * and smart app need to be on the same network for the connection to be successful
+ * <p>
+ * This API calls Neato Smart App Service to make a TCP connection with the robot. This API
+ * returns an error if the connection could not be established.
+ * 
+ * @param robotId			the serial number of the robot
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
  */
 RobotMgr.prototype.tryDirectConnection2 = function(robotId, callbackSuccess, callbackError) {
 	var connectPeerCommandArray = {'robotId':robotId};
@@ -536,34 +794,41 @@ RobotMgr.prototype.tryDirectConnection2 = function(robotId, callbackSuccess, cal
 			ACTION_TYPE_TRY_CONNECT_CONNECTION2, [connectPeerCommandArray]);
 };
 
-
-/*
- * Name: disconnectDirectConnection
- * tears down the existing direct connection (established via tryDirectConnection2/tryDirectConnection)
- * Params: Robot id
+/**
+ * This API tears down the existing direct connection created via tryDirectConnection2
+ * <p>
+ * This API calls Neato Smart App Service to disconnect from the TCP connection created from 
+ * tryDirectConnection2. 
+ * 
+ * @param robotId			the serial number of the robot
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
  */
-
 RobotMgr.prototype.disconnectDirectConnection  = function(robotId, callbackSuccess, callbackError) {
 	var disconnectPeerCommandArray = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_DISCONNECT_DIRECT_CONNETION, [disconnectPeerCommandArray]);
 };
 
-
-
-/*
- * Name: sendCommandToRobot (Deprecated because it uses the old command format). Use sendCommandToRobot2
- * sends a command to a specific robot
- * The robot and the smart app need to be on the same subnet for this connection to work.
- * Params: 
- *  Robot id
- *  Command Id – currently only 2 commands are supported: Start Cleaning (101) and Stop Cleaning (102). 
- *         Over time more commands (like Send To Base) will be added. 
- *         Currently always sends a command via the presence server (XMPP) – it does not use the direct connection, 
- *         but it may do so at a later stage.
- * Returns: None currently, but we may need to return the response from the command.
+/**
+ * This API sends a command to a specific robot. The robot and smart app need to be on the
+ * same network for successful connection. This API is deprecated. Please use sendCommandToRobot2
+ * instead. This API sends command via the presence server (XMPP) and does not use direct connection
+ * as of now
+ * <p>
+ * This API calls Neato Smart App Service to send command to robot. The command Id is the id of the
+ * command to be executed on the robot. Currently supported commands are - 
+ * <br>101 - Start Cleaning
+ * <br>102 - Stop Cleaning
+ * 
+ * @param robotId			the serial number of the robot
+ * @param commandId			command ID of the command to be executed on the robot.
+ * @param commandParams		the json Object containing key value pairs related to the command to be executed
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @deprecated				Replaced by {@link #sendCommandToRobot2(robotId, commandId, commandParams, callbackSuccess, callbackError)}
+ * @see						#sendCommandToRobot2(robotId, commandId, commandParams, callbackSuccess, callbackError)
  */
-
 RobotMgr.prototype.sendCommandToRobot = function(robotId, commandId, commandParams, callbackSuccess, callbackError) {
 	var commandArray = {'robotId':robotId, 'commandId':commandId, 'commandParams':commandParams};
 	
@@ -571,22 +836,25 @@ RobotMgr.prototype.sendCommandToRobot = function(robotId, commandId, commandPara
 			ACTION_TYPE_SEND_COMMAND_TO_ROBOT, [commandArray]);
 };
 
-/*
- * Name: sendCommandToRobot2
- * sends a command to a specific robot
- * The robot and the smart app need to be on the same subnet for this connection to work.
- * Params: 
- *  Robot id
- *  Command Id – currently only 2 commands are supported: Start Cleaning (101) and Stop Cleaning (102). 
- *         Over time more commands (like Send To Base) will be added. 
- *         NOTE: Though you can send "Start Cleaning" and "Stop Cleaning" commands using sendCommandToRobot2 but
- *         we have also exposed separate APIs. See "startCleaning", "stopCleaning", "pauseCleaning" and "resumeCleaning"
- *         Use specific API rather than calling "sendCommandToRobot2"
- *         Currently always sends a command via the presence server (XMPP) – it does not use the direct connection, 
- *         but it may do so at a later stage.
- * Returns: None currently, but we may need to return the response from the command.
+/**
+ * This API sends a command to a specific robot. The robot and smart app have to be on the
+ * same network for a successful connection. Though this can be used to send commands to the robot
+ * other API for common commands are also exposed. Commands like "Start Cleaning", "Stop Cleaning"
+ * "Pause Cleaning" and "Resume Cleaning" must be called from the cleaning specific API rather
+ * than sendCommandToRobot2. Currently this API always sends command via a presence server (XMPP)
+ * It does not use direct connection as of now.
+ * <p>
+ * This API calls Neato Smart App Service to send command to robot.The command id is the id of the
+ * command to be executed on the robot. Currently supported commands are - 
+ * <br>101 - Start Cleaning
+ * <br>102 - Stop Cleaning
+ * 
+ * @param robotId			the serial number of the robot
+ * @param commandId			command ID of the command to be executed on this robot.
+ * @param commandParams 	the json object containing key value pairs related to the command to be executed. 
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
  */
-
 RobotMgr.prototype.sendCommandToRobot2 = function(robotId, commandId, commandParams, callbackSuccess, callbackError) {
 	var params = {'params': commandParams};
 	var commandArray = {'robotId':robotId, 'commandId':commandId, 'commandParams':params};
@@ -595,30 +863,48 @@ RobotMgr.prototype.sendCommandToRobot2 = function(robotId, commandId, commandPar
 			ACTION_TYPE_SEND_COMMAND_TO_ROBOT2, [commandArray]);
 };
 
-
-/*
- * Name: setRobotName (Deprecated use setRobotName2). setRobotName2 returns the updated Robot infomration
- * Set the Robot Name
- * Params: 
- *  Robot id
- *  Robot Name 
- *  Returns None
+/**
+ * This API sets the robot name. It is deprecated as of now. Please use setRobotName2 instead.
+ * <p>
+ * on error it returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * 
+ * @param robotId			the serial number of the robot
+ * @param robotName			the name of the robot
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @deprecated 				Replaced by {@link #setRobotName2(robotId, robotName, callbackSuccess, callbackError)}
+ * @see						#setRobotName2(robotId, robotName, callbackSuccess, callbackError)
  */
-
 RobotMgr.prototype.setRobotName = function(robotId, robotName, callbackSuccess, callbackError) {
 	var setRobotName = {'robotId':robotId, 'robotName':robotName};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_SET_ROBOT_NAME, [setRobotName]);
 };
 
-/*
- * Name: setRobotName2 
- * Set the Robot Name
- * Params: 
- *  Robot id
- *  Robot Name 
- *  Returns: Robot JSON object
- *  {robotId:<robotId>,  robot_name: <robot_name>}
+/**
+ * This API sets the robot name.
+ * <p>
+ * on success this API returns a JSON Object {robotId:"robotId", robotName:"robotName"}
+ * <br>where robotId is the serial number of the robot
+ * <br>robotName is the new name of the robot
+ * <p>
+ * on error it returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * 
+ * @param robotId			the serial number of the robot
+ * @param robotName			the name of the robot
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					a JSON Object
  */
 RobotMgr.prototype.setRobotName2 = function(robotId, robotName, callbackSuccess, callbackError) {
 	var setRobotName = {'robotId':robotId, 'robotName':robotName};
@@ -626,29 +912,49 @@ RobotMgr.prototype.setRobotName2 = function(robotId, robotName, callbackSuccess,
 			ACTION_TYPE_SET_ROBOT_NAME_2, [setRobotName]);
 };
 
-
-/*
- * Name: getRobotDetail 
- * Get the robot details. As of now robot detail consists only robot name and robot id
- * Params: 
- *  Robot id
- *  Returns: Robot JSON object
- *  {robotId:<robotId>,  robot_name: <robot_name>}
+/**
+ * This API gets the robot details.
+ * <p>
+ * on success this API returns a JSON Object {robotId:"robotId", robotName:"robotName"}
+ * <br>where robotId is the robot's id
+ * <br>robotName is the robot's name
+ * <p>
+ * on error it returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * 
+ * @param robotId			the serial number of the robot
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ * @returns					a JSON Object
  */
-
 RobotMgr.prototype.getRobotDetail = function(robotId, callbackSuccess, callbackError) {
 	var getRobotDetail = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_GET_ROBOT_DETAIL, [getRobotDetail]);
 };
 
-/*
- * Name: getRobotOnlineStatus 
- * Set the Robot Name
- * Params: 
- *  Robot id
- *  Returns: Robot JSON object
- *  {robotId:<robotId>,  online: true/false}
+/**
+ * This API checks if a robot is online or not
+ * <p>
+ * on success this API returns a JSON Object {robotId:"robotId", online:"online"}
+ * <br>where robotId is the serial number of the robot
+ * <br>online is the boolean value (true/false) describing state of the robot
+ * <p>
+ * on error it returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * 
+ * @param robotId			the serial number of the robot
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ * @returns					a JSON Object
  */
 RobotMgr.prototype.getRobotOnlineStatus = function(robotId, callbackSuccess, callbackError) {
 	var getRobotStatus = {'robotId':robotId};
@@ -656,30 +962,96 @@ RobotMgr.prototype.getRobotOnlineStatus = function(robotId, callbackSuccess, cal
 			ACTION_TYPE_GET_ROBOT_ONLINE_STATUS, [getRobotStatus]);
 };
 
+/**
+ * This API checks if a robot is online or not (timed mode implementation)
+ * <p>
+ * on success this API returns a JSON Object {robotId:"robotId", online:"online"}
+ * <br>where robotId is the serial number of the robot
+ * <br>online is the boolean value (true/false) describing the state of the robot
+ * <p>
+ * on error it returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * 
+ * @param robotId			the serial number of the robot
+ * @param callbackSuccess	success callback for the API
+ * @param callbackError		error callback for the API
+ * @returns					a json object
+ */
+RobotMgr.prototype.getRobotVirtualOnlineStatus = function(robotId, callbackSuccess, callbackError) {
+	var getRobotStatus = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ROBOT_VIRTUAL_ONLINE_STATUS, [getRobotStatus]);
+};
+
+/**
+ * This API is not supported as of now.
+ * 
+ * @param robotId			the serial number of the robot
+ * @param scheduleType		the schedule type of the robot(e.g. Basic or Advanced)
+ * @param jsonArray			the schedule Data to be set for the robot
+ * @param callbackSuccess	success callback for the API
+ * @param callbackError		error callback for the API
+ */
 RobotMgr.prototype.setSchedule = function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
 	var scheduleArray = {'robotId':robotId, 'scheduleType':scheduleType, 'schedule': jsonArray};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACIION_TYPE_SET_SCHEDULE, [scheduleArray]);
 };
 
+/**
+ * This API is not supported as of now
+ * 
+ * @param robotId			the serial number of the robot
+ * @param scheduleType		the schedule type of the robot(e.g. Basic or Advanced)
+ * @param callbackSuccess	success callback for the robot
+ * @param callbackError		error callback for the robot
+ */
 RobotMgr.prototype.getSchedule = function(robotId, scheduleType, callbackSuccess, callbackError) {
 	var scheduleArray = {'robotId':robotId, 'scheduleType':scheduleType};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACIION_TYPE_GET_ROBOT_SCHEDULE, [scheduleArray]);
 };
 
+/**
+ * This API is not supported as of now
+ * 
+ * @param robotId			the serial number of the robot
+ * @param scheduleType		the schedule type of the robot(e.g. Basic or Advanced)
+ * @param callbackSuccess	success callback for the API
+ * @param callbackError		error callback for the API
+ */
 RobotMgr.prototype.deleteSchedule = function(robotId, scheduleType, callbackSuccess, callbackError) {
 	var scheduleArray = {'robotId':robotId, 'scheduleType':scheduleType};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_DELETE_ROBOT_SCHEDULE, [scheduleArray]);
 };
 
+/**
+ * This API is not supported as of now
+ * 
+ * @param robotId			the serial number of the robot
+ * @param callbackSuccess	success callback for the API
+ * @param callbackError		error callback for the API
+ */
 RobotMgr.prototype.getMaps = function(robotId, callbackSuccess, callbackError) {
 	var mapArray = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_GET_ROBOT_MAP, [mapArray]);
 };
 
+/**
+ * This API is not supported as of now
+ * 
+ * @param robotId			the serial number of the robot
+ * @param mapId				the map id
+ * @param mapOverlayInfo	the map overlay info
+ * @param callbackSuccess	success callback for the API
+ * @param callbackError		error callback for the API
+ */
 RobotMgr.prototype.setMapOverlayData = function(robotId, mapId, mapOverlayInfo, callbackSuccess, callbackError) {
 	var mapArray = {'robotId':robotId, 'mapId':mapId, 'mapOverlayInfo':mapOverlayInfo};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
@@ -687,175 +1059,316 @@ RobotMgr.prototype.setMapOverlayData = function(robotId, mapId, mapOverlayInfo, 
 };
 
 // Atlas action types
+/**
+ * This API is not supported as of now
+ * 
+ * @param robotId			the serial number of the robot 
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API * 
+ */
 RobotMgr.prototype.getRobotAtlasMetadata = function(robotId, callbackSuccess, callbackError) {
 	var atlasArray = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_GET_ROBOT_ATLAS_METADATA, [atlasArray]);
 };
 
-
+/**
+ * This API is not supported as of now
+ * 
+ * @param robotId			the serial number of the robot
+ * @param atlasMetadata		the atlas meta data
+ * @param callbackSuccess	success callback for the API
+ * @param callbackError		error callback for the API
+ */
 RobotMgr.prototype.updateAtlasMetaData = function(robotId, atlasMetadata, callbackSuccess, callbackError) {
 	var atlasArray = {'robotId':robotId, 'atlasMetadata':atlasMetadata};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_UPDATE_ROBOT_ATLAS_METADATA, [atlasArray]);
 };
 
+/**
+ * This API is not supported as of now
+ * 
+ * @param robotId			the serial number of the robot
+ * @param gridId			the grid id	
+ * @param callbackSuccess	success callback for the API
+ * @param callbackError		error callback for the API
+ */
 RobotMgr.prototype.getAtlasGridData = function(robotId, gridId, callbackSuccess, callbackError) {
 	var getGridArray = {'robotId':robotId, 'gridId':gridId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_GET_ATLAS_GRID_DATA, [getGridArray]);
 };
 
-/*
- * Name: createSchedule
- * This API creates a new local schedule for the robot. Note that if you were already working with a local schedule, 
- * that data is lost, and this new schedule will be updated in subsequent calls. 
- * Params
- *  - robotId
- *  - scheduleType (SCHEDULE_TYPE_BASIC or SCHEDULE_TYPE_ADVANCED). As of now only SCHEDULE_TYPE_BASIC is supported
- * Returns: 
- * {'scheduleId':scheduleId, ‘robotId’: robotId, ‘scheduleType’: scheduleType}
-
+/**
+ * This API creates a new local schedule for the robot. If you were already working with a local schedule
+ * that data is lost, and this new schedule will be updated in subsequent calls.
+ * <p>
+ * This API saves the schedule in the database and hence does not call webservice.
+ * The schedule type can have values
+ * <br>1 - SCHEDULE_TYPE_BASIC
+ * <br>2 - SCHEDULE_TYPE_ADVANCED. 
+ * <br>As of now only SCHEDULE_TYPE_BASIC is supported.
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{scheduleId:"scheduleId", robotId:"robotId", scheduleType:"scheduleType"}
+ * <br>where scheduleId is the schedule id for the schedule
+ * <br>robotId is the robot serial number
+ * <br>scheduleType is the schedule Type(SCHEDULE_TYPE_BASIC or SCHEDULE_TYPE_ADVANCED)
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error       
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * <br>1012 - JSON Creation Error
+ * 
+ * @param robotId 			the serial number of the robot
+ * @param scheduleType 		the schedule type of the robot
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ * @returns					a JSON Object
  */
-
 RobotMgr.prototype.createSchedule = function(robotId, scheduleType, callbackSuccess, callbackError) {
 	var createSchedule = {'robotId':robotId, 'scheduleType':scheduleType};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_CREATE_SCHEDULE, [createSchedule]);
 };
 
-/*
- * Name: getScheduleEvents
- * getScheduleEvents makes a call to the server to get the Schedule Events for the robot. 
- * Once we fetch the schedule data from server, we cache this data locally and further changes are done on the local copy.
- * Params
- *  - robotId
- *  - scheduleType (SCHEDULE_TYPE_BASIC or SCHEDULE_TYPE_ADVANCED). As of now only SCHEDULE_TYPE_BASIC is supported
- * Returns: JSON Object of Schedule data
- * {'scheduleId':scheduleId, ‘robotId’: robotId, ‘scheduleType’: scheduleType, scheduleEventLists:’ scheduleEventLists}
- * ScheduleEventLists is a JSONArray with all the scheduleEventIds for the scheduleEvents of the schedule
+/**
+ * This API makes a call to the server to get the Schedule Events for the robot. Once we fetch the schedule data
+ * from server, we cache this data locally and further changes are done on the local copy
+ * <p>
+ * The schedule Type can have types -
+ * <br>1 - SCHEDULE_TYPE_BASIC
+ * <br>2 - SCHEDULE_TYPE_ADVANCED.
+ * <br>As of now only SCHEDULE_TYPE_BASIC is supported
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{scheduleId:"scheduleId", robotId:"robotId", scheduleType:"scheduleType", scheduleEventLists:"scheduleEventLists"}
+ * <br>where scheduleId is the id of the schedule
+ * <br>robotId is the serial number of the robot
+ * <br>scheduleType is schedule Type (could be SCHEDULE_TYPE_BASIC or SCHEDULE_TYPE_ADVANCED)
+ * <br>scheduleEventLists is a JSON Array with all schedule Event ids for the scheduleEvents of the schedule
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error       
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * <br>1012 - JSON Creation Error
+ * 
+ * @param robotId 			the serial number of the robot
+ * @param scheduleType 		the schedule type of the schedule
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ * @returns					a JSON Object
  */
-
 RobotMgr.prototype.getScheduleEvents = function(robotId, scheduleType, callbackSuccess, callbackError) {
 	var getScheduleEvents = {'robotId':robotId, 'scheduleType':scheduleType};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_GET_SCHEDULE_EVENTS, [getScheduleEvents]);
 };
 
-/*
- * Name: getScheduleEventData
- * getScheduleEventData gets the schedule data for the event. This API fetches the data from the local database
- * Params
- *  - scheduleId
- *  - scheduleEventId
- * Returns: JSON Object of Schedule data
- * {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId, 'scheduleEventData':scheduleEventData};
- * scheduleEventData for the basic event is a JSON object {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
+/**
+ * This API gets the schedule data for the event. It fetches the data from the local database
+ * and hence does not make a web service call.
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{scheduleId:"scheduleId", scheduleEventId:"scheduleEventId", scheduleEventData:"scheduleEventData"}
+ * <br>where scheduleId is the id of the schedule
+ * <br>scheduleEventId is the event id of the schedule
+ * <br>scheduleEventData is a JSON Object
+ * <br>{day:"day", startTime:"startTime", cleaningMode:"cleaningMode"}
+ * <br>where day is an integer value(0(DAY_SUNDAY) to 6(DAY_SATURDAY))
+ * <br>startTime is time in format(hh:mm)
+ * <br>cleaning Mode is (ECO or NORMAL)
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error       
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * <br>1012 - JSON Creation Error
+ * 
+ * @param scheduleId 		the schedule id of the schedule
+ * @param scheduleEventId 	the schedule event id of the schedule
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
  */
-
-
 RobotMgr.prototype.getScheduleEventData = function(scheduleId, scheduleEventId, callbackSuccess, callbackError) {
 	var getScheduleEventData = {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_GET_SCHEDULE_EVENT_DATA, [getScheduleEventData]);
 };
 
-/*
- * Name: addScheduleEvent
- * addScheduleEvent adds a schedule event in the local copy of the robot schedule. 
- * No changes are made to the server data until updateSchedule is called
- * Params
- *  - scheduleId
- *  - scheduleEventData (returns from createBasicScheduleEventObject helper API)
- * Returns: {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId}
- * It returns the scheduleEventId of the added scheduleEvent for further tracking.
+/**
+ * This API adds a schedule event in the local copy of the robot schedule. No changes
+ * are made to the server data until updateSchedule is called. It does not make a
+ * web service call. It returns the scheduleEventId of the added scheduleEvent for 
+ * further tracking.
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{scheduleId:"scheduleId", scheduleEventId:"scheduleEventId"}
+ * <br>where scheduleId is the id of the schedule
+ * <br>scheduleEventId is the id of the added schedule Event
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error       
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * <br>1012 - JSON Creation Error
+ * 
+ * @param scheduleId 			the schedule id of the schedule
+ * @param scheduleEventData 	the schedule event data for the schedule
+ * @param callbackSuccess 		success callback for the API
+ * @param callbackError 		error callback for the API
+ * @returns						a JSON Object
  */
-
 RobotMgr.prototype.addScheduleEvent = function(scheduleId, scheduleEventData, callbackSuccess, callbackError) {
 	var addScheduleEventData = {'scheduleId':scheduleId, 'scheduleEventData':scheduleEventData};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_ADD_ROBOT_SCHEDULE_EVENT, [addScheduleEventData]);
 };
 
-/*
- * Name: updateScheduleEvent
- * updateScheduleEvent API updates a schedule event in the local copy of the robot schedule. 
- * No changes are made to the server data until updateSchedule is called
- * Params
- *  - scheduleId
- *  - scheduleEventId - Schedule Event id
- *  - scheduleEventData (returns from createBasicScheduleEventObject helper API)
- * Returns: JSON object of the updated schedule Event
- * {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId}
+/**
+ * This API updates a schedule event in the local copy of the robot schedule. No changes are
+ * made to the server data until updateSchedule is called
+ * <p>
+ * on success this API returns a JSON Object of updated schedule Event
+ * <br>{scheduleId:"scheduleId", scheduleEventId:"scheduleEventId"}
+ * <br>where scheduleId is the id of the schedule
+ * <br>and schedule Event Id is the updated schedule event id
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error       
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * <br>1012 - JSON Creation Error
+ * 
+ * @param scheduleId 			the schedule id of the schedule
+ * @param scheduleEventId 		the schedule event id of the schedule
+ * @param scheduleEventData 	the schedule event data for the schedule event id
+ * @param callbackSuccess 		success callback for the API
+ * @param callbackError 		error callback for the API
+ * @returns						a JSON Object
  */
-
 RobotMgr.prototype.updateScheduleEvent = function(scheduleId, scheduleEventId, scheduleEventData, callbackSuccess, callbackError) {
 	var updateScheduleEvent = {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId, 'scheduleEventData':scheduleEventData};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_UPDATE_ROBOT_SCHEDULE_EVENT, [updateScheduleEvent]);
 };
 
-/*
- * Name: deleteScheduleEvent
- * deleteScheduleEvent API deletes a schedule event from the local copy of the robot schedule. 
- * No changes are made to the server data until updateSchedule is called
- * Params
- *  - scheduleId
- *  - scheduleEventId - Schedule Event id
- * Returns a JSON: {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId} of the deleted schedule event
+/**
+ * This API deletes a schedule event from the local copy of the robot schedule. No changes
+ * are made to the server data until updateSchedule is called
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{scheduleId:"scheduleId", scheduleEventId:"scheduleEventId"}
+ * <br>where scheduleId is the id of the deleted schedule
+ * <br>scheduleEventId is the event id of the deleted schedule
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error       
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * <br>1012 - JSON Creation Error
+ * 
+ * @param scheduleId 		the schedule id of the schedule
+ * @param scheduleEventId 	the schedule event id of the schedule
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					a JSON Object
  */
-
-
 RobotMgr.prototype.deleteScheduleEvent = function(scheduleId, scheduleEventId, callbackSuccess, callbackError) {
 	var deleteScheduleEvent = {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_DELETE_ROBOT_SCHEDULE_EVENT, [deleteScheduleEvent]);
 };
 
-
-/*
- * Name: updateSchedule
- * updateSchedule API updates the server data with the local copy of the schedule.
- * Params
- *  - scheduleId
- * Returns a JSON: {“scheduleId” : scheduleId} with the scheduleId of the schedule updated.
+/**
+ * This API updates the server data with the local copy of the schedule. If the 
+ * schedule id does not exist it will create a new schedule with this id on the server.
+ * <p>
+ * on success this API returns a JSON Object {scheduleId:"scheduleId"}
+ * <br>where scheduleId is the updated schedule ID
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error       
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * <br>1012 - JSON Creation Error
+ * <br>1014 - User Unauthroized Error
+ * 
+ * @param scheduleId 		the schedule id of the schedule
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					a JSON Object
  */
-
 RobotMgr.prototype.updateSchedule = function(scheduleId, callbackSuccess, callbackError) {
 	var updateSchedule = {'scheduleId':scheduleId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_UPDATE_SCHEDULE, [updateSchedule]);
 };
 
-
-/*
- * Name: getScheduleData
- * getScheduleData is just a helper API which returns the entire event items in a single call.
- * Params
- *  - scheduleId
- * Returns: a JSON Object;
- * : {'scheduleId':scheduleId, 'scheduleType': 'scheduleType', schedules:<schedulesArray> }
- * schedulesArray Object will be a JSONArray with the data of each scheduleEvents in schedule.
- * Example:
- *	[{day:1, startTime:12:00, 'cleaningMode':1} , {day:3, startTime:5:00, 'cleaningMode':1}]
+/**
+ * This API is a helper API which returns the entire event items in a single call.
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{scheduleType:"scheduleType", scheduleId:"scheduleId", schedules:"scheduleArray"}
+ * <br>where scheduleId is the id of the schedule
+ * <br>scheduleType is the schedule type(SCHEDULE_TYPE_BASIC or SCHEDULE_TYPE_NORMAL)
+ * <br>scheduleArray is a JSON Array with each schedule Event as a JSON Object like
+ * <br>{day:"day", startTime:12:00, cleaningMode:"cleaningMode"}
+ * <br>where day is an integer value(0(DAY_SUNDAY) to 6(DAY_SATURDAY))
+ * <br>startTime is a time value(hh:mm)
+ * <br>cleaning Mode is (ECO or NORMAL)
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error       
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * <br>1005 - Invalid Schedule Id
+ * <br>1012 - JSON Creation Error
+ * 
+ * @param scheduleId 		the schedule id of the schedule
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					a JSON Object
  */
-
 RobotMgr.prototype.getScheduleData = function(scheduleId, callbackSuccess, callbackError) {
 	var getScheduleData = {'scheduleId':scheduleId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_GET_SCHEDULE_DATA, [getScheduleData]);
 };
 
-/*
- * Name: setSpotDefinition
- * Saves spot definition to the DB.
- * Params
- *  - robotId : Value as string. (Must be a valid robotId)
- *  - spotCleaningAreaLength : Value as integer.
- *  - spotCleaningAreaHeight : Value as integer.
- * In case of success, callbackSuccess is called with response as OK.
- * In case of an error, callbackError gets called with error JSON below:
- * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+/**
+ * This API saves the spot definition in the DB.
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1011 - DB error
+ * <br>1013 - Invalid Parameter
+ * 
+ * @param robotId					the serial number of the robot 
+ * @param spotCleaningAreaLength 	the spot cleaning area length(integer)
+ * @param spotCleaningAreaHeight 	the spot cleaning area height(integer)
+ * @param callbackSuccess 			success callback for the API
+ * @param callbackError 			error callback for the API
+ * @returns							json object on error
  */
 RobotMgr.prototype.setSpotDefinition = function(robotId, spotCleaningAreaLength, spotCleaningAreaHeight,
 		callbackSuccess, callbackError) {
@@ -865,15 +1378,24 @@ RobotMgr.prototype.setSpotDefinition = function(robotId, spotCleaningAreaLength,
 			ACTION_TYPE_SET_SPOT_DEFINITION, [commandParams]);
 };
 
-/*
- * Name: getSpotDefinition
- * Gets spot definition from the DB.
- * Params
- *  - robotId: Value as string. (Must be a valid robotId)
- * In case of success, callbackSuccess is called with following JSON:
- * 	{'spotCleaningAreaLength':<area length>, 'spotCleaningAreaHeight':<area height>}
- * In case of an error, callbackError gets called with error JSON below:
- * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+/**
+ * This API gets spot definition from the DB. In case spot values are not set for this robot
+ * default values od spot will be returned.
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{spotCleaningAreaLength:"areaLength", spotCleaningAreaHeight:"areaHeight"}
+ * <br>where areaLength is the spot area length
+ * <br>areaHeight is the spot area height
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1011 - DB Error
+ * <br>1012 - JSON Creation Error
+ * 
+ * @param robotId 			the serial number of the robot
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					a JSON Object
  */
 RobotMgr.prototype.getSpotDefinition = function(robotId, callbackSuccess, callbackError) {
 	var commandParams = {'robotId':robotId};
@@ -881,17 +1403,21 @@ RobotMgr.prototype.getSpotDefinition = function(robotId, callbackSuccess, callba
 			ACTION_TYPE_GET_SPOT_DEFINITION, [commandParams]);
 };
 
-/*
- * Name: driveRobot
- * Send "drive" command to the robot
- * Params
- *  - robotId: Value as string. (Must be a valid robotId)
- *  - navigationControlId: Valuse as integer. Value must (Must be one of
- *    NAVIGATION_CONTROL_1, NAVIGATION_CONTROL_2, NAVIGATION_CONTROL_3
- *    NAVIGATION_CONTROL_4, NAVIGATION_CONTROL_5 and NAVIGATION_CONTROL_BACK)
- * In case of success, callbackSuccess is called with response as OK.
- * In case of an error, callbackError is called with error JSON below:
- * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+/**
+ * This API sends drive command to the robot. This API calls Neato Smart App Service.
+ * <p>
+ * The navigation control id is an integer. It must be among the following values:
+ * <br>1 - NAVIGATION_CONTROL_1
+ * <br>2 - NAVIGATION_CONTROL_2
+ * <br>3 - NAVIGATION_CONTROL_3
+ * <br>4 - NAVIGATION_CONTROL_4
+ * <br>5 - NAVIGATION_CONTROL_5
+ * <br>6 - NAVIGATION_CONTROL_BACK
+ * 
+ * @param robotId 				the serial number of the robot
+ * @param navigationControlId 	the navigation control id sent to the robot
+ * @param callbackSuccess 		success callback for the API
+ * @param callbackError 		error callback for the API
  */
 RobotMgr.prototype.driveRobot = function(robotId, navigationControlId, callbackSuccess, callbackError) {
 	var commandParams = {'robotId':robotId, 'navigationControlId':navigationControlId};
@@ -899,15 +1425,13 @@ RobotMgr.prototype.driveRobot = function(robotId, navigationControlId, callbackS
 			ACTION_TYPE_DRIVE_ROBOT, [commandParams]);
 };
 
-/*
- * Name: turnVaccumOnOff
- * Turn Vacuum On or Off on the robot
- * Params
- *  - robotId: Value as string. (Must be a valid robotId)
- *  - flag: Value as integer. Value Must be one of FLAG_ON or FLAG_OFF
- * In case of success, callbackSuccess is called with response as OK.
- * In case of an error, callbackError is called with error JSON below:
- * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+/**
+ * This API turns the vacuum of the robot on or off. This API calls Neato Smart App Service
+ * 
+ * @param robotId 			the serial number of the robot
+ * @param on 				Integer value. Must be FLAG_ON or FLAG_OFF
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
  */
 RobotMgr.prototype.turnVaccumOnOff = function(robotId, on, callbackSuccess, callbackError) {
 	var commandParams = {'robotId':robotId, 'on':on};
@@ -915,17 +1439,15 @@ RobotMgr.prototype.turnVaccumOnOff = function(robotId, on, callbackSuccess, call
 			ACTION_TYPE_TURN_VACUUM_ON_OFF, [commandParams]);
 };
 
-/*
- * Name: turnWiFiOnOff
- * Turn WiFi On or Off on the robot. If WiFi is to be turned off then duration
- * must be specified (in secs)
- * Params
- *  - robotId: Value as string. (Must be a valid robotId)
- *  - flag: Value as integer. Value musMust be one of FLAG_ON or FLAG_OFF
- *  - wiFiTurnOffDurationInSec: Value as integer. Must be secs.
- * In case of success, callbackSuccess is called with response as OK.
- * In case of an error, callbackError is called with error JSON below:
- * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+/**
+ * This API turns the WiFi on or off on the robot. If WiFi is turned off then
+ * duration must be specified (in secs). This API calls Neato Smart App Service
+ * 
+ * @param robotId 					the serial number of the robot
+ * @param on 						Integer value. Must be 1(FLAG_ON) or 0(FLAG_OFF)
+ * @param wiFiTurnOnDurationInSec 	Integer value (seconds)
+ * @param callbackSuccess 			success callback for this API
+ * @param callbackError 			error callback for this API
  */
 RobotMgr.prototype.turnWiFiOnOff = function(robotId, on, wiFiTurnOnDurationInSec, callbackSuccess, callbackError) {
 	var onoffInfo = {'flagOnOff': on, 'wiFiTurnOffDurationInSec': wiFiTurnOnDurationInSec};
@@ -935,20 +1457,25 @@ RobotMgr.prototype.turnWiFiOnOff = function(robotId, on, wiFiTurnOnDurationInSec
 			ACTION_TYPE_TURN_WIFI_ON_OFF, [commandArray]);
 };
 
-/*
- * Name: startCleaning
- * Sends "start cleaning" command to the robot. 
- *  - robotId: Value as string. (Must be a valid robotId)
- *  - cleaningCategoryId: Value as predefined integer value (Must be one
- *    of CLEANING_CATEGORY_MANUAL, CLEANING_CATEGORY_ALL Or CLEANING_CATEGORY_SPOT)
- *  - cleaningModeId : Value as predefined integer value (Must be one CLEANING_MODE_ECO
- *    Or CLEANING_MODE_NORMAL)
- *  - cleaningModifier - Value as String (for e.g. 1, 2)
- * In case of success, callbackSuccess is called with response as OK.
- * In case of an error, callbackError is called with error JSON below:
- * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+/**
+ * This API sends start cleaning command to the robot. This API calls Neato Smart App Service.
+ * <p>
+ * Cleaning Category Id value is a predefined integer and must be one of
+ * <br>2 - CLEANING_CATEGORY_ALL
+ * <br>3 - CLEANING_CATEGORY_SPOT
+ * <br>1 - CLEANING_CATEGORY_MANUAL
+ * <p>
+ * Cleaning Mode Id value is a predefined integer and must be one of
+ * <br>1 - CLEANING_MODE_ECO
+ * <br>2 - CLEANING_MODE_NORMAL
+ * 
+ * @param robotId 				the serial number of the robot
+ * @param cleaningCategoryId 	the cleaning category id of the robot
+ * @param cleaningModeId 		the cleaning mode id of the robot
+ * @param cleaningModifier 		the cleaning modifier of the robot. String value (e.g. 1, 2)
+ * @param callbackSuccess 		success callback for this API
+ * @param callbackError 		error callback for this API
  */
-
 RobotMgr.prototype.startCleaning = function(robotId, cleaningCategoryId, cleaningModeId, cleaningModifier,
 		callbackSuccess, callbackError) {
 	
@@ -961,14 +1488,12 @@ RobotMgr.prototype.startCleaning = function(robotId, cleaningCategoryId, cleanin
 			ACTION_TYPE_START_CLEANING, [commandArray]);
 };
 
-/*
- * Name: stopCleaning
- * Sends "stop cleaning" command to the robot. 
- * Params
- *  - robotId: Value as string. (Must be a valid robotId)
- * In case of success, callbackSuccess is called with response as OK.
- * In case of an error, callbackError is called with error JSON below:
- * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+/**
+ * This API sends stop cleaning command to the robot.This API calls Neato Smart App Service.
+ * 
+ * @param robotId 			the serial number of the robot
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
  */
 RobotMgr.prototype.stopCleaning = function(robotId, callbackSuccess, callbackError) {
 	var commandArray = {'robotId':robotId};
@@ -976,89 +1501,117 @@ RobotMgr.prototype.stopCleaning = function(robotId, callbackSuccess, callbackErr
 			ACTION_TYPE_STOP_CLEANING, [commandArray]);
 };
 
-
-/*
- * Name: pauseCleaning
- * Sends "pause cleaning" command to the robot. Robot needs to remember the 
- * parameters sent in startCleaning because in resumeCleaning we don't resend these params
- * Params
- *  - robotId: Value as string. (Must be a valid robotId)
- * In case of success, callbackSuccess is called with response as OK.
- * In case of an error, callbackError is called with error JSON below:
- * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+/**
+ * This API sends pause cleaning command to the robot. Robot needs to remember
+ * the parameters sent in startCleaning because in resumeCleaning we don't resend
+ * these params. This API calls Neato Smart App Service
+ * 
+ * @param robotId 			the serial number of the robot
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
  */
-
 RobotMgr.prototype.pauseCleaning = function(robotId, callbackSuccess, callbackError) {
 	var commandArray = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_PAUSE_CLEANING, [commandArray]);
 };
 
-/*
- * Name: resumeCleaning
- * Sends "pause cleaning" command to the robot. Robot needs to remember the 
- * parameters sent in startCleaning because in resumeCleaning we don't resend these params
- * Params
- *  - robotId: Value as string. (Must be a valid robotId)
- * In case of success, callbackSuccess is called with response as OK.
- * In case of an error, callbackError is called with error JSON below:
- * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+/**
+ * This API sends resume cleaning command to the robot. This API calls Neato Smart App Service.
+ * 
+ * @param robotId 			the serial number of the robot
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
  */
-
 RobotMgr.prototype.resumeCleaning = function(robotId, callbackSuccess, callbackError) {
 	var commandArray = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_RESUME_CLEANING, [commandArray]);
 };
 
-/*
-* Name: isScheduleEnabled
-* Checks if Schedule is enabled on Server for the specific robot
-* Params
-*  - robotId: Value as string. (Must be a valid robotId)
-*  - scheduleType (0 for Basic and 1 for Advanced). As of now only basic type is supported
-*  Returns: a JSON Object
-*  {“isScheduleEnabled”:true/false, "scheduleType":<scheduleType>, "robotId":<robotId>}
-*  
-*/
+/**
+ * This API checks if a schedule is enabled on server for the specific robot
+ * <p>
+ * scheduleType is an integer value. The value can be
+ * <br>1 - SCHEDULE_TYPE_BASIC
+ * <br>2 - SCHEDULE_TYPE_ADVANCED.
+ * <br>As of now only SCHEDULE_TYPE_BASIC is supported
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{isScheduleEnabled:"isScheduleEnabled", scheduleType:"scheduleType", robotId:"robotId"}
+ * <br>where isScheduleEnabled is boolean value (true/false) describing schedule state
+ * <br>scheduleType is an integer value
+ * <br>robotId is the serial number of the robot
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * 
+ * @param robotId 			the serial number of the robot
+ * @param scheduleType 		Integer value
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					a JSON Object
+ */
 RobotMgr.prototype.isScheduleEnabled = function (robotId, scheduleType, callbackSuccess, callbackError) {
 	var params = {'robotId':robotId, 'scheduleType':scheduleType};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_IS_SCHEDULE_ENABLED, [params]);
 };
 
-
-/*
-* Name: enableSchedule
-* Enable/Disable Schedule on the Server for the specific robot
-* Params
-*  - robotId: Value as string. (Must be a valid robotId)
-*  - scheduleType (0 for Basic and 1 for Advanced). As of now only basic type is supported
-*  - enable true to enable and false to disable the schedule
-*  Returns: a JSON Object
-*  {“isScheduleEnabled”:true/false, "scheduleType":<scheduleType>, "robotId":<robotId>}
-*  
-*/
+/**
+ * This API enables or disables schedule on the server for the specific robot
+ * <p>
+ * scheduleType is an integer value. The value can be
+ * <br>1 - SCHEDULE_TYPE_BASIC
+ * <br>2 - SCHEDULE_TYPE_ADVANCED.
+ * <br>As of now only SCHEDULE_TYPE_BASIC is supported
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{isScheduleEnabled:"isScheduleEnabled", scheduleType:"scheduleType", robotId:"robotId"}
+ * <br>isScheduleEnabled is boolean value (true/false)
+ * <br>scheduleType is an integer value
+ * <br>robotId is the serial number of the robot
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown Error
+ * <br>1002 - Network Error
+ * <br>1003 - Server Error
+ * <br>1004 - JSON Parsing Error
+ * 
+ * @param robotId 			the serial number of the robot
+ * @param scheduleType 		Integer value. Must be SCHEDULE_TYPE_BASIC or SCHEDULE_TYPE_ADVANCED
+ * @param enable 			boolean value. true to enable schedule and false to disable schedule
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ * @returns					a JSON Object
+ */
 RobotMgr.prototype.enableSchedule = function (robotId, scheduleType, enable, callbackSuccess, callbackError) {
 	var params = {'robotId':robotId, 'scheduleType':scheduleType, 'enableSchedule':enable};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_ENABLE_SCHEDUL, [params]);
 };
-/*
- * Name: registerForRobotMessages
- * Support to notify push messages sent by server to UI.
- * In error case error callback gets called with error JSON object
- */
 
+/**
+ * This API notifies push messages sent by server to UI.
+ * 
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ */
 RobotMgr.prototype.registerForRobotMessages = function(callbackSuccess, callbackError) {
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_REGISTER_FOR_ROBOT_MESSAGES, []);
 };
 
-/*
- * Name: unregisterForRobotMessages
- * Unregister for the messages sent by plugin to UI
- * In case of error, error callback gets called with error JSON object
+/**
+ * This API unregisters for push messages sent by server to UI.
+ * 
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
  */
 RobotMgr.prototype.unregisterForRobotMessages = function(callbackSuccess, callbackError) {
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
@@ -1067,207 +1620,435 @@ RobotMgr.prototype.unregisterForRobotMessages = function(callbackSuccess, callba
 
 var UserPluginManager = (function() {
 	return {
-		/*
-		 * Name: loginUser
-		 * Login using the email and password provided. If credentials matches logs in and returns
-		 * the User JSON object
-		 * User JSON object – represents a user, and returned by methods dealing with users.
-		 * {userId:<userId>, email:<emailId>, username:<username>, alternate_email:<alternate_email>, validation_status:<validation_status>}
-		 * validation_status is will be one of the following value
-		 * USER_STATUS_VALIDATED, USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD or USER_STATUS_NOT_VALIDATED
-		 * If validation_status is USER_STATUS_NOT_VALIDATED, we should not allow user to use the application
-		 * In case user fails to login error is returned in callbackError
-		 * All errors are represented by JSON object 
-		 * {errorCode:<code>, errorMessage:<errorMessage>}
+		/**
+		 * This API logs the user in using the email and password provided by the user.
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{email:"emailAddress, userName:"userName", userId:"userId", validation_status:"validationStatus"}
+		 * <br>where emailAddress is user email address
+		 * <br>userName is the user's name
+		 * <br>userId is the user's Id 
+		 * <br>validation status would be among the following values
+		 * <br>USER_STATUS_VALIDATED - user is validated and logged into the app
+		 * <br>USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD - user is not validated but can log in for a brief amount of time into the app
+		 * <br>USER_STATUS_NOT_VALIDATED - user is not validated and cannot log into the app
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode
+		 * 
+		 * @param email				the email address of the user
+		 * @param password			the password of the user
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 * @returns					returns JSON Object
 		 */
 		login: function(email, password , callbackSuccess, callbackError) {
-			window.plugins.neatoPluginLayer.userMgr.loginUser(email, password, callbackSuccess, callbackError)
+			window.plugins.neatoPluginLayer.userMgr.loginUser(email, password, callbackSuccess, callbackError);
 		},
 	
-		/*
-		 * Name: logoutUser
-		 * Logout the user from the system. Clear all the logged in user information locally
-		 * Does not contain any return value 
+		/**
+		 * This API logs the user out of the system. It also clears all the user logged in
+		 * information locally. This API does not return any value
+		 * 
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
 		 */
 		logout: function(callbackSuccess, callbackError) {
-			window.plugins.neatoPluginLayer.userMgr.logoutUser(callbackSuccess, callbackError)
+			window.plugins.neatoPluginLayer.userMgr.logoutUser(callbackSuccess, callbackError);
 		},
 	
-		/*
-		 * Name: createUser
-		 * Creates a new user. This API does not trigger the email validation.
-		 * Server assumes whatever email is provided does exists. This API will be depreicated
-		 * Once we have the email validation infrastructure in place
-		 * Params
-		 *  - Email
-		 *  - password
-		 *  - UserName
-		 *  Returns the User JSON object if successful
-		 * In case of error callbackError gets called
+		/**
+		 * This API creates a new user. It does not trigger email validation. Server
+		 * assumes whatever email is provided is already validated if it exists. Use
+		 * createUser2 to create user instead
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{email:"emailAddress", userName:"userName", userId:"userId", validation_status:"validationStatus"}
+		 * <br>where emailAddress is the email address of the user
+		 * <br>userName is the user's name
+		 * <br>userId is the user id
+		 * <br>validation status can be among the following values
+		 * <br>USER_STATUS_VALIDATED - user is validated and logged into the app
+		 * <br>USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD - user is not validated but can log in for a brief amount of time into the app
+		 * <br>USER_STATUS_NOT_VALIDATED - user is not validated and cannot log into the app
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode
+		 * 
+		 * @param email				the email address of the user
+		 * @param password			the password of the user
+		 * @param name 				name of the user
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 * @returns					returns a json object
+		 * @deprecated				replaced by {@link #createUser2(email, password, name, alternateEmail, callbackSuccess, callbackError)}
+		 * @see						#createUser2(email, password, name, alternateEmail, callbackSuccess, callbackError)
 		 */
 		createUser: function(email, password, name, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.createUser(email, password, name, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: createUser2
-		 * Creates a new user. This API will trigger the email validation.
-		 * Params
-		 *  - Email
-		 *  - password
-		 *  - UserName
-		 *  Returns the User JSON object if successful
-		 * In case of error callbackError gets called
-		 */
-		
+		/**
+		 * This API creates a new user by triggering email validation. Use 
+		 * this API to create new users.
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{email:"emailAddress", alternate_email:"alternateEmailAddress", userName:"userName", userId:"userId", validation_status:"validationStatus"}
+		 * <br>where emailAddress is the email Address of the user
+		 * <br>alternateEmailAddress is the alternate email Address of the user
+		 * <br>userName is the name of the user
+		 * <br>userId is the user id of the user 
+		 * <br>validation status could be among the following values
+		 * <br>USER_STATUS_VALIDATED - user is validated and logged into the app
+		 * <br>USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD - user is not validated but can log in for a brief amount of time into the app
+		 * <br>USER_STATUS_NOT_VALIDATED - user is not validated and cannot log into the app
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode
+		 * 
+		 * @param email				the email address of the user
+		 * @param password			the password of the user
+		 * @param name				name of the user
+		 * @param alternateEmail	the alternate email id of the user (optional parameter)
+		 * @param callbackSuccess 	the success callback for this API
+		 * @param callbackError 	the error callback for this API
+		 * @returns					returns a json object
+		 */		
 		createUser2: function(email, password, name, alternateEmail, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.createUser2(email, password, name, alternateEmail, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: resendValidationMail
-		 * Resend the validation email to the user email id
-
-		 * Params
-		 *  - Email
-		 *  - password
-		 *  - UserName
-		 *  Returns the User JSON object if successful
-		 * In case of error callbackError gets called
+		/**
+		 * Resend the validation email to the user email id.
+		 * <p>
+		 * on success this API returns a JSON Object {message:"We have resent validation mail"}
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errorMessage:"errorMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode
+		 * 
+		 * @param email				the email address of the user
+		 * @param callbackSuccess 	the success callback for this API
+		 * @param callbackError 	the error callback for this API
+		 * @returns					a json object 
 		 */
 		resendValidationMail: function(email, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.resendValidationMail(email, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: isUserValidated
-		 * checks if a user is validated or not
-		 * returns JSON in success callback
-		 * {"validation_status":<validation_status>, message:<message>}
-		 * validation_status is will be one of the following value
-		 * USER_STATUS_VALIDATED, USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD or USER_STATUS_NOT_VALIDATED
-		 * If validation_status is USER_STATUS_NOT_VALIDATED, we should not allow user to use the application
+		/**
+		 * This API checks if a user is validated or not
+		 * <p>
+		 * on success this API returns a JSON Object {validation_status:"validationStatus", message:"message"}
+		 * <br>validationStatus would be one among the following values
+		 * <br>USER_STATUS_VALIDATED - user is validated and logged into the app
+		 * <br>USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD - user is not validated but can log in for a brief amount of time into the app
+		 * <br>USER_STATUS_NOT_VALIDATED - user is not validated and cannot log into the app
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode
 		 * 
-		 */
-		
+		 * @param email				the email address of the user
+		 * @param callbackSuccess	the success callback for this API
+		 * @param callbackError 	the error callback for this API
+		 * @returns					a json object
+		 */		
 		isUserValidated: function(email, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.isUserValidated(email, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: isUserLoggedIn
-		 * checks if a user is already logged in
-		 * returns true if user is logged in, false otherwise
-		 * Error callback is not called.
+		/**
+		 * This API checks if a user is already logged into the app
+		 * 
+		 * @param email				the email address of the user
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API 
+		 * @returns					true if the user is logged in, false otherwise
 		 */
-
 		isUserLoggedIn: function(email, callbackSuccess, callbackError) {	
 			window.plugins.neatoPluginLayer.userMgr.isUserLoggedIn(email, callbackSuccess, callbackError);
-		},
+		},		
 		
-		
-		/*
-		 * Name: associateRobotCommand
-		 * Associates the robot with the user. 
-		 * Returns none
-		 * Params
-		 *  - email
-		 *  - robotId (which needs to be associated)
-		 */
-		
+		/**
+		 * This API associates a robot with a user
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode
+		 * 
+		 * @param email				the email address of the user
+		 * @param robotId			the robotId of the robot to be associated
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 * @returns					JSON Object on error
+		 */		
 		associateRobot: function(email, robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.associateRobotCommand(email, robotId, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: getUserDetail
-		 * Returns the User JSON object
-		 * Params
-		 *  - email
-		 * Gets the user details information from server
+		/**
+		 * This API returns a JSON Object containing user details.
+		 * <p>
+		 * result is {email:"emailAddress", userName:"userName", userId:"userId"}
+		 * <br>where emailAddress is user email address
+		 * <br>userName is the name of the user
+		 * <br>userId is the id of the user
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode
 		 * 
+		 * @param email				the email address of the user
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					JSON Object
 		 */
-
 		getUserDetail: function(email, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.getUserDetail(email, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: getAssociatedRobots
-		 * Get the associated robots list in JSON 
-		 * Returns a JSONArray of associated robots.
-		 * [{robotId:<robotId>,  robot_name: <robot_name>},{ robotId: <robotId>,  robot_name:<robot_name>}]
-		 * Params
-		 *  - email
+		/**
+		 * This API gets a list of associated robots for a user in JSON
+		 * <p>
+		 * This API returns on success a JSON Array of which each element is like
+		 * <br>{robotId:"robotId", robotName:"robotName"}
+		 * <br>where robotId is robot's id
+		 * <br>robotName is robot's name
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode 
+		 * 
+		 * @param email 			the email address of the user
+		 * @param callbackSuccess 	success callback of the API
+		 * @param callbackError 	error callback of the API
+		 * @returns					a JSON Array on success or a JSON Object on error
 		 */
 		getAssociatedRobots: function(email, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.getAssociatedRobots(email, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: disassociateRobot
-		 * disassociate the robot from the specified user 
-		 * Returns None
-		 * Params
-		 *  - email
-		 *  - robotId
+		/**
+		 * Disassociate a robot from a specified user.
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode 
+		 * 
+		 * @param email 			the email address of the user
+		 * @param robotId			the robot Id of the robot (robot serial number)
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					A JSON Object on error
 		 */
-
 		disassociateRobot: function(email, robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.disassociateRobot(email, robotId, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: disassociateAllRobots
-		 * disassociates all the robots from the specified user 
-		 * Returns None
-		 * Params
-		 *  - email
+		/**
+		 * This API disassociates all the robots for the specified user
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode 
+		 * 
+		 * @param email 			the email address of the user
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					a JSON Object on error
 		 */
 		disassociateAllRobots: function(email, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.disassociateAllRobots(email, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: changePassword
-		 * Change the password of the user
-		 * Params
-		 *  - email
-		 *  - user's current password
-		 *  - new password
-		 * returns None in case of success
-		 * In error case error callback gets called with the Error JSON object
+		/**
+		 * This API changes the user's password.
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode 
 		 * 
+		 * @param email				the email address of the user
+		 * @param currentPassword 	the old password of the user
+		 * @param newPassword		the new password of the user
+		 * @param callbackSuccess 	the success callback of this API
+		 * @param callbackError 	the error callback of this API
+		 * @returns					a JSON Object on error
 		 */
 		changePassword: function(email, currentPassword, newPassword, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.changePassword(email, currentPassword, newPassword, callbackSuccess, callbackError);
-		}, 
-		
+		},		
 
-		/*
-		 * Name: forgetPassword
-		 * Server sends the email to the user email id
-		 * Params
-		 *  - email
-		 * returns None in case of success
-		 * In error case error callback gets called with the Error JSON object
+		/**
+		 * This API takes user email address and asks server to send a mail to recover password
+		 * for this user.
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode
 		 * 
+		 * @param email				the email address of the user
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					JSON Object on error
 		 */
-
 		forgetPassword: function(email, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.forgetPassword(email, callbackSuccess, callbackError);
 		},		
 		
+		/**
+		 * This API is used to switch on/off global and individual push notification settings
+		 * <br>Notification ID specifies three types of notifications currently supported
+		 * <br>101 - Robot needs cleaning
+		 * <br>102 - Cleaning is done
+		 * <br>103 - Robot is stuck
+		 * <p>
+		 * on success this API returns a JSON Object {key:"notificationId", value:"value"}
+		 * <br>where notificationId can be one of those described above
+		 * <br>value is the boolean value for that notification id (true/false)
+		 * <p> 
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode 
+		 * 
+		 * @param email					the email address of the user
+		 * @param notificationId		notification id
+		 * @param enableNotification 	boolean flag to turn notifications on or off
+		 * @param callbackSuccess 		success callback for the API
+		 * @param callbackError 		error callback for the API
+		 * @returns						a JSON Object
+		 */
 		turnNotificationOnoff: function(email, notificationId, enableNotification, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.turnNotificationOnoff(email, notificationId, enableNotification, 
 						callbackSuccess, callbackError);
 		},
 
+		/**
+		 * This API fetches a single push notification setting (enable/disable) based on the notification id
+		 * <br>Notification ID specifies three types of notifications currently supported
+		 * <br>101 - Robot needs cleaning
+		 * <br>102 - Cleaning is done
+		 * <br>103 - Robot is stuck
+		 * <p>
+		 * on success this API returns a JSON Object {key:"notificationId", value:"value"}
+		 * <br>where notificationId can be one of those described above
+		 * <br>value is the boolean value for that notification id (true/false)
+		 * <p> 
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode 
+		 * 
+		 * @param email				the email address of the user
+		 * @param notificationId	the notification id
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					a JSON Object
+		 */
 		isNotificationEnabled: function(email, notificationId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.isNotificationEnabled(email, notificationId, 
 						callbackSuccess, callbackError);
 		},
 		
+		/**
+		 * This API fetches all global and individual push notification options setting 
+		 * <br>Notification ID specifies three types of notifications currently supported
+		 * <br>101 - Robot needs cleaning
+		 * <br>102 - Cleaning is done
+		 * <br>103 - Robot is stuck
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{global:"global", notifications:[{key:101, value:"value"},{key:102, value:"value"},{key:103, value:"value"}]}
+		 * <br>where global is a boolean describing if notification type is glabal or not
+		 * <br>value is boolean value (true/false) for that particular notification id
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode 
+		 * 
+		 * @param email				the email address of the user
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					a JSON Object
+		 */
 		getNotificationSettings: function(email, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.getNotificationSettings(email, callbackSuccess, callbackError);
 		}
@@ -1278,101 +2059,128 @@ var UserPluginManager = (function() {
 var RobotPluginManager = (function() {
 	return {
 		
-		/*
-		 * Name: discoverNearbyRobots
-		 * starts discovering nearby robots that are on the same subnet.
-		 * Params: None
-		 * Returns a JSONArray of discovered robots
-		 * [{robotId:<robotId>,  robot_name: <robot_name>},{ robotId: <robotId>,  robot_name:<robot_name>}]
-		 */
-		
+		/**
+		 * This API starts discovering nearby robots that are available and online.
+		 * This API calls Neato Smart App Service to discover robots.
+		 * 
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError  	error callback for the API
+		 */		
 		discoverNearbyRobots: function(callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.discoverNearbyRobots(callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: tryDirectConnection (Deprecated because it uses the old port number to connect). Use tryDirectConnection2
-		 * tries to establish a direct peer-to-peer connection with the robot. 
-		 * The robot and the smart app need to be on the same subnet for this connection to work.
-		 * Params: Robot id
-		 * Returns an error if connection cannot be established
-		 */
-		
+		/**
+		 * This API tries to establish a direct peer-to-peer connection with the robot. For a successful
+		 * connection robot and smart app need to be on the same network. This API is deprecated. Please
+		 * use tryDirectConnection2 instead.
+		 * <p>
+		 * This API calls Neato Smart App Service to make a TCP connection with the robot. This API
+		 * returns an error if connection could not be established.
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @deprecated				Replaced by {@link #tryDirectConnection2(robotId, callbackSuccess, callbackError)}
+		 * @see						#tryDirectConnection2(robotId, callbackSuccess, callbackError)
+		 */		
 		tryDirectConnection: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.tryDirectConnection(robotId, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: tryDirectConnection2
-		 * tries to establish a direct peer-to-peer connection with the robot. 
-		 * The robot and the smart app need to be on the same subnet for this connection to work.
-		 * Params: Robot id
-		 * Returns an error if connection cannot be established
-		 */
-		
+		/**
+		 * This API tries to establish a direct peer-to-peer connection with the robot. The robot
+		 * and smart app need to be on the same network for the connection to be successful
+		 * <p>
+		 * This API calls Neato Smart App Service to make a TCP connection with the robot. This API
+		 * returns an error if the connection could not be established.
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 */		
 		tryDirectConnection2: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.tryDirectConnection2(robotId, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: disconnectDirectConnection
-		 * tears down the existing direct connection (established via tryDirectConnection2/tryDirectConnection)
-		 * Params: Robot id
-		 */
-		
+		/**
+		 * This API tears down the existing direct connection created via tryDirectConnection2
+		 * <p>
+		 * This API calls Neato Smart App Service to disconnect from the TCP connection created from 
+		 * tryDirectConnection2. 
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 */		
 		disconnectDirectConnection: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.disconnectDirectConnection(robotId, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: sendCommandToRobot (Deprecated because it uses the old command format). Use sendCommandToRobot2
-		 * sends a command to a specific robot
-		 * The robot and the smart app need to be on the same subnet for this connection to work.
-		 * Params: 
-		 *  Robot id
-		 *  Command Id – currently only 2 commands are supported: Start Cleaning (101) and Stop Cleaning (102). 
-		 *         Over time more commands (like Send To Base) will be added. 
-		 *         Currently always sends a command via the presence server (XMPP) – it does not use the direct connection, 
-		 *         but it may do so at a later stage.
-		 * Returns: None currently, but we may need to return the response from the command.
-		 */
-		
+		/**
+		 * This API sends a command to a specific robot. The robot and smart app need to be on the
+		 * same network for successful connection. This API is deprecated. Please use sendCommandToRobot2
+		 * instead. This API sends command via the presence server (XMPP) and does not use direct connection
+		 * as of now
+		 * <p>
+		 * This API calls Neato Smart App Service to send command to robot. The command Id is the id of the
+		 * command to be executed on the robot. Currently supported commands are - 
+		 * <br>101 - Start Cleaning
+		 * <br>102 - Stop Cleaning
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param commandId			command ID of the command to be executed on the robot.
+		 * @param commandParams		the json Object containing key value pairs related to the command to be executed
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @deprecated				Replaced by {@link #sendCommandToRobot2(robotId, commandId, commandParams, callbackSuccess, callbackError)}
+		 * @see						#sendCommandToRobot2(robotId, commandId, commandParams, callbackSuccess, callbackError)
+		 */		
 		sendCommandToRobot: function(robotId, commandId, commandParams, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.sendCommandToRobot(robotId, commandId, commandParams, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: sendCommandToRobot2
-		 * sends a command to a specific robot
-		 * The robot and the smart app need to be on the same subnet for this connection to work.
-		 * Params: 
-		 *  Robot id
-		 *  Command Id – currently only 2 commands are supported: Start Cleaning (101) and Stop Cleaning (102). 
-		 *         Over time more commands (like Send To Base) will be added. 
-		 *         NOTE: Though you can send "Start Cleaning" and "Stop Cleaning" commands using sendCommandToRobot2 but
-		 *         we have also exposed separate APIs. See "startCleaning", "stopCleaning", "pauseCleaning" and "resumeCleaning"
-		 *         Use specific API rather than calling "sendCommandToRobot2"
-		 *         Currently always sends a command via the presence server (XMPP) – it does not use the direct connection, 
-		 *         but it may do so at a later stage.
-		 * Returns: None currently, but we may need to return the response from the command.
-		 */
-		
+		/**
+		 * This API sends a command to a specific robot. The robot and smart app have to be on the
+		 * same network for a successful connection. Though this can be used to send commands to the robot
+		 * other API for common commands are also exposed. Commands like "Start Cleaning", "Stop Cleaning"
+		 * "Pause Cleaning" and "Resume Cleaning" must be called from the cleaning specific API rather
+		 * than sendCommandToRobot2. Currently this API always sends command via a presence server (XMPP)
+		 * It does not use direct connection as of now.
+		 * <p>
+		 * This API calls Neato Smart App Service to send command to robot.The command id is the id of the
+		 * command to be executed on the robot. Currently supported commands are - 
+		 * <br>101 - Start Cleaning
+		 * <br>102 - Stop Cleaning
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param commandId			command ID of the command to be executed on this robot.
+		 * @param commandParams 	the json object containing key value pairs related to the command to be executed. 
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 */		
 		sendCommandToRobot2: function(robotId, commandId, commandParams, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.sendCommandToRobot2(robotId, commandId, commandParams, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: startCleaning
-		 * Sends "start cleaning" command to the robot. 
-		 *  - robotId: Value as string. (Must be a valid robotId)
-		 *  - cleaningCategoryId: Value as predefined integer value (Must be one
-		 *    of CLEANING_CATEGORY_MANUAL, CLEANING_CATEGORY_ALL Or CLEANING_CATEGORY_SPOT)
-		 *  - cleaningModeId : Value as predefined integer value (Must be one CLEANING_MODE_ECO
-		 *    Or CLEANING_MODE_NORMAL)
-		 *  - cleaningModifier - Value as String (for e.g. 1, 2)
-		 * In case of success, callbackSuccess is called with response as OK.
-		 * In case of an error, callbackError is called with error JSON below:
-		 * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+		/**
+		 * This API sends start cleaning command to the robot. This API calls Neato Smart App Service.
+		 * <p>
+		 * Cleaning Category Id value is a predefined integer and must be one of
+		 * <br>2 - CLEANING_CATEGORY_ALL
+		 * <br>3 - CLEANING_CATEGORY_SPOT
+		 * <br>1 - CLEANING_CATEGORY_MANUAL
+		 * <p>
+		 * Cleaning Mode Id value is a predefined integer and must be one of
+		 * <br>1 - CLEANING_MODE_ECO
+		 * <br>2 - CLEANING_MODE_NORMAL
+		 * 
+		 * @param robotId 				the serial number of the robot
+		 * @param cleaningCategoryId 	the cleaning category id of the robot
+		 * @param cleaningModeId 		the cleaning mode id of the robot
+		 * @param cleaningModifier 		the cleaning modifier of the robot. String value (e.g. 1, 2)
+		 * @param callbackSuccess 		success callback for this API
+		 * @param callbackError 		error callback for this API
 		 */
 		startCleaning: function(robotId, cleaningCategoryId, cleaningModeId, cleaningModifier,
 					callbackSuccess, callbackError) {
@@ -1380,406 +2188,725 @@ var RobotPluginManager = (function() {
 					callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: stopCleaning
-		 * Sends "stop cleaning" command to the robot. 
-		 * Params
-		 *  - robotId: Value as string. (Must be a valid robotId)
-		 * In case of success, callbackSuccess is called with response as OK.
-		 * In case of an error, callbackError is called with error JSON below:
-		 * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+		/**
+		 * This API sends stop cleaning command to the robot.This API calls Neato Smart App Service.
+		 * 
+		 * @param robotId 			the serial number of the robot
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
 		 */
 		stopCleaning: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.stopCleaning(robotId, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: pauseCleaning
-		 * Sends "pause cleaning" command to the robot. This internally calls 
-		 * sendCommandToRobot2 method of "window.plugins.neatoPluginLayer.robotMgr"
-		 * Params
-		 *  - robotId: Value as string. (Must be a valid robotId)
-		 * In case of success, callbackSuccess is called with response as OK.
-		 * In case of an error, callbackError is called with error JSON below:
-		 * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+		/**
+		 * This API sends pause cleaning command to the robot. Robot needs to remember
+		 * the parameters sent in startCleaning because in resumeCleaning we don't resend
+		 * these params. This API calls Neato Smart App Service
+		 * 
+		 * @param robotId 			the serial number of the robot
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
 		 */
 		pauseCleaning: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.pauseCleaning(robotId, callbackSuccess, callbackError);
 		},
 
-		/*
-		 * Name: resumeCleaning
-		 * Sends "resume cleaning" command to the robot. This internally calls 
-		 * sendCommandToRobot2 method of "window.plugins.neatoPluginLayer.robotMgr" 
-		 * Params
-		 *  - robotId: Value as string. (Must be a valid robotId)
-		 * In case of success, callbackSuccess is called with response as OK.
-		 * In case of an error, callbackError is called with error JSON below:
-		 * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
-		 */	
+		/**
+		 * This API sends resume cleaning command to the robot. This API calls Neato Smart App Service.
+		 * 
+		 * @param robotId 			the serial number of the robot
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 */
 		resumeCleaning: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.resumeCleaning(robotId, callbackSuccess, callbackError);
 		},
 	
-		/*
-		 * Name: setSpotDefinition
-		 * Saves the spot definition to the DB. This internally calls setSpotDefinition
-		 * method of "window.plugins.neatoPluginLayer.robotMgr" 
-		 * Params
-		 *  - robotId : Value as string. (Must be a valid robotId)
-		 *  - spotCleaningAreaLength : Value as integer.
-		 *  - spotCleaningAreaHeight : Value as integer.
-		 * In case of success, callbackSuccess is called with response as OK.
-		 * In case of an error, callbackError is called with error JSON below:
-		 * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
-		*/	
+		/**
+		 * This API saves the spot definition in the DB.
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1011 - DB error
+		 * <br>1013 - Invalid Parameter
+		 * 
+		 * @param robotId					the serial number of the robot 
+		 * @param spotCleaningAreaLength 	the spot cleaning area length(integer)
+		 * @param spotCleaningAreaHeight 	the spot cleaning area height(integer)
+		 * @param callbackSuccess 			success callback for the API
+		 * @param callbackError 			error callback for the API
+		 * @returns							json object on error
+		 */
 		setSpotDefinition: function(robotId, spotCleaningAreaLength, spotCleaningAreaHeight, 
 					callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.setSpotDefinition(robotId, spotCleaningAreaLength, 
 					spotCleaningAreaHeight, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: getSpotDefinition
-		 * Saves the spot definition to the DB. This internally calls getSpotDefinition
-		 * method of "window.plugins.neatoPluginLayer.robotMgr" 
-		 * Params
-		 *  - robotId: Value as string. (Must be a valid robotId)
-		 * In case of success, callbackSuccess is called with following JSON:
-		 * 	{'spotCleaningAreaLength':<area length>, 'spotCleaningAreaHeight':<area height>}
-		 * In case of an error, callbackError is called with error JSON below:
-		 * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+		/**
+		 * This API gets spot definition from the DB. In case spot values are not set for this robot
+		 * default values od spot will be returned.
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{spotCleaningAreaLength:"areaLength", spotCleaningAreaHeight:"areaHeight"}
+		 * <br>where areaLength is the spot area length
+		 * <br>areaHeight is the spot area height
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1011 - DB Error
+		 * <br>1012 - JSON Creation Error
+		 * 
+		 * @param robotId 			the serial number of the robot
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					a JSON Object
 		 */
 		getSpotDefinition: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getSpotDefinition(robotId, callbackSuccess, callbackError);
 		},
 
-		/*
-		 * Name: driveRobot
-		 * Sends "drive" command to the robot. This internally calls driveRobot 
-		 * method of "window.plugins.neatoPluginLayer.robotMgr" 
-		 * Params
-		 *  - robotId: Value as string. (Must be a valid robotId)
-		 *  - navigationControlId: Valuse as integer. Value must (Must be one of
-		 *    NAVIGATION_CONTROL_1, NAVIGATION_CONTROL_2, NAVIGATION_CONTROL_3
-		 *    NAVIGATION_CONTROL_4, NAVIGATION_CONTROL_5 and NAVIGATION_CONTROL_6)
-		 * In case of success, callbackSuccess is called with response as OK.
-		 * In case of an error, callbackError is called with error JSON below:
-		 * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+		/**
+		 * This API sends drive command to the robot. This API calls Neato Smart App Service.
+		 * <p>
+		 * The navigation control id is an integer. It must be among the following values:
+		 * <br>1 - NAVIGATION_CONTROL_1
+		 * <br>2 - NAVIGATION_CONTROL_2
+		 * <br>3 - NAVIGATION_CONTROL_3
+		 * <br>4 - NAVIGATION_CONTROL_4
+		 * <br>5 - NAVIGATION_CONTROL_5
+		 * <br>6 - NAVIGATION_CONTROL_BACK
+		 * 
+		 * @param robotId 				the serial number of the robot
+		 * @param navigationControlId 	the navigation control id sent to the robot
+		 * @param callbackSuccess 		success callback for the API
+		 * @param callbackError 		error callback for the API
 		 */
 		driveRobot: function(robotId, navigationControlId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.driveRobot(robotId, navigationControlId, 
 					callbackSuccess, callbackError);
 		},
 
-		/*
-		 * Name: turnVaccumOnOff
-		 * Turn Vacuum On or Off on the robot. This internally calls turnVaccumOnOff 
-		 * method of "window.plugins.neatoPluginLayer.robotMgr" 
-		 * Params
-		 *  - robotId: Value as string. (Must be a valid robotId)
-		 *  - flag: Value as integer. Value Must be one of FLAG_ON or FLAG_OFF
-		 * In case of success, callbackSuccess is called with response as OK.
-		 * In case of an error, callbackError is called with error JSON below:
-		 * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+		/**
+		 * This API turns the vacuum of the robot on or off. This API calls Neato Smart App Service
+		 * 
+		 * @param robotId 			the serial number of the robot
+		 * @param on 				Integer value. Must be FLAG_ON or FLAG_OFF
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
 		 */
 		turnVaccumOnOff: function(robotId, flag, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.turnVaccumOnOff(robotId, flag, callbackSuccess, callbackError);
 		},
 
-		/*
-		 * Name: turnWiFiOnOff
-		 * Turn WiFi On or Off on the robot. If WiFi is to be turned off then duration
-		 * must be specified (in secs). This internally calls turnWiFiOnOff method of 
-		 * "window.plugins.neatoPluginLayer.robotMgr" 
-		 * Params
-		 *  - robotId: Value as string. (Must be a valid robotId)
-		 *  - flag: Value as integer. Value Must be one of FLAG_ON or FLAG_OFF
-		 *  - wiFiTurnOnDurationInSec: Value as integer. Must be secs.
-		 * In case of success, callbackSuccess is called with response as OK.
-		 * In case of an error, callbackError is called with error JSON below:
-		 * 	{'errorCode':<error code>, 'errorMessage':<error msg>}
+		/**
+		 * This API turns the WiFi on or off on the robot. If WiFi is turned off then
+		 * duration must be specified (in secs). This API calls Neato Smart App Service
+		 * 
+		 * @param robotId 					the serial number of the robot
+		 * @param on 						Integer value. Must be 1(FLAG_ON) or 0(FLAG_OFF)
+		 * @param wiFiTurnOnDurationInSec 	Integer value (seconds)
+		 * @param callbackSuccess 			success callback for this API
+		 * @param callbackError 			error callback for this API
 		 */
 		turnWiFiOnOff: function(robotId, flag, wiFiTurnOnDurationInSec, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.turnWiFiOnOff(robotId, flag, wiFiTurnOnDurationInSec, 
 					callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: setRobotName (Deprecated use setRobotName2). setRobotName2 returns the updated Robot infomration
-		 * Set the Robot Name
-		 * Params: 
-		 *  Robot id
-		 *  Robot Name 
-		 *  Returns None
+		/**
+		 * This API sets the robot name. It is deprecated as of now. Please use setRobotName2 instead.
+		 * <p>
+		 * on error it returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param robotName			the name of the robot
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @deprecated 				Replaced by {@link #setRobotName2(robotId, robotName, callbackSuccess, callbackError)}
+		 * @see						#setRobotName2(robotId, robotName, callbackSuccess, callbackError)
 		 */
 		setRobotName : function(robotId, robotName, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.setRobotName(robotId, robotName, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: setRobotName2 
-		 * Set the Robot Name
-		 * Params: 
-		 *  Robot id
-		 *  Robot Name 
-		 *  Returns: Robot JSON object
-		 *  {robotId:<robotId>,  robot_name: <robot_name>}
+		/**
+		 * This API sets the robot name.
+		 * <p>
+		 * on success this API returns a JSON Object {robotId:"robotId", robotName:"robotName"}
+		 * <br>where robotId is the serial number of the robot
+		 * <br>robotName is the new name of the robot
+		 * <p>
+		 * on error it returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param robotName			the name of the robot
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					a JSON Object
 		 */
 		setRobotName2 : function(robotId, robotName, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.setRobotName2(robotId, robotName, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: getRobotDetail 
-		 * Get the robot details. As of now robot detail consists only robot name and robot id
-		 * Params: 
-		 *  Robot id
-		 *  Returns: Robot JSON object
-		 *  {robotId:<robotId>,  robot_name: <robot_name>}
-		 */
-		
+		/**
+		 * This API gets the robot details.
+		 * <p>
+		 * on success this API returns a JSON Object {robotId:"robotId", robotName:"robotName"}
+		 * <br>where robotId is the robot's id
+		 * <br>robotName is the robot's name
+		 * <p>
+		 * on error it returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 * @returns					a JSON Object
+		 */		
 		getRobotDetail : function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getRobotDetail(robotId, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: getRobotOnlineStatus 
-		 * Set the Robot Name
-		 * Params: 
-		 *  Robot id
-		 *  Returns: Robot JSON object
-		 *  {robotId:<robotId>,  online: true/false}
-		 */
-		
+		/**
+		 * This API checks if a robot is online or not
+		 * <p>
+		 * on success this API returns a JSON Object {robotId:"robotId", online:"online"}
+		 * <br>where robotId is the serial number of the robot
+		 * <br>online is the boolean value (true/false) describing state of the robot
+		 * <p>
+		 * on error it returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 * @returns					a JSON Object
+		 */		
 		getRobotOnlineStatus : function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getRobotOnlineStatus(robotId, callbackSuccess, callbackError);
 		},
 		
+		/**
+		 * This API checks if a robot is online or not (timed mode implementation)
+		 * <p>
+		 * on success this API returns a JSON Object {robotId:"robotId", online:"online"}
+		 * <br>where robotId is the serial number of the robot
+		 * <br>online is the boolean value (true/false) describing the state of the robot
+		 * <p>
+		 * on error it returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param callbackSuccess	success callback for the API
+		 * @param callbackError		error callback for the API
+		 * @returns					a json object
+		 */		
+		getRobotVirtualOnlineStatus : function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotVirtualOnlineStatus(robotId, callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API is not supported as of now.
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param scheduleType		the schedule type of the robot(e.g. Basic or Advanced)
+		 * @param jsonArray			the schedule Data to be set for the robot
+		 * @param callbackSuccess	success callback for the API
+		 * @param callbackError		error callback for the API
+		 */
 		setSchedule: function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.setSchedule(robotId, scheduleType, jsonArray, callbackSuccess, callbackError);
 		},
 		
+		/**
+		 * This API is not supported as of now
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param scheduleType		the schedule type of the robot(e.g. Basic or Advanced)
+		 * @param callbackSuccess	success callback for the robot
+		 * @param callbackError		error callback for the robot
+		 */
 		getSchedule: function(robotId, scheduleType, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getSchedule(robotId, scheduleType,  callbackSuccess, callbackError);
 		},
 		
+		/**
+		 * This API is not supported as of now
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param scheduleType		the schedule type of the robot(e.g. Basic or Advanced)
+		 * @param callbackSuccess	success callback for the API
+		 * @param callbackError		error callback for the API
+		 */
 		deleteSchedule: function(robotId, scheduleType, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.deleteSchedule(robotId, scheduleType, callbackSuccess, callbackError);
 		},
 		
+		/**
+		 * This API is not supported as of now
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param callbackSuccess	success callback for the API
+		 * @param callbackError		error callback for the API
+		 */
 		getMaps: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getMaps(robotId, callbackSuccess, callbackError);
 		}, 
 		
+		/**
+		 * This API is not supported as of now
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param mapId				the map id
+		 * @param mapOverlayInfo	the map overlay info
+		 * @param callbackSuccess	success callback for the API
+		 * @param callbackError		error callback for the API
+		 */
 		setMapOverlayData : function(robotId, mapId, mapOverlayInfo, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.setMapOverlayData (robotId, mapId, mapOverlayInfo, callbackSuccess, callbackError);
 		},
 		
 		// It will give the atlas xml data.
+		/**
+		 * This API is not supported as of now
+		 * 
+		 * @param robotId			the serial number of the robot 
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API * 
+		 */
 		getRobotAtlasMetadata: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getRobotAtlasMetadata(robotId, callbackSuccess, callbackError);
-		},
-		
+		},		
 				
 		// It will update the atlas mapped to this robotId. The version of the xml is stored inside.
+		/**
+		 * This API is not supported as of now
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param atlasMetadata		the atlas meta data
+		 * @param callbackSuccess	success callback for the API
+		 * @param callbackError		error callback for the API
+		 */
 		updateAtlasMetaData: function(robotId, atlasMetadata, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.updateAtlasMetaData(robotId, atlasMetadata, callbackSuccess, callbackError);
 		},
 		
 		// TODO: We are taking robotId. Analyse if taking atlasId is a better option.
+		/**
+		 * This API is not supported as of now
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param gridId			the grid id	
+		 * @param callbackSuccess	success callback for the API
+		 * @param callbackError		error callback for the API
+		 */
 		getAtlasGridData: function(robotId, gridId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getAtlasGridData(robotId, gridId, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: registerNotifications
-		 * Register for the notifications from the Robot. As of now this API
-		 * register for all type of notifications. 
-		 * Params
-		 *  - robotId
-		 *  Returns: None
+		/**
+		 * This API registers for notifications from the robot. For now it registers
+		 * all notifications for the robot i.e. robot needs cleaning, cleaning is done,
+		 * robot is stuck
+		 * <p>
+		 * The API calls Neato Smart App Service
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
 		 */
 		registerNotifications: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.registerNotifications(robotId, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: unregisterNotifications
-		 * Unregister for the notifications from the Robot. 
-		 * Params
-		 *  - robotId
-		 *  Returns: None
+		/**
+		 * This API unregisters for notifications from the robot. Currently it 
+		 * unregisters for all notifications for the robot i.e. robot needs cleaning,
+		 * cleaning is done, and robot is stuck
+		 * <p>
+		 * This API calls Neato Smart App Service.
+		 * 
+		 * @param robotId			the serial number of the robot
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
 		 */
 		unregisterNotifications: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.unregisterNotifications(robotId, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: registerForRobotMessages
-		 * Support to notify push messages sent by server to UI.
-		 * In error case error callback gets called with error JSON object
+		/**
+		 * This API registers for notifications. As of now this API registers for all type of
+		 * notifications. This API does not make a webservice call.
+		 * <p>
+		 * on success this API returns a JSON Object {robotDataKeyId:"robotDataKeyId", robotId:"robotId", robotData:"robotData"}
+		 * <br>where robotDataKeyId is the data key id for the robot
+		 * <br>robotId is the id of the robot
+		 * <br>robotData is the data sent by robot
+		 * 
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API 
+		 * @returns					a JSON Object on success
+		 */
+		registerNotifications2: function(callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.registerNotifications2(callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API unregisters for all notifications from the robot.
+		 * 
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError  	error callback for this API
+		 */
+		unregisterNotifications2: function(callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.unregisterNotifications2(callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API notifies push messages sent by server to UI.
+		 * 
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
 		 */
 		registerForRobotMessages: function(callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.registerForRobotMessages(callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: unregisterForRobotMessages
-		 * Unregister for the messages sent by plugin to UI
-		 * In case of error, error callback gets called with error JSON object
+		/**
+		 * This API unregisters for push messages sent by server to UI.
+		 * 
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
 		 */
 		unregisterForRobotMessages: function(callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.unregisterForRobotMessages(callbackSuccess, callbackError);
 		},
 		
-		// New Schedule APIs being added:
-		
-		
-		/*
-		 * Name: createSchedule
-		 * This API creates a new local schedule for the robot. Note that if you were already working with a local schedule, 
-		 * that data is lost, and this new schedule will be updated in subsequent calls. 
-		 * Params
-		 *  - robotId
-		 *  - scheduleType (SCHEDULE_TYPE_BASIC or SCHEDULE_TYPE_ADVANCED). As of now only SCHEDULE_TYPE_BASIC is supported
-		 * Returns: 
-		 * {'scheduleId':scheduleId, ‘robotId’: robotId, ‘scheduleType’: scheduleType}
-
+		// New Schedule APIs being added:		
+		/**
+		 * This API creates a new local schedule for the robot. If you were already working with a local schedule
+		 * that data is lost, and this new schedule will be updated in subsequent calls.
+		 * <p>
+		 * This API saves the schedule in the database and hence does not call webservice.
+		 * The schedule type can have values
+		 * <br>1 - SCHEDULE_TYPE_BASIC
+		 * <br>2 - SCHEDULE_TYPE_ADVANCED. 
+		 * <br>As of now only SCHEDULE_TYPE_BASIC is supported.
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{scheduleId:"scheduleId", robotId:"robotId", scheduleType:"scheduleType"}
+		 * <br>where scheduleId is the schedule id for the schedule
+		 * <br>robotId is the robot serial number
+		 * <br>scheduleType is the schedule Type(SCHEDULE_TYPE_BASIC or SCHEDULE_TYPE_ADVANCED)
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error       
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * <br>1012 - JSON Creation Error
+		 * 
+		 * @param robotId 			the serial number of the robot
+		 * @param scheduleType 		the schedule type of the robot
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 * @returns					a JSON Object
 		 */
 		createSchedule: function(robotId, scheduleType, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.createSchedule(robotId, scheduleType, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: getScheduleEvents
-		 * getScheduleEvents makes a call to the server to get the Schedule Events for the robot. 
-		 * Once we fetch the schedule data from server, we cache this data locally and further changes are done on the local copy.
-		 * Params
-		 *  - robotId
-		 *  - scheduleType (SCHEDULE_TYPE_BASIC or SCHEDULE_TYPE_ADVANCED). As of now only SCHEDULE_TYPE_BASIC is supported
-		 * Returns: JSON Object of Schedule data
-		 * {'scheduleId':scheduleId, ‘robotId’: robotId, ‘scheduleType’: scheduleType, scheduleEventLists:’ scheduleEventLists}
-		 * ScheduleEventLists is a JSONArray with all the scheduleEventIds for the scheduleEvents of the schedule
+		/**
+		 * This API makes a call to the server to get the Schedule Events for the robot. Once we fetch the schedule data
+		 * from server, we cache this data locally and further changes are done on the local copy
+		 * <p>
+		 * The schedule Type can have types -
+		 * <br>1 - SCHEDULE_TYPE_BASIC
+		 * <br>2 - SCHEDULE_TYPE_ADVANCED.
+		 * <br>As of now only SCHEDULE_TYPE_BASIC is supported
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{scheduleId:"scheduleId", robotId:"robotId", scheduleType:"scheduleType", scheduleEventLists:"scheduleEventLists"}
+		 * <br>where scheduleId is the id of the schedule
+		 * <br>robotId is the serial number of the robot
+		 * <br>scheduleType is schedule Type (could be SCHEDULE_TYPE_BASIC or SCHEDULE_TYPE_ADVANCED)
+		 * <br>scheduleEventLists is a JSON Array with all schedule Event ids for the scheduleEvents of the schedule
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error       
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * <br>1012 - JSON Creation Error
+		 * 
+		 * @param robotId 			the serial number of the robot
+		 * @param scheduleType 		the schedule type of the schedule
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 * @returns					a JSON Object
 		 */
 		getScheduleEvents: function(robotId, scheduleType, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getScheduleEvents(robotId, scheduleType, callbackSuccess, callbackError);
 		},
 
-		/*
-		 * Name: getScheduleEventData
-		 * getScheduleEventData gets the schedule data for the event. This API fetches the data from the local database
-		 * Params
-		 *  - scheduleId
-		 *  - scheduleEventId
-		 * Returns: JSON Object of Schedule data
-		 * {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId, 'scheduleEventData':scheduleEventData};
-		 * scheduleEventData for the basic event is a JSON object {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
+		/**
+		 * This API gets the schedule data for the event. It fetches the data from the local database
+		 * and hence does not make a web service call.
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{scheduleId:"scheduleId", scheduleEventId:"scheduleEventId", scheduleEventData:"scheduleEventData"}
+		 * <br>where scheduleId is the id of the schedule
+		 * <br>scheduleEventId is the event id of the schedule
+		 * <br>scheduleEventData is a JSON Object
+		 * <br>{day:"day", startTime:"startTime", cleaningMode:"cleaningMode"}
+		 * <br>where day is an integer value(0(DAY_SUNDAY) to 6(DAY_SATURDAY))
+		 * <br>startTime is time in format(hh:mm)
+		 * <br>cleaning Mode is (ECO or NORMAL)
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error       
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * <br>1012 - JSON Creation Error
+		 * 
+		 * @param scheduleId 		the schedule id of the schedule
+		 * @param scheduleEventId 	the schedule event id of the schedule
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
 		 */
-
 		getScheduleEventData: function(scheduleId, scheduleEventId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getScheduleEventData(scheduleId, scheduleEventId, callbackSuccess, callbackError);
-		},
+		},		
 		
-		
-		/*
-		 * Name: addScheduleEvent
-		 * addScheduleEvent adds a schedule event in the local copy of the robot schedule. 
-		 * No changes are made to the server data until updateSchedule is called
-		 * Params
-		 *  - scheduleId
-		 *  - scheduleEventData (returns from createBasicScheduleEventObject helper API)
-		 * Returns: {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId}
-		 * It returns the scheduleEventId of the added scheduleEvent for further tracking.
+		/**
+		 * This API adds a schedule event in the local copy of the robot schedule. No changes
+		 * are made to the server data until updateSchedule is called. It does not make a
+		 * web service call. It returns the scheduleEventId of the added scheduleEvent for 
+		 * further tracking.
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{scheduleId:"scheduleId", scheduleEventId:"scheduleEventId"}
+		 * <br>where scheduleId is the id of the schedule
+		 * <br>scheduleEventId is the id of the added schedule Event
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error       
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * <br>1012 - JSON Creation Error
+		 * 
+		 * @param scheduleId 			the schedule id of the schedule
+		 * @param scheduleEventData 	the schedule event data for the schedule
+		 * @param callbackSuccess 		success callback for the API
+		 * @param callbackError 		error callback for the API
+		 * @returns						a JSON Object
 		 */
 		addScheduleEvent: function(scheduleId, scheduleEventData, callbackSuccess, callbackError) {
-			window.plugins.neatoPluginLayer.robotMgr.addScheduleEvent(scheduleId, scheduleEventData, callbackSuccess, callbackError)
+			window.plugins.neatoPluginLayer.robotMgr.addScheduleEvent(scheduleId, scheduleEventData, callbackSuccess, callbackError);
 		},
 
-		/*
-		 * Name: updateScheduleEvent
-		 * updateScheduleEvent API updates a schedule event in the local copy of the robot schedule. 
-		 * No changes are made to the server data until updateSchedule is called
-		 * Params
-		 *  - scheduleId
-		 *  - scheduleEventId - Schedule Event id
-		 *  - scheduleEventData (returns from createBasicScheduleEventObject helper API)
-		 * Returns: JSON object of the updated schedule Event
-		 * {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId}
+		/**
+		 * This API updates a schedule event in the local copy of the robot schedule. No changes are
+		 * made to the server data until updateSchedule is called
+		 * <p>
+		 * on success this API returns a JSON Object of updated schedule Event
+		 * <br>{scheduleId:"scheduleId", scheduleEventId:"scheduleEventId"}
+		 * <br>where scheduleId is the id of the schedule
+		 * <br>and schedule Event Id is the updated schedule event id
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error       
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * <br>1012 - JSON Creation Error
+		 * 
+		 * @param scheduleId 			the schedule id of the schedule
+		 * @param scheduleEventId 		the schedule event id of the schedule
+		 * @param scheduleEventData 	the schedule event data for the schedule event id
+		 * @param callbackSuccess 		success callback for the API
+		 * @param callbackError 		error callback for the API
+		 * @returns						a JSON Object
 		 */
 		updateScheduleEvent: function(scheduleId, scheduleEventId, scheduleEventData, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.updateScheduleEvent(scheduleId, scheduleEventId, scheduleEventData, callbackSuccess, callbackError);
 		},
 
-		/*
-		 * Name: deleteScheduleEvent
-		 * deleteScheduleEvent API deletes a schedule event from the local copy of the robot schedule. 
-		 * No changes are made to the server data until updateSchedule is called
-		 * Params
-		 *  - scheduleId
-		 *  - scheduleEventId - Schedule Event id
-		 * Returns a JSON: {'scheduleId':scheduleId, 'scheduleEventId':scheduleEventId} of the deleted schedule event
-		 */
-		
+		/**
+		 * This API deletes a schedule event from the local copy of the robot schedule. No changes
+		 * are made to the server data until updateSchedule is called
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{scheduleId:"scheduleId", scheduleEventId:"scheduleEventId"}
+		 * <br>where scheduleId is the id of the deleted schedule
+		 * <br>scheduleEventId is the event id of the deleted schedule
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error       
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * <br>1012 - JSON Creation Error
+		 * 
+		 * @param scheduleId 		the schedule id of the schedule
+		 * @param scheduleEventId 	the schedule event id of the schedule
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					a JSON Object
+		 */		
 		deleteScheduleEvent: function(scheduleId, scheduleEventId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.deleteScheduleEvent(scheduleId, scheduleEventId, callbackSuccess, callbackError);
 		},
-
 		
-		/*
-		 * Name: updateSchedule
-		 * updateSchedule API updates the server data with the local copy of the schedule.
-		 * Params
-		 *  - scheduleId
-		 * Returns a JSON: {“scheduleId” : scheduleId} with the scheduleId of the schedule updated.
+		/**
+		 * This API updates the server data with the local copy of the schedule. If the 
+		 * schedule id does not exist it will create a new schedule with this id on the server.
+		 * <p>
+		 * on success this API returns a JSON Object {scheduleId:"scheduleId"}
+		 * <br>where scheduleId is the updated schedule ID
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error       
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * <br>1012 - JSON Creation Error
+		 * <br>1014 - User Unauthroized Error
+		 * 
+		 * @param scheduleId 		the schedule id of the schedule
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					a JSON Object
 		 */
 		updateSchedule: function(scheduleId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.updateSchedule(scheduleId, callbackSuccess, callbackError);
 		},
 		
-		/*
-		 * Name: getScheduleData
-		 * getScheduleData is just a helper API which returns the entire event items in a single call.
-		 * Params
-		 *  - scheduleId
-		 * Returns: a JSON Object;
-		 * : {'scheduleId':scheduleId, 'scheduleType': 'scheduleType', schedules:<schedulesArray> }
-		 * schedulesArray Object will be a JSONArray with the data of each scheduleEvents in schedule.
-		 * Example:
-		 *	[{day:1, startTime:12:00, 'cleaningMode':1} , {day:3, startTime:5:00, 'cleaningMode':1}]
+		/**
+		 * This API is a helper API which returns the entire event items in a single call.
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{scheduleType:"scheduleType", scheduleId:"scheduleId", schedules:"scheduleArray"}
+		 * <br>where scheduleId is the id of the schedule
+		 * <br>scheduleType is the schedule type(SCHEDULE_TYPE_BASIC or SCHEDULE_TYPE_NORMAL)
+		 * <br>scheduleArray is a JSON Array with each schedule Event as a JSON Object like
+		 * <br>{day:"day", startTime:12:00, cleaningMode:"cleaningMode"}
+		 * <br>where day is an integer value(0(DAY_SUNDAY) to 6(DAY_SATURDAY))
+		 * <br>startTime is a time value(hh:mm)
+		 * <br>cleaning Mode is (ECO or NORMAL)
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error       
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * <br>1005 - Invalid Schedule Id
+		 * <br>1012 - JSON Creation Error
+		 * 
+		 * @param scheduleId 		the schedule id of the schedule
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					a JSON Object
 		 */
 		getScheduleData: function(scheduleId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getScheduleData(scheduleId, callbackSuccess, callbackError);
 		},
-		/*
- 		* Name: isScheduleEnabled
- 		* Checks if Schedule is enabled on Server for the specific robot
- 		* Params
- 		*  - robotId: Value as string. (Must be a valid robotId)
- 		*  - scheduleType (0 for Basic and 1 for Advanced). As of now only basic type is supported
- 		*  Returns: a JSON Object
- 		*  {“isScheduleEnabled”:true/false, "scheduleType":<scheduleType>, "robotId":<robotId>}
- 		*  
- 		*/
+		
+		/**
+		 * This API checks if a schedule is enabled on server for the specific robot
+		 * <p>
+		 * scheduleType is an integer value. The value can be
+		 * <br>1 - SCHEDULE_TYPE_BASIC
+		 * <br>2 - SCHEDULE_TYPE_ADVANCED.
+		 * <br>As of now only SCHEDULE_TYPE_BASIC is supported
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{isScheduleEnabled:"isScheduleEnabled", scheduleType:"scheduleType", robotId:"robotId"}
+		 * <br>where isScheduleEnabled is boolean value (true/false) describing schedule state
+		 * <br>scheduleType is an integer value
+		 * <br>robotId is the serial number of the robot
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * 
+		 * @param robotId 			the serial number of the robot
+		 * @param scheduleType 		Integer value
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					a JSON Object
+		 */
 		isScheduleEnabled: function(robotId, scheduleType, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.isScheduleEnabled(robotId, scheduleType, callbackSuccess, callbackError);
 		}, 
 		
-		/*
-		* Name: enableSchedule
-		* Enable/Disable Schedule on the Server for the specific robot
-		* Params
-		*  - robotId: Value as string. (Must be a valid robotId)
-		*  - scheduleType (0 for Basic and 1 for Advanced). As of now only basic type is supported
-		*  - enable true to enable and false to disable the schedule
-		*  Returns: a JSON Object
-		*  {“isScheduleEnabled”:true/false, "scheduleType":<scheduleType>, "robotId":<robotId>}
-		*  
-		*/
+		/**
+		 * This API enables or disables schedule on the server for the specific robot
+		 * <p>
+		 * scheduleType is an integer value. The value can be
+		 * <br>1 - SCHEDULE_TYPE_BASIC
+		 * <br>2 - SCHEDULE_TYPE_ADVANCED.
+		 * <br>As of now only SCHEDULE_TYPE_BASIC is supported
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{isScheduleEnabled:"isScheduleEnabled", scheduleType:"scheduleType", robotId:"robotId"}
+		 * <br>isScheduleEnabled is boolean value (true/false)
+		 * <br>scheduleType is an integer value
+		 * <br>robotId is the serial number of the robot
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown Error
+		 * <br>1002 - Network Error
+		 * <br>1003 - Server Error
+		 * <br>1004 - JSON Parsing Error
+		 * 
+		 * @param robotId 			the serial number of the robot
+		 * @param scheduleType 		Integer value. Must be SCHEDULE_TYPE_BASIC or SCHEDULE_TYPE_ADVANCED
+		 * @param enable 			boolean value. true to enable schedule and false to disable schedule
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 * @returns					a JSON Object
+		 */
 		enableSchedule: function(robotId, scheduleType, enable, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.enableSchedule(robotId, scheduleType, enable, callbackSuccess, callbackError);
-		}
-		
+		}		
 	}
 }());
 
@@ -1808,6 +2935,7 @@ var PluginManagerHelper =  (function() {
 		 *  Returns: Basic Schedule JSON object
 		 *  {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
 		 */
+		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {
 			var schedule = {'day':day, 'startTime': startTime, 'cleaningMode':cleaningMode};
 			return schedule;
@@ -1846,7 +2974,5 @@ var scheduleEventHelper =  (function() {
 			getEventId: function(eventList, index) {
 				return eventList[index];
 			}
-		}	
+		};	
 }());
-
-
