@@ -24,4 +24,5 @@ public class NeatoSmartAppsEventConstants {
 	public static final int ROBOT_UNREGISTER_STATUS_NOTIFICATIONS = 15;
 	public static final int ROBOT_DIRT_BAG_FULL = 16;
 	public static final int ROBOT_STUCK = 17;
+	public static final int ROBOT_DATA = 18;
 }

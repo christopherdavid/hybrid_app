@@ -41,6 +41,7 @@ import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCom
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacketHeader;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotRequests;
+import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
 import com.neatorobotics.android.slide.framework.tcp.RobotPeerConnection;
 import com.neatorobotics.android.slide.framework.tcp.RobotPeerDataListener;
 import com.neatorobotics.android.slide.framework.tcp.TcpConnectionHelper;
@@ -67,8 +68,6 @@ public class NeatoSmartAppService extends Service {
 	private XMPPConnectionHelper mXMPPConnectionHelper;
 	private RobotPeerConnection mRobotPeerConnection;
 	
-	private static final int COMMAND_PACKET_SIGNATURE = 0xCafeBabe;
-	private static final int COMMAND_PACKET_VERSION = 1;
 	private static final int ROBOT_NOTIFICATION_ID = 100; // arbitrary number
 	
 	private Handler mHandler = new Handler();
@@ -125,6 +124,15 @@ public class NeatoSmartAppService extends Service {
 		@Override
 		public void onDataReceived(String from, RobotCommandPacket packet) {
 			LogHelper.log(TAG, "TODO: XMPP onDataReceived. New Packet Data = " + packet);
+			//If data changed command recevied, retrieve the changed data from server.
+			if (packet.isRequest()) {
+				if (isDataChangedCommand(packet.getRobotCommands().getCommand(0))) {
+					LogHelper.log(TAG, "Data changed on server for robot");
+					//TODO: Using managed robot.
+					RobotDataManager.getServerData(getApplicationContext(), NeatoPrefs.getManagedRobotSerialId(getApplicationContext()));
+					return;
+				}
+			}
 			sendNotification(packet);
 		}
 		
@@ -262,6 +270,14 @@ public class NeatoSmartAppService extends Service {
 		return false;
 	}
 	
+	private boolean isDataChangedCommand(RequestPacket request) {
+		int commandId = request.getCommand();
+		if (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_PROFILE_DATA_CHANGED) {
+			return true;
+		}
+		return false;
+	}
+	
 	private void sendNotification(RobotCommandPacket robotPacket) {		
 		if (robotPacket.isResponse()) {
 			sendResponseNotification(robotPacket);
@@ -334,6 +350,7 @@ public class NeatoSmartAppService extends Service {
 		LogHelper.logD(TAG, "generateNotification:" + notification);
 		String robotState = getString(R.string.notification_text_robot_state);
 		PendingIntent intent = getNotificationIntent(context, R.drawable.ic_launcher, notification, robotState);
+		//TODO: Use builder.
 		NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		Notification n = new Notification();
 		n.flags = Notification.FLAG_AUTO_CANCEL;
@@ -727,7 +744,7 @@ public class NeatoSmartAppService extends Service {
 	private void sendCommandUsingNewCommandStructure(String robotId, RobotRequests requests) {
 		
 		LogHelper.log(TAG, "sendCommandUsingNewCommandStructure called");
-		RobotCommandPacketHeader header = getRobotCommandHeader();
+		RobotCommandPacketHeader header = RobotCommandPacketHeader.getRobotCommandHeader(RobotCommandPacketConstants.COMMAND_PACKET_SIGNATURE, RobotCommandPacketConstants.COMMAND_PACKET_VERSION);
 		if(isPeerConnectionExists(robotId)) {
 			LogHelper.log(TAG, "SendCommand Called using TCP connection as transport");
 			requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_PEER);
@@ -761,11 +778,5 @@ public class NeatoSmartAppService extends Service {
 		return ((mXMPPConnectionHelper!= null) && mXMPPConnectionHelper.isConnected());
 	}
 	
-	private RobotCommandPacketHeader getRobotCommandHeader() {
-		RobotCommandPacketHeader header = new RobotCommandPacketHeader();
-		header.setSignature(COMMAND_PACKET_SIGNATURE);
-		header.setVersion(COMMAND_PACKET_VERSION);
-		return header;
-	}
 	
 }

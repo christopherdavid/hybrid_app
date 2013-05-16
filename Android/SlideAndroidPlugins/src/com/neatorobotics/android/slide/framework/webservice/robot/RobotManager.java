@@ -133,4 +133,30 @@ public class RobotManager {
 		
 		TaskUtils.scheduleTask(task, 0);
 	}
+	
+	public void getRobotVirtualOnlineStatus(final String robotId, final WebServiceBaseRequestListener listener) {
+		LogHelper.logD(TAG, "getRobotVirtualOnlineStatus called for RobotID = " + robotId);
+		
+		Runnable task = new Runnable() {			
+			@Override
+			public void run() {
+				try {
+					RobotVirtualOnlineStatusResult result = NeatoRobotWebservicesHelper.getRobotVirtualOnlineStatus(mContext, robotId);
+					listener.onReceived(result);
+				}
+				catch (UserUnauthorizedException ex) {
+					listener.onServerError(ex.getErrorMessage());
+				}
+				catch (NeatoServerException ex) {
+					listener.onServerError(ex.getErrorMessage());
+				}
+				catch (IOException ex) {
+					listener.onNetworkError(ex.getMessage());
+				}
+			}
+		};
+		
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
 }

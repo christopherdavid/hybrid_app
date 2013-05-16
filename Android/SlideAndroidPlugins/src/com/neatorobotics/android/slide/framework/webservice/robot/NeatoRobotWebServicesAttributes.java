@@ -78,5 +78,14 @@ public class NeatoRobotWebServicesAttributes {
 			public static final String SERIAL_NUMBER = "serial_number";			
 		}
 	}
+	
+	public static class GetRobotVirtualOnlineStatus{
+		public static final String METHOD_NAME = "robot.is_robot_online_virtual"; 
+
+		public static class Attribute {
+			public static final String API_KEY = "api_key";
+			public static final String SERIAL_NUMBER = "serial_number";			
+		}
+	}
 
 }

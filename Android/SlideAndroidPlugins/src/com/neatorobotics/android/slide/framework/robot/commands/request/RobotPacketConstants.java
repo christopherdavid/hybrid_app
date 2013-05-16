@@ -24,5 +24,6 @@ public class RobotPacketConstants {
 	
 	public static final int DISTRIBUTION_MODE_TYPE_XMPP = 0;
 	public static final int DISTRIBUTION_MODE_TYPE_PEER = 1;
+	public static final int DISTRIBUTION_MODE_TYPE_TIME_MODE_SERVER = 2;
 
 }
