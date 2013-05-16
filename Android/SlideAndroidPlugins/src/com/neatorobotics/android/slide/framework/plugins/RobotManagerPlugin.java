@@ -42,6 +42,7 @@ import com.neatorobotics.android.slide.framework.webservice.robot.RobotDetailRes
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotOnlineStatusResult;
+import com.neatorobotics.android.slide.framework.webservice.robot.SetRobotProfileDetailsResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.RobotAtlasWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.RobotAtlasGridWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.listeners.RobotGridDataDownloadListener;
@@ -50,6 +51,7 @@ import com.neatorobotics.android.slide.framework.webservice.robot.atlas.listener
 import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapDataDownloadListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.UpdateRobotMapListener;
+import com.neatorobotics.android.slide.framework.webservice.robot.schedule.IsScheduleEnabledResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.RobotSchedulerManager2;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.ScheduleRequestListener;
 import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
@@ -76,7 +78,7 @@ public class RobotManagerPlugin extends Plugin {
 		UPDATE_SCHEDULE, CREATE_SCHEDULE, SYNC_SCHEDULE_FROM_SERVER, IS_SCHEDULE_ENABLED, 
 		ENABLE_SCHEDULE, SET_SPOT_DEFINITION,
 		GET_SPOT_DEFINITION, START_CLEANING, STOP_CLEANING, PAUSE_CLEANING, RESUME_CLEANING,
-		DRIVE_ROBOT, TURN_VACUUM_ON_OFF, TURN_WIFI_ON_OFF, REGISTER_FOR_ROBOT_MESSAGES};
+		DRIVE_ROBOT, TURN_VACUUM_ON_OFF, TURN_WIFI_ON_OFF, REGISTER_FOR_ROBOT_MESSAGES, UNREGISTER_FOR_ROBOT_MESSAGES};
 
 		static {
 			ACTION_MAP.put(ActionTypes.DISCOVER_NEAR_BY_ROBOTS, RobotManagerPluginMethods.DISCOVER_NEAR_BY_ROBOTS);
@@ -124,7 +126,8 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_MAP.put(ActionTypes.TURN_VACUUM_ON_OFF, RobotManagerPluginMethods.TURN_VACUUM_ON_OFF);
 			ACTION_MAP.put(ActionTypes.TURN_WIFI_ON_OFF, RobotManagerPluginMethods.TURN_WIFI_ON_OFF);			
 			
-			ACTION_MAP.put(ActionTypes.REGISTER_FOR_ROBOT_MESSAGES, RobotManagerPluginMethods.REGISTER_FOR_ROBOT_MESSAGES);		
+			ACTION_MAP.put(ActionTypes.REGISTER_FOR_ROBOT_MESSAGES, RobotManagerPluginMethods.REGISTER_FOR_ROBOT_MESSAGES);
+			ACTION_MAP.put(ActionTypes.UNREGISTER_FOR_ROBOT_MESSAGES, RobotManagerPluginMethods.UNREGISTER_FOR_ROBOT_MESSAGES);
 		}
 
 		private RobotPluginDiscoveryListener mRobotPluginDiscoveryListener;
@@ -323,12 +326,21 @@ public class RobotManagerPlugin extends Plugin {
 				LogHelper.log(TAG, "REGISTER_FOR_ROBOT_MESSAGES initiated");
 				registerForRobotsMessages(context, jsonData, callbackId);
 				break;
+			case UNREGISTER_FOR_ROBOT_MESSAGES:
+				LogHelper.log(TAG, "UNREGISTER_FOR_ROBOT_MESSAGES initiated");
+				unregisterForRobotMessages(context, jsonData, callbackId);
+				break;
 			}
 		}
 		
 		private void registerForRobotsMessages(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "registerForRobotsMessages called");
 			PushNotificationMessageHandler.getInstance(context).addPushNotificationListener(new RobotPushNotificationListener(callbackId));
+		}
+		
+		private void unregisterForRobotMessages(Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "unregisterForRobotMessages called");
+			PushNotificationMessageHandler.getInstance(context).removePushNotificationListener();
 		}
 		
 		// Private helper method to send the cleaning commands. Keeping Cleaning command helper method separate so that
@@ -482,46 +494,59 @@ public class RobotManagerPlugin extends Plugin {
 		}
 		
 		// Private helper method to return the schedule enable/disable state.
-		// TODO: Use webservice calls for isScheduleEnabled.
 		private void isScheduleEnabled(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "isScheduleEnabled action initiated in Robot plugin");
-			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-			int scheduleType = jsonData.getInt(JsonMapKeys.KEY_SCHEDULE_TYPE);
-			JSONObject jsonResult = new JSONObject();
-			try {
-				jsonResult.put(JsonMapKeys.KEY_IS_SCHEDULE_ENABLED, NeatoPrefs.getIsScheduleEnabled(context, scheduleType));
-				jsonResult.put(JsonMapKeys.KEY_SCHEDULE_TYPE, scheduleType);
-				jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
-			} catch (JSONException e) {
-				LogHelper.logD(TAG, "Exception in getSpotDefinitionJsonObject", e);
-			}
-			PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
-			pluginResult.setKeepCallback(false);
-			success(pluginResult, callbackId);
+			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			final int scheduleType = jsonData.getInt(JsonMapKeys.KEY_SCHEDULE_TYPE);
+			int scheduleTypeOnServer = SchedulerConstants2.convertToServerConstants(scheduleType);
+			
+			RobotSchedulerManager2.getInstance(context).isScheduleEnabled(robotId, scheduleTypeOnServer, new ScheduleRequestListenerWrapper(callbackId) {
+
+				@Override
+				public JSONObject getResultObject(NeatoWebserviceResult responseResult)
+						throws JSONException {
+					JSONObject jsonResult;
+					if((responseResult != null) && (responseResult instanceof IsScheduleEnabledResult)) {
+						IsScheduleEnabledResult result = (IsScheduleEnabledResult) responseResult;					
+						jsonResult = new JSONObject();
+						jsonResult.put(JsonMapKeys.KEY_IS_SCHEDULE_ENABLED, result.isScheduledEnabled);
+						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_TYPE, scheduleType);
+						jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+					} else {
+						jsonResult = getErrorJsonObject(ErrorTypes.ERROR_TYPE_UNKNOWN, "response result is not of type is schedule enabled result");
+					}
+					return jsonResult;
+				}				
+			});
 		}
 		
 		// Private helper method to return the schedule enable/disable state.
 		// As of now we are storing the enable/disable status in shared preferences
 		// later we need to call the Web API to enable/disable schedule
-		// TODO: revisit once web service is implemented
-		private void enableSchedule(Context context, RobotJsonData jsonData, String callbackId) {
+		private void enableSchedule(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "enableSchedule called");
-			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-			int scheduleType = jsonData.getInt(JsonMapKeys.KEY_SCHEDULE_TYPE);
-			boolean enableSchedule = jsonData.getBoolean(JsonMapKeys.KEY_ENABLE_SCHEDULE);
-			NeatoPrefs.saveIsScheduleEnabled(context, scheduleType, enableSchedule);
-			JSONObject jsonResult = new JSONObject();
-			try {
-				jsonResult.put(JsonMapKeys.KEY_IS_SCHEDULE_ENABLED, NeatoPrefs.getIsScheduleEnabled(context, scheduleType));
-				jsonResult.put(JsonMapKeys.KEY_SCHEDULE_TYPE, scheduleType);
-				jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
-			} catch (JSONException e) {
-				LogHelper.logD(TAG, "Exception in getSpotDefinitionJsonObject", e);
-			}
-			PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
-			pluginResult.setKeepCallback(false);
-			success(pluginResult, callbackId);
+			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			final int scheduleType = jsonData.getInt(JsonMapKeys.KEY_SCHEDULE_TYPE);
+			final boolean enableSchedule = jsonData.getBoolean(JsonMapKeys.KEY_ENABLE_SCHEDULE);
 			
+			final int scheduleTypeOnServer = SchedulerConstants2.convertToServerConstants(scheduleType);
+			RobotSchedulerManager2.getInstance(context).setEnableSchedule(robotId, scheduleTypeOnServer, enableSchedule, new ScheduleRequestListenerWrapper(callbackId) {
+
+				@Override
+				public JSONObject getResultObject(NeatoWebserviceResult responseResult)
+						throws JSONException {
+					JSONObject jsonResult;
+					if((responseResult != null) && (responseResult instanceof SetRobotProfileDetailsResult)) {
+						jsonResult = new JSONObject();
+						jsonResult.put(JsonMapKeys.KEY_IS_SCHEDULE_ENABLED, enableSchedule);
+						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_TYPE, scheduleType);
+						jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+					} else {
+						jsonResult = getErrorJsonObject(ErrorTypes.ERROR_TYPE_UNKNOWN, "response result is not of type set profile details result");
+					}
+					return jsonResult;
+				}				
+			});
 		}
 
 		private void setSpotDefinition(Context context, RobotJsonData jsonData, final String callbackId) {
@@ -858,6 +883,7 @@ public class RobotManagerPlugin extends Plugin {
 		
 		private void deleteRobotSchedule(final Context context, final RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "Delete robot schedule action initiated in Robot plugin");
+			@SuppressWarnings("unused")
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			
 			// TODO: Needs to be implemented
@@ -1116,6 +1142,7 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String IS_SCHEDULE_ENABLED = "isScheduleEnabled";
 			public static final String ENABLE_SCHEDULE = "enableSchedule";
 			public static final String REGISTER_FOR_ROBOT_MESSAGES = "registerForRobotMessges";
+			public static final String UNREGISTER_FOR_ROBOT_MESSAGES = "unregisterForRobotMessages";
 		}
 
 		private JSONObject getErrorJsonObject(int errorCode, String errMessage) {

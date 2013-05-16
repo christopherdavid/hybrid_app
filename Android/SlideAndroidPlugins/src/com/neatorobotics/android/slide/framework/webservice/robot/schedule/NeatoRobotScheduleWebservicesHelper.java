@@ -2,10 +2,15 @@ package com.neatorobotics.android.slide.framework.webservice.robot.schedule;
 
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
+import org.json.JSONException;
+import org.json.JSONObject;
 import android.content.Context;
-
+import android.text.TextUtils;
+import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.MobileWebServiceClient;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
@@ -13,15 +18,23 @@ import com.neatorobotics.android.slide.framework.webservice.NeatoServerException
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceHelper;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceUtils;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
+import com.neatorobotics.android.slide.framework.webservice.robot.SetRobotProfileDetailsResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.DeleteNeatoRobotScheduleData;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.GetNeatoRobotScheduleData;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.GetNeatoRobotSchedules;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.GetScheduleBasedOnType;
+import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.IsScheduleEnabled;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.PostNeatoRobotScheduleData;
+import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.SetEnableSchedule;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.UpdateNeatoRobotScheduleData;
 
 public class NeatoRobotScheduleWebservicesHelper {
 
+	private static final String TAG = NeatoRobotScheduleWebservicesHelper.class.getSimpleName();
+
+	private static final String SCHEDULE_ENABLE_DISABLE_PROFILE_DETAILS_KEY = "profile_details";
+	private static final String SCHEDULE_ENABLE_DISABLE_RESULT_KEY = "result";
+	
 	public static GetNeatoRobotSchedulesResult getNeatoRobotSchedulesRequest(Context context, String serial_number) {
 		GetNeatoRobotSchedulesResult result = null;
 		Map<String, String> getNeatoRobotSchedulesReqParams = new HashMap<String, String>();
@@ -84,5 +97,75 @@ public class NeatoRobotScheduleWebservicesHelper {
 		
 		String response = MobileWebServiceClient.executeHttpPost(context, GetScheduleBasedOnType.METHOD_NAME, requestParams);
 		return AppUtils.checkResponseResult(response, GetRobotScheduleByTypeResult.class);		
+	}
+	
+	public static SetRobotProfileDetailsResult setEnableSchedule(Context context, String robotSerialNumber, int scheduleType, boolean enableSchedule)
+		throws UserUnauthorizedException, NeatoServerException, IOException {
+		
+		Map<String, String> setEnableScheduleReqParams = new HashMap<String, String>();
+		setEnableScheduleReqParams.put(SetEnableSchedule.Attribute.ROBOT_SERIAL_NUMBER, robotSerialNumber);
+		String scheduleTypeKey = getScheduleFieldKeyToSetOnServer(scheduleType);
+		if (TextUtils.isEmpty(scheduleTypeKey)) {
+			throw new InvalidParameterException("Invalid Schedule Key");
+		}
+		setEnableScheduleReqParams.put(scheduleTypeKey, String.valueOf(enableSchedule));
+		
+		String response = MobileWebServiceClient.executeHttpPost(context, SetEnableSchedule.METHOD_NAME, setEnableScheduleReqParams);
+		return AppUtils.checkResponseResult(response, SetRobotProfileDetailsResult.class);
+	}
+	
+	public static IsScheduleEnabledResult isScheduleEnabled(Context context, String robotSerialNumber, int scheduleType)
+		throws UserUnauthorizedException, NeatoServerException, IOException {
+		
+		Map<String, String> isScheduleEnabledReqParams = new HashMap<String, String>();
+		isScheduleEnabledReqParams.put(IsScheduleEnabled.Attribute.ROBOT_SERIAL_NUMBER, robotSerialNumber);
+		
+		String response = MobileWebServiceClient.executeHttpPost(context, IsScheduleEnabled.METHOD_NAME, isScheduleEnabledReqParams);
+		LogHelper.logD(TAG, "response = " + response);
+		String scheduleKeyStr = getScheduleKey(scheduleType);
+		boolean isEnabled = false;
+		if (!TextUtils.isEmpty(scheduleKeyStr)) {
+			isEnabled = isScheduleEnabledFromJSONResponse(response, scheduleKeyStr);
+		}
+		IsScheduleEnabledResult result = new IsScheduleEnabledResult();
+		result.isScheduledEnabled = isEnabled;
+		return result;
+	}
+	
+	private static final String SET_PROFILE_KEY_FORMAT = "profile[%s]";
+	
+	private static String getScheduleKey(int scheduleType) {
+		String scheduleTypeInStr = null;
+		if (scheduleType == SchedulerConstants2.SERVER_SCHEDULE_TYPE_BASIC) {
+			scheduleTypeInStr = SetEnableSchedule.Attribute.ENABLE_BASIC_SCHEDULE;
+		}
+		else if (scheduleType == SchedulerConstants2.SERVER_SCHEDULE_TYPE_ADVANCED) {
+			scheduleTypeInStr = SetEnableSchedule.Attribute.ENABLE_ADVANCED_SCHEDULE;
+		}
+		return scheduleTypeInStr;
+	}
+	
+	
+	private static String getScheduleFieldKeyToSetOnServer(int scheduleType) {
+		String scheduleTypeInStr = getScheduleKey(scheduleType);
+		
+		if (!TextUtils.isEmpty(scheduleTypeInStr)) {
+			return String.format(SET_PROFILE_KEY_FORMAT, scheduleTypeInStr);
+		}
+		
+		return null;
+	}
+	
+	private static boolean isScheduleEnabledFromJSONResponse (String jsonResponse, String scheduleKey) {
+		
+		try {
+			JSONObject response = new JSONObject(jsonResponse);
+			JSONObject resultObject = response.getJSONObject(SCHEDULE_ENABLE_DISABLE_RESULT_KEY);
+			JSONObject profileDetails = resultObject.getJSONObject(SCHEDULE_ENABLE_DISABLE_PROFILE_DETAILS_KEY);
+			return Boolean.valueOf(profileDetails.getString(scheduleKey));
+		} catch (JSONException e) {
+			LogHelper.logD(TAG, "EXCEPTION isScheduleEnabled in parsing JSON", e);
+		} 
+		return false;
 	}
 }
