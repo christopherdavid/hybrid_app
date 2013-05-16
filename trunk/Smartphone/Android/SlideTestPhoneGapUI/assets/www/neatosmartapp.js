@@ -105,6 +105,7 @@ var neatoSmartApp = (function() {
 			localStorage.setItem('email', result.email);
 			localStorage.setItem('loggedIn', 1);
 			neatoSmartApp.registerForRobotMessages();
+			neatoSmartApp.registerRobotNotification2();
 			neatoSmartApp.hideWelcomeShowHomePage();
 		},
 
@@ -127,6 +128,7 @@ var neatoSmartApp = (function() {
 			localStorage.setItem('loggedIn', 1);
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.registerForRobotMessages();
+			neatoSmartApp.registerRobotNotification2();
 			neatoSmartApp.hideLoginShowHomePage();
 		},
 
@@ -822,6 +824,7 @@ var neatoSmartApp = (function() {
 				localStorage.setItem('isRobotStarted', "true");
 				document.querySelector('#btnSendStartStopCleanCommand3').value = "Stop Cleaning";
 			}
+			neatoSmartApp.setResponseText(result);
 		},
 		
 		startStopCleaningError3: function(error) {
@@ -871,6 +874,7 @@ var neatoSmartApp = (function() {
 				localStorage.setItem('isCleaningPaused', "true");
 				document.querySelector('#btnPauseResumeCleaningCommand3').value = "Resume Cleaning";
 			}
+			neatoSmartApp.setResponseText(result);
 		},
 		
 		pauseResumeCleaningError3: function(error) {
@@ -1172,6 +1176,7 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.setResponseText(result);
 			var scheduleId = result.scheduleId;
+			eventIdList = [];
 			localStorage.setItem('scheduleId', scheduleId);
 		},
 		createScheduleError: function(error) {
@@ -1783,6 +1788,17 @@ var neatoSmartApp = (function() {
 			}
 		},
 		
+		getRobotVirtualOnlineStatus: function() {
+			var robotId = localStorage.getItem('robotId');
+			if ((robotId == null) || (robotName.length == 0)) {
+				alert("Please associate a robot");
+			}			
+			else {
+				neatoSmartApp.showProgressBar();
+				RobotPluginManager.getRobotVirtualOnlineStatus(robotId, neatoSmartApp.getRobotOnlineStatusSuccess, neatoSmartApp.getRobotOnlineStatusError);
+			}
+		},
+		
 		setNotifications: function() {			
 			var robotId = localStorage.getItem('robotId');
 			if ((robotId == null) || (robotName.length == 0)) {
@@ -1992,6 +2008,19 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 		},
 
+		registerRobotNotification2 : function() {
+			RobotPluginManager.registerNotifications2(neatoSmartApp.notificationStatusSuccess2, neatoSmartApp.notificationStatusError2);
+		},
+		
+		notificationStatusSuccess2: function(result) {		
+			neatoSmartApp.hideProgressBar();			
+			neatoSmartApp.setResponseText(result);
+		},
+		
+		notificationStatusError2: function(error) {
+			neatoSmartApp.hideProgressBar();			
+			neatoSmartApp.setResponseText(error);
+		},
 		
 		//##################FUNCTIONS RELATED TO HIDE-SHOW SECTIONS ON HTML#####################################
 		
@@ -2440,6 +2469,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnRefreshUI').addEventListener('click', neatoSmartApp.refreshUIByState, true);
 			document.querySelector('#btnValidateUser').addEventListener('click', neatoSmartApp.isUserValidated, true);
 			document.querySelector('#btnUnregisterPushMessage').addEventListener('click', neatoSmartApp.unregisterForRobotMessages, true);
+			document.querySelector('#btnIsRobotOnlineVirtual').addEventListener('click', neatoSmartApp.getRobotVirtualOnlineStatus, true);
 			
 			var directConn = localStorage.getItem('isPeerConnection');
 			if ((directConn == null) || (directConn == "false")) {
@@ -2488,6 +2518,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnRefreshUI').removeEventListener('click', neatoSmartApp.refreshUIByState, true);
 			document.querySelector('#btnValidateUser').removeEventListener('click', neatoSmartApp.isUserValidated, true);
 			document.querySelector('#btnUnregisterPushMessage').removeEventListener('click', neatoSmartApp.unregisterForRobotMessages, true);
+			document.querySelector('#btnIsRobotOnlineVirtual').removeEventListener('click', neatoSmartApp.getRobotVirtualOnlineStatus, true);
 		},
 		
 		populateCleaningCategoryList: function () {
@@ -3147,6 +3178,7 @@ var neatoSmartApp = (function() {
 			var validationStatus = result['validation_status'];
 			if (validationStatus != USER_STATUS_NOT_VALIDATED) {
 				neatoSmartApp.registerForRobotMessages();
+				neatoSmartApp.registerRobotNotification2();
 				neatoSmartApp.showUserHomepage();
 			}
 			else {
