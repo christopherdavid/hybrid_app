@@ -18,6 +18,7 @@ import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConsta
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
+import com.neatorobotics.android.slide.framework.webservice.robot.SetRobotProfileDetailsResult;
 
 public class RobotSchedulerManager2 {
 
@@ -425,6 +426,54 @@ public class RobotSchedulerManager2 {
 				}
 				catch (IOException ex) {
 					listener.onNetworkError(ex.getMessage());
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
+	public void setEnableSchedule(final String robotId, final int scheduleType, final boolean enableSchedule, final ScheduleRequestListener listener) {
+		Runnable task = new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					if(scheduleType == SchedulerConstants2.SERVER_SCHEDULE_TYPE_BASIC) {
+						SetRobotProfileDetailsResult result = NeatoRobotScheduleWebservicesHelper.setEnableSchedule(mContext, robotId, scheduleType, enableSchedule);
+						if(result.success()) {
+							listener.onReceived(result);
+						} else {
+							listener.onServerError(ErrorTypes.ERROR_TYPE_UNKNOWN, "Result is not of type set profile details result");
+						}						
+					} else if(scheduleType == SchedulerConstants2.SERVER_SCHEDULE_TYPE_ADVANCED){
+						listener.onServerError(ErrorTypes.INVALID_SCHEDULE_TYPE, "Advanced Schedule Type not supported yet");
+					}					
+				} catch (UserUnauthorizedException e) {
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
+				} catch (NeatoServerException e) {
+					listener.onServerError(e.getErrorMessage());
+				} catch (IOException e) {
+					listener.onNetworkError(e.getMessage());
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
+	public void isScheduleEnabled(final String robotId, final int scheduleType, final ScheduleRequestListener listener) {
+		Runnable task = new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					IsScheduleEnabledResult result = NeatoRobotScheduleWebservicesHelper.isScheduleEnabled(mContext, robotId, scheduleType);
+					listener.onReceived(result);
+				} catch (UserUnauthorizedException e) {
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
+				} catch (NeatoServerException e) {
+					listener.onServerError(e.getErrorMessage());
+				} catch (IOException e) {
+					listener.onNetworkError(e.getMessage());
 				}
 			}
 		};

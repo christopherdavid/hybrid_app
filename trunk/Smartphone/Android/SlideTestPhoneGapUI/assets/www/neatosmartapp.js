@@ -185,6 +185,18 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(error);
 		},
 		
+		unregisterForRobotMessages: function() {
+			RobotPluginManager.unregisterForRobotMessages(neatoSmartApp.successUnregisterPushMessage, neatoSmartApp.errorUnregisterPushMessage);
+		},
+		
+		successUnregisterPushMessage: function(result) {
+			neatoSmartApp.setResponseText(result);
+		},
+		
+		errorUnregisterPushMessage: function(error) {
+			neatoSmartApp.setResponseText(error);
+		},
+		
 		register: function() {
 			var email = document.querySelector('#regmailid').value;
 			var password = document.querySelector('#regpasskey').value;
@@ -922,20 +934,15 @@ var neatoSmartApp = (function() {
 				return;
 			}
 			neatoSmartApp.showProgressBar();
-			RobotPluginManager.enableSchedule(robotId, 0, true, neatoSmartApp.enableDisableScheduleSuccess,
-					neatoSmartApp.enableDisableScheduleErr);
-		},
-		
-		disableSchedule: function() {
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
+			var isEnabled = localStorage.getItem('enableSchedule');
+			if (isEnabled == 1) {
+				RobotPluginManager.enableSchedule(robotId, 0, false, neatoSmartApp.enableDisableScheduleSuccess,
+						neatoSmartApp.enableDisableScheduleErr);
+			} else {
+				RobotPluginManager.enableSchedule(robotId, 0, true, neatoSmartApp.enableDisableScheduleSuccess,
+						neatoSmartApp.enableDisableScheduleErr);
 			}
-			neatoSmartApp.showProgressBar();
-			RobotPluginManager.enableSchedule(robotId, 0, false, neatoSmartApp.enableDisableScheduleSuccess,
-					neatoSmartApp.enableDisableScheduleErr);
-
+		
 		},
 		
 		isScheduleEnabled: function() {
@@ -951,6 +958,14 @@ var neatoSmartApp = (function() {
 		},
 		
 		enableDisableScheduleSuccess: function(result) {
+			if (result.isScheduleEnabled == true) {
+				localStorage.setItem('enableSchedule', 1);
+				document.querySelector('#btnEnableSchedule').value = "Disable Schedule (New)";
+			}
+			else {
+				localStorage.setItem('enableSchedule', 0);
+				document.querySelector('#btnEnableSchedule').value = "Enable Schedule (New)";
+			}
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.setResponseText(result);
 		},
@@ -2420,11 +2435,11 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnSendStartStopCleanCommand2').addEventListener('click', neatoSmartApp.startStopCleaning2 , true);
 			document.querySelector('#btnPauseCleaningCommand').addEventListener('click', neatoSmartApp.pauseCleaning , true);
 			document.querySelector('#btnEnableSchedule').addEventListener('click', neatoSmartApp.enableSchedule , true);
-			document.querySelector('#btnDisableSchedule').addEventListener('click', neatoSmartApp.disableSchedule , true);
 			document.querySelector('#btnIsScheduleEnabled').addEventListener('click', neatoSmartApp.isScheduleEnabled , true);
 			document.querySelector('#btnSetRobotClock').addEventListener('click', neatoSmartApp.setRobotClock , true);
 			document.querySelector('#btnRefreshUI').addEventListener('click', neatoSmartApp.refreshUIByState, true);
 			document.querySelector('#btnValidateUser').addEventListener('click', neatoSmartApp.isUserValidated, true);
+			document.querySelector('#btnUnregisterPushMessage').addEventListener('click', neatoSmartApp.unregisterForRobotMessages, true);
 			
 			var directConn = localStorage.getItem('isPeerConnection');
 			if ((directConn == null) || (directConn == "false")) {
@@ -2468,11 +2483,11 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnSendStartStopCleanCommand2').removeEventListener('click', neatoSmartApp.startStopCleaning2 , true);
 			document.querySelector('#btnPauseCleaningCommand').removeEventListener('click', neatoSmartApp.pauseCleaning , true);
 			document.querySelector('#btnEnableSchedule').removeEventListener('click', neatoSmartApp.enableSchedule , true);
-			document.querySelector('#btnDisableSchedule').removeEventListener('click', neatoSmartApp.disableSchedule , true);
 			document.querySelector('#btnIsScheduleEnabled').removeEventListener('click', neatoSmartApp.isScheduleEnabled , true);
 			document.querySelector('#btnSetRobotClock').removeEventListener('click', neatoSmartApp.setRobotClock , true);
 			document.querySelector('#btnRefreshUI').removeEventListener('click', neatoSmartApp.refreshUIByState, true);
 			document.querySelector('#btnValidateUser').removeEventListener('click', neatoSmartApp.isUserValidated, true);
+			document.querySelector('#btnUnregisterPushMessage').removeEventListener('click', neatoSmartApp.unregisterForRobotMessages, true);
 		},
 		
 		populateCleaningCategoryList: function () {
