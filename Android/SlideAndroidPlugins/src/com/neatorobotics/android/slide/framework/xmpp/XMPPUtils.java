@@ -38,4 +38,10 @@ public class XMPPUtils {
 		return userId;
 
 	}
+	
+	//Used to see if the message is incoming from the given robotId
+	public static boolean isRobotChatId(String from, String robotId) {
+		//TODO:
+		return true;
+	}
 }

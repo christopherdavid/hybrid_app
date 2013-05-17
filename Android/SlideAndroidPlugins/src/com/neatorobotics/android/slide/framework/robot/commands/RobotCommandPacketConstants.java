@@ -67,12 +67,36 @@ public class RobotCommandPacketConstants {
 
 	//Robot states
 	//TODO: Need to put these constants in relevant class.
-	public static final int ROBOT_STATE_CLEANING 							= 10001;
-	public static final int ROBOT_STATE_IDLE 								= 10002;
-	public static final int ROBOT_STATE_CHARGING 							= 10003;
+	public static final int ROBOT_STATE_UNKNOWN 							= 10001;
+	public static final int ROBOT_STATE_CLEANING 							= 10002;
+	public static final int ROBOT_STATE_IDLE 								= 10003;
+	public static final int ROBOT_STATE_CHARGING 							= 10004;
+	public static final int ROBOT_STATE_STOPPED 							= 10005;
+	public static final int ROBOT_STATE_STUCK 								= 10006;
+	public static final int ROBOT_STATE_PAUSED 								= 10007;
+	public static final int ROBOT_STATE_RESUMED 							= 10008;
+	public static final int ROBOT_STATE_INVALID								= 19999;
+	
 	//Codes for data changed on server
 	public static final int KEY_ROBOT_SCHEDULE_CHANGED 						= 20001;
 	public static final int KEY_ROBOT_ATLAS_CHANGED 						= 20002;
 	public static final int KEY_ROBOT_MAP_CHANGED 							= 20003;
 	public static final int KEY_ROBOT_DETAILS_CHANGED 						= 20004;
+	
+	//Helper method to get the state of the robot depending on the commandId.
+	public static int getRobotStateFromId(int commandId) {
+		if (commandId == COMMAND_ROBOT_START) {
+			return ROBOT_STATE_CLEANING;
+		}
+		else if (commandId == COMMAND_ROBOT_STOP) {
+			return ROBOT_STATE_STOPPED;
+		}
+		else if (commandId == COMMAND_PAUSE_CLEANING) {
+			return ROBOT_STATE_PAUSED;
+		}
+		else if (commandId == COMMAND_RESUME_CLEANING) {
+			return ROBOT_STATE_RESUMED;
+		}
+		return ROBOT_STATE_INVALID;
+	}
 }

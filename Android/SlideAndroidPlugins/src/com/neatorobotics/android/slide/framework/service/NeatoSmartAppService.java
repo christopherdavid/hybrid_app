@@ -46,6 +46,7 @@ import com.neatorobotics.android.slide.framework.tcp.RobotPeerConnection;
 import com.neatorobotics.android.slide.framework.tcp.RobotPeerDataListener;
 import com.neatorobotics.android.slide.framework.tcp.TcpConnectionHelper;
 import com.neatorobotics.android.slide.framework.tcp.TcpDataPacketListener;
+import com.neatorobotics.android.slide.framework.timemode.RobotCommandTimerHelper;
 import com.neatorobotics.android.slide.framework.udp.RobotDiscoveryListener;
 import com.neatorobotics.android.slide.framework.udp.RobotDiscoveryService;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
@@ -126,10 +127,9 @@ public class NeatoSmartAppService extends Service {
 			LogHelper.log(TAG, "TODO: XMPP onDataReceived. New Packet Data = " + packet);
 			//If data changed command recevied, retrieve the changed data from server.
 			if (packet.isRequest()) {
-				if (isDataChangedCommand(packet.getRobotCommands().getCommand(0))) {
-					LogHelper.log(TAG, "Data changed on server for robot");
-					//TODO: Using managed robot.
-					RobotDataManager.getServerData(getApplicationContext(), NeatoPrefs.getManagedRobotSerialId(getApplicationContext()));
+				RequestPacket request = packet.getRobotCommands().getCommand(0);
+				if (isDataChangedCommand(request)) {
+					processDataChangedRequest(from, request);
 					return;
 				}
 			}
@@ -137,7 +137,7 @@ public class NeatoSmartAppService extends Service {
 		}
 		
 	};
-
+	
 	private RobotDiscoveryListener mRobotDiscoveryListener = new RobotDiscoveryListener() {
 
 		public void onDiscoveryStarted() {
@@ -276,6 +276,22 @@ public class NeatoSmartAppService extends Service {
 			return true;
 		}
 		return false;
+	}
+	
+	private void processDataChangedRequest(String from, RequestPacket request) {
+		LogHelper.log(TAG, "Data changed on server for robot");
+		String robotId = request.getCommandParam(RobotCommandPacketConstants.KEY_ROBOT_ID);
+		
+		if (TextUtils.isEmpty(robotId)) {
+			LogHelper.log(TAG, "Robot Id is empty in data changed command.");
+			robotId = NeatoPrefs.getManagedRobotSerialId(getApplicationContext());
+		}
+		
+		if (XMPPUtils.isRobotChatId(from, robotId)) {
+			RobotCommandTimerHelper.getInstance(getApplicationContext()).stopCommandTimerIfRunning(robotId);
+		}
+		
+		RobotDataManager.getServerData(getApplicationContext(), robotId);
 	}
 	
 	private void sendNotification(RobotCommandPacket robotPacket) {		

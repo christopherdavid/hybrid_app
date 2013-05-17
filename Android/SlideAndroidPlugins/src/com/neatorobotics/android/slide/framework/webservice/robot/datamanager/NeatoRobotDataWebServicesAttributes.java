@@ -44,4 +44,14 @@ public class NeatoRobotDataWebServicesAttributes {
 			public static final String SERIAL_NUMBER = "serial_number";
 		}
 	}
+	
+	public static class DeleteRobotProfileKey {
+		public static final String METHOD_NAME = "robot.delete_robot_profile_key";
+		public static class Attribute {
+			public static final String API_KEY = "api_key";
+			public static final String SERIAL_NUMBER = "serial_number";
+			public static final String PROFILE_KEY = "key";
+		}
+	}
+
 }
