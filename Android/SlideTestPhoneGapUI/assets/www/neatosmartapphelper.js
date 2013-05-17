@@ -24,6 +24,12 @@ var DAY_SATURDAY = 6;
 var SCHEDULE_TYPE_BASIC = 0;
 var SCHEDULE_TYPE_ADVANCED = 1;
 
+//robotNotifications2 keyCodes
+//Actual State
+var ROBOT_CURRENT_STATE_CHANGED = 4001;
+//State Update
+var ROBOT_STATE_UPDATE = 4003;
+
 var PLUGIN_JSON_KEYS  =  (function() {
     var keys = {
             'DISCOVERY_NOTIFICATION_KEY': 'notificationType', 

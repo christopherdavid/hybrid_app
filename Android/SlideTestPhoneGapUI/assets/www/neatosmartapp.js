@@ -20,6 +20,7 @@ var neatoSmartApp = (function() {
 	var ROBOT_STATE_STOPPED 	= 10005;
 	var ROBOT_STATE_STUCK 		= 10006;
 	var ROBOT_STATE_PAUSED 		= 10007;
+	var ROBOT_STATE_RESUMED		= 10008;
 	
 	var WELCOME_PAGE = 101;
 	var USER_LOGIN_PAGE = 102;
@@ -89,6 +90,14 @@ var neatoSmartApp = (function() {
 			}
 			document.querySelector('#responseText').innerHTML ="Response: "+JSON.stringify(result, null, 4);
 		},
+		
+		setResponseTextAppend: function(result) {
+			if (result == null) {
+				return;
+			}
+			document.querySelector('#responseText').innerHTML += "<br /> Response: "+JSON.stringify(result, null, 4);
+		}, 
+		
 		// Click listeners with success and error callbacks.
 		loginWithDemo: function() {
 			var email = "demo1@demo.com";
@@ -815,20 +824,23 @@ var neatoSmartApp = (function() {
 			var robotStarted = localStorage.getItem('isRobotStarted');
 
 			if (robotStarted == "true") {
+				localStorage.setItem('robotStateUpdate', ROBOT_STATE_STOPPED);
 				localStorage.setItem('isRobotStarted', "false");
 				document.querySelector('#btnSendStartStopCleanCommand3').value = "Start Cleaning";
 				localStorage.setItem('isCleaningPaused', "false");
 				document.querySelector('#btnPauseResumeCleaningCommand3').value = "Pause Cleaning";
 			}
 			else {
+				localStorage.setItem('robotStateUpdate', ROBOT_STATE_CLEANING);
 				localStorage.setItem('isRobotStarted', "true");
 				document.querySelector('#btnSendStartStopCleanCommand3').value = "Stop Cleaning";
 			}
-			neatoSmartApp.setResponseText(result);
+			neatoSmartApp.toggleStartStop();
+			neatoSmartApp.setResponseTextAppend(result);
 		},
 		
 		startStopCleaningError3: function(error) {
-			neatoSmartApp.setResponseText(error);
+			neatoSmartApp.setResponseTextAppend(error);
 			neatoSmartApp.hideProgressBar();
 		},
 		
@@ -867,18 +879,21 @@ var neatoSmartApp = (function() {
 			
 			var cleaningPaused = localStorage.getItem('isCleaningPaused');
 			if (cleaningPaused == "true") {
+				localStorage.setItem('robotStateUpdate', ROBOT_STATE_RESUMED);
 				localStorage.setItem('isCleaningPaused', "false");
 				document.querySelector('#btnPauseResumeCleaningCommand3').value = "Pause Cleaning";
 			}
 			else {
+				localStorage.setItem('robotStateUpdate', ROBOT_STATE_PAUSED);
 				localStorage.setItem('isCleaningPaused', "true");
 				document.querySelector('#btnPauseResumeCleaningCommand3').value = "Resume Cleaning";
 			}
-			neatoSmartApp.setResponseText(result);
+			neatoSmartApp.toggleStartStop();
+			neatoSmartApp.setResponseTextAppend(result);
 		},
 		
 		pauseResumeCleaningError3: function(error) {
-			neatoSmartApp.setResponseText(error);
+			neatoSmartApp.setResponseTextAppend(error);
 			neatoSmartApp.hideProgressBar();
 		},
 		
@@ -2014,12 +2029,50 @@ var neatoSmartApp = (function() {
 		
 		notificationStatusSuccess2: function(result) {		
 			neatoSmartApp.hideProgressBar();			
-			neatoSmartApp.setResponseText(result);
+			var dataKeyCode =  (result['robotDataKeyId']);
+			var robotId = (result['robotId']);
+			var data = result['robotData'];
+			
+			if (dataKeyCode == ROBOT_CURRENT_STATE_CHANGED) {
+				var state = data['robotCurrentState'];
+				localStorage.setItem('robotCurrentState', state);
+			
+			}
+			if (dataKeyCode == ROBOT_STATE_UPDATE) {
+				var state = data['robotStateUpdate'];
+				localStorage.setItem('robotStateUpdate', state);
+			
+			}
+			
+			neatoSmartApp.toggleStartStop();
+		},
+		
+		toggleStartStop: function() {
+			var currentState = localStorage.getItem('robotCurrentState');
+			document.querySelector('#currentRobotState').innerHTML ="Actual State: " + neatoSmartApp.getStateFromCode(currentState);
+			var state = localStorage.getItem('robotStateUpdate');
+			document.querySelector('#robotState').innerHTML ="State: " + neatoSmartApp.getStateFromCode(state);
+		},
+		
+		getStateFromCode: function(stateCode) {
+			if (stateCode == ROBOT_STATE_CLEANING) {
+				return "Started Cleaning";
+			}
+			else if (stateCode == ROBOT_STATE_STOPPED) {
+				return "Stopped Cleaning";
+			}
+			else if (stateCode == ROBOT_STATE_PAUSED) {
+				return "Paused Cleaning";
+			}
+			else if (stateCode == ROBOT_STATE_RESUMED) {
+				return "Resumed Cleaning";
+			}
+			return "Not Available"
 		},
 		
 		notificationStatusError2: function(error) {
 			neatoSmartApp.hideProgressBar();			
-			neatoSmartApp.setResponseText(error);
+			neatoSmartApp.setResponseTextAppend(error);
 		},
 		
 		//##################FUNCTIONS RELATED TO HIDE-SHOW SECTIONS ON HTML#####################################
