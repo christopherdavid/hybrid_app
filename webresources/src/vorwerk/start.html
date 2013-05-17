@@ -1,0 +1,28 @@
+<div data-role="page" id="start" style="background-repeat: no-repeat; background-image: url(img/icons/company_logo_225x126.png); background-position: 0% 100%">
+    <div data-role="header" class="headerbar" data-theme="b" data-position="fixed" data-tap-toggle="false">
+    </div>
+    <div data-role="content">
+        <ul data-role="listview" data-divider-theme="a" data-inset="true">
+            <li>
+                <a href="javascript:void(0);" data-bind="click: login">
+                    <span class="ui-li-desc top" data-i18n="start.login_question" data-bind="translate:{obs:language()}">
+                        already have an account?
+                    </span>
+                    <h3 class="companyColoredTxt" data-i18n="start.login" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                        login
+                    </h3>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" data-bind="click: register">
+                    <span class="ui-li-desc top" data-i18n="start.register_question" data-bind="translate:{obs:language()}">
+                        no account so far?
+                    </span>
+                    <h3 class="companyColoredTxt" data-i18n="start.register" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                    	register
+                    </h3>
+                </a>
+            </li>
+        </ul>
+    </div><!-- /content -->
+</div><!-- /page -->

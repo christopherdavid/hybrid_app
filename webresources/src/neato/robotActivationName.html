@@ -1,0 +1,26 @@
+<div data-role="page" id="robotActivationName">
+    <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">[back]</a>
+        </div>
+        <h1>
+            <div class="screenTitle">
+                <span data-i18n="robotActivationId.navi.title" data-bind="translate: language">[navi title]</span>
+            </div>
+        </h1>
+        <div class="ui-btn-right">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.next" 
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: isFilledOut(), click:next">[next]</a>
+        </div>
+    </div>
+    
+    <div data-role="content">
+        <h2 data-i18n="robotActivationName.page.id_accepted" data-bind="translate: language">Your ID was accepted...</h2>
+        <fieldset>
+            <input type="text" data-i18n="robotActivationName.page.robot_name" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: robotName, valueUpdate: 'afterkeydown'" autofocus="autofocus"/>
+        </fieldset>
+    </div>
+</div>

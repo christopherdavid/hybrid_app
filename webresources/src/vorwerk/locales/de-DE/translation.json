@@ -1,0 +1,243 @@
+{
+    "messages": {
+        "101": {
+            "title":"I'm stuck",
+            "message": "Please clear my path. Help me so I can continue cleaning."
+        },
+        "102": {
+            "title":"I'm scruffy",
+            "message": "Please empty my Dirt Bin and Filter if needed."
+        },
+        "103": {
+            "title":"Return to base",
+            "message": "I'm finished and returning to my base!"
+        }
+    },
+    "pattern": {
+        "week":"1,2,3,4,5,6,0",
+        "time":"HHii"
+    },
+    "common": {
+        "back": "zurück",
+        "next": "weiter",
+        "ok": "OK",
+        "cancel": "Abbrechen",
+        "edit": "bearbeiten",
+        "delete": "löschen",
+        "change": "ändern",
+        "logout": "Abmelden",
+        "on": "On",
+        "off": "Off",
+        "menu": "Menu",
+        "cleaningMode": {
+            "1": "eco",
+            "2": "normal"
+        },
+        "day": {
+            "0": "Sonntag",
+            "1": "Montag",
+            "2": "Dienstag",
+            "3": "Mittwoch",
+            "4": "Donnerstag",
+            "5": "Freitag",
+            "6": "Samstag"
+        }
+    },
+    "communication": {
+        "fetch_robots": "Roboterliste wird abgerufen...",
+        "fetch_map": "Kartendaten werden abgerufen...",
+        "update_scheduler": "Kalender wird snychronisiert..."
+    },
+    "cleaning": {
+        "navi": {
+            "title": "Reinigung"
+        },
+        "page": {
+            "cleaning": "Reinigung",
+            "remote": "Fernbedienung",
+            "schedule": "Wochenplan",
+            "settings": "Einstellungen",
+            "logout": "Abmelden",
+            "change_robot": "Roboter wechseln",
+            "send_to_base": "Zur Basis schicken",
+            "spot_size_title": "Spot size: ",
+            "cleaningType": {
+                "1":"Manuell",
+                "2":"Alles",
+                "3":"Spot"
+            }
+        }
+    },
+    "start": {
+        "login": "Bitte einloggen!",
+        "login_question": "Haben Sie schon einen Account?",
+        "register": "Jetzt Registrieren.",
+        "register_question": "Haben Sie bisher noch keinen Account?"
+    },
+    "createAccount": {
+        "navi": {
+            "title": "Benutzer Account erstellen"
+        },
+        "page": {
+            "title": "Willkommen bei der Registrierung.<br/>Zum weiterkommen werden noch ein paar Informationen benötigt.",
+            "name": "Benutzername",
+            "email": "Email Addresse",
+            "password": "Passwort",
+            "password_verify": "Passwort verifizieren",
+            "password_show": "Passwort anzeigen"
+            "registration_done_title": "Registrierung abgeschlossen",
+            "registration_done_message": "Eine Bestätigungs-E-Mail wurde an Ihre E-Mail-Adresse gesendet. Bitte bestätigen sie Ihren Account innerhalb 48 Stunden.<br /><br />Nach der Bestätigung können Sie sich einloggen und zu Ihrem Roboter verbinden."
+        }
+    },
+    "robotSelection": {
+        "navi": {
+            "title": "Auswahl eines Saugroboters",
+            "logout": "Abmelden"
+        },
+        "page": {
+            "register": "Registrierung abgeschlossen.<br>Willkommen %s!",
+            "login": "Willkommen %s!",
+            "logged_in": "Hallo %s.",
+            "no_robot": "Sie haben noch keinen Roboter registriert.<br>Bitte fügen Sie einen neuen Roboter hinzu.",
+            "select_robot": "Bitte wählen sie einen Roboter aus:"
+        }
+    },
+    "robotActivationId": {
+        "navi": {
+            "title": "Roboter aktivieren"
+        },
+        "page": {
+            "wifisetup": "Bitte geben sie die Roboter ID ein.</br>Sie finden sie unter:</br><span class=\"companyColoredTxt\">Wifi Einstellungen / Registrierung</span> im Anzeige Menü des Roboters, oder auf der Rückseite Ihres Gerätes.",
+            "robotId": "Roboter ID"
+        }
+    },
+    "robotActivationName": {
+        "page": {
+            "id_accepted": "Ihre Roboter ID wurde akzeptiert.</br></br>Sie können nun bei Bedarf den Namen Ihres Roboters personalisieren.",
+            "robot_name": "Roboter Name"
+        }
+    },
+    "robotActivationDone": {
+        "page": {
+            "reg_complete": "Yay! Robot Registration is complete.</br></br>Thank you for choosing this product. Happy Cleaning!"
+        }
+    },
+    "loginUser": {
+        "navi": {
+            "back": "zurück",
+            "title": "Benutzer anmelden",
+            "next": "anmelden"
+        },
+        "page": {
+            "title": "Bitte geben Sie Name und Passwort Ihres Vorwerk Benutzerkontos ein.",
+            "email": "Email Adresse",
+            "password": "Passwort",
+            "password_lost": "Passwort vergessen?",
+            "password_show": "Passwort anzeigen",
+            "tap_here": "Hier berühren."
+        }
+    },
+    "settings": {
+        "navi": {
+            "title": "Einstellungen"
+        },
+        "page": {
+            "robot_management": "Roboter Einstellungen",
+            "user_settings": "Benutzereinstellungen",
+            "general_settings": "Allgemeine Einstellungen",
+            "terms":"Nutzungsbedingungen"
+        }
+    },
+    "robotManagement": {
+        "navi": {
+            "title": "Roboter Einstellungen"
+        },
+        "page": {
+            "robot_name": "Roboter Name",
+            "robot_id": "Roboter ID",
+            "robot_type": "Type",
+            "cleaning_options": {
+                "title": "Reinigungs Einstellungen",
+                "schedule":"Zeitplan zum Reinigen benutzen"
+            }
+        }
+    },
+    "userSettings": {
+        "navi": {
+            "title": "Benutzereinstellungen"
+        },
+        "page": {
+            "email_adress": "E-Mail Addresse",
+            "password": "Passwort",
+            "old_password" : "Altes Passwort",
+            "new_password" : "Neues Passwort",
+            "new_password_verify" : "Neues Passwort verifizieren",
+            "password_is_being_changed" : "Passwort wird geändert",
+            "password_was_not_changed" : "Passwort wurde nicht geändert"
+        },
+        "message" : {
+        	"title" : "Passwort konnte nicht geändert werden",
+        	"no_server" : "Der Server ist nicht erreichbar, Ihr Passwort konnte nicht geändert werden."
+        }
+    },
+    "generalSettings": {
+        "navi": {
+            "title": "Allgemeine Einstellungen"
+        },
+        "page": {
+         	"notify_with" : "Benachrichtige mich mit...",
+         	"notify_when" : "Benachrichtige mich, wenn...",
+         	"push_on_phone" : "Push-Benachrichtigung auf meinem Handy",
+         	"robot_need_cleaning" : "Roboter muss gereinigt werden",
+         	"cleaning_done" : "Reinigung abgeschlossen",
+         	"robot_stuck" : "Roboter sitzt fest"
+        }
+    },
+    "terms": {
+        "navi": {
+            "title":"Nutzungsbedingungen"
+        },
+        "page": {
+            "paragraph":"TODO: fehlenden Text von Vorwerk/neato hinzufügen"
+        }
+    }
+    "basicScheduler": {
+        "navi": {
+            "back": "zurück",
+            "title": "Wochenplan",
+            "add": "hinzufügen",
+            "edit": "bearbeiten"
+        }
+    },
+    "basicSchedulerDate": {
+        "navi": {
+            "title": "Wochenplan"
+        },
+        "page": {
+            "cleaning_event": "Reinigungsevent",
+            "cleaning_mode": "Reinigungsmodus",
+            "quiet_time": "Ruhezeit",
+            "starting_time": "Startzeit",
+            "clean_every": "Sauge jeden...",
+            "starting_time": "Startzeit",
+            "ending_time": "Endzeit",
+            "dnd_on": "Nicht stören am ..."
+        }
+    },
+    "remote": {
+        "navi": {
+            "title": "Remote"
+        }
+    },
+    "confirm": {
+        "close_app": "Wollen Sie das Programm wirklich beenden ?"
+    },
+    "startup": {
+        "message": {
+            "nowifi": "<h1>Please make sure that your mobile device is connected to your WiFi.<h1>"
+        }
+    },
+    "app": {
+        "name": "i18next DE"
+    }
+}
