@@ -1,0 +1,70 @@
+<div data-role="page" id="userSettings" style="height: 100%">
+    
+    <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+        </div>
+        <h1>
+            <div class="robotName">
+                <span data-bind="click:changeRobot, text: robot().robotName">[robot name]</span>
+            </div>
+            <div class="screenTitle">
+                <span data-i18n="generalSettings.navi.title" data-bind="translate: language">[navi title]</span> 
+            </div>
+        </h1>
+    </div>
+
+    <div data-role="content">
+        
+        <fieldset class="editWithButton">
+            <h2 data-i18n="generalSettings.page.notify_with"
+                data-bind="translate: language">[notify with]</h2>
+            
+            <div data-role="fieldcontain">
+                <p class="label"  style="padding-right:15px;" data-i18n="generalSettings.page.push_on_phone" 
+                        data-bind="translate: language">[push]</p>
+                
+                <select data-bind="value: selectedPushType, jqmFlipValue:selectedPushType" name="flip-1" id="flip-1" data-role="slider">
+                        <option data-i18n="common.off" data-bind="translate:{obs:language(), target: textTarget.SLIDER_LABEL_B}" value="off">[Off]</option>
+                        <option data-i18n="common.on" data-bind="translate:{obs:language(), target: textTarget.SLIDER_LABEL_A}" value="on">[On]</option>
+                </select>  
+            </div> 
+        </fieldset>
+        
+        <fieldset class="editWithButton">
+            <h2 data-i18n="generalSettings.page.notify_when"
+                data-bind="translate: language">[notify when]</h2>
+            
+            <div data-role="fieldcontain">
+                <p class="label"  style="padding-right:15px;" data-i18n="generalSettings.page.robot_need_cleaning" 
+                        data-bind="translate: language">[need cleaning]</p>
+                
+                <select data-bind="value: robotNeedsCleaning, jqmFlipValue:robotNeedsCleaning" name="flip-2" id="flip-2" data-role="slider">
+                        <option data-i18n="common.off" data-bind="translate:{obs:language(), target: textTarget.SLIDER_LABEL_B}" value="off">[Off]</option>
+                        <option data-i18n="common.on" data-bind="translate:{obs:language(), target: textTarget.SLIDER_LABEL_A}" value="on">[On]</option>
+                </select> 
+            </div>
+            <div data-role="fieldcontain">
+                <p class="label"  style="padding-right:15px;" data-i18n="generalSettings.page.cleaning_done" 
+                        data-bind="translate: language">[cleaning done]</p>
+                
+                <select data-bind="value: cleaningDone, jqmFlipValue:cleaningDone" name="flip-3" id="flip-3" data-role="slider">
+                        <option data-i18n="common.off" data-bind="translate:{obs:language(), target: textTarget.SLIDER_LABEL_B}" value="off">[Off]</option>
+                        <option data-i18n="common.on" data-bind="translate:{obs:language(), target: textTarget.SLIDER_LABEL_A}" value="on">[On]</option>
+                </select> 
+            </div>
+            <div data-role="fieldcontain">
+                <p class="label"  style="padding-right:15px;" data-i18n="generalSettings.page.robot_stuck" 
+                        data-bind="translate: language">[stuck]</p> 
+                
+                <select data-bind="value: robotStuck, jqmFlipValue:robotStuck" name="flip-4" id="flip-4" data-role="slider">
+                        <option data-i18n="common.off" data-bind="translate:{obs:language(), target: textTarget.SLIDER_LABEL_B}" value="off">[Off]</option>
+                        <option data-i18n="common.on" data-bind="translate:{obs:language(), target: textTarget.SLIDER_LABEL_A}" value="on">[On]</option>
+                </select> 
+            </div>
+        </fieldset>    
+        
+    </div>
+</div>

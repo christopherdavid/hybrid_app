@@ -1,35 +1,63 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="createAll" name="ResourceCompiler">
+<project basedir="." default="createAllVorwerk" name="ResourceCompiler">
   
   <!-- <property name="wro4j" value="wro4j-runner-1.4.9-jar-with-dependencies.jar" /> -->
   <property name="wro4j" value="wro4j-runner-1.6.0-jar-with-dependencies.jar" />
-  <property name="srcFolder" value="../src/stylesheets/less" />
   <property name="copyFolder" value="../bin/copymin" />
   <property name="mergeFolder" value="../bin/merge" />
   <property name="lessFolder" value="../bin/less" />
   <property name="distFolder" value="../dist" />
   
-  <target name="createAll">
-    <antcall target="createAndroid"></antcall>
-    <antcall target="createiOS"></antcall>
+  <!-- switches for properties plattform and publisher -->
+  <target name="createAllVorwerk">
+    <antcall target="createAndroidVorwerk"></antcall>
+    <antcall target="createiOSVorwerk"></antcall>
   </target>
   
-  <target name="createAndroid">
+  <target name="createAndroidVorwerk">
+    <echo message="create Android version for vorwerk" />
     <property name="platform" value="android"/>
+    <property name="publisher" value="vorwerk"/>
+    <property name="lessSrcFolder" value="../src/vorwerk/stylesheets/less"/>
     <antcall target="createDistribution"></antcall>
   </target>
   
-  <target name="createiOS">
+  <target name="createiOSVorwerk">
+    <echo message="create iOS version for vorwerk" />
     <property name="platform" value="ios"/>
+    <property name="publisher" value="vorwerk"/>
+    <property name="lessSrcFolder" value="../src/vorwerk/stylesheets/less"/>
     <antcall target="createDistribution"></antcall>
   </target>
-      
+  
+  <target name="createAllNeato">
+    <antcall target="createAndroidVorwerk"></antcall>
+    <antcall target="createiOSVorwerk"></antcall>
+  </target>
+  
+  <target name="createAndroidNeato">
+    <echo message="create Android version for neato" />
+    <property name="platform" value="android"/>
+    <property name="publisher" value="neato"/>
+    <property name="lessSrcFolder" value="../src/neato/stylesheets/less"/>
+    <antcall target="createDistribution"></antcall>
+  </target>
+  
+  <target name="createiOSNeato">
+    <echo message="create iOS version for neato" />
+    <property name="platform" value="ios"/>
+    <property name="publisher" value="neato"/>
+    <property name="lessSrcFolder" value="../src/neato/stylesheets/less"/>
+    <antcall target="createDistribution"></antcall>
+  </target>
+  
+  <!-- create distribution -->
   <target name="createDistribution" depends="deleteDistribution,createResource">
     <property name="distributionFolder" value="${distFolder}/${platform}/www"></property>
     
     <!-- copy html files -->
     <copy todir="${distributionFolder}" overwrite="true">
-      <fileset dir="../src">
+      <fileset dir="../src/${publisher}">
         <include name="*.html" />
         <exclude name="desktop.html"/>
       </fileset>
@@ -37,31 +65,26 @@
     
     <!-- copy locales -->
     <copy todir="${distributionFolder}/locales" overwrite="true">
-      <fileset dir="../src/locales">
+      <fileset dir="../src/${publisher}/locales">
       </fileset>
     </copy>
 
     <!-- copy fonts -->
     <copy todir="${distributionFolder}/fonts" overwrite="true">
-      <fileset dir="../src/fonts">
+      <fileset dir="../src/${publisher}/fonts">
       </fileset>
     </copy>
 
     
     <!-- copy images -->
     <copy todir="${distributionFolder}/img" overwrite="true">
-      <fileset dir="../src/img">
+      <fileset dir="../src/${publisher}/img">
       </fileset>
     </copy>
     
     <!-- copy stylesheets -->
     <copy todir="${distributionFolder}/stylesheets/css/themes" overwrite="true">
-      <fileset dir="../src/stylesheets/css/themes">
-      </fileset>
-    </copy>
-    
-    <copy todir="${distributionFolder}/stylesheets/css/ios_inspired" overwrite="true">
-      <fileset dir="../src/stylesheets/css/ios_inspired">
+      <fileset dir="../src/${publisher}/stylesheets/css/themes">
       </fileset>
     </copy>
     
@@ -80,7 +103,7 @@
     </copy>
     
     <copy todir="${distributionFolder}/javascript/viewmodel" overwrite="true">
-      <fileset dir="../src/javascript/viewmodel">
+      <fileset dir="../src/${publisher}/javascript/viewmodel">
         <include name="*.js" />
       </fileset>
     </copy>
@@ -98,24 +121,26 @@
   3. merge resource files, resolve css import and execute less css processing
   -->
   <target name="createResource" depends="deleteResource">
-    
+    <echo message="minify javascript" />
     <!-- step 1: minify javascript -->
     <exec executable="java" failonerror="true">
-    <arg line="-jar ${wro4j} --wroFile ${platform}.xml --contextFolder ${srcFolder} 
+    <arg line="-jar ${wro4j} --wroFile ${platform}.xml --contextFolder ${lessSrcFolder} 
             --destinationFolder ${copyFolder} -m -c jsMin"></arg>
     </exec>
     <!--  -m -c jsMin  -->
     
+    <echo message="copy already minified lib files (file name contains 'min' )" />
     <!-- step 2: copy already minified lib files (file name contains 'min' )-->
     <copy todir="${copyFolder}" overwrite="true">
-      <fileset dir="../src/javascript/libs">
+      <fileset dir="../src/${publisher}/javascript/libs">
         <include name="*min*.js" />
       </fileset>
     </copy>
     
+    <echo message="import resolving, merging and less css processing" />
     <!-- step 3: import resolving, merging and less css processing -->
     <exec executable="java" failonerror="true">
-    <arg line="-jar ${wro4j} --wroFile merge.xml --contextFolder ${srcFolder} 
+    <arg line="-jar ${wro4j} --wroFile merge.xml --contextFolder ${lessSrcFolder} 
             --destinationFolder ${mergeFolder} --preProcessors cssImport,lessCss"></arg>
     </exec>
     

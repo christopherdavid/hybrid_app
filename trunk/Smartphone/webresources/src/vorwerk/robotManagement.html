@@ -1,0 +1,91 @@
+<div data-role="page" id="loginUser" style="height: 100%">
+    
+    <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+        </div>
+        <h1>
+            <div class="robotName">
+                <span data-bind="click:changeRobot, text: robot().robotName">[robot name]</span>
+            </div>
+            <div class="screenTitle">
+                <span data-i18n="robotManagement.navi.title" data-bind="translate: language">[navi title]</span>
+            </div>
+        </h1>
+        <div class="ui-btn-right">
+            <a href="#" data-role="button" class="ui-disabled" data-theme="b" data-mini="false" data-inline="true" 
+                data-i18n="common.delete"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: deleteRobot">[delete]</a>
+        </div>
+    </div>
+
+    <div data-role="content">
+        
+        <fieldset class="editWithButton">
+            <h2 data-i18n="robotManagement.page.robot_name"
+                data-bind="translate: language">[robot_name]</h2>
+            
+            <p data-bind="text: robot().robotName" class="label"></p>
+            
+            <div class="ui-button-block">
+                <a href="#" data-role="button" data-theme="b" data-mini="false" 
+                    data-i18n="common.change"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: changeName">[change]</a>
+            </div>
+            
+        </fieldset>
+        
+        <fieldset>
+            <h2 data-i18n="robotManagement.page.robot_id"
+                data-bind="translate: language">[robot_id]</h2>
+            <p data-bind="text: robot().robotId"  class="label">asd</p>
+        </fieldset>
+        
+        <fieldset>
+            <h2 data-i18n="robotManagement.page.robot_type"
+                data-bind="translate: language">[robot_id]</h2>
+            <p class="label"> Neato Premium</p>
+        </fieldset>
+        
+        <fieldset class="editWithButton">
+            <h2 data-i18n="robotManagement.page.cleaning_options.title"
+                data-bind="translate: language">[cleaning title]</h2>
+            
+            <div data-role="fieldcontain">
+                <p class="label" style="padding-right:15px;" data-i18n="robotManagement.page.cleaning_options.schedule" 
+                        data-bind="translate: language">[scheduled]</p>
+                
+                <select name="flip-1" id="flip-1" data-role="slider">
+                        <option value="off">Off</option>
+                        <option value="on">On</option>
+                    </select> 
+            </div>
+        </fieldset>
+        
+    </div>
+    
+	<div id="changeNamePopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport">
+		<div data-role="header" data-theme="b">
+			<h1 class="ui-title" role="heading" aria-level="1" data-i18n="common.edit" data-bind="translate: language">[edit]</h1>
+		</div>
+		<div data-role="content">
+
+            <h2 data-i18n="robotManagement.page.robot_name"
+                data-bind="translate: language">[robot_name]</h2>
+            
+            <input type="text" data-bind="value: newRobotName, valueUpdate: 'afterkeydown'"/>
+
+            <div class="ui-bar-buttons buttons_2">
+                <a href="#" class="first-button" data-role="button" data-theme="b" data-mini="false" 
+                    data-i18n="common.ok"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: newRobotName().length != '', click: commitEdit">[ok]</a>
+                <a href="#" class="second-button" data-role="button" data-theme="b" data-mini="false" 
+                    data-i18n="common.cancel" data-rel="back"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[cancel]</a>
+            </div> 
+		</div>
+	</div>
+    
+</div>

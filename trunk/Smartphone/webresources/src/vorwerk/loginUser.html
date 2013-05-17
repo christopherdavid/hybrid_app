@@ -1,0 +1,42 @@
+<div data-role="page" id="loginUser" style="height: 100%">
+    
+    <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+        </div>
+        <h1>
+            <div class="screenTitle">
+                <span data-i18n="loginUser.navi.title" data-bind="translate: language">[navi title]</span>
+            </div>
+        </h1>
+        <div class="ui-btn-right">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="loginUser.navi.next" 
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: isFilledOut(), click:next">next</a>
+        </div>
+    </div>
+
+    <div data-role="content">
+        <h2 data-i18n="loginUser.page.title" data-bind="translate: language">[welcome]</h2>
+        <fieldset>
+            <input type="text" data-i18n="loginUser.page.email" 
+                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'afterkeydown'"/>
+            <input type="password" data-i18n="loginUser.page.password" 
+                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'afterkeydown', visible:!showPassword()"/>
+            <input type="text" data-i18n="loginUser.page.password" 
+                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'afterkeydown', visible: showPassword()"/>
+            <input type="checkbox" name="togglePassword" id="togglePassword" class="custom" data-bind="checked: showPassword" />
+            <label for="togglePassword" data-i18n="loginUser.page.password_show" 
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[show pwd]</label>
+        </fieldset>
+        <!-- password lost -->
+        <div style="display:block; text-align: right; margin-top:20px;" 
+            data-i18n="loginUser.page.password_lost" 
+            data-bind="translate: language"></div>
+        <div class="companyColoredTxt" style="display:block; text-align: right;" 
+            data-i18n="loginUser.page.tap_here" 
+            data-bind="translate: language, click: passwordLost"></div>
+    </div>
+</div>

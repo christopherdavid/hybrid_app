@@ -1,67 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <groups xmlns="http://www.isdc.ro/wro">
-    <group name="fonts">
-        <css>/fonts.less</css>
+    <group name="splashscreen">
+        <css>/splashscreen.less</css>
     </group>
-    <group name="icons">
-        <css>/icons.less</css>
+    <group name="high-res">
+        <css>/high-res.less</css>
     </group>
-    <group name="colors">
-        <css>/colors.less</css>
+    <group name="low-res">
+        <css>/low-res.less</css>
     </group>
-    <group name="notificationbar">
-      <css>/notificationbar.less</css>
-    </group>
-    <group name="headerbar">
-      <css>/headerbar.less</css>
-    </group>
-    <group name="cleaningscreen">
-      <css>/cleaningscreen.less</css>
-    </group>
-    <group name="scheduler">
-        <css>/scheduler.less</css>
-    </group>
-    <group name="vr200theme">
-        <css>/vr200theme.less</css>
-    </group>
-    <group name="forms">
-        <css>/forms.less</css>
-    </group>
-    
-    
-    <group name="map">
-        <css>/map.less</css>
-    </group>
-    <group name="startscreen">
-    	<css>/startscreen.less</css>
-    </group>
-    
-    
     <group name="libs">
-      <js>/../../../bin/copymin/cordova.min.js</js>
-      <js>/../../../bin/copymin/plugins.js</js>
-      <js>/../../../bin/copymin/jquery-1.8.2.min.js</js>
-      <js>/../../../bin/copymin/handler.js</js>
-      <js>/../../../bin/copymin/i18next-1.6.0.min.js</js>
-      <js>/../../../bin/copymin/knockout-2.2.1.min.js</js>
-      <js>/../../../bin/copymin/knockout.mapping.min.js</js>
-      <js>/../../../bin/copymin/state-machine.min.js</js>
-      <js>/../../../bin/copymin/jquery-ui-1.9.2.custom.min.js</js>
-      <js>/../../../bin/copymin/jquery.ui.touch-punch.min.js</js>
-      <js>/../../../bin/copymin/jquery.ui.plugins.js</js>
-      <js>/../../../bin/copymin/mobiscroll.datetime-2.3.1.min.js</js>
+      <js>/../../../../bin/copymin/cordova.min.js</js>
+      <js>/../../../../bin/copymin/plugins.js</js>
+      <js>/../../../../bin/copymin/jquery-1.8.2.min.js</js>
+      <js>/../../../../bin/copymin/handler.js</js>
+      <js>/../../../../bin/copymin/i18next-1.6.0.min.js</js>
+      <js>/../../../../bin/copymin/knockout-2.2.1.min.js</js>
+      <js>/../../../../bin/copymin/knockout.mapping.min.js</js>
+      <js>/../../../../bin/copymin/state-machine.min.js</js>
+      <js>/../../../../bin/copymin/jquery-ui-1.9.2.custom.min.js</js>
+      <js>/../../../../bin/copymin/jquery.ui.touch-punch.min.js</js>
+      <js>/../../../../bin/copymin/jquery.ui.plugins.js</js>
+      <js>/../../../../bin/copymin/mobiscroll.datetime-2.3.1.min.js</js>
     </group>
     <group name="jcanvas">
-      <js>/../../../bin/copymin/jcanvas.min.js</js>
+      <js>/../../../../bin/copymin/jcanvas.min.js</js>
     </group>
     <group name="application">
-        <js>/../../../bin/copymin/application.js</js>
+        <js>/../../../../bin/copymin/application.js</js>
     </group>
     <group name="utils">
-        <js>/../../../bin/copymin/utils.js</js>
+        <js>/../../../../bin/copymin/utils.js</js>
     </group>
     <group name="jquery.mobile">
-        <js>/../../../bin/copymin/jquery.mobile-1.2.0.min.js</js>
-        <js>/../../../bin/copymin/jqm.plugins.js</js>
+        <js>/../../../../bin/copymin/jquery.mobile-1.2.0.min.js</js>
+        <js>/../../../../bin/copymin/jqm.plugins.js</js>
     </group>
 </groups>
