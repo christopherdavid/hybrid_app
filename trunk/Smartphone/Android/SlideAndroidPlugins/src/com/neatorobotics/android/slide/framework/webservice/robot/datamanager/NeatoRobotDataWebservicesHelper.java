@@ -12,11 +12,14 @@ import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.MobileWebServiceClient;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.DeleteRobotProfileKey;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.GetRobotProfileDetails2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails2;
 
 
 public class NeatoRobotDataWebservicesHelper {
+	
+	private static final String EMPTY_VALUE = "";
 	
 	public static SetRobotProfileDetailsResult2 setRobotProfileDetailsRequest2(Context context, String robotId, HashMap<String, String> profileDetailsParams) 
 			throws UserUnauthorizedException, NeatoServerException, IOException {		
@@ -61,5 +64,20 @@ public class NeatoRobotDataWebservicesHelper {
 		return profile;
 	}
 	
+	public static DeleteRobotProfileKeyResult deleteRobotProfileKey (Context context, String robotId, String key) 
+			throws UserUnauthorizedException, NeatoServerException, IOException {		
+		
+		Map<String, String> robotDeleteKeyParams = new HashMap<String, String>();
+		robotDeleteKeyParams.put(DeleteRobotProfileKey.Attribute.SERIAL_NUMBER, robotId);
+		robotDeleteKeyParams.put(DeleteRobotProfileKey.Attribute.PROFILE_KEY, key);
+		String response = MobileWebServiceClient.executeHttpPost(context, DeleteRobotProfileKey.METHOD_NAME, robotDeleteKeyParams);
+		return AppUtils.checkResponseResult(response, DeleteRobotProfileKeyResult.class);
+	}
 	
+	public static SetRobotProfileDetailsResult2 resetRobotProfileValue(Context context, String robotId, String key) throws UserUnauthorizedException, 
+	NeatoServerException, IOException {
+		HashMap<String, String> robotStateChangeMap = new HashMap<String, String>();
+		robotStateChangeMap.put(key, EMPTY_VALUE);
+		return setRobotProfileDetailsRequest2(context, robotId, robotStateChangeMap);
+	}
 }

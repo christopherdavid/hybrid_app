@@ -18,7 +18,6 @@ import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotP
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotStateListener;
 import com.neatorobotics.android.slide.framework.robot.commands.request.ResponsePacket;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotRequests;
-import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants;
 import com.neatorobotics.android.slide.framework.service.NeatoSmartAppService;
 import com.neatorobotics.android.slide.framework.service.NeatoSmartAppsEventConstants;
 
@@ -133,9 +132,10 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 			case NeatoSmartAppsEventConstants.ROBOT_DATA:
 				LogHelper.logD(TAG, "ROBOT_DATA received");
 				if (mRobotDataListener != null) {
-					String robotId = resultData.getString(RobotCommandPacketConstants.KEY_ROBOT_ID);
-					int dataCode = resultData.getInt(RobotProfileConstants.ROBOT_DATA_KEY_CODE);
-					HashMap<String, String> data = (HashMap<String, String>) resultData.getSerializable(RobotProfileConstants.ROBOT_DATA_KEY);
+					String robotId = resultData.getString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID);
+					int dataCode = resultData.getInt(NeatoRobotResultReceiverConstants.ROBOT_DATA_KEY_CODE);
+					@SuppressWarnings("unchecked")
+					HashMap<String, String> data = (HashMap<String, String>) resultData.getSerializable(NeatoRobotResultReceiverConstants.ROBOT_DATA_KEY);
 					if (!TextUtils.isEmpty(robotId)) {
 						mRobotDataListener.onDataReceived(robotId, dataCode, data);
 					}

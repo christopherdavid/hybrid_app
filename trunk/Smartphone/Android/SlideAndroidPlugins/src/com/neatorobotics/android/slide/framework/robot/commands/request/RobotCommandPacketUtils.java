@@ -7,6 +7,7 @@ import android.content.Context;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 
 public class RobotCommandPacketUtils {
+	
 	//One step method to create RobotCommandPacket. This method can be used in other places too.
 	public static String getRobotCommandPacket(Context context, int commandId, HashMap<String, String> commandParams, int distributionMode) {
 		RequestPacket request = RequestPacket.createRequestPacket(context, commandId, commandParams);
@@ -19,5 +20,16 @@ public class RobotCommandPacketUtils {
 		RobotCommandBuilder builder = new RobotCommandBuilder();
 		String robotPacketInXmlFormat =  builder.convertRobotCommandsToString(robotCommandPacket);
 		return robotPacketInXmlFormat;
+	}
+	
+	//Method to get commandId from command.
+	public static int getRobotIdFromCommand(Context context, String cleaningCommand) {
+		RobotCommandParser parser = new RobotCommandParser();
+		RobotCommandPacket packet = parser.convertStringToRobotCommands(cleaningCommand);
+		if (packet != null && packet.isRequest()) {
+			int commandId = packet.getRobotCommands().getCommand(0).getCommand();
+			return commandId;
+		}
+		return -1;
 	}
 }

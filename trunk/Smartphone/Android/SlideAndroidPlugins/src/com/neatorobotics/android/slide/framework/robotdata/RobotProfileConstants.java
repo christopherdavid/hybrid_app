@@ -21,11 +21,9 @@ public class RobotProfileConstants {
 				return null;
 		}
 	}
-	
-	public static final String ROBOT_DATA_KEY_CODE = "robotDataKeyCode";
-	public static final String ROBOT_DATA_KEY = "robotDataKey";
-	
+
+	//Key Codes for profile data changes.
 	public static final int ROBOT_CURRENT_STATE_CHANGED = 4001;
-	//Virtual
 	public static final int ROBOT_STATE_CHANGED = 4002;
+	public static final int ROBOT_STATE_UPDATE = 4003;
 }
