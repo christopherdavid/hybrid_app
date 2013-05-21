@@ -12,4 +12,6 @@
 + (void)saveUserAuthToken:(NSString *)authToken;
 + (void)dissociateAllRobotsForUserWithEmail:(NSString *)email;
 + (void)deleteRobotWithRobotId:(NSString *)robotId forUser:(NSString *)userId;
++ (void)saveDevicePushAuthToken:(NSString *)authToken;
++ (NSString *)getDevicePushAuthToken;
 @end

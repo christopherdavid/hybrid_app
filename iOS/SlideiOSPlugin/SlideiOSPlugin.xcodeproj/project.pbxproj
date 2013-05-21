@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		28B4A9F9173786D30017702D /* AppBaseDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B4A9F8173786D30017702D /* AppBaseDelegate.m */; };
 		B22BDAAC168D7C8400FFCB76 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B22BDAAB168D7C8400FFCB76 /* Foundation.framework */; };
 		B22BDAB1168D7C8400FFCB76 /* SlideiOSPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B22BDAB0168D7C8400FFCB76 /* SlideiOSPlugin.h */; };
 		B22BDAB3168D7C8400FFCB76 /* SlideiOSPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B22BDAB2168D7C8400FFCB76 /* SlideiOSPlugin.m */; };
@@ -184,6 +185,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		28B4A9F7173786D30017702D /* AppBaseDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBaseDelegate.h; sourceTree = "<group>"; };
+		28B4A9F8173786D30017702D /* AppBaseDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBaseDelegate.m; sourceTree = "<group>"; };
 		B22BDAA8168D7C8400FFCB76 /* libSlideiOSPlugin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSlideiOSPlugin.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B22BDAAB168D7C8400FFCB76 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B22BDAAF168D7C8400FFCB76 /* SlideiOSPlugin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SlideiOSPlugin-Prefix.pch"; sourceTree = "<group>"; };
@@ -571,6 +574,8 @@
 				B22BDAD7168D7EF400FFCB76 /* Plugins */,
 				B22BDAD8168D7EF400FFCB76 /* ThirtyPartyTools */,
 				B29F930616946E81001A70B7 /* Build.h */,
+				28B4A9F7173786D30017702D /* AppBaseDelegate.h */,
+				28B4A9F8173786D30017702D /* AppBaseDelegate.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1485,6 +1490,7 @@
 				E1B0CF5D16EF9C42001E3360 /* PostScheduleResult.m in Sources */,
 				E1B0CF5E16EF9C42001E3360 /* SetAdvancedScheduleListener.m in Sources */,
 				E1B0CF5F16EF9C42001E3360 /* UpdateBasicScheduleListener.m in Sources */,
+				28B4A9F9173786D30017702D /* AppBaseDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

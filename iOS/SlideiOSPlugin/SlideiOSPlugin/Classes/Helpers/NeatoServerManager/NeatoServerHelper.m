@@ -18,6 +18,9 @@
 #define DISSOCIATE_ALL_ROBOTS_RESPONSE_HANDLER @"dissociateAllRobotsHandler:"
 #define DISSOCIATE_ROBOT_RESPONSE_HANDLER @"dissociateRobotHandler:"
 #define GET_ROBOT_ONLINE_STATUS_RESPONSE_HANDLER @"getRobotOnlineStatusHandler:"
+#define PUSH_NOTIFICATION_REGISTRATION_REPOSNE_HANDLER @"pushNotificationRegistrationHandler:connection:"
+#define PUSH_NOTIFICATION_UNREGISTRATION_REPOSNE_HANDLER @"pushNotificationUnregistrationHandler:"
+#define PUSH_NOTIFICATION_DEVICE_TOKEN  @"deviceTokenForPush"
 
 #define GET_AUTH_TOKEN_NATIVE_POST_STRING @"api_key=%@&account_type=%@&email=%@&password=%@"
 #define GET_USER_DETAILS_POST_STRING @"api_key=%@&email=%@&auth_token=%@"
@@ -33,11 +36,13 @@
 #define DISSOCIATE_ALL_ROBOTS_POST_STRING @"api_key=%@&email=%@&serial_number=%@"
 #define GET_ROBOT_ONLINE_STATUS_POST_STRING @"api_key=%@&serial_number=%@"
 
+#define PUSH_NOTIFICATION_REGISTRATION_POST_STRING  @"api_key=%@&user_email=%@&device_type=%ld&registration_id=%@"
+#define PUSH_NOTIFICATION_UNREGISTRATION_POST_STRING  @"api_key=%@&registration_id=%@"
+
+
 @interface NeatoServerHelper()
 
 @property(nonatomic, retain) NeatoServerHelper *retained_self;
-//@property(nonatomic, retain) NSMutableData *responseData;
-//@property(nonatomic, readwrite) int responseCode;
 @property(nonatomic, retain) NSString *robotId;
 
 - (void)notifyRequestFailed:(SEL)selector withError:(NSError *)error;
@@ -48,8 +53,6 @@
 
 @implementation NeatoServerHelper
 @synthesize retained_self = _retained_self;
-//@synthesize responseData = _responseData;
-//@synthesize responseCode = _responseCode;
 @synthesize delegate = _delegate;
 @synthesize robotId = _robotId;
 
@@ -78,8 +81,17 @@
 {
     debugLog(@"");
     NSString *selectorStr = [[connection originalRequest] valueForHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    NSInteger parameterCount = [[selectorStr mutableCopy] replaceOccurrencesOfString:@":" withString:@"," options:NSLiteralSearch range:NSMakeRange(0, [selectorStr length])];
     SEL selector = NSSelectorFromString(selectorStr);
-    [self performSelector:selector withObject:responseData];
+    if (parameterCount == 1) {
+        [self performSelector:selector withObject:responseData];
+    }
+    else if (parameterCount == 2) {
+        [self performSelector:selector withObject:responseData withObject:connection];
+    }
+    else {
+        debugLog(@"connectionDidFinishLoading called with invalid number of arguments. Selector = %@, Parameters required = %d", selectorStr, parameterCount);
+    }
 }
 
 // This gets called when the connection fails for any reason.
@@ -88,7 +100,16 @@
     debugLog(@"");
     NSString *selectorStr = [[connection originalRequest] valueForHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     SEL selector = NSSelectorFromString(selectorStr);
-    [self performSelector:selector withObject:error];
+    NSInteger parameterCount = [[selectorStr mutableCopy] replaceOccurrencesOfString:@":" withString:@"," options:NSLiteralSearch range:NSMakeRange(0, [selectorStr length])];
+    if (parameterCount == 1) {
+        [self performSelector:selector withObject:error];
+    }
+    else if (parameterCount == 2) {
+        [self performSelector:selector withObject:error withObject:connection];
+    }
+    else {
+        debugLog(@"requestFailedForConnection called with invalid number of arguments. Selector = %@, Parameters required = %d", selectorStr, parameterCount);
+    }
 }
 
 -(void) getUserLogoutResponseHandler:(id)value
@@ -352,6 +373,7 @@
     helper.delegate = self;
     [helper getDataForRequest:request];
 }
+
 
 -(void) loginNativeUserHandler:(id) value
 {
@@ -934,6 +956,126 @@
         [self notifyRequestFailed:@selector(failedToDissociateAllRobots:) withError:error];
     }
 }
+
+- (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken {
+    debugLog(@"registerPushNotification called. Email = %@, deviceToken = %@", email, deviceToken);
+    self.retained_self = self;
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:PUSH_NOTIFICATION_REGISTRATION_POST_STRING, NEATO_API_KEY,
+                           email, (long)deviceType, deviceToken] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:deviceToken forHTTPHeaderField:PUSH_NOTIFICATION_DEVICE_TOKEN];
+    [request setValue:PUSH_NOTIFICATION_REGISTRATION_REPOSNE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    
+    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper getDataForRequest:request];
+}
+
+
+- (void)unregisterPushNotificationForDeviceToken:(NSString *)deviceToken {
+    debugLog(@"unregisterPushNotification called. deviceToken = %@", deviceToken);
+    self.retained_self = self;
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:PUSH_NOTIFICATION_UNREGISTRATION_POST_STRING, NEATO_API_KEY,
+                           deviceToken] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [request setValue:PUSH_NOTIFICATION_UNREGISTRATION_REPOSNE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    
+    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper getDataForRequest:request];
+}
+
+
+- (void)pushNotificationRegistrationHandler:(id)value connection:(NSURLConnection *)connection {
+  if (!value) {
+    NSMutableDictionary* details = [NSMutableDictionary dictionary];
+    [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
+    
+    NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+    debugLog(@"push notification registration failed");
+    [self notifyRequestFailed:@selector(pushNotificationRegistrationFailedWithError:) withError:error];
+    return;
+  }
+  
+  if ([value isKindOfClass:[NSError class]]) {
+    debugLog(@"push notification registration failed");
+
+    [self notifyRequestFailed:@selector(pushNotificationRegistrationFailedWithError:) withError:value];
+    return;
+  }
+  
+  NSDictionary *jsonData = [AppHelper parseJSON:value];
+  NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+  debugLog(@"status = %d", [status intValue]);
+  if ([status intValue] == NEATO_STATUS_SUCCESS) {
+     dispatch_async(dispatch_get_main_queue(), ^{
+      if ([self.delegate respondsToSelector:@selector(pushNotificationRegisteredForDeviceToken:)]) {
+        NSString *deviceToken = [[connection originalRequest] valueForHTTPHeaderField:PUSH_NOTIFICATION_DEVICE_TOKEN];
+        [self.delegate performSelector:@selector(pushNotificationRegisteredForDeviceToken:) withObject:deviceToken];
+      }
+      self.delegate = nil;
+      self.retained_self = nil;
+    });
+  }
+  else {
+    NSMutableDictionary* details = [NSMutableDictionary dictionary];
+    [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
+    
+    NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+    [self notifyRequestFailed:@selector(pushNotificationRegistrationFailedWithError:) withError:error];
+  }
+  
+}
+
+-(void) pushNotificationUnregistrationHandler:(id) value
+{
+  if (value == nil) {
+    NSMutableDictionary* details = [NSMutableDictionary dictionary];
+    [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
+    
+    NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+    debugLog(@"push notification unregistration failed");
+    [self notifyRequestFailed:@selector(pushNotificationUnregistrationFailed:) withError:error];
+    return;
+  }
+  
+  if ([value isKindOfClass:[NSError class]]) {
+    debugLog(@"push notification unregistration failed");
+    [self notifyRequestFailed:@selector(pushNotificationUnregistrationFailed:) withError:value];
+    return;
+  }
+  
+  NSDictionary *jsonData = [AppHelper parseJSON:value];
+  NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+  debugLog(@"status = %d", [status intValue]);
+  if ([status intValue] == NEATO_STATUS_SUCCESS) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      debugLog(@"push notification unregistration succeeded");
+      if ([self.delegate respondsToSelector:@selector(pushNotificationUnregistrationSuccess:)])
+      {
+        [self.delegate performSelector:@selector(pushNotificationUnregistrationSuccess:)];
+      }
+      self.delegate = nil;
+      self.retained_self = nil;
+    });
+  }
+  else
+  {
+    NSMutableDictionary* details = [NSMutableDictionary dictionary];
+    [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
+    
+    NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+    debugLog(@"push notification unregistration failed. Error = %@", error);
+    [self notifyRequestFailed:@selector(pushNotificationUnregistrationFailed:) withError:error];
+  }
+  
+}
+
 
 @end
 
