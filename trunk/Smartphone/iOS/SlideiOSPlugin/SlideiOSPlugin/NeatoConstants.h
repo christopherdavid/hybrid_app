@@ -102,21 +102,25 @@
     #define NEATO_UPDATE_AUTH_TOKEN_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.update_auth_token_expiry"
     #define NEATO_SET_ROBOT_PROFILE_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.set_profile_details"
     #define NEATO_GET_ROBOT_ONLINE_STATUS_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.is_online"
-	#define NEATO_DISSOCIATE_ALL_ROBOTS_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.disassociate_robot"
+    #define NEATO_DISSOCIATE_ALL_ROBOTS_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.disassociate_robot"
+    #define NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neato.rajatogo.com/api/rest/json/?method=message.notification_registration"
+    #define NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neato.rajatogo.com/api/rest/json/?method=message.notification_unregistration"
 #elif SWITCH_TO_DEV_SERVER
-    // Will use API's at http://neatodev.rajatogo.com/Server_Yii/Neato/wstest/
-    #define NEATO_CREATE_USER_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=user.create"
-    #define NEATO_GET_USER_AUTH_TOKEN_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=auth.get_user_auth_token"
-    #define NEATO_GET_USER_DETAILS_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=user.get_user_account_details"
-    #define NEATO_LOGOUT_USER_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=user.logout_auth_token"
-    #define NEATO_CREATE_ROBOT_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robot.create"
-    #define NEATO_GET_ROBOT_DETAILS_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robot.get_details"
-    #define NEATO_SET_ROBOT_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robot.set_user"
-    #define NEATO_GET_ASSOCIATED_ROBOTS_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=user.get_associated_robots"
-    #define NEATO_UPDATE_AUTH_TOKEN_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=user.update_auth_token_expiry"
-    #define NEATO_SET_ROBOT_PROFILE_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robot.set_profile_details"
-    #define NEATO_GET_ROBOT_ONLINE_STATUS_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robot.is_online"
-	#define NEATO_DISSOCIATE_ALL_ROBOTS_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=user.disassociate_robot"
+    // Will use API's at http://neatodev.rajatogo.com/wstest/
+    #define NEATO_CREATE_USER_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.create"
+    #define NEATO_GET_USER_AUTH_TOKEN_URL @"http://neatodev.rajatogo.com/api/rest/json?method=auth.get_user_auth_token"
+    #define NEATO_GET_USER_DETAILS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.get_user_account_details"
+    #define NEATO_LOGOUT_USER_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.logout_auth_token"
+    #define NEATO_CREATE_ROBOT_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.create"
+    #define NEATO_GET_ROBOT_DETAILS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.get_details"
+    #define NEATO_SET_ROBOT_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.set_user"
+    #define NEATO_GET_ASSOCIATED_ROBOTS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.get_associated_robots"
+    #define NEATO_UPDATE_AUTH_TOKEN_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.update_auth_token_expiry"
+    #define NEATO_SET_ROBOT_PROFILE_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.set_profile_details"
+    #define NEATO_GET_ROBOT_ONLINE_STATUS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.is_online"
+    #define NEATO_DISSOCIATE_ALL_ROBOTS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.disassociate_robot"
+    #define NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neatodev.rajatogo.com/api/rest/json/?method=message.notification_registration"
+    #define NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neatodev.rajatogo.com/api/rest/json/?method=message.notification_unregistration"
 #else
     // Will use API's at http://neatostaging.rajatogo.com/wstest/
     #define NEATO_CREATE_USER_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.create"
@@ -131,6 +135,8 @@
     #define NEATO_SET_ROBOT_PROFILE_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.set_profile_details"
     #define NEATO_GET_ROBOT_ONLINE_STATUS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.is_online"
 	#define NEATO_DISSOCIATE_ALL_ROBOTS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.disassociate_robot"
+    #define NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=message.notification_registration"
+    #define NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=message.notification_unregistration"
 #endif
 
 
@@ -139,9 +145,9 @@
     #define NEATO_GET_ATLAS_GRID_METADATA_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.get_atlas_grid_metadata"
     #define NEATO_UPDATE_ATLAS_METADATA_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.update_atlas"
 #elif SWITCH_TO_DEV_SERVER
-    #define NEATO_GET_ROBOT_ATLAS_DATA_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robot.get_atlas_data"
-    #define NEATO_GET_ATLAS_GRID_METADATA_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robot.get_atlas_grid_metadata"
-    #define NEATO_UPDATE_ATLAS_METADATA_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robot.update_atlas"
+    #define NEATO_GET_ROBOT_ATLAS_DATA_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.get_atlas_data"
+    #define NEATO_GET_ATLAS_GRID_METADATA_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.get_atlas_grid_metadata"
+    #define NEATO_UPDATE_ATLAS_METADATA_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.update_atlas"
 #else
     #define NEATO_GET_ROBOT_ATLAS_DATA_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.get_atlas_data"
     #define NEATO_GET_ATLAS_GRID_METADATA_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.get_atlas_grid_metadata"
@@ -167,11 +173,11 @@
     #define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.update_data"
     #define NEATO_DELETE_SCHEDULE_DATA @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.delete_data"
 #elif SWITCH_TO_DEV_SERVER
-    #define NEATO_GET_SCHEDULES_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robotschedule.get_schedules"
-    #define NEATO_GET_SCHEDULE_DATA_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=robotschedule.get_data"
-    #define NEATO_POST_ROBOT_SCHEDULE_DATA @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json/?method=robotschedule.post_data"
-    #define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json/?method=robotschedule.update_data"
-    #define NEATO_DELETE_SCHEDULE_DATA @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json/?method=robotschedule.delete_data"
+    #define NEATO_GET_SCHEDULES_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robotschedule.get_schedules"
+    #define NEATO_GET_SCHEDULE_DATA_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robotschedule.get_data"
+    #define NEATO_POST_ROBOT_SCHEDULE_DATA @"http://neatodev.rajatogo.com/api/rest/json/?method=robotschedule.post_data"
+    #define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"http://neatodev.rajatogo.com/api/rest/json/?method=robotschedule.update_data"
+    #define NEATO_DELETE_SCHEDULE_DATA @"http://neatodev.rajatogo.com/api/rest/json/?method=robotschedule.delete_data"
 
 #else
     #define NEATO_GET_SCHEDULES_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.get_schedules"

@@ -130,7 +130,7 @@
     debugLog(@"");
     self.retained_self = self;
     self.callbackId = callbackId;
-    
+
     NeatoServerManager *manager = [[NeatoServerManager alloc] init];
     manager.delegate = self;
     [manager logoutUserEmail:email authToken:auth_token];
@@ -211,6 +211,11 @@
 
 - (void)userLoggedOut {
     debugLog(@"");
+    NSString *deviceToken = [NeatoUserHelper getDevicePushAuthToken];
+    if (deviceToken && deviceToken.length > 0) {
+        UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+        [callWrapper unregisterPushNotificationForDeviceToken:deviceToken];
+    }
     [NeatoRobotManager diconnectRobotFromTCP:@"" delegate:self];
     [NeatoRobotManager logoutFromXMPP:self];
     [NeatoUserHelper clearUserData];
@@ -313,6 +318,56 @@
 
 - (void)failedToGetAssociatedRobotsWithError:(NSError *)error {
     [self notifyCallback:@selector(failedToGetAssociatedRobotsWithError:callbackId:) object:error];
+}
+
+- (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken {
+    debugLog(@"registerPushNotification called");
+    self.retained_self = self;
+    
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager registerPushNotificationForEmail:email deviceType:deviceType deviceToken:deviceToken];
+}
+
+- (void)unregisterPushNotificationForDeviceToken:(NSString *)deviceToken {
+    debugLog(@"unregisterPushNotificationForRegistrationId called");
+    self.retained_self = self;
+    
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager unregisterPushNotificationForDeviceToken:deviceToken];
+    
+}
+
+- (void)pushNotificationRegistrationFailedWithError:(NSError *) error {
+    debugLog(@"pushNotificationRegistrationFailedWithError called");
+    // Not sending the notification to the outer layer because registratin/unregistration is internal call
+    [NeatoUserHelper saveDevicePushAuthToken:@""];
+    self.delegate = nil;
+    self.retained_self = nil;
+}
+
+- (void)pushNotificationRegisteredForDeviceToken:(NSString *)deviceToken {
+    debugLog(@"pushNotificationRegisteredForDeviceToken called");
+    // Not sending the notification to the outer layer because registratin/unregistration is internal call
+    [NeatoUserHelper saveDevicePushAuthToken:deviceToken];
+    self.delegate = nil;
+    self.retained_self = nil;
+}
+
+- (void)pushNotificationUnregistrationFailedWithError:(NSError *) error {
+    debugLog(@"pushNotificationUnregistrationFailedWithError called");
+    // Not sending the notification to the outer layer because registratin/unregistration is internal call
+    self.delegate = nil;
+    self.retained_self = nil;
+}
+
+- (void)pushNotificationUnregistrationSuccess {
+    debugLog(@"pushNotificationUnregistrationSuccess called");
+    // Not sending the notification to the outer layer because registratin/unregistration is internal call
+    [NeatoUserHelper saveDevicePushAuthToken:@""];
+    self.delegate = nil;
+    self.retained_self = nil;
 }
 
 @end

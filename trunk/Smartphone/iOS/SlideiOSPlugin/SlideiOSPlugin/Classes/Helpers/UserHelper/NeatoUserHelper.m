@@ -14,6 +14,8 @@
 #define KEY_ACCOUNT_TYPE @"neato_user_account_type"
 #define KEY_USER_PASSWORD @"neato_user_password"
 #define KEY_EXTERNAL_SOCIAL_ID @"neato_user_external_social_id"
+#define KEY_DEVICE_PUSH_AUTH_TOKEN  @"device_push_auth_token"
+
 
 @implementation NeatoUserHelper
 
@@ -31,6 +33,18 @@
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     return [userDefaults valueForKey:KEY_USER_AUTH_TOKEN];
+}
+
++ (void)saveDevicePushAuthToken:(NSString *)authToken {
+    NSLog(@"saveDevicePushAuthToken CALLED");
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:authToken forKey:KEY_DEVICE_PUSH_AUTH_TOKEN];
+    [userDefaults synchronize];
+}
+
++ (NSString *)getDevicePushAuthToken {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    return [userDefaults valueForKey:KEY_DEVICE_PUSH_AUTH_TOKEN];
 }
 
 // TODO: should work on BG thread

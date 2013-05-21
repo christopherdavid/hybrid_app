@@ -4,6 +4,7 @@
 
 @protocol UserManagerProtocol <NSObject>
 
+@optional
 //-(void) requestFailed:(NSError *) error callbackId:(NSString *)callbackId;
 - (void)gotUserDetails:(NeatoUser *)neatoUser callbackId:(NSString *)callbackId;
 - (void)robotCreated:(NSString *)callbackId;
@@ -26,6 +27,11 @@
 - (void)gotUserAssociatedRobots:(NSMutableArray *)robots callbackId:(NSString *)callbackId;
 - (void)failedToGetAssociatedRobotsWithError:(NSError *)error callbackId:(NSString *)callbackId;
 - (void)failedToDissociateRobotWithError:(NSError *)error callbackId:(NSString *)callbackId;
+
+- (void)pushNotificationRegistrationFailedWithError:(NSError *) error;
+- (void)pushNotificationRegisteredForDeviceToken:(NSString *)deviceToken;
+- (void)pushNotificationUnregistrationSuccess;
+- (void)pushNotificationUnregistrationFailedWithError:(NSError *) error;
 @end
 
 @interface UserManagerCallWrapper : CDVPlugin 
@@ -44,5 +50,6 @@
 - (void)dissociateAllRobotsForUserWithEmail:(NSString *)email callbackID:(NSString *)callbackId;
 - (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)emailId callbackId:(NSString *)callbackId;
 - (void)associatedRobotsForUserWithEmail:(NSString *)email authToken:(NSString *)auth_token callbackId:(NSString *)callbackId;
-
+- (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken;
+- (void)unregisterPushNotificationForDeviceToken:(NSString *)deviceToken;
 @end

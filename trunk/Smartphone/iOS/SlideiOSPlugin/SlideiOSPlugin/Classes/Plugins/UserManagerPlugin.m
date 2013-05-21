@@ -48,6 +48,9 @@
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+  
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+                            (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 }
 
 -(void) userCreated:(NeatoUser *) neatoUser  callbackId:(NSString *)callbackId {
@@ -59,6 +62,9 @@
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+  
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+                    (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 }
 
 -(void) failedToCreateUserWithError:(NSError *)error callbackId:(NSString *)callbackId {
@@ -280,6 +286,7 @@
     debugLog(@"");
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"User logged out."];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    [[UIApplication sharedApplication]  unregisterForRemoteNotifications];
 }
 
 - (void)dissociatedAllRobots:(NSString *)message callbackId:(NSString *)callbackId {

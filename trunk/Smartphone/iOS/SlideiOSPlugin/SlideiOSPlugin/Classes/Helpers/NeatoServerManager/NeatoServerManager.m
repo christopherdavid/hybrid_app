@@ -478,4 +478,61 @@
     [self notifyRequestFailed:@selector(failedToDissociateRobotWithError:) withError:error];
 
 }
+
+- (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken {
+  debugLog(@"registerPushNotification called");
+  self.retained_self = self;
+  
+  NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+  helper.delegate = self;
+  [helper registerPushNotificationForEmail:email deviceType:deviceType deviceToken:deviceToken];
+}
+
+- (void)unregisterPushNotificationForDeviceToken:(NSString *)deviceToken {
+  debugLog(@"unregisterPushNotification called");
+  self.retained_self = self;
+  
+  NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+  helper.delegate = self;
+  [helper unregisterPushNotificationForDeviceToken:deviceToken];
+}
+
+
+- (void)pushNotificationRegistrationFailedWithError:(NSError *) error {
+  debugLog(@"pushNotificationRegistrationFailed called");
+  [self notifyRequestFailed:@selector(pushNotificationRegistrationFailedWithError:) withError:error];
+  self.delegate = nil;
+  self.retained_self = nil;
+}
+- (void)pushNotificationRegisteredForDeviceToken:(NSString *)deviceToken {
+  debugLog(@"pushNotificationRegisteredForDeviceToken called");
+  if ([self.delegate respondsToSelector:@selector(pushNotificationRegisteredForDeviceToken:)])
+  {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self.delegate performSelector:@selector(pushNotificationRegisteredForDeviceToken:) withObject:deviceToken];
+      self.delegate = nil;
+      self.retained_self = nil;
+    });
+  }
+}
+
+
+- (void)pushNotificationUnregistrationFailedWithError:(NSError *)error {
+  debugLog(@"pushNotificationUnregistrationFailedWithError called");
+  [self notifyRequestFailed:@selector(pushNotificationUnregistrationFailedWithError:) withError:error];
+  self.delegate = nil;
+  self.retained_self = nil;
+}
+- (void)pushNotificationUnregistrationSuccess {
+  debugLog(@"pushNotificationUnregistrationSuccess called");
+  if ([self.delegate respondsToSelector:@selector(pushNotificationUnregistrationSuccess:)])
+  {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self.delegate performSelector:@selector(pushNotificationUnregistrationSuccess:)];
+      self.delegate = nil;
+      self.retained_self = nil;
+    });
+  }
+ 
+}
 @end

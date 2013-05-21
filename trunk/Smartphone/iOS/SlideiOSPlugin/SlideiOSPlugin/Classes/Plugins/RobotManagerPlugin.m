@@ -19,7 +19,15 @@
 #import "GetScheduleEventDataPluginResult.h"
 #import "GetScheduleDataPluginResult.h"
 
+#define ROBOT_MESSAGE_CALLBACK_ID_KEY @"robotMessagesNotificationCallBackKey"
+
+@interface RobotManagerPlugin()
+@property (strong, nonatomic) NSMutableDictionary *robotMessagesCallBacks;
+@end
+
 @implementation RobotManagerPlugin
+
+@synthesize robotMessagesCallBacks = _robotMessagesCallBacks;
 
 - (void) discoverNearByRobots:(CDVInvokedUrlCommand *)command
 {
@@ -694,6 +702,17 @@
 - (void)deleteScheduleError:(NSError *)error callbackId:(NSString *)callbackId {
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)registerForRobotMessages:(CDVInvokedUrlCommand *)command {
+  debugLog(@"registerForRobotMessages called.");
+  [self.robotMessagesCallBacks setValue:command.callbackId forKey:ROBOT_MESSAGE_CALLBACK_ID_KEY];
+  
+}
+
+- (void)unregisterForRobotMessages:(CDVInvokedUrlCommand *)command {
+  debugLog(@"unregisterForRobotMessages called.");
+  [self.robotMessagesCallBacks removeObjectForKey:ROBOT_MESSAGE_CALLBACK_ID_KEY];
 }
 
 @end

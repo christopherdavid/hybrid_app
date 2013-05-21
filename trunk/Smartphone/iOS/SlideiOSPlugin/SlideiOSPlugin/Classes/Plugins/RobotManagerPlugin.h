@@ -35,4 +35,6 @@
 - (void)robotSetSchedule2:(CDVInvokedUrlCommand *)command;
 - (void)getSchedule2:(CDVInvokedUrlCommand *)command;
 - (void)deleteScheduleData:(CDVInvokedUrlCommand *)command;
+- (void)registerForRobotMessages:(CDVInvokedUrlCommand *)command;
+- (void)unregisterForRobotMessages:(CDVInvokedUrlCommand *)command;
 @end

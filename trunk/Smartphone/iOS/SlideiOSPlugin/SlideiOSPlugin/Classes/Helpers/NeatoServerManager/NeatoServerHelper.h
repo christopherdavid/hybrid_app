@@ -19,6 +19,8 @@
 - (void)onlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId;
 - (void)dissociatedAllRobots:(NSString *)message;
 - (void)robotDissociatedWithMessage:(NSString *)message;
+- (void)pushNotificationRegisteredForDeviceToken:(NSString *)deviceToken;
+- (void)pushNotificationUnregistrationSuccess;
 
 // Failure cases
 - (void)failedToGetCreateUserHandle:(NSError *) error;
@@ -35,6 +37,8 @@
 - (void)failedToGetRobotOnlineStatusWithError:(NSError *)error;
 - (void)failedToDissociateAllRobots:(NSError *)error;
 - (void)failedToDissociateRobotWithError:(NSError *)error;
+- (void)pushNotificationRegistrationFailedWithError:(NSError *)error;
+- (void)pushNotificationUnregistrationFailedWithError:(NSError *)error;
 @end
 
 @interface NeatoServerHelper : NSObject
@@ -55,5 +59,7 @@
 - (void)onlineStatusForRobotWithId:(NSString *)robotId;
 - (void)dissociateAllRobotsForUserWithEmail:(NSString *)email;
 - (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)email;
+- (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken;
+- (void)unregisterPushNotificationForDeviceToken:(NSString *)deviceToken;
 
 @end

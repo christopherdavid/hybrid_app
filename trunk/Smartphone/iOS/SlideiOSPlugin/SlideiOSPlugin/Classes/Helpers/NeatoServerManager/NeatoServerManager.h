@@ -19,6 +19,10 @@
 - (void)failedToDissociateRobot:(NSError *)error;
 - (void)gotUserAssociatedRobots:(NSMutableArray *) robots;
 - (void)failedToGetAssociatedRobotsWithError:(NSError *) error;
+- (void)pushNotificationRegistrationFailedWithError:(NSError *) error;
+- (void)pushNotificationRegisteredForDeviceToken:(NSString *)deviceToken;
+- (void)pushNotificationUnregistrationSuccess;
+- (void)pushNotificationUnregistrationFailed:(NSError *) error;
 @end
 
 @interface NeatoServerManager : NSObject <NeatoServerHelperProtocol>
@@ -40,4 +44,7 @@
 - (void)onlineStatusForRobotWithId:(NSString *)robotId;
 - (void)dissociateAllRobotsForUserWithEmail:(NSString *)email;
 - (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)emailId;
+- (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken;
+- (void)unregisterPushNotificationForDeviceToken:(NSString *)registrationId;
+
 @end
