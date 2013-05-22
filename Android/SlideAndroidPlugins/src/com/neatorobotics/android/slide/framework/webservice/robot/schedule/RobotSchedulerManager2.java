@@ -18,7 +18,7 @@ import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConsta
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
-import com.neatorobotics.android.slide.framework.webservice.robot.SetRobotProfileDetailsResult;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult2;
 
 public class RobotSchedulerManager2 {
 
@@ -439,7 +439,7 @@ public class RobotSchedulerManager2 {
 			public void run() {
 				try {
 					if(scheduleType == SchedulerConstants2.SERVER_SCHEDULE_TYPE_BASIC) {
-						SetRobotProfileDetailsResult result = NeatoRobotScheduleWebservicesHelper.setEnableSchedule(mContext, robotId, scheduleType, enableSchedule);
+						SetRobotProfileDetailsResult2 result = NeatoRobotScheduleWebservicesHelper.setEnableSchedule(mContext, robotId, scheduleType, enableSchedule);
 						if(result.success()) {
 							listener.onReceived(result);
 						} else {

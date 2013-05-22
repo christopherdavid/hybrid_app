@@ -13,8 +13,12 @@ public class NeatoRobotDataWebServicesAttributes {
 		}
 		
 		public static class ProfileAttributeKeys {
-			public static final String ROBOT_CURRENT_STATE = "robotCurrentState";
-			public static final String ROBOT_CLEANING_COMMAND = "cleaningCommand";
+			public static final String ROBOT_CURRENT_STATE 		= "robotCurrentState";
+			public static final String ROBOT_CLEANING_COMMAND 	= "cleaningCommand";
+			public static final String ROBOT_NAME 				= "name";
+			public static final String ROBOT_ENABLE_SCHEDULE 	= "enable_basic_schedule";
+			public static final String ROBOT_TURN_VACUUM_ONOFF  = "vacuum_onoff";
+			public static final String ROBOT_TURN_WIFI_ONOFF  	= "wifi_onoff";
 		}
 	}
 	

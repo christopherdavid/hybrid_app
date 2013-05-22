@@ -25,10 +25,15 @@ var SCHEDULE_TYPE_BASIC = 0;
 var SCHEDULE_TYPE_ADVANCED = 1;
 
 //robotNotifications2 keyCodes
-//Actual State
-var ROBOT_CURRENT_STATE_CHANGED = 4001;
-//State Update
-var ROBOT_STATE_UPDATE = 4003;
+
+// The current state of the robot
+var ROBOT_CURRENT_STATE_CHANGED 	= 4001;
+// The keyCode for the state update of the robot.
+var ROBOT_STATE_UPDATE				= 4003;
+// The keyCode for the name update of the robot.
+var ROBOT_NAME_UPDATE  				= 4004;
+// The keyCode for the schedulestate update of the robot.
+var ROBOT_SCHEDULE_STATE_CHANGED 	= 4005;
 
 var PLUGIN_JSON_KEYS  =  (function() {
     var keys = {
@@ -112,9 +117,7 @@ var ACTION_TYPE_GET_SCHEDULE_EVENTS 			= "getScheduleEvents";
 var ACTION_TYPE_GET_SCHEDULE_DATA 				= "getScheduleData";
 var ACTION_TYPE_CREATE_SCHEDULE 				= "createSchedule";
 var ACTION_TYPE_IS_SCHEDULE_ENABLED 			= "isScheduleEnabled";
-var ACTION_TYPE_ENABLE_SCHEDUL					= "enableSchedule";
-
-
+var ACTION_TYPE_ENABLE_SCHEDULE				= "enableSchedule";
 
 //List of keys to send data:
 
@@ -1599,7 +1602,7 @@ RobotMgr.prototype.isScheduleEnabled = function (robotId, scheduleType, callback
 RobotMgr.prototype.enableSchedule = function (robotId, scheduleType, enable, callbackSuccess, callbackError) {
 	var params = {'robotId':robotId, 'scheduleType':scheduleType, 'enableSchedule':enable};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
-			ACTION_TYPE_ENABLE_SCHEDUL, [params]);
+			ACTION_TYPE_ENABLE_SCHEDULE, [params]);
 };
 
 /**

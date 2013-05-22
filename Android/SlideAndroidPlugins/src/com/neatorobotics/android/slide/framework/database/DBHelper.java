@@ -11,6 +11,7 @@ import com.neatorobotics.android.slide.framework.database.NeatoDatabase.Cleaning
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.GridInfoColumns;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.NotificationSettingsColumns;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.RobotInfoColumns;
+import com.neatorobotics.android.slide.framework.database.NeatoDatabase.RobotProfileParameters;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.ScheduleIdsColumns;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.ScheduleInfoColumns;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.Tables;
@@ -54,6 +55,7 @@ public class DBHelper {
 	private static final String SELECTION_CLEANING_SETTINGS_BY_ROBOTID = Tables.TABLE_NAME_CLEANING_SETTINGS + "." + CleaningSettingsColumns.COL_NAME_ROBOT_ID + " = ?";
 	private static final String SELECTION_NOTIFICATION_SETTINGS_BY_ROBOTID = Tables.TABLE_NAME_NOTIFICATION_SETTINGS + "." + NotificationSettingsColumns.COL_NAME_EMAIL + " = ?";
 	
+	private static final String SELECTION_ROBOT_PROFILE_PARAM_BY_ROBOTID_AND_KEY = Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS + "." + RobotProfileParameters.COL_NAME_ROBOT_ID + " = ? AND " + Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS + "." + RobotProfileParameters.COL_NAME_ROBOT_PARAM_KEY + " = ?";
 	private DBHelper (Context context) {
 		mContext = context;
 	}
@@ -88,6 +90,7 @@ public class DBHelper {
 		clearAllScheduleIds();
 		clearAllCleaningSettings();
 		clearAllNotificationSettings();
+		clearAllRobotProfileParams();
 	}
 	
 	@Override
@@ -910,5 +913,70 @@ public class DBHelper {
 		values.put(NotificationSettingsColumns.COL_NAME_NOTIFICATION_JSON, settingsJson);
 
 		return values;
+	}
+	
+	
+	// Public method to handle profile params : Table :TABLE_NAME_ROBOT_PROFILE_PARAMS
+	private void clearAllRobotProfileParams() {
+		SQLiteDatabase db = getDatabase();
+		int count = db.delete(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, null, null);
+		LogHelper.logD(TAG, "clearAllProfileParams - " + count);
+	}
+	
+	private ContentValues getProfileParamsContentValues(String robotId, String key, long timestamp) {
+		ContentValues values  = new ContentValues();
+		values.put(RobotProfileParameters.COL_NAME_ROBOT_ID, robotId);
+		values.put(RobotProfileParameters.COL_NAME_ROBOT_PARAM_KEY, key);
+		values.put(RobotProfileParameters.COL_NAME_ROBOT_PARAM_TIMESTAMP, timestamp);
+		return values;
+	}
+	
+	private boolean addProfileParam(String robotId, String key, long timestamp) {
+		LogHelper.logD(TAG, "AddprofileParam for the robot");
+		ContentValues values = getProfileParamsContentValues(robotId, key, timestamp);
+		SQLiteDatabase db = getDatabase();
+		long rowId = db.insert(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, null, values);
+		return (rowId > 0) ? true : false;
+	}
+	
+	private boolean updateProfileParam(String robotId, String key, long timestamp) {
+		LogHelper.logD(TAG, "updateProfileParam for the robot");
+		ContentValues values = getProfileParamsContentValues(robotId, key, timestamp);
+		String[] selectionArgs = new String[] {robotId, key};
+		SQLiteDatabase db = getDatabase();		
+		int count = db.update(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, values, SELECTION_ROBOT_PROFILE_PARAM_BY_ROBOTID_AND_KEY, selectionArgs);
+		
+		return (count > 0) ? true : false;
+	}
+	
+	private boolean deleteProfileParam(String robotId, String key) {
+		LogHelper.logD(TAG, "deleteProfileParam for the robot "+ robotId + " Key: " +key);
+		String[] selectionArgs = new String[] {robotId, key};
+		SQLiteDatabase db = getDatabase();		
+		int count = db.delete(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, SELECTION_ROBOT_PROFILE_PARAM_BY_ROBOTID_AND_KEY, selectionArgs);
+		return (count > 0) ? true : false;
+	}
+	
+	public long getProfileParamTimestamp(String robotId, String id) {
+		String[] selectionArgs = new String[] {robotId, id};
+		SQLiteDatabase db = getDatabase();
+		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, null, SELECTION_ROBOT_PROFILE_PARAM_BY_ROBOTID_AND_KEY, selectionArgs, null, null, null);
+		if (cursor.moveToFirst()) {
+			return cursor.getLong(cursor.getColumnIndex(RobotProfileParameters.COL_NAME_ROBOT_PARAM_TIMESTAMP));
+		}
+		return -1;
+	}
+	
+	public boolean saveProfileParam(String robotId, String key, long timestamp) {
+		if (getProfileParamTimestamp(robotId, key) != -1) {
+			return updateProfileParam(robotId, key, timestamp);
+		}
+		else {
+			return addProfileParam(robotId, key, timestamp);
+		}
+	}
+	
+	public boolean deleteProfileParamIfExists(String robotId, String key) {
+			return deleteProfileParam(robotId, key);
 	}
 }

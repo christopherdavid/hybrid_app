@@ -19,17 +19,9 @@ public class RobotCommandTimerHelper {
 	
 	private static final Object INSTANCE_LOCK = new Object();
 	private HashMap<String, CommandTimer> mTimerMap;
-	Context mContext;
+	private Context mContext;
 	
-	BroadcastReceiver mCommandExpiryAlarmReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			LogHelper.log(TAG, "NetworkConnectionMgr:onReceive called");
-			
-			LogHelper.log(TAG, "No Network");
-		}
-	};
-	
+
 	private static RobotCommandTimerHelper sRobotCommandTimerHelper;
 	
 	private RobotCommandTimerHelper(Context context)

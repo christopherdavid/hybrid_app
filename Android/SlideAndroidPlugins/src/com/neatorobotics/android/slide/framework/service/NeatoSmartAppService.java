@@ -272,10 +272,7 @@ public class NeatoSmartAppService extends Service {
 	
 	private boolean isDataChangedCommand(RequestPacket request) {
 		int commandId = request.getCommand();
-		if (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_PROFILE_DATA_CHANGED) {
-			return true;
-		}
-		return false;
+		return (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_PROFILE_DATA_CHANGED);
 	}
 	
 	private void processDataChangedRequest(String from, RequestPacket request) {
@@ -287,7 +284,8 @@ public class NeatoSmartAppService extends Service {
 			robotId = NeatoPrefs.getManagedRobotSerialId(getApplicationContext());
 		}
 		
-		if (XMPPUtils.isRobotChatId(from, robotId)) {
+		if (XMPPUtils.isRobotChatId(getApplicationContext(), from, robotId)) {
+			LogHelper.logD(TAG, "packet is received from robot chat id. Stop the command expiry timer if running.");
 			RobotCommandTimerHelper.getInstance(getApplicationContext()).stopCommandTimerIfRunning(robotId);
 		}
 		

@@ -9,7 +9,7 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 public class NeatoDatabase extends SQLiteOpenHelper {
 	private static final String TAG = NeatoDatabase.class.getSimpleName();
 
-	private static final int DB_VERSION = 5;
+	private static final int DB_VERSION = 6;
 	private static final String DB_NAME = "neato_plugin_smart_apps.db";
 	
 	// Table names
@@ -22,6 +22,7 @@ public class NeatoDatabase extends SQLiteOpenHelper {
 		public static final String TABLE_NAME_GRID_INFO  = "grid_info";
 		public static final String TABLE_NAME_ROBOT_SCHEDULE_IDS = "robot_schedule_ids";
 		public static final String TABLE_NAME_SCHEDULE_INFO = "schedule_info";
+		public static final String TABLE_NAME_ROBOT_PROFILE_PARAMS = "robot_profile_params";
 	}
 	
 	// user_info table column names 
@@ -84,6 +85,14 @@ public class NeatoDatabase extends SQLiteOpenHelper {
 		public static final String COL_NAME_SCHEDULE_VERSION 	= "scheduleVersion";	
 		public static final String COL_NAME_SCHEDULE_TYPE 		= "scheduleType";
 		public static final String COL_NAME_SCHEDULE_DATA 		= "scheduleData";
+	}
+	
+	//Robot profile parameters
+	public interface RobotProfileParameters {
+		public static final String COL_NAME_ROBOT_PROFILE_DB_ID 		= "_id";
+		public static final String COL_NAME_ROBOT_ID					= "robotId";
+		public static final String COL_NAME_ROBOT_PARAM_KEY 			= "robotParamKey";
+		public static final String COL_NAME_ROBOT_PARAM_TIMESTAMP		= "robotParamTimestamp";
 	}
 	
 	public NeatoDatabase(Context context) {
@@ -171,6 +180,14 @@ public class NeatoDatabase extends SQLiteOpenHelper {
 					+ "("
 					+ NotificationSettingsColumns.COL_NAME_EMAIL			+ " TEXT PRIMARY KEY, "
 					+ NotificationSettingsColumns.COL_NAME_NOTIFICATION_JSON	+ " TEXT )");
+			
+			db.execSQL("CREATE TABLE IF NOT EXISTS " +
+					Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS
+					+ "("
+					+ RobotProfileParameters.COL_NAME_ROBOT_PROFILE_DB_ID		+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+					+ RobotProfileParameters.COL_NAME_ROBOT_ID					+ " TEXT KEY, "
+					+ RobotProfileParameters.COL_NAME_ROBOT_PARAM_KEY			+ " TEXT KEY, "
+					+ RobotProfileParameters.COL_NAME_ROBOT_PARAM_TIMESTAMP	+ " LONG )");
 	
 			db.setTransactionSuccessful();
 		}
@@ -190,6 +207,7 @@ public class NeatoDatabase extends SQLiteOpenHelper {
 			db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS);
 			db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_CLEANING_SETTINGS);			
 			db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_NOTIFICATION_SETTINGS);			
+			db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS);
 			db.setTransactionSuccessful();
 		}
 		finally {

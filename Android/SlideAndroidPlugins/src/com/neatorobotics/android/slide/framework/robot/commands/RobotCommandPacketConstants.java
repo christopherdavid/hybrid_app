@@ -75,6 +75,7 @@ public class RobotCommandPacketConstants {
 	public static final int ROBOT_STATE_STUCK 								= 10006;
 	public static final int ROBOT_STATE_PAUSED 								= 10007;
 	public static final int ROBOT_STATE_RESUMED 							= 10008;
+	public static final int ROBOT_STATE_ON_BASE								= 10009;
 	public static final int ROBOT_STATE_INVALID								= 19999;
 	
 	//Codes for data changed on server
@@ -96,6 +97,9 @@ public class RobotCommandPacketConstants {
 		}
 		else if (commandId == COMMAND_RESUME_CLEANING) {
 			return ROBOT_STATE_RESUMED;
+		}
+		else if (commandId == COMMAND_SEND_BASE) {
+			return ROBOT_STATE_ON_BASE;
 		}
 		return ROBOT_STATE_INVALID;
 	}
