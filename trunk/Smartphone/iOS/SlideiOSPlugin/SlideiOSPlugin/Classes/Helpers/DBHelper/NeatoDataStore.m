@@ -354,6 +354,9 @@ static NeatoDataStore *sharedInstance;
         user.account_type = userEntity.account_type;
         user.password = userEntity.password;
         user.external_social_id = userEntity.external_social_id;
+        user.validationStatus = userEntity.validationStatus;
+        user.alternateEmail = userEntity.alternateEmail;
+        
         NSArray *robots = [userEntity.hasRobots allObjects];
         user.robots = [[NSMutableArray alloc] init];
         for(int i=0; i<[robots count]; i++) {
@@ -724,6 +727,8 @@ static NeatoDataStore *sharedInstance;
             userEntity.account_type = user.account_type;
             userEntity.password = user.password;
             userEntity.external_social_id = user.external_social_id;
+            userEntity.alternateEmail = user.alternateEmail;
+            userEntity.validationStatus = user.validationStatus;
             
             for(int i = 0; i<[user.robots count]; i++) {
                 [userEntity addHasRobotsObject:[self insertOrUpdateRobot:[user.robots objectAtIndex:i]]];
@@ -1154,6 +1159,26 @@ static NeatoDataStore *sharedInstance;
     }
     else {
         return [AppHelper nserrorWithDescription:@"Managed object context is nil." code:200];
+    }
+}
+
+- (void)updatePassword:(NSString *)newPassword {
+    if (self.managedObjectContext) {
+        NeatoUserEntity *userEntity;
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
+        NSError *error = nil;
+        NSArray *userEntityArray = [self.managedObjectContext executeFetchRequest:request error:&error];
+        if(error) {
+            debugLog(@"There is an error while retrieving users");
+            return;
+        }
+        if ([userEntityArray count] > 1) {
+            debugLog(@"!!!ERROR!! There cannot be more than one user in our database(According to our schema)");
+            return ;
+        }
+        userEntity = [userEntityArray lastObject];
+        userEntity.password = newPassword;
+        [self saveDatabase];
     }
 }
 

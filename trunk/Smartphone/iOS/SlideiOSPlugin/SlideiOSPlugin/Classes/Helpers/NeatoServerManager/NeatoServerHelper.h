@@ -21,6 +21,15 @@
 - (void)robotDissociatedWithMessage:(NSString *)message;
 - (void)pushNotificationRegisteredForDeviceToken:(NSString *)deviceToken;
 - (void)pushNotificationUnregistrationSuccess;
+- (void)validatedUserWithResult:(NSDictionary *)result;
+- (void)resendValidationEmailSucceededWithMessage:(NSString *)message;
+- (void)forgetPasswordSuccess;
+- (void)changePasswordSuccess;
+- (void)failedToForgetPasswordWithError:(NSError *)error;
+- (void)failedToChangePasswordWithError:(NSError *)error;
+- (void)gotHandleForCreateUser2:(NSString *)authToken;
+- (void)failedToGetCreateUserHandle2Error:(NSError *)error;
+- (void)enabledDisabledScheduleSuccess;
 
 // Failure cases
 - (void)failedToGetCreateUserHandle:(NSError *) error;
@@ -39,6 +48,9 @@
 - (void)failedToDissociateRobotWithError:(NSError *)error;
 - (void)pushNotificationRegistrationFailedWithError:(NSError *)error;
 - (void)pushNotificationUnregistrationFailedWithError:(NSError *)error;
+- (void)userValidationFailedWithError:(NSError *)error;
+- (void)failedToResendValidationEmailWithError:(NSError *)error;
+- (void)failedToEnableDisableScheduleWithError:(NSError *)error;
 @end
 
 @interface NeatoServerHelper : NSObject
@@ -61,5 +73,10 @@
 - (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)email;
 - (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken;
 - (void)unregisterPushNotificationForDeviceToken:(NSString *)deviceToken;
-
+- (void)isUserValidatedForEmail:(NSString *)email;
+- (void)resendValidationEmail:(NSString *)email;
+- (void)forgetPasswordForEmail:(NSString *)email;
+- (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword authToken:(NSString *)authToken;
+- (void)createUser2:(NeatoUser *)neatoUser;
+- (void)enableDisable:(BOOL)enable scheduleType:(int)scheduleType forRobot:(NSString *)robotId withUserEmail:(NSString *)email;
 @end

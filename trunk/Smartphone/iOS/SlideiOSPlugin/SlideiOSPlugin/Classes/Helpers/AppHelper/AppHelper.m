@@ -5,8 +5,7 @@
 
 @implementation AppHelper
 
-+(NSDictionary *) parseJSON :(NSData *) jsonData;
-{
++ (NSDictionary *)parseJSON:(NSData *)jsonData {
     NSError* error = nil;
     NSDictionary *data = [NSJSONSerialization
                               JSONObjectWithData:jsonData
@@ -19,8 +18,7 @@
     return data;
 }
 
-+ (NSString *)jsonStringFromObject:(id)object
-{
++ (NSString *)jsonStringFromObject:(id)object {
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:object
                                                        options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
@@ -34,8 +32,7 @@
     }
 }
 
-+ (NSString *)sha1:(NSString *) decodedString
-{
++ (NSString *)sha1:(NSString *)decodedString {
     NSData *data = [decodedString dataUsingEncoding:NSUTF8StringEncoding];
     uint8_t digest[CC_SHA1_DIGEST_LENGTH];
     
@@ -52,8 +49,7 @@
 }
 
 // Gets the int value of apps signature
-+(unsigned) getAppSignature
-{
++ (unsigned)getAppSignature {
     unsigned result = 0;
     NSScanner *scanner = [NSScanner scannerWithString:@"0xcafebabe"];
     
@@ -62,23 +58,20 @@
 }
 
 
-+(BOOL) isArchitectureLittleEndian
-{
++ (BOOL)isArchitectureLittleEndian {
     int i = 1;
     int firstBitVal = *((unsigned char*)&i);
     return (firstBitVal == i);
 }
 
 // Converts a int value to its big endian equivalent
-+(int) swapIntoBigEndian:(int)littleInt
-{
++ (int)swapIntoBigEndian:(int)littleInt {
     int32_t unswapped = littleInt;
     int32_t swapped = CFSwapInt32HostToBig(unswapped);
     return swapped;
 }
 
-+(NSString *) jsonStringFromNSDictionary:(id) data
-{
++ (NSString *)jsonStringFromNSDictionary:(id)data {
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data
                                                        options:NSJSONWritingPrettyPrinted
@@ -93,13 +86,11 @@
     }
 }
 
-+(NSString *) jsonStringFromArrayofNSDictionaries:(NSArray *) arrayOfDictionaries;
-{
++ (NSString *)jsonStringFromArrayofNSDictionaries:(NSArray *)arrayOfDictionaries {
     return [self jsonStringFromNSDictionary:arrayOfDictionaries];
 }
 
-+(NSURL *) getLocalCachePath
-{
++ (NSURL *)getLocalCachePath {
     NSArray *directoriesArr;
     #ifdef ENABLE_DB_CREATION_IN_DOCUMENTS_DIR
         directoriesArr = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
@@ -112,8 +103,7 @@
 
 // Creates a unique Id for a string using SHA1 function
 // Code picked up from http://stackoverflow.com/questions/7570377/creating-sha1-hash-from-nsstring
-+(NSString *) getUniqueIdFromString:(NSString *) baseString
-{
++ (NSString *)getUniqueIdFromString:(NSString *)baseString {
     NSData *data= [baseString dataUsingEncoding:NSUTF8StringEncoding];
     uint8_t digest[CC_SHA1_DIGEST_LENGTH];
     CC_SHA1(data.bytes, data.length, digest);
@@ -125,8 +115,7 @@
     return output;
 }
 
-+ (NSString *) generateUniqueString
-{
++ (NSString *)generateUniqueString {
     CFUUIDRef uuidRef = CFUUIDCreate(NULL);
     CFStringRef uuidStringRef = CFUUIDCreateString(NULL, uuidRef);
     CFRelease(uuidRef);
@@ -134,8 +123,7 @@
 }
 
 // Retruns true if a string is nil or empty
-+(bool) isStringNilOrEmpty:(NSString *) input
-{
++ (bool)isStringNilOrEmpty:(NSString *)input {
     if (!input || [input length] == 0)
     {
         return YES;
@@ -143,8 +131,7 @@
     return NO;
 }
 
-+(NSString *) getCurrentServer
-{
++ (NSString *)getCurrentServer {
     #ifdef NEATO_ROBOT_SERVER_PROD
         return NEATO_PROD_SERVER;
     #elif SWITCH_TO_DEV_SERVER
@@ -154,22 +141,19 @@
     #endif
 }
 
-+(void) traceAppInfo
-{
++ (void)traceAppInfo {
     debugLog(@"==================App info=====================");
     debugLog(@"Plugin version = %@", SLIDE_IOS_PLUGIN_VERSION);
     debugLog(@"Server = %@", [self getCurrentServer]);
     debugLog(@"====================End========================");
 }
 
-+(NSString *) getMainAppVersion
-{
++ (NSString *)getMainAppVersion {
      NSString *strBuildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
     return strBuildVersion;
 }
 
-+(NSDictionary *) getAppDebugInfo
-{
++ (NSDictionary *)getAppDebugInfo {
     debugLog(@"");
     NSMutableDictionary *appInfo = [[NSMutableDictionary alloc] init];
     [appInfo setValue:[self getMainAppVersion] forKey:NEATO_KEY_APP_VERSION];
@@ -178,8 +162,7 @@
     return appInfo;
 }
 
-+ (NSTimeInterval)currentTimeStamp
-{
++ (NSTimeInterval)currentTimeStamp {
     NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
     return timeStamp;
 }

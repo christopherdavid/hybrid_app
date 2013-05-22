@@ -13,8 +13,10 @@
 @property(nonatomic, retain) NSString *account_type;
 @property(nonatomic, retain) NSString *password;
 @property(nonatomic, retain) NSString *external_social_id;
+@property(nonatomic, strong) NSString *alternateEmail;
+@property(nonatomic, strong) NSString *validationStatus;
 
--(id) initWithDictionary:(NSDictionary *) dictionary;
-
+- (id)initWithDictionary:(NSDictionary *)dictionary;
+- (NSNumber *)userValidationStatus;
 
 @end

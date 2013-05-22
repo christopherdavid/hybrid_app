@@ -47,6 +47,8 @@
 - (void)deleteScheduleError:(NSError *)error callbackId:(NSString *)callbackId;
 - (void)updatedSchedule:(NSString *)scheduleId callbackId:(NSString *)callbackId;
 - (void)updateScheduleError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)failedToEnableDisableScheduleWithError:(NSError *) error callbackId:(NSString *)callbackId;
+- (void)enabledDisabledScheduleWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId;
 
 @end
 
@@ -80,4 +82,5 @@
 - (void)setRobotSchedule:(NSArray *)schedulesArray forRobotId:(NSString *)robotId ofType:(NSString *)schedule_type callbackId:(NSString *)callbackId;
 - (void)getRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type callbackId:(NSString *) callbackId;
 - (void)deleteRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type callbackId:(NSString *)callbackId;
+- (void)enabledDisable:(BOOL)enable schedule:(int)scheduleType forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email callbackId:(NSString *)callbackId;
 @end

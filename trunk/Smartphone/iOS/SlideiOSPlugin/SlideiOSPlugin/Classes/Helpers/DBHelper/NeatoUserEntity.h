@@ -13,6 +13,8 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * password;
 @property (nonatomic, retain) NSString * userId;
+@property (nonatomic, retain) NSString * alternateEmail;
+@property (nonatomic, retain) NSString * validationStatus;
 @property (nonatomic, retain) NSSet *hasRobots;
 @property (nonatomic, retain) NSSet *hasSocialNetowrks;
 @end

@@ -41,6 +41,9 @@
 		E168BBD3169D461800BA6AD3 /* XMPPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBCB169D461800BA6AD3 /* XMPPConnection.m */; };
 		E168BBD4169D461800BA6AD3 /* XMPPConnectionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBCD169D461800BA6AD3 /* XMPPConnectionHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
 		E168BBD5169D461800BA6AD3 /* XMPPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBCF169D461800BA6AD3 /* XMPPHelper.m */; };
+		E1925454174BDF42004143B7 /* EnableDisableScheduleListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1925453174BDF42004143B7 /* EnableDisableScheduleListener.m */; };
+		E193AE7A174B694E00AE0B4E /* ChangePasswordListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E193AE79174B694E00AE0B4E /* ChangePasswordListener.m */; };
+		E193AE87174B916500AE0B4E /* CreateUserListener2.m in Sources */ = {isa = PBXBuildFile; fileRef = E193AE86174B916500AE0B4E /* CreateUserListener2.m */; };
 		E195EA1516B6B56A00E4D9C6 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E195EA1416B6B56A00E4D9C6 /* CoreFoundation.framework */; };
 		E195EA1B16B6B56A00E4D9C6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E195EA1916B6B56A00E4D9C6 /* InfoPlist.strings */; };
 		E195EA2216B6B65F00E4D9C6 /* NeatoDatastoreModel.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */; };
@@ -251,6 +254,12 @@
 		E168BBCF169D461800BA6AD3 /* XMPPHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPHelper.m; sourceTree = "<group>"; };
 		E168BBD6169D46C400BA6AD3 /* PluginConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PluginConstants.h; sourceTree = "<group>"; };
 		E168BBD7169D471300BA6AD3 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		E1925452174BDF42004143B7 /* EnableDisableScheduleListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnableDisableScheduleListener.h; sourceTree = "<group>"; };
+		E1925453174BDF42004143B7 /* EnableDisableScheduleListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnableDisableScheduleListener.m; sourceTree = "<group>"; };
+		E193AE78174B694E00AE0B4E /* ChangePasswordListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangePasswordListener.h; sourceTree = "<group>"; };
+		E193AE79174B694E00AE0B4E /* ChangePasswordListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangePasswordListener.m; sourceTree = "<group>"; };
+		E193AE85174B916500AE0B4E /* CreateUserListener2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateUserListener2.h; sourceTree = "<group>"; };
+		E193AE86174B916500AE0B4E /* CreateUserListener2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateUserListener2.m; sourceTree = "<group>"; };
 		E195EA1316B6B56A00E4D9C6 /* NeatoDataStore.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NeatoDataStore.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		E195EA1416B6B56A00E4D9C6 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		E195EA1816B6B56A00E4D9C6 /* NeatoDataStore-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NeatoDataStore-Info.plist"; sourceTree = "<group>"; };
@@ -585,10 +594,10 @@
 			children = (
 				E1A065AE16956556009C22F7 /* PluginCallWrapper */,
 				B22BDAF9168D7F3B00FFCB76 /* UserManagerPlugin.h */,
-				E168BBD6169D46C400BA6AD3 /* PluginConstants.h */,
 				B22BDAFA168D7F3B00FFCB76 /* UserManagerPlugin.m */,
 				B22BDAFC168D7F5500FFCB76 /* RobotManagerPlugin.h */,
 				B22BDAFD168D7F5500FFCB76 /* RobotManagerPlugin.m */,
+				E168BBD6169D46C400BA6AD3 /* PluginConstants.h */,
 			);
 			path = Plugins;
 			sourceTree = "<group>";
@@ -901,6 +910,12 @@
 		E1A064D01695639D009C22F7 /* NeatoServerManager */ = {
 			isa = PBXGroup;
 			children = (
+				E1925452174BDF42004143B7 /* EnableDisableScheduleListener.h */,
+				E1925453174BDF42004143B7 /* EnableDisableScheduleListener.m */,
+				E193AE85174B916500AE0B4E /* CreateUserListener2.h */,
+				E193AE86174B916500AE0B4E /* CreateUserListener2.m */,
+				E193AE78174B694E00AE0B4E /* ChangePasswordListener.h */,
+				E193AE79174B694E00AE0B4E /* ChangePasswordListener.m */,
 				E1A2B7BB16DA52BE003DC9C8 /* RobotDissociationListener.h */,
 				E1A2B7BC16DA52BE003DC9C8 /* RobotDissociationListener.m */,
 				E1A44BED16D3BDC900898959 /* RobotAssociationListener2.h */,
@@ -1491,6 +1506,9 @@
 				E1B0CF5E16EF9C42001E3360 /* SetAdvancedScheduleListener.m in Sources */,
 				E1B0CF5F16EF9C42001E3360 /* UpdateBasicScheduleListener.m in Sources */,
 				28B4A9F9173786D30017702D /* AppBaseDelegate.m in Sources */,
+				E193AE7A174B694E00AE0B4E /* ChangePasswordListener.m in Sources */,
+				E193AE87174B916500AE0B4E /* CreateUserListener2.m in Sources */,
+				E1925454174BDF42004143B7 /* EnableDisableScheduleListener.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

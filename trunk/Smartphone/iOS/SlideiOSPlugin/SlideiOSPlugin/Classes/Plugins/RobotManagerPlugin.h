@@ -37,4 +37,5 @@
 - (void)deleteScheduleData:(CDVInvokedUrlCommand *)command;
 - (void)registerForRobotMessages:(CDVInvokedUrlCommand *)command;
 - (void)unregisterForRobotMessages:(CDVInvokedUrlCommand *)command;
+- (void)enableSchedule:(CDVInvokedUrlCommand *)command;
 @end

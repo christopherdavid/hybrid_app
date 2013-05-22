@@ -97,4 +97,9 @@
 + (void)deleteRobotWithRobotId:(NSString *)robotId forUser:(NSString *)userId {
     [[NeatoDataStore sharedNeatoDataStore] deleteRobotForSerialNumber:robotId forUserId:userId];
 }
+
++ (void)updatePassword:(NSString *)newPassword {
+    [[NeatoDataStore sharedNeatoDataStore] updatePassword:newPassword];
+}
+
 @end

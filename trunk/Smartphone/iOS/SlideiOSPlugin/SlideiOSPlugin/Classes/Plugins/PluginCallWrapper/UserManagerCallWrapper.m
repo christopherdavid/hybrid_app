@@ -370,4 +370,120 @@
     self.retained_self = nil;
 }
 
+- (void)isUserValidatedForEmail:(NSString *)email callbackID:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager isUserValidatedForEmail:email];
+}
+
+- (void)validatedUserWithResult:(NSDictionary *)resultData {
+    debugLog(@"");
+    [self notifyCallback:@selector(validatedUserWithResult:callbackId:) object:resultData];
+}
+
+- (void)userValidationFailedWithError:(NSError *)error {
+    debugLog(@"");
+    [self notifyCallback:@selector(userValidationFailedWithError:callbackId:) object:error];
+}
+
+- (void)resendValidationEmail:(NSString *) email callbackID:(NSString *) callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager resendValidationEmail:email];
+}
+
+- (void)resendValidationEmailSucceededWithMessage:(NSString *)message {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.delegate respondsToSelector:@selector(resendValidationEmailSucceededWithMessage:callbackId:)]) {
+            [self.delegate resendValidationEmailSucceededWithMessage:message callbackId:self.callbackId];
+        }
+        self.delegate = nil;
+        self.retained_self = nil;
+    });
+}
+
+- (void)failedToResendValidationEmailWithError:(NSError *)error {
+    debugLog(@"");
+    [self notifyCallback:@selector(failedToResendValidationEmailWithError:callbackId:) object:error];
+}
+
+- (void)forgetPasswordForEmail:(NSString *)email callbackID:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager forgetPasswordForEmail:email];
+}
+
+- (void)forgetPasswordSuccess {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.delegate respondsToSelector:@selector(forgetPasswordSuccessWithCallbackId:)]) {
+            [self.delegate performSelector:@selector(forgetPasswordSuccessWithCallbackId:) withObject:self.callbackId];
+        }
+        self.delegate = nil;
+        self.retained_self = nil;
+    });
+}
+
+- (void)failedToForgetPasswordWithError:(NSError *)error {
+    [self notifyCallback:@selector(failedToForgetPasswordWithError:callbackId:) object:error];
+}
+
+- (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword callbackID:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager changePasswordFromOldPassword:oldPassword toNewPassword:newPassword];
+}
+
+- (void)changePasswordSuccess {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.delegate respondsToSelector:@selector(changePasswordSuccessWithCallbackId:)]) {
+            [self.delegate performSelector:@selector(changePasswordSuccessWithCallbackId:) withObject:self.callbackId];
+        }
+        self.delegate = nil;
+        self.retained_self = nil;
+    });
+}
+
+- (void)failedToChangePasswordWithError:(NSError *)error {
+    debugLog(@"");
+    [self notifyCallback:@selector(failedToChangePasswordWithError:callbackId:) object:error];
+}
+
+- (void)createUser2:(NeatoUser *)neatoUser callbackID:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager createUser2:neatoUser];
+}
+
+- (void)userCreated2:(NeatoUser *)neatoUser {
+    debugLog(@"");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.delegate respondsToSelector:@selector(userCreated2:callbackId:)]) {
+            [self.delegate performSelector:@selector(userCreated2:callbackId:) withObject:neatoUser withObject:self.callbackId];
+        }
+        self.delegate = nil;
+        self.retained_self = nil;
+    });
+}
+
+- (void)failedToCreateUser2WithError:(NSError *)error {
+    debugLog(@"");
+    [self notifyCallback:@selector(failedToCreateUser2WithError:callbackId:) object:error];
+}
 @end

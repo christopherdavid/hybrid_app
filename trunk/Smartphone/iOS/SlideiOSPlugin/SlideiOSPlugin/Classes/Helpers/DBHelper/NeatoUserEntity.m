@@ -13,6 +13,8 @@
 @dynamic name;
 @dynamic password;
 @dynamic userId;
+@dynamic alternateEmail;
+@dynamic validationStatus;
 @dynamic hasRobots;
 @dynamic hasSocialNetowrks;
 

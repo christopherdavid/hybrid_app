@@ -630,4 +630,29 @@
     self.delegate = nil;
 }
 
+- (void)enabledDisable:(BOOL)enable schedule:(int)scheduleType forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager enabledDisable:enable schedule:scheduleType forRobotWithId:robotId withUserEmail:email];
+}
+
+- (void)enabledDisabledScheduleWithResult:(NSDictionary *)resultData {
+    if ([self.delegate respondsToSelector:@selector(deleteScheduleSuccess:callbackId:)]) {
+        [self.delegate enabledDisabledScheduleWithResult:resultData callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)failedToEnableDisableScheduleWithError:(NSError *)error {
+    if ([self.delegate respondsToSelector:@selector(failedToEnableDisableScheduleWithError:callbackId:)]) {
+        [self.delegate failedToEnableDisableScheduleWithError:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
 @end

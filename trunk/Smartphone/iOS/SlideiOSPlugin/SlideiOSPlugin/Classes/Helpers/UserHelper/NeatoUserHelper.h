@@ -14,4 +14,5 @@
 + (void)deleteRobotWithRobotId:(NSString *)robotId forUser:(NSString *)userId;
 + (void)saveDevicePushAuthToken:(NSString *)authToken;
 + (NSString *)getDevicePushAuthToken;
++ (void)updatePassword:(NSString *)newPassword;
 @end
