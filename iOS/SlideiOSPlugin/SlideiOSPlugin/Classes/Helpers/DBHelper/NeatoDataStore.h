@@ -29,6 +29,7 @@
 - (void)deleteUserDetails;
 - (void)dissociateAllRobotsForUserWithEmail:(NSString *)email;
 - (void)deleteRobotForSerialNumber:(NSString *)serialNumber forUserId:(NSString *)userId;
+- (void)updatePassword:(NSString *)newPassword;
 
 
 //Scheduling Methods.

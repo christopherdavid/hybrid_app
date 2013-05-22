@@ -33,7 +33,7 @@
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:ERROR_TYPE_UNKNOWN forKey:KEY_ERROR_CODE];
+    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
@@ -71,7 +71,7 @@
     debugLog(@"");
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:ERROR_TYPE_UNKNOWN forKey:KEY_ERROR_CODE];
+    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
@@ -91,7 +91,7 @@
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:ERROR_TYPE_UNKNOWN forKey:KEY_ERROR_CODE];
+    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
@@ -101,7 +101,7 @@
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:ERROR_TYPE_UNKNOWN forKey:KEY_ERROR_CODE];
+    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
@@ -154,7 +154,7 @@
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:ERROR_TYPE_UNKNOWN forKey:KEY_ERROR_CODE];
+    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
@@ -189,7 +189,7 @@
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:ERROR_TYPE_UNKNOWN forKey:KEY_ERROR_CODE];
+    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
@@ -276,7 +276,7 @@
     NeatoRobot *robot = [NeatoRobotHelper getRobotForId:robotId];
     NSMutableDictionary *robotDict = [[NSMutableDictionary alloc] init];
     [robotDict setValue:robot.serialNumber forKey:KEY_ROBOT_ID];
-    [robotDict setValue:[NSNumber numberWithInt:ROBOT_ASSOCIATION_SUCCESS] forKey:@"responseStat"];
+    [robotDict setValue:[NSNumber numberWithInteger:ROBOT_ASSOCIATION_SUCCESS] forKey:@"responseStat"];
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:robotDict];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
@@ -333,4 +333,160 @@
     [self writeJavascript:[result toErrorCallbackString:callbackId]]; 
 }
 
+- (void)isUserValidated:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    //get the callback id
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    
+    NSString *email = [parameters valueForKey:KEY_EMAIL];
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper isUserValidatedForEmail:email callbackID:callbackId];
+}
+
+- (void)validatedUserWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+    
+    [data setValue:[resultData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NEATO_RESPONSE_MESSAGE];
+    [data setValue:[resultData valueForKey:NEATO_VALIDATION_STATUS] forKey:NEATO_VALIDATION_STATUS];
+    
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)userValidationFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"Error = %@", error);
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
+    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
+    
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)resendValidationMail:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    //get the callback id
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    
+    NSString *email = [parameters valueForKey:KEY_EMAIL];
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper resendValidationEmail:email callbackID:callbackId];
+}
+
+- (void)failedToResendValidationEmailWithError:(NSError *)error callbackId:(NSString *)callbackId {    
+    debugLog(@"Error = %@", error);
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
+    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
+    
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)resendValidationEmailSucceededWithMessage:(NSString *)message callbackId:(NSString *)callbackId {
+    debugLog(@"message in manager plugin=%@",message);
+    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+    [data setValue:message forKey:KEY_MESSAGE];
+    debugLog(@"json message in manager plugin=%@",data);
+    
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)forgetPassword:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@",parameters);
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper forgetPasswordForEmail:[parameters objectForKey:KEY_EMAIL] callbackID:callbackId];
+}
+
+- (void)forgetPasswordSuccessWithCallbackId:(NSString *)callbackId {
+    // Empty Dictionary object.
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dictionary];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)failedToForgetPasswordWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
+    [dictionary setValue:[NSNumber numberWithInteger:[error code]] forKey:KEY_ERROR_CODE];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)changePassword:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@",parameters);
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper changePasswordFromOldPassword:[parameters objectForKey:KEY_CURRENT_PASSWORD] toNewPassword:[parameters objectForKey:KEY_NEW_PASSWORD] callbackID:callbackId];
+}
+
+- (void)changePasswordSuccessWithCallbackId:(NSString *)callbackId {
+    // Empty Dictionary object.
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dictionary];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)failedToChangePasswordWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
+    [dictionary setValue:[NSNumber numberWithInteger:[error code]] forKey:KEY_ERROR_CODE];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+- (void)createUser2:(CDVInvokedUrlCommand *)command {
+    // Get the callback id
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@",parameters);
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    NeatoUser *neatoUser = [[NeatoUser alloc] init];
+    neatoUser.email = [parameters objectForKey:KEY_EMAIL];
+    neatoUser.password = [parameters objectForKey:KEY_PASSWORD];
+    neatoUser.name = [parameters objectForKey:KEY_USER_NAME];
+    neatoUser.account_type = ACCOUNT_TYPE_NATIVE;
+    neatoUser.alternateEmail = [parameters objectForKey:KEY_ALTERNATE_EMAIL];
+    [callWrapper createUser2:neatoUser callbackID:callbackId];
+}
+
+- (void)userCreated2:(NeatoUser *)neatoUser callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+    [data setValue:neatoUser.name forKey:KEY_USER_NAME];
+    [data setValue:neatoUser.userId forKey:KEY_USER_ID];
+    [data setValue:neatoUser.email forKey:KEY_EMAIL];
+    [data setValue:neatoUser.alternateEmail forKey:KEY_ALTERNATE_EMAIL];
+    [data setValue:[neatoUser userValidationStatus] forKey:NEATO_VALIDATION_STATUS];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+     (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+}
+
+- (void)failedToCreateUser2WithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
+    [dictionary setValue:[NSNumber numberWithInt:[error code]] forKey:KEY_ERROR_CODE];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
 @end

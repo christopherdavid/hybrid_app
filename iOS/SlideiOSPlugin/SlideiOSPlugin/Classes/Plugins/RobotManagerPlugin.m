@@ -18,6 +18,7 @@
 #import "CreateScheduleEventPluginResult.h"
 #import "GetScheduleEventDataPluginResult.h"
 #import "GetScheduleDataPluginResult.h"
+#import "NeatoUserHelper.h"
 
 #define ROBOT_MESSAGE_CALLBACK_ID_KEY @"robotMessagesNotificationCallBackKey"
 
@@ -195,7 +196,7 @@
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:ERROR_TYPE_UNKNOWN forKey:KEY_ERROR_CODE];
+    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
@@ -235,7 +236,7 @@
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:ERROR_TYPE_UNKNOWN forKey:KEY_ERROR_CODE];
+    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
@@ -713,6 +714,36 @@
 - (void)unregisterForRobotMessages:(CDVInvokedUrlCommand *)command {
   debugLog(@"unregisterForRobotMessages called.");
   [self.robotMessagesCallBacks removeObjectForKey:ROBOT_MESSAGE_CALLBACK_ID_KEY];
+}
+
+- (void)enableSchedule:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@",parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    NSString *email = [NeatoUserHelper getLoggedInUserEmail];
+    BOOL enable = [[parameters objectForKey:KEY_ENABLE_DISABLE_SCHEDULE ] boolValue];
+    NSString *scheduleType = [parameters objectForKey:KEY_SCHEDULE_TYPE];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call enabledDisable:enable schedule:[scheduleType intValue] forRobotWithId:robotId withUserEmail:email callbackId:callbackId];
+}
+
+- (void)failedToEnableDisableScheduleWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
+    [dictionary setValue:[[NSNumber numberWithInt:error.code] stringValue] forKey:KEY_ERROR_CODE];
+    
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)enabledDisabledScheduleWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId {
+    debugLog(@"resultData = %@", resultData);
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultData];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
 @end

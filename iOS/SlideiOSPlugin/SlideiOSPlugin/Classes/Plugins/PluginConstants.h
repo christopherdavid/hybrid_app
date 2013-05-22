@@ -3,6 +3,7 @@
 #define KEY_USER_NAME @"userName"
 #define KEY_USER_ID @"userId"
 #define KEY_AUTH_TOKEN @"auth_token"
+#define KEY_ALTERNATE_EMAIL @"alternate_email"
 // Used by robot plugin
 #define KEY_COMMAND_ID @"commandId"
 #define KEY_COMMAND_PARAMETERS @"commandParams"
@@ -17,15 +18,13 @@
 #define KEY_ATLAS_GRID_DATA @"gridData"
 #define KEY_ROBOT_ONLINE_STATUS @"online"
 #define KEY_PARAMS @"params"
+#define KEY_MESSAGE @"message"
+#define KEY_CURRENT_PASSWORD @"currentPassword"
+#define KEY_NEW_PASSWORD @"newPassword"
 
 //Used for error
 #define KEY_ERROR_CODE @"errorCode"
 #define KEY_ERROR_MESSAGE @"errorMessage"
-
-#define ERROR_TYPE_UNKNOWN @"1001"
-#define ERROR_NETWORK_ERROR @"1002"
-#define ERROR_SERVER_ERROR @"1003"
-#define JSON_PARSING_ERROR @"1004"
 
 //Used by scheduler
 #define KEY_DAY @"day"
@@ -47,6 +46,9 @@
 #define KEY_SCHEDULE_EVENT_ID @"scheduleEventId"
 #define KEY_SCHEDULE_EVENTS_LIST  @"scheduleEventLists"
 #define KEY_SCHEDULE @"schedule"
+#define KEY_SCHEDULE_IS_ENABLED @"isScheduleEnabled"
+#define KEY_ENABLE_DISABLE_SCHEDULE @"enableSchedule"
+
 //Used by robot map
 
 #define KEY_ROBOT_MAP_ID @"mapId"

@@ -8,13 +8,18 @@
 #import "SetRobotNameListener.h"
 #import "RobotAssociationListener2.h"
 #import "RobotDissociationListener.h"
+#import "CreateUserListener2.h"
+#import "ChangePasswordListener.h"
+#import "EnableDisableScheduleListener.h"
 
 @interface NeatoServerManager()
 
 @property(nonatomic, retain) NeatoServerManager *retained_self;
 @property(nonatomic, retain) LoginListener *loginListener;
 @property(nonatomic, retain) CreateUserListener *createUserListener;
+@property(nonatomic, strong) CreateUserListener2 *createUserListener2;
 @property(nonatomic, retain) RobotAssociationListener *associationListener;
+@property(nonatomic, strong) ChangePasswordListener *changePasswordListener;
 @property(nonatomic, retain) NSString *userEmail;
 
 -(void) notifyRequestFailed:(SEL) selector withError:(NSError *) error;
@@ -28,6 +33,8 @@
 @synthesize createUserListener = _createUserListener;
 @synthesize associationListener = _associationListener;
 @synthesize userEmail = _userEmail;
+@synthesize createUserListener2 = _createUserListener2;
+@synthesize changePasswordListener = _changePasswordListener;
 
 -(void) loginNativeUser:(NSString *) email password:(NSString *)password
 {
@@ -533,6 +540,150 @@
       self.retained_self = nil;
     });
   }
- 
 }
+
+-(void)isUserValidatedForEmail:(NSString *)email {
+    debugLog(@"");
+    self.retained_self = self;
+    
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self;
+    [helper isUserValidatedForEmail:email];
+}
+
+- (void)userValidationFailedWithError:(NSError *)error {
+    debugLog(@"");
+    [self notifyRequestFailed:@selector(userValidationFailedWithError:) withError:error];
+}
+
+- (void)validatedUserWithResult:(NSDictionary *)resultData {
+    debugLog(@"");
+    [self.delegate performSelectorOnMainThread:@selector(validatedUserWithResult:) withObject:resultData waitUntilDone:NO];
+    self.delegate = nil;
+    self.retained_self = nil;
+}
+
+- (void)resendValidationEmail:(NSString *)email  {
+    debugLog(@"");
+    self.retained_self = self;
+    
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self;
+    [helper resendValidationEmail:email];
+}
+
+- (void)resendValidationEmailSucceededWithMessage:(NSString *)message {
+    debugLog(@"");
+    [self.delegate performSelectorOnMainThread:@selector(resendValidationEmailSucceededWithMessage:) withObject:message waitUntilDone:NO];
+    self.delegate = nil;
+    self.retained_self = nil;
+}
+
+- (void)failedToResendValidationEmailWithError:(NSError *)error{
+    debugLog(@"");
+    [self notifyRequestFailed:@selector(failedToResendValidationEmailWithError:) withError:error];
+}
+- (void)forgetPasswordForEmail:(NSString *)email {
+    debugLog(@"");
+    self.retained_self = self;
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self;
+    [helper forgetPasswordForEmail:email];
+}
+
+- (void)forgetPasswordSuccess {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(forgetPasswordSuccess)]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate performSelector:@selector(forgetPasswordSuccess)];
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+}
+
+- (void)failedToForgetPasswordWithError:(NSError *)error {
+    debugLog(@"");
+    [self notifyRequestFailed:@selector(failedToForgetPasswordWithError:) withError:error];
+}
+
+- (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword {
+    debugLog(@"");
+    self.retained_self = self;
+    self.changePasswordListener = [[ChangePasswordListener alloc] initWithDelegate:self];
+    self.changePasswordListener.changedPassword = newPassword;
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self.changePasswordListener;
+    [helper changePasswordFromOldPassword:oldPassword toNewPassword:newPassword authToken:[NeatoUserHelper getUsersAuthToken]];
+}
+
+- (void)changePasswordSuccess {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(changePasswordSuccess)]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate performSelector:@selector(changePasswordSuccess)];
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+}
+
+- (void)failedToChangePasswordWithError:(NSError *)error {
+    debugLog(@"");
+    [self notifyRequestFailed:@selector(failedToChangePasswordWithError:) withError:error];
+}
+
+- (void)createUser2:(NeatoUser *)neatoUser {
+    debugLog(@"");
+    self.retained_self = self;
+    self.createUserListener2 = [[CreateUserListener2 alloc] initWithDelegate:self];
+    self.createUserListener2 .user = neatoUser;
+    [self.createUserListener2 start];
+}
+
+- (void)userCreated2:(NeatoUser *)user {
+    debugLog(@"");
+    // TODO: Need to implement setAttributes web API and call from here.
+    if ([self.delegate respondsToSelector:@selector(userCreated2:)]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate performSelector:@selector(userCreated2:) withObject:user];
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+}
+
+- (void)failedToCreateUser2WithError:(NSError *)error {
+    debugLog(@"");
+    [self notifyRequestFailed:@selector(failedToCreateUser2WithError:) withError:error];
+}
+
+- (void)enabledDisable:(BOOL)enable schedule:(int)scheduleType forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email {
+    debugLog(@"");
+    self.retained_self = self;
+    EnableDisableScheduleListener *enableDisableScheduleListener = [[EnableDisableScheduleListener alloc] initWithDelegate:self];
+    enableDisableScheduleListener.robotId = robotId;
+    enableDisableScheduleListener.email = email;
+    enableDisableScheduleListener.enable = enable;
+    enableDisableScheduleListener.scheduleType = scheduleType;
+    [enableDisableScheduleListener start];
+}
+
+- (void)failedToEnableDisableScheduleWithError:(NSError *) error {
+    debugLog(@"");
+    [self notifyRequestFailed:@selector(failedToEnableDisableScheduleWithError:) withError:error];
+}
+
+- (void)enabledDisabledScheduleWithResult:(NSDictionary *)resultData {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(enabledDisabledScheduleWithResult:)])
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate performSelector:@selector(enabledDisabledScheduleWithResult:) withObject:resultData];
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+}
+
 @end

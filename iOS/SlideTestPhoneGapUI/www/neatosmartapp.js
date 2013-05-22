@@ -179,7 +179,7 @@ var neatoSmartApp = (function() {
 //			neatoSmartApp.hideChangePasswordShowUserSetting();
 		},
 		
-		changePassErr: function() {
+		changePassErr: function(error) {
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.setResponseText(error);
 		},

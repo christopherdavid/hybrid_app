@@ -23,9 +23,21 @@
 - (void)pushNotificationRegisteredForDeviceToken:(NSString *)deviceToken;
 - (void)pushNotificationUnregistrationSuccess;
 - (void)pushNotificationUnregistrationFailed:(NSError *) error;
+- (void)validatedUserWithResult:(NSDictionary *)resultData;
+- (void)userValidationFailedWithError:(NSError *)error;
+- (void)resendValidationEmailSucceededWithMessage:(NSString *)message;
+- (void)failedToResendValidationEmailWithError:(NSError *)error;
+- (void)forgetPasswordSuccess;
+- (void)failedToForgetPasswordWithError:(NSError *)error;
+- (void)changePasswordSuccess;
+- (void)failedToChangePasswordWithError:(NSError *)error;
+- (void)userCreated2:(NeatoUser *)neatoUser;
+- (void)failedToCreateUser2WithError:(NSError *)error;
+- (void)failedToEnableDisableScheduleWithError:(NSError *)error;
+- (void)enabledDisabledScheduleWithResult:(NSDictionary *)resultData;
 @end
 
-@interface NeatoServerManager : NSObject <NeatoServerHelperProtocol>
+@interface NeatoServerManager : NSObject 
 
 @property(nonatomic, weak) id delegate;
 
@@ -46,5 +58,10 @@
 - (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)emailId;
 - (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken;
 - (void)unregisterPushNotificationForDeviceToken:(NSString *)registrationId;
-
+- (void)isUserValidatedForEmail:(NSString *)email;
+- (void)resendValidationEmail:(NSString *)email;
+- (void)forgetPasswordForEmail:(NSString *)email;
+- (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword;
+- (void)createUser2:(NeatoUser *)neatoUser;
+- (void)enabledDisable:(BOOL)enable schedule:(int)scheduleType forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email;
 @end

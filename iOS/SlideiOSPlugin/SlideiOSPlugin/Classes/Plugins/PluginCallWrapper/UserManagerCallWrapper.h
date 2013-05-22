@@ -32,6 +32,16 @@
 - (void)pushNotificationRegisteredForDeviceToken:(NSString *)deviceToken;
 - (void)pushNotificationUnregistrationSuccess;
 - (void)pushNotificationUnregistrationFailedWithError:(NSError *) error;
+- (void)validatedUserWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId;
+- (void)userValidationFailedWithError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)failedToResendValidationEmailWithError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)resendValidationEmailSucceededWithMessage:(NSString *)message callbackId:(NSString *)callbackId;
+- (void)forgetPasswordSuccessWithCallbackId:(NSString *)callbackId;
+- (void)failedToForgetPasswordWithError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)changePasswordSuccessWithCallbackId:(NSString *)callbackId;
+- (void)failedToChangePasswordWithError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)userCreated2:(NeatoUser *)neatoUser callbackId:(NSString *)callbackId;
+- (void)failedToCreateUser2WithError:(NSError *)error callbackId:(NSString *)callbackId;
 @end
 
 @interface UserManagerCallWrapper : CDVPlugin 
@@ -52,4 +62,9 @@
 - (void)associatedRobotsForUserWithEmail:(NSString *)email authToken:(NSString *)auth_token callbackId:(NSString *)callbackId;
 - (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken;
 - (void)unregisterPushNotificationForDeviceToken:(NSString *)deviceToken;
+- (void)isUserValidatedForEmail:(NSString *)email callbackID:(NSString *)callbackId;
+- (void)resendValidationEmail:(NSString *) email callbackID:(NSString *) callbackId;
+- (void)forgetPasswordForEmail:(NSString *)email callbackID:(NSString *)callbackId;
+- (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword callbackID:(NSString *)callbackId;
+- (void)createUser2:(NeatoUser *)neatoUser callbackID:(NSString *)callbackId;
 @end
