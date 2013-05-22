@@ -28,8 +28,9 @@
 #import <UIKit/UIKit.h>
 
 #import <Cordova/CDVViewController.h>
+#import "AppBaseDelegate.h"
 
-@interface AppDelegate : NSObject <UIApplicationDelegate>{}
+@interface AppDelegate : AppBaseDelegate
 
 // invoke string is passed to your app on launch, this is only valid if you
 // edit SlideTestPhoneGapUI-Info.plist to add a protocol

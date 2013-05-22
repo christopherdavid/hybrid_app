@@ -28,6 +28,7 @@
 	<br>	
 	<input type="button" id="btnGoToLogin" value="Login" class="gradientButton"></input>
 	<input type="button" id="btnGoToRegister" value="New Account" class="gradientButton"></input>
+	<input type="button" id="btnForgetPassword" value="Forgot Password?" class="gradientButton"></input>
 	<br><br>	
 	<center><label>Just show me the demo!</label></center>	
 	<input type="button" id="btnDemoLogin" value="Login as Demo1" class="gradientButton"></input>
@@ -61,9 +62,35 @@
 	<input type="password" id="regpasskeyconfirm" placeholder="Re-Enter Password" class="defaultInputText"></input>
 	<br>
 	<input type="button" id="registerUserButton" value="Register" class="gradientButton"></input> 
+	<input type="button" id="registerUserEmailValidationButton" value="Register (Valid Email)" class="gradientButton"></input>
+	<input type="button" id="resendValidationMailButton" value="Resend Mail" class="gradientButton"></input>
 	</section>
 	
+	<!-- Change password screen -->
+	<section id="changePasswordPage"  aria-hidden=true>
+	<div class="defaultSectionHeader">Change Password</div>  
+	<br>
+
+	<input type="text" id="currentPassword" placeholder="Current Password" class="defaultInputText"></input>
+	<br>
+
+	<input type="text" id="newPassword" placeholder="New Password" class="defaultInputText"></input>
+	<br>
 	
+	<input type="button" id="changePasswordButton" value="Change Password" class="gradientButton"></input> 
+	</section>
+	
+	<!-- Forget password screen -->
+	<section id="forgetPasswordPage"  aria-hidden=true>
+	<div class="defaultSectionHeader">Enter your Email Id so that we can send you the login Credentials</div>  
+	<br>
+
+	<input type="text" id="forgetPassMailId" placeholder="Email Id" class="defaultInputText"></input>
+	<br>
+	
+	<input type="button" id="forgetPasswordButton" value="Send" class="gradientButton"></input> 
+	</section>
+
 	<!-- User screen -->
 	<section id="userHomePage"  aria-hidden=true>
 		<div class="defaultSectionHeader">Neato Test App</div>
@@ -90,9 +117,10 @@
 			</center>
 			
 			<br><br><input type="button" id="btnGoToDebug" value="Test APIs" class="gradientButton">
-			<br><br><input type="button" id="btnGoToNewSchedule" value="Test Schedule APIs" class="gradientButton">
+			<br><input type="button" id="btnGoToTestCleaningPage" value="Test Cleaning APIs" class="gradientButton">
+			<br><input type="button" id="btnGoToNewSchedule" value="Test Schedule APIs" class="gradientButton">
 			<br><input type="button" id="btnLogout" value="Logout" class="gradientButton"></input>
-           <br><input type="button" id="aboutButton" value="About" class="gradientButton"></input>
+            <br><input type="button" id="aboutButton" value="About" class="gradientButton"></input>
 		<br>
 		
 		<!-- <label>Robot Commands</label>
@@ -139,26 +167,83 @@
 		<div class="defaultSectionHeader">Test APIs</div>
 		
 		<br><input type="button" id="btnDisassociateAllRobot" value="Dissociate all Robots" class="gradientButton"></input>
-		<br><input type="button" id="btnOpenClosePeerConn" value="Open Connection" class="gradientButton" disabled=true></input>
+		<br><input type="button" id="btnOpenClosePeerConn" value="Open Connection" class="gradientButton"></input>
 		<br><input type="button" id="btnOpenClosePeerConn2" value="Open Connection (New)" class="gradientButton"></input>
-		<br><input type="button" id="btnSendStartStopCleanCommand" value="Start Cleaning" class="gradientButton" disabled=true></input>
-		<br><input type="button" id="btnSendStartStopCleanCommand2" value="Start Cleaning (New)" class="gradientButton"></input>
-		<br><input type="button" id="btnPauseCleaningCommand" value="Pause Cleaning (New)" class="gradientButton"></input>
+		<br><input type="button" id="btnSendStartStopCleanCommand" value="Start Cleaning" class="gradientButton"></input>
+		<br><input type="button" id="btnSendStartStopCleanCommand2" value="Start Cleaning (Deprecated)" class="gradientButton"></input>
+		<br><input type="button" id="btnPauseCleaningCommand" value="Pause Cleaning (Deprecated)" class="gradientButton"></input>
 		<br><input type="button" id="btnEnableSchedule" value="Enable Schedule (New)" class="gradientButton"></input>
-		<br><input type="button" id="btnDisableSchedule" value="Disable Schedule (New)" class="gradientButton"></input>
+		<br><input type="button" id="btnIsScheduleEnabled" value="Is Schedule Enabled (New)" class="gradientButton"></input>
 		<br><input type="button" id="btnSetRobotClock" value="Set Robot Clock (New)" class="gradientButton"></input>
-		<br><input type="button" id="btnTestGoToRobotMap" value="Show Robot Map" class="gradientButton" disabled=true></input>
-		<br><input type="button" id="btnTestDissociateRobot" value="Dissociate Robot" class="gradientButton"></input>
+		<br><input type="button" id="btnTestGoToRobotMap" value="Show Robot Map" class="gradientButton"></input>
+		<br><input type="button" id="btnTestDissociateRobot" value="Dissociate Robot" class="gradientButton"></input>	
 		<br><input type="button" id="btnTestAllAssociatedRobots" value="All Associated Robots" class="gradientButton"></input>
 		<br><input type="button" id="btnTestRobotDetail" value="Robot Detail" class="gradientButton"></input>
-		<br><input type="button" id="btnTestUserDetail" value="User Detail" class="gradientButton"></input>							
-		
+		<br><input type="button" id="btnTestUserDetail" value="User Detail" class="gradientButton"></input>	
+		<br><input type="button" id="btnRefreshUI" value="Refresh UI" class="gradientButton" ></input>
+		<br><input type="button" id="btnValidateUser" value="Is User Validated" class="gradientButton" ></input>						
+		<br><input type="button" id="btnTurnVacuumOnOff" value="Turn Robot Vacuum ON" class="gradientButton" ></input>
+		<br><input type="button" id="btnManageRobotWiFi" value="Manage Robot WiFi" class="gradientButton" ></input>
+		<br><input type="button" id="btnUnregisterPushMessage" value="Unregister Push Msg" class="gradientButton" ></input>
+		<br><input type="button" id="btnIsRobotOnlineVirtual" value="Is Robot Online Virtual" class="gradientButton" ></input>
 	</section>
 	
+	<section id="cleaningAPIs"  aria-hidden=true>
+		<div class="defaultSectionHeader">Test Cleaning APIs</div>
+		<div class="cmdParams">
+			<label for="CleaningCategoryList">Cleaning Category:</label>
+			<br>
+			<select name="CleaningCategoryList" id="CleaningCategoryList">
+			</select>
+		</div>	
+		<div class="cmdParams">
+			<label for="CleaningModeList">Cleaning Mode:</label>
+			<br>
+			<select name="CleaningModeList" id="CleaningModeList">
+			</select>
+		</div>
+		<div class="cmdParams">
+			<label>Modifier:</label>
+			<input type="radio" name="radioCleaningModifier" id="radioCleaningModifier1x" value="1x">1x
+			<input type="radio" name="radioCleaningModifier" id="radioCleaningModifier2x" value="2x">2x
+		</div>
+		
+		<input type="button" id="btnSendStartStopCleanCommand3" value="Start Cleaning" class="gradientButton"></input>
+		<br><input type="button" id="btnPauseResumeCleaningCommand3" value="Pause Cleaning" class="gradientButton"></input>
+		<br><input type="button" id="btnGoToSpotDefinitionAPIPage" value="Test Spot APIs" class="gradientButton">
+
+		<div id="divNavigationControls" class="cmdParams" style="visibility:hidden;">
+			<label for="NavigationControlList">Control Id:</label>
+			<select name="NavigationControlList" id="NavigationControlList">
+			</select>
+			<input type="button" id="btnNavigateRobot" value="Navigate" class="gradientButton"></input>
+		</div>	
+		
+		</br>
+		<label id="currentRobotState">Actual State: Not Available</label>
+		</br>
+		<label id="robotState">State: Not Available</label>
+	</section>
+	
+	<section id="spotDefinitionAPIs"  aria-hidden=true>
+		<div class="defaultSectionHeader">Test Spot Definition APIs</div>
+		<div class="cmdParams">
+			<label for="SpotAreaLengthList">Area:</label>
+			<select name="SpotAreaLengthList" id="SpotAreaLengthList">
+			</select>
+			<label for="SpotAreaHeightList"> x </label>
+			<select name="SpotAreaHeightList" id="SpotAreaHeightList">
+			</select>
+		</div>
+		<br><input type="button" id="btnSetSpotDefinition" value="Set Spot Definition" class="gradientButton"></input>
+		<br><input type="button" id="btnGetSpotDefinition" value="Get Spot Definition" class="gradientButton"></input>
+	</section>
+
 	<section id="robotCommands"  aria-hidden=true>
 		<div class="defaultSectionHeader">Robot Commands</div>
 		<br><br><input type="button" id="btnStartStopCleaning" value="Start Cleaning" class="gradientButton"></input>
 		<br><input type="button" id="btnSendToBase" value="Send to base" class="gradientButton"></input>
+		<br><input type="button" id="btnGetState" value="Get State" class="gradientButton"></input>
 	</section>
 		
 	<section id="settings"  aria-hidden=true>
@@ -171,10 +256,52 @@
 		<div class="defaultSectionHeader">Robot Settings</div>		 		
 		<br><br><input type="button" id="btnGoToSetRobotName" value="Set Name" class="gradientButton"></input>
 		<br><input type="button" id="btnGetRobotDetail" value="Robot Detail" class="gradientButton"></input>
-        <br><input type="button" id="btnGetRobotOnlineStatus" value="Online status" class="gradientButton"></input>
-		<br><input type="button" id="btnGoToAtlas" value="Atlas" class="gradientButton"></input>
+		<br><input type="button" id="btnEnableNotifications" value="Notifications ON" class="gradientButton"></input>	
+		<br><input type="button" id="btnNotificationSettings" value="Notifications" class="gradientButton"></input>			
+		<br><input type="button" id="btnGoToAtlas" value="Atlas" class="gradientButton"></input>					
 	</section>
 	
+	<section id="notificationSettings"  aria-hidden=true>
+		<div class="defaultSectionHeader">Notification Settings</div>
+		<input type="button" id="btnEnableGlobalNotifications" value="Notifications ON" class="gradientButton"></input>
+		<br>
+		<br>
+		<div>
+			<label class="headerLabel">Notify me when...</label>
+			<br>
+			<br>
+			<table>
+				<tr class="spaceBelow">			
+					<td width="40%">
+						<label>Robot needs to be cleaned</label>
+					</td>
+					<td>
+						<input type="radio" name="radioDirtBinNotification" id="radioDBNotificationON" value="ON">ON
+						<input type="radio" name="radioDirtBinNotification" id="radioDBNotificationOFF" value="OFF">OFF
+					</td>
+				</tr>
+				<tr class="spaceBelow">			
+					<td width="40%">
+						<label>Cleaning is done</label>
+					</td>
+					<td>
+						<input type="radio" name="radioCleaningDone" id="radioCDNotificationON" value="ON">ON
+						<input type="radio" name="radioCleaningDone" id="radioCDNotificationOFF" value="OFF">OFF
+					</td>
+				</tr>
+				<tr class="spaceBelow">			
+					<td width="40%">
+						<label>Robot is stuck</label>
+					</td>
+					<td>
+						<input type="radio" name="radioRobotStuck" id="radioRSNotificationON" value="ON">ON
+						<input type="radio" name="radioRobotStuck" id="radioRSNotificationOFF" value="OFF">OFF
+					</td>
+				</tr>
+			</table>
+		</div>
+	</section>
+		
 	<section id="setRobotName"  aria-hidden=true>
 		<div class="defaultSectionHeader">Set Robot name</div>
 		<br><br><input type="text" id="robotName" placeholder="Robot name" class="defaultInputText"></input> 		
@@ -201,6 +328,8 @@
 	<section id="userSettings"  aria-hidden=true>
 		<div class="defaultSectionHeader">User Settings</div>		 		
 		<br><br><input type="button" id="btnGetUserDetail" value="User Detail" class="gradientButton"></input>
+		<br>
+		<input type="button" id="goToChangePassword" value="Change Password" class="gradientButton"></input>
 	</section>
 	
 	<!-- Old schedule section
@@ -241,12 +370,10 @@
 		<br><input type="button" id="btnScheduleAlternateWeekdays" value="Mon, Wed, Fri" class="gradientButton"></input> 
 		<br><input type="button" id="btnScheduleBabyNap" value="Weekdays(Baby Nap)" class="gradientButton"></input> 
 		<br><input type="button" id="btnScheduleOnlyWeekends" value="Only Weekends" class="gradientButton"></input> 
-		<br><input type="button" id="btnScheduleWorkingCouple" value="Working Couples" class="gradientButton"></input> 
-		<br><input type="button" id="btnScheduleClear" value="Clear Schedule" class="gradientButton"></input> 
-		<br><input type="button" id="btnGetSchedule" value="Get Schedule" class="gradientButton"></input>
-        <br>
-		<br>
-		<input type="checkbox" name="scheduleType" value="Use Basic Schedule" id="useBasicSchedule"/>Use Basic Schedule</input>
+		<br><input type="button" id="btnScheduleWorkingCouple" value="Working Couples" class="gradientButton" ></input> 
+		<br><input type="button" id="btnScheduleClear" value="Clear Schedule" class="gradientButton" ></input> 
+		<br><input type="button" id="btnGetSchedule" value="Get Schedule" class="gradientButton" ></input>
+		
 	</section>
 	
 	<!-- Map section -->
@@ -274,7 +401,38 @@
 			
 		<div>
 	</section>
-   <!--About Screen Section -->
+
+<!-- New Schedule Section -->
+	<section id="newScheduleRobot"  aria-hidden=true>
+		<div class="defaultSectionHeader">New Robot Schedule</div>
+		<br><input type="button" id="btnCreateSchedue" value="Create Schedule" class="gradientButtonSchedule"></input> 
+		<br><input type="button" id="btnGetScheduleEvents" value="Get Schedule Events" class="gradientButtonSchedule"></input> 
+		<br><input type="button" id="btnAddScheduleEvent" value="Add Schedule Event" class="gradientButtonSchedule"></input> 
+		<br><input type="button" id="btnAddScheduleEventNew" value="Add Schedule Event(New)" class="gradientButtonSchedule"></input> 
+		<br><input type="button" id="btnUpdateScheduleEvent" value="Update Schedule Event" class="gradientButtonSchedule" ></input> 
+		<br><input type="button" id="btnUpdateScheduleEventNew" value="Update Schedule Event(New)" class="gradientButtonSchedule" ></input> 
+		<br><input type="button" id="getScheduleEventData" value="Get Schedule Event Data" class="gradientButtonSchedule" ></input>
+		<br><input type="button" id="btnDeleteScheduleEvent" value="Delete Schedule Event" class="gradientButtonSchedule" ></input> 
+		<br><input type="button" id="updateSchedule" value="Update Schedule" class="gradientButtonSchedule" ></input>
+		<br><input type="button" id="btnGetScheduleData" value="Get Schedule Data" class="gradientButtonSchedule" ></input>
+		<br>
+		<br>
+		<input type="checkbox" checked="checked" name="scheduleType" value="Use Basic Schedule" id="newUseBasicSchedule"/>Use Basic Schedule</input>
+		
+	</section>
+
+	<section id="manageRobotWiFi"  aria-hidden=true>
+		<div class="defaultSectionHeader">Manage Robot WiFi</div>
+		<br>
+		<div id="divRobotWiFiOffDuration" class="cmdParams" style="text-align: left;">
+			<label>WiFi Turn-Off Duration</label>
+			<br><input type="radio" name="time_period" id="time_5mins">5 Minutes
+			<br><input type="radio" name="time_period" id="time_10mins">10 Minutes
+			<br><input type="radio" name="time_period" id="time_15mins">15 Minutes
+		</div>		
+		<br><input type="button" id="btnTurnWiFiOnOff" value="Turn Robot WiFi ON" class="gradientButton" ></input>
+	</section>
+        <!--About Screen Section -->
         <section id="aboutScreen" aria-hidden=true>
             <center>
                 <br>
@@ -292,23 +450,8 @@
                 </table>
             </center>
         </section>
-        <!-- New Schedule Section -->
-        <section id="newScheduleRobot"  aria-hidden=true>
-            <div class="defaultSectionHeader">New Robot Schedule</div>
-            <br><input type="button" id="btnCreateSchedue" value="Create Schedule" class="gradientButton"></input>
-            <br><input type="button" id="btnGetScheduleEvents" value="Get Schedule Events" class="gradientButton"></input>
-            <br><input type="button" id="btnAddScheduleEvent" value="Add Schedule Event" class="gradientButton"></input>
-            <br><input type="button" id="btnUpdateScheduleEvent" value="Update Schedule Event" class="gradientButton" ></input>
-            <br><input type="button" id="getScheduleEventData" value="Get Schedule Event Data" class="gradientButton" ></input>
-            <br><input type="button" id="btnDeleteScheduleEvent" value="Delete Schedule Event" class="gradientButton" ></input>
-            <br><input type="button" id="updateSchedule" value="Update Schedule" class="gradientButton"></input>
-            <br><input type="button" id="btnGetScheduleData" value="Get Schedule Data" class="gradientButton" ></input>
-            <br>
-            <br>
-            <input type="checkbox" name="scheduleType" value="Use Basic Schedule" id="newUseBasicSchedule"/>Use Basic Schedule</input>
-            
-        </section>
-<input type="button" id="backbutton" value="Back" class="gradientButton"></input>
+        <input type="button" id="backbutton" value="Back" class="gradientButton"></input>
+
 <label id="responseText"></label>
 <div><center><img src="spinner.gif" id="spinnerImg" style="display:none;" /></center></div>
 	</body>
