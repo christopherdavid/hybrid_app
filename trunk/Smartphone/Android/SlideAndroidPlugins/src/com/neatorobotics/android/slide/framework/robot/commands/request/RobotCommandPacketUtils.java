@@ -23,7 +23,7 @@ public class RobotCommandPacketUtils {
 	}
 	
 	//Method to get commandId from command.
-	public static int getRobotIdFromCommand(Context context, String cleaningCommand) {
+	public static int getRobotIdFromCommand(String cleaningCommand) {
 		RobotCommandParser parser = new RobotCommandParser();
 		RobotCommandPacket packet = parser.convertStringToRobotCommands(cleaningCommand);
 		if (packet != null && packet.isRequest()) {

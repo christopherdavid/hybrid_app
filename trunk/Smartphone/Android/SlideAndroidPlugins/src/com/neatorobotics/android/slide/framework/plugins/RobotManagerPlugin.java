@@ -37,6 +37,8 @@ import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings
 import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettingsListener;
 import com.neatorobotics.android.slide.framework.robot.settings.SettingsManager;
 import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
+import com.neatorobotics.android.slide.framework.robotdata.RobotDataNotifyUtils;
+import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.DataConversionUtils;
@@ -46,7 +48,6 @@ import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotOnlineStatusResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotVirtualOnlineStatusResult;
-import com.neatorobotics.android.slide.framework.webservice.robot.SetRobotProfileDetailsResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.RobotAtlasWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.RobotAtlasGridWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.listeners.RobotGridDataDownloadListener;
@@ -364,6 +365,9 @@ public class RobotManagerPlugin extends Plugin {
 		private void unregisterForRobotMessages(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "unregisterForRobotMessages called");
 			PushNotificationMessageHandler.getInstance(context).removePushNotificationListener();
+			PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+			pluginResult.setKeepCallback(false);
+			success(pluginResult, callbackId);
 		}
 		
 		// Private helper method to send the cleaning commands. Keeping Cleaning command helper method separate so that
@@ -394,26 +398,8 @@ public class RobotManagerPlugin extends Plugin {
 					commadParamsMap.put(JsonMapKeys.KEY_SPOT_CLEANING_AREA_HEIGHT, spotAreaHeight);
 				}
 			}
-			if (AppConstants.isServerDataModeEnabled()) {
-				//Sending command over webservice. the JsonResult is changed. Expose another method.
-				LogHelper.logD(TAG, "Sending command VIA webservice");
-				RobotDataManager.sendRobotCommand(context, robotId, commandId, commadParamsMap, new RobotRequestListenerWrapper(callbackId) {
-
-					@Override
-					public JSONObject getResultObject(NeatoWebserviceResult result)
-							throws JSONException {
-						JSONObject object = null;
-						if (result != null && result instanceof SetRobotProfileDetailsResult2) {
-							object = new JSONObject();
-							SetRobotProfileDetailsResult2 profileResult = (SetRobotProfileDetailsResult2) result;
-							object.put(JsonMapKeys.KEY_EXPECTED_TIME_TO_EXECUTE, profileResult.mParams.expected_time);
-						}
-						return object;
-					}
-				});
-			} else {
-				sendCommandHelper(context, robotId, commandId, commadParamsMap, callbackId);
-			}
+			
+			sendCommandHelper(context, robotId, commandId, commadParamsMap, callbackId);
 		}
 
 		private void driveRobot(Context context, RobotJsonData jsonData, final String callbackId) {
@@ -583,7 +569,7 @@ public class RobotManagerPlugin extends Plugin {
 				public JSONObject getResultObject(NeatoWebserviceResult responseResult)
 						throws JSONException {
 					JSONObject jsonResult;
-					if((responseResult != null) && (responseResult instanceof SetRobotProfileDetailsResult)) {
+					if((responseResult != null) && (responseResult instanceof SetRobotProfileDetailsResult2)) {
 						jsonResult = new JSONObject();
 						jsonResult.put(JsonMapKeys.KEY_IS_SCHEDULE_ENABLED, enableSchedule);
 						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_TYPE, scheduleType);
@@ -706,7 +692,7 @@ public class RobotManagerPlugin extends Plugin {
 		private void registerRobotNotifications2(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "registerRobotNotifications2 action initiated in Robot plugin");
 			
-			RobotDataManager.addRobotDataChangedListener(context, new RobotDataListener() {
+			RobotDataNotifyUtils.addRobotDataChangedListener(context, new RobotDataListener() {
 				@Override
 				public void onDataReceived(String robotId, int dataCode, HashMap<String, String> data) {
 					JSONObject robotData = new JSONObject();
@@ -726,7 +712,7 @@ public class RobotManagerPlugin extends Plugin {
 		
 		private void unregisterRobotNotifications2(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "unregisterRobotNotifications2 action initiated in Robot plugin");
-			RobotDataManager.removeRobotDataChangedListener(context);
+			RobotDataNotifyUtils.removeRobotDataChangedListener(context);
 			PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
 			pluginResult.setKeepCallback(false);
 			success(pluginResult, callbackId);
@@ -914,10 +900,16 @@ public class RobotManagerPlugin extends Plugin {
 			success(pluginStartResult, callbackId);
 		} 
 		
-		
 		private void sendCommandHelper(Context context, String robotId, int commandId, HashMap<String, String> params, String callbackId) {
 			// Create Robot state notification listener to notify when we get a robot state info
 			// from the robot
+			
+			if (AppConstants.isServerDataModeEnabled() && RobotProfileConstants.isTimedModeSupportedForCommand(commandId)) {
+				LogHelper.logD(TAG, "Sending command VIA webservice");
+				RobotDataManager.sendRobotCommand(context, robotId, commandId, params, new RobotSetProfileDataRequestListener(callbackId));
+				return;
+			}
+			
 			if (commandId == RobotCommandPacketConstants.COMMAND_GET_ROBOT_STATE) {
 				if (mRobotStateNotificationPluginListener == null) {
 					mRobotStateNotificationPluginListener = new RobotStateNotificationPluginListener();
@@ -1629,6 +1621,26 @@ public class RobotManagerPlugin extends Plugin {
 			public void onServerError(int errorType, String errorMessage) {
 				LogHelper.logD(TAG, "Server Error: " + errorMessage);
 				sendError(mCallbackId, errorType, errorMessage);
+			}
+		}
+		
+		// Use for time-mode request purposes
+		private class RobotSetProfileDataRequestListener extends RobotRequestListenerWrapper {
+
+			public RobotSetProfileDataRequestListener(String callbackId) {
+				super(callbackId);
+			}
+			
+			@Override
+			public JSONObject getResultObject(NeatoWebserviceResult result)
+					throws JSONException {
+				JSONObject object = null;
+				if (result != null && result instanceof SetRobotProfileDetailsResult2) {
+					object = new JSONObject();
+					SetRobotProfileDetailsResult2 profileResult = (SetRobotProfileDetailsResult2) result;
+					object.put(JsonMapKeys.KEY_EXPECTED_TIME_TO_EXECUTE, profileResult.extra_params.expected_time);
+				}
+				return object;
 			}
 		}
 		

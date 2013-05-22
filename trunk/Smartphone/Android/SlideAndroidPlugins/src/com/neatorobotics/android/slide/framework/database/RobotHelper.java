@@ -15,6 +15,7 @@ import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails2.ProfileAttributeKeys;
 
 public class RobotHelper {	
 	private static final String TAG = RobotHelper.class.getSimpleName();
@@ -187,5 +188,39 @@ public class RobotHelper {
 		}
 		
 		return jsonObject;
+	}
+	
+	// Robot profile
+	public static boolean isProfileKeyExists(Context context, String robotId, String key) {
+		if (DBHelper.getInstance(context).getProfileParamTimestamp(robotId, key) != -1) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean isProfileDataChanged(Context context, String robotId, String key, long timeStamp) {
+		long currentTimestamp = DBHelper.getInstance(context).getProfileParamTimestamp(robotId, key);
+		if (currentTimestamp != -1) {
+			// Hack for robotName. the timestamp is always 0. So check the robotName.
+			if (key.equals(ProfileAttributeKeys.ROBOT_NAME)) {
+				// From here we will always return true.
+				return true;
+			}
+			LogHelper.logD(TAG, "Current Timestamp: " + currentTimestamp + " For key: "+ key);
+			LogHelper.logD(TAG, "New Timestamp: " + timeStamp + " For key: " +key);
+			return (Long.valueOf(timeStamp) > Long.valueOf(currentTimestamp));
+		}
+		return true;
+	}
+	
+	public static boolean saveProfileParam(Context context, String robotId, String key, long timestamp) {
+		return DBHelper.getInstance(context).saveProfileParam(robotId, key, timestamp);
+	}
+	
+	public static boolean deleteProfileParamIfExists(Context context, String robotId, String key) {
+		if (isProfileKeyExists(context, robotId, key)) {
+			return DBHelper.getInstance(context).deleteProfileParamIfExists(robotId, key);
+		}
+		return false;
 	}
 }

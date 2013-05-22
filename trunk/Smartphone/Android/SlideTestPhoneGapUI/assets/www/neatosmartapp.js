@@ -175,10 +175,10 @@ var neatoSmartApp = (function() {
 		changePassSuccess: function(result) {
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.setResponseText(result);
-//			neatoSmartApp.hideChangePasswordShowUserSetting();
+			//neatoSmartApp.hideChangePasswordShowUserSetting();
 		},
 		
-		changePassErr: function() {
+		changePassErr: function(error) {
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.setResponseText(error);
 		},
@@ -530,7 +530,7 @@ var neatoSmartApp = (function() {
 			}
 			
 			neatoSmartApp.showProgressBar();
-			RobotPluginManager.sendCommandToRobot2(robotId, COMMAND_SEND_BASE, [], neatoSmartApp.sendToBaseSuccess, neatoSmartApp.sendToBaseError);			
+			RobotPluginManager.sendCommandToRobot2(robotId, COMMAND_SEND_BASE, {}, neatoSmartApp.sendToBaseSuccess, neatoSmartApp.sendToBaseError);			
 		},
 		
 		sendToBaseSuccess: function(result) {
@@ -1734,7 +1734,7 @@ var neatoSmartApp = (function() {
 		
 		getUserDetails: function() {
 			neatoSmartApp.showProgressBar();
-			var email = "demo1@demo.com";
+			var email = localStorage.getItem('email');
 			UserPluginManager.getUserDetail(email, neatoSmartApp.getUserDetailsSuccess, neatoSmartApp.getUserDetailsErr);
 		},
 		
@@ -2042,6 +2042,12 @@ var neatoSmartApp = (function() {
 				var state = data['robotStateUpdate'];
 				localStorage.setItem('robotStateUpdate', state);
 			
+			}
+			if (dataKeyCode == ROBOT_SCHEDULE_STATE_CHANGED) {
+				//TODO:
+			}
+			if (dataKeyCode == ROBOT_NAME_UPDATE) {
+				//TODO:
 			}
 			
 			neatoSmartApp.toggleStartStop();
