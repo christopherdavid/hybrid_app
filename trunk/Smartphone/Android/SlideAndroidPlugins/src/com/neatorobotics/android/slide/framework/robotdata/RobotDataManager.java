@@ -32,6 +32,12 @@ public class RobotDataManager {
 		setRobotProfileParam(context, robotId, keyType, robotPacketInXmlFormat, listener);
 	}
 		
+	// Public static helper method to set the schedule status to updated
+	public static void sendRobotScheduleUpdated(Context context, String robotId, WebServiceBaseRequestListener listener) {
+		LogHelper.logD(TAG, "Send command action initiated sendRobotScheduleUpdated - RobotSerialId = " + robotId);
+		setRobotProfileParam(context, robotId, ProfileAttributeKeys.ROBOT_SCHEDULE_UPDATED, String.valueOf(true) , listener);
+	}
+	
 	private static void setRobotProfileParam (final Context context, final String robotId, final String key,  final String value, final WebServiceBaseRequestListener listener) {
 		LogHelper.logD(TAG, "setRobotProfileParam called");
 		LogHelper.logD(TAG, "Robot Id = " + robotId + " Key: " + key + "Value: "+ value);
@@ -43,8 +49,10 @@ public class RobotDataManager {
 					profileParams.put(key, value);					
 					SetRobotProfileDetailsResult2 result = NeatoRobotDataWebservicesHelper.setRobotProfileDetailsRequest2(context, robotId, profileParams);
 					
-					// Do not set this for every command.
-					RobotCommandTimerHelper.getInstance(context).startCommandExpiryTimer(robotId);
+					//Do not start timer for every set profile data change.
+					if (RobotProfileConstants.isTimerExpirableForProfileKey(key)) {
+						RobotCommandTimerHelper.getInstance(context).startCommandExpiryTimer(robotId);
+					}	
 					listener.onReceived(result);
 				}
 				catch (UserUnauthorizedException ex) {

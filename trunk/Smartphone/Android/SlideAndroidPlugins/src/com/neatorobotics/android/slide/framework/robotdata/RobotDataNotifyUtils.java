@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
+import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiverConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDataListener;
 import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2;
 import com.neatorobotics.android.slide.framework.service.NeatoSmartAppsEventConstants;
+import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails2.ProfileAttributeKeys;
 
@@ -47,12 +49,15 @@ public class RobotDataNotifyUtils {
 			notifyStateChange(context, robotId, details);
 		}
 		
-		boolean isRobotScheduleChanged = RobotProfileDataUtils.isDataChangedAndSave(context, details, robotId, ProfileAttributeKeys.ROBOT_ENABLE_SCHEDULE);
-		if (isRobotScheduleChanged) {
+		boolean isRobotScheduleStateChanged = RobotProfileDataUtils.isDataChangedAndSave(context, details, robotId, ProfileAttributeKeys.ROBOT_ENABLE_SCHEDULE);
+		if (isRobotScheduleStateChanged) {
 			notifyScheduleStateChange(context, robotId, details);
 		}
 		
-		
+		boolean isScheduleChanged = RobotProfileDataUtils.isDataChangedAndSave(context, details, robotId, ProfileAttributeKeys.ROBOT_SCHEDULE_UPDATED);
+		if (isScheduleChanged) {
+			notifyScheduleUpdated(context, robotId, details);
+		}
 	}
 	
 	// Private helper method to consume the profile data parameters.
@@ -67,13 +72,34 @@ public class RobotDataNotifyUtils {
 		}
 	}
 	
-	private static void notifyRobotNameChange(Context context, String robotId, GetRobotProfileDetailsResult2 details) {
-		String robotName = RobotProfileDataUtils.getRobotName(details);
-		if (!TextUtils.isEmpty(robotName)) {
-			HashMap<String, String> data = new HashMap<String, String>();
-			data.put(JsonMapKeys.KEY_ROBOT_NAME, robotName);
-			notifyDataChanged(context, robotId, RobotProfileConstants.ROBOT_NAME_UPDATE, data);
+	private static void notifyScheduleUpdated(Context context, String robotId, GetRobotProfileDetailsResult2 details) {
+		boolean isScheduleUpdated = RobotProfileDataUtils.isScheduleUpdated(context, details);
+		if (isScheduleUpdated) {
+			notifyDataChanged(context, robotId, RobotProfileConstants.ROBOT_IS_SCHEDULE_UPDATED, new HashMap<String, String>());
 		}
+	}
+	
+	private static void notifyRobotNameChange(Context context, String robotId, GetRobotProfileDetailsResult2 details) {
+		
+		String robotName = RobotProfileDataUtils.getRobotName(details);
+		if (TextUtils.isEmpty(robotName)) {
+			LogHelper.logD(TAG, "robotName is empty");
+			return;
+		}
+		RobotItem robotItem = RobotHelper.getRobotItem(context, robotId);
+		String currentRobotName = "";
+		if (robotItem != null) {
+			currentRobotName = robotItem.name;
+		}
+		
+		if (robotName.equalsIgnoreCase(currentRobotName)) {
+			LogHelper.logD(TAG, "Robot name is not changed");
+			return;
+		}
+		LogHelper.logD(TAG, "Robot name is changed");
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put(JsonMapKeys.KEY_ROBOT_NAME, robotName);
+		notifyDataChanged(context, robotId, RobotProfileConstants.ROBOT_NAME_UPDATE, data);
 	}
 	
 	private static void notifyStateChange (Context context, String robotId, GetRobotProfileDetailsResult2 details) {

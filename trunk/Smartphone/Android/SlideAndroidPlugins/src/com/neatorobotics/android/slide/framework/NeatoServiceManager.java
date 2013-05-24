@@ -49,8 +49,7 @@ public class NeatoServiceManager {
 	
 	public void initialize() {
 		LogHelper.logD(TAG, "Initialise Neato Service");
-		String version = AppUtils.getVersionWithBuildNumber(mContext);
-		LogHelper.log(TAG, "Build Number = " + version);
+		AppUtils.logApplicationVersion(mContext);
 		mResultReciever = new NeatoRobotResultReceiver(mHandler);
 		ApplicationConfig.getInstance(mContext).setRobotResultReceiver((NeatoRobotResultReceiver) mResultReciever);
 		Intent serviceIntent = new Intent(mContext, NeatoSmartAppService.class);

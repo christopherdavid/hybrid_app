@@ -31,6 +31,10 @@ public class RobotProfileDataUtils {
 		return virtualState;
 	}
 	
+	public static boolean contains(GetRobotProfileDetailsResult2 details, String key) {
+		return details.contains(key);
+	}
+	
 	public static String getRobotName(GetRobotProfileDetailsResult2 details) {
 		String robotName = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_NAME);
 		return robotName;
@@ -46,6 +50,12 @@ public class RobotProfileDataUtils {
 		String scheduleState = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_ENABLE_SCHEDULE);
 		LogHelper.logD(TAG, "getBasicScheduleState, retrived ROBOT_SCHEDULE");
 		return scheduleState;
+	}
+	
+	public static boolean isScheduleUpdated(Context context, GetRobotProfileDetailsResult2 details) {
+		String isScheduleUpdated = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_SCHEDULE_UPDATED);
+		LogHelper.logD(TAG, "isScheduleUpdated, retrived ROBOT_SCHEDULE");
+		return Boolean.valueOf(isScheduleUpdated);
 	}
 	
 	public static String getState(String virtualState, String currentState) {

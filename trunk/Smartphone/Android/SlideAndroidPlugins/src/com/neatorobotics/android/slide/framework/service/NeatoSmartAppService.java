@@ -23,7 +23,6 @@ import android.os.RemoteException;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
-
 import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.R;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
@@ -613,7 +612,9 @@ public class NeatoSmartAppService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		
+
+		AppUtils.logLibraryVersion();
+
 		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
 		
 		LogHelper.log(TAG, "Server information = " + getFormattedServerInfo());

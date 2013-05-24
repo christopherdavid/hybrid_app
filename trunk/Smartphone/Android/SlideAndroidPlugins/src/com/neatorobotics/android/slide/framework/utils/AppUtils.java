@@ -9,7 +9,9 @@ import java.util.UUID;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.neatorobotics.android.slide.framework.LibVersionInfo;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
+import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceUtils;
@@ -21,6 +23,8 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 public class AppUtils {
+	
+	private static final String TAG = AppUtils.class.getSimpleName();
 	
 	// Public static helper function to return the Version number of the application.
 	// This returns the version number as specified in AndroidManifest.xml
@@ -140,6 +144,18 @@ public class AppUtils {
 		catch (JSONException e) {
 			
 		}
-		
+	}
+	
+	public static void logLibraryVersion() {
+		LogHelper.log(TAG, "----------------------------------------------------");
+		LogHelper.log(TAG, "Plugin Library version = " + LibVersionInfo.getLibraryVersion());
+		LogHelper.log(TAG, "----------------------------------------------------");
+	}
+	
+	public static void logApplicationVersion(Context context) {
+		String version = AppUtils.getVersionWithBuildNumber(context);
+		LogHelper.log(TAG, "----------------------------------------------------");
+		LogHelper.log(TAG, "Application version = " + version);
+		LogHelper.log(TAG, "----------------------------------------------------");
 	}
 }

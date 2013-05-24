@@ -10,6 +10,7 @@ import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
+import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
 import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
@@ -23,6 +24,9 @@ public class SlidePluginBaseActivity extends DroidGap {
 	public void onCreate(Bundle savedInstanceState) {
 		LogHelper.logD(TAG, "onCreate called");
 		super.onCreate(savedInstanceState);
+		
+		AppUtils.logLibraryVersion();
+
 		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
 		
 		mServiceManager = new NeatoServiceManager(getApplicationContext());

@@ -322,7 +322,8 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(result);
 			neatoSmartApp.hideProgressBar();			
 			neatoSmartApp.hideAddRobotShowCommandsPage();
-			
+			eventIdList = [];
+			localStorage.setItem('scheduleId', null);
 			localStorage.setItem('isRobotStarted', "false");
 			localStorage.setItem('isCleaningPaused', "false");
 			localStorage.setItem('isPeerConnection', "false");
@@ -458,7 +459,8 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(result);
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.hideDirectAssociateRobotShowRobotCommandPage();
-			
+			eventIdList = [];
+			localStorage.setItem('scheduleId', null);
 			localStorage.setItem('isRobotStarted', "false");
 			localStorage.setItem('isCleaningPaused', "false");
 			localStorage.setItem('isPeerConnection', "false");
@@ -2049,7 +2051,10 @@ var neatoSmartApp = (function() {
 			if (dataKeyCode == ROBOT_NAME_UPDATE) {
 				//TODO:
 			}
-			
+			if (dataKeyCode == ROBOT_SCHEDULE_UPDATED) {
+				//TODO:
+			}
+			alert(dataKeyCode);
 			neatoSmartApp.toggleStartStop();
 		},
 		

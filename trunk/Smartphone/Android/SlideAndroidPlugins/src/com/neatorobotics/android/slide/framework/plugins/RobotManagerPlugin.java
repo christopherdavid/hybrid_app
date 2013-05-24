@@ -462,6 +462,16 @@ public class RobotManagerPlugin extends Plugin {
 					super.onScheduleData(scheduleJson);
 					final String robotId = ScheduleHelper.getRobotIdForSchedule(context, scheduleId);
 					sendDataChangedCommand(context, robotId, RobotCommandPacketConstants.KEY_ROBOT_SCHEDULE_CHANGED);
+					if (AppConstants.isServerDataModeEnabled()) {
+						// Passing NoActionWebServiceRequestListener in listener because we don't want to 
+						// send the response to the UI layer
+						// TODO:
+						// However this has one issue. If Schedule is updated but the API to tell the robot that schedule is updated
+						// fails then robot will not know that scheduled has changed. Either server should send the message
+						// to the robot whenever schedule is updated or if this API fails, SmartApp needs to save this information
+						// and try again
+						RobotDataManager.sendRobotScheduleUpdated(context, robotId, new NoActionWebServiceRequestListener());
+					}
 				}
 			});
 		}
@@ -1733,6 +1743,31 @@ public class RobotManagerPlugin extends Plugin {
 			}
 			
 			return jsonObject;
+		}
+		
+		private static final class NoActionWebServiceRequestListener implements WebServiceBaseRequestListener {
+
+			@Override
+			public void onReceived(NeatoWebserviceResult responseResult) {
+				LogHelper.log(TAG, "NoActionWebServiceRequestListener: onReceive responseResult = " + responseResult);
+			}
+
+			@Override
+			public void onNetworkError(String errMessage) {
+				LogHelper.log(TAG, "NoActionWebServiceRequestListener: onNetworkError errMessage = " + errMessage);
+			}
+
+			@Override
+			public void onServerError(String errMessage) {
+				LogHelper.log(TAG, "NoActionWebServiceRequestListener: onServerError errMessage = " + errMessage);
+				
+			}
+
+			@Override
+			public void onServerError(int errorType, String errMessage) {
+				LogHelper.log(TAG, "NoActionWebServiceRequestListener: onServerError errMessage = " + errMessage);				
+			}
+			
 		}
 }
 
