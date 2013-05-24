@@ -53,7 +53,7 @@ public class DBHelper {
 	private static final String SELECTION_ROBOT_BY_BASIC_SCHEDULE_ID = Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_BASIC_SCHEDULE_ID + " = ?";
 	private static final String SELECTION_ROBOT_BY_ADVANCED_SCHEDULE_ID = Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_ADVANCED_SCHEDULE_ID + " = ?";
 	private static final String SELECTION_CLEANING_SETTINGS_BY_ROBOTID = Tables.TABLE_NAME_CLEANING_SETTINGS + "." + CleaningSettingsColumns.COL_NAME_ROBOT_ID + " = ?";
-	private static final String SELECTION_NOTIFICATION_SETTINGS_BY_ROBOTID = Tables.TABLE_NAME_NOTIFICATION_SETTINGS + "." + NotificationSettingsColumns.COL_NAME_EMAIL + " = ?";
+	private static final String SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL = Tables.TABLE_NAME_NOTIFICATION_SETTINGS + "." + NotificationSettingsColumns.COL_NAME_EMAIL + " = ?";
 	
 	private static final String SELECTION_ROBOT_PROFILE_PARAM_BY_ROBOTID_AND_KEY = Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS + "." + RobotProfileParameters.COL_NAME_ROBOT_ID + " = ? AND " + Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS + "." + RobotProfileParameters.COL_NAME_ROBOT_PARAM_KEY + " = ?";
 	private DBHelper (Context context) {
@@ -866,11 +866,11 @@ public class DBHelper {
 		SQLiteDatabase db = getDatabase();
 
 		Cursor cursor = db.query(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, 
-				SELECTION_NOTIFICATION_SETTINGS_BY_ROBOTID, selectionArgs, null, null, null);
+				SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL, selectionArgs, null, null, null);
 		if (cursor.moveToFirst()) {			
 			// Entry exist update it
 			count = db.update(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, values, 
-					SELECTION_NOTIFICATION_SETTINGS_BY_ROBOTID, selectionArgs);
+					SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL, selectionArgs);
 		}
 		else {
 			// Entry does not exist add one
@@ -890,7 +890,7 @@ public class DBHelper {
 		SQLiteDatabase db = getDatabase();
 		String[] selectionArgs = new String[] {email};
 		Cursor cursor = db.query(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, 
-				SELECTION_NOTIFICATION_SETTINGS_BY_ROBOTID, selectionArgs, null, null, null);
+				SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL, selectionArgs, null, null, null);
 		
 		if (cursor.moveToFirst()) {
 			notificationsJson = cursor.getString(cursor.getColumnIndex(NotificationSettingsColumns.COL_NAME_NOTIFICATION_JSON));

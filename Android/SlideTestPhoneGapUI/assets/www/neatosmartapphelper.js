@@ -34,6 +34,8 @@ var ROBOT_STATE_UPDATE				= 4003;
 var ROBOT_NAME_UPDATE  				= 4004;
 // The keyCode for the schedulestate update of the robot.
 var ROBOT_SCHEDULE_STATE_CHANGED 	= 4005;
+// The keyCode for the schedule is updated notification
+var ROBOT_SCHEDULE_UPDATED 			= 4006;
 
 var PLUGIN_JSON_KEYS  =  (function() {
     var keys = {

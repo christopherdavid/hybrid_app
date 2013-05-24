@@ -19,6 +19,7 @@ public class NeatoRobotDataWebServicesAttributes {
 			public static final String ROBOT_ENABLE_SCHEDULE 	= "enable_basic_schedule";
 			public static final String ROBOT_TURN_VACUUM_ONOFF  = "vacuum_onoff";
 			public static final String ROBOT_TURN_WIFI_ONOFF  	= "wifi_onoff";
+			public static final String ROBOT_SCHEDULE_UPDATED 	= "schedule_updated";
 		}
 	}
 	
