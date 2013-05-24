@@ -12,6 +12,7 @@
 #import "NeatoDBHelper.h"
 #import "PluginConstants.h"
 #import "NeatoRobotHelper.h"
+#import "NeatoNotification.h"
 
 @implementation UserManagerPlugin
 
@@ -489,4 +490,58 @@
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
 }
+
+- (void)turnNotificationOnOff:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    // Get the callback id
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    NeatoNotification *notification = [[NeatoNotification alloc] init];
+    notification.notificationId = [parameters valueForKey:KEY_NOTFICATION_ID];
+    notification.notificationValue = [AppHelper stringFromBool:[[parameters valueForKey:KEY_ON] boolValue]];
+    [callWrapper turnNotification:notification onOffForUserWithEmail:[parameters valueForKey:KEY_EMAIL] callbackID:callbackId];
+}
+
+- (void)setUserPushNotificationOptionsSuccessWithNotificationData:(NSDictionary *)notificationJson callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:notificationJson];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
+    [dictionary setValue:[NSNumber numberWithInt:[error code]] forKey:KEY_ERROR_CODE];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]]; 
+}
+
+- (void)getNotificationSettings:(CDVInvokedUrlCommand *)command {
+    // Get the callback id
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper notificationSettingsForUserWithEmail:[parameters objectForKey:KEY_EMAIL] callbackID:callbackId];
+}
+
+- (void)userNotificationSettingsData:(NSDictionary *)notificationJson callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:notificationJson];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+- (void)failedToGetUserPushNotificationSettingsWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
+    [dictionary setValue:[NSNumber numberWithInt:[error code]] forKey:KEY_ERROR_CODE];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]]; 
+}
+
 @end

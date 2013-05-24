@@ -182,4 +182,21 @@
     return @"";
 }
 
++ (BOOL)boolValueFromString:(NSString *)string {
+    if ([string isEqualToString:STRING_TRUE]) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
++ (NSString *)stringFromBool:(BOOL)boolValue {
+    if (boolValue) {
+        return STRING_TRUE;
+    }
+    else {
+        return STRING_FALSE;
+    }
+}
 @end

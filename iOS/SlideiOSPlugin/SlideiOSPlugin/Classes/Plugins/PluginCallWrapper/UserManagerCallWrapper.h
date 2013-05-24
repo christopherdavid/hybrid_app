@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "NeatoServerManager.h"
 #import <Cordova/CDV.h>
+#import "NeatoNotification.h"
 
 @protocol UserManagerProtocol <NSObject>
 
@@ -42,6 +43,11 @@
 - (void)failedToChangePasswordWithError:(NSError *)error callbackId:(NSString *)callbackId;
 - (void)userCreated2:(NeatoUser *)neatoUser callbackId:(NSString *)callbackId;
 - (void)failedToCreateUser2WithError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)notificationsTurnedOnOffWithResult:(NSDictionary *)notification callbackId:(NSString *)callbackId;
+- (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)userNotificationSettingsData:(NSDictionary *)notificationJson callbackId:(NSString *)callbackId;
+- (void)failedToGetUserPushNotificationSettingsWithError:(NSError *)error callbackId:(NSString *)callbackId;
+
 @end
 
 @interface UserManagerCallWrapper : CDVPlugin 
@@ -67,4 +73,6 @@
 - (void)forgetPasswordForEmail:(NSString *)email callbackID:(NSString *)callbackId;
 - (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword callbackID:(NSString *)callbackId;
 - (void)createUser2:(NeatoUser *)neatoUser callbackID:(NSString *)callbackId;
+- (void)notificationSettingsForUserWithEmail:(NSString *)email callbackID:(NSString *)callbackId;
+- (void)turnNotification:(NeatoNotification *)notification onOffForUserWithEmail:(NSString *)email callbackID:(NSString *)callbackId;
 @end

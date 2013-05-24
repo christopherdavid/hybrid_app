@@ -11,6 +11,10 @@
 #import "CreateUserListener2.h"
 #import "ChangePasswordListener.h"
 #import "EnableDisableScheduleListener.h"
+#import "NeatoNotification.h"
+#import "SetUserPushNotificationOptionsListener.h"
+#import "GetUserPushNotificationsListener.h"
+#import "AppHelper.h"
 
 @interface NeatoServerManager()
 
@@ -20,6 +24,8 @@
 @property(nonatomic, strong) CreateUserListener2 *createUserListener2;
 @property(nonatomic, retain) RobotAssociationListener *associationListener;
 @property(nonatomic, strong) ChangePasswordListener *changePasswordListener;
+@property(nonatomic, strong) SetUserPushNotificationOptionsListener *setPushNotificationsListener;
+@property(nonatomic, strong) GetUserPushNotificationsListener *getPushNotificationsListener;
 @property(nonatomic, retain) NSString *userEmail;
 
 -(void) notifyRequestFailed:(SEL) selector withError:(NSError *) error;
@@ -35,6 +41,8 @@
 @synthesize userEmail = _userEmail;
 @synthesize createUserListener2 = _createUserListener2;
 @synthesize changePasswordListener = _changePasswordListener;
+@synthesize setPushNotificationsListener = _setPushNotificationsListener;
+@synthesize getPushNotificationsListener = _getPushNotificationsListener;
 
 -(void) loginNativeUser:(NSString *) email password:(NSString *)password
 {
@@ -684,6 +692,54 @@
             self.retained_self = nil;
         });
     }
+}
+
+- (void)turnNotification:(NeatoNotification *)notification onOffForUserWithEmail:(NSString *)email {
+    debugLog(@"");
+    self.retained_self = self;
+    self.setPushNotificationsListener = [[SetUserPushNotificationOptionsListener alloc] initWithDelegate:self];
+    self.setPushNotificationsListener.notification = notification;
+    self.setPushNotificationsListener.email = email;
+    [self.setPushNotificationsListener start];
+}
+
+- (void)notificationsTurnedOnOffWithResult:(NSDictionary *)notification {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(notificationsTurnedOnOffWithResult:)]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate performSelector:@selector(notificationsTurnedOnOffWithResult:) withObject:notification];
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+    
+}
+- (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error {
+    [self notifyRequestFailed:@selector(failedToSetUserPushNotificationOptionsWithError:) withError:error];
+}
+
+- (void)notificationSettingsForUserWithEmail:(NSString *)email {
+    debugLog(@"");
+    self.retained_self = self;
+    self.getPushNotificationsListener = [[GetUserPushNotificationsListener alloc] initWithDelegate:self];
+    self.getPushNotificationsListener.email = email;
+    [self.getPushNotificationsListener start];
+}
+
+- (void)userNotificationSettingsData:(NSDictionary *)notificationJson {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(userNotificationSettingsData:)]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate performSelector:@selector(userNotificationSettingsData:) withObject:notificationJson];
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+}
+
+- (void)failedToGetUserPushNotificationSettingsWithError:(NSError *)error {
+    debugLog(@"");
+    [self notifyRequestFailed:@selector(failedToGetUserPushNotificationSettingsWithError:) withError:error];
 }
 
 @end

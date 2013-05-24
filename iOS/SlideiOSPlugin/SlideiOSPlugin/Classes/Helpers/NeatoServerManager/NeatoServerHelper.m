@@ -27,6 +27,9 @@
 #define CHANGE_PASSWORD_HANDLER @"changePasswordHandler:"
 #define CREATE_USER2_RESPONSE_HANDLER @"createUserHandler2:"
 #define ENABLE_DISABLE_SCHEDULE_RESPONSE_HANDLER @"enableDisableScheduleHandler:"
+#define SET_USER_PUSH_NOTIFICATION_OPTION_HANDLER @"setUserPushNotificationOptionHandler:"
+#define GET_USER_PUSH_NOTIFICATION_OPTION_HANDLER @"getUserPushNotificationOptionHandler:"
+
 
 #define GET_IS_USER_VALIDATED_POST_STRING @"api_key=%@&email=%@"
 #define GET_AUTH_TOKEN_NATIVE_POST_STRING @"api_key=%@&account_type=%@&email=%@&password=%@"
@@ -52,6 +55,8 @@
 #define ENABLE_BASIC_SCHEDULE @"enable_basic_schedule"
 #define ENABLE_ADVANCED_SCHEDULE @"enable_advanced_schedule"
 #define ENABLE_DISABLE_SCHEDULE_POST_STRING @"api_key=%@&serial_number=%@&source_serial_number=%@&source_smartapp_id=%@&value_extra=%@&%@"
+#define SET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING @"api_key=%@&email=%@&json_object=%@"
+#define GET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING @"api_key=%@&email=%@"
 
 @interface NeatoServerHelper()
 
@@ -1221,7 +1226,8 @@
     
     if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Forget password failed!");
-        NSError *error = [AppHelper nserrorWithDescription:[value objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
+        NSError *netowrkError = (NSError *)value;
+        NSError *error = [AppHelper nserrorWithDescription:[netowrkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
         [self notifyRequestFailed:@selector(failedToForgetPasswordWithError:) withError:error];
         return;
     }
@@ -1267,7 +1273,8 @@
     
     if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Change password failed!");
-        NSError *error = [AppHelper nserrorWithDescription:[value objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
+        NSError *netowrkError = (NSError *)value;
+        NSError *error = [AppHelper nserrorWithDescription:[netowrkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
         [self notifyRequestFailed:@selector(failedToChangePasswordWithError:) withError:error];
         return;
     }
@@ -1312,7 +1319,8 @@
     
     if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"User creation2 failed!");
-        NSError *error = [AppHelper nserrorWithDescription:[value objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
+        NSError *netowrkError = (NSError *)value;
+        NSError *error = [AppHelper nserrorWithDescription:[netowrkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
         [self notifyRequestFailed:@selector(failedToGetCreateUserHandle2Error:) withError:error];
         return;
     }
@@ -1403,6 +1411,103 @@
         [self notifyRequestFailed:@selector(failedToEnableDisableScheduleWithError:) withError:error];
     }
     
+}
+
+- (void)setUserPushNotificationOptions:(NSString *)jsonString forUserWithEmail:(NSString *)email {
+    self.retained_self = self;
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:SET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING, NEATO_API_KEY, email, jsonString] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:SET_USER_PUSH_NOTIFICATION_OPTION_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper getDataForRequest:request];
+}
+
+- (void)setUserPushNotificationOptionHandler:(id)value {
+    if (value == nil) {
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        debugLog(@"Set push notification options failed!");
+        [self notifyRequestFailed:@selector(failedToSetUserPushNotificationOptionsWithError:) withError:error];
+        return;
+    }
+    
+    if ([value isKindOfClass:[NSError class]]) {
+        debugLog(@"Set push notification options failed!");
+        NSError *networkError = (NSError *)value;
+        NSError *error = [AppHelper nserrorWithDescription:[networkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
+        [self notifyRequestFailed:@selector(failedToSetUserPushNotificationOptionsWithError:) withError:error];
+        return;
+    }
+    
+    NSDictionary *jsonData = [AppHelper parseJSON:value];
+    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    debugLog(@"status = %d", [status intValue]);
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
+        debugLog(@"Set push notification options successful");
+        NSDictionary *data = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
+        debugLog(@" Success Message : %@", [data valueForKey:NEATO_RESPONSE_MESSAGE]);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(setUserPushNotificationOptionsSuccess)]) {
+                [self.delegate performSelector:@selector(setUserPushNotificationOptionsSuccess)];
+            }
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+    else {
+        debugLog(@"Set push notification options unsuccessful");
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        [self notifyRequestFailed:@selector(failedToSetUserPushNotificationOptionsWithError:) withError:error];
+    }
+}
+
+- (void)notificationSettingsForUserWithEmail:(NSString *)email {
+    self.retained_self = self;
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING, NEATO_API_KEY, email] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:GET_USER_PUSH_NOTIFICATION_OPTION_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper getDataForRequest:request];
+}
+
+- (void)getUserPushNotificationOptionHandler:(id)value {
+    if (value == nil) {
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        debugLog(@"Get push notification options failed!");
+        [self notifyRequestFailed:@selector(failedToGetUserPushNotificationSettingsWithError:) withError:error];
+        return;
+    }
+    
+    if ([value isKindOfClass:[NSError class]]) {
+        debugLog(@"Get push notification options failed!");
+        NSError *networkError = (NSError *)value;
+        NSError *error = [AppHelper nserrorWithDescription:[networkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
+        [self notifyRequestFailed:@selector(failedToGetUserPushNotificationSettingsWithError:) withError:error];
+        return;
+    }
+    
+    NSDictionary *jsonData = [AppHelper parseJSON:value];
+    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    debugLog(@"status = %d", [status intValue]);
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
+        debugLog(@"Set push notification options successful");
+        NSDictionary *data = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(userNotificationSettingsData:)]) {
+                [self.delegate performSelector:@selector(userNotificationSettingsData:) withObject:data];
+            }
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+    else {
+        debugLog(@"Set push notification options unsuccessful");
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        [self notifyRequestFailed:@selector(failedToGetUserPushNotificationSettingsWithError:) withError:error];
+    }
 }
 
 @end

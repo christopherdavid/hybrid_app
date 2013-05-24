@@ -102,4 +102,20 @@
     [[NeatoDataStore sharedNeatoDataStore] updatePassword:newPassword];
 }
 
++ (void)insertOrUpdateNotificaton:(NeatoNotification *)notification forEmail:(NSString *)email {
+    [[NeatoDataStore sharedNeatoDataStore] insertOrUpdateNotificaton:notification forEmail:email];
+}
+
++ (BOOL)notificationsExistForUserWithEmail:(NSString *)email {
+    return [[NeatoDataStore sharedNeatoDataStore] notificationsExistForUserWithEmail:email];
+}
+
++ (void)setNotificationsFromNotificationsArray:(NSArray *)notificationOptionsArray forEmail:(NSString *)email {
+    [[NeatoDataStore sharedNeatoDataStore] setNotificationsFromNotificationsArray:notificationOptionsArray forEmail:email];
+}
+
++ (NSArray *)notificationsForUserWithEmail:(NSString *)email {
+   return [[NeatoDataStore sharedNeatoDataStore] notificationsForUserWithEmail:email];
+}
+
 @end

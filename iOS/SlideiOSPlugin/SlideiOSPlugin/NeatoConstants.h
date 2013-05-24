@@ -75,6 +75,21 @@
 #define ERROR_TYPE_USER_UNAUTHORIZED 1014
 #define ERROR_NOT_SUPPORTED 1015
 
+
+#define STRING_TRUE @"true"
+#define STRING_FALSE @"false"
+// Notification constants
+// Total notifications options:4 - global, robot stuck, needs clean and cleaning done.
+#define TOTAL_NOTIFICATION_OPTIONS 4
+#define KEY_NOTIFICATIONS @"notifications"
+#define NOTIFICATION_ID_GLOBAL @"global"
+#define NOTIFICATION_ID_ROBOT_STUCK @"101"
+#define NOTIFICATION_ID_NEEDS_CLEAN @"102"
+#define NOTIFICATON_ID_CLEANING_DONE @"103"
+#define KEY_NOTIFICATION_KEY @"key"
+#define KEY_NOTIFICATION_VALUE @"value"
+
+
 #define NETWORK_CONNECTION_FAILURE_MSG @"Request failed!Please check your network settings."
 // To switch to prod server, uncomment SWITCH_TO_PROD_SERVER variable
 //#define SWITCH_TO_PROD_SERVER 1
@@ -129,6 +144,10 @@
     #define NEATO_FORGET_PASSWORD_URL @"http://neato.rajatogo.com/api/rest/json?method=user.forget_password"
     #define NEATO_CHANGE_PASSWORD_URL @"http://neato.rajatogo.com/api/rest/json?method=user.change_password"
     #define NEATO_SET_ROBOT_PROFILE_2_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.set_profile_details2"
+    #define NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neato.rajatogo.com/api/rest/json?method=message.set_user_push_notification_options"
+    #define NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neato.rajatogo.com/api/rest/json?method=message.get_user_push_notification_options"
+
+
 #elif SWITCH_TO_DEV_SERVER
     // Will use API's at http://neatodev.rajatogo.com/wstest/
     #define NEATO_CREATE_USER_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.create"
@@ -151,6 +170,9 @@
     #define NEATO_FORGET_PASSWORD_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.forget_password"
     #define NEATO_CHANGE_PASSWORD_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.change_password"
     #define NEATO_SET_ROBOT_PROFILE_2_URL @"http://neatodev.rajatogo.com/api/rest/json/?method=robot.set_profile_details2"
+    #define NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=message.set_user_push_notification_options"
+    #define NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=message.get_user_push_notification_options"
+
 #else
     // Will use API's at http://neatostaging.rajatogo.com/wstest/
     #define NEATO_CREATE_USER_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.create"
@@ -172,6 +194,8 @@
     #define NEATO_CREATE_USER2_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.create2"
     #define NEATO_FORGET_PASSWORD_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.forget_password"
     #define NEATO_CHANGE_PASSWORD_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.change_password"
+    #define NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=message.set_user_push_notification_options"
+    #define NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=message.get_user_push_notification_options"
     #define NEATO_SET_ROBOT_PROFILE_2_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.set_profile_details2"
 #endif
 

@@ -3,6 +3,7 @@
 #import "NeatoRobot.h"
 #import "NSURLConnectionHelper.h"
 #import "NeatoServerHelper.h"
+#import "NeatoNotification.h"
 
 @protocol NeatoServerManagerProtocol <NSObject>
 
@@ -35,6 +36,10 @@
 - (void)failedToCreateUser2WithError:(NSError *)error;
 - (void)failedToEnableDisableScheduleWithError:(NSError *)error;
 - (void)enabledDisabledScheduleWithResult:(NSDictionary *)resultData;
+- (void)notificationsTurnedOnOffWithResult:(NSDictionary *)notification;
+- (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error;
+- (void)userNotificationSettingsData:(NSDictionary *)notification;
+- (void)failedToGetUserPushNotificationSettingsWithError:(NSError *)error;
 @end
 
 @interface NeatoServerManager : NSObject 
@@ -64,4 +69,6 @@
 - (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword;
 - (void)createUser2:(NeatoUser *)neatoUser;
 - (void)enabledDisable:(BOOL)enable schedule:(int)scheduleType forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email;
+- (void)turnNotification:(NeatoNotification *)notification onOffForUserWithEmail:(NSString *)email;
+- (void)notificationSettingsForUserWithEmail:(NSString *)email;
 @end
