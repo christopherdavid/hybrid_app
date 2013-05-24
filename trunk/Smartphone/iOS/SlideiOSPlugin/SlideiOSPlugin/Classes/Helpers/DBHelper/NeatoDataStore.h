@@ -4,6 +4,7 @@
 #import "NeatoUser.h"
 #import "NeatoRobot.h"
 #import "NeatoSocialNetworks.h"
+#import "NeatoNotification.h"
 
 @class Schedule;
 
@@ -44,4 +45,11 @@
 - (id)getRobotIdForScheduleId:(NSString *)scheduleId;
 - (id)updateScheduleWithScheduleId:(NSString *)scheduleId withServerScheduleId:(NSString *)serverScheduleId andXmlDataVersion:(NSString *)xmlDataVersion;
 - (id)updateScheduleWithScheduleId:(NSString *)scheduleId forXmlDataVersion:(NSString *)xmlDataVersion;
+
+// Notification Methods.
+- (void)insertOrUpdateNotificaton:(NeatoNotification *)notification forEmail:(NSString *)email;
+- (BOOL)notificationsExistForUserWithEmail:(NSString *)email;
+- (void)setNotificationsFromNotificationsArray:(NSArray *)notificationOptionsArray forEmail:(NSString *)email;
+- (NSArray *)notificationsForUserWithEmail:(NSString *)email;
+
 @end

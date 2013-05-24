@@ -30,6 +30,9 @@
 - (void)gotHandleForCreateUser2:(NSString *)authToken;
 - (void)failedToGetCreateUserHandle2Error:(NSError *)error;
 - (void)enabledDisabledScheduleSuccess;
+- (void)setUserPushNotificationOptionsSuccess;
+- (void)userNotificationSettingsData:(NSDictionary *)notification;
+
 
 // Failure cases
 - (void)failedToGetCreateUserHandle:(NSError *) error;
@@ -51,6 +54,8 @@
 - (void)userValidationFailedWithError:(NSError *)error;
 - (void)failedToResendValidationEmailWithError:(NSError *)error;
 - (void)failedToEnableDisableScheduleWithError:(NSError *)error;
+- (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error;
+- (void)failedToGetUserPushNotificationSettingsWithError:(NSError *)error;
 @end
 
 @interface NeatoServerHelper : NSObject
@@ -79,4 +84,6 @@
 - (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword authToken:(NSString *)authToken;
 - (void)createUser2:(NeatoUser *)neatoUser;
 - (void)enableDisable:(BOOL)enable scheduleType:(int)scheduleType forRobot:(NSString *)robotId withUserEmail:(NSString *)email;
+- (void)setUserPushNotificationOptions:(NSString *)jsonString forUserWithEmail:(NSString *)email;
+- (void)notificationSettingsForUserWithEmail:(NSString *)email;
 @end

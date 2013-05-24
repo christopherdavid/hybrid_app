@@ -1,11 +1,12 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class NeatoRobotEntity, NeatoSocialNetworksEntity;
+@class NeatoNotificationEntity, NeatoRobotEntity, NeatoSocialNetworksEntity;
 
 @interface NeatoUserEntity : NSManagedObject
 
 @property (nonatomic, retain) NSString * account_type;
+@property (nonatomic, retain) NSString * alternateEmail;
 @property (nonatomic, retain) NSString * chatId;
 @property (nonatomic, retain) NSString * chatPassword;
 @property (nonatomic, retain) NSString * email;
@@ -13,10 +14,10 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * password;
 @property (nonatomic, retain) NSString * userId;
-@property (nonatomic, retain) NSString * alternateEmail;
 @property (nonatomic, retain) NSString * validationStatus;
 @property (nonatomic, retain) NSSet *hasRobots;
 @property (nonatomic, retain) NSSet *hasSocialNetowrks;
+@property (nonatomic, retain) NSSet *hasNotificationOptions;
 @end
 
 @interface NeatoUserEntity (CoreDataGeneratedAccessors)
@@ -30,5 +31,10 @@
 - (void)removeHasSocialNetowrksObject:(NeatoSocialNetworksEntity *)value;
 - (void)addHasSocialNetowrks:(NSSet *)values;
 - (void)removeHasSocialNetowrks:(NSSet *)values;
+
+- (void)addHasNotificationOptionsObject:(NeatoNotificationEntity *)value;
+- (void)removeHasNotificationOptionsObject:(NeatoNotificationEntity *)value;
+- (void)addHasNotificationOptions:(NSSet *)values;
+- (void)removeHasNotificationOptions:(NSSet *)values;
 
 @end

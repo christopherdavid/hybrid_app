@@ -92,4 +92,7 @@
 #define ROBOT_ASSOCIATION_SUCCESS 9001
 #define ROBOT_ASSOCIATION_FAILED 9002
 
+// Notification constants
+#define KEY_NOTFICATION_ID @"notificationId"
+#define KEY_ON @"on"
 

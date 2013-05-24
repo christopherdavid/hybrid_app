@@ -16,6 +16,7 @@
 #import "ScheduleEvent.h"
 #import "AppHelper.h"
 #import "BasicScheduleEvent.h"
+#import "NeatoNotificationEntity.h"
 
 #define ENTITY_COMMAND_TRACKER @"CommandTrackerEntity"
 #define NEATO_DATA_STORE_NAME @"NeatoDatastore.sqlite"
@@ -23,6 +24,7 @@
 #define ENTITY_NEATO_USER @"NeatoUserEntity"
 #define ENTITY_NEATO_ROBOT @"NeatoRobotEntity"
 #define ENTITY_NEATO_SOCIALNETWORKS @"NeatoSocialNetworksEntity"
+#define ENTITY_NEATO_NOTIFICATION @"NeatoNotificationEntity"
 
 //Schedule Entities
 #define ENTITY_SCHEDULE @"ScheduleEntity"
@@ -1180,6 +1182,126 @@ static NeatoDataStore *sharedInstance;
         userEntity.password = newPassword;
         [self saveDatabase];
     }
+}
+
+- (void)insertOrUpdateNotificaton:(NeatoNotification *)notification forEmail:(NSString *)email {
+    if (self.managedObjectContext) {
+        NeatoUserEntity * userEntity = [self neatoUserEntityForEmail:email];
+        if (userEntity) {
+            NeatoNotificationEntity *notificationsEntity = [self insertOrUpdateNeatoNotificaton:notification];
+            if (notificationsEntity) {
+                [userEntity addHasNotificationOptionsObject:notificationsEntity];
+                [self saveDatabase];
+            }
+        }
+        else {
+            debugLog(@"User with email = %@ does not exist",email);
+        }
+    }
+}
+
+- (NeatoUserEntity *)neatoUserEntityForEmail:(NSString *)email {
+    NeatoUserEntity *userEntity;
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
+    request.predicate = [NSPredicate predicateWithFormat:@"email= %@", email];
+    NSError *error = nil;
+    NSArray *users = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if(error) {
+        debugLog(@"Error while fetching users.");
+        return nil;
+    }
+    if([users count] > 1) {
+        debugLog(@"!!!!Error!!!!! there cannot be more than one userEntity with same email");
+        return nil;
+    }
+    
+    if([users count] == 1) {
+        userEntity = [users lastObject];
+    }
+    return userEntity;
+}
+
+- (NeatoNotificationEntity *)insertOrUpdateNeatoNotificaton:(NeatoNotification *)notification {
+    NeatoNotificationEntity *notificationsEntity;
+    if(self.managedObjectContext) {
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_NOTIFICATION];
+        request.predicate = [NSPredicate predicateWithFormat:@"notificationId= %@", notification.notificationId];
+        NSError *error = nil;
+        NSArray *notificationEntites = [self.managedObjectContext executeFetchRequest:request error:&error];
+        if(error) {
+            debugLog(@"Error while fetching notification entities.");
+            return nil;
+        }
+        if([notificationEntites count] > 1) {
+            debugLog(@"!!!!Error!!!!! there cannot be more than one notificationEntites with same notificationId");
+            return nil;
+        }
+        
+        if([notificationEntites count] == 1) {
+            notificationsEntity = [notificationEntites lastObject];
+        }
+        else {
+            notificationsEntity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_NEATO_NOTIFICATION inManagedObjectContext:self.managedObjectContext];
+            notificationsEntity.notificationId = notification.notificationId;
+        }
+        notificationsEntity.notificationValue = notification.notificationValue;
+        [self saveDatabase];
+    }
+    else {
+        debugLog(@"Managed object context is nil");
+    }
+    return  notificationsEntity;
+}
+
+- (BOOL)notificationsExistForUserWithEmail:(NSString *)email {
+    if (self.managedObjectContext) {
+        NeatoUserEntity * userEntity = [self neatoUserEntityForEmail:email];
+        if (userEntity) {
+            NSArray *notificationEntities = [userEntity.hasNotificationOptions allObjects];
+            if ([notificationEntities count] == 0) {
+                return NO;
+            }
+            else {
+                return YES;
+            }
+        }
+        else {
+            debugLog(@"User with email = %@ does not exist",email);
+            return nil;
+        }
+    }
+    else {
+        debugLog(@"Managed object context is nil");
+        return nil;
+    }
+}
+
+- (void)setNotificationsFromNotificationsArray:(NSArray *)notificationOptionsArray forEmail:(NSString *)email {
+    for (int i = 0; i < [notificationOptionsArray count]; i++) {
+        NeatoNotification *neatoNotification = [notificationOptionsArray objectAtIndex:i];
+        [self insertOrUpdateNotificaton:neatoNotification forEmail:email];
+    } 
+}
+
+- (NSArray *)notificationsForUserWithEmail:(NSString *)email {
+    NSMutableArray *notifications = [[NSMutableArray alloc] init];
+    if (self.managedObjectContext) {
+        NeatoUserEntity * userEntity = [self neatoUserEntityForEmail:email];
+        if (userEntity) {
+            NSArray *notificationOptionsEntities = [userEntity.hasNotificationOptions allObjects];
+            for (int i = 0 ; i < [notificationOptionsEntities count] ; i++) {
+                NeatoNotification *neatoNotification = [[NeatoNotification alloc] init];
+                NeatoNotificationEntity *notificationsEntity = [notificationOptionsEntities objectAtIndex:i];
+                neatoNotification.notificationId = notificationsEntity.notificationId;
+                neatoNotification.notificationValue = notificationsEntity.notificationValue;
+                [notifications addObject:neatoNotification];
+            }
+        }
+        else {
+            debugLog(@"User with email = %@ does not exist",email);
+        }
+    }
+    return notifications; 
 }
 
 @end

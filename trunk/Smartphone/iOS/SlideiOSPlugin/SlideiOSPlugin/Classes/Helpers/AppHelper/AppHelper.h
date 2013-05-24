@@ -21,4 +21,6 @@
 + (NSTimeInterval)currentTimeStamp;
 + (NSError *)nserrorWithDescription:(NSString *)description code:(NSInteger)code;
 + (NSString *)getEmptyStringIfNil:(NSString *)input;
++ (BOOL)boolValueFromString:(NSString *)string;
++ (NSString *)stringFromBool:(BOOL)boolValue;
 @end

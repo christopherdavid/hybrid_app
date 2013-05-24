@@ -486,4 +486,55 @@
     debugLog(@"");
     [self notifyCallback:@selector(failedToCreateUser2WithError:callbackId:) object:error];
 }
+
+- (void)turnNotification:(NeatoNotification *)notification onOffForUserWithEmail:(NSString *)email callbackID:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager turnNotification:notification onOffForUserWithEmail:email];
+}
+
+- (void)notificationsTurnedOnOffWithResult:(NSDictionary *)notificationJson {
+    debugLog(@"");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.delegate respondsToSelector:@selector(notificationsTurnedOnOffWithResult:callbackId:)]) {
+            [self.delegate performSelector:@selector(notificationsTurnedOnOffWithResult:callbackId:) withObject:notificationJson withObject:self.callbackId];
+        }
+        self.delegate = nil;
+        self.retained_self = nil;
+    });
+}
+
+- (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error {
+    debugLog(@"");
+    [self notifyCallback:@selector(failedToSetUserPushNotificationOptionsWithError:callbackId:) object:error];
+}
+
+- (void)notificationSettingsForUserWithEmail:(NSString *)email callbackID:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager notificationSettingsForUserWithEmail:email];
+}
+
+- (void)userNotificationSettingsData:(NSDictionary *)notificationJson {
+    debugLog(@"");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.delegate respondsToSelector:@selector(userNotificationSettingsData:callbackId:)]) {
+            [self.delegate performSelector:@selector(userNotificationSettingsData:callbackId:) withObject:notificationJson withObject:self.callbackId];
+        }
+        self.delegate = nil;
+        self.retained_self = nil;
+    });
+}
+
+- (void)failedToGetUserPushNotificationSettingsWithError:(NSError *)error {
+    debugLog(@"");
+    [self notifyCallback:@selector(failedToGetUserPushNotificationSettingsWithError:callbackId:) object:error];
+}
+
 @end

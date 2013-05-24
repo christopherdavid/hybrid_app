@@ -19,6 +19,11 @@
 		B22BDAFB168D7F3B00FFCB76 /* UserManagerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B22BDAFA168D7F3B00FFCB76 /* UserManagerPlugin.m */; };
 		B22BDAFE168D7F5500FFCB76 /* RobotManagerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B22BDAFD168D7F5500FFCB76 /* RobotManagerPlugin.m */; };
 		E121001216B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */; };
+		E13214A0174E3DD5004F2A0E /* GetUserPushNotificationsListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E132149B174E3DD4004F2A0E /* GetUserPushNotificationsListener.m */; };
+		E13214A1174E3DD5004F2A0E /* NeatoNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = E132149D174E3DD4004F2A0E /* NeatoNotification.m */; };
+		E13214A2174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E132149F174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.m */; };
+		E13214A5174E3E5C004F2A0E /* NeatoUserEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E13214A4174E3E5C004F2A0E /* NeatoUserEntity.m */; };
+		E13214A8174E3E74004F2A0E /* NeatoNotificationEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E13214A7174E3E73004F2A0E /* NeatoNotificationEntity.m */; };
 		E15FC46616A9B68F0000AB67 /* AtlasGridManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC44916A9B68F0000AB67 /* AtlasGridManager.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
 		E15FC46716A9B68F0000AB67 /* AtlasGridMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC44B16A9B68F0000AB67 /* AtlasGridMetadata.m */; };
 		E15FC46816A9B68F0000AB67 /* AtlasServerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC44D16A9B68F0000AB67 /* AtlasServerHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
@@ -54,7 +59,6 @@
 		E199354C16EE1433008BB353 /* CommandTrackerEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354B16EE1433008BB353 /* CommandTrackerEntity.m */; };
 		E199354F16EE1441008BB353 /* ScheduleEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354E16EE1441008BB353 /* ScheduleEntity.m */; };
 		E199355216EE1442008BB353 /* ScheduleEventsEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355116EE1441008BB353 /* ScheduleEventsEntity.m */; };
-		E199355516EE1442008BB353 /* NeatoUserEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355416EE1442008BB353 /* NeatoUserEntity.m */; };
 		E199357516EE14A4008BB353 /* AdvanceScheduleEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355816EE14A1008BB353 /* AdvanceScheduleEvent.m */; };
 		E199357616EE14A4008BB353 /* BasicScheduleEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355A16EE14A1008BB353 /* BasicScheduleEvent.m */; };
 		E199357816EE14A4008BB353 /* Schedule.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355E16EE14A1008BB353 /* Schedule.m */; };
@@ -208,6 +212,16 @@
 		B29F92F21694659A001A70B7 /* CordovaLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CordovaLib.xcodeproj; path = "../../PhoneGap/phonegap-phonegap-26d211b/lib/ios/CordovaLib/CordovaLib.xcodeproj"; sourceTree = "<group>"; };
 		B29F930616946E81001A70B7 /* Build.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Build.h; sourceTree = "<group>"; };
 		E121001116B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NeatoDatastoreModel.xcdatamodel; sourceTree = "<group>"; };
+		E132149A174E3DD4004F2A0E /* GetUserPushNotificationsListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetUserPushNotificationsListener.h; sourceTree = "<group>"; };
+		E132149B174E3DD4004F2A0E /* GetUserPushNotificationsListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetUserPushNotificationsListener.m; sourceTree = "<group>"; };
+		E132149C174E3DD4004F2A0E /* NeatoNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoNotification.h; sourceTree = "<group>"; };
+		E132149D174E3DD4004F2A0E /* NeatoNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoNotification.m; sourceTree = "<group>"; };
+		E132149E174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetUserPushNotificationOptionsListener.h; sourceTree = "<group>"; };
+		E132149F174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetUserPushNotificationOptionsListener.m; sourceTree = "<group>"; };
+		E13214A3174E3E5C004F2A0E /* NeatoUserEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoUserEntity.h; sourceTree = "<group>"; };
+		E13214A4174E3E5C004F2A0E /* NeatoUserEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoUserEntity.m; sourceTree = "<group>"; };
+		E13214A6174E3E73004F2A0E /* NeatoNotificationEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoNotificationEntity.h; sourceTree = "<group>"; };
+		E13214A7174E3E73004F2A0E /* NeatoNotificationEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoNotificationEntity.m; sourceTree = "<group>"; };
 		E15FC44816A9B68F0000AB67 /* AtlasGridManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtlasGridManager.h; sourceTree = "<group>"; };
 		E15FC44916A9B68F0000AB67 /* AtlasGridManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AtlasGridManager.m; sourceTree = "<group>"; };
 		E15FC44A16A9B68F0000AB67 /* AtlasGridMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtlasGridMetadata.h; sourceTree = "<group>"; };
@@ -283,8 +297,6 @@
 		E199354E16EE1441008BB353 /* ScheduleEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleEntity.m; sourceTree = "<group>"; };
 		E199355016EE1441008BB353 /* ScheduleEventsEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleEventsEntity.h; sourceTree = "<group>"; };
 		E199355116EE1441008BB353 /* ScheduleEventsEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleEventsEntity.m; sourceTree = "<group>"; };
-		E199355316EE1442008BB353 /* NeatoUserEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoUserEntity.h; sourceTree = "<group>"; };
-		E199355416EE1442008BB353 /* NeatoUserEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoUserEntity.m; sourceTree = "<group>"; };
 		E199355716EE14A1008BB353 /* AdvanceScheduleEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvanceScheduleEvent.h; sourceTree = "<group>"; };
 		E199355816EE14A1008BB353 /* AdvanceScheduleEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdvanceScheduleEvent.m; sourceTree = "<group>"; };
 		E199355916EE14A1008BB353 /* BasicScheduleEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicScheduleEvent.h; sourceTree = "<group>"; };
@@ -712,8 +724,10 @@
 				E168BBC1169D461800BA6AD3 /* NeatoDBHelper.h */,
 				E168BBC2169D461800BA6AD3 /* NeatoDBHelper.m */,
 				E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */,
-				E199355316EE1442008BB353 /* NeatoUserEntity.h */,
-				E199355416EE1442008BB353 /* NeatoUserEntity.m */,
+				E13214A6174E3E73004F2A0E /* NeatoNotificationEntity.h */,
+				E13214A7174E3E73004F2A0E /* NeatoNotificationEntity.m */,
+				E13214A3174E3E5C004F2A0E /* NeatoUserEntity.h */,
+				E13214A4174E3E5C004F2A0E /* NeatoUserEntity.m */,
 				E199355016EE1441008BB353 /* ScheduleEventsEntity.h */,
 				E199355116EE1441008BB353 /* ScheduleEventsEntity.m */,
 				E199354D16EE1441008BB353 /* ScheduleEntity.h */,
@@ -910,6 +924,12 @@
 		E1A064D01695639D009C22F7 /* NeatoServerManager */ = {
 			isa = PBXGroup;
 			children = (
+				E132149A174E3DD4004F2A0E /* GetUserPushNotificationsListener.h */,
+				E132149B174E3DD4004F2A0E /* GetUserPushNotificationsListener.m */,
+				E132149C174E3DD4004F2A0E /* NeatoNotification.h */,
+				E132149D174E3DD4004F2A0E /* NeatoNotification.m */,
+				E132149E174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.h */,
+				E132149F174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.m */,
 				E1925452174BDF42004143B7 /* EnableDisableScheduleListener.h */,
 				E1925453174BDF42004143B7 /* EnableDisableScheduleListener.m */,
 				E193AE85174B916500AE0B4E /* CreateUserListener2.h */,
@@ -1484,7 +1504,6 @@
 				E199354C16EE1433008BB353 /* CommandTrackerEntity.m in Sources */,
 				E199354F16EE1441008BB353 /* ScheduleEntity.m in Sources */,
 				E199355216EE1442008BB353 /* ScheduleEventsEntity.m in Sources */,
-				E199355516EE1442008BB353 /* NeatoUserEntity.m in Sources */,
 				E199357516EE14A4008BB353 /* AdvanceScheduleEvent.m in Sources */,
 				E199357616EE14A4008BB353 /* BasicScheduleEvent.m in Sources */,
 				E199357816EE14A4008BB353 /* Schedule.m in Sources */,
@@ -1509,6 +1528,11 @@
 				E193AE7A174B694E00AE0B4E /* ChangePasswordListener.m in Sources */,
 				E193AE87174B916500AE0B4E /* CreateUserListener2.m in Sources */,
 				E1925454174BDF42004143B7 /* EnableDisableScheduleListener.m in Sources */,
+				E13214A0174E3DD5004F2A0E /* GetUserPushNotificationsListener.m in Sources */,
+				E13214A1174E3DD5004F2A0E /* NeatoNotification.m in Sources */,
+				E13214A2174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.m in Sources */,
+				E13214A5174E3E5C004F2A0E /* NeatoUserEntity.m in Sources */,
+				E13214A8174E3E74004F2A0E /* NeatoNotificationEntity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

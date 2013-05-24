@@ -24,4 +24,6 @@
 - (void)forgetPassword:(CDVInvokedUrlCommand *)command;
 - (void)changePassword:(CDVInvokedUrlCommand *)command;
 - (void)createUser2:(CDVInvokedUrlCommand *)command;
+- (void)turnNotificationOnOff:(CDVInvokedUrlCommand *)command;
+- (void)getNotificationSettings:(CDVInvokedUrlCommand *)command;
 @end

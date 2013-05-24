@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 
 @class NeatoUser;
+@class NeatoNotification;
 
 @interface NeatoUserHelper : NSObject
 
@@ -15,4 +16,9 @@
 + (void)saveDevicePushAuthToken:(NSString *)authToken;
 + (NSString *)getDevicePushAuthToken;
 + (void)updatePassword:(NSString *)newPassword;
++ (void)insertOrUpdateNotificaton:(NeatoNotification *)notification forEmail:(NSString *)email;
++ (BOOL)notificationsExistForUserWithEmail:(NSString *)email;
++ (void)setNotificationsFromNotificationsArray:(NSArray *)notificationOptionsArray forEmail:(NSString *)email;
++ (NSArray *)notificationsForUserWithEmail:(NSString *)email;
+
 @end
