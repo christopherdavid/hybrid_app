@@ -278,6 +278,14 @@ public class NeatoSmartAppService extends Service {
 		LogHelper.log(TAG, "Data changed on server for robot");
 		String robotId = request.getCommandParam(RobotCommandPacketConstants.KEY_ROBOT_ID);
 		
+		String causeAgentId = request.getCommandParam(RobotCommandPacketConstants.KEY_CAUSE_AGENT_ID);
+		if (!TextUtils.isEmpty(causeAgentId)) {
+			if (causeAgentId.equals(NeatoPrefs.getNeatoUserDeviceId(getApplicationContext()))) {
+				LogHelper.log(TAG, "Causing Agent Matched. Ignore Data changed notification");
+				return;
+			}
+		}
+		
 		if (TextUtils.isEmpty(robotId)) {
 			LogHelper.log(TAG, "Robot Id is empty in data changed command.");
 			robotId = NeatoPrefs.getManagedRobotSerialId(getApplicationContext());
@@ -462,7 +470,7 @@ public class NeatoSmartAppService extends Service {
 			LogHelper.log(TAG, "cancelDiscovery Called");
 		}
 
-		//TODO cleanup all the things here. TO be called when we wish to stop the service
+		// TODO cleanup all the things here. TO be called when we wish to stop the service
 		public void cleanup() {
 			LogHelper.log(TAG, "cleanup service called");
 
@@ -587,7 +595,7 @@ public class NeatoSmartAppService extends Service {
 			} 
 			else if(intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
 				NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-				if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI && ! networkInfo.isConnected()) {
+				if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI && !networkInfo.isConnected()) {
 					// Wifi is disconnected
 					LogHelper.logD(TAG, "Disconnecting from the network");
 					// There is no API to logout. XMPP will automatically break the connection

@@ -2034,27 +2034,29 @@ var neatoSmartApp = (function() {
 			var dataKeyCode =  (result['robotDataKeyId']);
 			var robotId = (result['robotId']);
 			var data = result['robotData'];
+			var message = "";
 			
 			if (dataKeyCode == ROBOT_CURRENT_STATE_CHANGED) {
 				var state = data['robotCurrentState'];
 				localStorage.setItem('robotCurrentState', state);
+				message = "Robot Current State Changed";
 			
 			}
 			if (dataKeyCode == ROBOT_STATE_UPDATE) {
 				var state = data['robotStateUpdate'];
 				localStorage.setItem('robotStateUpdate', state);
-			
+				message = "Robot State Updated";
 			}
 			if (dataKeyCode == ROBOT_SCHEDULE_STATE_CHANGED) {
-				//TODO:
+				message = "Robot Schedule State Changed";
 			}
 			if (dataKeyCode == ROBOT_NAME_UPDATE) {
-				//TODO:
+				message = "Robot Name Changed";
 			}
 			if (dataKeyCode == ROBOT_SCHEDULE_UPDATED) {
-				//TODO:
+				message = "Robot Schedule Updated";
 			}
-			alert(dataKeyCode);
+			alert(message);
 			neatoSmartApp.toggleStartStop();
 		},
 		

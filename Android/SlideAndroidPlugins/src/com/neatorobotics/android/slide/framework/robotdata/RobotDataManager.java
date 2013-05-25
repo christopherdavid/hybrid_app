@@ -6,6 +6,7 @@ import java.util.HashMap;
 import android.content.Context;
 
 import com.neatorobotics.android.slide.framework.AppConstants;
+import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacketUtils;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotPacketConstants;
@@ -16,7 +17,7 @@ import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedExce
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails2.ProfileAttributeKeys;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebservicesHelper;
-import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult2;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult3;
 import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
 
 public class RobotDataManager {
@@ -47,8 +48,9 @@ public class RobotDataManager {
 				try {
 					HashMap<String, String> profileParams = new HashMap<String, String>();
 					profileParams.put(key, value);					
-					SetRobotProfileDetailsResult2 result = NeatoRobotDataWebservicesHelper.setRobotProfileDetailsRequest2(context, robotId, profileParams);
-					
+					SetRobotProfileDetailsResult3 result = NeatoRobotDataWebservicesHelper.setRobotProfileDetailsRequest3(context, robotId, profileParams);
+					long timestamp = result.extra_params.timestamp;
+					RobotHelper.saveProfileParam(context, robotId, key, timestamp);
 					//Do not start timer for every set profile data change.
 					if (RobotProfileConstants.isTimerExpirableForProfileKey(key)) {
 						RobotCommandTimerHelper.getInstance(context).startCommandExpiryTimer(robotId);

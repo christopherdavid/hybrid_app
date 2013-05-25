@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import com.neatorobotics.android.slide.framework.LibVersionInfo;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceUtils;
@@ -158,4 +159,19 @@ public class AppUtils {
 		LogHelper.log(TAG, "Application version = " + version);
 		LogHelper.log(TAG, "----------------------------------------------------");
 	}
+	
+	public static String createNeatoUserDeviceIdIfNotExists(Context context) {
+		String deviceId = NeatoPrefs.getNeatoUserDeviceId(context);
+		if (TextUtils.isEmpty(deviceId)) {
+			deviceId = generateUuid();
+			NeatoPrefs.saveNeatoUserDeviceId(context, deviceId);
+		}
+		return deviceId;
+	}
+	
+	
+	public static void clearNeatoUserDeviceId(Context context) {
+		NeatoPrefs.clearNeatoUserDeviceId(context);
+	}
+	
 }

@@ -53,7 +53,7 @@ import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.Rob
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.listeners.RobotGridDataDownloadListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.listeners.AddUpdateRobotAtlasListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.atlas.listeners.RobotAtlasDataDownloadListener;
-import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult2;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult3;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapDataDownloadListener;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.RobotMapWebservicesManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.map.UpdateRobotMapListener;
@@ -579,7 +579,7 @@ public class RobotManagerPlugin extends Plugin {
 				public JSONObject getResultObject(NeatoWebserviceResult responseResult)
 						throws JSONException {
 					JSONObject jsonResult;
-					if((responseResult != null) && (responseResult instanceof SetRobotProfileDetailsResult2)) {
+					if((responseResult != null) && (responseResult instanceof SetRobotProfileDetailsResult3)) {
 						jsonResult = new JSONObject();
 						jsonResult.put(JsonMapKeys.KEY_IS_SCHEDULE_ENABLED, enableSchedule);
 						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_TYPE, scheduleType);
@@ -1645,9 +1645,9 @@ public class RobotManagerPlugin extends Plugin {
 			public JSONObject getResultObject(NeatoWebserviceResult result)
 					throws JSONException {
 				JSONObject object = null;
-				if (result != null && result instanceof SetRobotProfileDetailsResult2) {
+				if (result != null && result instanceof SetRobotProfileDetailsResult3) {
 					object = new JSONObject();
-					SetRobotProfileDetailsResult2 profileResult = (SetRobotProfileDetailsResult2) result;
+					SetRobotProfileDetailsResult3 profileResult = (SetRobotProfileDetailsResult3) result;
 					object.put(JsonMapKeys.KEY_EXPECTED_TIME_TO_EXECUTE, profileResult.extra_params.expected_time);
 				}
 				return object;

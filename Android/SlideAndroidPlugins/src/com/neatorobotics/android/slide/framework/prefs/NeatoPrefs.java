@@ -12,7 +12,7 @@ public class NeatoPrefs {
 	private static final String KEY_NEATO_USER_AUTH_TOKEN = "neato_user_auth_token";
 	private static final String PEER_CONNECTION_STATUS = "peer_conn_status";
 	private static final String MANAGED_ROBOT_SERIAL_ID = "managed_robot_serial_id";
-
+	private static final String NEATO_USER_DEVICE_ID 			= "cause_agent_id";
 	// TODO: This is just a temporary arrangement till everybody switches to the new command structure
 	// 
 	private static final String USE_NEW_COMMAND_STRUCTURE = "useNewCommandStructure";
@@ -163,6 +163,18 @@ public class NeatoPrefs {
 		}
 		
 		return false;
+	}
+	
+	public static String getNeatoUserDeviceId(Context context) {
+		return getPreferenceStrValue(context, NEATO_USER_DEVICE_ID);
+	}
+	
+	public static void saveNeatoUserDeviceId(Context context, String neatoDeviceId) {
+		savePreference(context, NEATO_USER_DEVICE_ID, neatoDeviceId);
+	}
+	
+	public static void clearNeatoUserDeviceId(Context context) {
+		savePreference(context, NEATO_USER_DEVICE_ID, "");
 	}
 	
 }

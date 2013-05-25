@@ -14,7 +14,6 @@ public class RobotProfileConstants {
 	
 	static {
 		PROFILE_KEY_TIMER_EXPIRY_MAP.put(ProfileAttributeKeys.ROBOT_CLEANING_COMMAND, true);
-		PROFILE_KEY_TIMER_EXPIRY_MAP.put(ProfileAttributeKeys.ROBOT_TURN_VACUUM_ONOFF, true);
 	}
 	
 	public static String getProfileKeyTypeForCommand(int commandId) {

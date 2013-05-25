@@ -16,6 +16,7 @@ import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.Ne
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.GetRobotPresenceStatus;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.GetRobotProfileDetails2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails2;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3;
 
 
 public class NeatoRobotDataWebservicesHelper {
@@ -32,6 +33,19 @@ public class NeatoRobotDataWebservicesHelper {
 		robotSetDetailParams.putAll(addProfilePrefix(profileDetailsParams));
 		String response = MobileWebServiceClient.executeHttpPost(context, SetRobotProfileDetails2.METHOD_NAME, robotSetDetailParams);
 		return AppUtils.checkResponseResult(response, SetRobotProfileDetailsResult2.class);
+	}
+	
+	public static SetRobotProfileDetailsResult3 setRobotProfileDetailsRequest3(Context context, String robotId, HashMap<String, String> profileDetailsParams) 
+			throws UserUnauthorizedException, NeatoServerException, IOException {		
+		
+		Map<String, String> robotSetDetailParams = new HashMap<String, String>();
+		robotSetDetailParams.put(SetRobotProfileDetails3.Attribute.SERIAL_NUMBER, robotId);
+		robotSetDetailParams.put(SetRobotProfileDetails3.Attribute.SOURCE_SMARTAPP_ID, NeatoPrefs.getUserEmailId(context));
+		robotSetDetailParams.put(SetRobotProfileDetails3.Attribute.CAUSING_AGENT_ID, NeatoPrefs.getNeatoUserDeviceId(context));
+		robotSetDetailParams.put(DeleteRobotProfileKey.Attribute.NOTIFICATION_FLAG, DeleteRobotProfileKey.DATA_CHANGED_NOTIFICATION_FLAG_ON);
+		robotSetDetailParams.putAll(addProfilePrefix(profileDetailsParams));
+		String response = MobileWebServiceClient.executeHttpPost(context, SetRobotProfileDetails3.METHOD_NAME, robotSetDetailParams);
+		return AppUtils.checkResponseResult(response, SetRobotProfileDetailsResult3.class);
 	}
 	
 	public static GetRobotPresenceStatusResult getRobotPresenceStatus (Context context, String robotId) 
@@ -63,24 +77,27 @@ public class NeatoRobotDataWebservicesHelper {
 	}
 
 	private static String getProfileKey(String key) {
-		String keyWithProfilePrefix = String.format(PROFILE_KEY_FORMAT, SetRobotProfileDetails2.Attribute.PROFILE, key);
+		String keyWithProfilePrefix = String.format(PROFILE_KEY_FORMAT, SetRobotProfileDetails3.Attribute.PROFILE, key);
 		return keyWithProfilePrefix;
 	}
 	
-	public static DeleteRobotProfileKeyResult deleteRobotProfileKey (Context context, String robotId, String key) 
+	public static DeleteRobotProfileKeyResult deleteRobotProfileKey(Context context, String robotId, String key) 
 			throws UserUnauthorizedException, NeatoServerException, IOException {		
 		
 		Map<String, String> robotDeleteKeyParams = new HashMap<String, String>();
 		robotDeleteKeyParams.put(DeleteRobotProfileKey.Attribute.SERIAL_NUMBER, robotId);
 		robotDeleteKeyParams.put(DeleteRobotProfileKey.Attribute.PROFILE_KEY, key);
+		robotDeleteKeyParams.put(DeleteRobotProfileKey.Attribute.CAUSING_AGENT_ID, NeatoPrefs.getNeatoUserDeviceId(context));
+		robotDeleteKeyParams.put(DeleteRobotProfileKey.Attribute.NOTIFICATION_FLAG, DeleteRobotProfileKey.DATA_CHANGED_NOTIFICATION_FLAG_OFF);
+		
 		String response = MobileWebServiceClient.executeHttpPost(context, DeleteRobotProfileKey.METHOD_NAME, robotDeleteKeyParams);
 		return AppUtils.checkResponseResult(response, DeleteRobotProfileKeyResult.class);
 	}
 	
-	public static SetRobotProfileDetailsResult2 resetRobotProfileValue(Context context, String robotId, String key) throws UserUnauthorizedException, 
+	public static SetRobotProfileDetailsResult3 resetRobotProfileValue(Context context, String robotId, String key) throws UserUnauthorizedException, 
 	NeatoServerException, IOException {
 		HashMap<String, String> robotStateChangeMap = new HashMap<String, String>();
 		robotStateChangeMap.put(key, "");
-		return setRobotProfileDetailsRequest2(context, robotId, robotStateChangeMap);
+		return setRobotProfileDetailsRequest3(context, robotId, robotStateChangeMap);
 	}
 }

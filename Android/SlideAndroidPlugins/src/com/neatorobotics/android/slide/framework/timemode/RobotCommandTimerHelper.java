@@ -3,13 +3,9 @@ package com.neatorobotics.android.slide.framework.timemode;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
-
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 
 public class RobotCommandTimerHelper {
 	

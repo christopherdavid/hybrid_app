@@ -49,7 +49,7 @@ public class RobotDataNotifyUtils {
 			notifyStateChange(context, robotId, details);
 		}
 		
-		boolean isRobotScheduleStateChanged = RobotProfileDataUtils.isDataChangedAndSave(context, details, robotId, ProfileAttributeKeys.ROBOT_ENABLE_SCHEDULE);
+		boolean isRobotScheduleStateChanged = RobotProfileDataUtils.isDataChangedAndSave(context, details, robotId, ProfileAttributeKeys.ROBOT_ENABLE_BASIC_SCHEDULE);
 		if (isRobotScheduleStateChanged) {
 			notifyScheduleStateChange(context, robotId, details);
 		}
@@ -58,6 +58,7 @@ public class RobotDataNotifyUtils {
 		if (isScheduleChanged) {
 			notifyScheduleUpdated(context, robotId, details);
 		}
+		// Add vacuum and wifi changes if necessary.
 	}
 	
 	// Private helper method to consume the profile data parameters.
@@ -86,6 +87,7 @@ public class RobotDataNotifyUtils {
 			LogHelper.logD(TAG, "robotName is empty");
 			return;
 		}
+		
 		RobotItem robotItem = RobotHelper.getRobotItem(context, robotId);
 		String currentRobotName = "";
 		if (robotItem != null) {
@@ -96,6 +98,9 @@ public class RobotDataNotifyUtils {
 			LogHelper.logD(TAG, "Robot name is not changed");
 			return;
 		}
+		robotItem.name = robotName;
+		RobotHelper.saveRobotDetails(context, robotItem);
+		
 		LogHelper.logD(TAG, "Robot name is changed");
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put(JsonMapKeys.KEY_ROBOT_NAME, robotName);
