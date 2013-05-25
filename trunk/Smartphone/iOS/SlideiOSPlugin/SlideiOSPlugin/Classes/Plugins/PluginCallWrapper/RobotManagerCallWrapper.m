@@ -1,6 +1,7 @@
 #import "RobotManagerCallWrapper.h"
 #import "LogHelper.h"
 #import "XMPPConnectionHelper.h"
+#import "RobotCommandManager.h"
 
 @interface RobotManagerCallWrapper()
 
@@ -654,5 +655,16 @@
     }
     self.retained_self = nil;
     self.delegate = nil;
+}
+
+- (void)turnVacuumOnOff:(int)on forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email withParams:(NSDictionary *)params commandId:(NSString *)commandId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    
+    RobotCommandManager *manager = [[RobotCommandManager alloc] init];
+    manager.delegate = self;
+    [manager turnVacuumOnOff:on forRobotWithId:robotId withUserEmail:email withParams:params commandId:commandId];
 }
 @end

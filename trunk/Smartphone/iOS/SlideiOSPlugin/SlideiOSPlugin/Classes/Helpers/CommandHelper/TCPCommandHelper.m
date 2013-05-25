@@ -32,53 +32,11 @@
     return [command dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-- (NSData *)startRobotCommand2WithParams:(NSDictionary *)params andRequestId:(NSString *)requestId {
+
+- (NSData *)getRobotCommand2WithId:(int)commandId withParams:(NSDictionary *)params andRequestId:(NSString *)requestId {
     debugLog(@"");
     CommandsHelper *commandHelper = [[CommandsHelper alloc] init];
-    NSString *command = [NSString stringWithFormat:TEMP_TCP_NEW_ROBOT_COMMAND_FORMAT, [commandHelper versionForCommand], [AppHelper getAppSignature], COMMAND_START_ROBOT, requestId, [[NSNumber numberWithDouble:[AppHelper currentTimeStamp]] stringValue], [commandHelper commandRetryCount], [commandHelper commandResponseNeeded], [NeatoUserHelper getNeatoUser].userId, [commandHelper distributionModeForCommandType:@"TCP"], [commandHelper generateXMLForParams:params]];
-    debugLog(@"command = %@", command);
-    return [command dataUsingEncoding:NSUTF8StringEncoding];
-}
-
-
-- (NSData *)stopRobotCommand2WithParams:(NSDictionary *)params andRequestId:(NSString *)requestId {
-    debugLog(@"");
-    CommandsHelper *commandHelper = [[CommandsHelper alloc] init];
-    NSString *command = [NSString stringWithFormat:TEMP_TCP_NEW_ROBOT_COMMAND_FORMAT, [commandHelper versionForCommand], [AppHelper getAppSignature], COMMAND_STOP_ROBOT, requestId, [[NSNumber numberWithDouble:[AppHelper currentTimeStamp]] stringValue], [commandHelper commandRetryCount], [commandHelper commandResponseNeeded], [NeatoUserHelper getNeatoUser].userId, [commandHelper distributionModeForCommandType:@"TCP"], [commandHelper generateXMLForParams:params]];
-    debugLog(@"command = %@", command);
-    return [command dataUsingEncoding:NSUTF8StringEncoding];
-}
-
-- (NSData *)pauseRobotCommandWithParams:(NSDictionary *)params andRequestId:(NSString *)requestId {
-    debugLog(@"");
-    CommandsHelper *commandHelper = [[CommandsHelper alloc] init];
-    NSString *command = [NSString stringWithFormat:TEMP_TCP_NEW_ROBOT_COMMAND_FORMAT, [commandHelper versionForCommand], [AppHelper getAppSignature], COMMAND_PAUSE_CLEANING, requestId, [[NSNumber numberWithDouble:[AppHelper currentTimeStamp]] stringValue], [commandHelper commandRetryCount], [commandHelper commandResponseNeeded], [NeatoUserHelper getNeatoUser].userId, [commandHelper distributionModeForCommandType:@"TCP"], [commandHelper generateXMLForParams:params]];
-    debugLog(@"command = %@", command);
-    return [command dataUsingEncoding:NSUTF8StringEncoding];
-}
-
-
-
-- (NSData *)setRobotTimeCommandWithParams:(NSDictionary *)params andRequestId:(NSString *)requestId {
-    debugLog(@"");
-    CommandsHelper *commandHelper = [[CommandsHelper alloc] init];
-    NSString *command = [NSString stringWithFormat:TEMP_TCP_NEW_ROBOT_COMMAND_FORMAT, [commandHelper versionForCommand], [AppHelper getAppSignature], COMMAND_SET_ROBOT_TIME, requestId, [[NSNumber numberWithDouble:[AppHelper currentTimeStamp]] stringValue], [commandHelper commandRetryCount], [commandHelper commandResponseNeeded], [NeatoUserHelper getNeatoUser].userId, [commandHelper distributionModeForCommandType:@"TCP"], [commandHelper generateXMLForParams:params]];
-    debugLog(@"command = %@", command);
-    return [command dataUsingEncoding:NSUTF8StringEncoding];
-}
-
-- (NSData *)enableDisableScheduleCommandWithParams:(NSDictionary *)params andRequestId:(NSString *)requestId {
-    debugLog(@"");
-    CommandsHelper *commandHelper = [[CommandsHelper alloc] init];
-    NSString *command = [NSString stringWithFormat:TEMP_TCP_NEW_ROBOT_COMMAND_FORMAT, [commandHelper versionForCommand], [AppHelper getAppSignature], COMMAND_ENABLE_DISABLE_SCHEDULE, requestId, [[NSNumber numberWithDouble:[AppHelper currentTimeStamp]] stringValue], [commandHelper commandRetryCount], [commandHelper commandResponseNeeded], [NeatoUserHelper getNeatoUser].userId, [commandHelper distributionModeForCommandType:@"TCP"], [commandHelper generateXMLForParams:params]];
-    debugLog(@"command = %@", command);
-    return [command dataUsingEncoding:NSUTF8StringEncoding];
-}
-
-- (NSData *)sendToBaseCommandWithParams:(NSDictionary *)params andRequestId:(NSString *)requestId {
-    debugLog(@"");
-    CommandsHelper *commandHelper = [[CommandsHelper alloc] init];
-    NSString *command = [NSString stringWithFormat:TEMP_TCP_NEW_ROBOT_COMMAND_FORMAT, [commandHelper versionForCommand], [AppHelper getAppSignature], COMMAND_SEND_TO_BASE, requestId, [[NSNumber numberWithDouble:[AppHelper currentTimeStamp]] stringValue], [commandHelper commandRetryCount], [commandHelper commandResponseNeeded], [NeatoUserHelper getNeatoUser].userId, [commandHelper distributionModeForCommandType:@"TCP"], [commandHelper generateXMLForParams:params]];
+    NSString *command = [NSString stringWithFormat:TEMP_TCP_NEW_ROBOT_COMMAND_FORMAT, [commandHelper versionForCommand], [AppHelper getAppSignature], commandId, requestId, [[NSNumber numberWithDouble:[AppHelper currentTimeStamp]] stringValue], [commandHelper commandRetryCount], [commandHelper commandResponseNeeded], [NeatoUserHelper getNeatoUser].userId, [commandHelper distributionModeForCommandType:@"TCP"], [commandHelper generateXMLForParams:params]];
     debugLog(@"command = %@", command);
     return [command dataUsingEncoding:NSUTF8StringEncoding];
 }

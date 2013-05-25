@@ -89,6 +89,17 @@
 #define KEY_NOTIFICATION_KEY @"key"
 #define KEY_NOTIFICATION_VALUE @"value"
 
+// Command constants
+#define COMMAND_START_ROBOT                 101
+#define COMMAND_STOP_ROBOT                  102
+#define COMMAND_PAUSE_CLEANING              107
+#define COMMAND_SET_ROBOT_TIME              110
+#define COMMAND_ENABLE_DISABLE_SCHEDULE     108
+#define COMMAND_SEND_TO_BASE                104
+#define COMMAND_TURN_VACUUM_ONOFF           116
+#define COMMAND_RESUME_CLEANING             114
+#define COMMAND_VACUUM_ONOFF                116
+#define COMMAND_TURN_WIFI_ONOFF             117
 
 #define NETWORK_CONNECTION_FAILURE_MSG @"Request failed!Please check your network settings."
 // To switch to prod server, uncomment SWITCH_TO_PROD_SERVER variable
