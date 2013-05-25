@@ -145,6 +145,7 @@
 		E1B60E0B16B0400300342422 /* NeatoServerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0616B0400300342422 /* NeatoServerHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
 		E1B60E0C16B0400300342422 /* RobotAssociationListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0816B0400300342422 /* RobotAssociationListener.m */; };
 		E1B6A6A616AEA49E0077DB08 /* CommandTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B6A6A516AEA49E0077DB08 /* CommandTracker.m */; };
+		E1EC9CE6174F96FD0016FF47 /* RobotCommandManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E1EC9CE5174F96FD0016FF47 /* RobotCommandManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -481,6 +482,8 @@
 		E1B60E0816B0400300342422 /* RobotAssociationListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotAssociationListener.m; sourceTree = "<group>"; };
 		E1B6A6A416AEA49E0077DB08 /* CommandTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandTracker.h; sourceTree = "<group>"; };
 		E1B6A6A516AEA49E0077DB08 /* CommandTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandTracker.m; sourceTree = "<group>"; };
+		E1EC9CE4174F96FD0016FF47 /* RobotCommandManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotCommandManager.h; sourceTree = "<group>"; };
+		E1EC9CE5174F96FD0016FF47 /* RobotCommandManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotCommandManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -886,6 +889,8 @@
 		E1A064C01695639D009C22F7 /* CommandHelper */ = {
 			isa = PBXGroup;
 			children = (
+				E1EC9CE4174F96FD0016FF47 /* RobotCommandManager.h */,
+				E1EC9CE5174F96FD0016FF47 /* RobotCommandManager.m */,
 				E1639FDE16D4F0AA0016C236 /* RobotCommandHelper.h */,
 				E1639FDF16D4F0AA0016C236 /* RobotCommandHelper.m */,
 				E1B6A6A416AEA49E0077DB08 /* CommandTracker.h */,
@@ -1533,6 +1538,7 @@
 				E13214A2174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.m in Sources */,
 				E13214A5174E3E5C004F2A0E /* NeatoUserEntity.m in Sources */,
 				E13214A8174E3E74004F2A0E /* NeatoNotificationEntity.m in Sources */,
+				E1EC9CE6174F96FD0016FF47 /* RobotCommandManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

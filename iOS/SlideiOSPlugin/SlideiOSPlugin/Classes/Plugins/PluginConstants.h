@@ -96,3 +96,4 @@
 #define KEY_NOTFICATION_ID @"notificationId"
 #define KEY_ON @"on"
 
+#define KEY_FLAG_ON_OFF @"flagOnOff"

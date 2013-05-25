@@ -746,4 +746,105 @@
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
+- (void)turnVacuumOnOff:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@",parameters);
+    NSString *commandId = [NSString stringWithFormat:@"%d", COMMAND_VACUUM_ONOFF];
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    NSString *email = [NeatoUserHelper getLoggedInUserEmail];
+    int on = [[parameters objectForKey:KEY_ON] intValue];
+    
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    [params setValue:[[NSNumber numberWithInt:on] stringValue] forKey:KEY_FLAG_ON_OFF];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call turnVacuumOnOff:on forRobotWithId:robotId withUserEmail:email withParams:params commandId:commandId callbackId:callbackId];
+}
+
+- (void)startCleaning:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    
+    NSString *commandId = [NSString stringWithFormat:@"%d", COMMAND_START_ROBOT];
+
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    NSDictionary *commandParams = [parameters objectForKey:KEY_COMMAND_PARAMETERS];
+    NSMutableDictionary *params = [commandParams objectForKey:KEY_PARAMS];
+    debugLog(@"params = %@",params);
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call sendCommandToRobot2:robotId commandId:commandId params:params callbackId:callbackId];
+}
+
+- (void)stopCleaning:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    
+    NSString *commandId = [NSString stringWithFormat:@"%d", COMMAND_STOP_ROBOT];
+    
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    NSDictionary *commandParams = [parameters objectForKey:KEY_COMMAND_PARAMETERS];
+    NSMutableDictionary *params = [commandParams objectForKey:KEY_PARAMS];
+    debugLog(@"params = %@",params);
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call sendCommandToRobot2:robotId commandId:commandId params:params callbackId:callbackId];
+}
+
+- (void)pauseCleaning:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    
+    NSString *commandId = [NSString stringWithFormat:@"%d", COMMAND_PAUSE_CLEANING];
+    
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    NSDictionary *commandParams = [parameters objectForKey:KEY_COMMAND_PARAMETERS];
+    NSMutableDictionary *params = [commandParams objectForKey:KEY_PARAMS];
+    debugLog(@"params = %@",params);
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call sendCommandToRobot2:robotId commandId:commandId params:params callbackId:callbackId];
+}
+
+- (void)resumeCleaning:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    
+    NSString *commandId = [NSString stringWithFormat:@"%d", COMMAND_RESUME_CLEANING];
+    
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    NSDictionary *commandParams = [parameters objectForKey:KEY_COMMAND_PARAMETERS];
+    NSMutableDictionary *params = [commandParams objectForKey:KEY_PARAMS];
+    debugLog(@"params = %@",params);
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call sendCommandToRobot2:robotId commandId:commandId params:params callbackId:callbackId];
+}
+
+- (void)turnWiFiOnOff:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    
+    NSString *commandId = [NSString stringWithFormat:@"%d", COMMAND_TURN_WIFI_ONOFF];
+    
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    NSDictionary *commandParams = [parameters objectForKey:KEY_COMMAND_PARAMETERS];
+    NSMutableDictionary *params = [commandParams objectForKey:KEY_PARAMS];
+    debugLog(@"params = %@",params);
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call sendCommandToRobot2:robotId commandId:commandId params:params callbackId:callbackId];
+}
 @end

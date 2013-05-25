@@ -38,4 +38,10 @@
 - (void)registerForRobotMessages:(CDVInvokedUrlCommand *)command;
 - (void)unregisterForRobotMessages:(CDVInvokedUrlCommand *)command;
 - (void)enableSchedule:(CDVInvokedUrlCommand *)command;
+- (void)startCleaning:(CDVInvokedUrlCommand *)command;
+- (void)stopCleaning:(CDVInvokedUrlCommand *)command;
+- (void)pauseCleaning:(CDVInvokedUrlCommand *)command;
+- (void)resumeCleaning:(CDVInvokedUrlCommand *)command;
+- (void)turnWiFiOnOff:(CDVInvokedUrlCommand *)command;
+- (void)turnVacuumOnOff:(CDVInvokedUrlCommand *)command;
 @end
