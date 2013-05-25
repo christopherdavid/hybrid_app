@@ -66,16 +66,7 @@ public class NeatoRobotScheduleWebServicesAttributes {
 		}
 	}
 	
-	public static class SetEnableSchedule {
-		public static final String METHOD_NAME = "robot.set_profile_details2";
-		public static class Attribute {
-			public static final String API_KEY = "api_key";
-			public static final String ROBOT_SERIAL_NUMBER = "serial_number";
-			public static final String SOURCE_SMARTAPP_ID = "source_smartapp_id";
-			public static final String ENABLE_BASIC_SCHEDULE = "enable_basic_schedule";
-			public static final String ENABLE_ADVANCED_SCHEDULE = "enable_advanced_schedule";
-		}
-	}
+
 	
 	public static class IsScheduleEnabled {
 		public static final String METHOD_NAME = "robot.get_profile_details";

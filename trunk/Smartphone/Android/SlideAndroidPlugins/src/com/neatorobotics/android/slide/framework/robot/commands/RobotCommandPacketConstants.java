@@ -61,6 +61,7 @@ public class RobotCommandPacketConstants {
 	public static final String KEY_USER_ID 									= "userId";
 	public static final String KEY_CHAT_ID 									= "chatId";
 	
+	public static final String KEY_CAUSE_AGENT_ID							= "causeAgentId";
 	public static final int DEFAULT_SPOT_CLEANING_LENGTH					= 5;
 	public static final int DEFAULT_SPOT_CLEANING_HEIGHT					= 3;
 	

@@ -20,6 +20,7 @@ import com.neatorobotics.android.slide.framework.pluginhelper.UserJsonData;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.settings.SettingsManager;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
+import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
@@ -302,6 +303,7 @@ public class UserManagerPlugin extends Plugin {
 					
 					RobotCommandServiceManager.loginToXmpp(context);
 					PushNotificationUtils.registerForPushNotification(context);
+					AppUtils.createNeatoUserDeviceIdIfNotExists(context);
 				}					
 				
 				return userDetails;
@@ -342,6 +344,7 @@ public class UserManagerPlugin extends Plugin {
 				success(logoutPluginResult, callbackId);
 				PushNotificationMessageHandler.getInstance(context).removePushNotificationListener();
 				PushNotificationUtils.unregisterPushNotification(context);
+				AppUtils.clearNeatoUserDeviceId(context);
 			}
 		};
 		
@@ -374,6 +377,7 @@ public class UserManagerPlugin extends Plugin {
 					userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
 					RobotCommandServiceManager.loginToXmpp(context);
 					PushNotificationUtils.registerForPushNotification(context);
+					AppUtils.createNeatoUserDeviceIdIfNotExists(context);
 				}				
 				
 				return userDetails;
@@ -408,6 +412,7 @@ public class UserManagerPlugin extends Plugin {
 					userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
 					RobotCommandServiceManager.loginToXmpp(context);
 					PushNotificationUtils.registerForPushNotification(context);
+					AppUtils.createNeatoUserDeviceIdIfNotExists(context);
 				}		
 				
 				return userDetails;

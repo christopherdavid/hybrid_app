@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.CommandFactory;
 import com.neatorobotics.android.slide.framework.robot.commands.CommandPacketValidator;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandsGroup;
@@ -124,7 +125,8 @@ public class XMPPConnectionHelper {
 			}
 			LogHelper.logD(TAG, "Login attempt- User id - " + userId);
 			if (isValidUserIdAndPassword(userId, password)) {
-				connection.login(userId, password);
+				String resourceId = getResourceId();
+				connection.login(userId, password, resourceId);
 				startReceivingPackets();
 				LogHelper.log(TAG, "XMPP Login Successful");
 			} else {
@@ -307,7 +309,8 @@ public class XMPPConnectionHelper {
 					String password = getUserChatPassword();
 					if (isValidUserIdAndPassword(userId, password)) {
 						try {
-							connection.login(userId, password);
+							String resourceId = getResourceId();
+							connection.login(userId, password, resourceId);
 						}
 						catch (Exception e) {
 							
@@ -327,6 +330,10 @@ public class XMPPConnectionHelper {
 		return isConnected;
 	}
 
+	private String getResourceId() {
+		return NeatoPrefs.getNeatoUserDeviceId(mContext);
+	}
+	
 	private void processMessageFromRobot(Message message) {
 		String packetXml = message.getBody();
 		

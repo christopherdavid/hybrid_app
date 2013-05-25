@@ -36,6 +36,7 @@ public class SlidePluginBaseActivity extends DroidGap {
 		
 		if(UserHelper.isUserLoggedIn(this)) {
 			String authToken = NeatoPrefs.getNeatoUserAuthToken(this);
+			AppUtils.createNeatoUserDeviceIdIfNotExists(this);
 			UserManager.getInstance(this).setUserAttributesOnServer(authToken, DeviceUtils.getUserAttributes(this));
 			PushNotificationUtils.registerForPushNotification(this);
 		}

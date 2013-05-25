@@ -47,7 +47,7 @@ public class RobotProfileDataUtils {
 	}
 	
 	public static String getBasicScheduleState(Context context, GetRobotProfileDetailsResult2 details) {
-		String scheduleState = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_ENABLE_SCHEDULE);
+		String scheduleState = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_ENABLE_BASIC_SCHEDULE);
 		LogHelper.logD(TAG, "getBasicScheduleState, retrived ROBOT_SCHEDULE");
 		return scheduleState;
 	}
