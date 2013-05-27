@@ -24,7 +24,7 @@ public class AppConstants {
 	 * the server.
 	 * If set to false, the commands will be sent VIA XMPP/TCP connection and server won't be involved.
 	 */
-	private static final boolean IS_SERVER_DATA_MODE_ENABLED = false;
+	private static final boolean IS_SERVER_DATA_MODE_ENABLED = true;
 	
 	public static boolean isServerDataModeEnabled() {
 		return IS_SERVER_DATA_MODE_ENABLED;
