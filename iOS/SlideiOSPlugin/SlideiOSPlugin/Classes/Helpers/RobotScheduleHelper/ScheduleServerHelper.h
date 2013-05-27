@@ -13,11 +13,14 @@
 - (void)postedSchedule:(PostScheduleResult *)message;
 - (void)postScheduleError:(NSError *)error;
 
-- (void)updatedSchedule:(NSString *)message;
-- (void)updatedScheduleError:(NSError *)error;
+- (void)updatedScheduleWithResult:(id)result;
+- (void)updateScheduleError:(NSError *)error;
 
 - (void)deletedScheduleData:(NSString *)message;
 - (void)deleteScheduleDataError:(NSError *)error;
+
+- (void)gotScheduleWithData:(id)data;
+- (void)failedToGetScheduleWithError:(NSError *)error;
 
 @end
 
@@ -29,6 +32,7 @@
 - (void)getDataForScheduleWithId:(NSString *)scheduleId;
 
 - (void)postScheduleForRobotId:(NSString *)robotId withScheduleData:(NSString *)xmlData ofScheduleType:(NSString *)scheduleType;
-- (void)updateScheduleDataForScheduleId:(NSString *)scheduleId withXMLDataVersion:(NSString *)xml_data_version withScheduleData:(NSString *)xmlData ofScheduleType:(NSString *)scheduleType;
+- (void)updateScheduleDataForScheduleId:(NSString *)scheduleId withScheduleVersion:(NSString *)scheduleVersion withScheduleData:(NSString *)data ofScheduleType:(NSString *)scheduleType;
 - (void)deleteScheduleDataForScheduleId:(NSString *)scheduleId;
+- (void)scheduleBasedOnType:(NSString *)scheduleType forRobotId:(NSString *)robotId;
 @end

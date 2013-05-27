@@ -92,9 +92,9 @@
     [notificationJson setValue:self.notification.notificationId forKey:KEY_NOTIFICATION_KEY];
     [notificationJson setValue:[NSNumber numberWithBool:[AppHelper boolValueFromString:self.notification.notificationValue]] forKey:KEY_NOTIFICATION_VALUE];
     dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.delegate respondsToSelector:@selector(userNotificationSettingsData:)])
+        if ([self.delegate respondsToSelector:@selector(notificationsTurnedOnOffWithResult:)])
         {
-            [self.delegate performSelector:@selector(userNotificationSettingsData:) withObject:notificationJson];
+            [self.delegate performSelector:@selector(notificationsTurnedOnOffWithResult:) withObject:notificationJson];
         }
         self.delegate = nil;
         self.retained_self = nil;

@@ -35,16 +35,16 @@
 
 //Scheduling Methods.
 - (id)createScheduleForRobotId:(NSString *)robotId forScheduleType:(NSString *)scheduleType withScheduleId:(NSString *)scheduleId;
-- (id)getScheduleTypeForScheduleId:(NSString *)scheduleId;
-- (id)addBasicScheduleEventData:(NSString *)xmlData withScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId;
-- (id)updateBasicScheduleEventWithId:(NSString *)scheduleEventId withXMLData:(NSString *)xmlData;
+- (id)scheduleTypeForScheduleId:(NSString *)scheduleId;
+- (id)addBasicScheduleEventData:(NSString *)data withScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId;
+- (id)updateBasicScheduleEventWithId:(NSString *)scheduleEventId withData:(NSString *)data;
 - (id)deleteBasicScheduleEventWithId:(NSString *)scheduleEventId;
-- (id)getBasicScheduleEventWithId:(NSString *)scheduleEventId;
-- (id)getBasicScheduleForScheduleId:(NSString *)scheduleId;
+- (id)basicScheduleEventWithId:(NSString *)scheduleEventId;
+- (id)basicScheduleForScheduleId:(NSString *)scheduleId;
 - (void)saveSchedule:(Schedule *)schedule ofType:(NSString *)scheduleType forRobotWithId:(NSString *)robotId;
-- (id)getRobotIdForScheduleId:(NSString *)scheduleId;
-- (id)updateScheduleWithScheduleId:(NSString *)scheduleId withServerScheduleId:(NSString *)serverScheduleId andXmlDataVersion:(NSString *)xmlDataVersion;
-- (id)updateScheduleWithScheduleId:(NSString *)scheduleId forXmlDataVersion:(NSString *)xmlDataVersion;
+- (id)robotIdForScheduleId:(NSString *)scheduleId;
+- (id)updateServerScheduleId:(NSString *)serverScheduleId andScheduleVersion:(NSString *)scheduleVersion forScheduleWithScheduleId:(NSString *)scheduleId;
+- (id)updateScheduleVersion:(NSString *)scheduleVersion forScheduleWithScheduleId:(NSString *)scheduleId;
 
 // Notification Methods.
 - (void)insertOrUpdateNotificaton:(NeatoNotification *)notification forEmail:(NSString *)email;

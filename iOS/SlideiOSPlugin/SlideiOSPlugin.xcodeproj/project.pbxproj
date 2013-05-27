@@ -55,9 +55,7 @@
 		E198854616B2FB6400ED1AD8 /* NeatoDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E198854316B2FB6400ED1AD8 /* NeatoDataStore.m */; };
 		E199354316EE1432008BB353 /* NeatoRobotEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354216EE1432008BB353 /* NeatoRobotEntity.m */; };
 		E199354616EE1433008BB353 /* NeatoSocialNetworksEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354516EE1433008BB353 /* NeatoSocialNetworksEntity.m */; };
-		E199354916EE1433008BB353 /* BasicScheduleEventEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354816EE1433008BB353 /* BasicScheduleEventEntity.m */; };
 		E199354C16EE1433008BB353 /* CommandTrackerEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354B16EE1433008BB353 /* CommandTrackerEntity.m */; };
-		E199354F16EE1441008BB353 /* ScheduleEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354E16EE1441008BB353 /* ScheduleEntity.m */; };
 		E199355216EE1442008BB353 /* ScheduleEventsEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355116EE1441008BB353 /* ScheduleEventsEntity.m */; };
 		E199357516EE14A4008BB353 /* AdvanceScheduleEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355816EE14A1008BB353 /* AdvanceScheduleEvent.m */; };
 		E199357616EE14A4008BB353 /* BasicScheduleEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355A16EE14A1008BB353 /* BasicScheduleEvent.m */; };
@@ -131,6 +129,9 @@
 		E1A2B7BD16DA52BE003DC9C8 /* RobotDissociationListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A2B7BC16DA52BE003DC9C8 /* RobotDissociationListener.m */; };
 		E1A44BD616D3828B00898959 /* SetRobotNameListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A44BD516D3828B00898959 /* SetRobotNameListener.m */; };
 		E1A44BEF16D3BDC900898959 /* RobotAssociationListener2.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A44BEE16D3BDC900898959 /* RobotAssociationListener2.m */; };
+		E1A5D39017523AB300E01DCF /* ScheduleEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5D38F17523AB300E01DCF /* ScheduleEntity.m */; };
+		E1A5D39317523AC300E01DCF /* BasicScheduleEventEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5D39217523AC300E01DCF /* BasicScheduleEventEntity.m */; };
+		E1A5D39717523B7200E01DCF /* ScheduleJsonHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5D39617523B7200E01DCF /* ScheduleJsonHelper.m */; };
 		E1AC0E921695BE19005601EE /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A06555169563B5009C22F7 /* libidn.a */; };
 		E1B0CF4A16EF6F99001E3360 /* GetScheduleEventsListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF4916EF6F99001E3360 /* GetScheduleEventsListener.m */; };
 		E1B0CF4D16EF6FF9001E3360 /* ScheduleServerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF4C16EF6FF9001E3360 /* ScheduleServerHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
@@ -290,12 +291,8 @@
 		E199354216EE1432008BB353 /* NeatoRobotEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoRobotEntity.m; sourceTree = "<group>"; };
 		E199354416EE1433008BB353 /* NeatoSocialNetworksEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoSocialNetworksEntity.h; sourceTree = "<group>"; };
 		E199354516EE1433008BB353 /* NeatoSocialNetworksEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoSocialNetworksEntity.m; sourceTree = "<group>"; };
-		E199354716EE1433008BB353 /* BasicScheduleEventEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicScheduleEventEntity.h; sourceTree = "<group>"; };
-		E199354816EE1433008BB353 /* BasicScheduleEventEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicScheduleEventEntity.m; sourceTree = "<group>"; };
 		E199354A16EE1433008BB353 /* CommandTrackerEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandTrackerEntity.h; sourceTree = "<group>"; };
 		E199354B16EE1433008BB353 /* CommandTrackerEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandTrackerEntity.m; sourceTree = "<group>"; };
-		E199354D16EE1441008BB353 /* ScheduleEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleEntity.h; sourceTree = "<group>"; };
-		E199354E16EE1441008BB353 /* ScheduleEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleEntity.m; sourceTree = "<group>"; };
 		E199355016EE1441008BB353 /* ScheduleEventsEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleEventsEntity.h; sourceTree = "<group>"; };
 		E199355116EE1441008BB353 /* ScheduleEventsEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleEventsEntity.m; sourceTree = "<group>"; };
 		E199355716EE14A1008BB353 /* AdvanceScheduleEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvanceScheduleEvent.h; sourceTree = "<group>"; };
@@ -458,6 +455,12 @@
 		E1A44BD516D3828B00898959 /* SetRobotNameListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetRobotNameListener.m; sourceTree = "<group>"; };
 		E1A44BED16D3BDC900898959 /* RobotAssociationListener2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotAssociationListener2.h; sourceTree = "<group>"; };
 		E1A44BEE16D3BDC900898959 /* RobotAssociationListener2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotAssociationListener2.m; sourceTree = "<group>"; };
+		E1A5D38E17523AB300E01DCF /* ScheduleEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleEntity.h; sourceTree = "<group>"; };
+		E1A5D38F17523AB300E01DCF /* ScheduleEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleEntity.m; sourceTree = "<group>"; };
+		E1A5D39117523AC300E01DCF /* BasicScheduleEventEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicScheduleEventEntity.h; sourceTree = "<group>"; };
+		E1A5D39217523AC300E01DCF /* BasicScheduleEventEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicScheduleEventEntity.m; sourceTree = "<group>"; };
+		E1A5D39517523B7200E01DCF /* ScheduleJsonHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleJsonHelper.h; sourceTree = "<group>"; };
+		E1A5D39617523B7200E01DCF /* ScheduleJsonHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleJsonHelper.m; sourceTree = "<group>"; };
 		E1B0CF4816EF6F99001E3360 /* GetScheduleEventsListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetScheduleEventsListener.h; sourceTree = "<group>"; };
 		E1B0CF4916EF6F99001E3360 /* GetScheduleEventsListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetScheduleEventsListener.m; sourceTree = "<group>"; };
 		E1B0CF4B16EF6FF9001E3360 /* ScheduleServerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleServerHelper.h; sourceTree = "<group>"; };
@@ -727,18 +730,18 @@
 				E168BBC1169D461800BA6AD3 /* NeatoDBHelper.h */,
 				E168BBC2169D461800BA6AD3 /* NeatoDBHelper.m */,
 				E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */,
+				E1A5D39117523AC300E01DCF /* BasicScheduleEventEntity.h */,
+				E1A5D39217523AC300E01DCF /* BasicScheduleEventEntity.m */,
+				E1A5D38E17523AB300E01DCF /* ScheduleEntity.h */,
+				E1A5D38F17523AB300E01DCF /* ScheduleEntity.m */,
 				E13214A6174E3E73004F2A0E /* NeatoNotificationEntity.h */,
 				E13214A7174E3E73004F2A0E /* NeatoNotificationEntity.m */,
 				E13214A3174E3E5C004F2A0E /* NeatoUserEntity.h */,
 				E13214A4174E3E5C004F2A0E /* NeatoUserEntity.m */,
 				E199355016EE1441008BB353 /* ScheduleEventsEntity.h */,
 				E199355116EE1441008BB353 /* ScheduleEventsEntity.m */,
-				E199354D16EE1441008BB353 /* ScheduleEntity.h */,
-				E199354E16EE1441008BB353 /* ScheduleEntity.m */,
 				E199354A16EE1433008BB353 /* CommandTrackerEntity.h */,
 				E199354B16EE1433008BB353 /* CommandTrackerEntity.m */,
-				E199354716EE1433008BB353 /* BasicScheduleEventEntity.h */,
-				E199354816EE1433008BB353 /* BasicScheduleEventEntity.m */,
 				E199354416EE1433008BB353 /* NeatoSocialNetworksEntity.h */,
 				E199354516EE1433008BB353 /* NeatoSocialNetworksEntity.m */,
 				E199354116EE1432008BB353 /* NeatoRobotEntity.h */,
@@ -809,6 +812,8 @@
 		E199355616EE149F008BB353 /* RobotScheduleHelper */ = {
 			isa = PBXGroup;
 			children = (
+				E1A5D39517523B7200E01DCF /* ScheduleJsonHelper.h */,
+				E1A5D39617523B7200E01DCF /* ScheduleJsonHelper.m */,
 				E1B0CF5116EF9C40001E3360 /* DeleteAdvancedScheduleListener.h */,
 				E1B0CF5216EF9C40001E3360 /* DeleteAdvancedScheduleListener.m */,
 				E1B0CF5316EF9C40001E3360 /* GetAdvancedScheduleListener.h */,
@@ -1505,9 +1510,7 @@
 				E1A2B7BD16DA52BE003DC9C8 /* RobotDissociationListener.m in Sources */,
 				E199354316EE1432008BB353 /* NeatoRobotEntity.m in Sources */,
 				E199354616EE1433008BB353 /* NeatoSocialNetworksEntity.m in Sources */,
-				E199354916EE1433008BB353 /* BasicScheduleEventEntity.m in Sources */,
 				E199354C16EE1433008BB353 /* CommandTrackerEntity.m in Sources */,
-				E199354F16EE1441008BB353 /* ScheduleEntity.m in Sources */,
 				E199355216EE1442008BB353 /* ScheduleEventsEntity.m in Sources */,
 				E199357516EE14A4008BB353 /* AdvanceScheduleEvent.m in Sources */,
 				E199357616EE14A4008BB353 /* BasicScheduleEvent.m in Sources */,
@@ -1539,6 +1542,9 @@
 				E13214A5174E3E5C004F2A0E /* NeatoUserEntity.m in Sources */,
 				E13214A8174E3E74004F2A0E /* NeatoNotificationEntity.m in Sources */,
 				E1EC9CE6174F96FD0016FF47 /* RobotCommandManager.m in Sources */,
+				E1A5D39017523AB300E01DCF /* ScheduleEntity.m in Sources */,
+				E1A5D39317523AC300E01DCF /* BasicScheduleEventEntity.m in Sources */,
+				E1A5D39717523B7200E01DCF /* ScheduleJsonHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

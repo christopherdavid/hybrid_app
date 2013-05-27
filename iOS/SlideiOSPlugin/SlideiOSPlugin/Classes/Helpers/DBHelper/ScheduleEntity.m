@@ -8,7 +8,7 @@
 @dynamic scheduleId;
 @dynamic scheduleType;
 @dynamic server_scheduleId;
-@dynamic xml_data_version;
+@dynamic schedule_version;
 @dynamic hasScheduleEvent;
 @dynamic ofRobot;
 

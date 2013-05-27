@@ -505,10 +505,10 @@
     [callWrapper turnNotification:notification onOffForUserWithEmail:[parameters valueForKey:KEY_EMAIL] callbackID:callbackId];
 }
 
-- (void)setUserPushNotificationOptionsSuccessWithNotificationData:(NSDictionary *)notificationJson callbackId:(NSString *)callbackId {
+- (void)notificationsTurnedOnOffWithResult:(NSDictionary *)notification callbackId:(NSString *)callbackId {
     debugLog(@"");
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:notificationJson];
-    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:notification];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];    
 }
 
 - (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error callbackId:(NSString *)callbackId {

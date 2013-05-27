@@ -505,26 +505,26 @@
     return [NeatoRobotManager deleteScheduleEventWithScheduleEventId:scheduleEventId forScheduleId:scheduleId];
 }
 
-- (id)getScheduleEventDataWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
+- (id)scheduleEventDataWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
     debugLog(@"");
-    return [NeatoRobotManager getSchedueEventDataWithScheduleEventId:scheduleEventId forScheduleId:scheduleId];
+    return [NeatoRobotManager scheduleEventDataWithScheduleEventId:scheduleEventId forScheduleId:scheduleId];
 }
 
-- (id)getScheduleDataForScheduleId:(NSString *)scheduleId {
+- (id)scheduleDataForScheduleId:(NSString *)scheduleId {
     debugLog(@"");
-    return [NeatoRobotManager getScheduleDataForScheduleId:scheduleId];
+    return [NeatoRobotManager scheduleDataForScheduleId:scheduleId];
 }
 
-- (void)getScheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType callbackId:(NSString *)callbackId {
+- (void)scheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType callbackId:(NSString *)callbackId {
     self.retained_self = self;
     self.callbackId = callbackId;
-    [NeatoRobotManager getScheduleEventsForRobotWithId:robotId ofScheduleType:scheduleType delegate:self];
+    [NeatoRobotManager scheduleEventsForRobotWithId:robotId ofScheduleType:scheduleType delegate:self];
 }
 
-- (void)failedToGetScheduleEventsForRobotWithId:(NSString *)robotId error:(NSError *)error {
+- (void)failedToGetScheduleEventsWithError:(NSError *)error {
     debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(failedToGetScheduleEventsForRobotWithId:error:callbackId:)]) {
-        [self.delegate failedToGetScheduleEventsForRobotWithId:robotId error:error callbackId:self.callbackId];
+    if ([self.delegate respondsToSelector:@selector(failedToGetScheduleEventsWithError:callbackId:)]) {
+        [self.delegate performSelector:@selector(failedToGetScheduleEventsWithError:callbackId:) withObject:error withObject:self.callbackId];
     }
     self.retained_self = nil;
     self.delegate = nil;

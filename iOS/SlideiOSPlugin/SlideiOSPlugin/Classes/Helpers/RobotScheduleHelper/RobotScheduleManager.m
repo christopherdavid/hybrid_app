@@ -13,6 +13,7 @@
 #import "SetAdvancedScheduleListener.h"
 #import "GetAdvancedScheduleListener.h"
 #import "DeleteAdvancedScheduleListener.h"
+#import "ScheduleJsonHelper.h"
 
 // PluginResult Classes
 #import "CreateSchedulePluginResult.h"
@@ -39,28 +40,26 @@
 
 - (id)createScheduleForRobotId:(NSString *)robotId forScheduleType:(NSString *)scheduleType {
     debugLog(@"");
-    if([NEATO_SCHEDULE_ADVANCE isEqualToString:[ScheduleUtils getScheduleTypeString:scheduleType]]) {
-        NSMutableDictionary* details = [NSMutableDictionary dictionary];
-        [details setValue:@"Advance Schedule Type is not supported" forKey:NSLocalizedDescriptionKey];
-        NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+    if([NEATO_SCHEDULE_ADVANCE isEqualToString:[ScheduleUtils scheduleTypeString:scheduleType]]) {
+        NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:ERROR_NOT_SUPPORTED];
         return error;
     }
     NSString *scheduleId = [AppHelper generateUniqueString];
-    id result = [ScheduleDBHelper createScheduleForRobotId:robotId ofScheduleType:[ScheduleUtils getScheduleTypeString:scheduleType] withScheduleId:scheduleId];
+    id result = [ScheduleDBHelper createScheduleForRobotId:robotId ofScheduleType:[ScheduleUtils scheduleTypeString:scheduleType] withScheduleId:scheduleId];
     if([result isKindOfClass:[NSError class]]) {
         return result;
     }
     else {
         CreateSchedulePluginResult *pluginResult = [[CreateSchedulePluginResult alloc] init];
         pluginResult.robotId = robotId;
-        pluginResult.scheduleType = scheduleType;
+        pluginResult.scheduleType = [scheduleType integerValue];
         pluginResult.scheduleId = scheduleId;
         return pluginResult;
     }
 }
 
 - (id)addScheduleEventData:(NSDictionary *)scheduleEventData forScheduleWithScheduleId:(NSString *)scheduleId {
-    id dbResult = [ScheduleDBHelper getScheduleTypeForScheduleId:scheduleId];
+    id dbResult = [ScheduleDBHelper scheduleTypeForScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
@@ -70,9 +69,7 @@
             return [self addBasicScheduleEventData:scheduleEventData forscheduleWithScheduleId:scheduleId];
         }
         else {
-            NSMutableDictionary* details = [NSMutableDictionary dictionary];
-            [details setValue:@"Advance Schedule Type is not supported" forKey:NSLocalizedDescriptionKey];
-            NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:ERROR_NOT_SUPPORTED];
             return error;
         }
     }
@@ -81,7 +78,7 @@
 - (id)addBasicScheduleEventData:(NSDictionary *)scheduleEventData forscheduleWithScheduleId:(NSString *)scheduleId {
     NSString *scheduleEventId = [AppHelper generateUniqueString];
     BasicScheduleEvent *basicScheduleEvent = [[BasicScheduleEvent alloc] initWithDictionary:scheduleEventData andEventId:scheduleEventId];
-    id dbResult = [ScheduleDBHelper addBasicScheduleEventData:[ScheduleXMLHelper getXMlfromBasicScheduleEvent:basicScheduleEvent] withScheduleEventId:scheduleEventId forScheduleId:scheduleId];
+    id dbResult = [ScheduleDBHelper addBasicScheduleEventData:basicScheduleEvent.parameterStr withScheduleEventId:scheduleEventId forScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
@@ -95,7 +92,7 @@
 }
 
 - (id)updateScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId withScheduleEventdata:(NSDictionary *)scheduleEventData {
-    id dbResult = [ScheduleDBHelper getScheduleTypeForScheduleId:scheduleId];
+    id dbResult = [ScheduleDBHelper scheduleTypeForScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
@@ -105,9 +102,7 @@
             return [self updateBasicScheduleEventWithScheduleEventId:scheduleEventId forScheduleId:scheduleId withScheduleEventdata:scheduleEventData];
         }
         else {
-            NSMutableDictionary* details = [NSMutableDictionary dictionary];
-            [details setValue:@"Advance Schedule Type is not supported" forKey:NSLocalizedDescriptionKey];
-            NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:ERROR_NOT_SUPPORTED];
             return error;
         }
     }
@@ -115,7 +110,7 @@
 
 - (id)updateBasicScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId withScheduleEventdata:(NSDictionary *)scheduleEventData {
     BasicScheduleEvent *basicScheduleEvent = [[BasicScheduleEvent alloc] initWithDictionary:scheduleEventData andEventId:scheduleEventId];
-    id dbResult = [ScheduleDBHelper updateBasicScheduleEventWithId:scheduleEventId withXMLData:[ScheduleXMLHelper getXMlfromBasicScheduleEvent:basicScheduleEvent]];
+    id dbResult = [ScheduleDBHelper updateBasicScheduleEventWithId:scheduleEventId withData:basicScheduleEvent.parameterStr];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
@@ -128,7 +123,7 @@
 }
 
 - (id)deleteScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
-    id dbResult = [ScheduleDBHelper getScheduleTypeForScheduleId:scheduleId];
+    id dbResult = [ScheduleDBHelper scheduleTypeForScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
@@ -138,13 +133,10 @@
             return [self deleteBasicScheduleWithScheduleEventId:scheduleEventId forScheduleId:scheduleId];
         }
         else {
-            NSMutableDictionary* details = [NSMutableDictionary dictionary];
-            [details setValue:@"Advance Schedule Type is not supported" forKey:NSLocalizedDescriptionKey];
-            NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:ERROR_NOT_SUPPORTED];
             return error;
         }
     }
-    
 }
 
 - (id)deleteBasicScheduleWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
@@ -160,27 +152,25 @@
     }
 }
 
-- (id)getSchedueEventDataWithScheduleEventId:(NSString *)scheduleEventId withScheduleId:(NSString *)scheduleId {
-    id dbResult = [ScheduleDBHelper getScheduleTypeForScheduleId:scheduleId];
+- (id)scheduleEventDataWithScheduleEventId:(NSString *)scheduleEventId withScheduleId:(NSString *)scheduleId {
+    id dbResult = [ScheduleDBHelper scheduleTypeForScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
     else {
         NSString *scheduleType = (NSString *)dbResult;
         if([scheduleType isEqualToString:NEATO_SCHEDULE_BASIC] ) {
-            return [self getBasicScheduleWithId:scheduleEventId withScheduleId:scheduleId];
+            return [self basicScheduleWithScheduleEventId:scheduleEventId withScheduleId:scheduleId];
         }
         else {
-            NSMutableDictionary* details = [NSMutableDictionary dictionary];
-            [details setValue:@"Advance Schedule Type is not supported" forKey:NSLocalizedDescriptionKey];
-            NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:ERROR_NOT_SUPPORTED];
             return error;
         }
     }
 }
 
-- (id)getBasicScheduleWithId:(NSString *)scheduleEventId withScheduleId:(NSString *)scheduleId{
-    id result = [ScheduleDBHelper getBasicScheduleEventDataWithId:scheduleEventId];
+- (id)basicScheduleWithScheduleEventId:(NSString *)scheduleEventId withScheduleId:(NSString *)scheduleId{
+    id result = [ScheduleDBHelper basicScheduleEventDataWithId:scheduleEventId];
     if([result isKindOfClass:[NSError class]]) {
         return result;
     }
@@ -193,27 +183,25 @@
     }
 }
 
-- (id)getScheduleDataForScheduleId:(NSString *)scheduleId {
-    id dbResult = [ScheduleDBHelper getScheduleTypeForScheduleId:scheduleId];
+- (id)scheduleDataForScheduleId:(NSString *)scheduleId {
+    id dbResult = [ScheduleDBHelper scheduleTypeForScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
     else {
         NSString *scheduleType = (NSString *)dbResult;
         if([scheduleType isEqualToString:NEATO_SCHEDULE_BASIC] ) {
-            return [self getBasicScheduleWithId:scheduleId];
+            return [self basicScheduleWithScheduleId:scheduleId];
         }
         else {
-            NSMutableDictionary* details = [NSMutableDictionary dictionary];
-            [details setValue:@"Advance Schedule Type is not supported" forKey:NSLocalizedDescriptionKey];
-            NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:ERROR_NOT_SUPPORTED];
             return error;
         }
     }
 }
 
-- (id)getBasicScheduleWithId:(NSString *)scheduleId {
-    id result = [ScheduleDBHelper getBasicScheduleForScheduleId:scheduleId];
+- (id)basicScheduleWithScheduleId:(NSString *)scheduleId {
+    id result = [ScheduleDBHelper basicScheduleForScheduleId:scheduleId];
     if([result isKindOfClass:[NSError class]]) {
         return result;
     }
@@ -221,45 +209,47 @@
         Schedule *schedule = (Schedule *)result;
         GetScheduleDataPluginResult *pluginResult = [[GetScheduleDataPluginResult alloc] init];
         pluginResult.scheduleId = scheduleId;
-        pluginResult.scheduleType = schedule.scheduleType;
+        pluginResult.scheduleType = [schedule.scheduleType integerValue];
         pluginResult.schedule = schedule;
         return pluginResult;
     }
 }
 
-- (void)getScheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType delegate:(id<RobotScheduleManagerProtocol>)delgate {
+- (void)scheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType delegate:(id<RobotScheduleManagerProtocol>)delgate {
     self.retained_self = self;
     self.scheduleDelegate = delgate;
     
     debugLog(@"");
-    NSString *scheduleTypeStr = [ScheduleUtils getScheduleTypeString:scheduleType];
+    NSString *scheduleTypeStr = [ScheduleUtils scheduleTypeString:scheduleType];
     if (!scheduleTypeStr) {
-        [self.scheduleDelegate failedToGetScheduleEventsForRobotWithId:robotId error:[AppHelper nserrorWithDescription:@"Invalid schedule type." code:200]];
+        [self.scheduleDelegate failedToGetScheduleEventsWithError:[AppHelper nserrorWithDescription:@"Invalid schedule type." code:INVALID_SCHEDULE_TYPE]];
         return;
     }
-    
     GetScheduleEventsListener *eventsListener = [[GetScheduleEventsListener alloc]initWithDelegate:self];
     eventsListener.robotId = robotId;
     eventsListener.scheduleType = scheduleTypeStr;
-    
     [eventsListener start];
 }
 
-- (void)failedToGetSchedulesForRobotId:(NSString *)robotId withError:(NSError *)error {
+- (void)failedToGetScheduleEventsWithError:(NSError *)error {
     debugLog(@"");
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.scheduleDelegate performSelector:@selector(failedToGetScheduleEventsForRobotWithId:error:) withObject:robotId withObject:error];
-        self.scheduleDelegate = nil;
-        self.retained_self = nil;
+        if ([self.scheduleDelegate respondsToSelector:@selector(failedToGetScheduleEventsWithError:)]) {
+            [self.scheduleDelegate performSelector:@selector(failedToGetScheduleEventsWithError:) withObject:error];
+            self.scheduleDelegate = nil;
+            self.retained_self = nil;    
+        }
     });
 }
 
 - (void)gotScheduleEventsForSchedule:(Schedule *)schedule ofType:(NSInteger)scheduleType forRobotWithId:(NSString *)robotId {
     debugLog(@"");
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.scheduleDelegate gotScheduleEventsForSchedule:schedule ofType:scheduleType forRobotWithId:robotId];
-        self.scheduleDelegate = nil;
-        self.retained_self = nil;
+        if ([self.scheduleDelegate respondsToSelector:@selector(gotScheduleEventsForSchedule:ofType:forRobotWithId:)]) {
+            [self.scheduleDelegate gotScheduleEventsForSchedule:schedule ofType:scheduleType forRobotWithId:robotId];
+            self.scheduleDelegate = nil;
+            self.retained_self = nil;     
+        }
     });
 }
 
@@ -267,18 +257,25 @@
     debugLog(@"");
     self.retained_self = self;
     self.scheduleDelegate = delegate;
-    id dbResult = [ScheduleDBHelper getScheduleTypeForScheduleId:scheduleId];
+    id dbResult = [ScheduleDBHelper scheduleTypeForScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
-        // TODO: Notify caller
         debugLog(@"Error in database.");
-	return;
+        NSError *error = [AppHelper nserrorWithDescription:@"Could not get schedule type from database." code:ERROR_DB_ERROR];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.scheduleDelegate respondsToSelector:@selector(updateScheduleError:)]) {
+                [self.scheduleDelegate performSelector:@selector(updateScheduleError:) withObject:error];
+            }
+            self.scheduleDelegate = nil;
+            self.retained_self = nil;
+        });
+        return;
     }
     NSString *scheduleType = (NSString *)dbResult;
     if([scheduleType isEqualToString:NEATO_SCHEDULE_BASIC] ) {
         [self updateBasicScheduleForScheduleId:scheduleId];
     }
     else {
-        NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported." code:200];
+        NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported." code:ERROR_NOT_SUPPORTED];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.scheduleDelegate respondsToSelector:@selector(updateScheduleError:)]) {
                 [self.scheduleDelegate performSelector:@selector(updateScheduleError:) withObject:error];
@@ -321,7 +318,7 @@
     debugLog(@"");
     self.retained_self = self;
     self.scheduleDelegate = delegate;
-    if([[ScheduleUtils getScheduleTypeString:scheduleType] isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
+    if([[ScheduleUtils scheduleTypeString:scheduleType] isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
         [self setRobotAdvancedSchedule:schedulesArray forRobotId:robotId];
     }
     else {
@@ -345,7 +342,7 @@
     debugLog(@"");
     self.retained_self = self;
     self.scheduleDelegate = delegate;
-    if([[ScheduleUtils getScheduleTypeString:scheduleType] isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
+    if([[ScheduleUtils scheduleTypeString:scheduleType] isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
         [self getAdvancedSchedulesForRobotId:robotId];
     }
     else {
@@ -365,7 +362,7 @@
     debugLog(@"");
     self.retained_self = self;
     self.scheduleDelegate = delegate;
-    if([[ScheduleUtils getScheduleTypeString:scheduleType] isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
+    if([[ScheduleUtils scheduleTypeString:scheduleType] isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
         // Schedule Type is Advanced
         [self deleteAdvancedScheduleForRobotId:robotId];
     }
@@ -435,5 +432,6 @@
         self.retained_self = nil;
     });
 }
+
 
 @end

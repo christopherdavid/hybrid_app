@@ -2,7 +2,8 @@
 #import "SchedulerConstants.h"
 
 @interface ScheduleUtils : NSObject
-+ (NSString *)getScheduleTypeString:(NSString *)scheduleType;
-+ (NSInteger)getScheduleIntFromString:(NSString *)scheduleType;
-+ (Day)getDayEnumValue:(int)day;
++ (NSString *)scheduleTypeString:(NSString *)scheduleType;
++ (NSInteger)scheduleIntFromString:(NSString *)scheduleType;
++ (Day)dayEnumValue:(int)day;
++ (NSInteger)serverScheduleIntFromString:(NSString *)scheduleType;
 @end

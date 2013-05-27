@@ -9,7 +9,7 @@
     NSMutableDictionary *jsonObject = [[NSMutableDictionary alloc] init];
     [jsonObject setObject:[AppHelper getEmptyStringIfNil:self.scheduleId] forKey:KEY_SCHEDULE_ID];
     [jsonObject setObject:[AppHelper getEmptyStringIfNil:self.robotId] forKey:KEY_ROBOT_ID];
-    [jsonObject setObject:[AppHelper getEmptyStringIfNil:self.scheduleType] forKey:KEY_SCHEDULE_TYPE];
+    [jsonObject setObject:[NSNumber numberWithInteger:self.scheduleType] forKey:KEY_SCHEDULE_TYPE];
     return jsonObject;
 }
 @end
