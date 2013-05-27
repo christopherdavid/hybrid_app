@@ -21,6 +21,8 @@
 #define GET_POST_ROBOT_SCHEDULE_RESPONSE_HANDLER @"postRobotScheduleHandler:"
 #define GET_UPDATE_ROBOT_SCHEDULE_RESPONSE_HANDLER @"upadateRobotScheduleHandler:"
 #define GET_DELETE_SCHEDULE_RESPONSE_HANDLER @"deleteScheduleDataResponseHandler:"
+#define GET_SCHEDULE_BASED_ON_TYPE_POST_STRING @"api_key=%@&robot_serial_number=%@&schedule_type=%@"
+#define GET_SCHEDULE_BASED_ON_TYPE_RESPONSE_HANDLER @"getScheduleBasedOnTypeResponseHandler:"
 
 @interface ScheduleServerHelper()
 
@@ -50,13 +52,14 @@
     debugLog(@"");
     if (value == nil) {
         debugLog(@"Get schedules request failed!");
-        [self.delegate failedToGetSchedulesForRobotId:robotId withError:[AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:200]];
+        [self.delegate failedToGetSchedulesForRobotId:robotId withError:[AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN]];
         return;
     }
     
     if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Get schedules request failed. With Error = %@!", value);
-        [self.delegate failedToGetSchedulesForRobotId:robotId withError:value];
+        NSError *serverError = (NSError *)value;
+        [self.delegate failedToGetSchedulesForRobotId:robotId withError:[AppHelper nserrorWithDescription:[serverError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR]];
         return;
     }
     
@@ -72,7 +75,7 @@
         });
     }
     else {
-        [self.delegate failedToGetSchedulesForRobotId:robotId withError:[AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:200]];
+        [self.delegate failedToGetSchedulesForRobotId:robotId withError:[AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR]];
     }
 }
 
@@ -205,12 +208,12 @@
     }
 }
 
-- (void)updateScheduleDataForScheduleId:(NSString *)scheduleId withXMLDataVersion:(NSString *)xml_data_version withScheduleData:(NSString *)xmlData ofScheduleType:(NSString *)scheduleType {
+- (void)updateScheduleDataForScheduleId:(NSString *)scheduleId withScheduleVersion:(NSString *)scheduleVersion withScheduleData:(NSString *)data ofScheduleType:(NSString *)scheduleType {
     debugLog(@"");
     self.retainedSelf = self;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_UPDATE_ROBOT_SCHEDULE_DATA]];
     [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:[[NSString stringWithFormat:GET_UPDATE_ROBOT_SCHEDULE_DATA_POST_STRING, NEATO_API_KEY, scheduleId, scheduleType, xml_data_version, xmlData] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_UPDATE_ROBOT_SCHEDULE_DATA_POST_STRING, NEATO_API_KEY, scheduleId, scheduleType, scheduleVersion, data] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:GET_UPDATE_ROBOT_SCHEDULE_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
     helper.delegate = self;
@@ -220,32 +223,33 @@
 - (void)upadateRobotScheduleHandler:(id)value {
     debugLog(@"");
     if (value == nil) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:200];
-        [self notifyRequestFailed:@selector(updatedScheduleError:) withError:error];
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        [self notifyRequestFailed:@selector(updateScheduleError:) withError:error];
         return;
     }
     
     if ([value isKindOfClass:[NSError class]]) {
-        [self notifyRequestFailed:@selector(updatedScheduleError:) withError:value];
+        NSError *networkError = (NSError *)value;
+        NSError *error = [AppHelper nserrorWithDescription:[networkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
+        [self notifyRequestFailed:@selector(updateScheduleError:) withError:error];
         return;
     }
     NSDictionary *jsonData = [AppHelper parseJSON:value];
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
-    NSDictionary *data = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
-    NSString *message = [data valueForKey:NEATO_RESPONSE_MESSAGE];
+    NSDictionary *result = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
     if ([status intValue] == NEATO_STATUS_SUCCESS) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:@selector(updatedSchedule:)]) {
-                [self.delegate performSelector:@selector(updatedSchedule:) withObject:message];
+            if ([self.delegate respondsToSelector:@selector(updatedScheduleWithResult:)]) {
+                [self.delegate performSelector:@selector(updatedScheduleWithResult:) withObject:result];
             }
             self.delegate = nil;
             self.retainedSelf = nil;
         });
     }
     else {
-        NSError *error = [AppHelper nserrorWithDescription:NEATO_RESPONSE_MESSAGE code:200];
-        [self notifyRequestFailed:@selector(updatedScheduleError:) withError:error];
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        [self notifyRequestFailed:@selector(updateScheduleError:) withError:error];
     }
 }
 
@@ -304,6 +308,53 @@
         self.delegate = nil;
         self.retainedSelf = nil;
     });
+}
+
+- (void)scheduleBasedOnType:(NSString *)scheduleType forRobotId:(NSString *)robotId {
+    debugLog(@"");
+    self.retainedSelf = self;
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_SCHEDULE_BASED_ON_TYPE]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_SCHEDULE_BASED_ON_TYPE_POST_STRING, NEATO_API_KEY, robotId, scheduleType] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:GET_SCHEDULE_BASED_ON_TYPE_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper getDataForRequest:request];
+}
+
+- (void)getScheduleBasedOnTypeResponseHandler:(id)value {
+    debugLog(@"");
+    if (value == nil) {
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        debugLog(@"Get schedule based on type failed!");
+        [self notifyRequestFailed:@selector(failedToGetScheduleWithError:) withError:error];
+        return;
+    }
+    if ([value isKindOfClass:[NSError class]]) {
+        NSError *networkError = (NSError *)value;
+        NSError *error = [AppHelper nserrorWithDescription:[networkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
+        debugLog(@"Get schedule based on type failed!");
+        [self notifyRequestFailed:@selector(failedToGetScheduleWithError:) withError:error];
+        return;
+    }
+    NSDictionary *jsonData = [AppHelper parseJSON:value];
+    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    NSArray *data = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
+    debugLog(@"status = %d", [status intValue]);
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(gotScheduleWithData:)]) {
+                [self.delegate performSelector:@selector(gotScheduleWithData:) withObject:data];
+            }
+            self.delegate = nil;
+            self.retainedSelf = nil;
+        });
+    }
+    else {
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        debugLog(@"error reason : %@",[error localizedDescription]);
+        [self notifyRequestFailed:@selector(failedToGetScheduleWithError:) withError:error];
+    }
 }
 
 @end

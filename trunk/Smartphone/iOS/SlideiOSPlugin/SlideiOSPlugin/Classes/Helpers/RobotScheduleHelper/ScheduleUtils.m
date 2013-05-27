@@ -2,9 +2,13 @@
 #import "NeatoConstants.h"
 #import "LogHelper.h"
 
+// For server basic schedule is 1 and advance schedule is 2.
+#define NEATO_SCHEDULE_ADVANCE_SERVER_INT 2
+#define NEATO_SCHEDULE_BASIC_SERVER_INT 1
+
 @implementation ScheduleUtils
 
-+ (NSString *)getScheduleTypeString:(NSString *)scheduleType {
++ (NSString *)scheduleTypeString:(NSString *)scheduleType {
     debugLog(@"");
     if([scheduleType isEqualToString:@"0"]) {
         return NEATO_SCHEDULE_BASIC;
@@ -15,7 +19,7 @@
     return nil;
 }
 
-+ (Day)getDayEnumValue:(int)day {
++ (Day)dayEnumValue:(int)day {
     switch (day) {
         case 0:
             return SUNDAY;
@@ -36,7 +40,7 @@
     return -1;
 }
 
-+ (NSInteger)getScheduleIntFromString:(NSString *)scheduleType {
++ (NSInteger)scheduleIntFromString:(NSString *)scheduleType {
     debugLog(@"");
     if([scheduleType isEqualToString:NEATO_SCHEDULE_BASIC]) {
         return NEATO_SCHEDULE_BASIC_INT;
@@ -47,5 +51,14 @@
     return -1;
 }
 
++ (NSInteger)serverScheduleIntFromString:(NSString *)scheduleType {
+    if([scheduleType isEqualToString:NEATO_SCHEDULE_BASIC]) {
+        return NEATO_SCHEDULE_BASIC_SERVER_INT;
+    }
+    else if ([scheduleType isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
+        return NEATO_SCHEDULE_ADVANCE_SERVER_INT;
+    }
+    return -1; 
+}
 
 @end

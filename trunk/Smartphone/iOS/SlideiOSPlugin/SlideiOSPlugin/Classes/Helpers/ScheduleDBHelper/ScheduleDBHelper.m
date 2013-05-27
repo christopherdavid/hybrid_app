@@ -8,19 +8,19 @@
     return [database createScheduleForRobotId:robotId forScheduleType:scheduleType withScheduleId:scheduleId];
 }
 
-+ (id)getScheduleTypeForScheduleId:(NSString *)scheduleId {
++ (id)scheduleTypeForScheduleId:(NSString *)scheduleId {
     NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
-    return [database getScheduleTypeForScheduleId:scheduleId];
+    return [database scheduleTypeForScheduleId:scheduleId];
 }
 
-+ (id)addBasicScheduleEventData:(NSString *)xmlData withScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
++ (id)addBasicScheduleEventData:(NSString *)data withScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
     NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
-    return [database addBasicScheduleEventData:xmlData withScheduleEventId:scheduleEventId forScheduleId:scheduleId];
+    return [database addBasicScheduleEventData:data withScheduleEventId:scheduleEventId forScheduleId:scheduleId];
 }
 
-+ (id)updateBasicScheduleEventWithId:(NSString *)scheduleEventId withXMLData:(NSString *)xmlData {
++ (id)updateBasicScheduleEventWithId:(NSString *)scheduleEventId withData:(NSString *)xmlData {
     NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
-    return [database updateBasicScheduleEventWithId:scheduleEventId withXMLData:xmlData];
+    return [database updateBasicScheduleEventWithId:scheduleEventId withData:xmlData];
 }
 
 + (id)deleteBasicSchedleEventWithId:(NSString *)scheduleEventId {
@@ -28,14 +28,14 @@
     return [database deleteBasicScheduleEventWithId:scheduleEventId];
 }
 
-+ (id)getBasicScheduleEventDataWithId:(NSString *)scheduleEventId {
++ (id)basicScheduleEventDataWithId:(NSString *)scheduleEventId {
     NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
-    return [database getBasicScheduleEventWithId:scheduleEventId];
+    return [database basicScheduleEventWithId:scheduleEventId];
 }
 
-+ (id)getBasicScheduleForScheduleId:(NSString *)scheduleId {
++ (id)basicScheduleForScheduleId:(NSString *)scheduleId {
     NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
-    return [database getBasicScheduleForScheduleId:scheduleId];
+    return [database basicScheduleForScheduleId:scheduleId];
 }
 
 + (void)saveSchedule:(Schedule *)schedule ofType:(NSString *)scheduleType forRobotWithId:(NSString *)robotId {
@@ -44,19 +44,19 @@
 }
 
 
-+ (id)getRobotIdForScheduleId:(NSString *)scheduleId {
++ (id)robotIdForScheduleId:(NSString *)scheduleId {
     NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
-    return [database getRobotIdForScheduleId:scheduleId];
+    return [database robotIdForScheduleId:scheduleId];
 }
 
-+ (id)updateScheduleWithScheduleId:(NSString *)scheduleId withServerScheduleId:(NSString *)server_scheduleId andXmlDataVersion:(NSString *)xml_data_version {
-    NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
-    return [database updateScheduleWithScheduleId:scheduleId withServerScheduleId:server_scheduleId andXmlDataVersion:xml_data_version];
++ (id)updateServerScheduleId:(NSString *)serverScheduleId andScheduleVersion:(NSString *)scheduleVersion forScheduleWithScheduleId:(NSString *)scheduleId {
+     NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
+    return [database updateServerScheduleId:serverScheduleId andScheduleVersion:scheduleVersion forScheduleWithScheduleId:scheduleId];
 }
 
-+ (id)updateScheduleWithScheduleId:(NSString *)scheduleId forXmlDataVersion:(NSString *)xml_data_version {
-    NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
-    return [database updateScheduleWithScheduleId:scheduleId forXmlDataVersion:xml_data_version];
++ (id)updateScheduleVersion:(NSString *)scheduleVersion forScheduleWithScheduleId:(NSString *)scheduleId {
+     NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
+    return [database updateScheduleVersion:scheduleVersion forScheduleWithScheduleId:scheduleId];
 }
 
 @end

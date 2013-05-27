@@ -1,19 +1,22 @@
 #import "UpdateBasicScheduleListener.h"
 #import "Schedule.h"
 #import "ScheduleDBHelper.h"
-#import "ScheduleXMLHelper.h"
 #import "ScheduleServerhelper.h"
 #import "AppHelper.h"
 #import "NeatoConstants.h"
 #import "PostScheduleResult.h"
 #import "LogHelper.h"
 #import "NSDictionary+StringValueForKey.h"
+#import "ScheduleUtils.h"
+#import "ScheduleJsonHelper.h"
+#import "SchedulerConstants.h"
 
 @interface UpdateBasicScheduleListener()
 
-@property(nonatomic, retain) UpdateBasicScheduleListener *retained_self;
-@property(nonatomic, retain) NSString *robotId;
-@property(nonatomic, retain) Schedule *schedule;
+@property(nonatomic, strong) UpdateBasicScheduleListener *retained_self;
+@property(nonatomic, strong) NSString *robotId;
+@property(nonatomic, strong) Schedule *schedule;
+@property(nonatomic, strong) NSString *scheduleData;
 @property(nonatomic, weak) id delegate;
 
 @end
@@ -25,6 +28,7 @@
 @synthesize scheduleId = _scheduleId;
 @synthesize robotId = _robotId;
 @synthesize schedule = _schedule;
+@synthesize scheduleData = _scheduleData;
 
 - (id)initWithDelegate:(id)delegate {
     if ((self = [super init])) {
@@ -35,77 +39,40 @@
 }
 
 - (void)start {
-    id dbResult = [ScheduleDBHelper getBasicScheduleForScheduleId:self.scheduleId];
+    id dbResult = [ScheduleDBHelper basicScheduleForScheduleId:self.scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
-        [self updateScheduleError:[AppHelper nserrorWithDescription:@"No basic schedule for this scheduleId in database." code:200]];
+        [self updateScheduleError:[AppHelper nserrorWithDescription:@"No basic schedule for this scheduleId in database." code:INVALID_SCHEDULE_ID]];
         return;
     }
     self.schedule = (Schedule *)dbResult;
-    self.robotId = [ScheduleDBHelper getRobotIdForScheduleId:self.scheduleId];
-    NSString *xmlData = [ScheduleXMLHelper getXmlDataFromSchedule:self.schedule];
-    ScheduleServerHelper *serverHelper = [[ScheduleServerHelper alloc] init];
-    serverHelper.delegate = self;
-    if([AppHelper isStringNilOrEmpty:self.schedule.server_scheduleId]) {
-        [serverHelper postScheduleForRobotId:self.robotId withScheduleData:xmlData ofScheduleType:NEATO_SCHEDULE_BASIC];
+    self.robotId = [ScheduleDBHelper robotIdForScheduleId:self.scheduleId];
+    if([AppHelper isStringNilOrEmpty:self.schedule.serverScheduleId]) {
+        // If there is no serverScheduleId in database then get latest scheduleId
+        // and version from server.
+        [self currentScheduleIdAndVersionForRobotId:self.robotId];
     }
     else {
-        [serverHelper updateScheduleDataForScheduleId:self.schedule.server_scheduleId withXMLDataVersion:self.schedule.xml_data_version withScheduleData:xmlData ofScheduleType:NEATO_SCHEDULE_BASIC];
+        [self updateScheduleDataForScheduleId:self.schedule.serverScheduleId withScheduleVersion:self.schedule.scheduleVersion withScheduleData:[ScheduleJsonHelper jsonFromSchedule:self.schedule] ofScheduleType:NEATO_SCHEDULE_BASIC];
     }
 }
 
 - (void)postedSchedule:(PostScheduleResult *)result {
     debugLog(@"");
-    // Save server_scheduleId and xml_Data_version in DB.
-    [self saveServerScheduleId:result.server_scheduleId andXmlDataVersion:result.xmlDataVersion forScheduleWithScheduleId:self.scheduleId];
+    // Save serverScheduleId and schedule version in DB.
+    [ScheduleDBHelper updateServerScheduleId:result.serverScheduleId andScheduleVersion:result.scheduleVersion forScheduleWithScheduleId:self.scheduleId];
     [self.delegate performSelector:@selector(updatedSchedule:) withObject:self.scheduleId];
-    self.delegate = nil;
-    self.retained_self = nil;   
-}
-
-- (void)postScheduleError:(NSError *)error {
-    [self.delegate performSelector:@selector(updateScheduleError:) withObject:error];
-    self.delegate = nil;
-    self.retained_self = nil;   
-}
-
-- (void)saveServerScheduleId:(NSString *)server_scheduleId andXmlDataVersion:(NSString *)xml_data_version forScheduleWithScheduleId:(NSString *)scheduleId {
-    [ScheduleDBHelper updateScheduleWithScheduleId:scheduleId withServerScheduleId:server_scheduleId andXmlDataVersion:xml_data_version];
-}
-
-- (void)updatedSchedule:(NSString *)message {
-    [self updateXmlDataVersion];
-}
-
-- (void)updateXmlDataVersion {
-    ScheduleServerHelper *serverHelper = [[ScheduleServerHelper alloc] init];
-    serverHelper.delegate = self;
-    [serverHelper getSchedulesForRobotWithId:self.robotId];
-}
-
-- (void)gotSchedulesData:(id)scheduleData forRobotId:(NSString *)robotId {
-    NSArray *scheduleGroup = (NSArray *)scheduleData;
-    for(int i=0; i<[scheduleGroup count]; i++) {
-        NSDictionary *serverSchedule = [scheduleGroup objectAtIndex:i];
-        if([self.schedule.server_scheduleId isEqualToString:[serverSchedule stringForKey:@"id"]]) {
-            [self saveXmlDataVersion:[serverSchedule stringForKey:@"xml_data_version"] forScheduleWithScheduleId:self.scheduleId];
-            return;
-        }
-    }
-    NSError *err = [AppHelper nserrorWithDescription:@"Error in update schedule" code:200];
-    [self updateScheduleError:err];
-}
-
-- (void)failedToGetSchedulesForRobotId:(NSString *)robotId withError:(NSError *)error {
-    // Delegate back the error.
-    [self.delegate performSelector:@selector(updateScheduleError:) withObject:error];
     self.delegate = nil;
     self.retained_self = nil;
 }
 
-- (void)saveXmlDataVersion:(NSString *)xml_data_version forScheduleWithScheduleId:(NSString *)scheduleId {
-    debugLog(@"");
-    // Update xml_data_version in db.
-    [ScheduleDBHelper updateScheduleWithScheduleId:scheduleId forXmlDataVersion:xml_data_version];
+- (void)postScheduleError:(NSError *)error {
+    [self updateScheduleError:error];
+}
+
+- (void)updatedScheduleWithResult:(id)result {
+    NSDictionary *resultDict = (NSDictionary *)result;
+    // Update schedule version in DB.
+    [ScheduleDBHelper updateScheduleVersion:[resultDict stringForKey:KEY_SCHEDULE_VERSION] forScheduleWithScheduleId:self.scheduleId];
     [self.delegate performSelector:@selector(updatedSchedule:) withObject:self.scheduleId];
     self.delegate = nil;
     self.retained_self = nil;
@@ -116,5 +83,67 @@
     self.delegate = nil;
     self.retained_self = nil;
 }
+
+- (void)currentScheduleIdAndVersionForRobotId:(NSString *)robotId {
+    debugLog(@"");
+    ScheduleServerHelper *serverHelper = [[ScheduleServerHelper alloc] init];
+    serverHelper.delegate = self;
+    [serverHelper getSchedulesForRobotWithId:self.robotId];
+}
+
+
+- (void)gotSchedulesData:(id)scheduleData forRobotId:(NSString *)robotId {
+    debugLog(@"");
+    if (![scheduleData isKindOfClass:[NSArray class]]) {
+        [self.delegate performSelector:@selector(failedToGetSchedulesForRobotId:withError:) withObject:robotId withObject:[AppHelper nserrorWithDescription:@"Failed to parse server response!" code:ERROR_SERVER_ERROR]];
+        self.delegate = nil;
+        self.retained_self = nil;
+        return;
+    }
+    NSArray *schedules = (NSArray *)scheduleData;
+    
+    // There should not be multiple schedules of a type for a robot although server supports it.
+    // Programmatically we take care of not creating multiple schedules on
+    // server.If there are multiple schedules on server we update latest one.
+    // This is under assumption that schedules are sent in descending order.
+    NSDictionary *scheduleDictionary = nil;
+    for (int i = [schedules count] - 1; i>=0; i--) {
+        NSDictionary *data = [schedules objectAtIndex:i];
+        id scheduleType = [data valueForKey:SCHEDULE_TYPE];
+        if ([scheduleType isKindOfClass:[NSString class]] && [scheduleType caseInsensitiveCompare:NEATO_SCHEDULE_BASIC] == NSOrderedSame) {
+            scheduleDictionary = data;
+            break;
+        }
+    }
+    // If scheduleDictionary is nil then we need to post schedule
+    // else update.
+    if (!scheduleDictionary) {
+        [self postScheduleForRobotId:self.robotId withScheduleData:[ScheduleJsonHelper jsonFromSchedule:self.schedule] ofScheduleType:NEATO_SCHEDULE_BASIC];
+    }
+    else {
+        // Update latest serverScheduleId and scheduleVersion in DB.
+        [ScheduleDBHelper updateServerScheduleId:[scheduleDictionary valueForKey:KEY_ID] andScheduleVersion:[scheduleDictionary valueForKey:KEY_XML_DATA_VERSION] forScheduleWithScheduleId:self.scheduleId];
+        [self updateScheduleDataForScheduleId:[scheduleDictionary valueForKey:KEY_ID] withScheduleVersion:[scheduleDictionary valueForKey:KEY_XML_DATA_VERSION] withScheduleData:[ScheduleJsonHelper jsonFromSchedule:self.schedule] ofScheduleType:NEATO_SCHEDULE_BASIC];
+    }
+    
+}
+
+- (void)failedToGetSchedulesForRobotId:(NSString *)robotId withError:(NSError *)error {
+    debugLog(@"");
+    [self updateScheduleError:error];
+}
+
+- (void)postScheduleForRobotId:(NSString *)robotId withScheduleData:(NSString *)xmlData ofScheduleType:(NSString *)scheduleType {
+    ScheduleServerHelper *serverHelper = [[ScheduleServerHelper alloc] init];
+    serverHelper.delegate = self;
+    [serverHelper postScheduleForRobotId:robotId withScheduleData:xmlData ofScheduleType:scheduleType];
+}
+
+- (void)updateScheduleDataForScheduleId:(NSString *)scheduleId withScheduleVersion:(NSString *)scheduleVersion withScheduleData:(NSString *)data ofScheduleType:(NSString *)scheduleType {
+    ScheduleServerHelper *serverHelper = [[ScheduleServerHelper alloc] init];
+    serverHelper.delegate = self;
+    [serverHelper updateScheduleDataForScheduleId:scheduleId withScheduleVersion:scheduleVersion withScheduleData:data ofScheduleType:scheduleType];
+}
+
 
 @end

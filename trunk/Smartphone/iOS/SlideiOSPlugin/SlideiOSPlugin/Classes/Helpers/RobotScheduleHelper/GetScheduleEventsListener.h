@@ -5,6 +5,7 @@
 
 @optional
 - (void)gotScheduleEventsForSchedule:(Schedule *)schedule ofType:(NSInteger)scheduleType forRobotWithId:(NSString *)robotId;
+- (void)failedToGetScheduleEventsWithError:(NSError *)error;
 
 @end
 

@@ -5,7 +5,7 @@
 @implementation BasicScheduleEventEntity
 
 @dynamic scheduleEventId;
-@dynamic xmlData;
+@dynamic parameterStr;
 @dynamic ofScheduleEvent;
 
 @end

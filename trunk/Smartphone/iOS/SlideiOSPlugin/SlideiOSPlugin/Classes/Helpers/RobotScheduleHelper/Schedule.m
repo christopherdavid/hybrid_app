@@ -4,7 +4,7 @@
 #import "LogHelper.h"
 
 @implementation Schedule
-@synthesize scheduleId = _scheduleId, scheduleType = _scheduleType, server_scheduleId = _server_scheduleId, xml_data_version = _xml_data_version, scheduleEvent = _scheduleEvent;
+@synthesize scheduleId = _scheduleId, scheduleType = _scheduleType, serverScheduleId = _serverScheduleId, scheduleVersion = _scheduleVersion, scheduleEvent = _scheduleEvent;
 
 - (NSArray *)arrayOfScheduleEventIdsForType:(NSInteger)scheduleType {
     NSMutableArray *arrayOfEventIds = [[NSMutableArray alloc] init];

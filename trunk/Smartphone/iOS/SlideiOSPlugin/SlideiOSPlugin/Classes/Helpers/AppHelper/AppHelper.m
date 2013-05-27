@@ -74,7 +74,7 @@
 + (NSString *)jsonStringFromNSDictionary:(id)data {
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data
-                                                       options:NSJSONWritingPrettyPrinted
+                                                       options:0
                                                          error:&error];
     
     if (!jsonData) {

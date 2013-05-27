@@ -243,12 +243,15 @@
     #define NEATO_POST_ROBOT_SCHEDULE_DATA @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.post_data"
     #define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.update_data"
     #define NEATO_DELETE_SCHEDULE_DATA @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.delete_data"
+    #define NEATO_GET_SCHEDULE_BASED_ON_TYPE @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.get_schedule_based_on_type"
+
 #elif SWITCH_TO_DEV_SERVER
     #define NEATO_GET_SCHEDULES_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robotschedule.get_schedules"
     #define NEATO_GET_SCHEDULE_DATA_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robotschedule.get_data"
     #define NEATO_POST_ROBOT_SCHEDULE_DATA @"http://neatodev.rajatogo.com/api/rest/json/?method=robotschedule.post_data"
     #define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"http://neatodev.rajatogo.com/api/rest/json/?method=robotschedule.update_data"
     #define NEATO_DELETE_SCHEDULE_DATA @"http://neatodev.rajatogo.com/api/rest/json/?method=robotschedule.delete_data"
+    #define NEATO_GET_SCHEDULE_BASED_ON_TYPE @"http://neatodev.rajatogo.com/api/rest/json?method=robotschedule.get_schedule_based_on_type"
 
 #else
     #define NEATO_GET_SCHEDULES_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.get_schedules"
@@ -256,6 +259,7 @@
     #define NEATO_POST_ROBOT_SCHEDULE_DATA @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.post_data"
     #define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.update_data"
     #define NEATO_DELETE_SCHEDULE_DATA @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.delete_data"
+    #define NEATO_GET_SCHEDULE_BASED_ON_TYPE @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.get_schedule_based_on_type"
 
 #endif
 

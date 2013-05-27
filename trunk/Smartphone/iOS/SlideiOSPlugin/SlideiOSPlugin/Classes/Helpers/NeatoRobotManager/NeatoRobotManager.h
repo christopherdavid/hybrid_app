@@ -26,11 +26,10 @@
 + (id)addScheduleEventData:(NSDictionary *)scheduleEventData forScheduleWithScheduleId:(NSString *)scheduleId;
 + (id)updateScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId withScheduleEventdata:(NSDictionary *)scheduleEventData;
 + (id)deleteScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId;
-+ (id)getSchedueEventDataWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId;
-+ (id)getScheduleDataForScheduleId:(NSString *)scheduleId;
-+ (void)getScheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType delegate:(id)delegate;
++ (id)scheduleEventDataWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId;
++ (id)scheduleDataForScheduleId:(NSString *)scheduleId;
++ (void)scheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType delegate:(id)delegate;
 + (void)updateScheduleForScheduleId:(NSString *)scheduleId delegate:(id)delegate;
-
 + (void)setRobotSchedule:(NSArray *)schedulesArray forRobotId:(NSString *)robotId ofType:(NSString *)schedule_type delegate:(id)delegate;
 + (void)getRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type delegate:(id)delegate;
 + (void)deleteRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type delegate:(id)delegate;

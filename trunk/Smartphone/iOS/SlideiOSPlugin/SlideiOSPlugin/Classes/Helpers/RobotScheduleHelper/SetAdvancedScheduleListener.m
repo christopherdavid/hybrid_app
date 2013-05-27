@@ -55,7 +55,7 @@
     NSString *schedule_xml = [ScheduleXMLHelper xmlFromScheduleGroup:scheduleGroup];
     ScheduleServerHelper *scheduleHelper = [[ScheduleServerHelper alloc] init];
     scheduleHelper.delegate = self;
-    [scheduleHelper updateScheduleDataForScheduleId:scheduleId withXMLDataVersion:xml_data_version withScheduleData:schedule_xml ofScheduleType:NEATO_SCHEDULE_ADVANCE];
+    [scheduleHelper updateScheduleDataForScheduleId:scheduleId withScheduleVersion:xml_data_version withScheduleData:schedule_xml ofScheduleType:NEATO_SCHEDULE_ADVANCE];
 }
 
 - (void)postScheduleForRobotId:(NSString *)robotId andScheduleGroup:(NSArray *)scheduleGroup {
@@ -69,7 +69,7 @@
 - (void)postedSchedule:(PostScheduleResult *)result {
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([self.delegate respondsToSelector:@selector(setScheduleSuccess:)]) {
-            [self.delegate performSelector:@selector(setScheduleSuccess:) withObject:result.server_scheduleId];
+            [self.delegate performSelector:@selector(setScheduleSuccess:) withObject:result.serverScheduleId];
         }
         self.delegate = nil;
         self.retained_self = nil;

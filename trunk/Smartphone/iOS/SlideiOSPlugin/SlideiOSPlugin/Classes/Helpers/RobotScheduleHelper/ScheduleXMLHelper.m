@@ -42,7 +42,7 @@
     NSString *startTime = [[startTimeArray lastObject] stringValue];
     scheduleEvent.startTime = [[ScheduleTimeObject alloc] initWithString:startTime];
     
-    scheduleEvent.xmlData = [self getXMlfromBasicScheduleEvent:scheduleEvent];
+    scheduleEvent.parameterStr = [self getXMlfromBasicScheduleEvent:scheduleEvent];
     return scheduleEvent;
 }
 
@@ -172,7 +172,7 @@
     NSMutableString *scheduleEventString = [[NSMutableString alloc] init];
     for(int i=0 ; i < [schedule.scheduleEvent.basicScheduleEvents count] ; i++) {
         BasicScheduleEvent *scheduleEvent = [schedule.scheduleEvent.basicScheduleEvents objectAtIndex:i];
-        [scheduleEventString appendString:scheduleEvent.xmlData];
+        [scheduleEventString appendString:scheduleEvent.parameterStr];
     }
     return scheduleEventString;
 }

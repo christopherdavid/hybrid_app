@@ -381,7 +381,7 @@ static NeatoDataStore *sharedInstance;
     @synchronized(self) {
         if(self.managedObjectContext) {
             NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
-            request.predicate = [NSPredicate predicateWithFormat:@"userId= %@",userId];
+            request.predicate = [NSPredicate predicateWithFormat:@"userId= [c]%@",userId];
             NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
             request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
             
@@ -419,7 +419,7 @@ static NeatoDataStore *sharedInstance;
     @synchronized(self) {
         if(self.managedObjectContext) {
             NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
-            request.predicate = [NSPredicate predicateWithFormat:@"userId= %@",userId];
+            request.predicate = [NSPredicate predicateWithFormat:@"userId= [c]%@",userId];
             NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
             request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
             
@@ -457,7 +457,7 @@ static NeatoDataStore *sharedInstance;
     if(self.managedObjectContext) {
         NSMutableArray *robots = [[NSMutableArray alloc]init];
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
-        request.predicate = [NSPredicate predicateWithFormat:@"userId= %@",userId];
+        request.predicate = [NSPredicate predicateWithFormat:@"userId= [c]%@",userId];
         NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
         request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
         
@@ -500,7 +500,7 @@ static NeatoDataStore *sharedInstance;
     if(self.managedObjectContext) {
         NSMutableArray *socialNetworks = [[NSMutableArray alloc]init];
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
-        request.predicate = [NSPredicate predicateWithFormat:@"userId= %@",userId];
+        request.predicate = [NSPredicate predicateWithFormat:@"userId= [c]%@",userId];
         NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
         request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
         
@@ -597,7 +597,7 @@ static NeatoDataStore *sharedInstance;
     if(self.managedObjectContext) {
         NeatoRobotEntity *robotEntity;
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_ROBOT];
-        request.predicate = [NSPredicate predicateWithFormat:@"serialNumber= %@", serialNumber];
+        request.predicate = [NSPredicate predicateWithFormat:@"serialNumber= [c]%@", serialNumber];
         NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
         request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
         
@@ -661,7 +661,7 @@ static NeatoDataStore *sharedInstance;
     if(self.managedObjectContext) {
         NeatoUserEntity *userEntity;
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
-        request.predicate = [NSPredicate predicateWithFormat:@"email= %@", email];
+        request.predicate = [NSPredicate predicateWithFormat:@"email= [c]%@", email];
         NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
         request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
         
@@ -768,7 +768,7 @@ static NeatoDataStore *sharedInstance;
 - (NeatoRobotEntity *)insertOrUpdateRobot:(NeatoRobot *)robot {
     NeatoRobotEntity *robotEntity;
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_ROBOT];
-    request.predicate = [NSPredicate predicateWithFormat:@"serialNumber= %@", robot.serialNumber];
+    request.predicate = [NSPredicate predicateWithFormat:@"serialNumber= [c]%@", robot.serialNumber];
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
     request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     
@@ -857,19 +857,19 @@ static NeatoDataStore *sharedInstance;
             else {
                 debugLog(@"robotEntity is not inserted.");
                 // Create NSError
-                return [AppHelper nserrorWithDescription:@"Schedule not inserted in database" code:200];
+                return [AppHelper nserrorWithDescription:@"Schedule not inserted in database" code:ERROR_DB_ERROR];
             }
         }
         else {
             debugLog(@"robot with robotId %@ does not exist.", serialNumber);
             // create NSError
-            return [AppHelper nserrorWithDescription:@"Robot does not exist" code:200];
+            return [AppHelper nserrorWithDescription:@"Robot does not exist" code:ERROR_DB_ERROR];
         }
     }
     else {
         debugLog(@"Managed object context is nil");
         // Create NSError
-        return [AppHelper nserrorWithDescription:@"Database did not start properly" code:200];
+        return [AppHelper nserrorWithDescription:@"Database did not start properly" code:ERROR_DB_ERROR];
     }
 }
 
@@ -919,46 +919,46 @@ static NeatoDataStore *sharedInstance;
   }
 }
 
-- (id)getScheduleTypeForScheduleId:(NSString *)scheduleId {
+- (id)scheduleTypeForScheduleId:(NSString *)scheduleId {
   if(self.managedObjectContext) {
     ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
     if(scheduleEntity) {
       return scheduleEntity.scheduleType;
     }
     else {
-      return [AppHelper nserrorWithDescription:@"Could not get scheduleEventType" code:200];
+      return [AppHelper nserrorWithDescription:@"Could not get scheduleEventType" code:ERROR_DB_ERROR];
     }
   }
   else {
     debugLog(@"Managed object context is nil");
     // Create NSError
-    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:200];
+    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:ERROR_DB_ERROR];
   }
 }
 
-- (id)addBasicScheduleEventData:(NSString *)xmlData withScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
+- (id)addBasicScheduleEventData:(NSString *)data withScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
   if(self.managedObjectContext) {
     ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
     if(scheduleEntity) {
-      BasicScheduleEventEntity *basicScheduleEventEntity = [self createBasicScheduleEventWithData:xmlData withScheduleEventId:scheduleEventId];
+      BasicScheduleEventEntity *basicScheduleEventEntity = [self createBasicScheduleEventWithData:data withScheduleEventId:scheduleEventId];
       ScheduleEventsEntity *scheduleEvent = scheduleEntity.hasScheduleEvent;
       [scheduleEvent addHasBasicScheduleEventsObject:basicScheduleEventEntity];
       [self saveDatabase];
       return [NSNumber numberWithBool:YES];
     }
     else {
-      return [AppHelper nserrorWithDescription:@"Could not get ScheduleEvent for this ScheduleId" code:200];
+      return [AppHelper nserrorWithDescription:@"Could not get ScheduleEvent for this ScheduleId" code:ERROR_DB_ERROR];
     }
   }
   else {
-    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:200];
+    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:ERROR_DB_ERROR];
   }
 }
 
-- (BasicScheduleEventEntity *)createBasicScheduleEventWithData:(NSString *)xmlData withScheduleEventId:(NSString *)scheduleEventId {
+- (BasicScheduleEventEntity *)createBasicScheduleEventWithData:(NSString *)data withScheduleEventId:(NSString *)scheduleEventId {
   BasicScheduleEventEntity *basicScheduleEventsEntity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_BASIC_SCHEDULE_EVENT inManagedObjectContext:self.managedObjectContext];
   basicScheduleEventsEntity.scheduleEventId = scheduleEventId;
-  basicScheduleEventsEntity.xmlData = xmlData;
+  basicScheduleEventsEntity.parameterStr = data;
   return basicScheduleEventsEntity;
 }
 
@@ -976,15 +976,14 @@ static NeatoDataStore *sharedInstance;
     return nil;
   }
   if([basicScheduleEventEntities count] == 0) {
-    debugLog(@"There is no schedule with this scheduleId");
-    return [AppHelper nserrorWithDescription:@"No BasicScheduleEventEntity with this id" code:200];
+    return [AppHelper nserrorWithDescription:@"No BasicScheduleEventEntity with this id" code:ERROR_DB_ERROR];
   }
   else {
     return [basicScheduleEventEntities lastObject];
   }
 }
 
-- (id)updateBasicScheduleEventWithId:(NSString *)scheduleEventId withXMLData:(NSString *)xmlData {
+- (id)updateBasicScheduleEventWithId:(NSString *)scheduleEventId withData:(NSString *)data {
   if(self.managedObjectContext) {
     id result = [self basicScheduleEventEntityWithId:scheduleEventId];
     if([result isKindOfClass:[NSError class]]) {
@@ -992,15 +991,15 @@ static NeatoDataStore *sharedInstance;
     }
     if(result) {
       BasicScheduleEventEntity *basicScheduleEventEntity = (BasicScheduleEventEntity *)result;
-      basicScheduleEventEntity.xmlData = xmlData;
+      basicScheduleEventEntity.parameterStr = data;
       [self saveDatabase];
       return [NSNumber numberWithBool:YES];
     }
+    return [AppHelper nserrorWithDescription:@"Could not update schedule." code:ERROR_DB_ERROR];    
   }
   else {
-   return [AppHelper nserrorWithDescription:@"Database did not start properly" code:200];
+   return [AppHelper nserrorWithDescription:@"Database did not start properly" code:ERROR_DB_ERROR];
   }
-  return [AppHelper nserrorWithDescription:@"Error in Database" code:200];
 }
 
 - (id)deleteBasicScheduleEventWithId:(NSString *)scheduleEventId {
@@ -1008,19 +1007,20 @@ static NeatoDataStore *sharedInstance;
     id result = [self basicScheduleEventEntityWithId:scheduleEventId];
     if([result isKindOfClass:[NSError class]]) {
       return result;
-    }if(result) {
+    }
+    if(result) {
       [self.managedObjectContext deleteObject:(BasicScheduleEventEntity *)result];
       [self saveDatabase];
       return [NSNumber numberWithBool:YES];
     }
   }
   else {
-    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:200];
+    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:ERROR_DB_ERROR];
   }
-  return [AppHelper nserrorWithDescription:@"Error in Database" code:200];
+  return [AppHelper nserrorWithDescription:@"Error in Database" code:ERROR_DB_ERROR];
 }
 
-- (id)getBasicScheduleEventWithId:(NSString *)scheduleEventId {
+- (id)basicScheduleEventWithId:(NSString *)scheduleEventId {
   if(self.managedObjectContext) {
     id result = [self basicScheduleEventEntityWithId:scheduleEventId];
     if([result isKindOfClass:[NSError class]]) {
@@ -1029,17 +1029,17 @@ static NeatoDataStore *sharedInstance;
       BasicScheduleEventEntity *basicScheduleEventEntity = (BasicScheduleEventEntity *)result;
       BasicScheduleEvent *basicScheduleEvent = [[BasicScheduleEvent alloc] init];
       basicScheduleEvent.scheduleEventId = basicScheduleEventEntity.scheduleEventId;
-      basicScheduleEvent.xmlData = basicScheduleEventEntity.xmlData;
+      basicScheduleEvent.parameterStr = basicScheduleEventEntity.parameterStr;
       return basicScheduleEvent;
     }
   }
   else {
-    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:200];
+    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:ERROR_DB_ERROR];
   }
-  return [AppHelper nserrorWithDescription:@"Error in Database" code:200];
+  return [AppHelper nserrorWithDescription:@"Error in Database" code:ERROR_DB_ERROR];
 }
 
-- (id)getBasicScheduleForScheduleId:(NSString *)scheduleId {
+- (id)basicScheduleForScheduleId:(NSString *)scheduleId {
   debugLog(@"");
   if(self.managedObjectContext) {
     Schedule *schedule = [[Schedule alloc] init];
@@ -1047,15 +1047,15 @@ static NeatoDataStore *sharedInstance;
     ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
     if(scheduleEntity) {
       schedule.scheduleId = scheduleEntity.scheduleId;
-      schedule.server_scheduleId = scheduleEntity.server_scheduleId;
+      schedule.serverScheduleId = scheduleEntity.server_scheduleId;
       schedule.scheduleType = scheduleEntity.scheduleType;
-      schedule.xml_data_version = scheduleEntity.xml_data_version;
+      schedule.scheduleVersion = scheduleEntity.schedule_version;
       NSArray *basicScheduleEventsEntities = [scheduleEntity.hasScheduleEvent.hasBasicScheduleEvents allObjects];
       NSMutableArray *basicScheduleEvents = [[NSMutableArray alloc] init];
       for(int i=0; i< [basicScheduleEventsEntities count]; i++) {
         BasicScheduleEvent *basicScheduleEvent = [[BasicScheduleEvent alloc] init];
         basicScheduleEvent.scheduleEventId = [[basicScheduleEventsEntities objectAtIndex:i] scheduleEventId];
-        basicScheduleEvent.xmlData = [[basicScheduleEventsEntities objectAtIndex:i] xmlData];
+        basicScheduleEvent.parameterStr = [[basicScheduleEventsEntities objectAtIndex:i] parameterStr];
         [basicScheduleEvents addObject:basicScheduleEvent];
       }
       [schedule.scheduleEvent addBasicScheduleEvents:basicScheduleEvents];
@@ -1091,14 +1091,13 @@ static NeatoDataStore *sharedInstance;
             }
             // Now insert new entity
             scheduleEntity = [self insertNewScheduleWithScheduleId:schedule.scheduleId ofType:scheduleType];
-            scheduleEntity.server_scheduleId = schedule.server_scheduleId;
-            scheduleEntity.xml_data_version = schedule.xml_data_version;
+            scheduleEntity.server_scheduleId = schedule.serverScheduleId;
+            scheduleEntity.schedule_version = schedule.scheduleVersion;
             [robotEntity addHasScheduleObject:scheduleEntity];
-            [self saveDatabase];
             
             if ([scheduleType isEqualToString:NEATO_SCHEDULE_BASIC]) {
                 for (BasicScheduleEvent *basicScheduleEvent in schedule.scheduleEvent.basicScheduleEvents) {
-                    BasicScheduleEventEntity *basicScheduleEventEntity = [self createBasicScheduleEventWithData:basicScheduleEvent.xmlData withScheduleEventId:basicScheduleEvent.scheduleEventId];
+                    BasicScheduleEventEntity *basicScheduleEventEntity = [self createBasicScheduleEventWithData:basicScheduleEvent.parameterStr withScheduleEventId:basicScheduleEvent.scheduleEventId];
                     [scheduleEntity.hasScheduleEvent addHasBasicScheduleEventsObject:basicScheduleEventEntity];
                 }
             }
@@ -1114,7 +1113,7 @@ static NeatoDataStore *sharedInstance;
     }
 }
 
-- (id)getRobotIdForScheduleId:(NSString *)scheduleId {
+- (id)robotIdForScheduleId:(NSString *)scheduleId {
     if(self.managedObjectContext) {
         ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
         if(scheduleEntity) {
@@ -1129,38 +1128,38 @@ static NeatoDataStore *sharedInstance;
     }
 }
 
-- (id)updateScheduleWithScheduleId:(NSString *)scheduleId withServerScheduleId:(NSString *)serverScheduleId andXmlDataVersion:(NSString *)xmlDataVersion {
+- (id)updateServerScheduleId:(NSString *)serverScheduleId andScheduleVersion:(NSString *)scheduleVersion forScheduleWithScheduleId:(NSString *)scheduleId {
     if(self.managedObjectContext) {
         ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
         if(scheduleEntity) {
             scheduleEntity.server_scheduleId = serverScheduleId;
-            scheduleEntity.xml_data_version = xmlDataVersion;
+            scheduleEntity.schedule_version = scheduleVersion;
             [self saveDatabase];
             return [NSNumber numberWithBool:YES];
         }
         else {
-            return [AppHelper nserrorWithDescription:@"No Schedule with this ScheduleId." code:200];
+            return [AppHelper nserrorWithDescription:@"No Schedule with this ScheduleId." code:INVALID_SCHEDULE_ID];
         }
     }
     else {
-        return [AppHelper nserrorWithDescription:@"Managed object context is nil." code:200];
+        return [AppHelper nserrorWithDescription:@"Database could start properly." code:ERROR_DB_ERROR];
     }
 }
 
-- (id)updateScheduleWithScheduleId:(NSString *)scheduleId forXmlDataVersion:(NSString *)xmlDataVersion {
+- (id)updateScheduleVersion:(NSString *)scheduleVersion forScheduleWithScheduleId:(NSString *)scheduleId {
     if(self.managedObjectContext) {
         ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
         if(scheduleEntity) {
-            scheduleEntity.xml_data_version = xmlDataVersion;
+            scheduleEntity.schedule_version = scheduleVersion;
             [self saveDatabase];
             return [NSNumber numberWithBool:YES];
         }
         else {
-            return [AppHelper nserrorWithDescription:@"No Schedule with this ScheduleId." code:200];
+            return [AppHelper nserrorWithDescription:@"No Schedule with this ScheduleId." code:INVALID_SCHEDULE_ID];
         }
     }
     else {
-        return [AppHelper nserrorWithDescription:@"Managed object context is nil." code:200];
+        return [AppHelper nserrorWithDescription:@"Database could not start properly." code:ERROR_DB_ERROR];
     }
 }
 
@@ -1203,7 +1202,7 @@ static NeatoDataStore *sharedInstance;
 - (NeatoUserEntity *)neatoUserEntityForEmail:(NSString *)email {
     NeatoUserEntity *userEntity;
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
-    request.predicate = [NSPredicate predicateWithFormat:@"email= %@", email];
+    request.predicate = [NSPredicate predicateWithFormat:@"email= [c]%@", email];
     NSError *error = nil;
     NSArray *users = [self.managedObjectContext executeFetchRequest:request error:&error];
     if(error) {

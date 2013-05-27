@@ -224,22 +224,21 @@
     return [scheduleManager deleteScheduleEventWithScheduleEventId:scheduleEventId forScheduleId:scheduleId];
 }
 
-+ (id)getSchedueEventDataWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
++ (id)scheduleEventDataWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
     RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    return [scheduleManager getSchedueEventDataWithScheduleEventId:scheduleEventId withScheduleId:scheduleId];
+    return [scheduleManager scheduleEventDataWithScheduleEventId:scheduleEventId withScheduleId:scheduleId];
 }
 
-+ (id)getScheduleDataForScheduleId:(NSString *)scheduleId {
++ (id)scheduleDataForScheduleId:(NSString *)scheduleId {
     RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    return [scheduleManager getScheduleDataForScheduleId:scheduleId];
+    return [scheduleManager scheduleDataForScheduleId:scheduleId];
 }
 
-+ (void)getScheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType delegate:(id)delegate {
++ (void)scheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType delegate:(id)delegate {
     RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    [scheduleManager getScheduleEventsForRobotWithId:robotId ofScheduleType:scheduleType delegate:delegate];
+    [scheduleManager scheduleEventsForRobotWithId:robotId ofScheduleType:scheduleType delegate:delegate];
 }
 
-// TODO: Fix parameter names
 + (void)updateScheduleForScheduleId:(NSString *)scheduleId delegate:(id)delegate {
     RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
     [scheduleManager updateScheduleForScheduleId:scheduleId delegate:delegate];
