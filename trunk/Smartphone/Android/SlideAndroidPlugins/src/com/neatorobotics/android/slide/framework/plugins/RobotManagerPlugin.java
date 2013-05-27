@@ -1738,8 +1738,10 @@ public class RobotManagerPlugin extends Plugin {
 			if (bundle != null) {
 				String notificationId = bundle.getString(PushNotificationConstants.NOTIFICATION_ID_KEY);
 				String message = bundle.getString(PushNotificationConstants.NOTIFICATION_MESSAGE_KEY);
+				String robotId = bundle.getString(PushNotificationConstants.ROBOT_ID_KEY);
 				AppUtils.addToJsonObjectIfNotEmpty(jsonObject, PushNotificationConstants.NOTIFICATION_ID_KEY, notificationId);
 				AppUtils.addToJsonObjectIfNotEmpty(jsonObject, PushNotificationConstants.NOTIFICATION_MESSAGE_KEY, message);
+				AppUtils.addToJsonObjectIfNotEmpty(jsonObject, PushNotificationConstants.ROBOT_ID_KEY, robotId);
 			}
 			
 			return jsonObject;

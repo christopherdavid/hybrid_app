@@ -9,4 +9,5 @@ public class PushNotificationConstants {
 	public static final String NOTIFICATION_MESSAGE_KEY = "message";
 	public static final String EXTRA_NOTIFICATION_BUNDLE = "bundle";
 	public static final String NOTIFICATION_ID_KEY = "notificationId";
+	public static final String ROBOT_ID_KEY = "robotId";
 }
