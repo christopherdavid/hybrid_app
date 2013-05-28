@@ -1,4 +1,5 @@
 #import "NeatoRobotEntity.h"
+#import "CleaningAreaEntity.h"
 #import "NeatoUserEntity.h"
 #import "ScheduleEntity.h"
 
@@ -14,5 +15,6 @@
 @dynamic userId;
 @dynamic hasSchedule;
 @dynamic hasUsers;
+@dynamic hasCleaningArea;
 
 @end

@@ -4,6 +4,7 @@
 #import "XMPPConnectionHelper.h"
 #import "Schedule.h"
 
+
 @protocol RobotManagerProtocol <NSObject>
 
 - (void)foundRobotsNearby:(id)value callbackId:(NSString *)callbackId;
@@ -49,7 +50,6 @@
 - (void)updateScheduleError:(NSError *)error callbackId:(NSString *)callbackId;
 - (void)failedToEnableDisableScheduleWithError:(NSError *) error callbackId:(NSString *)callbackId;
 - (void)enabledDisabledScheduleWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId;
-
 @end
 
 @interface RobotManagerCallWrapper : NSObject <TCPConnectionHelperProtocol, XMPPConnectionHelperProtocol>
@@ -84,4 +84,6 @@
 - (void)deleteRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type callbackId:(NSString *)callbackId;
 - (void)enabledDisable:(BOOL)enable schedule:(int)scheduleType forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email callbackId:(NSString *)callbackId;
 - (void)turnVacuumOnOff:(int)on forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email withParams:(NSDictionary *)params commandId:(NSString *)commandId callbackId:(NSString *)callbackId;
+- (id)setSpotDefinitionForRobotWithId:(NSString *)robotId cleaningAreaLength:(int)cleaningAreaLength cleaningAreaHeight:(int)cleaningAreaHeight;
+- (id)spotDefinitionForRobotWithId:(NSString *)robotId;
 @end

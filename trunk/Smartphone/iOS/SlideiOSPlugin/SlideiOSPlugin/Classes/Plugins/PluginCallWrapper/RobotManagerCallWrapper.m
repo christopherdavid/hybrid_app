@@ -2,6 +2,7 @@
 #import "LogHelper.h"
 #import "XMPPConnectionHelper.h"
 #import "RobotCommandManager.h"
+#import "NeatoRobotHelper.h"
 
 @interface RobotManagerCallWrapper()
 
@@ -667,4 +668,13 @@
     manager.delegate = self;
     [manager turnVacuumOnOff:on forRobotWithId:robotId withUserEmail:email withParams:params commandId:commandId];
 }
+
+- (id)setSpotDefinitionForRobotWithId:(NSString *)robotId cleaningAreaLength:(int)cleaningAreaLength cleaningAreaHeight:(int)cleaningAreaHeight {
+    return [NeatoRobotHelper setSpotDefinitionForRobotWithId:robotId cleaningAreaLength:cleaningAreaLength cleaningAreaHeight:cleaningAreaHeight];
+}
+
+- (id)spotDefinitionForRobotWithId:(NSString *)robotId {
+    return [NeatoRobotHelper spotDefinitionForRobotWithId:robotId];
+}
+
 @end

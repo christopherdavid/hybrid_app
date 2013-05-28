@@ -5,6 +5,7 @@
 #import "NeatoRobot.h"
 #import "NeatoSocialNetworks.h"
 #import "NeatoNotification.h"
+#import "CleaningArea.h"
 
 @class Schedule;
 
@@ -31,6 +32,8 @@
 - (void)dissociateAllRobotsForUserWithEmail:(NSString *)email;
 - (void)deleteRobotForSerialNumber:(NSString *)serialNumber forUserId:(NSString *)userId;
 - (void)updatePassword:(NSString *)newPassword;
+- (id)setCleaningArea:(CleaningArea *)cleaningArea;
+- (id)cleaningAreaForRobotWithId:(NSString *)robotId;
 
 
 //Scheduling Methods.

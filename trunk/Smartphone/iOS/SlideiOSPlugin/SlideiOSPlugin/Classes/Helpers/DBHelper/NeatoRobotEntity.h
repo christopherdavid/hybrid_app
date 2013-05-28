@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class NeatoUserEntity, ScheduleEntity;
+@class CleaningAreaEntity, NeatoUserEntity, ScheduleEntity;
 
 @interface NeatoRobotEntity : NSManagedObject
 
@@ -14,6 +14,7 @@
 @property (nonatomic, retain) NSString * userId;
 @property (nonatomic, retain) NSSet *hasSchedule;
 @property (nonatomic, retain) NSSet *hasUsers;
+@property (nonatomic, retain) CleaningAreaEntity *hasCleaningArea;
 @end
 
 @interface NeatoRobotEntity (CoreDataGeneratedAccessors)
