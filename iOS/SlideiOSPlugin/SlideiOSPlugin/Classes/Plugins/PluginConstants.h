@@ -21,7 +21,8 @@
 #define KEY_MESSAGE @"message"
 #define KEY_CURRENT_PASSWORD @"currentPassword"
 #define KEY_NEW_PASSWORD @"newPassword"
-
+#define KEY_SPOT_CLEANING_AREA_LENGTH @"spotCleaningAreaLength"
+#define KEY_SPOT_CLEANING_AREA_HEIGHT @"spotCleaningAreaHeight"
 //Used for error
 #define KEY_ERROR_CODE @"errorCode"
 #define KEY_ERROR_MESSAGE @"errorMessage"
@@ -96,4 +97,6 @@
 #define KEY_NOTFICATION_ID @"notificationId"
 #define KEY_ON @"on"
 
+#define DEFAULT_SPOT_CLEANING_LENGTH 5
+#define DEFAULT_SPOT_CLEANING_HEIGHT 3
 #define KEY_FLAG_ON_OFF @"flagOnOff"

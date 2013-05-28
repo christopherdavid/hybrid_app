@@ -17,6 +17,7 @@
 #import "AppHelper.h"
 #import "BasicScheduleEvent.h"
 #import "NeatoNotificationEntity.h"
+#import "CleaningAreaEntity.h"
 
 #define ENTITY_COMMAND_TRACKER @"CommandTrackerEntity"
 #define NEATO_DATA_STORE_NAME @"NeatoDatastore.sqlite"
@@ -25,6 +26,7 @@
 #define ENTITY_NEATO_ROBOT @"NeatoRobotEntity"
 #define ENTITY_NEATO_SOCIALNETWORKS @"NeatoSocialNetworksEntity"
 #define ENTITY_NEATO_NOTIFICATION @"NeatoNotificationEntity"
+#define ENTITY_CLEANING_AREA @"CleaningAreaEntity"
 
 //Schedule Entities
 #define ENTITY_SCHEDULE @"ScheduleEntity"
@@ -1302,5 +1304,56 @@ static NeatoDataStore *sharedInstance;
     }
     return notifications; 
 }
+- (id)setCleaningArea:(CleaningArea *)cleaningArea {
+    debugLog(@"");
+    if (self.managedObjectContext) {
+        NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:cleaningArea.robotId];
+        if (robotEntity) {
+            if(robotEntity.hasCleaningArea) {
+                robotEntity.hasCleaningArea.length = [NSNumber numberWithInt:cleaningArea.length];
+                robotEntity.hasCleaningArea.height = [NSNumber numberWithInt:cleaningArea.height];
+                [self saveDatabase];
+                return [NSNumber numberWithBool:YES];
+            } else {
+                CleaningAreaEntity *cleaningAreaEntity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_CLEANING_AREA inManagedObjectContext:self.managedObjectContext];
+                cleaningAreaEntity.ofRobot = robotEntity;
+                cleaningAreaEntity.length = [NSNumber numberWithInt:cleaningArea.length];
+                cleaningAreaEntity.height = [NSNumber numberWithInt:cleaningArea.height];
+                [self saveDatabase];
+                return [NSNumber numberWithBool:YES];
+            }
+        } else {
+            debugLog(@"Robot with Serial no. = %@ does not exist", cleaningArea.robotId);
+            return [AppHelper nserrorWithDescription:@"Robot does not exist" code:ERROR_DB_ERROR];
+        }
+    } else {
+        debugLog(@"Managed object context is nil");
+        return [AppHelper nserrorWithDescription:@"Database could not start properly." code:ERROR_DB_ERROR];
+    }
+}
 
+- (id)cleaningAreaForRobotWithId:(NSString *)robotId {
+    debugLog(@"");
+    if(self.managedObjectContext) {
+        CleaningArea *cleaningArea = [[CleaningArea alloc] init];
+        cleaningArea.robotId = robotId;
+        CleaningAreaEntity *cleaningAreaEntity;
+        NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
+        if(robotEntity) {
+            cleaningAreaEntity = robotEntity.hasCleaningArea;
+            cleaningArea.height = [cleaningAreaEntity.height intValue];
+            cleaningArea.length = [cleaningAreaEntity.length intValue];
+            
+            return cleaningArea;
+        }
+        else {
+            debugLog(@"Couldn't fetch robotEntity with this serialNumber %@",robotId);
+            return [AppHelper nserrorWithDescription:@"Robot does not exist" code:ERROR_DB_ERROR];
+        }
+    }
+    else {
+        debugLog(@"Managed object context is nil");
+        return [AppHelper nserrorWithDescription:@"Database could not start properly." code:ERROR_DB_ERROR];
+    }
+}
 @end

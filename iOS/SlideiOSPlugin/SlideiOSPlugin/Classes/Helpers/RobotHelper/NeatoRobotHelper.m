@@ -3,6 +3,7 @@
 #import "NeatoServerManager.h"
 #import "NeatoUserHelper.h"
 #import "NeatoDataStore.h"
+#import "CleaningArea.h"
 
 @implementation NeatoRobotHelper
 
@@ -42,6 +43,22 @@
         robot.name = name;
         [helper saveNeatoRobot:robot forUser:[NeatoUserHelper getNeatoUser].userId];
     }
+}
+
++ (id)setSpotDefinitionForRobotWithId:(NSString *)robotId cleaningAreaLength:(int)cleaningAreaLength cleaningAreaHeight:(int)cleaningAreaHeight {
+    debugLog(@"");
+    CleaningArea *cleaningArea = [[CleaningArea alloc] init];
+    cleaningArea.height = cleaningAreaHeight;
+    cleaningArea.length = cleaningAreaLength;
+    cleaningArea.robotId = robotId;
+    NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
+    return [helper setCleaningArea:cleaningArea];
+}
+
++ (id)spotDefinitionForRobotWithId:(NSString *)robotId {
+    debugLog(@"");
+    NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
+    return [helper cleaningAreaForRobotWithId:robotId];
 }
 
 @end

@@ -44,4 +44,6 @@
 - (void)resumeCleaning:(CDVInvokedUrlCommand *)command;
 - (void)turnWiFiOnOff:(CDVInvokedUrlCommand *)command;
 - (void)turnVacuumOnOff:(CDVInvokedUrlCommand *)command;
+- (void)setSpotDefinition:(CDVInvokedUrlCommand *)command;
+- (void)getSpotDefinition:(CDVInvokedUrlCommand *)command;
 @end
