@@ -21,15 +21,10 @@
 #import "NeatoUserHelper.h"
 #import "CleaningArea.h"
 
-#define ROBOT_MESSAGE_CALLBACK_ID_KEY @"robotMessagesNotificationCallBackKey"
 
-@interface RobotManagerPlugin()
-@property (strong, nonatomic) NSMutableDictionary *robotMessagesCallBacks;
-@end
 
 @implementation RobotManagerPlugin
 
-@synthesize robotMessagesCallBacks = _robotMessagesCallBacks;
 
 - (void) discoverNearByRobots:(CDVInvokedUrlCommand *)command
 {
@@ -698,16 +693,6 @@
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
 }
 
-- (void)registerForRobotMessages:(CDVInvokedUrlCommand *)command {
-    debugLog(@"registerForRobotMessages called.");
-    [self.robotMessagesCallBacks setValue:command.callbackId forKey:ROBOT_MESSAGE_CALLBACK_ID_KEY];
-    
-}
-
-- (void)unregisterForRobotMessages:(CDVInvokedUrlCommand *)command {
-    debugLog(@"unregisterForRobotMessages called.");
-    [self.robotMessagesCallBacks removeObjectForKey:ROBOT_MESSAGE_CALLBACK_ID_KEY];
-}
 
 - (void)enableSchedule:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
@@ -906,5 +891,89 @@
     });
 }
 
+- (void)registerForRobotMessges:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    debugLog(@"callbackId = %@", callbackId);
+    [[PushNotificationHelper sharedInstance] registerForPushNotificationsForCallbackId:callbackId];
+    [PushNotificationHelper sharedInstance].pushNotificationDelegate = self;
+}
+
+- (void)unregisterForRobotMessages:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    [PushNotificationHelper sharedInstance].pushNotificationDelegate = nil;;
+    [[PushNotificationHelper sharedInstance] unregisterForPushNotification];
+}
+
+- (void)didReceivePushNotification:(NSString *)callbackId withNotification:(NSDictionary*)notification {
+    debugLog(@"");
+    debugLog(@"callback id = %@", callbackId);
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:notification];
+    [result setKeepCallbackAsBool:YES];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+
+- (void)getRobotVirtualOnlineStatus:(CDVInvokedUrlCommand *)command {
+  debugLog(@"");
+  NSString *callbackId = command.callbackId;
+  NSDictionary *parameters = [command.arguments objectAtIndex:0];
+  debugLog(@"received parameters : %@", parameters);
+  NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+  RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+  call.delegate = self;
+  [call virtualOnlineStatusForRobotWithId:robotId callbackId:callbackId];
+}
+
+- (void)virtualOnlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
+  debugLog(@"");
+  NSMutableDictionary *jsonRobot = [[NSMutableDictionary alloc] init];
+  [jsonRobot setObject:robotId forKey:KEY_ROBOT_ID];
+  [jsonRobot setObject:[NSNumber numberWithBool:[status boolValue]] forKey:KEY_ROBOT_ONLINE_STATUS];
+  CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonRobot];
+  [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)failedToGetRobotVirtualOnlineStatusWithError:(NSError *)error callbackId:(NSString *)callbackId {
+  [self sendError:error forCallbackId:callbackId];
+}
+
+- (void)dealloc {
+    debugLog(@"");
+}
+
+- (void)isScheduleEnabled:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    NSString *scheduleType = [parameters stringForKey:KEY_SCHEDULE_TYPE];
+    RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper isScheduleType:scheduleType enabledForRobotWithId:robotId callbackId:callbackId];
+}
+
+- (void)gotScheduleStatus:(NSDictionary *)status callbackId:(NSString *)callbackId{
+    debugLog(@"Status = %@", status);
+    NSString *scheduleStatus = [status valueForKey:NEATO_KEY_SCHEDULE_ENABLED] ? [status valueForKey:NEATO_KEY_SCHEDULE_ENABLED] : [status valueForKey:NEATO_KEY_SCHEDULE_ENABLED_2];
+    NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
+    [message setValue:[scheduleStatus boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO] forKey:KEY_SCHEDULE_IS_ENABLED];
+    [message setValue:NEATO_SCHEDULE_BASIC forKey:KEY_SCHEDULE_TYPE];
+    [message setValue:[status valueForKey:KEY_SERIAL_NUMBER] forKey:KEY_ROBOT_ID];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:message];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    
+}
+
+- (void)failedToGetScheduleStatusWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
+    [dictionary setValue:[[NSNumber numberWithInt:error.code] stringValue] forKey:KEY_ERROR_CODE];
+    
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
 
 @end

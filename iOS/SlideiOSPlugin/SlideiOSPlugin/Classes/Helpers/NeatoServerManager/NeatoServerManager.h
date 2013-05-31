@@ -40,6 +40,11 @@
 - (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error;
 - (void)userNotificationSettingsData:(NSDictionary *)notification;
 - (void)failedToGetUserPushNotificationSettingsWithError:(NSError *)error;
+- (void)gotScheduleStatus:(NSDictionary *)status;
+- (void)failedToGetScheduleStatusWithError:(NSError *)error;
+
+- (void)virtualOnlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId;
+- (void)failedToGetRobotVirtualOnlineStatusWithError:(NSError *)error;
 @end
 
 @interface NeatoServerManager : NSObject 
@@ -71,4 +76,6 @@
 - (void)enabledDisable:(BOOL)enable schedule:(int)scheduleType forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email;
 - (void)turnNotification:(NeatoNotification *)notification onOffForUserWithEmail:(NSString *)email;
 - (void)notificationSettingsForUserWithEmail:(NSString *)email;
+- (void)isScheduleType:(NSString *)scheduleType enabledForRobotWithId:(NSString *)robotId;
+- (void)virtualOnlineStatusForRobotWithId:(NSString *)robotId;
 @end

@@ -2,6 +2,7 @@
 #import "UserManagerCallWrapper.h"
 #import "NeatoUserHelper.h"
 #import "LogHelper.h"
+#import "PushNotificationHelper.h"
 
 #define DEVICE_TYPE_IPHONE      2
 
@@ -50,14 +51,9 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    debugLog(@"didReceiveRemoteNotification called");
-    NSEnumerator *keySetEnumerator = [userInfo keyEnumerator];
-    id object = [keySetEnumerator nextObject];
-    while (object) {
-        NSString *value = userInfo[object];
-        debugLog(@"Key = %@ value = %@", object, value);
-        object = [keySetEnumerator nextObject];
-    }
+    debugLog(@"");
+    NSDictionary *customDataDictionary = [userInfo objectForKey:PUSH_NOTIFICATION_CUSTOM_DATA_KEY];
+    [self performSelector:@selector(receivePushNotification:) withObject:customDataDictionary afterDelay:0.5];
 }
 
 - (void)pushNotificationRegistrationFailedWithError:(NSError *) error {
@@ -78,6 +74,11 @@
 - (void)pushNotificationUnregistrationFailedWithError:(NSError *) error {
     debugLog(@"pushNotificationUnregistrationFailedWithError called");
     [NeatoUserHelper saveDevicePushAuthToken:@""];
+}
+
+- (void) receivePushNotification:(NSDictionary *) userInfo {
+    debugLog(@"receivePushNotification called");
+    [[PushNotificationHelper sharedInstance] setPushNotification:userInfo];
 }
 
 

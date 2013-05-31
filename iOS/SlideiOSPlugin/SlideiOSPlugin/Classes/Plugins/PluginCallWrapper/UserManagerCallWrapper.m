@@ -3,7 +3,8 @@
 #import "NeatoUserHelper.h"
 #import "NeatoRobotManager.h"
 #import "NeatoRobotHelper.h"
-
+#import "TCPHelper.h"
+#import "XMPPConnectionHelper.h"
 
 @interface UserManagerCallWrapper()
 
@@ -216,8 +217,11 @@
         UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
         [callWrapper unregisterPushNotificationForDeviceToken:deviceToken];
     }
-    [NeatoRobotManager diconnectRobotFromTCP:@"" delegate:self];
-    [NeatoRobotManager logoutFromXMPP:self];
+    TCPConnectionHelper *tcpHelper = [[TCPConnectionHelper alloc] init];
+    [tcpHelper disconnectFromRobot:@"" delegate:self];
+    XMPPConnectionHelper *xmppHelper = [[XMPPConnectionHelper alloc] init];
+    xmppHelper.delegate = self;
+    [xmppHelper disconnectFromRobot];
     [NeatoUserHelper clearUserData];
     [self notifyCallback:@selector(userLoggedOut:)];
 }

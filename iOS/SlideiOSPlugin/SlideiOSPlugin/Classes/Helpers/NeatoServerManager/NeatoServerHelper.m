@@ -29,6 +29,8 @@
 #define ENABLE_DISABLE_SCHEDULE_RESPONSE_HANDLER @"enableDisableScheduleHandler:"
 #define SET_USER_PUSH_NOTIFICATION_OPTION_HANDLER @"setUserPushNotificationOptionHandler:"
 #define GET_USER_PUSH_NOTIFICATION_OPTION_HANDLER @"getUserPushNotificationOptionHandler:"
+#define IS_SCHEDULE_ENABLED_HANDLER @"isScheduleEnabledHandler:"
+#define GET_ROBOT_VIRTUAL_ONLINE_STATUS_RESPONSE_HANDLER @"getRobotVirtualOnlineStatusHandler:"
 
 
 #define GET_IS_USER_VALIDATED_POST_STRING @"api_key=%@&email=%@"
@@ -57,6 +59,9 @@
 #define ENABLE_DISABLE_SCHEDULE_POST_STRING @"api_key=%@&serial_number=%@&source_serial_number=%@&source_smartapp_id=%@&value_extra=%@&%@"
 #define SET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING @"api_key=%@&email=%@&json_object=%@"
 #define GET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING @"api_key=%@&email=%@"
+#define IS_SCHEDULE_ENABLED_POST_STRING @"api_key=%@&serial_number=%@"
+#define GET_ROBOT_VIRTUAL_ONLINE_STATUS_POST_STRING @"api_key=%@&serial_number=%@"
+
 
 @interface NeatoServerHelper()
 
@@ -1507,6 +1512,119 @@
         debugLog(@"Set push notification options unsuccessful");
         NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
         [self notifyRequestFailed:@selector(failedToGetUserPushNotificationSettingsWithError:) withError:error];
+    }
+}
+
+- (void)virtualOnlineStatusForRobotWithId:(NSString *)robotId {
+    if (robotId == nil) {
+        NSError *error = [AppHelper nserrorWithDescription:@"Robot Id cannot be nil!" code:INVALID_PARAMETER];
+        debugLog(@"Robot Id cannot be nil!");
+        [self notifyRequestFailed:@selector(failedToGetRobotVirtualOnlineStatusWithError:) withError:error];
+        return;
+    }
+    self.retained_self = self;
+    self.robotId = robotId;
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_ROBOT_VIRTUAL_ONLINE_STATUS_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_ROBOT_VIRTUAL_ONLINE_STATUS_POST_STRING,NEATO_API_KEY,robotId] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:GET_ROBOT_VIRTUAL_ONLINE_STATUS_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    
+    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper getDataForRequest:request];
+}
+
+-(void)getRobotVirtualOnlineStatusHandler:(id)value {
+    debugLog(@"");
+    if (value == nil) {
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        debugLog(@"Failed to get robot online status!");
+        [self notifyRequestFailed:@selector(failedToGetRobotVirtualOnlineStatusWithError:) withError:error];
+        return;
+    }
+    
+    if ([value isKindOfClass:[NSError class]]) {
+        debugLog(@"Failed to get robot online status!");
+        NSError *networkError = (NSError *)value;
+        NSError *error = [AppHelper nserrorWithDescription:[networkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
+        [self notifyRequestFailed:@selector(failedToGetRobotVirtualOnlineStatusWithError:) withError:error];
+        return;
+    }
+    
+    NSDictionary *jsonData = [AppHelper parseJSON:value];
+    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    debugLog(@"status = %d", [status intValue]);
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
+        NSString *onlineStatus = [[jsonData valueForKey:NEATO_RESPONSE_RESULT] valueForKey:NEATO_ROBOT_ONLINE_STATUS];
+        // Notify caller on main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(virtualOnlineStatus:forRobotWithId:)]) {
+                [self.delegate performSelector:@selector(virtualOnlineStatus:forRobotWithId:) withObject:onlineStatus withObject:self.robotId];
+            }
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+        
+    }
+    else {
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        [self notifyRequestFailed:@selector(failedToGetRobotVirtualOnlineStatusWithError:) withError:error];
+    }
+}
+
+- (void)isScheduleType:(NSString *)scheduleType enabledForRobotWithId:(NSString *)robotId {
+    self.retained_self = self;
+    self.robotId = robotId;
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_ROBOT_PROFILE_DETAILS_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:IS_SCHEDULE_ENABLED_POST_STRING, NEATO_API_KEY, robotId] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [request setValue:IS_SCHEDULE_ENABLED_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    
+    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper getDataForRequest:request];
+}
+
+- (void)isScheduleEnabledHandler:(id)value {
+    if (!value) {
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
+        
+        NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+        debugLog(@"User Validation failed!");
+        [self notifyRequestFailed:@selector(failedToGetScheduleStatusWithError:) withError:error];
+        return;
+    }
+    
+    if ([value isKindOfClass:[NSError class]]) {
+        debugLog(@"User Validation failed!");
+        [self notifyRequestFailed:@selector(failedToGetScheduleStatusWithError:) withError:value];
+        return;
+    }
+    
+    NSDictionary *jsonData = [AppHelper parseJSON:value];
+    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    
+    debugLog(@"status = %d", [status intValue]);
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
+        NSMutableDictionary* status = [[NSMutableDictionary alloc] init];
+        status = [[jsonData valueForKey:NEATO_RESPONSE_RESULT] valueForKey:NEATO_PROFILE_DETAILS];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(gotScheduleStatus:)])
+            {
+                [self.delegate performSelector:@selector(gotScheduleStatus:) withObject:status];
+            }
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+    else {
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
+        
+        NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+        [self notifyRequestFailed:@selector(failedToGetScheduleStatusWithError:) withError:error];
     }
 }
 
