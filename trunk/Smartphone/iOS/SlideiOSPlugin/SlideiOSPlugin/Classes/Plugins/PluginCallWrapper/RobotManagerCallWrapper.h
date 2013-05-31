@@ -50,9 +50,14 @@
 - (void)updateScheduleError:(NSError *)error callbackId:(NSString *)callbackId;
 - (void)failedToEnableDisableScheduleWithError:(NSError *) error callbackId:(NSString *)callbackId;
 - (void)enabledDisabledScheduleWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId;
+- (void)gotScheduleStatus:(NSDictionary *)status callbackId:(NSString *)callbackId;
+- (void)failedToGetScheduleStatusWithError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)virtualOnlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
+- (void)failedToGetRobotVirtualOnlineStatusWithError:(NSError *)error callbackId:(NSString *)callbackId;
+
 @end
 
-@interface RobotManagerCallWrapper : NSObject <TCPConnectionHelperProtocol, XMPPConnectionHelperProtocol>
+@interface RobotManagerCallWrapper : NSObject
 
 @property(nonatomic, weak) id delegate;
 
@@ -84,6 +89,8 @@
 - (void)deleteRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type callbackId:(NSString *)callbackId;
 - (void)enabledDisable:(BOOL)enable schedule:(int)scheduleType forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email callbackId:(NSString *)callbackId;
 - (void)turnVacuumOnOff:(int)on forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email withParams:(NSDictionary *)params commandId:(NSString *)commandId callbackId:(NSString *)callbackId;
+- (void)isScheduleType:(NSString *)scheduleType enabledForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
 - (id)setSpotDefinitionForRobotWithId:(NSString *)robotId cleaningAreaLength:(int)cleaningAreaLength cleaningAreaHeight:(int)cleaningAreaHeight;
 - (id)spotDefinitionForRobotWithId:(NSString *)robotId;
+- (void)virtualOnlineStatusForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
 @end

@@ -742,4 +742,48 @@
     [self notifyRequestFailed:@selector(failedToGetUserPushNotificationSettingsWithError:) withError:error];
 }
 
+- (void)virtualOnlineStatusForRobotWithId:(NSString *)robotId {
+    debugLog(@"");
+    self.retained_self = self;
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self;
+    [helper virtualOnlineStatusForRobotWithId:robotId];
+}
+
+- (void)virtualOnlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(virtualOnlineStatus:forRobotWithId:)]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate performSelector:@selector(virtualOnlineStatus:forRobotWithId:) withObject:status withObject:robotId];
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+}
+
+- (void)failedToGetRobotVirtualOnlineStatusWithError:(NSError *)error {
+    debugLog(@"");
+    [self notifyRequestFailed:@selector(failedToGetRobotVirtualOnlineStatusWithError:) withError:error];
+}
+
+- (void)isScheduleType:(NSString *)scheduleType enabledForRobotWithId:(NSString *)robotId {
+    debugLog(@"");
+    self.retained_self = self;
+    
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self;
+    [helper isScheduleType:scheduleType enabledForRobotWithId:robotId];
+}
+
+- (void)gotScheduleStatus:(NSDictionary *)status {
+    debugLog(@"");
+    [self.delegate performSelectorOnMainThread:@selector(gotScheduleStatus:) withObject:status waitUntilDone:NO];
+    self.delegate = nil;
+    self.retained_self = nil;
+}
+- (void)failedToGetScheduleStatusWithError:(NSError *)error; {
+    debugLog(@"");
+    [self notifyRequestFailed:@selector(failedToGetScheduleStatusWithError:) withError:error];
+}
+
 @end

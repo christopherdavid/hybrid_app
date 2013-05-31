@@ -1,70 +1,13 @@
 #import "NeatoRobotManager.h"
-#import "FindNearByRobotsHelper.h"
-#import "GetRobotIPHelper.h"
 #import "TCPHelper.h"
 #import "LogHelper.h"
 #import "XMPPConnectionHelper.h"
 #import "NeatoUserHelper.h"
 #import "XMPPHelper.h"
 #import "NeatoRobotHelper.h"
-#import "RobotAtlasManager.h"
-#import "AtlasGridManager.h"
-#import "DeviceConnectionManager.h"
 #import "RobotCommandHelper.h"
-#import "CommandsHelper.h"
-#import "RobotScheduleManager.h"
 
 @implementation NeatoRobotManager
-
-+(void) findRobotsNearBy:(id) delegate action:(SEL)action
-{
-    FindNearByRobotsHelper *helper = [[FindNearByRobotsHelper alloc] init];
-    [helper findNearbyRobots:delegate action:action];
-}
-
-+(void) getRobotInfoBySerialId:(NSString *) serialId delegate:(id) delegate action:(SEL) action
-{
-    GetRobotIPHelper *ipHelper = [[GetRobotIPHelper alloc] init];
-    [ipHelper robotIPAddress:serialId delegate:delegate action:action];
-}
-
-+(void) connectToRobotOverTCP:(NeatoRobot *) robot delegate:(id<TCPConnectionHelperProtocol>) delegate
-{
-    TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
-    [helper connectToRobotOverTCP:robot delegate:delegate];
-}
-
-+(void) diconnectRobotFromTCP:(NSString*) robotId delegate:(id) delegate;
-{
-    TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
-    [helper disconnectFromRobot:robotId delegate:delegate];
-}
-
-+(void) logoutFromXMPP:(id) delegate
-{
-    XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
-    helper.delegate = delegate;
-    [helper disconnectFromRobot];
-}
-
-+(void) getRobotAtlasMetadataForRobotId:(NSString *) robotId delegate:(id) delegate
-{
-    RobotAtlasManager *atlasManager = [[RobotAtlasManager alloc] init];
-    [atlasManager getAtlasMetadataForRobotWithId:robotId delegate:delegate];
-}
-
-+(void) updateRobotAtlasData:(NeatoRobotAtlas *) robotAtlas  delegate:(id) delegate
-{
-    RobotAtlasManager *atlasManager = [[RobotAtlasManager alloc] init];
-    [atlasManager updateRobotAtlasData:robotAtlas delegate:delegate];
-}
-
-+(void) getAtlasGridMetadata:(NSString *) robotId gridId:(NSString *) gridId delegate:(id) delegate
-{
-    AtlasGridManager *atlasGridMan = [[AtlasGridManager alloc] init];
-    atlasGridMan.delegate = delegate;
-    [atlasGridMan getAtlasGridMetadata:robotId gridId:gridId];
-}
 
 // AS of now we allow only one TCP connection
 // So the device will be connected to a single robot over TCP
@@ -173,90 +116,6 @@
         default:
             break;
     }
-}
-
-+ (void)setRobotName2:(NSString *)robotName forRobotWithId:(NSString *)robotId delegate:(id)delegate {
-    NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
-    serverManager.delegate = delegate;
-    [serverManager setRobotName2:robotName forRobotWithId:robotId];
-}
-
-+ (void)getDetailsForRobotWithId:(NSString *)robotId delegate:(id)delegate {
-    NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
-    serverManager.delegate = delegate;
-    [serverManager getRobotDetails:robotId];
-}
-
-+ (void)onlineStatusForRobotWithId:(NSString *)robotId delegate:(id)delegate {
-    NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
-    serverManager.delegate = delegate;
-    [serverManager onlineStatusForRobotWithId:robotId];
-}
-
-+ (void)tryDirectConnection2:(NSString *)robotId delegate:(id)delegate {
-    DeviceConnectionManager *deviceConnectionManager = [[DeviceConnectionManager alloc] init];
-    [deviceConnectionManager tryDirectConnection2:robotId delegate:delegate];
-}
-
-
-+ (void)sendCommandToRobot2:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate {
-    RobotCommandHelper *robotCommandHelper = [[RobotCommandHelper alloc] init];
-    [robotCommandHelper sendCommandToRobot2:robotId commandId:commandId params:params delegate:delegate];
-}
-
-+ (id)createScheduleForRobotId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType {
-    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    return [scheduleManager createScheduleForRobotId:robotId forScheduleType:scheduleType];
-}
-
-+ (id)addScheduleEventData:(NSDictionary *)scheduleEventData forScheduleWithScheduleId:(NSString *)scheduleId {
-    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    return [scheduleManager addScheduleEventData:scheduleEventData forScheduleWithScheduleId:scheduleId];
-}
-
-+ (id)updateScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId withScheduleEventdata:(NSDictionary *)scheduleEventData {
-    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    return [scheduleManager updateScheduleEventWithScheduleEventId:scheduleEventId forScheduleId:scheduleId withScheduleEventdata:scheduleEventData];
-}
-
-+ (id)deleteScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
-    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    return [scheduleManager deleteScheduleEventWithScheduleEventId:scheduleEventId forScheduleId:scheduleId];
-}
-
-+ (id)scheduleEventDataWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
-    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    return [scheduleManager scheduleEventDataWithScheduleEventId:scheduleEventId withScheduleId:scheduleId];
-}
-
-+ (id)scheduleDataForScheduleId:(NSString *)scheduleId {
-    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    return [scheduleManager scheduleDataForScheduleId:scheduleId];
-}
-
-+ (void)scheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType delegate:(id)delegate {
-    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    [scheduleManager scheduleEventsForRobotWithId:robotId ofScheduleType:scheduleType delegate:delegate];
-}
-
-+ (void)updateScheduleForScheduleId:(NSString *)scheduleId delegate:(id)delegate {
-    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    [scheduleManager updateScheduleForScheduleId:scheduleId delegate:delegate];
-}
-
-+ (void)setRobotSchedule:(NSArray *)schedulesArray forRobotId:(NSString *)robotId ofType:(NSString *)schedule_type delegate:(id)delegate {
-    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    [scheduleManager setRobotSchedule:schedulesArray forRobotId:robotId ofType:schedule_type delegate:delegate];
-}
-
-+ (void)getRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type delegate:(id)delegate {
-    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    [scheduleManager getSchedulesForRobotId:robotId OfType:schedule_type delegate:delegate];
-}
-
-+(void) deleteRobotScheduleForRobotId:(NSString *)robotId ofType:(NSString *)schedule_type delegate:(id)delegate {
-    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    [scheduleManager deleteScheduleForRobotId:robotId OfType:schedule_type delegate:delegate];
 }
 
 @end

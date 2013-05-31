@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2838B97F17549B4200145B6C /* PushNotificationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2838B97E17549B4200145B6C /* PushNotificationHelper.m */; };
 		28B4A9F9173786D30017702D /* AppBaseDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B4A9F8173786D30017702D /* AppBaseDelegate.m */; };
 		B22BDAAC168D7C8400FFCB76 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B22BDAAB168D7C8400FFCB76 /* Foundation.framework */; };
 		B22BDAB1168D7C8400FFCB76 /* SlideiOSPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B22BDAB0168D7C8400FFCB76 /* SlideiOSPlugin.h */; };
@@ -196,6 +197,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2838B97D17549B4200145B6C /* PushNotificationHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotificationHelper.h; sourceTree = "<group>"; };
+		2838B97E17549B4200145B6C /* PushNotificationHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushNotificationHelper.m; sourceTree = "<group>"; };
 		28B4A9F7173786D30017702D /* AppBaseDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBaseDelegate.h; sourceTree = "<group>"; };
 		28B4A9F8173786D30017702D /* AppBaseDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBaseDelegate.m; sourceTree = "<group>"; };
 		B22BDAA8168D7C8400FFCB76 /* libSlideiOSPlugin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSlideiOSPlugin.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -526,6 +529,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2838B97C17549B2C00145B6C /* PushNotification */ = {
+			isa = PBXGroup;
+			children = (
+				2838B97D17549B4200145B6C /* PushNotificationHelper.h */,
+				2838B97E17549B4200145B6C /* PushNotificationHelper.m */,
+			);
+			path = PushNotification;
+			sourceTree = "<group>";
+		};
 		B22BDA9D168D7C8400FFCB76 = {
 			isa = PBXGroup;
 			children = (
@@ -638,6 +650,7 @@
 		B22BDB10168D848800FFCB76 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				2838B97C17549B2C00145B6C /* PushNotification */,
 				E199358216EE14CA008BB353 /* Categories */,
 				E199355616EE149F008BB353 /* RobotScheduleHelper */,
 				E199356816EE14A1008BB353 /* ScheduleDBHelper */,
@@ -1557,6 +1570,7 @@
 				E1D40FC61754832A00EBCD62 /* CleaningAreaEntity.m in Sources */,
 				E1D40FC91754838600EBCD62 /* NeatoRobotEntity.m in Sources */,
 				E1D40FCF17548F3900EBCD62 /* CleaningArea.m in Sources */,
+				2838B97F17549B4200145B6C /* PushNotificationHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

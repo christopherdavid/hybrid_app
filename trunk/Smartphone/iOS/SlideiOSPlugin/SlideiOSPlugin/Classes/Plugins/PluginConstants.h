@@ -21,6 +21,7 @@
 #define KEY_MESSAGE @"message"
 #define KEY_CURRENT_PASSWORD @"currentPassword"
 #define KEY_NEW_PASSWORD @"newPassword"
+#define KEY_SERIAL_NUMBER @"serial_number"
 #define KEY_SPOT_CLEANING_AREA_LENGTH @"spotCleaningAreaLength"
 #define KEY_SPOT_CLEANING_AREA_HEIGHT @"spotCleaningAreaHeight"
 //Used for error

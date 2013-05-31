@@ -27,6 +27,7 @@
 #define NEATO_RESPONSE_ROBOT_ATLAS_ID @"robot_atlas_id"
 #define NEATO_ROBOT_ONLINE_STATUS @"online"
 #define NEATO_VALIDATION_STATUS @"validation_status"
+#define NEATO_PROFILE_DETAILS @"profile_details"
 
 #define NEATO_SCHEDULE_ADVANCE @"Advanced"
 #define NEATO_SCHEDULE_BASIC @"Basic"
@@ -56,6 +57,10 @@
 #define NEATO_KEY_APP_VERSION @"appVersion"
 #define NEATO_KEY_LIB_VERSION @"libVersion"
 #define NEATO_KEY_SERVER_USED @"serverUsed"
+#define NEATO_KEY_SCHEDULE_ENABLED @"enable_basic_schedule"
+#define NEATO_KEY_SCHEDULE_ENABLED_2 @"enable_basic_schedule2"
+
+#define PUSH_NOTIFICATION_CUSTOM_DATA_KEY   @"raw_data"
 
 #define TAG_FIND_ROBOT_COMMAND 9001
 
@@ -150,6 +155,7 @@
     #define NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neato.rajatogo.com/api/rest/json/?method=message.notification_registration"
     #define NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neato.rajatogo.com/api/rest/json/?method=message.notification_unregistration"
     #define NEATO_IS_USER_VALIDATED_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.IsUserValidated"
+    #define NEATO_GET_ROBOT_PROFILE_DETAILS_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.get_profile_details"
     // TODO: These APIs have not been added to prod server.
     #define NEATO_CREATE_USER2_URL @"http://neato.rajatogo.com/api/rest/json?method=user.create2"
     #define NEATO_FORGET_PASSWORD_URL @"http://neato.rajatogo.com/api/rest/json?method=user.forget_password"
@@ -157,6 +163,7 @@
     #define NEATO_SET_ROBOT_PROFILE_2_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.set_profile_details2"
     #define NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neato.rajatogo.com/api/rest/json?method=message.set_user_push_notification_options"
     #define NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neato.rajatogo.com/api/rest/json?method=message.get_user_push_notification_options"
+    #define NEATO_GET_ROBOT_VIRTUAL_ONLINE_STATUS_URL @"http://neato.rajatogo.com/api/rest/json?method=robot.is_robot_online_virtual"
 
 
 #elif SWITCH_TO_DEV_SERVER
@@ -183,7 +190,8 @@
     #define NEATO_SET_ROBOT_PROFILE_2_URL @"http://neatodev.rajatogo.com/api/rest/json/?method=robot.set_profile_details2"
     #define NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=message.set_user_push_notification_options"
     #define NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=message.get_user_push_notification_options"
-
+    #define NEATO_GET_ROBOT_PROFILE_DETAILS_URL @"http://neatodev.rajatogo.com/api/rest/json/?method=robot.get_profile_details"
+    #define NEATO_GET_ROBOT_VIRTUAL_ONLINE_STATUS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.is_robot_online_virtual"
 #else
     // Will use API's at http://neatostaging.rajatogo.com/wstest/
     #define NEATO_CREATE_USER_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.create"
@@ -208,6 +216,8 @@
     #define NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=message.set_user_push_notification_options"
     #define NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=message.get_user_push_notification_options"
     #define NEATO_SET_ROBOT_PROFILE_2_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.set_profile_details2"
+    #define NEATO_GET_ROBOT_PROFILE_DETAILS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.get_profile_details"
+    #define NEATO_GET_ROBOT_VIRTUAL_ONLINE_STATUS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.is_robot_online_virtual"
 #endif
 
 

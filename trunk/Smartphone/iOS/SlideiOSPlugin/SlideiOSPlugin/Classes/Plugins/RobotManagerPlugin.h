@@ -5,8 +5,9 @@
 
 #import <Cordova/CDV.h>
 #import "RobotManagerCallWrapper.h"
+#import "PushNotificationHelper.h"
 
-@interface RobotManagerPlugin : CDVPlugin 
+@interface RobotManagerPlugin : CDVPlugin <PushNotificationDelegate>
 
 - (void)discoverNearByRobots:(CDVInvokedUrlCommand *)command;
 - (void)sendCommandToRobot:(CDVInvokedUrlCommand *)command;
@@ -35,8 +36,6 @@
 - (void)robotSetSchedule2:(CDVInvokedUrlCommand *)command;
 - (void)getSchedule2:(CDVInvokedUrlCommand *)command;
 - (void)deleteScheduleData:(CDVInvokedUrlCommand *)command;
-- (void)registerForRobotMessages:(CDVInvokedUrlCommand *)command;
-- (void)unregisterForRobotMessages:(CDVInvokedUrlCommand *)command;
 - (void)enableSchedule:(CDVInvokedUrlCommand *)command;
 - (void)startCleaning:(CDVInvokedUrlCommand *)command;
 - (void)stopCleaning:(CDVInvokedUrlCommand *)command;
@@ -46,4 +45,8 @@
 - (void)turnVacuumOnOff:(CDVInvokedUrlCommand *)command;
 - (void)setSpotDefinition:(CDVInvokedUrlCommand *)command;
 - (void)getSpotDefinition:(CDVInvokedUrlCommand *)command;
+- (void)registerForRobotMessges:(CDVInvokedUrlCommand *)command;
+- (void)unregisterForRobotMessages:(CDVInvokedUrlCommand *)command;
+- (void)getRobotVirtualOnlineStatus:(CDVInvokedUrlCommand *)command;
+- (void)isScheduleEnabled:(CDVInvokedUrlCommand *)command;
 @end

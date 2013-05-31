@@ -19,7 +19,7 @@
 @synthesize delegate = _delegate;
 @synthesize neatoRobot = _neatoRobot;
 
--(void) disconnectFromRobot:(NSString *) robotId delegate:(id<TCPConnectionHelperProtocol>) delegate
+-(void) disconnectFromRobot:(NSString *) robotId delegate:(id) delegate
 {
     debugLog(@"");
     self.retained_self = self;
