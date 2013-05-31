@@ -158,7 +158,7 @@ public class RobotHelper {
 	
 	// Private helper method to return the default push notification options
 	// by default all push notifications are disabled
-	private static JSONObject getDefaultSettings() {
+	public static JSONObject getDefaultSettings() {
 		JSONObject jsonObject = new JSONObject();
 		try {
 			jsonObject.put(JsonMapKeys.KEY_GLOBAL_NOTIFICATIONS, false);

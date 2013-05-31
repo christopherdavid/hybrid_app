@@ -129,7 +129,6 @@ public class RobotCommandServiceManager {
 	}
 
 	public static void loginToXmpp(Context context) {
-		LogHelper.logD(TAG, "Form peer connection action initiated");
 		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
 
 		if (neatoService != null) {

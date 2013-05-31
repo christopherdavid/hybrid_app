@@ -257,7 +257,6 @@ public class XMPPConnectionHelper {
 
 	}
 
-	//TODO: later the byte[] parameter will be removed. This is temporary.
 	private  void sendRobotPacket(String to, String packetXml)
 	{
 		Connection connection = getConnection();

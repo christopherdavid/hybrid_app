@@ -62,7 +62,6 @@ public class TcpIpTransport implements Transport {
 	}
 
 	public DatagramPacket readDatagram() throws IOException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -83,7 +82,6 @@ public class TcpIpTransport implements Transport {
 	}
 
 	public int getVersion() {
-		// TODO Auto-generated method stub
 		return AppConstants.TCP_PACKET_VERSION;
 	}
 

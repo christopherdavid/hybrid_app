@@ -99,7 +99,6 @@ public class TcpConnectionHelper {
 			int peerPort = TCP_ROBOT_SERVER_PORT;
 			LogHelper.logD(TAG, "Robot TCP IP Address = " + peerAddress);
 
-			//TODO: As we are supporting only one TCP connection as of now, break the exisiting conneciton if any
 			if (getConnectedRobotInfo() != null) {
 				closePeerConnectionInternal(getConnectedRobotInfo().getRobotId());
 			}
@@ -223,7 +222,7 @@ public class TcpConnectionHelper {
 		}
 	}
 
-	// TODO: add a field for robotId. Once we have multiple robot support, we will nedd that field.
+	// TODO: add a field for robotId. Once we have multiple robot support, we will need that field.
 	private void notifyPacketReceived(final String robotId, final RobotCommandsGroup robotCommandGroup)
 	{
 		for (int i = 0; i < robotCommandGroup.size(); i++) {

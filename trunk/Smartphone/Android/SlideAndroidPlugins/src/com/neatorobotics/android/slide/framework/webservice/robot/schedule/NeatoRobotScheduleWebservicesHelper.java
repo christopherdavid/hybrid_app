@@ -57,7 +57,6 @@ public class NeatoRobotScheduleWebservicesHelper {
 		return result;
 	}
 
-	// TODO : right now i have set blob data type to String. Not really sure.
 	public static AddNeatoRobotScheduleDataResult addNeatoRobotScheduleDataRequest(Context context, String serial_number,String schedule_type ,String xml_data, String blob_data)
 		throws UserUnauthorizedException, NeatoServerException, IOException {
 		
