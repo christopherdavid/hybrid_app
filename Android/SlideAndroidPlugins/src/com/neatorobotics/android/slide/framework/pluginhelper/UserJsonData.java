@@ -7,8 +7,7 @@ import org.json.JSONObject;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 
 
-//TODO: Get the design for incoming data for user manager json array which will be sent by javascript.
-//		Right now Assumed that the data will be sent in a (key,value) pair in a JSONObject which will be the 1st element of the 
+//		Right now the data will be sent in a (key,value) pair in a JSONObject which will be the 1st element of the 
 //  	received JSON Array. 
 
 public class UserJsonData {

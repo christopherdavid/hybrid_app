@@ -41,7 +41,10 @@ public class XMPPUtils {
 	
 	//Used to see if the message is incoming from the given robotId
 	public static boolean isRobotChatId(Context context, String from, String robotId) {
-		// TODO: Use getRobotChatId
-		return true;
+		String robotChatId = getRobotChatId(context, robotId);
+		if ((!TextUtils.isEmpty(robotChatId)) && (from.equals(robotChatId))) {
+			return true;
+		}
+		return false;
 	}
 }

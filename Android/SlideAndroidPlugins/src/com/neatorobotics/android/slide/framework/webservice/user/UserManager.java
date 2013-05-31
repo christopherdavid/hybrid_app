@@ -197,8 +197,6 @@ public class UserManager {
 			public void run() {
 				try {
 					RobotAssociationDisassociationResult result = NeatoUserWebservicesHelper.associateNeatoRobotRequest(mContext, emailId, robotId);					
-					// TODO: Add the associated robot in prefs list.
-					// Keep a ArrayList of robotItems.
 					RobotItem robotItem = RobotManager.getInstance(mContext).getRobotDetail(robotId);
 					LogHelper.log(TAG, "RobotItem = " + robotItem);
 					if (robotItem != null) {

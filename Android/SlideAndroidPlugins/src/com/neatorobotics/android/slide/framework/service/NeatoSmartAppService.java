@@ -123,7 +123,7 @@ public class NeatoSmartAppService extends Service {
 
 		@Override
 		public void onDataReceived(String from, RobotCommandPacket packet) {
-			LogHelper.log(TAG, "TODO: XMPP onDataReceived. New Packet Data = " + packet);
+			LogHelper.log(TAG, "XMPP onDataReceived. New Packet Data = " + packet);
 			//If data changed command recevied, retrieve the changed data from server.
 			if (packet.isRequest()) {
 				RequestPacket request = packet.getRobotCommands().getCommand(0);
@@ -294,6 +294,9 @@ public class NeatoSmartAppService extends Service {
 		if (XMPPUtils.isRobotChatId(getApplicationContext(), from, robotId)) {
 			LogHelper.logD(TAG, "packet is received from robot chat id. Stop the command expiry timer if running.");
 			RobotCommandTimerHelper.getInstance(getApplicationContext()).stopCommandTimerIfRunning(robotId);
+		}
+		else {
+			LogHelper.logD(TAG, "packet is not received from robot chat id.");
 		}
 		
 		RobotDataManager.getServerData(getApplicationContext(), robotId);
@@ -470,7 +473,7 @@ public class NeatoSmartAppService extends Service {
 			LogHelper.log(TAG, "cancelDiscovery Called");
 		}
 
-		// TODO cleanup all the things here. TO be called when we wish to stop the service
+		// TODO: cleanup all the things here. TO be called when we wish to stop the service
 		public void cleanup() {
 			LogHelper.log(TAG, "cleanup service called");
 
@@ -715,16 +718,18 @@ public class NeatoSmartAppService extends Service {
 	private void loginToXmppServer() {
 		try {
 			synchronized (mXmppConnectionLock) {
-				LogHelper.log(TAG, "loginToXmppServer called");
-				mXMPPConnectionHelper.close();
-				
-				LogHelper.logD(TAG, "closed existing connection. Now retring to connect");
-				mXMPPConnectionHelper.connect();
-				LogHelper.logD(TAG, "connected. Now loging in");
-				String userId = getUserChatId();
-				String password = getUserChatPassword();
-				LogHelper.log(TAG, "userId = " + userId);
-				mXMPPConnectionHelper.login(userId, password);
+				if (UserHelper.isUserLoggedIn(getApplicationContext())) {
+					LogHelper.log(TAG, "loginToXmppServer called");
+					mXMPPConnectionHelper.close();
+					
+					LogHelper.logD(TAG, "closed existing connection. Now retring to connect");
+					mXMPPConnectionHelper.connect();
+					LogHelper.logD(TAG, "connected. Now loging in");
+					String userId = getUserChatId();
+					String password = getUserChatPassword();
+					LogHelper.log(TAG, "userId = " + userId);
+					mXMPPConnectionHelper.login(userId, password);
+				}
 			}
 		}
 		catch (XMPPException e) {

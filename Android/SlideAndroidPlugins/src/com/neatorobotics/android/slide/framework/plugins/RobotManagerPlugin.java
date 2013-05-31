@@ -187,21 +187,17 @@ public class RobotManagerPlugin extends Plugin {
 			case SET_ROBOT_SCHEDULE:
 				LogHelper.log(TAG, "ADVANCED_SCHEDULE_ROBOT action initiated");
 				setAdvancedSchedule(context, jsonData, callbackId);
-				// TODO: handle with a listener
 				break;
 			case SET_MAP_OVERLAY_DATA:
 				LogHelper.log(TAG, "SET_MAP_OVERLAY_DATA action initiated");
-				// TODO: handle with a listener
 				setMapOverlayData(context, jsonData, callbackId);
 				break;
 			case GET_ROBOT_MAP:
 				LogHelper.log(TAG, "GET_ROBOT_MAP action initiated");
-				// TODO: handle with a listener
 				getRobotMaps(context, jsonData, callbackId);
 				break;
 			case GET_ROBOT_SCHEDULE:
 				LogHelper.log(TAG, "GET_ROBOT_SCHEDULE action initiated");
-				// TODO: handle with a listener
 				getRobotSchedule(context, jsonData, callbackId);				
 				break;
 				
@@ -866,7 +862,6 @@ public class RobotManagerPlugin extends Plugin {
 		private void disconnectPeerConnection(Context context,
 				RobotJsonData jsonData, String callbackId) {
 			LogHelper.logD(TAG, "disconnectPeerConnection action initiated in Robot plugin");
-			//TODO	
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			RobotCommandServiceManager.disconnectDirectConnection(context, robotId, new RobotPluginPeerConnectionListener(callbackId));
 			PluginResult pluginLogoutResult = new PluginResult(PluginResult.Status.OK);
@@ -904,7 +899,6 @@ public class RobotManagerPlugin extends Plugin {
 			JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
 
 			RobotCommandServiceManager.sendCommand(context, robot_id, commandId);
-			//TODO: Success should be send in a thread way.
 			PluginResult pluginStartResult = new PluginResult(PluginResult.Status.OK);
 			pluginStartResult.setKeepCallback(false);
 			success(pluginStartResult, callbackId);
@@ -942,7 +936,6 @@ public class RobotManagerPlugin extends Plugin {
 		}
 		
 		// Private helper method to save the schedule enable/disable information
-		// TODO: We need to eventually use the web service to enable/disable schedule
 		private void saveEnableDisableScheduleState(Context context, HashMap<String, String> params) {
 			String scheduleType = params.get(JsonMapKeys.KEY_SCHEDULE_TYPE);
 			String enableSchedule = params.get(JsonMapKeys.KEY_ENABLE_SCHEDULE);
@@ -1311,9 +1304,6 @@ public class RobotManagerPlugin extends Plugin {
 				try {
 					robot.put(JsonMapKeys.KEY_ROBOT_NAME, robotInfo.getRobotName());
 					robot.put(JsonMapKeys.KEY_ROBOT_ID, robotInfo.getSerialId());
-					//TODO : write a function to form a list of all the robot infos discovered. So that while forming a TCP we would be able to extract the ip address.
-					// For now sending the ip address to UI so as to get it back. Very imp to implement.
-					//robot.put(JsonMapKeys.KEY_ROBOT_IP_ADDRESS, robotInfo.getRobotIpAddress());
 				} catch (JSONException e) {
 					LogHelper.log(TAG, "Exception in robotJsonObject", e);
 				}

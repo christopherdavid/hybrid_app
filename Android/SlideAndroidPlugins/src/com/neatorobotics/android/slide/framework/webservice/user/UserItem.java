@@ -12,7 +12,6 @@ public class UserItem {
 	public String chat_id;
 	public String chat_pwd;	
 	public ArrayList<String> social_networks; // = new ArrayList<String>();	
-	// TODO : Add list of robot items details associated. Right now only adding the robot names.
 	
 	public ArrayList<RobotItem> robots = new ArrayList<RobotItem>();
 	

@@ -10,6 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.content.Context;
 import android.text.TextUtils;
+
+import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationMessageHandler;
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
@@ -204,6 +206,15 @@ public class UserManagerPlugin extends Plugin {
 				}
 				
 				return notificationSettings;
+			}
+			
+			// Send default notification settings.
+			@Override
+			public void onServerError(String errorMessage) {
+				LogHelper.logD(TAG, String.format("Server Message = %s ", errorMessage));
+				JSONObject notificationSettings = RobotHelper.getDefaultSettings();
+				PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, notificationSettings);		
+				success(pluginResult, mCallbackId);
 			}
 		});		
 	}
@@ -626,7 +637,7 @@ public class UserManagerPlugin extends Plugin {
 	}	
 
 	private class UserRequestListenerWrapper implements WebServiceBaseRequestListener {
-		private String mCallbackId;
+		protected String mCallbackId;
 		
 		public UserRequestListenerWrapper(String callbackId) {
 			mCallbackId = callbackId;
