@@ -20,8 +20,7 @@ public class RobotPacketConstants {
 	public static final String XML_TAG_RESPONSE = "response";
 	public static final String XML_TAG_STATUS = "status";
 	
-	
-	
+	// Distribution modes for command packets.
 	public static final int DISTRIBUTION_MODE_TYPE_XMPP = 0;
 	public static final int DISTRIBUTION_MODE_TYPE_PEER = 1;
 	public static final int DISTRIBUTION_MODE_TYPE_TIME_MODE_SERVER = 2;

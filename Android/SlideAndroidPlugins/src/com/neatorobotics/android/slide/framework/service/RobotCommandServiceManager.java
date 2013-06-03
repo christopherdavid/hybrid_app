@@ -17,22 +17,6 @@ import com.neatorobotics.android.slide.framework.robot.commands.request.RobotReq
 public class RobotCommandServiceManager {
 	private static final String TAG = RobotCommandServiceManager.class.getSimpleName();
 	
-	public static void sendCommand(Context context, String robotId, int commandId) {
-		LogHelper.logD(TAG, "Send command action initiated in Robot plugin internal - RobotSerialId = " + robotId);
-
-		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-		if (neatoService != null) {
-			try {
-				neatoService.sendCommand(robotId, commandId);
-			} catch (RemoteException e) {
-				LogHelper.logD(TAG, "Could not initiate sendCommand action ");
-			}
-		} else {
-			LogHelper.logD(TAG, "Service is not started!");
-
-		}
-	}
-	
 	public static void sendCommand2(Context context, String robotId, int commandId, HashMap<String, String> commandParams) {
 		LogHelper.logD(TAG, "Send command action initiated in Robot plugin internal - RobotSerialId = " + robotId);
 
@@ -69,26 +53,6 @@ public class RobotCommandServiceManager {
 			LogHelper.logD(TAG, "Service is not started!");
 			
 		}
-	}
-
-	public static void tryDirectConnection(Context context, String robotId, RobotPeerConnectionListener listener) {
-		LogHelper.logD(TAG, "Form peer connection action initiated");
-		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-		//TODO discover ipaddress if not already stored. Right now discovering everytime. Later we can have a map with serial Id.
-		ApplicationConfig.getInstance(context).getRobotResultReceiver().addPeerConnectionListener(listener);
-		if (neatoService != null) {
-			try {
-
-				LogHelper.logD(TAG, "Service exists. Start peer connection: "+robotId);
-				neatoService.connectToRobot(robotId);
-			} catch (RemoteException e) {
-				LogHelper.logD(TAG, "Could not initiate peer conneciton action");
-			}
-		} else {
-			LogHelper.logD(TAG, "Service is not started!");
-
-		}
-
 	}
 	
 	public static void tryDirectConnection2(Context context, String robotId, RobotPeerConnectionListener listener) {

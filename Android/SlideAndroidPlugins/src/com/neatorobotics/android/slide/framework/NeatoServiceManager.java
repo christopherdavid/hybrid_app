@@ -63,7 +63,6 @@ public class NeatoServiceManager {
 		if (mServiceBound) {
 			mContext.unbindService(mNeatoRobotServiceConnection);
 			mServiceBound = false;
-			
 			// For now we are stopping the service as soon as the App goes off.
 			Intent serviceIntent = new Intent(mContext, NeatoSmartAppService.class);
 			mContext.stopService(serviceIntent);

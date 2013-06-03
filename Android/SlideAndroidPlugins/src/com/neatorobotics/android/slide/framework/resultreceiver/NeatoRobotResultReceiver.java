@@ -18,7 +18,6 @@ import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotP
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotStateListener;
 import com.neatorobotics.android.slide.framework.robot.commands.request.ResponsePacket;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotRequests;
-import com.neatorobotics.android.slide.framework.service.NeatoSmartAppService;
 import com.neatorobotics.android.slide.framework.service.NeatoSmartAppsEventConstants;
 
 public class NeatoRobotResultReceiver extends ResultReceiver
@@ -35,7 +34,6 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 		super(handler);
 	}
 
-
 	@Override
 	protected void onReceiveResult(final int resultCode, Bundle resultData) {
 		super.onReceiveResult(resultCode, resultData);
@@ -44,7 +42,7 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 		
 		switch (resultCode) {		
 			case NeatoSmartAppsEventConstants.NEW_ROBOT_FOUND:
-				RobotInfo robotInfo = resultData.getParcelable(NeatoSmartAppService.DISCOVERY_ROBOT_INFO);
+				RobotInfo robotInfo = resultData.getParcelable(NeatoRobotResultReceiverConstants.DISCOVERY_ROBOT_INFO);
 				if (mRobotDiscoveryListener != null) {
 					mRobotDiscoveryListener.onNewRobotFound(robotInfo);
 				}

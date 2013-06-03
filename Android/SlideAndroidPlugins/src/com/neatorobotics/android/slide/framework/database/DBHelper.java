@@ -6,9 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.neatorobotics.android.slide.framework.database.NeatoDatabase.AtlasInfoColumns;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.CleaningSettingsColumns;
-import com.neatorobotics.android.slide.framework.database.NeatoDatabase.GridInfoColumns;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.NotificationSettingsColumns;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.RobotInfoColumns;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.RobotProfileParameters;
@@ -20,10 +18,7 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleInfo2;
 import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
 import com.neatorobotics.android.slide.framework.utils.CryptoUtils;
-import com.neatorobotics.android.slide.framework.utils.FileUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
-import com.neatorobotics.android.slide.framework.webservice.robot.atlas.AtlasItem;
-import com.neatorobotics.android.slide.framework.webservice.robot.atlas.grid.GridItem;
 import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 
 /*
@@ -44,9 +39,6 @@ public class DBHelper {
 	private static final String SELECTION_USER_BY_USER_EMAIL = Tables.TABLE_NAME_USER_INFO + "." + UserInfoColumns.COL_NAME_USER_EMAIL + " = ?";
 	
 	private static final String SELECTION_ROBOT_BY_SERIAL_ID = Tables.TABLE_NAME_ROBOT_INFO + "." + RobotInfoColumns.COL_NAME_ROBOT_SERIAL_ID + " = ?";
-	
-	private static final String SELECTION_ATLAS_BY_ID = Tables.TABLE_NAME_ATLAS_INFO + "." + AtlasInfoColumns.COL_NAME_ATLAS_ID + " = ?";
-	private static final String SELECTION_GRID_BY_ID = Tables.TABLE_NAME_GRID_INFO + "." + GridInfoColumns.COL_NAME_GRID_ID + " = ?";
 
 	private static final String SELECTION_SCHEDULE_INFO_BY_ID = Tables.TABLE_NAME_SCHEDULE_INFO + "." + ScheduleInfoColumns.COL_NAME_SCHEDULE_ID + " = ?";
 	private static final String SELECTION_ROBOT_SCHEDULE_BY_ID = Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_ROBOT_ID + " = ?";
@@ -84,8 +76,6 @@ public class DBHelper {
 
 	public void clearAllData() {
 		clearAllAssociatedRobots();
-		clearAllAtlasData();
-		clearAllGridData();
 		clearAllScheduleInfo();
 		clearAllScheduleIds();
 		clearAllCleaningSettings();
@@ -356,221 +346,6 @@ public class DBHelper {
 		return values;
 	}
 	
-	// Atlas data related functions ---------------------------------------------------------------------------
-	
-	/*
-	 * The helper function saves atlas data if not exist in the DB
-	 * if exist, compare the DB and the input Xml version if it is different then
-	 * reset the atlas xml file path of that item otherwise nothing to Do    
-	 */
-	public AtlasItem saveAtlasData(String atlasId, String xmlVersion) {	
-		LogHelper.logD(TAG, String.format("saveAtlasData - Input GridId = %s XmlVersion = %s", atlasId, xmlVersion));
-		AtlasItem atlasItem = getAtlasItemById(atlasId);
-		if (atlasItem != null) {			
-			LogHelper.logD(TAG, String.format("saveAtlasData - Database AtlasId = %s XmlVersion = %s Path = %s", 
-						atlasItem.getId(), atlasItem.getXmlVersion(), atlasItem.getXmlFilePath()));			
-			
-			if (!atlasItem.getXmlVersion().equals(xmlVersion)) {
-				atlasItem.setXmlFilePath("");
-				atlasItem.setXmlVersion(xmlVersion);
-				updateAtlasData(atlasItem);
-			}
-		}
-		else {
-			ContentValues values = getAtlasContentValues(atlasId, xmlVersion);
-			SQLiteDatabase db = getDatabase();
-			long rowId = db.insert(Tables.TABLE_NAME_ATLAS_INFO, null, values);
-			if (rowId > 0) {
-				atlasItem = new AtlasItem();
-				atlasItem.setId(atlasId);
-				atlasItem.setXmlVersion(xmlVersion);			
-			}
-		}
-		
-		return atlasItem;
-	}
-	
-	public AtlasItem getAtlasItemById(String atlasId) {
-		AtlasItem atlasItem = null;
-		String[] selectionArgs = new String[] {atlasId};
-		
-		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(Tables.TABLE_NAME_ATLAS_INFO, null, SELECTION_ATLAS_BY_ID, selectionArgs, null, null, null);
-		if (cursor.moveToFirst()) {
-			atlasItem = convertToAtlasItem(cursor);
-		}
-		
-		cursor.close();
-		
-		return atlasItem;
-	}
-	
-	public boolean updateAtlasXmlFilePath(String atlasId, String xmlFilePath) {
-		LogHelper.logD(TAG, String.format("updateAtlasXmlFilePath - AtlasId = [%s] Path = [%s] ", atlasId, xmlFilePath));
-		ContentValues values = new ContentValues();
-		values.put(AtlasInfoColumns.COL_NAME_ATLAS_XML_FILE_PATH, xmlFilePath);		
-		
-		String[] selectionArgs = new String[] {atlasId};
-		
-		SQLiteDatabase db = getDatabase();
-		int count = db.update(Tables.TABLE_NAME_ATLAS_INFO, values, SELECTION_ATLAS_BY_ID, selectionArgs);
-		
-		return (count > 0) ? true : false;
-	}
-	
-	public boolean updateAtlasData(AtlasItem atlasItem) {
-		ContentValues values = getContentValues(atlasItem);		
-		
-		String[] selectionArgs = new String[] {atlasItem.getId()};
-		
-		SQLiteDatabase db = getDatabase();
-		int count = db.update(Tables.TABLE_NAME_ATLAS_INFO, values, SELECTION_ATLAS_BY_ID, selectionArgs);
-		
-		return (count > 0) ? true : false;
-	}
-	
-	public void clearAllAtlasData() {
-		SQLiteDatabase db = getDatabase();
-		int count = db.delete(Tables.TABLE_NAME_ATLAS_INFO, null, null);
-		LogHelper.logD(TAG, "clearAllAtlasData - " + count);
-	}
-	
-	private AtlasItem convertToAtlasItem(Cursor cursor) {
-		AtlasItem atlasItem = new AtlasItem();
-		
-		atlasItem.setId(cursor.getString(cursor.getColumnIndex(AtlasInfoColumns.COL_NAME_ATLAS_ID)));
-		atlasItem.setXmlVersion(cursor.getString(cursor.getColumnIndex(AtlasInfoColumns.COL_NAME_ATLAS_XML_VERSION)));		
-		atlasItem.setXmlFilePath(cursor.getString(cursor.getColumnIndex(AtlasInfoColumns.COL_NAME_ATLAS_XML_FILE_PATH)));		
-		
-		return atlasItem;
-	}
-	
-	private ContentValues getAtlasContentValues(String atlasId, String xmlVersion) {
-		ContentValues values  = new ContentValues();
-		values.put(AtlasInfoColumns.COL_NAME_ATLAS_ID, atlasId);
-		values.put(AtlasInfoColumns.COL_NAME_ATLAS_XML_VERSION, xmlVersion);
-		
-		return values;
-	}
-	
-	private ContentValues getContentValues(AtlasItem atlasItem) {
-		ContentValues values  = new ContentValues();
-		values.put(AtlasInfoColumns.COL_NAME_ATLAS_ID, atlasItem.getId());
-		values.put(AtlasInfoColumns.COL_NAME_ATLAS_XML_VERSION, atlasItem.getXmlVersion());
-		values.put(AtlasInfoColumns.COL_NAME_ATLAS_XML_FILE_PATH, atlasItem.getXmlFilePath());				
-		
-		return values;
-	}
-	
-	// Grid data related functions ---------------------------------------------------------------------------
-	
-	/*
-	 * The helper function saves grid data if not exist in the DB
-	 * if exist, compare the DB and the input data version if it is different then
-	 * reset the grid data file path of that item otherwise nothing to Do    
-	 */
-	public GridItem saveGridData(String gridId, String dataVersion) {	
-		LogHelper.logD(TAG, String.format("saveGridData - Input GridId = %s DataVersion = %s", gridId, dataVersion));
-		GridItem gridItem = getGridItemById(gridId);
-		if (gridItem != null) {			
-			LogHelper.logD(TAG, String.format("saveGridData - Database GridId = %s DataVersion = %s Path = %s", 
-								gridItem.getId(), gridItem.getDataVersion(), gridItem.getDataFilePath()));			
-			
-			if (!gridItem.getDataVersion().equals(dataVersion)) {
-				// Delete the old cached file
-				FileUtils.deleteFile(gridItem.getDataFilePath());
-				
-				gridItem.setDataFilePath("");
-				gridItem.setDataVersion(dataVersion);				
-				updateGridData(gridItem);
-			}
-		}
-		else {
-			ContentValues values = getGridContentValues(gridId, dataVersion);
-			SQLiteDatabase db = getDatabase();
-			long rowId = db.insert(Tables.TABLE_NAME_GRID_INFO, null, values);
-			if (rowId > 0) {
-				gridItem = new GridItem();
-				gridItem.setId(gridId);
-				gridItem.setDataVersion(dataVersion);			
-			}
-		}
-		
-		return gridItem;
-	}
-	
-	public GridItem getGridItemById(String gridId) {
-		GridItem gridItem = null;
-		String[] selectionArgs = new String[] {gridId};
-		
-		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(Tables.TABLE_NAME_GRID_INFO, null, SELECTION_GRID_BY_ID, selectionArgs, null, null, null);
-		if (cursor.moveToFirst()) {
-			gridItem = convertToGridItem(cursor);
-		}
-		
-		cursor.close();
-		
-		return gridItem;
-	}
-	
-	public boolean updateGridDataFilePath(String gridId, String dataFilePath) {
-		LogHelper.logD(TAG, String.format("updateGridDataFilePath - GridId = [%s] Path = [%s] ", gridId, dataFilePath));
-		ContentValues values = new ContentValues();
-		values.put(GridInfoColumns.COL_NAME_GRID_DATA_FILE_PATH, dataFilePath);		
-		
-		String[] selectionArgs = new String[] {gridId};
-		
-		SQLiteDatabase db = getDatabase();
-		int count = db.update(Tables.TABLE_NAME_GRID_INFO, values, SELECTION_GRID_BY_ID, selectionArgs);
-		
-		return (count > 0) ? true : false;
-	}
-	
-	public boolean updateGridData(GridItem gridItem) {
-		ContentValues values = getContentValues(gridItem);		
-		
-		String[] selectionArgs = new String[] {gridItem.getId()};
-		
-		SQLiteDatabase db = getDatabase();
-		int count = db.update(Tables.TABLE_NAME_GRID_INFO, values, SELECTION_GRID_BY_ID, selectionArgs);
-		
-		return (count > 0) ? true : false;
-	}
-	
-	public void clearAllGridData() {
-		SQLiteDatabase db = getDatabase();
-		int count = db.delete(Tables.TABLE_NAME_GRID_INFO, null, null);
-		LogHelper.logD(TAG, "clearAllGridData - " + count);
-	}
-	
-	private GridItem convertToGridItem(Cursor cursor) {
-		GridItem gridItem = new GridItem();
-		
-		gridItem.setId(cursor.getString(cursor.getColumnIndex(GridInfoColumns.COL_NAME_GRID_ID)));
-		gridItem.setDataVersion(cursor.getString(cursor.getColumnIndex(GridInfoColumns.COL_NAME_GRID_DATA_VERSION)));		
-		gridItem.setDataFilePath(cursor.getString(cursor.getColumnIndex(GridInfoColumns.COL_NAME_GRID_DATA_FILE_PATH)));		
-		
-		return gridItem;
-	}
-	
-	private ContentValues getGridContentValues(String gridId, String dataVersion) {
-		ContentValues values  = new ContentValues();
-		values.put(GridInfoColumns.COL_NAME_GRID_ID, gridId);
-		values.put(GridInfoColumns.COL_NAME_GRID_DATA_VERSION, dataVersion);
-		
-		return values;
-	}
-	
-	private ContentValues getContentValues(GridItem gridItem) {
-		ContentValues values  = new ContentValues();
-		values.put(GridInfoColumns.COL_NAME_GRID_ID, gridItem.getId());
-		values.put(GridInfoColumns.COL_NAME_GRID_DATA_VERSION, gridItem.getDataVersion());
-		values.put(GridInfoColumns.COL_NAME_GRID_DATA_FILE_PATH, gridItem.getDataFilePath());				
-
-		return values;
-	}
-
 	// Public helper method to return the ScheduleInfo based on the id
 	// from the database
 	public ScheduleInfo2 getScheduleInfoById(String id) {

@@ -31,8 +31,6 @@ public class AdvancedScheduleEvent2 implements ScheduleEvent {
 		mEvent = event;
 	}
 
-
-
 	public JSONObject toJsonObject() {
 		JSONObject schedule = new JSONObject();		
 		try {
@@ -85,7 +83,6 @@ public class AdvancedScheduleEvent2 implements ScheduleEvent {
 	public String getScheduleAreaStr() {
 		return mArea;
 	}
-
 
 	public String getEventId() {
 		return mEventId;

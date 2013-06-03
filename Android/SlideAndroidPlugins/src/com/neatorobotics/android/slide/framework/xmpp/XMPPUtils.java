@@ -36,7 +36,6 @@ public class XMPPUtils {
 			userId = chat_id.substring(0, index);
 		}
 		return userId;
-
 	}
 	
 	//Used to see if the message is incoming from the given robotId

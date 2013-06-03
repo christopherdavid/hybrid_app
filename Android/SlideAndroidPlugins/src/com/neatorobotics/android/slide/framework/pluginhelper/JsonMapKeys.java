@@ -36,6 +36,7 @@ public class JsonMapKeys {
 	public static final String KEY_RESPONSE_STATUS = "responseStatus";
 	public static final String KEY_RESPONSE_PARAMS = "responseParams";
 	public static final String KEY_ROBOT_COMMANDS = "robotCommands";
+	
 	//Used for error
 	public static final String KEY_ERROR_CODE = "errorCode";
 	public static final String KEY_ERROR_MESSAGE = "errorMessage";
@@ -67,43 +68,6 @@ public class JsonMapKeys {
 	public static final String KEY_SCHEDULE_EVENT_DATA = "scheduleEventData";
 	public static final String KEY_CLEANING_MODE = "cleaningMode";
 
-	//Used by robot map
-	
-	public static final String KEY_ROBOT_MAP_ID = "mapId";
-	public static final String KEY_MAP_OVERLAY_INFO = "mapOverlayInfo";
-	public static final String KEY_MAP_IMAGE = "mapImage";
-
-	
-	// Used by ATLAS 
-	public static final String KEY_ATLAS_ID = "atlasId";
-	public static final String KEY_ATLAS_VERSION = "atlasVersion";
-	public static final String KEY_ALTAS_METADATA = "atlasMetadata";
-	public static final String KEY_ATLAS_GRID_ID = "gridId";
-	public static final String KEY_ATLAS_GRID_DATA = "gridData";
-	
-	public static final String KEY_ROOMMAP = "RoomMap";
-	public static final String KEY_NO_GO_MAP = "NoGoMap";
-	public static final String KEY_BASE_STATION_MAP = "BaseStationMap";
-	public static final String KEY_DIRT_MAP = "DirtMap";
-	public static final String KEY_EXPLORED_MAP = "ExploredMap";
-	public static final String KEY_VISIBLE_MAP = "VisibleMap";
-	
-	public static final String KEY_POINT_X = "x";
-	public static final String KEY_POINT_Y = "y";
-	
-	public static final String KEY_ID = "id";
-	public static final String KEY_NAME = "name";
-	public static final String KEY_ICON = "icon";
-	public static final String KEY_COLOR = "color";
-	public static final String KEY_SET_COLOR = "setColor";
-	public static final String KEY_BOUNDING_BOX = "boundingBox";
-	public static final String KEY_COORDINATES = "coords";
-	public static final String ICON_DEFAULT_VALUE = "ICON.KITCHEN";
-	public static final String COLOR_DEFAULT_VALUE = "#FF8080";
-	public static final String SET_COLOR_DEFAULT_VALUE = "#FF0000";
-	public static final String KEY_ROOMS = "rooms";
-	public static final String KEY_GEOGRAPHIES = "geographies";
-	
 	// Robot status notification events constants
 	private static final int EVENT_ID_BASE  		= 20000; 
 	public static final int EVENT_ID_REGISTER 		= EVENT_ID_BASE;
@@ -119,7 +83,6 @@ public class JsonMapKeys {
 	
 	// Used by navigation APIs
 	public static final String KEY_NAVIGATION_CONTROL_ID = "navigationControlId";
-	
 	public static final String KEY_FLAG_ON = "on";
 	public static final String KEY_WIFI_TURN_ON_DURATION_INSEC = "wiFiTurnOnDurationInSec";
 	
@@ -132,18 +95,14 @@ public class JsonMapKeys {
 	// Used by push notification APIs
 	public static final String KEY_REGISTER_PUSH_NOTIFICATION = "registerPushNotification";
 	public static final String KEY_PUSH_NOTIFICATION_TYPES = "pushNotificationTypes";
-	
 	public static final String KEY_FLAG_ON_OFF = "flagOnOff";
+	
 	// Timed Mode 
 	public static final String KEY_EXPECTED_TIME_TO_EXECUTE = "expectedTimeToExecute";
 	public static final String KEY_ROBOT_DATA_ID = "robotDataKeyId"; 
 	public static final String KEY_ROBOT_DATA = "robotData";
-	
 	public static final String KEY_ROBOT_CURRENT_STATE = "robotCurrentState";
 	public static final String KEY_SCHEDULE_STATE = "scheduleState";
-	//Virtual
-	public static final String KEY_ROBOT_STATE = "robotState";
-	//Update
 	public static final String KEY_ROBOT_STATE_UPDATE = "robotStateUpdate";
-	public static final String KEY_ROBOT_TIME = "robotTime";
+	
 }

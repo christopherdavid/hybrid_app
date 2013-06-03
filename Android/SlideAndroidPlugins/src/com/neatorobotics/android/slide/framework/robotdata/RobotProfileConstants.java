@@ -9,7 +9,6 @@ import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.Ne
 public class RobotProfileConstants {
 	
 	private static final String TAG = RobotProfileConstants.class.getSimpleName();
-	
 	private static final HashMap<String, Boolean> PROFILE_KEY_TIMER_EXPIRY_MAP = new HashMap<String, Boolean>();
 	
 	static {

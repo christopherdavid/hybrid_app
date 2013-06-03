@@ -12,7 +12,6 @@ public class ScheduleTimeObject2 {
 
 	public ScheduleTimeObject2(String time) {
 		int index = time.indexOf(':');
-		//TODO: default values
 		if (index == -1 ) {
 			mHrs = 0;
 			mMins = 0;

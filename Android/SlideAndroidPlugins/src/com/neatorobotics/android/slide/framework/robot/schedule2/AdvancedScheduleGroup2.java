@@ -6,10 +6,12 @@ import org.json.JSONArray;
 
 public class AdvancedScheduleGroup2 implements Schedules {
 	private String mUuid;
-	private ArrayList<AdvancedScheduleEvent2> mScheduleList = new ArrayList<AdvancedScheduleEvent2>();;
+	private ArrayList<AdvancedScheduleEvent2> mScheduleList = new ArrayList<AdvancedScheduleEvent2>();
+	
 	public AdvancedScheduleGroup2(String uuid) {
 		mUuid = uuid;
 	}
+	
 	public AdvancedScheduleGroup2() {
 		
 	} 
