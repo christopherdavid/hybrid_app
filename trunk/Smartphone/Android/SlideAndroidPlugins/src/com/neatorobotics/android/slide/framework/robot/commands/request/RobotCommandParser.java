@@ -60,8 +60,6 @@ public class RobotCommandParser {
 	
 	private static final String TAG = RobotCommandParser.class.getSimpleName();
 	
-	
-	
 	public RobotCommandPacket convertStringToRobotCommands(String robotPacket)
 	{
 		RobotCommandHandler handler = new RobotCommandHandler();
@@ -80,8 +78,6 @@ public class RobotCommandParser {
 		return null;
 	}
 	
-
-	
 	public RobotCommandPacket convertBytesToRobotCommands(byte[] robotPacket)
 	{
 		try {
@@ -93,9 +89,6 @@ public class RobotCommandParser {
 		}
 		return null;
 	}
-	
-	
-	
 	
 	private static class RobotCommandHandler extends DefaultHandler
 	{

@@ -21,6 +21,7 @@ var neatoSmartApp = (function() {
 	var ROBOT_STATE_STUCK 		= 10006;
 	var ROBOT_STATE_PAUSED 		= 10007;
 	var ROBOT_STATE_RESUMED		= 10008;
+	var ROBOT_STATE_ON_BASE		= 10009;
 	
 	var WELCOME_PAGE = 101;
 	var USER_LOGIN_PAGE = 102;
@@ -340,47 +341,6 @@ var neatoSmartApp = (function() {
 			localStorage.setItem('robotId', '');
 			localStorage.setItem('isPeerConnection', "false");
 		},
-		
-		openClosePeerConn: function() {
-			var robotId = localStorage.getItem('robotId');
-			
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
-			}
-			
-			neatoSmartApp.showProgressBar();
-			var directConn = localStorage.getItem('isPeerConnection');			
-			if ((directConn == null) || (directConn == "false")) {
-				localStorage.setItem('isPeerConnection', "false");
-				RobotPluginManager.tryDirectConnection(robotId, neatoSmartApp.successPeerConnect, neatoSmartApp.errorPeerConnect);
-			} 
-			else {
-				RobotPluginManager.disconnectDirectConnection(robotId, neatoSmartApp.successPeerConnect, neatoSmartApp.errorPeerConnect);				
-			}			
-		},
-		
-		successPeerConnect: function(result) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(result);
-			var directConn = localStorage.getItem('isPeerConnection');			
-			if (directConn == "true") {			
-				localStorage.setItem('isPeerConnection', "false");
-				document.querySelector('#btnOpenClosePeerConn').value = "Open Connection";
-			}
-			else {				
-				localStorage.setItem('isPeerConnection', "true");
-				document.querySelector('#btnOpenClosePeerConn').value = "Close Connection";
-			}
-			
-			directConn = localStorage.getItem('isPeerConnection');			
-		},
-		
-		errorPeerConnect: function(error) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(error);
-		},
-		
 		
 		openClosePeerConn2: function() {
 			var robotId = localStorage.getItem('robotId');
@@ -2080,6 +2040,9 @@ var neatoSmartApp = (function() {
 			else if (stateCode == ROBOT_STATE_RESUMED) {
 				return "Resumed Cleaning";
 			}
+			else if (stateCode == ROBOT_STATE_ON_BASE) {
+				return "On Base";
+			}
 			return "Not Available"
 		},
 		
@@ -2231,10 +2194,10 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnGoToCommandRobot').addEventListener('click', neatoSmartApp.goToRobotCommandsPage , true);
 			document.querySelector('#btnGoToDebug').addEventListener('click', neatoSmartApp.goToDebugOptionsPage , true);
 			document.querySelector('#btnGoToTestCleaningPage').addEventListener('click', neatoSmartApp.goToTestCleaningPage , true);
-			document.querySelector('#btnGoToSchedule').addEventListener('click', neatoSmartApp.goToSchedule , true);
+			document.querySelector('#btnGoToSchedule').addEventListener('click', neatoSmartApp.goToNewSchedulePage , true);
 			document.querySelector('#btnGoToSettings').addEventListener('click', neatoSmartApp.goToSettingsPage , true);			
 			document.querySelector('#btnLogout').addEventListener('click', neatoSmartApp.logoutUser , true);
-			document.querySelector('#btnGoToNewSchedule').addEventListener('click', neatoSmartApp.goToNewSchedulePage , true);
+
 		},
 
 		hideUserHomePage: function() {
@@ -2244,10 +2207,9 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnGoToCommandRobot').removeEventListener('click', neatoSmartApp.goToRobotCommandsPage , true);
 			document.querySelector('#btnGoToDebug').removeEventListener('click', neatoSmartApp.goToDebugOptionsPage , true);
 			document.querySelector('#btnGoToTestCleaningPage').removeEventListener('click', neatoSmartApp.goToTestCleaningPage , true);
-			document.querySelector('#btnGoToSchedule').removeEventListener('click', neatoSmartApp.goToSchedule , true);
+			document.querySelector('#btnGoToSchedule').removeEventListener('click', neatoSmartApp.goToNewSchedulePage , true);
 			document.querySelector('#btnGoToSettings').removeEventListener('click', neatoSmartApp.goToSettingsPage , true);
 			document.querySelector('#btnLogout').removeEventListener('click', neatoSmartApp.logoutUser , true);
-			document.querySelector('#btnGoToNewSchedule').removeEventListener('click', neatoSmartApp.goToNewSchedulePage , true);
 		},
 		
 		hideUserShowWelcome: function() {
@@ -2516,7 +2478,6 @@ var neatoSmartApp = (function() {
 			CURRENT_PAGE = DEBUG_OPTIONS_PAGE;
 			document.querySelector('#debugOptions').setAttribute('aria-hidden', 'false');
 			document.querySelector('#btnDisassociateAllRobot').addEventListener('click', neatoSmartApp.disassociateAllRobots , true);
-			document.querySelector('#btnTestGoToRobotMap').addEventListener('click', neatoSmartApp.goToRobotMap , true);
 			document.querySelector('#btnTestDissociateRobot').addEventListener('click', neatoSmartApp.disassociateRobot , true);
 			document.querySelector('#btnTestAllAssociatedRobots').addEventListener('click', neatoSmartApp.getAssociatedRobots , true);
 			document.querySelector('#btnTestRobotDetail').addEventListener('click', neatoSmartApp.getAssociatedRobotDetail , true);
@@ -2524,7 +2485,6 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnTurnVacuumOnOff').addEventListener('click',neatoSmartApp.turnVacuumOnOff, true);
 			document.querySelector('#btnManageRobotWiFi').addEventListener('click', neatoSmartApp.showManageRobotWiFiPage, true);
 			
-			document.querySelector('#btnOpenClosePeerConn').addEventListener('click', neatoSmartApp.openClosePeerConn , true);
 			document.querySelector('#btnOpenClosePeerConn2').addEventListener('click', neatoSmartApp.openClosePeerConn2 , true);
 			document.querySelector('#btnSendStartStopCleanCommand').addEventListener('click', neatoSmartApp.startStopCleaning , true);
 			document.querySelector('#btnSendStartStopCleanCommand2').addEventListener('click', neatoSmartApp.startStopCleaning2 , true);
@@ -2538,13 +2498,6 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnIsRobotOnlineVirtual').addEventListener('click', neatoSmartApp.getRobotVirtualOnlineStatus, true);
 			
 			var directConn = localStorage.getItem('isPeerConnection');
-			if ((directConn == null) || (directConn == "false")) {
-				document.querySelector('#btnOpenClosePeerConn').value = "Open Connection";
-			}
-			else {
-				document.querySelector('#btnOpenClosePeerConn').value = "Close Connection";
-			}
-			
 			// Initialize "Turn Vacuum On/Off" button text 
 			var vacuumON = localStorage.getItem('isVacuumON');
 			if (vacuumON == null) {
@@ -2564,9 +2517,7 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(null);			
 			document.querySelector('#debugOptions').setAttribute('aria-hidden', 'true');			
 			document.querySelector('#btnDisassociateAllRobot').removeEventListener('click', neatoSmartApp.disassociateAllRobots , true);
-			document.querySelector('#btnOpenClosePeerConn').removeEventListener('click', neatoSmartApp.openClosePeerConn , true);
 			
-			document.querySelector('#btnTestGoToRobotMap').removeEventListener('click', neatoSmartApp.goToRobotMap , true);
 			document.querySelector('#btnTestDissociateRobot').removeEventListener('click', neatoSmartApp.disassociateRobot , true);
 			document.querySelector('#btnTestAllAssociatedRobots').removeEventListener('click', neatoSmartApp.getAssociatedRobots , true);
 			document.querySelector('#btnTestRobotDetail').removeEventListener('click', neatoSmartApp.getAssociatedRobotDetail , true);

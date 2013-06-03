@@ -1,4 +1,4 @@
-package com.neatorobotics.android.slide.framework.timemode;
+package com.neatorobotics.android.slide.framework.timedmode;
 
 import java.util.HashMap;
 import java.util.Timer;

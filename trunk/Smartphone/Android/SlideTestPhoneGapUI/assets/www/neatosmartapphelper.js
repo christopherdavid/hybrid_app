@@ -769,12 +769,8 @@ RobotMgr.prototype.discoverNearbyRobots = function(callbackSuccess, callbackErro
 };
 
 /**
- * This API tries to establish a direct peer-to-peer connection with the robot. For a successful
- * connection robot and smart app need to be on the same network. This API is deprecated. Please
- * use tryDirectConnection2 instead.
+ * This API is deprecated. Please use tryDirectConnection2 instead.
  * <p>
- * This API calls Neato Smart App Service to make a TCP connection with the robot. This API
- * returns an error if connection could not be established.
  * 
  * @param robotId			the serial number of the robot
  * @param callbackSuccess 	success callback for the API
@@ -822,15 +818,8 @@ RobotMgr.prototype.disconnectDirectConnection  = function(robotId, callbackSucce
 };
 
 /**
- * This API sends a command to a specific robot. The robot and smart app need to be on the
- * same network for successful connection. This API is deprecated. Please use sendCommandToRobot2
- * instead. This API sends command via the presence server (XMPP) and does not use direct connection
- * as of now
+ * This API is deprecated. Please use sendCommandToRobot2.
  * <p>
- * This API calls Neato Smart App Service to send command to robot. The command Id is the id of the
- * command to be executed on the robot. Currently supported commands are - 
- * <br>101 - Start Cleaning
- * <br>102 - Stop Cleaning
  * 
  * @param robotId			the serial number of the robot
  * @param commandId			command ID of the command to be executed on the robot.
@@ -2082,12 +2071,8 @@ var RobotPluginManager = (function() {
 		},
 		
 		/**
-		 * This API tries to establish a direct peer-to-peer connection with the robot. For a successful
-		 * connection robot and smart app need to be on the same network. This API is deprecated. Please
-		 * use tryDirectConnection2 instead.
+		 * This API is deprecated. Please use tryDirectConnection2 instead.
 		 * <p>
-		 * This API calls Neato Smart App Service to make a TCP connection with the robot. This API
-		 * returns an error if connection could not be established.
 		 * 
 		 * @param robotId			the serial number of the robot
 		 * @param callbackSuccess 	success callback for the API
@@ -2129,15 +2114,7 @@ var RobotPluginManager = (function() {
 		},
 		
 		/**
-		 * This API sends a command to a specific robot. The robot and smart app need to be on the
-		 * same network for successful connection. This API is deprecated. Please use sendCommandToRobot2
-		 * instead. This API sends command via the presence server (XMPP) and does not use direct connection
-		 * as of now
-		 * <p>
-		 * This API calls Neato Smart App Service to send command to robot. The command Id is the id of the
-		 * command to be executed on the robot. Currently supported commands are - 
-		 * <br>101 - Start Cleaning
-		 * <br>102 - Stop Cleaning
+		 * This API is deprecated. Please use sendCommandToRobot2.
 		 * 
 		 * @param robotId			the serial number of the robot
 		 * @param commandId			command ID of the command to be executed on the robot.

@@ -46,7 +46,6 @@ package com.neatorobotics.android.slide.framework.robot.discovery;
  * </packet>
  */
 
-
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Locale;

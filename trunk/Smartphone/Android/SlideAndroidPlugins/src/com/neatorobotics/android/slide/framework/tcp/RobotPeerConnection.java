@@ -31,7 +31,7 @@ public class RobotPeerConnection {
 	
 	private static final String TAG = RobotPeerConnection.class.getSimpleName();
 	
-	private static final int TCP_ROBOT_SERVER_PORT = AppConstants.TCP_ROBOT_SERVER_SOCKET_PORT2;
+	private static final int TCP_ROBOT_SERVER_PORT = AppConstants.TCP_ROBOT_SERVER_SOCKET_PORT;
 	private static final int PACKET_READ_CHUNK_SIZE = (4 * 1024);
 	
 	private Context mContext;

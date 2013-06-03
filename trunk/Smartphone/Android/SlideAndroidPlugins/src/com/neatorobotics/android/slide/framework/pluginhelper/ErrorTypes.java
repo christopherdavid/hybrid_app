@@ -1,7 +1,7 @@
 package com.neatorobotics.android.slide.framework.pluginhelper;
 
 public class ErrorTypes {
-	//
+
 	public static final int ERROR_TYPE_UNKNOWN = 1001;
 	public static final int ERROR_NETWORK_ERROR=1002;
 	public static final int ERROR_SERVER_ERROR=1003;
@@ -12,10 +12,10 @@ public class ErrorTypes {
 	public static final int INVALID_SCHEDULE_TYPE = 1008;
 	public static final int FILE_DOWNLOAD_ERROR = 1009;
 	public static final int FILE_PARSE_ERROR = 1010;
-
 	public static final int ERROR_DB_ERROR = 1011;
 	public static final int JSON_CREATION_ERROR = 1012;
 	public static final int INVALID_PARAMETER = 1013;
 	public static final int ERROR_TYPE_USER_UNAUTHORIZED = 1014;
 	public static final int ERROR_NOT_SUPPORTED = 1015;
+
 }

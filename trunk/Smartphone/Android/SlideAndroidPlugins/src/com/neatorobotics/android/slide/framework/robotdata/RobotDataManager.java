@@ -10,7 +10,7 @@ import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacketUtils;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotPacketConstants;
-import com.neatorobotics.android.slide.framework.timemode.RobotCommandTimerHelper;
+import com.neatorobotics.android.slide.framework.timedmode.RobotCommandTimerHelper;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;

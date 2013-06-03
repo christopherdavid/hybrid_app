@@ -26,14 +26,12 @@ import android.util.SparseBooleanArray;
 import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.R;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
-import com.neatorobotics.android.slide.framework.gcm.PushNotificationConstants;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
 import com.neatorobotics.android.slide.framework.plugins.RobotConstants;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiverConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
-import com.neatorobotics.android.slide.framework.robot.commands.RobotPacket;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RequestPacket;
 import com.neatorobotics.android.slide.framework.robot.commands.request.ResponsePacket;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacket;
@@ -43,9 +41,7 @@ import com.neatorobotics.android.slide.framework.robot.commands.request.RobotReq
 import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
 import com.neatorobotics.android.slide.framework.tcp.RobotPeerConnection;
 import com.neatorobotics.android.slide.framework.tcp.RobotPeerDataListener;
-import com.neatorobotics.android.slide.framework.tcp.TcpConnectionHelper;
-import com.neatorobotics.android.slide.framework.tcp.TcpDataPacketListener;
-import com.neatorobotics.android.slide.framework.timemode.RobotCommandTimerHelper;
+import com.neatorobotics.android.slide.framework.timedmode.RobotCommandTimerHelper;
 import com.neatorobotics.android.slide.framework.udp.RobotDiscoveryListener;
 import com.neatorobotics.android.slide.framework.udp.RobotDiscoveryService;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
@@ -61,21 +57,12 @@ public class NeatoSmartAppService extends Service {
 	private static final String TAG = NeatoSmartAppService.class.getSimpleName();
 	
 	public static final String EXTRA_RESULT_RECEIVER = "extra.result_receiver";
-	public static final String DISCOVERY_ROBOT_INFO = "robot.info";
 	public static final String NEATO_RESULT_RECEIVER_ACTION = "com.neato.simulator.result_receiver.action";
 	
-	private TcpConnectionHelper mTcpConnectionHelper;
-	private XMPPConnectionHelper mXMPPConnectionHelper;
-	private RobotPeerConnection mRobotPeerConnection;
-	
 	private static final int ROBOT_NOTIFICATION_ID = 100; // arbitrary number
-	
-	private Handler mHandler = new Handler();
-	private ResultReceiver mResultReceiver;
 	private static SparseBooleanArray notificationCommands = new SparseBooleanArray();
 	
 	static {
-		// Add more notification commands here
 		// Notification commands are always sent to the plugin layers
 		notificationCommands.append(RobotCommandPacketConstants.COMMAND_GET_ROBOT_STATE, true);
 		notificationCommands.append(RobotCommandPacketConstants.COMMAND_STATUS_NOTIFICATION, true);
@@ -83,7 +70,11 @@ public class NeatoSmartAppService extends Service {
 		notificationCommands.append(RobotCommandPacketConstants.COMMAND_UNREGISTER_STATUS_NOTIFICATIONS, true);
 	}
 
-
+	private Handler mHandler = new Handler();
+	private ResultReceiver mResultReceiver;
+	private XMPPConnectionHelper mXMPPConnectionHelper;
+	private RobotPeerConnection mRobotPeerConnection;
+	
 	private XMPPNotificationListener xmppNotificationListener = new XMPPNotificationListener() {
 
 		@Override
@@ -114,11 +105,6 @@ public class NeatoSmartAppService extends Service {
 		@Override
 		public void onDisconnect() {
 			LogHelper.log(TAG, "XMPP disconnected");
-		}
-
-		@Override
-		public void onDataReceived(String from, RobotPacket robotCommand) {
-			LogHelper.log(TAG, "XMPP onDataReceived. Data = " + robotCommand);
 		}
 
 		@Override
@@ -156,39 +142,8 @@ public class NeatoSmartAppService extends Service {
 			LogHelper.logD(TAG, "onRobotDiscovered called");
 			if (mResultReceiver != null) {
 				Bundle bundle = new Bundle();
-				bundle.putParcelable(DISCOVERY_ROBOT_INFO, robotInfo);
+				bundle.putParcelable(NeatoRobotResultReceiverConstants.DISCOVERY_ROBOT_INFO, robotInfo);
 				mResultReceiver.send(NeatoSmartAppsEventConstants.NEW_ROBOT_FOUND, bundle);
-			}
-		}
-	};
-
-	private TcpDataPacketListener mTcpDataPacketListener = new TcpDataPacketListener() {
-
-		public void onConnect(String robotId) {			
-			if (mResultReceiver != null) {
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_CONNECTED, null);
-			}
-		}
-
-		public void onDisconnect(String robotId) {			
-			if (mResultReceiver != null) {
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_DISCONNECTED, null);
-			}
-		}
-
-		public void onDataReceived(String robotId, RobotPacket robotPacket) {
-			LogHelper.log(TAG, "Command Received from Remote Control with Command Id - " + robotPacket.getCommandId());
-			
-			LogHelper.log(TAG, "Command Received from Remote Control - " + robotPacket.toString());
-			if (mResultReceiver != null) {
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_DATA_RECEIVED, null);
-			}
-		}
-
-		@Override
-		public void errorInConnecting(String robotId) {
-			if (mResultReceiver != null) {
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_CONNECTION_ERROR, null);
 			}
 		}
 	};
@@ -221,13 +176,14 @@ public class NeatoSmartAppService extends Service {
 				sendNotification(robotPacket);
 				return;
 			}
+			
 			if (!shouldNotifyUi(robotId, robotPacket)) {
 				return;
 			}
+			
 			if (mResultReceiver == null) {
 				return;
 			}
-				
 
 			LogHelper.log(TAG, "Need to notify the UI");
 
@@ -368,8 +324,6 @@ public class NeatoSmartAppService extends Service {
 		}
 	}
 	
-	
-	
 	private void notifyRobotState(Context context, String notification) {
 		LogHelper.logD(TAG, "generateNotification:" + notification);
 		String robotState = getString(R.string.notification_text_robot_state);
@@ -393,7 +347,6 @@ public class NeatoSmartAppService extends Service {
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notifyIntent, android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
 		return pendingIntent;
 	}
-	
 	private Bundle getParamsBundle(Map<String, String> params) {
 		Bundle dataParams = new Bundle();
 		for (String key: params.keySet()) {
@@ -403,17 +356,6 @@ public class NeatoSmartAppService extends Service {
 		}
 		
 		return dataParams;
-	}
-	
-
-	private void initializeOldPeerHelperClassIfRequired()
-	{
-		if (mTcpConnectionHelper == null) {
-			LogHelper.logD(TAG, "Using old Command structure");
-			mTcpConnectionHelper = new TcpConnectionHelper(this);
-			mTcpConnectionHelper.setHandler(mHandler);
-			mTcpConnectionHelper.setTcpConnectionListener(mTcpDataPacketListener);
-		}
 	}
 	
 	private void initializeNewPeerHelperClassIfRequired()
@@ -436,29 +378,11 @@ public class NeatoSmartAppService extends Service {
 					userId, mRobotDiscoveryListener);
 		}
 
-		public void sendCommand(String robotId, int commandId) throws RemoteException {
-			LogHelper.log(TAG, "sendCommand Called");
-			
-			sendCommandUsingOldCommandStructure(robotId, commandId);
-			
-		}
-
 		public void sendCommand2(String robotId, RobotRequests requests) throws RemoteException {
 			LogHelper.logD(TAG, "sendCommand Called. Using new command structure");
 			sendCommandUsingNewCommandStructure(robotId, requests);
 		} 
 
-
-		public void connectToRobot(String robotId) throws RemoteException {
-			LogHelper.log(TAG, "connectToRobot Called. robotId -" + robotId);
-			
-			initializeOldPeerHelperClassIfRequired();
-			if (mTcpConnectionHelper != null) {
-				LogHelper.logD(TAG, "Using old command structure");
-				mTcpConnectionHelper.connectToRobot(robotId);
-			}
-		}
-		
 		public void connectToRobot2(String robotId) throws RemoteException {
 			LogHelper.log(TAG, "connectToRobot2 Called. robotId -" + robotId);
 			
@@ -473,19 +397,14 @@ public class NeatoSmartAppService extends Service {
 			LogHelper.log(TAG, "cancelDiscovery Called");
 		}
 
-		// TODO: cleanup all the things here. TO be called when we wish to stop the service
+		// cleanup all the things here. TO be called when we wish to stop the service
 		public void cleanup() {
 			LogHelper.log(TAG, "cleanup service called");
 
-			if((mTcpConnectionHelper != null) && (mTcpConnectionHelper.isConnected(""))) {
-				mTcpConnectionHelper.closePeerConnection("");
-
-			}
 			if (mRobotPeerConnection != null) {
 				mRobotPeerConnection.closeExistingPeerConnection();
 			}
-			mTcpDataPacketListener =null;
-			mTcpConnectionHelper =null;
+			
 			mRobotPeerConnection = null;
 			mRobotPeerDataListener = null;
 			mHandler = null;
@@ -511,17 +430,6 @@ public class NeatoSmartAppService extends Service {
 					LogHelper.logD(TAG, "Close peer connection when peer already closed.");
 					NeatoPrefs.setPeerConnectionStatus(getApplicationContext(), false);
 					mRobotPeerDataListener.onDisconnect(robotId);
-				}
-			}
-			if (mTcpConnectionHelper != null) {
-				boolean isConnected = mTcpConnectionHelper.isConnected(robotId);
-				if (isConnected) {
-					mTcpConnectionHelper.closePeerConnection(robotId);
-				} else {
-					// This should not be hit., Still catching the if at all.
-					LogHelper.logD(TAG, "Close peer connection when peer already closed.");
-					NeatoPrefs.setPeerConnectionStatus(getApplicationContext(), false);
-					mTcpDataPacketListener.onDisconnect(robotId);
 				}
 			}
 		}
@@ -625,11 +533,10 @@ public class NeatoSmartAppService extends Service {
 		super.onCreate();
 
 		AppUtils.logLibraryVersion();
-
 		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
-		
 		LogHelper.log(TAG, "Server information = " + getFormattedServerInfo());
 		
+		// Get XMPP started.
 		mXMPPConnectionHelper =  XMPPConnectionHelper.getInstance(this);
 		String xmppDomain = NeatoWebConstants.getXmppServerDomain();
 		mXMPPConnectionHelper.setServerInformation(xmppDomain, AppConstants.JABBER_SERVER_PORT, AppConstants.JABBER_WEB_SERVICE);
@@ -655,17 +562,6 @@ public class NeatoSmartAppService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		LogHelper.logD(TAG, "startId is " + startId);
-		
-		if (intent == null) {
-			LogHelper.logD(TAG, "intent is null");
-			return super.onStartCommand(intent, flags, startId);
-		}
-		
-		Bundle bundle = intent.getBundleExtra(PushNotificationConstants.EXTRA_NOTIFICATION_BUNDLE);
-		if(bundle != null) {
-			LogHelper.logD(TAG, "called from notification, bundle message is " + bundle.getString(PushNotificationConstants.NOTIFICATION_MESSAGE_KEY));
-//			sendPushNotificationToUI(bundle);
-		}
 		return super.onStartCommand(intent, flags, startId);
 	}
 
@@ -686,6 +582,7 @@ public class NeatoSmartAppService extends Service {
 		mResultReceiver = null;
 		return super.onUnbind(intent);
 	}
+	
 	@Override
 	public void onDestroy() {
 		try {
@@ -742,41 +639,19 @@ public class NeatoSmartAppService extends Service {
 		jabberUserId = XMPPUtils.removeJabberDomain(jabberUserId);
 		return jabberUserId;
 	}
+	
 	private String getUserChatPassword() {
 		String jabberUserPwd = UserHelper.getChatPwd(this);
 		return jabberUserPwd;
 	}
 
-	private void sendCommandUsingOldCommandStructure(String robotId, int commandId) {
-		
-		LogHelper.log(TAG, "sendCommandUsingOldCommandStructure called");
-		RobotPacket robotPacket = new RobotPacket(commandId);
-		
-		if((mTcpConnectionHelper != null) && (mTcpConnectionHelper.isConnected(robotId))) {
-			LogHelper.log(TAG, "SendCommand Called using TCP connection as transport");
-			mTcpConnectionHelper.sendRobotCommand(robotId, robotPacket);
-		} 
-		else {
-			LogHelper.log(TAG, "Tcp peer connection does not exist.");
-			if(mXMPPConnectionHelper.isConnected()) {
-				LogHelper.logD(TAG, "SendCommand Called using XMPP connection as transport. Command Id:-" + commandId);
-
-				String chatId = XMPPUtils.getRobotChatId(NeatoSmartAppService.this, robotId);
-				mXMPPConnectionHelper.sendRobotCommand(chatId, robotPacket);
-			} else {
-				LogHelper.logD(TAG, "Xmpp connection does not exist: Command Id = " + commandId);
-			}
-		}
-	}
-
 	private void sendCommandUsingNewCommandStructure(String robotId, RobotRequests requests) {
 		
-		LogHelper.log(TAG, "sendCommandUsingNewCommandStructure called");
+		LogHelper.logD(TAG, "sendCommandUsingNewCommandStructure called");
 		RobotCommandPacketHeader header = RobotCommandPacketHeader.getRobotCommandHeader(RobotCommandPacketConstants.COMMAND_PACKET_SIGNATURE, RobotCommandPacketConstants.COMMAND_PACKET_VERSION);
 		if(isPeerConnectionExists(robotId)) {
-			LogHelper.log(TAG, "SendCommand Called using TCP connection as transport");
+			LogHelper.logD(TAG, "SendCommand Called using TCP connection as transport");
 			requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_PEER);
-			//Form robot packet after setting all request parameters.
 			RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header, requests);
 			mRobotPeerConnection.sendRobotCommand(robotId, robotCommandPacket);
 		} 
@@ -787,7 +662,6 @@ public class NeatoSmartAppService extends Service {
 				String chatId = XMPPUtils.getRobotChatId(NeatoSmartAppService.this, robotId);
 				LogHelper.logD(TAG, "SendCommand Called using XMPP connection as transport. Request:-" + requests);
 				requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_XMPP);
-				//Form robot packet after setting all request parameters.
 				RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header, requests);
 				mXMPPConnectionHelper.sendRobotCommand(chatId, robotCommandPacket);
 			} else {
@@ -807,4 +681,5 @@ public class NeatoSmartAppService extends Service {
 	}
 	
 	
+
 }

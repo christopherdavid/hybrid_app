@@ -56,7 +56,6 @@ public class SchedulerConstants2 {
 	}
 	
 	public static SchedularEvent detrmineEvent(int eventType) {
-		// TODO Auto-generated method stub
 		if(eventType == SchedularEvent.QUIET.ordinal())
 			return SchedularEvent.QUIET;
 		if(eventType == SchedularEvent.CLEAN.ordinal())
@@ -113,11 +112,9 @@ public class SchedulerConstants2 {
 			case SchedulerConstants2.SCHEDULE_TYPE_BASIC:				
 				scheduleVal = SchedulerConstants2.SERVER_SCHEDULE_TYPE_BASIC;
 				break;
-				
 			case SchedulerConstants2.SCHEDULE_TYPE_ADVANCED:
 				scheduleVal = SchedulerConstants2.SERVER_SCHEDULE_TYPE_ADVANCED;
 				break;
-	
 			default:
 				break;
 		}
