@@ -238,6 +238,7 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(result);
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.hideRegisterShowHomePage();
+			neatoSmartApp.registerForRobotMessages();
 		},
 
 

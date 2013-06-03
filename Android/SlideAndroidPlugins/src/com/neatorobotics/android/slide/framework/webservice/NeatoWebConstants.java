@@ -29,6 +29,11 @@ public class NeatoWebConstants {
 	private static final String DEMO_XMPP_SERVER_DOMAIN = "rajatogo.com";
 	private static final String DEMO_SERVER_URL = "http://neatodemo.rajatogo.com";
 	
+	public static final int DEMO2_SERVER_ID = 1005;
+	private static final String DEMO2_BASE_JSON_URL = "http://neatodemo2.rajatogo.com/api/rest/json";
+	private static final String DEMO2_API_KEY = "1e26686d806d82144a71ea9a99d1b3169adaad917";
+	private static final String DEMO2_XMPP_SERVER_DOMAIN = "neatodemo2.rajatogo.com";
+	private static final String DEMO2_SERVER_URL = "http://neatodemo2.rajatogo.com";
 
 	public static final String QUERY_KEY_METHOD = "method";
 	public static final String QUERY_KEY_APIKEY = "api_key";
@@ -55,7 +60,8 @@ public class NeatoWebConstants {
 			return DEV_BASE_JSON_URL;
 		case DEMO_SERVER_ID:
 			return DEMO_BASE_JSON_URL;
-
+		case DEMO2_SERVER_ID:
+			return DEMO2_BASE_JSON_URL;
 		}
 		return PROD_BASE_JSON_URL;
 	}
@@ -75,6 +81,8 @@ public class NeatoWebConstants {
 			return DEV_API_KEY;
 		case DEMO_SERVER_ID:
 			return DEMO_API_KEY;
+		case DEMO2_SERVER_ID:
+			return DEMO2_API_KEY;
 		}
 		return PROD_API_KEY;
 	}
@@ -85,8 +93,7 @@ public class NeatoWebConstants {
 		switch (s_CurrentServerCode) {
 			case NeatoWebConstants.DEV_SERVER_ID:
 				serverName = "Development";
-				break;
-				
+				break;				
 			case NeatoWebConstants.STAGING_SERVER_ID:
 				serverName = "Staging";
 				break;
@@ -95,6 +102,9 @@ public class NeatoWebConstants {
 				break;
 			case DEMO_SERVER_ID:
 				serverName = "Demo";
+				break;
+			case DEMO2_SERVER_ID:
+				serverName = "Demo2";
 				break;
 		}
 		
@@ -117,6 +127,9 @@ public class NeatoWebConstants {
 			case DEMO_SERVER_ID:
 				serverUrl = DEMO_SERVER_URL;
 				break;
+			case DEMO2_SERVER_ID:
+				serverUrl = DEMO2_SERVER_URL;
+				break;
 		}
 		
 		return serverUrl;
@@ -133,6 +146,8 @@ public class NeatoWebConstants {
 			return DEV_XMPP_SERVER_DOMAIN;
 		case DEMO_SERVER_ID:
 			return DEMO_XMPP_SERVER_DOMAIN;
+		case DEMO2_SERVER_ID:
+			return DEMO2_XMPP_SERVER_DOMAIN;
 		}
 		return PROD_XMPP_SERVER_DOMAIN;
 	}
