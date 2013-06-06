@@ -2,7 +2,7 @@
 #import "LogHelper.h"
 #import "AppHelper.h"
 #import "NeatoConstants.h"
-
+#import "AppSettings.h"
 
 #define SERVER_REPONSE_HANDLER_KEY @"key_server_response_handler"
 #define RESEND_VALIDATION_EMAIL_HANDLER @"resendValidationEmailHandler:"
@@ -87,7 +87,7 @@
 {
     debugLog(@"logout user called");
     self.retained_self = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_LOGOUT_USER_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_LOGOUT_USER_URL]];
     [request setHTTPMethod:@"POST"];
     if (email == nil)
     {
@@ -190,7 +190,7 @@
     debugLog(@"");
     self.retained_self = self;
     self.robotId = serial_number;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_SET_ROBOT_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_SET_ROBOT_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:SET_ROBOT_USER_POST_STRING, NEATO_API_KEY, email, serial_number] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:SET_ROBOT_USER_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -256,7 +256,7 @@
 {
     debugLog(@"create robot called");
     self.retained_self = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_CREATE_ROBOT_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_CREATE_ROBOT_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_CREATE_ROBOT_POST_STRING, NEATO_API_KEY, neatoRobot.serialNumber,neatoRobot.name] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:GET_CREATE_ROBOT_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -322,7 +322,7 @@
 {
     debugLog(@"createUser called with the Email=%@ and password=%@ and name=%@ and account_type=%@",neatoUser.email,neatoUser.password,neatoUser.name,neatoUser.account_type);
     self.retained_self = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_CREATE_USER_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_CREATE_USER_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_CREATE_USER_POST_STRING, NEATO_API_KEY, neatoUser.name, neatoUser.email, neatoUser.password, neatoUser.account_type, neatoUser.external_social_id] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:GET_CREATE_USER_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -387,7 +387,7 @@
     debugLog(@"loginNativeUser called. Email = %@, Password = %@", email, password);
     self.retained_self = self;
     
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_USER_AUTH_TOKEN_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_USER_AUTH_TOKEN_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_AUTH_TOKEN_NATIVE_POST_STRING, NEATO_API_KEY,ACCOUNT_TYPE_NATIVE,email,password] dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -450,7 +450,7 @@
 {
     debugLog(@"getRobotDetails called with serial number %@",serialNumber);
     self.retained_self = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_ROBOT_DETAILS_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ROBOT_DETAILS_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_ROBOT_DETAILS_POST_STRING,NEATO_API_KEY, serialNumber] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:GET_ROBOT_DETAILS_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -513,7 +513,7 @@
     debugLog(@"authToken = %@, email = %@", authToken, email);
     self.retained_self = self;
     
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_USER_DETAILS_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_USER_DETAILS_URL]];
     [request setHTTPMethod:@"POST"];
     if (email == nil) {
         email = @"";
@@ -591,7 +591,7 @@
     }
     self.retained_self = self;
     
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_ASSOCIATED_ROBOTS_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ASSOCIATED_ROBOTS_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_ASSOCIATED_ROBOTS_POST_STRING,NEATO_API_KEY, authToken, email] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:GET_ASSOCIATED_ROBOTS_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -686,7 +686,7 @@
     }
     self.retained_self = self;
     
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_UPDATE_AUTH_TOKEN_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_UPDATE_AUTH_TOKEN_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:UPDATE_AUTH_TOKEN_POST_STRING,NEATO_API_KEY,authToken] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:UPDATE_AUTH_TOKEN_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -745,7 +745,7 @@
         return;
     }
     self.retained_self = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_SET_ROBOT_PROFILE_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_SET_ROBOT_PROFILE_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:SET_ROBOT_PROFILE_POST_STRING,NEATO_API_KEY, robotId, [self getRobotProfileDataFromKey:@"name" value:robotName]] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:SET_ROBOT_NAME_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -804,7 +804,7 @@
     }
     self.retained_self = self;
     self.robotId = robotId;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_ROBOT_ONLINE_STATUS_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ROBOT_ONLINE_STATUS_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_ROBOT_ONLINE_STATUS_POST_STRING,NEATO_API_KEY,robotId] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:GET_ROBOT_ONLINE_STATUS_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -872,7 +872,7 @@
         return;
     }
     self.retained_self = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_DISSOCIATE_ALL_ROBOTS_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_DISSOCIATE_ALL_ROBOTS_URL]];
     [request setHTTPMethod:@"POST"];
     if (!robotId) {
         robotId = @"";
@@ -985,7 +985,7 @@
     debugLog(@"registerPushNotification called. Email = %@, deviceToken = %@", email, deviceToken);
     self.retained_self = self;
     
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:PUSH_NOTIFICATION_REGISTRATION_POST_STRING, NEATO_API_KEY,
                            email, (long)deviceType, deviceToken] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -1002,7 +1002,7 @@
     debugLog(@"unregisterPushNotification called. deviceToken = %@", deviceToken);
     self.retained_self = self;
     
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:PUSH_NOTIFICATION_UNREGISTRATION_POST_STRING, NEATO_API_KEY,
                            deviceToken] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -1102,7 +1102,7 @@
 - (void)isUserValidatedForEmail:(NSString *)email {
     debugLog(@"Email = %@", email);
     self.retained_self = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_IS_USER_VALIDATED_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_IS_USER_VALIDATED_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_IS_USER_VALIDATED_POST_STRING, NEATO_API_KEY, email]
                           dataUsingEncoding:NSUTF8StringEncoding]];
@@ -1155,7 +1155,7 @@
 
 - (void)resendValidationEmail:(NSString *)email {
     self.retained_self = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_RESEND_VALIDATION_EMAIL_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_RESEND_VALIDATION_EMAIL_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_RESEND_VALIDATION_EMAIL_POST_STRING, NEATO_API_KEY, email] dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -1212,7 +1212,7 @@
 - (void)forgetPasswordForEmail:(NSString *)email {
     debugLog(@"ForgetPassword for email : %@",email);
     self.retained_self = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_FORGET_PASSWORD_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_FORGET_PASSWORD_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_FORGET_PASSWORD_POST_STRING, NEATO_API_KEY, email] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:FORGET_PASSWORD_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -1259,7 +1259,7 @@
 - (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword authToken:(NSString *)authToken {
     debugLog(@"Change password from oldPassword : %@ toNewPassword : %@", oldPassword, newPassword);
     self.retained_self = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_CHANGE_PASSWORD_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_CHANGE_PASSWORD_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_CHANGE_PASSWORD_POST_STRING, NEATO_API_KEY, authToken, oldPassword, newPassword] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:CHANGE_PASSWORD_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -1305,7 +1305,7 @@
 
 - (void)createUser2:(NeatoUser *)neatoUser {
     self.retained_self = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_CREATE_USER2_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_CREATE_USER2_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:CREATE_USER2_POST_STRING, NEATO_API_KEY, neatoUser.name, neatoUser.email, neatoUser.alternateEmail, neatoUser.password, neatoUser.account_type, neatoUser.external_social_id] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:CREATE_USER2_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -1368,7 +1368,7 @@
     self.retained_self = self;
     NSString *enableDisableCommand = [self paramsForEnabledSchedule:enable ofType:scheduleType];
     
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_SET_ROBOT_PROFILE_2_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_SET_ROBOT_PROFILE_2_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:ENABLE_DISABLE_SCHEDULE_POST_STRING, NEATO_API_KEY, robotId, NULL, email, NULL, enableDisableCommand] dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -1420,7 +1420,7 @@
 
 - (void)setUserPushNotificationOptions:(NSString *)jsonString forUserWithEmail:(NSString *)email {
     self.retained_self = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:SET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING, NEATO_API_KEY, email, jsonString] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:SET_USER_PUSH_NOTIFICATION_OPTION_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -1469,7 +1469,7 @@
 
 - (void)notificationSettingsForUserWithEmail:(NSString *)email {
     self.retained_self = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING, NEATO_API_KEY, email] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:GET_USER_PUSH_NOTIFICATION_OPTION_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -1524,7 +1524,7 @@
     }
     self.retained_self = self;
     self.robotId = robotId;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_ROBOT_VIRTUAL_ONLINE_STATUS_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ROBOT_VIRTUAL_ONLINE_STATUS_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_ROBOT_VIRTUAL_ONLINE_STATUS_POST_STRING,NEATO_API_KEY,robotId] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:GET_ROBOT_VIRTUAL_ONLINE_STATUS_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -1575,7 +1575,7 @@
 - (void)isScheduleType:(NSString *)scheduleType enabledForRobotWithId:(NSString *)robotId {
     self.retained_self = self;
     self.robotId = robotId;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_ROBOT_PROFILE_DETAILS_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ROBOT_PROFILE_DETAILS_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:IS_SCHEDULE_ENABLED_POST_STRING, NEATO_API_KEY, robotId] dataUsingEncoding:NSUTF8StringEncoding]];
     

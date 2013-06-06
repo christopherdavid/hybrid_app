@@ -48,6 +48,7 @@
 		E168BBD4169D461800BA6AD3 /* XMPPConnectionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBCD169D461800BA6AD3 /* XMPPConnectionHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
 		E168BBD5169D461800BA6AD3 /* XMPPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBCF169D461800BA6AD3 /* XMPPHelper.m */; };
 		E1925454174BDF42004143B7 /* EnableDisableScheduleListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1925453174BDF42004143B7 /* EnableDisableScheduleListener.m */; };
+		E1938E34175F399100149F30 /* AppSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = E1938E33175F399100149F30 /* AppSettings.m */; };
 		E193AE7A174B694E00AE0B4E /* ChangePasswordListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E193AE79174B694E00AE0B4E /* ChangePasswordListener.m */; };
 		E193AE87174B916500AE0B4E /* CreateUserListener2.m in Sources */ = {isa = PBXBuildFile; fileRef = E193AE86174B916500AE0B4E /* CreateUserListener2.m */; };
 		E195EA1516B6B56A00E4D9C6 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E195EA1416B6B56A00E4D9C6 /* CoreFoundation.framework */; };
@@ -277,6 +278,8 @@
 		E168BBD7169D471300BA6AD3 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		E1925452174BDF42004143B7 /* EnableDisableScheduleListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnableDisableScheduleListener.h; sourceTree = "<group>"; };
 		E1925453174BDF42004143B7 /* EnableDisableScheduleListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnableDisableScheduleListener.m; sourceTree = "<group>"; };
+		E1938E32175F399100149F30 /* AppSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppSettings.h; sourceTree = "<group>"; };
+		E1938E33175F399100149F30 /* AppSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppSettings.m; sourceTree = "<group>"; };
 		E193AE78174B694E00AE0B4E /* ChangePasswordListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangePasswordListener.h; sourceTree = "<group>"; };
 		E193AE79174B694E00AE0B4E /* ChangePasswordListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangePasswordListener.m; sourceTree = "<group>"; };
 		E193AE85174B916500AE0B4E /* CreateUserListener2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateUserListener2.h; sourceTree = "<group>"; };
@@ -650,6 +653,7 @@
 		B22BDB10168D848800FFCB76 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				E190E6D217561186002B7BE6 /* AppSettings */,
 				2838B97C17549B2C00145B6C /* PushNotification */,
 				E199358216EE14CA008BB353 /* Categories */,
 				E199355616EE149F008BB353 /* RobotScheduleHelper */,
@@ -800,6 +804,15 @@
 				E168BBCF169D461800BA6AD3 /* XMPPHelper.m */,
 			);
 			path = XMPPHelper;
+			sourceTree = "<group>";
+		};
+		E190E6D217561186002B7BE6 /* AppSettings */ = {
+			isa = PBXGroup;
+			children = (
+				E1938E32175F399100149F30 /* AppSettings.h */,
+				E1938E33175F399100149F30 /* AppSettings.m */,
+			);
+			path = AppSettings;
 			sourceTree = "<group>";
 		};
 		E195EA1616B6B56A00E4D9C6 /* NeatoDataStore */ = {
@@ -1571,6 +1584,7 @@
 				E1D40FC91754838600EBCD62 /* NeatoRobotEntity.m in Sources */,
 				E1D40FCF17548F3900EBCD62 /* CleaningArea.m in Sources */,
 				2838B97F17549B4200145B6C /* PushNotificationHelper.m in Sources */,
+				E1938E34175F399100149F30 /* AppSettings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

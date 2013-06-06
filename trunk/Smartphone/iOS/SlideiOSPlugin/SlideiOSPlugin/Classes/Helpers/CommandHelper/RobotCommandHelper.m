@@ -9,6 +9,7 @@
 #import "TCPCommandHelper.h"
 #import "XMPPConnectionHelper.h"
 #import "XMPPCommandHelper.h"
+#import "CleaningArea.h"
 
 #define START_ROBOT_COMMAND_TAG                 1001
 #define STOP_ROBOT_COMMAND_TAG                  1002
@@ -39,9 +40,11 @@
     self.retainedSelf = self;
     self.delegate = delegate;
     switch ([commandId intValue]) {
-        case COMMAND_START_ROBOT:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:START_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
+        case COMMAND_START_ROBOT: {
+            NSDictionary *updatedParams = [self updatedSpotParametersInParams:params forRobotWithId:robotId];
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:START_ROBOT_COMMAND_TAG withParams:updatedParams delegate:delegate];
             break;
+        }
         case COMMAND_STOP_ROBOT:
             [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:STOP_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
             break;
@@ -168,6 +171,28 @@
         self.delegate = nil;
         self.retainedSelf = nil;
     });
+}
+
+- (NSDictionary *)updatedSpotParametersInParams:(NSDictionary *)params forRobotWithId:(NSString *)robotId {
+    NSNumber *cleaningCategory = [params valueForKey:KEY_CLEANING_CATEGORY];
+    if ([cleaningCategory integerValue] == CLEANING_CATEGORY_SPOT) {
+        NSMutableDictionary *updatedParams = [params mutableCopy];
+        id dbResult = [NeatoRobotHelper spotDefinitionForRobotWithId:robotId];
+        if ([dbResult isKindOfClass:[NSError class]]) {
+            return params;
+        }
+        CleaningArea *cleaningArea = (CleaningArea *)dbResult;
+        if (cleaningArea.height || cleaningArea.length) {
+            [updatedParams setObject:[NSNumber numberWithInteger:cleaningArea.height] forKey:KEY_SPOT_CLEANING_AREA_HEIGHT];
+            [updatedParams setObject:[NSNumber numberWithInteger:cleaningArea.length] forKey:KEY_SPOT_CLEANING_AREA_LENGTH];
+        }
+        else {
+            [updatedParams setObject:[NSNumber numberWithInteger:DEFAULT_SPOT_CLEANING_HEIGHT] forKey:KEY_SPOT_CLEANING_AREA_HEIGHT];
+            [updatedParams setObject:[NSNumber numberWithInteger:DEFAULT_SPOT_CLEANING_LENGTH] forKey:KEY_SPOT_CLEANING_AREA_LENGTH];
+        }
+        return updatedParams;
+    }
+    return params;
 }
 
 @end
