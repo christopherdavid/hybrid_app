@@ -5,6 +5,7 @@
 #import "AppHelper.h"
 #import "PostScheduleResult.h"
 #import "NeatoConstants.h"
+#import "AppSettings.h"
 
 #define GET_SCHEDULE_DATA_POST_STRING @"api_key=%@&robot_schedule_id=%@"
 #define GET_SCHEDULE_DATA_RESPONSE_HANDLER @"gotScheduleResponseData:forScheduleId:"
@@ -37,7 +38,7 @@
     debugLog(@"");
     self.retainedSelf = self;
     
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_SCHEDULES_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_SCHEDULES_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_SCHEDULES_POST_STRING, NEATO_API_KEY, robotId] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:robotId forHTTPHeaderField:ROBOT_ID_SERVER_KEY];
@@ -121,7 +122,7 @@
     debugLog(@"");
     self.retainedSelf = self;
     
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_SCHEDULE_DATA_URL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_SCHEDULE_DATA_URL]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_SCHEDULE_DATA_POST_STRING, NEATO_API_KEY, scheduleId] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:scheduleId forHTTPHeaderField:SCHEDULE_ID_SERVER_KEY];
@@ -165,7 +166,7 @@
 - (void)postScheduleForRobotId:(NSString *)robotId withScheduleData:(NSString *)xmlData ofScheduleType:(NSString *)scheduleType {
     debugLog(@"");
     self.retainedSelf = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_POST_ROBOT_SCHEDULE_DATA]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_POST_ROBOT_SCHEDULE_DATA]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_POST_ROBOT_SCHEDULE_STRING, NEATO_API_KEY, robotId,scheduleType, xmlData] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:GET_POST_ROBOT_SCHEDULE_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -211,7 +212,7 @@
 - (void)updateScheduleDataForScheduleId:(NSString *)scheduleId withScheduleVersion:(NSString *)scheduleVersion withScheduleData:(NSString *)data ofScheduleType:(NSString *)scheduleType {
     debugLog(@"");
     self.retainedSelf = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_UPDATE_ROBOT_SCHEDULE_DATA]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_UPDATE_ROBOT_SCHEDULE_DATA]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_UPDATE_ROBOT_SCHEDULE_DATA_POST_STRING, NEATO_API_KEY, scheduleId, scheduleType, scheduleVersion, data] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:GET_UPDATE_ROBOT_SCHEDULE_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -256,7 +257,7 @@
 - (void)deleteScheduleDataForScheduleId:(NSString *)scheduleId {
     debugLog(@"");
     self.retainedSelf = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_DELETE_SCHEDULE_DATA]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_DELETE_SCHEDULE_DATA]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_DELETE_SCHEDULE_POST_STRING, NEATO_API_KEY, scheduleId] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:GET_DELETE_SCHEDULE_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -313,7 +314,7 @@
 - (void)scheduleBasedOnType:(NSString *)scheduleType forRobotId:(NSString *)robotId {
     debugLog(@"");
     self.retainedSelf = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_SCHEDULE_BASED_ON_TYPE]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_SCHEDULE_BASED_ON_TYPE]];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[[NSString stringWithFormat:GET_SCHEDULE_BASED_ON_TYPE_POST_STRING, NEATO_API_KEY, robotId, scheduleType] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:GET_SCHEDULE_BASED_ON_TYPE_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];

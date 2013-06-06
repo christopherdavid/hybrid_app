@@ -49,4 +49,5 @@
 - (void)unregisterForRobotMessages:(CDVInvokedUrlCommand *)command;
 - (void)getRobotVirtualOnlineStatus:(CDVInvokedUrlCommand *)command;
 - (void)isScheduleEnabled:(CDVInvokedUrlCommand *)command;
+- (void)setRobotName:(CDVInvokedUrlCommand *)command;
 @end

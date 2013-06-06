@@ -98,6 +98,4 @@
 #define KEY_NOTFICATION_ID @"notificationId"
 #define KEY_ON @"on"
 
-#define DEFAULT_SPOT_CLEANING_LENGTH 5
-#define DEFAULT_SPOT_CLEANING_HEIGHT 3
 #define KEY_FLAG_ON_OFF @"flagOnOff"

@@ -976,4 +976,10 @@
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
 }
 
+- (void)setRobotName:(CDVInvokedUrlCommand *)command {
+  debugLog(@"");
+  NSError *error = [AppHelper nserrorWithDescription:@" API'setRobotName' is deprecated, use 'setRobotName2' instead." code:ERROR_NOT_SUPPORTED];
+  [self sendError:error forCallbackId:command.callbackId];
+}
+
 @end

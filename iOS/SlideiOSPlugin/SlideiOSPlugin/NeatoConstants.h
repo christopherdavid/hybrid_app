@@ -106,6 +106,19 @@
 #define COMMAND_VACUUM_ONOFF                116
 #define COMMAND_TURN_WIFI_ONOFF             117
 
+// Cleaning API params
+#define KEY_CLEANING_CATEGORY @"cleaningCategory"
+#define  KEY_SPOT_CLEANING_AREA_LENGTH @"spotCleaningAreaLength"
+#define KEY_SPOT_CLEANING_AREA_HEIGHT @"spotCleaningAreaHeight"
+
+// Cleaning Category
+#define CLEANING_CATEGORY_MANUAL 1
+#define CLEANING_CATEGORY_ALL 2
+#define CLEANING_CATEGORY_SPOT 3
+
+#define DEFAULT_SPOT_CLEANING_LENGTH 5
+#define DEFAULT_SPOT_CLEANING_HEIGHT 3
+
 #define NETWORK_CONNECTION_FAILURE_MSG @"Request failed!Please check your network settings."
 // To switch to prod server, uncomment SWITCH_TO_PROD_SERVER variable
 //#define SWITCH_TO_PROD_SERVER 1
@@ -139,85 +152,16 @@
 
 #ifdef NEATO_ROBOT_SERVER_PROD
     // Will use API's at http://neato.rajatogo.com/wstest/
-    #define NEATO_CREATE_USER_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.create"
-    #define NEATO_GET_USER_AUTH_TOKEN_URL @"http://neato.rajatogo.com/api/rest/json/?method=auth.get_user_auth_token"
-    #define NEATO_RESEND_VALIDATION_EMAIL_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.ResendValidationEmail"
-    #define NEATO_GET_USER_DETAILS_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.get_user_account_details"
-    #define NEATO_LOGOUT_USER_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.logout_auth_token"
-    #define NEATO_CREATE_ROBOT_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.create"
-    #define NEATO_GET_ROBOT_DETAILS_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.get_details"
-    #define NEATO_SET_ROBOT_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.set_user"
-    #define NEATO_GET_ASSOCIATED_ROBOTS_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.get_associated_robots"
-    #define NEATO_UPDATE_AUTH_TOKEN_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.update_auth_token_expiry"
-    #define NEATO_SET_ROBOT_PROFILE_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.set_profile_details"
-    #define NEATO_GET_ROBOT_ONLINE_STATUS_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.is_online"
-    #define NEATO_DISSOCIATE_ALL_ROBOTS_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.disassociate_robot"
-    #define NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neato.rajatogo.com/api/rest/json/?method=message.notification_registration"
-    #define NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neato.rajatogo.com/api/rest/json/?method=message.notification_unregistration"
-    #define NEATO_IS_USER_VALIDATED_URL @"http://neato.rajatogo.com/api/rest/json/?method=user.IsUserValidated"
-    #define NEATO_GET_ROBOT_PROFILE_DETAILS_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.get_profile_details"
-    // TODO: These APIs have not been added to prod server.
-    #define NEATO_CREATE_USER2_URL @"http://neato.rajatogo.com/api/rest/json?method=user.create2"
-    #define NEATO_FORGET_PASSWORD_URL @"http://neato.rajatogo.com/api/rest/json?method=user.forget_password"
-    #define NEATO_CHANGE_PASSWORD_URL @"http://neato.rajatogo.com/api/rest/json?method=user.change_password"
-    #define NEATO_SET_ROBOT_PROFILE_2_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.set_profile_details2"
-    #define NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neato.rajatogo.com/api/rest/json?method=message.set_user_push_notification_options"
-    #define NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neato.rajatogo.com/api/rest/json?method=message.get_user_push_notification_options"
-    #define NEATO_GET_ROBOT_VIRTUAL_ONLINE_STATUS_URL @"http://neato.rajatogo.com/api/rest/json?method=robot.is_robot_online_virtual"
-
+    #define NEATO_BASE_URL @"http://neato.rajatogo.com/api/rest/json"
 
 #elif SWITCH_TO_DEV_SERVER
     // Will use API's at http://neatodev.rajatogo.com/wstest/
-    #define NEATO_CREATE_USER_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.create"
-    #define NEATO_GET_USER_AUTH_TOKEN_URL @"http://neatodev.rajatogo.com/api/rest/json?method=auth.get_user_auth_token"
-    #define NEATO_RESEND_VALIDATION_EMAIL_URL @"http://neatodev.rajatogo.com/Server_Yii/Neato/api/rest/json?method=user.ResendValidationEmail"
-    #define NEATO_GET_USER_DETAILS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.get_user_account_details"
-    #define NEATO_LOGOUT_USER_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.logout_auth_token"
-    #define NEATO_CREATE_ROBOT_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.create"
-    #define NEATO_GET_ROBOT_DETAILS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.get_details"
-    #define NEATO_SET_ROBOT_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.set_user"
-    #define NEATO_GET_ASSOCIATED_ROBOTS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.get_associated_robots"
-    #define NEATO_UPDATE_AUTH_TOKEN_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.update_auth_token_expiry"
-    #define NEATO_SET_ROBOT_PROFILE_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.set_profile_details"
-    #define NEATO_GET_ROBOT_ONLINE_STATUS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.is_online"
-    #define NEATO_DISSOCIATE_ALL_ROBOTS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.disassociate_robot"
-    #define NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neatodev.rajatogo.com/api/rest/json/?method=message.notification_registration"
-    #define NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neatodev.rajatogo.com/api/rest/json/?method=message.notification_unregistration"
-    #define NEATO_IS_USER_VALIDATED_URL @"http://neatodev.rajatogo.com/api/rest/json/?method=user.IsUserValidated"
-    #define NEATO_CREATE_USER2_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.create2"
-    #define NEATO_FORGET_PASSWORD_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.forget_password"
-    #define NEATO_CHANGE_PASSWORD_URL @"http://neatodev.rajatogo.com/api/rest/json?method=user.change_password"
-    #define NEATO_SET_ROBOT_PROFILE_2_URL @"http://neatodev.rajatogo.com/api/rest/json/?method=robot.set_profile_details2"
-    #define NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=message.set_user_push_notification_options"
-    #define NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=message.get_user_push_notification_options"
-    #define NEATO_GET_ROBOT_PROFILE_DETAILS_URL @"http://neatodev.rajatogo.com/api/rest/json/?method=robot.get_profile_details"
-    #define NEATO_GET_ROBOT_VIRTUAL_ONLINE_STATUS_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.is_robot_online_virtual"
+    #define NEATO_BASE_URL @"http://neatodev.rajatogo.com/api/rest/json"
+    
 #else
     // Will use API's at http://neatostaging.rajatogo.com/wstest/
-    #define NEATO_CREATE_USER_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.create"
-    #define NEATO_GET_USER_AUTH_TOKEN_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=auth.get_user_auth_token"
-    #define NEATO_RESEND_VALIDATION_EMAIL_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.ResendValidationEmail"
-    #define NEATO_GET_USER_DETAILS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.get_user_account_details"
-    #define NEATO_LOGOUT_USER_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.logout_auth_token"
-    #define NEATO_CREATE_ROBOT_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.create"
-    #define NEATO_GET_ROBOT_DETAILS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.get_details"
-    #define NEATO_SET_ROBOT_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.set_user"
-    #define NEATO_GET_ASSOCIATED_ROBOTS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.get_associated_robots"
-    #define NEATO_UPDATE_AUTH_TOKEN_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.update_auth_token_expiry"
-    #define NEATO_SET_ROBOT_PROFILE_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.set_profile_details"
-    #define NEATO_GET_ROBOT_ONLINE_STATUS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.is_online"
-	#define NEATO_DISSOCIATE_ALL_ROBOTS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.disassociate_robot"
-    #define NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=message.notification_registration"
-    #define NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=message.notification_unregistration"
-    #define NEATO_IS_USER_VALIDATED_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.IsUserValidated"
-    #define NEATO_CREATE_USER2_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.create2"
-    #define NEATO_FORGET_PASSWORD_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.forget_password"
-    #define NEATO_CHANGE_PASSWORD_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=user.change_password"
-    #define NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=message.set_user_push_notification_options"
-    #define NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=message.get_user_push_notification_options"
-    #define NEATO_SET_ROBOT_PROFILE_2_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.set_profile_details2"
-    #define NEATO_GET_ROBOT_PROFILE_DETAILS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.get_profile_details"
-    #define NEATO_GET_ROBOT_VIRTUAL_ONLINE_STATUS_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.is_robot_online_virtual"
+    #define NEATO_BASE_URL @"http://neatostaging.rajatogo.com/api/rest/json"
+   
 #endif
 
 
@@ -246,30 +190,37 @@
 
 #endif
 
+//URL Constants
+#define NEATO_CREATE_USER_URL @"method=user.create"
+#define NEATO_GET_USER_AUTH_TOKEN_URL @"method=auth.get_user_auth_token"
+#define NEATO_RESEND_VALIDATION_EMAIL_URL @"method=user.ResendValidationEmail"
+#define NEATO_GET_USER_DETAILS_URL @"method=user.get_user_account_details"
+#define NEATO_LOGOUT_USER_URL @"method=user.logout_auth_token"
+#define NEATO_CREATE_ROBOT_URL @"method=robot.create"
+#define NEATO_GET_ROBOT_DETAILS_URL @"method=robot.get_details"
+#define NEATO_SET_ROBOT_URL @"method=robot.set_user"
+#define NEATO_GET_ASSOCIATED_ROBOTS_URL @"method=user.get_associated_robots"
+#define NEATO_UPDATE_AUTH_TOKEN_URL @"method=user.update_auth_token_expiry"
+#define NEATO_SET_ROBOT_PROFILE_URL @"method=robot.set_profile_details"
+#define NEATO_GET_ROBOT_ONLINE_STATUS_URL @"method=robot.is_online"
+#define NEATO_DISSOCIATE_ALL_ROBOTS_URL @"method=user.disassociate_robot"
+#define NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL @"method=message.notification_registration"
+#define NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL @"method=message.notification_unregistration"
+#define NEATO_IS_USER_VALIDATED_URL @"method=user.IsUserValidated"
+#define NEATO_GET_ROBOT_PROFILE_DETAILS_URL @"method=robot.get_profile_details"
+// TODO: These APIs have not been added to prod server.
+#define NEATO_CREATE_USER2_URL @"method=user.create2"
+#define NEATO_FORGET_PASSWORD_URL @"method=user.forget_password"
+#define NEATO_CHANGE_PASSWORD_URL @"method=user.change_password"
+#define NEATO_SET_ROBOT_PROFILE_2_URL @"method=robot.set_profile_details2"
+#define NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL @"method=message.set_user_push_notification_options"
+#define NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL @"method=message.get_user_push_notification_options"
+#define NEATO_GET_ROBOT_VIRTUAL_ONLINE_STATUS_URL @"method=robot.is_robot_online_virtual"
 
-#ifdef ROBOT_SCHEDULE_SERVER_PROD
-    #define NEATO_GET_SCHEDULES_URL @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.get_schedules"
-    #define NEATO_GET_SCHEDULE_DATA_URL @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.get_data"
-    #define NEATO_POST_ROBOT_SCHEDULE_DATA @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.post_data"
-    #define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.update_data"
-    #define NEATO_DELETE_SCHEDULE_DATA @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.delete_data"
-    #define NEATO_GET_SCHEDULE_BASED_ON_TYPE @"http://neato.rajatogo.com/api/rest/json/?method=robotschedule.get_schedule_based_on_type"
-
-#elif SWITCH_TO_DEV_SERVER
-    #define NEATO_GET_SCHEDULES_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robotschedule.get_schedules"
-    #define NEATO_GET_SCHEDULE_DATA_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robotschedule.get_data"
-    #define NEATO_POST_ROBOT_SCHEDULE_DATA @"http://neatodev.rajatogo.com/api/rest/json/?method=robotschedule.post_data"
-    #define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"http://neatodev.rajatogo.com/api/rest/json/?method=robotschedule.update_data"
-    #define NEATO_DELETE_SCHEDULE_DATA @"http://neatodev.rajatogo.com/api/rest/json/?method=robotschedule.delete_data"
-    #define NEATO_GET_SCHEDULE_BASED_ON_TYPE @"http://neatodev.rajatogo.com/api/rest/json?method=robotschedule.get_schedule_based_on_type"
-
-#else
-    #define NEATO_GET_SCHEDULES_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.get_schedules"
-    #define NEATO_GET_SCHEDULE_DATA_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.get_data"
-    #define NEATO_POST_ROBOT_SCHEDULE_DATA @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.post_data"
-    #define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.update_data"
-    #define NEATO_DELETE_SCHEDULE_DATA @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.delete_data"
-    #define NEATO_GET_SCHEDULE_BASED_ON_TYPE @"http://neatostaging.rajatogo.com/api/rest/json/?method=robotschedule.get_schedule_based_on_type"
-
-#endif
-
+//Schedule URL Constants
+#define NEATO_GET_SCHEDULES_URL @"method=robotschedule.get_schedules"
+#define NEATO_GET_SCHEDULE_DATA_URL @"method=robotschedule.get_data"
+#define NEATO_POST_ROBOT_SCHEDULE_DATA @"method=robotschedule.post_data"
+#define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"method=robotschedule.update_data"
+#define NEATO_DELETE_SCHEDULE_DATA @"method=robotschedule.delete_data"
+#define NEATO_GET_SCHEDULE_BASED_ON_TYPE @"method=robotschedule.get_schedule_based_on_type"
