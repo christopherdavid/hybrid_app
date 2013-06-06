@@ -142,6 +142,12 @@ Application.prototype.loadWorkflow = function() {
                     "value" : true
                 }]
             },{
+                targetScreenId : "about",
+                conditions : [{
+                    "key" : "about",
+                    "value" : true
+                }]
+            },{
                 targetScreenId : "terms",
                 conditions : [{
                     "key" : "terms",
@@ -264,6 +270,21 @@ Application.prototype.loadWorkflow = function() {
                 targetScreenId : "robotSelection",
                 conditions : [{
                     "key" : "changeRobot",
+                    "value" : true
+                }]
+            }]
+        },
+        "about" : {
+            navrules : [{
+                targetScreenId : "robotSelection",
+                conditions : [{
+                    "key" : "changeRobot",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "settings",
+                conditions : [{
+                    "key" : "back",
                     "value" : true
                 }]
             }]

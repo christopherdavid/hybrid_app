@@ -11,8 +11,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.conditions = {};
     this.startAreaControl = null;
     this.robotStateMachine = null;
-    this.robot = ko.observable();
-    this.robotServerState = ko.observable("sleeping");
+    this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
+    this.robotServerState = that.robot().stateString;
     this.cleaningType = ko.observableArray([{
             id : "2",
             text : $.i18n.t("cleaning.page.cleaningType.2")
@@ -104,7 +104,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         $spotPopup.popup("close");
         
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.setSpotDefinition, [that.robot().robotId(), that.spotSizeLength(), that.spotSizeHeight()],
-        { type: notificationType.OPERATION, message: "Set new Spotsize: " + that.newSpotSizeLength() + "x" +  that.newSpotSizeHeight() , callback: null, bHide: true });
+        { type: notificationType.OPERATION, message: "Set new Spotsize: " + that.newSpotSizeLength() + "x" +  that.newSpotSizeHeight() , bHide: true });
         tDeffer.done(function(result) {
             that.spotSizeLength(that.newSpotSizeLength());
             that.spotSizeHeight(that.newSpotSizeHeight());
@@ -161,15 +161,31 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     }
 
     this.startStopRobotSuccess = function(result) {
-        if (that.robotStateMachine.is("inactive")){
-            that.robotStateMachine.clean();
-        } else if (that.robotStateMachine.is("active")){
-            that.robotStateMachine.pause();
-        } else if (that.robotStateMachine.is("paused")){
-            that.robotStateMachine.clean();
+        console.log("startStopRobotSuccess " + JSON.stringify(result))
+        if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1) {
+            var delay = result.expectedTimeToExecute - 4 > 0 ? result.expectedTimeToExecute - 4 : 1;
+            var sWakeUp = (result.expectedTimeToExecute < 30) ?  "Waking Up...." : ("Waking Up in about " + result.expectedTimeToExecute + " seconds");
+            var callGuidW = guid();
+            parent.notification.showLoadingArea(true, notificationType.WAKEUP, sWakeUp, callGuidW);
+            callGuidR = guid();
+            parent.notification.showLoadingArea(true, notificationType.GETREADY, "Get ready....", callGuidR);
+            window.setTimeout(function(){
+                parent.notification.showLoadingArea(false, notificationType.WAKEUP, "", callGuidW);
+            }, delay*1000);
+            window.setTimeout(function(){
+                parent.notification.showLoadingArea(false, notificationType.WAKEUP, "", callGuidR);
+            }, (delay - 2 > 0 ? delay - 2 : 1)*1000 );
+            that.robotStateMachine.disable();
+        // robot is connected to server
+        } else {
+            if (that.robotStateMachine.is("inactive")){
+                that.robotStateMachine.clean();
+            } else if (that.robotStateMachine.is("active")){
+                that.robotStateMachine.pause();
+            } else if (that.robotStateMachine.is("paused")){
+                that.robotStateMachine.clean();
+            }
         }
-        // get new server state
-        //that.getRobotState();
     }
 
     this.startStopRobotError = function(error) {
@@ -206,17 +222,6 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         console.log("Error:(Sending robot to base):" + error);
     }
     
-     this.getRobotState = function() {
-        // Send command that the robot should return to base
-        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.sendCommandToRobot2, [that.robot().robotId(), COMMAND_GET_ROBOT_STATE, {}], { type: notificationType.NONE });
-        tDeffer.done(that.successGetRobotState);
-    };
-    
-    this.successGetRobotState = function(result) {
-        if(result.currentStateString) {
-            that.robotServerState(result.currentStateString)
-        }
-    }
     this.oldSpotSizeWidth = 0;
     this.oldSpotSizeHeight = 0;
     /**
@@ -254,9 +259,6 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             that.robotServerState(resultText);
         });
         
-        that.robot(ko.mapping.fromJS(parent.communicationWrapper.dataValues["activeRobot"]), null, that.robot);
-        //that.getRobotState();
-        
         // getSpotDefinition
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getSpotDefinition, [that.robot().robotId()]);
         tDeffer.done(that.successGetSpotDefinition);
@@ -293,11 +295,11 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                 to : "inactive"
             }, {
                 name : "clean",
-                from : ["inactive", "paused"],
+                from : ["disabled","inactive", "paused"],
                 to : "active"
             }, {
                 name : "pause",
-                from : "active",
+                from : ["disabled","active"],
                 to : "paused"
             }],
 

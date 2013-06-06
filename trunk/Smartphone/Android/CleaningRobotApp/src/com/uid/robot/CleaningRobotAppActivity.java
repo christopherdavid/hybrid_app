@@ -33,10 +33,4 @@ public class CleaningRobotAppActivity extends SlidePluginBaseActivity {
         });*/
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(final Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
-
 }

@@ -14,22 +14,23 @@
       left:0;
       width:@timeColumnWidth;
       height:@dayNameHeight;
+      /*
       background-color:@bg_gradient_start;
-      z-index:20;
+      */
+      .horizontal-gradient(@bg_gradient_start,transparent);
+      z-index:1000;
     }
 
     .dayRow {
         min-width: 7*@dayMinColumnWidth + @timeColumnWidth;
         box-sizing: border-box; 
-        z-index: 1;
+        z-index: 999;
         position: relative;
+        /*
         background-color:@bg_gradient_start;
-            
-            /*
-            .vertical-gradient(@bg_gradient_start,transparent);
-            */
-           
-            padding-left: @timeColumnWidth;
+        */    
+        .vertical-gradient(@bg_gradient_start,transparent);
+        padding-left: @timeColumnWidth;
             
         .dayLabel {
             display : inline-block;
@@ -49,13 +50,13 @@
     .timeColumn {
         position: absolute;
         width: @timeColumnWidth; 
-        z-index: 1;
-        background-color:@bg_gradient_start;
-        margin-top:@dayNameHeight;
+        z-index: 999;
         /*
-        .horizontal-gradient(@bg_gradient_start,transparent);
+        background-color:@bg_gradient_start;
         */
-      
+        margin-top:@dayNameHeight;
+        .horizontal-gradient(@bg_gradient_start,transparent);
+        
         .time {
             height: @hourHeight;
             text-align: right;

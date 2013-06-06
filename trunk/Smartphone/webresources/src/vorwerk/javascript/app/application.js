@@ -16,7 +16,11 @@ function Application() {
     // configuration for the application
     this.config = {
         firstScreen : "start",
-        pageTransition : "none"
+        pageTransition : "none",
+        version:"0.3.0",
+        pluginVersion:"0.5.0.00",
+        emailRegEx: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/
+        //emailRegEx : /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
     };
     this.scheduler;
     
@@ -38,6 +42,11 @@ function Application() {
         that.communicationWrapper = new WorkflowCommunication(that);
         that.notification = new WorkflowNotification(that);
         that.notification.init();
+        
+        that.communicationWrapper.setDataValue("robotList", ko.observableArray([]));
+        that.communicationWrapper.setDataValue("selectedRobot", ko.observable({}));
+        
+        
         // that.changeLanguage('de-de', function() { loadFirstPage(); });
         // get last language selection from local storage
         window.plugins.globalization.getLocaleName(function(locale) {
@@ -62,12 +71,17 @@ function Application() {
         var username = that.communicationWrapper.getFromLocalStorage('username');
         if(username != null)
         {
-            var tDeffer = that.communicationWrapper.exec(UserPluginManager.isUserLoggedIn, [username], { type: notificationType.NONE, message: "", callback: null});
+            var tDeffer = that.communicationWrapper.exec(UserPluginManager.isUserLoggedIn, [username], { type: notificationType.NONE, message: ""});
             tDeffer.done(function(result){
                 if(result == true) {
-                    var tDeffer2 = that.communicationWrapper.exec(UserPluginManager.getUserDetail, [username], {}, "user");
+                    var tDeffer2 = that.communicationWrapper.exec(UserPluginManager.getUserDetail, [username], {});
                     tDeffer2.done(function(result){
+                        that.communicationWrapper.setDataValue("user", result);
+                        // register for push notifications (from server)
                         that.notification.registerForRobotMessages();
+                        
+                        // register for notifications from robot if app is running
+                        that.notification.registerForRobotNotifications();
                         that.flowNavigator.loadScreen("robotSelection", null);
                     });
                     

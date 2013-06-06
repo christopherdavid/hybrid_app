@@ -35,7 +35,7 @@
         <ul data-role="listview" data-divider-theme="a" data-inset="true" data-bind="foreach: robots">
 
             <li data-bind="css:{'ui-selected': $parent.selectedRobot() === $data}">
-                <a href="javascript:void(0);" data-bind="click: $root.robotSelected"> <h3 class="companyColoredTxt" data-bind="text: robotName"> cleaning kitchen </h3> <span class="ui-li-desc"  data-bind="text: robotId"> Dave </span> </a>
+                <a href="javascript:void(0);" data-bind="click: $root.robotSelected"> <h3 class="companyColoredTxt" data-bind="text: robotName"> [robot name] </h3> <span class="ui-li-desc"  data-bind="text: stateString">[robot state]</span> </a>
             </li>
         </ul>
     </div><!-- /content -->

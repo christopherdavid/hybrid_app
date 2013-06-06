@@ -14,7 +14,7 @@ resourceHandler.registerFunction('robotActivationId_ViewModel.js', function(pare
 
     this.next = function() {
         // send the robotId to the server for validation
-        var email = parent.communicationWrapper.dataValues["user"].email;
+        var email = parent.communicationWrapper.getDataValue("user").email;
         var tDeffer = parent.communicationWrapper.exec(UserPluginManager.associateRobot, [email, that.robotId()]);
         tDeffer.done(that.robotIdSuccess);
         tDeffer.fail(that.robotIdError);

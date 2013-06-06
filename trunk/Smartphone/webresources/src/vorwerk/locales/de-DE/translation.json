@@ -13,6 +13,32 @@
             "message": "I'm finished and returning to my base!"
         }
     },
+    "dialogs":{
+        "EVENT_DELETE": {
+            "title":"Möchten Sie wirklich den Event löschen ?",
+            "title_plural":"Möchten Sie wirklich die Events löschen ?",
+            "message":"",
+            "button_1":"Löschen",
+            "button_2":"Nein"
+        },
+        "ROBOT_DELETE": {
+            "title":"Möchten Sie wirklich __robotName__ löschen?",
+            "message":"",
+            "button_1":"Löschen",
+            "button_2":"Nein"
+        }
+    },
+    "robotStateCodes":{
+        "10001":"State Unknown",
+        "10002":"Started Cleaning",
+        "10003":"Idle",
+        "10004":"Charging",
+        "10005":"Stopped Cleaning",
+        "10006":"Stucked",
+        "10007":"Paused Cleaning",
+        "10008":"Resumed Cleaning",
+        "10009":"On Base"
+    },
     "pattern": {
         "week":"1,2,3,4,5,6,0",
         "time":"HHii"
@@ -46,7 +72,10 @@
     "communication": {
         "fetch_robots": "Roboterliste wird abgerufen...",
         "fetch_map": "Kartendaten werden abgerufen...",
-        "update_scheduler": "Kalender wird snychronisiert..."
+        "update_scheduler": "Kalender wird snychronisiert...",
+        "reset_password":"Passwort wird zurückgesetzt...",
+        "reset_password_done":"Passwort wurde erfolgreich zurückgesetzt",
+        "delete_robot_done":"Roboter __robotName__ wurde gelöscht."
     },
     "cleaning": {
         "navi": {
@@ -134,7 +163,9 @@
             "password": "Passwort",
             "password_lost": "Passwort vergessen?",
             "password_show": "Passwort anzeigen",
-            "tap_here": "Hier berühren."
+            "tap_here": "Hier berühren.",
+            "password_reset":"Passwort zurücksetzen",
+            "description":"Um ein neues Passwort anzufordern, geben Sie bitte Ihre registrierte Email Adresse ein. Sie erhalten dann umgehend eine Email mit Ihrem neuen Passwort."
         }
     },
     "settings": {
@@ -145,7 +176,8 @@
             "robot_management": "Roboter Einstellungen",
             "user_settings": "Benutzereinstellungen",
             "general_settings": "Allgemeine Einstellungen",
-            "terms":"Nutzungsbedingungen"
+            "terms":"Nutzungsbedingungen",
+            "about":"Über"
         }
     },
     "robotManagement": {
@@ -238,6 +270,6 @@
         }
     },
     "app": {
-        "name": "i18next DE"
+        "name": "CleaningRobotApp"
     }
 }
