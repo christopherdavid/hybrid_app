@@ -3,7 +3,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     var that = this;
     this.conditions = {};
     this.backConditions = {};
-    this.robot = ko.observable();
+    this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     
     this.showPassword = ko.observable(false);
     this.newPassword = ko.observable("");
@@ -41,8 +41,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     }
     
     this.init = function() {
-        that.robot(ko.mapping.fromJS(parent.communicationWrapper.dataValues["activeRobot"]), null, that.robot);
-        that.user(ko.mapping.fromJS(parent.communicationWrapper.dataValues["user"]), null, that.user);
+        that.user(ko.mapping.fromJS(parent.communicationWrapper.getDataValue("user")), null, that.user);
     };
     
     this.changeRobot = function() {
@@ -70,7 +69,6 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     }
     
     this.successChangePassword = function(result) {
-        parent.communicationWrapper.dataValues["activeRobot"].robotName = that.newRobotName();
         console.log("result" + JSON.stringify(result));
         that.showPassword = ko.observable(false);
         that.newPassword = ko.observable("");

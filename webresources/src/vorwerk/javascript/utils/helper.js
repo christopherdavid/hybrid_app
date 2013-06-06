@@ -51,3 +51,20 @@ var deviceSize =  (function() {
         }
     }
 }());
+
+function localizeTime(time) {
+    var timeFormat = $.i18n.t("pattern.time");
+    var amPmMarker = "";
+    var hour = time.split(":")[0];
+    var min = time.split(":")[1]
+    if (timeFormat == "hhiiA") {
+        amPmMarker = hour <= 12 ? ' am' : ' pm';
+        
+        if(hour > 12) {
+            hour = hour - 12;
+        }
+    }
+    // add leading zero
+    hour = hour < 10 ? "0" + hour : hour;
+    return hour + ':' + min + amPmMarker;
+}

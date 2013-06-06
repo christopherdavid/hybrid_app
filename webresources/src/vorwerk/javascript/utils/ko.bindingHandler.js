@@ -144,3 +144,28 @@ ko.bindingHandlers.jqmFlipValue = {
         $(element).slider("refresh");
     }
 };
+
+ko.bindingHandlers.jqmInputVisible = {
+    update : function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        var value = valueAccessor(), allBindings = allBindingsAccessor();
+        var valueUnwrapped = ko.utils.unwrapObservable(valueAccessor());
+        $(element).parent().toggle(valueUnwrapped);
+    }
+}
+
+ko.bindingHandlers.jqmInputCSS = {
+    update : function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        var value = valueAccessor(), allBindings = allBindingsAccessor();
+        var valueUnwrapped = ko.utils.unwrapObservable(valueAccessor());
+        $.each( value, function( className, obs ) {
+            var addClass = typeof obs == "function" ? obs() : obs;
+            //console.log( className + ": " + addClass);
+            if(addClass) {
+                $(element).parent().addClass(className);
+            } else {
+                $(element).parent().removeClass(className);
+            }
+        });
+        
+    }
+}

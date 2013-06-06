@@ -28,12 +28,12 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
 
         // Set the robot as active one if required
         if (that.bundle) {
-            parent.communicationWrapper.storeDataValue("activeRobot", that.bundle.robot);
+            parent.communicationWrapper.setDataValue("activeRobot", that.bundle.robot);
         }
 
         parent.flowNavigator.next();
         //TODO replace with correct message
-        parent.notification.showLoadingArea(true, notificationType.HINT, "added " + that.robotName(), false);
+        parent.notification.showLoadingArea(true, notificationType.HINT, "added " + that.robotName());
     }
 
     this.robotNameError = function(error) {

@@ -9,26 +9,29 @@ function WorkflowCommunication(parent) {
     this.dataValues = {};
     // stores the callbacks for the current view
     this.callbacks = {};
+    // callbacks that were handled after the view has been unloaded
+    this.staticCallbacks = {};
     
-    this.onCallbackReturn = function(guid, success, result, storeKey){
+    this.onCallbackReturn = function(guid, success, result){
         //console.log("guid: " + guid + " result: " + JSON.stringify(result) + "\nstoreKey: " + storeKey)
         // check if callback belongs to the current viewmodel, otherwise ignore it
         if(that.callbacks[guid]) {
-            // TODO: Hide loading indicator AFTER the success and error handling. For now
-            //       put here to prevent error alert from not hiding the notification area.
-            //parent.notification.showLoadingArea(false, notificationOptions.type);
             if(that.callbacks[guid].notifyOptions.type != notificationType.NONE && typeof that.callbacks[guid].notifyOptions.bHide == "undefined" || that.callbacks[guid].notifyOptions.bHide === true) {
-                parent.notification.showLoadingArea(false, that.callbacks[guid].notifyOptions.type);
+                parent.notification.showLoadingArea(false, that.callbacks[guid].notifyOptions.type, "", guid);
             }
             if (success){
-                if (storeKey && result){
-                    that.dataValues[storeKey] = result;
-                }
                 that.callbacks[guid].oDeferred.resolve(result, that.callbacks[guid].notifyOptions);
             } else {
-                //parent.notification.showError(result);
-                parent.notification.showDialog(dialogType.ERROR, "Communication Error", JSON.stringify(result));
+                parent.notification.showError(result);
                 that.callbacks[guid].oDeferred.reject(result, that.callbacks[guid].notifyOptions);
+            }
+        // check if there was a static callback
+        } else if(that.staticCallbacks[guid]) {
+            if (success){
+                that.staticCallbacks[guid].oDeferred.resolve(result, that.staticCallbacks[guid].notifyOptions);
+            } else {
+                parent.notification.showError(result);
+                that.staticCallbacks[guid].oDeferred.reject(result, that.staticCallbacks[guid].notifyOptions);
             }
         }
     };
@@ -41,48 +44,54 @@ function WorkflowCommunication(parent) {
      * @param {function} command The command to be called on the communication layer.
      * @param {array} args The arguments for the function call. If no arguments exists be sure to supply an empty array.
      * @param {object} notificationOptions The notification options containing the callback an the notification type.
-     * @param {string} [storeKey] optional key for data storage
+     * @param {string} [bStatic] optional flag to handle callbacks after viewmodel changed
      * @return {object} returns the promise of the deferred object
      */
-     this.exec = function(command, args, notificationOptions, storeKey) {
+     this.exec = function(command, args, notificationOptions, bStatic) {
         var oDeferred = $.Deferred();
         var notifyOptions = notificationOptions;
+        var callGuid = guid();
+        bStatic = typeof bStatic != "undefined" ? bStatic : false;
+        
         if (!notificationOptions || !notificationOptions.type){
-            notifyOptions = { type: notificationType.SPINNER, message: "" , callback: null, bHide: true };
+            notifyOptions = { type: notificationType.SPINNER, message: "" , bHide: true };
         }
         if(notifyOptions.type != notificationType.NONE) { 
-            parent.notification.showLoadingArea(true, notifyOptions.type, notifyOptions.message);
+            parent.notification.showLoadingArea(true, notifyOptions.type, notifyOptions.message, callGuid);
         }
         
-        var callGuid = guid();
         // store defferd object for callbacks and notification options (using guid) to avoid references to cordova plugin 
-        that.callbacks[callGuid] = {oDeferred:oDeferred, notifyOptions:notifyOptions};
+        if(!bStatic) {
+            that.callbacks[callGuid] = {oDeferred:oDeferred, notifyOptions:notifyOptions};
+        } else {
+            that.staticCallbacks[callGuid] = {oDeferred:oDeferred, notifyOptions:notifyOptions};
+        }
         
         //console.log("call guid: " + callGuid);
         switch(args.length) {
             case 0:
-                command(function(result) { that.onCallbackReturn(callGuid, true, result, storeKey);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                command(function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
             break;
             case 1:
-                command(args[0], function(result) { that.onCallbackReturn(callGuid, true, result, storeKey);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                command(args[0], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
             break;
             case 2:
-                command(args[0],args[1], function(result) { that.onCallbackReturn(callGuid, true, result, storeKey);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                command(args[0],args[1], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
             break;
             case 3:
-                command(args[0],args[1],args[2], function(result) { that.onCallbackReturn(callGuid, true, result, storeKey);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                command(args[0],args[1],args[2], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
             break;
             case 4:
-                command(args[0],args[1],args[2],args[3], function(result) { that.onCallbackReturn(callGuid, true, result, storeKey);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                command(args[0],args[1],args[2],args[3], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
             break;
             case 5:
-                command(args[0],args[1],args[2],args[3],args[4], function(result) { that.onCallbackReturn(callGuid, true, result, storeKey);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                command(args[0],args[1],args[2],args[3],args[4], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
             break;
             case 6:
-                command(args[0],args[1],args[2],args[3],args[4],args[5], function(result) { that.onCallbackReturn(callGuid, true, result, storeKey);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                command(args[0],args[1],args[2],args[3],args[4],args[5], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
             break;
             case 7:
-                command(args[0],args[1],args[2],args[3],args[4],args[5],args[6], function(result) { that.onCallbackReturn(callGuid, true, result, storeKey);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                command(args[0],args[1],args[2],args[3],args[4],args[5],args[6], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
             break;
             
             default:
@@ -98,8 +107,12 @@ function WorkflowCommunication(parent) {
       that.saveToLocalStorage('username', null); 
     };
     
-    this.storeDataValue = function(key, dataValue){
+    this.setDataValue = function(key, dataValue){
         that.dataValues[key] = dataValue;
+    }
+    
+    this.getDataValue = function(key) {
+        return that.dataValues[key]||null;
     }
     
     this.removeDataValue = function(key) {
@@ -123,6 +136,30 @@ function WorkflowCommunication(parent) {
         var tempStore = $.parseJSON( window.localStorage.getItem("cleaningAppStore")) || {};
         return tempStore[key] || null;
     }
+    this.clearStaticCallbacks = function(staticKey) {
+        that.staticCallbacks = {};
+    }
+    // this requests the robot state for each roboter 
+    this.getRobotState = function(robotId) {
+        // Send command that the robot should return to base
+        var tDeffer = that.exec(RobotPluginManager.sendCommandToRobot2, [robotId, COMMAND_GET_ROBOT_STATE, {}], { type: notificationType.NONE }, true);
+        tDeffer.done(that.successGetRobotState);
+    };
     
+    this.successGetRobotState = function(result) {
+        if(result.stateCode && result.robotId) {
+            var tempRobots = that.getDataValue("robotList");
+            // find robote with robotId in global binding object
+            var state = $.i18n.t("robotStateCodes." + result.stateCode);
+            // loop over all robots and add the state property
+            $.each(tempRobots(), function(index, item){
+                if(item.robotId() == result.robotId) {
+                    item.stateCode(result.stateCode);
+                    item.stateString(state);
+                    return false;
+                }
+            });
+        }
+    }
 }
 

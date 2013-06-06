@@ -29,6 +29,17 @@ var NOTIFICATION_ROBOT_STUCK = "101";
 var NOTIFICATION_DIRT_BIN_FULL = "102";
 var NOTIFICATION_CLEANING_DONE = "103";
 
+// Robot state codes
+    var ROBOT_STATE_UNKNOWN     = 10001;
+    var ROBOT_STATE_CLEANING    = 10002;
+    var ROBOT_STATE_IDLE        = 10003;
+    var ROBOT_STATE_CHARGING    = 10004;
+    var ROBOT_STATE_STOPPED     = 10005;
+    var ROBOT_STATE_STUCK       = 10006;
+    var ROBOT_STATE_PAUSED      = 10007;
+    var ROBOT_STATE_RESUMED     = 10008;
+    var ROBOT_STATE_ON_BASE     = 10009;
+
 var PLUGIN_JSON_KEYS = (function() {
     var keys = {
         'DISCOVERY_NOTIFICATION_KEY' : 'notificationType',
@@ -268,7 +279,9 @@ var UserPluginManager = ( function() {
             }, 
             
             forgetPassword: function(email, callbackSuccess, callbackError) {
-                window.plugins.neatoPluginLayer.userMgr.forgetPassword(email, callbackSuccess, callbackError);
+                window.setTimeout(function() {
+                    callbackSuccess(true);
+                }, 1500);
             },
             
             
@@ -331,7 +344,9 @@ var RobotPluginManager = ( function() {
             },
             
             setRobotName2 : function(robotId, robotName, callbackSuccess, callbackError) {
-            window.plugins.neatoPluginLayer.robotMgr.setRobotName2(robotId, robotName, callbackSuccess, callbackError);
+                window.setTimeout(function() {
+                     callbackSuccess("OK");
+                 }, 1000);
             },
             
             getRobotDetail : function(robotId, callbackSuccess, callbackError) {
@@ -433,6 +448,52 @@ var RobotPluginManager = ( function() {
              window.setTimeout(function() {
                 callbackSuccess("OK");
             }, 1000);
+        },
+        
+        /**
+         * This API sends a command to a specific robot. The robot and smart app have to be on the
+         * same network for a successful connection. Though this can be used to send commands to the robot
+         * other API for common commands are also exposed. Commands like "Start Cleaning", "Stop Cleaning"
+         * "Pause Cleaning" and "Resume Cleaning" must be called from the cleaning specific API rather
+         * than sendCommandToRobot2. Currently this API always sends command via a presence server (XMPP)
+         * It does not use direct connection as of now.
+         * <p>
+         * This API calls Neato Smart App Service to send command to robot.The command id is the id of the
+         * command to be executed on the robot. Currently supported commands are - 
+         * <br>101 - Start Cleaning
+         * <br>102 - Stop Cleaning
+         * 
+         * @param robotId           the serial number of the robot
+         * @param commandId         command ID of the command to be executed on this robot.
+         * @param commandParams     the json object containing key value pairs related to the command to be executed. 
+         * @param callbackSuccess   success callback for the API
+         * @param callbackError     error callback for the API
+         */     
+        sendCommandToRobot2: function(robotId, commandId, commandParams, callbackSuccess, callbackError) {
+            var stateCode = ROBOT_STATE_ON_BASE;
+            var delay = 1000;
+            switch(robotId) {
+                case "mapdemo123":
+                    stateCode = ROBOT_STATE_CLEANING
+                    delay = 3000;
+                    break;
+                case "rr1234":
+                    stateCode = ROBOT_STATE_PAUSED
+                    delay = 10000;
+                    break;
+            }
+            
+            
+            
+             window.setTimeout(function() {
+                callbackSuccess({
+                    "dateTimeString":"06-06-2013 20:20",
+                    "currentStateString":"paused",
+                    "stateCode":stateCode,
+                    "robotId": robotId
+                });
+            }, delay);
+            
         },
         
         /*
@@ -637,6 +698,24 @@ var RobotPluginManager = ( function() {
                 }, 1000);
             },
             
+            /**
+             * This API registers for notifications. As of now this API registers for all type of
+             * notifications. This API does not make a webservice call.
+             * <p>
+             * on success this API returns a JSON Object {robotDataKeyId:"robotDataKeyId", robotId:"robotId", robotData:"robotData"}
+             * <br>where robotDataKeyId is the data key id for the robot
+             * <br>robotId is the id of the robot
+             * <br>robotData is the data sent by robot
+             * 
+             * @param callbackSuccess   success callback for this API
+             * @param callbackError     error callback for this API 
+             * @returns                 a JSON Object on success
+             */
+            registerNotifications2: function(callbackSuccess, callbackError) {
+                // window.setTimeout(function() {
+                    // callbackSuccess(true);
+                // }, 1000);
+            },
             
             /*
              * Name: registerForRobotMessages
@@ -645,9 +724,9 @@ var RobotPluginManager = ( function() {
              */
             registerForRobotMessages: function(callbackSuccess, callbackError) {
                 //window.plugins.neatoPluginLayer.robotMgr.registerForRobotMessages(callbackSuccess, callbackError);
-                window.setTimeout(function() {
-                    callbackSuccess(true);
-                }, 4000);
+                // window.setTimeout(function() {
+                    // callbackSuccess(true);
+                // }, 4000);
             },
             
             // New Schedule APIs being added:

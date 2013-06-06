@@ -4,8 +4,13 @@
   background-size: 18px 18px;
 }
 
-.ui-checkbox-on .ui-icon, .ui-checkbox-off .ui-icon {
+.ui-checkbox-on .ui-icon {
   background-color: rgba(0,0,0,0.8);
+}
+
+.ui-checkbox-off .ui-icon {
+  background-color: rgba(0,0,0,0.8);
+  background-image:none;
 }
 
 .textWithButton {
@@ -311,9 +316,11 @@ div.ui-slider.ui-slider-switch{
 }
 
 .ui-popup-screen.in {
-  opacity: 0.7;
+  /*opacity: 0.7;
   filter: Alpha(Opacity=70);
+  */
   background-color: #666;
+  background-image:none;
 }
 
 .ui-popup-container.ui-popup-active{
@@ -434,3 +441,17 @@ div.ui-slider.ui-slider-switch{
   
 }
 
+fieldset.aboutInfo {
+  width:250px;
+  margin:auto;
+  text-align: center;
+  
+  .appIcon {
+    background-image:url(../../img/icons/app_icon_512x512.png);
+    background-repeat:no-repeat;
+    background-size:contain;
+    min-width:250px;
+    min-height:250px;
+    margin:auto;
+  }
+}

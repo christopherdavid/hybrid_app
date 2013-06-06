@@ -21,9 +21,6 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
 
     var PASSWORD_LENGTH = 6;
 
-    var emailRegEx = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    // regex : /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
-
     this.back = function() {
         that.conditions['back'] = true;
         parent.flowNavigator.previous();
@@ -39,13 +36,14 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
 
     this.next = function() {
         //TODO remove username from create user methode
-        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.createUser, [that.email(), that.password(), 'default'], {}, "user");
+        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.createUser2, [that.email(), that.password(), 'default'], {});
         tDeffer.done(that.successRegister);
         tDeffer.fail(that.errorRegister);
     };
 
     this.successRegister = function(result) {
         that.conditions['valid'] = true;
+        parent.communicationWrapper.setData("user", result);
         var translatedTitle = $.i18n.t("createAccount.page.registration_done_title");
         var translatedText = $.i18n.t("createAccount.page.registration_done_message");
         parent.notification.showDialog(dialogType.WARNING, translatedTitle, translatedText, [{"label":"Ok", "callback":function(e){ parent.notification.closeDialog(); parent.flowNavigator.next(robotScreenCaller.REGISTER);}}]);
@@ -70,7 +68,7 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
     function isEmailValid() {
         if (that.email() == '')
             return true;
-        return (that.email() != '' && emailRegEx.test(that.email()));
+        return (that.email() != '' && parent.config.emailRegEx.test(that.email()));
     }
 
 })
