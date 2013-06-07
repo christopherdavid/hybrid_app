@@ -43,7 +43,7 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
 
     this.successRegister = function(result) {
         that.conditions['valid'] = true;
-        parent.communicationWrapper.setData("user", result);
+        parent.communicationWrapper.setDataValue("user", result);
         var translatedTitle = $.i18n.t("createAccount.page.registration_done_title");
         var translatedText = $.i18n.t("createAccount.page.registration_done_message");
         parent.notification.showDialog(dialogType.WARNING, translatedTitle, translatedText, [{"label":"Ok", "callback":function(e){ parent.notification.closeDialog(); parent.flowNavigator.next(robotScreenCaller.REGISTER);}}]);

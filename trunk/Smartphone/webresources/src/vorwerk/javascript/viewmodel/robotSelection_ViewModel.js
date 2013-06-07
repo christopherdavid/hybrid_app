@@ -6,25 +6,25 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
     this.backConditions = {};
     this.robots = parent.communicationWrapper.getDataValue("robotList");
     this.isBackVisible = ko.observable(false);
-    this.isRobotVisible = ko.observable(false);
-    this.selectedRobot = ko.observable();
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
+    this.isRobotVisible = ko.computed(function(){
+        return (typeof(that.robot().robotName) != 'undefined');
+    },this);
+    
+    this.selectedRobot = ko.observable();
+    
     var userName = parent.communicationWrapper.getFromLocalStorage('username');
     
     this.init = function() {
-        //parent.notification.showLoadingArea(true, notificationType.HINT, "Nachricht 1");
-        //parent.notification.showLoadingArea(true, notificationType.HINT, "Nachricht 2");
-        //parent.notification.showLoadingArea(true, notificationType.HINT, "Nachricht 3");
-        //parent.notification.showLoadingArea(true, notificationType.GETREADY, "Get ready....", "1234567890");
-        //parent.notification.showLoadingArea(true, notificationType.WAKEUP, "Waking Up....", "abcdefghij");
-        // window.setTimeout(function() { 
-            // parent.notification.showLoadingArea(false, notificationType.GETREADY, "Get ready....", "1234567890");
-            // }, 5000)
-        
         // show robot has been deleted message
         if (that.bundle && that.bundle == robotScreenCaller.DELETE) {
             var sDelete = $.i18n.t('communication.delete_robot_done', {robotName:that.robot().robotId()});
             parent.notification.showLoadingArea(true, notificationType.HINT, sDelete);
+            // clear history
+            parent.history.clear();
+            // remove robot from local data
+            that.robots.remove(that.robot());
+            that.robot({});
         }
         
         // Update the back button depending on the screen that opened this view
@@ -132,8 +132,6 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
                 that.isBackVisible((that.bundle == robotScreenCaller.CHANGE || that.bundle == robotScreenCaller.MANAGE));
             }
         }
-        var defined = typeof(that.robot().robotName) != 'undefined';
-        that.isRobotVisible(defined);
     };
 
     this.getRobotList = function() {

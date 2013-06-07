@@ -54,12 +54,8 @@ function WorkflowNotification(parent) {
                         case ROBOT_CURRENT_STATE_CHANGED:
                         case ROBOT_STATE_UPDATE:
                             var curState = result.robotData.robotCurrentState || result.robotData.robotStateUpdate;
-                            //update state, make sure it's an valid state code
-                            if(curState >= 10001 && curState <= 10009) {
-                                var state = $.i18n.t("robotStateCodes." + curState);
-                                curRobot().stateCode(curState);
-                                curRobot().stateString(state);
-                            }
+                            // update state
+                            parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
                             
                             // send notification
                             //TODO: add listener instead of viewmodel check
@@ -67,13 +63,16 @@ function WorkflowNotification(parent) {
                                 switch(curState) {
                                     case ROBOT_STATE_CLEANING:
                                     case ROBOT_STATE_RESUMED:
-                                        parent.viewmodel.robotStateMachine.clean();
-                                    break;
+                                        parent.viewModel.robotStateMachine.clean();
+                                        console.log("called 1")
+                                        break;
                                     case ROBOT_STATE_PAUSED:
-                                        parent.viewmodel.robotStateMachine.pause();
+                                        console.log("called 2")
+                                        parent.viewModel.robotStateMachine.pause();
                                         break;
                                     default:
-                                        parent.viewmodel.robotStateMachine.deactivate();
+                                        console.log("called 3")
+                                        parent.viewModel.robotStateMachine.deactivate();
                                 }
                             } 
                             break;

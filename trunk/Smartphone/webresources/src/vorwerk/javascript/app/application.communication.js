@@ -154,11 +154,21 @@ function WorkflowCommunication(parent) {
             // loop over all robots and add the state property
             $.each(tempRobots(), function(index, item){
                 if(item.robotId() == result.robotId) {
-                    item.stateCode(result.stateCode);
-                    item.stateString(state);
+                    // update state
+                    that.updateRobotStateWithCode(item, result.stateCode);
                     return false;
                 }
             });
+        }
+    }
+    
+    this.updateRobotStateWithCode = function(robot, curState) {
+        //update state, make sure it's an valid state code
+        if(curState >= 10001 && curState <= 10009 && robot.stateCode) {
+            var state = $.i18n.t("robotStateCodes." + curState);
+            console.log("updateRobotStateWithCode: "  + curState + " text: " + state)
+            robot.stateCode(curState);
+            robot.stateString(state);
         }
     }
 }

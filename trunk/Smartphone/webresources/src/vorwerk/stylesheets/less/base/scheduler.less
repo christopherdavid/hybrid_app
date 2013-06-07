@@ -17,14 +17,16 @@
       /*
       background-color:@bg_gradient_start;
       */
+      -webkit-transform:translateZ(0);
       .horizontal-gradient(@bg_gradient_start,transparent);
-      z-index:1000;
+      z-index:1001;
     }
 
     .dayRow {
+        -webkit-transform:translateZ(0);
         min-width: 7*@dayMinColumnWidth + @timeColumnWidth;
         box-sizing: border-box; 
-        z-index: 999;
+        z-index: 1000;
         position: relative;
         /*
         background-color:@bg_gradient_start;
@@ -50,7 +52,8 @@
     .timeColumn {
         position: absolute;
         width: @timeColumnWidth; 
-        z-index: 999;
+        z-index: 1000;
+        -webkit-transform:translateZ(0);
         /*
         background-color:@bg_gradient_start;
         */

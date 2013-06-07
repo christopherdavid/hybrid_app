@@ -46,6 +46,7 @@
     "common": {
         "back": "back",
         "next": "next",
+        "stop": "Stop",
         "ok": "OK",
         "cancel": "Cancel",
         "edit": "Edit",
@@ -75,7 +76,9 @@
         "update_scheduler": "Scheduler is being synchronized...",
         "reset_password":"Password is beeing reseted...",
         "reset_password_done":"Password successfully reseted",
-        "delete_robot_done":"Robot __robotName__ was deleted."
+        "delete_robot_done":"Robot __robotName__ was deleted.",
+        "stop_robot":"Robot is stoping to clean",
+        "send_to_base":"Robot is beeing send back to base"
     },
     "cleaning": {
         "navi": {

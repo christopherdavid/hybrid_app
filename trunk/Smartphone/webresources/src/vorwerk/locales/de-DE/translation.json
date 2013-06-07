@@ -46,6 +46,7 @@
     "common": {
         "back": "zurück",
         "next": "weiter",
+        "stop": "Stop",
         "ok": "OK",
         "cancel": "Abbrechen",
         "edit": "bearbeiten",
@@ -75,7 +76,9 @@
         "update_scheduler": "Kalender wird snychronisiert...",
         "reset_password":"Passwort wird zurückgesetzt...",
         "reset_password_done":"Passwort wurde erfolgreich zurückgesetzt",
-        "delete_robot_done":"Roboter __robotName__ wurde gelöscht."
+        "delete_robot_done":"Roboter __robotName__ wurde gelöscht.",
+        "stop_robot":"Roboter hört auf zu saugen",
+        "send_to_base":"Roboter wird zurück zur Basis geschickt"
     },
     "cleaning": {
         "navi": {

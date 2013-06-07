@@ -16,7 +16,11 @@
         <div class="ui-btn-right">
             <a href="#" class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true"
                 data-i18n="cleaning.page.send_to_base"
-                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:sendToBase">[send to base]</a>
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:sendToBase, visible:!isStopVisible(), jqLinkButtonEnable: !waitingForRobot()">[send to base]</a>
+            <a href="#" class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.stop"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:stopRobot, visible:isStopVisible, jqLinkButtonEnable: !waitingForRobot()">[stop]</a>
+                
         </div>
     </div>
     
@@ -46,16 +50,16 @@
             <div class="ui-bar-flyout-button">
                 <div class="ui-btn-left" data-bind="css:{'two-buttons':isSpotSelected()}">
                         <select data-native-menu="false" data-corners="false" data-icon="false" id="cleaningType"
-                            data-bind="jqmOptions: cleaningType, optionsText: 'text', optionsValue : 'id', value: selectedType, optionsCaption: ' ', jqmButtonClass:'first-button'">
+                            data-bind="jqmOptions: cleaningType, optionsText: 'text', optionsValue : 'id', value: selectedType, optionsCaption: ' ', jqmButtonClass:'first-button', jqOptionsEnable: !waitingForRobot()">
                         </select>
                         
                         <a data-role="button" class="second-button" data-theme="b" data-mini="false" data-inline="true" href="#"
-                            data-bind="visible:isSpotSelected(), jqLinkButtonText:spotSize, click:editSpotSize"
+                            data-bind="visible:isSpotSelected(), jqLinkButtonText:spotSize, click:editSpotSize, jqLinkButtonEnable: !waitingForRobot()"
                         >[spot]</a>
                 </div>
                 <div class="ui-btn-right">
                     <select data-native-menu="false" data-corners="false" data-icon="false"
-                        data-bind="jqmOptions: cleaningMode, optionsText: 'text', optionsValue : 'id', value: selectedMode, optionsCaption: ' '">
+                        data-bind="jqmOptions: cleaningMode, optionsText: 'text', optionsValue : 'id', value: selectedMode, optionsCaption: ' ', jqOptionsEnable: !waitingForRobot()">
                     </select>
                 </div>
             </div>
