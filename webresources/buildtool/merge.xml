@@ -12,7 +12,7 @@
     <group name="libs">
       <js>/../../../../bin/copymin/cordova.min.js</js>
       <js>/../../../../bin/copymin/plugins.js</js>
-      <js>/../../../../bin/copymin/jquery-1.8.2.min.js</js>
+      <js>/../../../../bin/copymin/jquery-1.9.1.min.js</js>
       <js>/../../../../bin/copymin/handler.js</js>
       <js>/../../../../bin/copymin/i18next-1.6.0.min.js</js>
       <js>/../../../../bin/copymin/knockout-2.2.1.min.js</js>
@@ -33,7 +33,7 @@
         <js>/../../../../bin/copymin/utils.js</js>
     </group>
     <group name="jquery.mobile">
-        <js>/../../../../bin/copymin/jquery.mobile-1.2.0.min.js</js>
+        <js>/../../../../bin/copymin/jquery.mobile-1.3.1.min.js</js>
         <js>/../../../../bin/copymin/jqm.plugins.js</js>
     </group>
 </groups>
