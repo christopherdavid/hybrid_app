@@ -47,7 +47,7 @@
             // remove all old classes
             self.contentWrapper[0].className = "contentWrapper";
             
-            console.log(self.contentWrapper);
+            //console.log(self.contentWrapper);
             switch(type) {
                 case notificationType.OPERATION:
                     self.contentWrapper.addClass("icon spinner");

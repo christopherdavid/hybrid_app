@@ -68,3 +68,39 @@ function localizeTime(time) {
     hour = hour < 10 ? "0" + hour : hour;
     return hour + ':' + min + amPmMarker;
 }
+// helper class for robot state
+var robotStateMachine = {
+    lastState:"",
+    current:"inactive",
+    callback: null,
+
+    is:function() {
+        return this.current;
+    },
+    stateBefore:function() {
+        return this.lastState;
+    },
+    clean:function() {
+        console.log("clean")
+        this.changestate(this.current, "active");
+    },
+    disable:function() {
+        console.log("disable")
+        this.changestate(this.current, "disabled")
+    },
+    deactivate:function() {
+        console.log("deactivate")
+        this.changestate(this.current, "inactive")
+    },
+    pause:function() {
+        console.log("pause")
+        this.changestate(this.current, "paused")
+    },
+    changestate: function(from, to) {
+        this.lastState = from;
+        this.current = to;
+        if(this.callback != null && typeof this.callback == "function") {
+            this.callback(from, to);
+        }
+    }
+};

@@ -55,7 +55,7 @@ resourceHandler.registerFunction('loginUser_ViewModel.js', function(parent) {
     this.sucessLogin = function(result, notifyOptions) {
         that.conditions['valid'] = true;
         console.log("result: " + result);
-        parent.communicationWrapper.setData("user", result);
+        parent.communicationWrapper.setDataValue("user", result);
         
         // register for push notifications (from server)
         parent.notification.registerForRobotMessages();

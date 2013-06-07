@@ -171,6 +171,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     this.commitDel = function() {
         var events = that.scheduler.selectedEvents();
         var aDeffer = [];
+        parent.notification.closeDialog();
 
         $.each(events, function(index, item) {
             //RobotPluginManager.deleteScheduleEvent(scheduleId, scheduleEventId, callbackSuccess, callbackError)
@@ -190,7 +191,11 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             aDeffer.push(tempDeferred);
         });
         $.when.apply(window, aDeffer).then(function(result, notificationOptions) {
-            parent.notification.showLoadingArea(false, notificationOptions.type);
+            if(notificationOptions && notificationOptions.type) {
+                parent.notification.showLoadingArea(false, notificationOptions.type);
+            } else {
+                parent.notification.reset();
+            }
             that.updateSchedule(null);
         });
     }
