@@ -3,6 +3,7 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
     var that = this;
     this.conditions = {};
     this.robotName = ko.observable('');
+    this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
 
     this.back = function() {
         that.conditions['back'] = true;
@@ -14,26 +15,25 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
     }, this);
 
     this.next = function() {
-        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.setRobotName, [that.bundle.robot.robotId, that.robotName()]);
+        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.setRobotName2, [that.bundle.robot.robotId, that.robotName()]);
         tDeffer.done(that.robotNameSuccess);
         tDeffer.fail(that.robotNameError);
-
-        // parent.flowNavigator.next();
     };
 
     this.robotNameSuccess = function(result) {
         console.log("robotNameSuccess " + JSON.stringify(result));
         that.conditions['robotNameValid'] = true;
         that.bundle.robot.robotName = that.robotName();
-
-        // Set the robot as active one if required
-        if (that.bundle) {
-            parent.communicationWrapper.setDataValue("activeRobot", that.bundle.robot);
-        }
-
+        var unknownState = $.i18n.t("robotStateCodes." + ROBOT_STATE_UNKNOWN);
+        that.bundle.robot.stateCode = ROBOT_STATE_UNKNOWN;
+        that.bundle.robot.stateString = unknownState;
+        // request state from server due some delay we need to use a 
+        // separate API call because the user could navigate in the meantime 
+        // to another screen
+        parent.communicationWrapper.getRobotState(that.bundle.robot.robotId);
+        
+        that.robot(ko.mapping.fromJS(that.bundle.robot), null, that.robot);
         parent.flowNavigator.next();
-        //TODO replace with correct message
-        parent.notification.showLoadingArea(true, notificationType.HINT, "added " + that.robotName());
     }
 
     this.robotNameError = function(error) {

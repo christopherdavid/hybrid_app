@@ -18,7 +18,7 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
     this.init = function() {
         // show robot has been deleted message
         if (that.bundle && that.bundle == robotScreenCaller.DELETE) {
-            var sDelete = $.i18n.t('communication.delete_robot_done', {robotName:that.robot().robotId()});
+            var sDelete = $.i18n.t('communication.delete_robot_done', {robotName:that.robot().robotName()});
             parent.notification.showLoadingArea(true, notificationType.HINT, sDelete);
             // clear history
             parent.history.clear();

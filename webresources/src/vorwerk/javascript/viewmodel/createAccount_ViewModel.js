@@ -36,7 +36,7 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
 
     this.next = function() {
         //TODO remove username from create user methode
-        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.createUser2, [that.email(), that.password(), 'default'], {});
+        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.createUser2, [that.email(), that.password(), 'default', ''], {});
         tDeffer.done(that.successRegister);
         tDeffer.fail(that.errorRegister);
     };
@@ -51,7 +51,7 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
 
     this.errorRegister = function(error) {
         that.conditions['valid'] = false;
-        console.log("error: " + error);
+        console.log("errorRegister: " + JSON.stringify(error));
     }
     function isPasswordComplex() {
         // if (that.password() == '')

@@ -52,7 +52,7 @@ resourceHandler.registerFunction('robotManagement_ViewModel.js', function(parent
     
     this.deleteRobot = function() {
         // show delete warning message 
-        parent.notification.showDialog(dialogType.WARNING,$.i18n.t('dialogs.ROBOT_DELETE.title',{robotName:that.robot().robotId()}), "", 
+        parent.notification.showDialog(dialogType.WARNING,'Delete robot', $.i18n.t('dialogs.ROBOT_DELETE.title',{robotName:that.robot().robotName()}), 
             [{label:$.i18n.t('dialogs.ROBOT_DELETE.button_1'), callback:that.commitDelete}, {label:$.i18n.t('dialogs.ROBOT_DELETE.button_2')}]);
     };
     

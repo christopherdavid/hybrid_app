@@ -78,7 +78,8 @@
         "reset_password_done":"Passwort wurde erfolgreich zurückgesetzt",
         "delete_robot_done":"Roboter __robotName__ wurde gelöscht.",
         "stop_robot":"Roboter hört auf zu saugen",
-        "send_to_base":"Roboter wird zurück zur Basis geschickt"
+        "send_to_base":"Roboter wird zurück zur Basis geschickt",
+        "robot_added": "Roboter __robotName__ wurde hinzugefügt.
     },
     "cleaning": {
         "navi": {

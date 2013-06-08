@@ -13,7 +13,7 @@ function WorkflowCommunication(parent) {
     this.staticCallbacks = {};
     
     this.onCallbackReturn = function(guid, success, result){
-        //console.log("guid: " + guid + " result: " + JSON.stringify(result) + "\nstoreKey: " + storeKey)
+        console.log("guid: " + guid + " result: " + JSON.stringify(result) + "\nsuccess: " + success)
         // check if callback belongs to the current viewmodel, otherwise ignore it
         if(that.callbacks[guid]) {
             if(that.callbacks[guid].notifyOptions.type != notificationType.NONE && typeof that.callbacks[guid].notifyOptions.bHide == "undefined" || that.callbacks[guid].notifyOptions.bHide === true) {

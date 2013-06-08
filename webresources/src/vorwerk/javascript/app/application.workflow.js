@@ -77,7 +77,8 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "homeScreen",
                     "value" : true
                 }]
-            }]
+            }],
+            clearHistory : true
         },
         "loginUser" : {
             navrules : [{
