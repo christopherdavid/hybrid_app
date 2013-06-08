@@ -159,7 +159,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         console.log("startStopRobotSuccess " + JSON.stringify(result))
         // some delay
         if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1) {
-            that.handleTimedMode(result.expectedTimeToExecute, that.robot().robotId());
+            handleTimedMode(result.expectedTimeToExecute, that.robot().robotId());
         // robot is connected to server
         } else {
             if (that.robotStateMachine.is("inactive")){
@@ -220,7 +220,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.successStopRobot = function(result) {
         console.log("successStopRobot" + JSON.stringify(result));
         if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1) {
-            that.handleTimedMode(result.expectedTimeToExecute, that.robot().robotId());
+            handleTimedMode(result.expectedTimeToExecute, that.robot().robotId());
         // robot is connected to server
         } else {
             that.robotStateMachine.deactivate();
