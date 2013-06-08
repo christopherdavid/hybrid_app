@@ -165,6 +165,7 @@ function handleTimedMode(expectedTimeToExecute, robotId) {
     var maxVisibleReadyMsg = 6;
     var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
     if(curRobot().robotId && curRobot().robotId() == robotId) {
+        robotStateMachine.wait();
         // each animation is at least 2s visible cause of notification bar settings
         if(expectedTimeToExecute - 4 > 0) {
             // 1/3 but max of maxVisibleReadyMsg
@@ -181,6 +182,5 @@ function handleTimedMode(expectedTimeToExecute, robotId) {
                 app.notification.showLoadingArea(false, notificationType.WAKEUP, "", callGuidR);
             }, delayGetReady);
         }
-        robotStateMachine.wait();
     }
 }
