@@ -70,12 +70,18 @@ function localizeTime(time) {
 }
 // helper class for robot state
 var robotStateMachine = {
-    lastState:"",
+    lastState:"inactive",
     current:"inactive",
     callback: null,
-
-    is:function() {
-        return this.current;
+    // switch back to the state before
+    reset:function() {
+        this.changestate(this.current, this.lastState);
+    },
+    triggerCallback:function() {
+        this.changestate(this.lastState, this.current);
+    },
+    is:function(state) {
+        return this.current == state;
     },
     stateBefore:function() {
         return this.lastState;
@@ -86,15 +92,19 @@ var robotStateMachine = {
     },
     disable:function() {
         console.log("disable")
-        this.changestate(this.current, "disabled")
+        this.changestate(this.current, "disabled");
     },
     deactivate:function() {
         console.log("deactivate")
-        this.changestate(this.current, "inactive")
+        this.changestate(this.current, "inactive");
     },
     pause:function() {
         console.log("pause")
-        this.changestate(this.current, "paused")
+        this.changestate(this.current, "paused");
+    },
+    wait:function() {
+        console.log("wait");
+        this.changestate(this.current, "waiting");
     },
     changestate: function(from, to) {
         this.lastState = from;
@@ -104,3 +114,73 @@ var robotStateMachine = {
         }
     }
 };
+function createWaitMessageLoop(delayWakeUp, delayGetReady, robotId, lastGuid) {
+    console.log("createWaitMessageLoop delayWakeUp: "+ delayWakeUp + " robotId: " + robotId)
+    var callGuid = guid();
+    var sWakeUp = "Waking Up in about " + (delayWakeUp + 2) + " seconds";
+    var visibleTime = delayWakeUp > 10 ? 10 : delayWakeUp;
+    var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
+    // check if robot is still selected and robot state hasn't changed otherwise stop recursion
+    if(curRobot().robotId && curRobot().robotId() == robotId && robotStateMachine.is("waiting")) {
+        // call createWaitMessageLoop recursive till end
+        if(delayWakeUp > 0) {
+            window.setTimeout(function(){
+                createWaitMessageLoop((delayWakeUp-10),delayGetReady, robotId, callGuid);
+            }, visibleTime*1000);
+        }
+        
+        // close last message            
+        if(typeof lastGuid != "undefined") {
+            app.notification.showLoadingArea(false, notificationType.WAKEUP, "", lastGuid);
+        }
+        // show this timer message only for cleaning view
+        if(delayWakeUp > 0 && visibleTime == 10 && app.viewModel.screenId == "cleaning") {
+            app.notification.showLoadingArea(true, notificationType.WAKEUP, sWakeUp, callGuid);
+        
+        // show last wake up message GLOBAL
+        } else if (delayWakeUp > 0 && visibleTime <= 10) {
+            app.notification.showLoadingArea(true, notificationType.WAKEUP, sWakeUp, callGuid);
+        
+        // show get ready message GLOBAL
+        } else {
+           app.notification.showLoadingArea(true, notificationType.GETREADY, "Get ready....", callGuid);
+            window.setTimeout(function(){
+                app.notification.showLoadingArea(false, notificationType.GETREADY, "", callGuid);
+            }, delayGetReady*1000);
+        }
+    } else {
+        if(typeof lastGuid != "undefined") {
+            // close message
+            app.notification.showLoadingArea(false, notificationType.WAKEUP, "", lastGuid);
+        }
+   }
+}
+function handleTimedMode(expectedTimeToExecute, robotId) {
+    console.log("handleTimedMode");
+    // calulate timing for animations
+    var delayWakeUp = 1;
+    var delayGetReady = 1;
+    var callGuidW = guid(), callGuidR = guid();
+    var sWakeUp = "Waking Up....";
+    var maxVisibleReadyMsg = 6;
+    var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
+    if(curRobot().robotId && curRobot().robotId() == robotId) {
+        // each animation is at least 2s visible cause of notification bar settings
+        if(expectedTimeToExecute - 4 > 0) {
+            // 1/3 but max of maxVisibleReadyMsg
+            delayGetReady = Math.min(Math.floor((expectedTimeToExecute - 4)/3) , maxVisibleReadyMsg);
+            delayWakeUp = (expectedTimeToExecute - 2 - delayGetReady);
+            createWaitMessageLoop(delayWakeUp, delayGetReady, robotId);
+        } else {
+            app.notification.showLoadingArea(true, notificationType.WAKEUP, sWakeUp, callGuidW);
+            window.setTimeout(function(){
+                app.notification.showLoadingArea(false, notificationType.WAKEUP, "", callGuidW);
+            }, delayWakeUp * 1000);
+            app.notification.showLoadingArea(true, notificationType.GETREADY, "Get ready....", callGuidR);
+            window.setTimeout(function(){
+                app.notification.showLoadingArea(false, notificationType.WAKEUP, "", callGuidR);
+            }, delayGetReady);
+        }
+        robotStateMachine.wait();
+    }
+}

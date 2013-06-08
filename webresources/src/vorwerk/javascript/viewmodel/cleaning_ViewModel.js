@@ -24,6 +24,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             id : "1",
             text : $.i18n.t("cleaning.page.cleaningType.1")
         }]);
+    // set cleaning type "all" as default
     this.selectedType = ko.observable("2");
     
     this.cleaningMode = ko.observableArray([{
@@ -33,6 +34,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             id : "2",
             text : $.i18n.t("common.cleaningMode.2")
         }]);
+    // set cleaning mode "eco" as default
     this.selectedMode = ko.observable("1");
     
     this.isSpotSelected = ko.computed(function() {
@@ -46,7 +48,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.robotState = ko.observable("");
     
     this.waitingForRobot = ko.computed(function() {
-         return (that.robotState() == "disabled");
+         return (that.robotState() == "disabled" || that.robotState() == "waiting");
     }, this); 
     
     this.isRemoteDisabled = ko.computed(function() {
@@ -80,6 +82,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         }
     });
     
+    // spot size popup
     this.newSpotSizeLength = ko.observable();
     this.newSpotSizeHeight = ko.observable();
     this.newSpotSize = ko.computed(function() {
@@ -124,25 +127,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.popupCancel = function() {
         $spotPopup.popup("close");
     }
-
-    this.logout = function() {
-        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.logout, []);
-        tDeffer.done(that.successLogout);
-        tDeffer.fail(that.errorLogout);
-    };
-
-    this.successLogout = function(result) {
-        that.conditions['logout'] = true;
-        parent.flowNavigator.next();
-        
-        // Clear the data values on logout.
-        parent.communicationWrapper.clearDataValues();
-    }
-
-    this.errorLogout = function(error) {
-        console.log("Error(Logout failed):" + error);
-    }
-
+    
     this.changeRobot = function() {
         // Switch to robot selection dialog
         that.conditions['changeRobot'] = true;
@@ -169,59 +154,12 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             tDeffer.fail(that.startStopRobotError);
         }
     }
-    this.createWaitMessage = function(delayWakeUp, visibleTime) {
-        var callGuidWL = guid();
-        var sWakeUp = "Waking Up in about " + (delayWakeUp + 2) + " seconds";
-        parent.notification.showLoadingArea(true, notificationType.WAKEUP, sWakeUp, callGuidWL);
-        window.setTimeout(function(){
-            parent.notification.showLoadingArea(false, notificationType.WAKEUP, "", callGuidWL);
-        }, visibleTime);
-    }
-    this.handleTimedMode = function(expectedTimeToExecute) {
-        console.log("handleTimedMode");
-        // calulate timing for animations
-        var delayWakeUp = 1;
-        var delayGetReady = 1;
-        var callGuidW = guid(), callGuidR = guid();
-        var sWakeUp = "Waking Up....";
-        
-        // each animation is at least 2s visible cause of notification bar settings
-        if(expectedTimeToExecute - 4 > 0) {
-            // 1/3 but max of 10s
-            delayGetReady = Math.min(Math.floor((expectedTimeToExecute - 4)/3) , 10);
-            delayWakeUp = (expectedTimeToExecute - 4 - delayGetReady);
-            
-            // adding some 10s update timer
-            var turns =  Math.floor((delayWakeUp/10));
-            for(var i = 1; i <=  turns; i++) {
-                that.createWaitMessage(delayWakeUp, (i*10000));
-                delayWakeUp -= 10;
-            }
-            if(delayWakeUp > 0) {
-                that.createWaitMessage(delayWakeUp, (expectedTimeToExecute - 4 - delayGetReady - delayWakeUp) * 1000);
-            }
-            parent.notification.showLoadingArea(true, notificationType.GETREADY, "Get ready....", callGuidR);
-            window.setTimeout(function(){
-                parent.notification.showLoadingArea(false, notificationType.WAKEUP, "", callGuidR);
-            }, (expectedTimeToExecute - 4 - delayGetReady) * 1000);
-        } else {
-            parent.notification.showLoadingArea(true, notificationType.WAKEUP, sWakeUp, callGuidW);
-            window.setTimeout(function(){
-                parent.notification.showLoadingArea(false, notificationType.WAKEUP, "", callGuidW);
-            }, delayWakeUp * 1000);
-            parent.notification.showLoadingArea(true, notificationType.GETREADY, "Get ready....", callGuidR);
-            window.setTimeout(function(){
-                parent.notification.showLoadingArea(false, notificationType.WAKEUP, "", callGuidR);
-            }, delayGetReady);
-        }
-        that.robotStateMachine.disable();
-    }
-
+    
     this.startStopRobotSuccess = function(result) {
         console.log("startStopRobotSuccess " + JSON.stringify(result))
         // some delay
         if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1) {
-            that.handleTimedMode(result.expectedTimeToExecute);
+            that.handleTimedMode(result.expectedTimeToExecute, that.robot().robotId());
         // robot is connected to server
         } else {
             if (that.robotStateMachine.is("inactive")){
@@ -242,7 +180,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         // TODO: update the state according to the error
     }
     
-    // popup links
+    // navigation menu actions
     this.cleaning = function() {
         $("#menuPopup").popup("close");
     }
@@ -256,6 +194,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         parent.flowNavigator.next();
     }
     
+    // send to base button
     this.sendToBase = function() {
         // Send command that the robot should return to base
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.sendCommandToRobot2, [that.robot().robotId(), COMMAND_SEND_BASE, {}], 
@@ -263,14 +202,14 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         tDeffer.done(that.successSendToBase);
         tDeffer.fail(that.errorSendToBase);
     };
-
     this.successSendToBase = function(result) {
         console.log("successSendToBase" + JSON.stringify(result));
     }
-
     this.errorSendToBase = function(error) {
         console.log("errorSendToBase" + JSON.stringify(error));
     }
+    
+    // stop robot button
     this.stopRobot = function() {
         // Send command that the robot should stop
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.stopCleaning, [that.robot().robotId()], 
@@ -278,23 +217,20 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         tDeffer.done(that.successStopRobot);
         tDeffer.fail(that.errorStopRobot);
     }
-     this.successStopRobot = function(result) {
+    this.successStopRobot = function(result) {
         console.log("successStopRobot" + JSON.stringify(result));
         if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1) {
-            that.handleTimedMode(result.expectedTimeToExecute);
+            that.handleTimedMode(result.expectedTimeToExecute, that.robot().robotId());
         // robot is connected to server
         } else {
             that.robotStateMachine.deactivate();
             parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_STOPPED);
         }
     }
-
     this.errorStopRobot = function(error) {
         console.log("errorStopRobot" + JSON.stringify(error));
     }
     
-    this.oldSpotSizeWidth = 0;
-    this.oldSpotSizeHeight = 0;
     /**
      * Called when the viewmodel is initialized (after the view has been loaded, before bindings are applied)
      */
@@ -326,6 +262,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             e.stopPropagation(); 
         });
         
+        // register for push notifications type of NOTIFICATION_CLEANING_DONE
         parent.notification.registerStatus(NOTIFICATION_CLEANING_DONE, function(resultText) {
             that.robotServerState(resultText);
         });
@@ -334,6 +271,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getSpotDefinition, [that.robot().robotId()]);
         tDeffer.done(that.successGetSpotDefinition);
         
+        // get jquery object for spotSize popup
         $spotPopup = $("#spotSize");
         
         // prevent the default behavior of standard touch events
@@ -341,21 +279,26 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             e.preventDefault();
         }, false);
         
+        // create startAreaControl (start button with remote control functionality)
         that.startAreaControl = new StartAreaControl($('#startArea'), $("#startContainer"),$('#eventArea'), $('#startBtn'),$('#remote'), [$('#remoteUp'), $('#remoteDown'), $('#remoteLeft'), $('#remoteRight'), $('#remoteDiagLeft'), $('#remoteDiagRight')]);
         that.startAreaControl.init();
+        // set reference to binding object
         that.startAreaControl.isRemoteDisabled = this.isRemoteDisabled;
         
+        // set callback for state changes
         that.robotStateMachine.callback = function(from, to) {
             //console.log("callback " + from + " to "  + to)
             that.startAreaControl.onStateChanged(to);
             that.robotState(to);
         };
+        // get lasst state, this triggers callback
+        that.robotStateMachine.triggerCallback();
+        
         // click event listener for start button 
         $('#startBtn').on('startClick', that.startBtnClick);
         
         // pressed event listener for remote buttons
         $('#remote').on('remotePressed', that.remotePressed);
-        
     }
     
     this.successGetSpotDefinition = function(result) {
@@ -367,6 +310,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         }
     }
     
+    // handle remote pressed events
     this.remotePressed = function(event, button) {
         //console.log("remote button pressed:")
         //console.log(button)
@@ -400,16 +344,17 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             console.log("drive robot direction: " + navigationControlId);
         }
     }
-    
     this.errorDrive = function(error) {
         console.log("Error:(Driving robot):" + error);
     }
     
+    // viewmodel reload 
     this.reload = function() {
         // reset the conditions
         that.conditions = {}
     }
-
+    
+    // viewmodel deinit, destroy objects and remove event listener
     this.deinit = function() {
         that.startAreaControl.deinit();
         that.startAreaControl = null;

@@ -17,7 +17,7 @@ function Application() {
     this.config = {
         firstScreen : "start",
         pageTransition : "none",
-        version:"0.4.0",
+        version:"0.5.0",
         pluginVersion:"0.5.1.00",
         emailRegEx: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/
         //emailRegEx : /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
@@ -69,8 +69,7 @@ function Application() {
     function loadFirstPage() {
         // check if user was already logged in before
         var username = that.communicationWrapper.getFromLocalStorage('username');
-        if(username != null)
-        {
+        if(username != null) {
             var tDeffer = that.communicationWrapper.exec(UserPluginManager.isUserLoggedIn, [username], { type: notificationType.NONE, message: ""});
             tDeffer.done(function(result){
                 if(result == true) {
@@ -98,6 +97,7 @@ function Application() {
             
             // in case of an error navigate to first screen
             tDeffer.fail(function(error) {
+                that.communicationWrapper.saveToLocalStorage('username', null); 
                 that.flowNavigator.loadScreen(that.config.firstScreen, null);
             });
         } else {

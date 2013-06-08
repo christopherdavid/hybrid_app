@@ -90,12 +90,6 @@ Application.prototype.loadWorkflow = function() {
         },
         "cleaning" : {
             navrules : [{
-                targetScreenId : "start",
-                conditions : [{
-                    "key" : "logout",
-                    "value" : true
-                }]
-            }, {
                 targetScreenId : "robotSelection",
                 conditions : [{
                     "key" : "changeRobot",
