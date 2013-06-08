@@ -165,7 +165,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             contextBufferAsString += item;
         });
         // show delete warning message 
-        parent.notification.showDialog(dialogType.WARNING,$.i18n.t('dialogs.EVENT_DELETE.title',{count:events.length}), contextBufferAsString, 
+        parent.notification.showDialog(dialogType.WARNING,'Delete event', $.i18n.t('dialogs.EVENT_DELETE.title',{count:events.length}) +"</br>"+ contextBufferAsString, 
             [{label:$.i18n.t('dialogs.EVENT_DELETE.button_1'), callback:that.commitDel}, {label:$.i18n.t('dialogs.EVENT_DELETE.button_2')}]); 
     }
     this.commitDel = function() {

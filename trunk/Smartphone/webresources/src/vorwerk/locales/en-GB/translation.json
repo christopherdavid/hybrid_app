@@ -78,7 +78,8 @@
         "reset_password_done":"Password successfully reseted",
         "delete_robot_done":"Robot __robotName__ was deleted.",
         "stop_robot":"Robot is stoping to clean",
-        "send_to_base":"Robot is beeing send back to base"
+        "send_to_base":"Robot is beeing send back to base",
+        "robot_added": "Robot __robotName__ has been added."
     },
     "cleaning": {
         "navi": {
