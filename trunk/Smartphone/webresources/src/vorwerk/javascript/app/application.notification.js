@@ -48,6 +48,7 @@ function WorkflowNotification(parent) {
             var tempRobots = parent.communicationWrapper.getDataValue("robotList");
             var curRobot = parent.communicationWrapper.getDataValue("selectedRobot");
             
+            // first check if notification is for current selected robot (due performance reason)
             if(curRobot().robotId && curRobot().robotId() == result.robotId) {
                 console.log("notification for current robot")
                 switch(result.robotDataKeyId) {
@@ -56,25 +57,6 @@ function WorkflowNotification(parent) {
                             var curState = result.robotData.robotCurrentState || result.robotData.robotStateUpdate;
                             // update state
                             parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
-                            
-                            // send notification
-                            //TODO: add listener instead of viewmodel check
-                            if(parent.viewModel.screenId == "cleaning") {
-                                switch(curState) {
-                                    case ROBOT_STATE_CLEANING:
-                                    case ROBOT_STATE_RESUMED:
-                                        parent.viewModel.robotStateMachine.clean();
-                                        console.log("called 1")
-                                        break;
-                                    case ROBOT_STATE_PAUSED:
-                                        console.log("called 2")
-                                        parent.viewModel.robotStateMachine.pause();
-                                        break;
-                                    default:
-                                        console.log("called 3")
-                                        parent.viewModel.robotStateMachine.deactivate();
-                                }
-                            } 
                             break;
                         case ROBOT_NAME_UPDATE:
                             //update name
@@ -92,12 +74,8 @@ function WorkflowNotification(parent) {
                             case ROBOT_CURRENT_STATE_CHANGED:
                             case ROBOT_STATE_UPDATE:
                                 var curState = result.robotData.robotCurrentState || result.robotData.robotStateUpdate;
-                                //update state, make sure it's an valid state code
-                                if(curState >= 10001 && curState <= 10009) {
-                                    var state = $.i18n.t("robotStateCodes." + curState);
-                                    item.stateCode(curState);
-                                    item.stateString(state);
-                                }
+                                // update state
+                                parent.communicationWrapper.updateRobotStateWithCode(item, curState);
                                 break;
                             case ROBOT_NAME_UPDATE:
                                 //update name
@@ -324,14 +302,14 @@ function WorkflowNotification(parent) {
     //TODO: add error codes switch
     this.showError = function(error) {
         if (error && error.errorMessage) {
-            that.notification.showDialog(dialogType.ERROR, "Communication Error", errorMessage);
+            that.showDialog(dialogType.ERROR, "Communication Error", error.errorMessage);
             if (error.errorCode) {
                 console.log("error: " + error.errorCode + " msg: " + error.errorMessage);
             } else {
                 console.log("error msg: " + error.errorMessage + "\n error object: " + JSON.stringify(error));
             }
         } else {
-            that.notification.showDialog(dialogType.ERROR, "Communication Error", "An Error occurred while contacting the server!");
+            that.showDialog(dialogType.ERROR, "Communication Error", "An Error occurred while contacting the server!");
             console.log("error object: " + JSON.stringify(error));
         }
     }

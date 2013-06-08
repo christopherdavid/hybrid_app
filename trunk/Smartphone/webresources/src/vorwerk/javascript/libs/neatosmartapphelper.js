@@ -190,7 +190,9 @@ var UserPluginManager = ( function() {
             isUserLoggedIn : function(email, callbackSuccess, callbackError) {
                 //window.plugins.neatoPluginLayer.userMgr.isUserLoggedIn(email, callbackSuccess, callbackError);
                 window.setTimeout(function() {
-                    callbackSuccess(true);
+                    //callbackSuccess(true);
+                   callbackError({"status":-1,"message":"Method call failed the User Authentication"});
+
                 }, 1000);
                 //callbackSuccess(false);
             },

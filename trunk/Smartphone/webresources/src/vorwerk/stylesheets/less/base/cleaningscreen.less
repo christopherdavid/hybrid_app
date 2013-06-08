@@ -218,7 +218,27 @@
         }
         
         #startBtn {
-            margin:auto
+            margin:auto;
+            
+            #loadingSpinnerButton {
+                position:absolute;
+                display:none;
+                left:50%;
+                top:50%;
+                margin-left: -64px;
+                margin-top: -64px;
+                z-index: 3000;
+                width:128px;
+                height:128px;
+                -moz-transform:scale(1.3);
+                -webkit-transform:scale(1.3);
+                -ms-transform:scale(1.3);
+                -o-transform:scale(1.3);
+                transform:scale(1.3);
+            }
+            &.startbtn_waiting #loadingSpinnerButton {
+                display:block;
+            }
         }
         
         #eventArea {

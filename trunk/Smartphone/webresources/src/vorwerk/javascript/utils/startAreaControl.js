@@ -295,9 +295,13 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
                 case "paused":
                     className += " startbtn_paused";
                     break;
+                case "waiting":
+                    that.startBtnDown = false;
+                    className += " startbtn_waiting";
+                    break;
             }
 
-            if (state != "disabled") {
+            if (state != "disabled" && state != "waiting") {
                 className += isMouseDown ? "-down" : "-up";
                 that.startBtnDown = isMouseDown;
             }

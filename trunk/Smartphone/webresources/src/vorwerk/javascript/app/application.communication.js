@@ -165,10 +165,28 @@ function WorkflowCommunication(parent) {
     this.updateRobotStateWithCode = function(robot, curState) {
         //update state, make sure it's an valid state code
         if(curState >= 10001 && curState <= 10009 && robot.stateCode) {
+            var curRobot = that.getDataValue("selectedRobot");
             var state = $.i18n.t("robotStateCodes." + curState);
-            console.log("updateRobotStateWithCode: "  + curState + " text: " + state)
+            console.log("updateRobotStateWithCode: "  + curState + " text: " + state + " for robot: " + robot.robotId())
+            // update robot object
             robot.stateCode(curState);
             robot.stateString(state);
+            
+            // check if robot is the current robot and update state machine
+            if(curRobot().robotId && robot.robotId() == curRobot().robotId()) {
+                // update state machine
+                switch(curState) {
+                    case ROBOT_STATE_CLEANING:
+                    case ROBOT_STATE_RESUMED:
+                        robotStateMachine.clean();
+                        break;
+                    case ROBOT_STATE_PAUSED:
+                        robotStateMachine.pause();
+                        break;
+                    default:
+                        robotStateMachine.deactivate();
+                }
+            }
         }
     }
 }
