@@ -103,7 +103,9 @@ function WorkflowCommunication(parent) {
     //TODO: add comments
     
     this.clearDataValues = function(){
-      that.dataValues = {};  
+      that.getDataValue("robotList")([]);
+      that.getDataValue("selectedRobot")({});
+      that.dataValues["scheduleId"] = null;
       that.saveToLocalStorage('username', null); 
     };
     

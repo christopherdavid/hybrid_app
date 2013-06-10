@@ -74,11 +74,11 @@
         "fetch_robots": "Robot list is being fetched...",
         "fetch_map": "Maps are being fetched...",
         "update_scheduler": "Scheduler is being synchronized...",
-        "reset_password":"Password is beeing reseted...",
+        "reset_password":"Password is being reseted...",
         "reset_password_done":"Password successfully reseted",
         "delete_robot_done":"Robot __robotName__ was deleted.",
-        "stop_robot":"Robot is stoping to clean",
-        "send_to_base":"Robot is beeing send back to base",
+        "stop_robot":"Robot is stopping to clean",
+        "send_to_base":"Robot is being send back to base",
         "robot_added": "Robot __robotName__ has been added."
     },
     "cleaning": {
