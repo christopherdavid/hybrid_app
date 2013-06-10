@@ -80,6 +80,9 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
     this.robotSelected = function(data, event) {
         that.conditions['robotSelected'] = true;
         that.robot(data);
+        // update state machine
+        parent.communicationWrapper.updateRobotStateWithCode(data, data.stateCode());
+        
         //parent.communicationWrapper.setDataValue("sel", ko.toJS(data));
         
         if (that.bundle == robotScreenCaller.CHANGE) {
