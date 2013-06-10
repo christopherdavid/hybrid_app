@@ -13,7 +13,6 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     // set reference to helper class
     this.robotStateMachine = robotStateMachine;
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
-    this.robotServerState = that.robot().stateString;
     this.cleaningType = ko.observableArray([{
             id : "2",
             text : $.i18n.t("cleaning.page.cleaningType.2")
@@ -264,7 +263,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         
         // register for push notifications type of NOTIFICATION_CLEANING_DONE
         parent.notification.registerStatus(NOTIFICATION_CLEANING_DONE, function(resultText) {
-            that.robotServerState(resultText);
+            that.robot().stateString(resultText);
         });
         
         // getSpotDefinition

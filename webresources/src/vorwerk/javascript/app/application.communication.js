@@ -163,6 +163,8 @@ function WorkflowCommunication(parent) {
     }
     
     this.updateRobotStateWithCode = function(robot, curState) {
+        // make sure curState is an integer
+        curState = parseInt(curState, 10);
         //update state, make sure it's an valid state code
         if(curState >= 10001 && curState <= 10009 && robot.stateCode) {
             var curRobot = that.getDataValue("selectedRobot");

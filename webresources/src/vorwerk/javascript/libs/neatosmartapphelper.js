@@ -29,6 +29,17 @@ var NOTIFICATION_ROBOT_STUCK = "101";
 var NOTIFICATION_DIRT_BIN_FULL = "102";
 var NOTIFICATION_CLEANING_DONE = "103";
 
+// The current state of the robot
+var ROBOT_CURRENT_STATE_CHANGED     = 4001;
+// The keyCode for the state update of the robot.
+var ROBOT_STATE_UPDATE              = 4003;
+// The keyCode for the name update of the robot.
+var ROBOT_NAME_UPDATE               = 4004;
+// The keyCode for the schedulestate update of the robot.
+var ROBOT_SCHEDULE_STATE_CHANGED    = 4005;
+// The keyCode for the schedule is updated notification
+var ROBOT_SCHEDULE_UPDATED          = 4006;
+
 // Robot state codes
     var ROBOT_STATE_UNKNOWN     = 10001;
     var ROBOT_STATE_CLEANING    = 10002;
@@ -190,8 +201,8 @@ var UserPluginManager = ( function() {
             isUserLoggedIn : function(email, callbackSuccess, callbackError) {
                 //window.plugins.neatoPluginLayer.userMgr.isUserLoggedIn(email, callbackSuccess, callbackError);
                 window.setTimeout(function() {
-                    //callbackSuccess(true);
-                   callbackError({"status":-1,"message":"Method call failed the User Authentication"});
+                    callbackSuccess(true);
+                   //callbackError({"status":-1,"message":"Method call failed the User Authentication"});
 
                 }, 1000);
                 //callbackSuccess(false);

@@ -73,9 +73,10 @@ var robotStateMachine = {
     lastState:"inactive",
     current:"inactive",
     callback: null,
-    // switch back to the state before
+    // reset state to inactive
     reset:function() {
-        this.changestate(this.current, this.lastState);
+        this.lastState="inactive";
+        this.current="inactive";
     },
     triggerCallback:function() {
         this.changestate(this.lastState, this.current);
