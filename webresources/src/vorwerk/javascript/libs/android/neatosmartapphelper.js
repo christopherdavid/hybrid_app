@@ -39,16 +39,16 @@ var ROBOT_SCHEDULE_UPDATED 			= 4006;
 
 
 // Robot state codes
-//TODO: added manually should be included from raja by default
-var ROBOT_STATE_UNKNOWN     = 10001;
-var ROBOT_STATE_CLEANING    = 10002;
-var ROBOT_STATE_IDLE        = 10003;
-var ROBOT_STATE_CHARGING    = 10004;
-var ROBOT_STATE_STOPPED     = 10005;
-var ROBOT_STATE_STUCK       = 10006;
-var ROBOT_STATE_PAUSED      = 10007;
-var ROBOT_STATE_RESUMED     = 10008;
-var ROBOT_STATE_ON_BASE     = 10009;
+var ROBOT_STATE_UNKNOWN 	= 10001;
+var ROBOT_STATE_CLEANING 	= 10002;
+var ROBOT_STATE_IDLE 		= 10003;
+var ROBOT_STATE_CHARGING 	= 10004;
+var ROBOT_STATE_STOPPED 	= 10005;
+var ROBOT_STATE_STUCK 		= 10006;
+var ROBOT_STATE_PAUSED 		= 10007;
+var ROBOT_STATE_RESUMED		= 10008;
+var ROBOT_STATE_ON_BASE		= 10009;
+
 
 var PLUGIN_JSON_KEYS  =  (function() {
     var keys = {
@@ -133,6 +133,7 @@ var ACTION_TYPE_GET_SCHEDULE_DATA 				= "getScheduleData";
 var ACTION_TYPE_CREATE_SCHEDULE 				= "createSchedule";
 var ACTION_TYPE_IS_SCHEDULE_ENABLED 			= "isScheduleEnabled";
 var ACTION_TYPE_ENABLE_SCHEDULE				= "enableSchedule";
+var ACTION_TYPE_GET_ROBOT_CLEANING_STATE					= "getRobotCleaningState";
 
 //List of keys to send data:
 
@@ -1631,6 +1632,27 @@ RobotMgr.prototype.unregisterForRobotMessages = function(callbackSuccess, callba
 			ACTION_TYPE_UNREGISTER_FOR_ROBOT_MESSAGES, []);
 };
 
+
+/**
+ * This API gets the current state of the robot
+ *  on success this API returns a JSON Object
+ * <br>{robotCurrentState:"robotCurrentState", robotNewVirtualState: <robotNewVirtualState>, robotId:"robotId"}
+ * <br>robotCurrentState is an integer value of the current actual state of the robot
+ * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
+ * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
+ * <br>robotId is the serial number of the robot
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * @param robotId 			the serial number of the robot
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ */
+RobotMgr.prototype.getRobotCleaningState = function(robotId, callbackSuccess, callbackError) {
+	var params = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ROBOT_CLEANING_STATE, [params]);
+};
+
 var UserPluginManager = (function() {
 	return {
 		/**
@@ -2907,7 +2929,26 @@ var RobotPluginManager = (function() {
 		 */
 		enableSchedule: function(robotId, scheduleType, enable, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.enableSchedule(robotId, scheduleType, enable, callbackSuccess, callbackError);
-		}		
+		},
+		
+		/**
+		 * This API gets the current state of the robot
+		 *  on success this API returns a JSON Object
+		 * <br>{robotCurrentState:"robotCurrentState", robotNewVirtualState: <robotNewVirtualState>, robotId:"robotId"}
+		 * <br>robotCurrentState is an integer value of the current actual state of the robot
+		 * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
+		 * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
+		 * <br>robotId is the serial number of the robot
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * @param robotId 			the serial number of the robot
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 */
+		
+		getRobotCleaningState: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotCleaningState(robotId, callbackSuccess, callbackError);
+		}
 	}
 }());
 
@@ -2934,7 +2975,7 @@ var PluginManagerHelper =  (function() {
 		 *  - startTime
 		 *  - cleaningMode
 		 *  Returns: Basic Schedule JSON object
-		 *  {'day':day, 'startTime': startTime, ï¿½cleaningModeï¿½:cleaningMode}
+		 *  {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
 		 */
 		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {
