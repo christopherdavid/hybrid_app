@@ -34,6 +34,9 @@
 - (void)updatePassword:(NSString *)newPassword;
 - (id)setCleaningArea:(CleaningArea *)cleaningArea;
 - (id)cleaningAreaForRobotWithId:(NSString *)robotId;
+- (void)saveXMPPCallbackId:(NSString *)xmppCallbackId;
+- (NSString *)xmppCallbackId;
+- (void)removeXMPPCallbackId;
 
 
 //Scheduling Methods.

@@ -61,4 +61,21 @@
     return [helper cleaningAreaForRobotWithId:robotId];
 }
 
++ (void)saveXMPPCallbackId:(NSString *)xmppCallbackId {
+    debugLog(@"");
+    NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
+    [helper saveXMPPCallbackId:xmppCallbackId];
+}
+
++ (NSString *)xmppCallbackId {
+    debugLog(@"");
+    NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
+    return [helper xmppCallbackId];
+}
+
++ (void)removeXMPPCallbackId {
+    debugLog(@"");
+    NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
+    return [helper removeXMPPCallbackId];
+}
 @end

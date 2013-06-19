@@ -28,10 +28,10 @@
 #define NEATO_ROBOT_ONLINE_STATUS @"online"
 #define NEATO_VALIDATION_STATUS @"validation_status"
 #define NEATO_PROFILE_DETAILS @"profile_details"
-
+#define NEATO_RESPONSE_EXTRA_PARAMS @"extra_params"
 #define NEATO_SCHEDULE_ADVANCE @"Advanced"
 #define NEATO_SCHEDULE_BASIC @"Basic"
-
+#define NEATO_RESPONSE_EXPECTED_TIME @"expected_time"
 #define NEATO_SCHEDULE_ADVANCE_INT 1
 #define NEATO_SCHEDULE_BASIC_INT 0
 
@@ -118,6 +118,12 @@
 
 #define DEFAULT_SPOT_CLEANING_LENGTH 5
 #define DEFAULT_SPOT_CLEANING_HEIGHT 3
+
+// Timed Mode
+#define TIMED_MODE_ENABLED 0
+#define NOTIFICATION_FLAG_FALSE 0
+#define NOTIFICATION_FLAG_TRUE 1
+#define KEY_CLEANING_COMMAND @"cleaningCommand"
 
 #define NETWORK_CONNECTION_FAILURE_MSG @"Request failed!Please check your network settings."
 // To switch to prod server, uncomment SWITCH_TO_PROD_SERVER variable
@@ -208,6 +214,7 @@
 #define NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL @"method=message.notification_unregistration"
 #define NEATO_IS_USER_VALIDATED_URL @"method=user.IsUserValidated"
 #define NEATO_GET_ROBOT_PROFILE_DETAILS_URL @"method=robot.get_profile_details"
+#define NEATO_GET_ROBOT_PROFILE_DETAILS_2_URL @"method=robot.get_profile_details2"
 // TODO: These APIs have not been added to prod server.
 #define NEATO_CREATE_USER2_URL @"method=user.create2"
 #define NEATO_FORGET_PASSWORD_URL @"method=user.forget_password"
@@ -216,7 +223,7 @@
 #define NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL @"method=message.set_user_push_notification_options"
 #define NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL @"method=message.get_user_push_notification_options"
 #define NEATO_GET_ROBOT_VIRTUAL_ONLINE_STATUS_URL @"method=robot.is_robot_online_virtual"
-
+#define NEATO_SET_ROBOT_PROFILE_DETAILS_3 @"method=robot.set_profile_details3"
 //Schedule URL Constants
 #define NEATO_GET_SCHEDULES_URL @"method=robotschedule.get_schedules"
 #define NEATO_GET_SCHEDULE_DATA_URL @"method=robotschedule.get_data"

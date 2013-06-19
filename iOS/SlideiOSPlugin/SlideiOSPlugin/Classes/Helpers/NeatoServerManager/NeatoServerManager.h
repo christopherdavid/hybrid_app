@@ -45,6 +45,10 @@
 
 - (void)virtualOnlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId;
 - (void)failedToGetRobotVirtualOnlineStatusWithError:(NSError *)error;
+
+- (void)commandSentWithResult:(NSDictionary *)result;
+- (void)failedtoSendCommandWithError:(NSError *)error;
+
 @end
 
 @interface NeatoServerManager : NSObject 
@@ -78,4 +82,5 @@
 - (void)notificationSettingsForUserWithEmail:(NSString *)email;
 - (void)isScheduleType:(NSString *)scheduleType enabledForRobotWithId:(NSString *)robotId;
 - (void)virtualOnlineStatusForRobotWithId:(NSString *)robotId;
+- (void)sendCommand:(NSString *)command toRobot:(NSString *)robotId;
 @end

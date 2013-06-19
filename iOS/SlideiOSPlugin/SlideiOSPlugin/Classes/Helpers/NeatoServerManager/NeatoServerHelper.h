@@ -35,6 +35,8 @@
 - (void)gotScheduleStatus:(NSDictionary *)status;
 - (void)virtualOnlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId;
 
+- (void)commandSentWithResult:(NSDictionary *)result;
+- (void)gotRobotProfileDetails2WithResult:(NSDictionary *)result;
 
 // Failure cases
 - (void)failedToGetCreateUserHandle:(NSError *) error;
@@ -60,6 +62,9 @@
 - (void)failedToGetUserPushNotificationSettingsWithError:(NSError *)error;
 - (void)failedToGetScheduleStatusWithError:(NSError *)error;
 - (void)failedToGetRobotVirtualOnlineStatusWithError:(NSError *)error;
+- (void)failedtoSendCommandWithError:(NSError *)error;
+- (void)failedToGetRobotProfileDetails2WithError:(NSError *)error;
+
 @end
 
 @interface NeatoServerHelper : NSObject
@@ -92,4 +97,6 @@
 - (void)notificationSettingsForUserWithEmail:(NSString *)email;
 - (void)isScheduleType:(NSString *)scheduleType enabledForRobotWithId:(NSString *)robotId;
 - (void)virtualOnlineStatusForRobotWithId:(NSString *)robotId;
+- (void)sendCommand:(NSString *)command toRobot:(NSString *)robotId withSourceEmailId:(NSString *)email;
+- (void)getProfileDetails2ForRobotWithId:(NSString *)robotId;
 @end

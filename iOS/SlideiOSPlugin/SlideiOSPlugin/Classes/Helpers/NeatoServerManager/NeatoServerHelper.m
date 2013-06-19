@@ -31,7 +31,8 @@
 #define GET_USER_PUSH_NOTIFICATION_OPTION_HANDLER @"getUserPushNotificationOptionHandler:"
 #define IS_SCHEDULE_ENABLED_HANDLER @"isScheduleEnabledHandler:"
 #define GET_ROBOT_VIRTUAL_ONLINE_STATUS_RESPONSE_HANDLER @"getRobotVirtualOnlineStatusHandler:"
-
+#define SEND_COMMAND_RESPONSE_HANDLER @"sendCommandHandler:"
+#define GET_ROBOT_PROFILE_DETAILS_2_HANDLER @"getRobotProfileDetails2Handler:"
 
 #define GET_IS_USER_VALIDATED_POST_STRING @"api_key=%@&email=%@"
 #define GET_AUTH_TOKEN_NATIVE_POST_STRING @"api_key=%@&account_type=%@&email=%@&password=%@"
@@ -61,7 +62,8 @@
 #define GET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING @"api_key=%@&email=%@"
 #define IS_SCHEDULE_ENABLED_POST_STRING @"api_key=%@&serial_number=%@"
 #define GET_ROBOT_VIRTUAL_ONLINE_STATUS_POST_STRING @"api_key=%@&serial_number=%@"
-
+#define SET_ROBOT_PROFILE_DETAILS_3_POST_STRING @"api_key=%@&serial_number=%@&source_serial_number=%@&source_smartapp_id=%@&cause_agent_id=%@&value_extra=%@&notification_flag=%@&%@"
+#define GET_ROBOT_PROFILE_DETAILS_2_POST_STRING @"api_key=%@&serial_number=%@&key=%@"
 
 @interface NeatoServerHelper()
 
@@ -1625,6 +1627,108 @@
         
         NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
         [self notifyRequestFailed:@selector(failedToGetScheduleStatusWithError:) withError:error];
+    }
+}
+
+- (void)sendCommand:(NSString *)command toRobot:(NSString *)robotId withSourceEmailId:(NSString *)email {
+    self.retained_self = self;
+    NSString *profileKey = [self getRobotProfileDataFromKey:KEY_CLEANING_COMMAND value:command];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_SET_ROBOT_PROFILE_DETAILS_3]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:SET_ROBOT_PROFILE_DETAILS_3_POST_STRING, NEATO_API_KEY, robotId, @"", email, @"causeAgentId", @"", [NSNumber numberWithInt:NOTIFICATION_FLAG_TRUE], profileKey] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:SEND_COMMAND_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    
+    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper getDataForRequest:request];
+}
+
+
+- (void)sendCommandHandler:(id)value {
+    if (!value) {
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
+        
+        NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+        [self notifyRequestFailed:@selector(failedtoSendCommandWithError:) withError:error];
+        return;
+    }
+    
+    if ([value isKindOfClass:[NSError class]]) {
+        [self notifyRequestFailed:@selector(failedtoSendCommandWithError:) withError:value];
+        return;
+    }
+    
+    NSDictionary *jsonData = [AppHelper parseJSON:value];
+    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    
+    NSDictionary *result = [jsonData valueForKey:NEATO_RESPONSE_EXTRA_PARAMS];
+    debugLog(@"status = %d", [status intValue]);
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(commandSentWithResult:)]) {
+                [self.delegate performSelector:@selector(commandSentWithResult:) withObject:result];
+            }
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+    else {
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
+        
+        NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+        [self notifyRequestFailed:@selector(failedtoSendCommandWithError:) withError:error];
+    }
+}
+
+- (void)getProfileDetails2ForRobotWithId:(NSString *)robotId {
+    self.retained_self = self;
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ROBOT_PROFILE_DETAILS_2_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_ROBOT_PROFILE_DETAILS_2_POST_STRING ,NEATO_API_KEY, robotId, @""] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:GET_ROBOT_PROFILE_DETAILS_2_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    
+    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper getDataForRequest:request];
+}
+
+- (void)getRobotProfileDetails2Handler:(id)value {
+    if (!value) {
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
+        
+        NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+        [self notifyRequestFailed:@selector(failedToGetRobotProfileDetails2WithError:) withError:error];
+        return;
+    }
+    
+    if ([value isKindOfClass:[NSError class]]) {
+        [self notifyRequestFailed:@selector(failedToGetRobotProfileDetails2WithError:) withError:value];
+        return;
+    }
+    
+    NSDictionary *jsonData = [AppHelper parseJSON:value];
+    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    
+    NSDictionary *result = [jsonData valueForKey:NEATO_RESPONSE_EXTRA_PARAMS];
+    debugLog(@"status = %d", [status intValue]);
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(gotRobotProfileDetails2WithResult:)]) {
+                [self.delegate performSelector:@selector(gotRobotProfileDetails2WithResult:) withObject:result];
+            }
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+    else {
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
+        
+        NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+        [self notifyRequestFailed:@selector(failedToGetRobotProfileDetails2WithError:) withError:error];
     }
 }
 

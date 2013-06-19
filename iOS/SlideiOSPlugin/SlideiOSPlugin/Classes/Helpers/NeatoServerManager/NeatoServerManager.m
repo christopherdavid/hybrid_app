@@ -786,4 +786,29 @@
     [self notifyRequestFailed:@selector(failedToGetScheduleStatusWithError:) withError:error];
 }
 
+- (void)sendCommand:(NSString *)command toRobot:(NSString *)robotId {
+    debugLog(@"");
+    self.retained_self = self;
+    
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self;
+    [helper sendCommand:command toRobot:robotId withSourceEmailId:[NeatoUserHelper getLoggedInUserEmail]];
+}
+
+- (void)failedtoSendCommandWithError:(NSError *)error {
+    debugLog(@"");
+    [self.delegate performSelector:@selector(failedtoSendCommandWithError:) withObject:error];
+    self.delegate = nil;
+    self.retained_self = nil;
+}
+
+- (void)commandSentWithResult:(NSDictionary *)result {
+    debugLog(@"");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate performSelector:@selector(commandSentWithResult:) withObject:result];
+        self.delegate = nil;
+        self.retained_self = nil;
+    });
+}
+
 @end

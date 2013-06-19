@@ -10,6 +10,7 @@
 #import "XMPPConnectionHelper.h"
 #import "XMPPCommandHelper.h"
 #import "CleaningArea.h"
+#import "NeatoUserHelper.h"
 
 #define START_ROBOT_COMMAND_TAG                 1001
 #define STOP_ROBOT_COMMAND_TAG                  1002
@@ -17,7 +18,7 @@
 #define PAUSE_ROBOT_COMMAND_TAG                 1004
 #define ENABLE_DISABLE_SCHEDULE_COMMAND_TAG     1005
 #define SEND_TO_BASE_COMMAND_TAG                1006
-#define TURN_VACUUM_ONOFF                       1016
+#define TURN_VACUUM_ONOFF_COMMAND_TAG           1016
 #define RESUME_ROBOT_COMMAND_TAG                1007
 #define TURN_WIFI_ONOFF_COMMAND_TAG             1008
 
@@ -29,60 +30,41 @@
 - (void)sendCommandWithId:(int)commandId toRobot2:(NSString *)robotId withCommandTag:(long)commandTag withParams:(NSDictionary *)params delegate:(id)delegate;
 - (NSMutableData *)tcpCommandHeaderForCommand:(NSData *)command;
 - (NSData *)formattedTCPCommandFromCommand:(NSData *)command;
+- (BOOL)isTimedModeSupportedForCommand:(NSString *)commandId;
+- (void)sendCommandOverTCPXMPPToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate;
+- (void)sendCommandOverServerToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate;
 @end
 
 @implementation RobotCommandHelper
 @synthesize delegate = _delegate;
 @synthesize retainedSelf = _retainedSelf;
 
+- (BOOL)isTimedModeSupportedForCommand:(NSString *)commandId {
+    switch([commandId intValue]) {
+        case COMMAND_START_ROBOT:
+        case COMMAND_STOP_ROBOT:
+        case COMMAND_PAUSE_CLEANING:
+        case COMMAND_SEND_TO_BASE:
+        case COMMAND_RESUME_CLEANING:
+            return YES;
+        default:
+            return NO;
+    }
+}
+
 - (void)sendCommandToRobot2:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate {
     debugLog(@"commandId value is %d",[commandId intValue]);
     self.retainedSelf = self;
     self.delegate = delegate;
-    switch ([commandId intValue]) {
-        case COMMAND_START_ROBOT: {
-            NSDictionary *updatedParams = [self updatedSpotParametersInParams:params forRobotWithId:robotId];
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:START_ROBOT_COMMAND_TAG withParams:updatedParams delegate:delegate];
-            break;
-        }
-        case COMMAND_STOP_ROBOT:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:STOP_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
-            break;
-        case COMMAND_PAUSE_CLEANING:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:PAUSE_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
-            break;
-        case COMMAND_SET_ROBOT_TIME:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:SET_TIME_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
-            break;
-        case COMMAND_ENABLE_DISABLE_SCHEDULE: {
-            NSMutableDictionary *updatedParams = [params mutableCopy];
-            if([updatedParams objectForKey:@"enableSchedule"]) {
-                NSNumber *value = [updatedParams objectForKey:@"enableSchedule"];
-                if([value boolValue] == YES) {
-                    [updatedParams setObject:@"true" forKey:@"enableSchedule"];
-                }
-                else {
-                    [updatedParams setObject:@"false" forKey:@"enableSchedule"];
-                }
-            }
-            [self sendCommandWithId:[commandId intValue]toRobot2:robotId withCommandTag:ENABLE_DISABLE_SCHEDULE_COMMAND_TAG withParams:updatedParams delegate:delegate];
-            break;
-        }
-        case COMMAND_SEND_TO_BASE:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:SEND_TO_BASE_COMMAND_TAG withParams:params delegate:delegate];
-            break;
-        case COMMAND_TURN_VACUUM_ONOFF:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:TURN_VACUUM_ONOFF withParams:params delegate:delegate];
-            break;
-        case COMMAND_RESUME_CLEANING:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:RESUME_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
-            break;
-        case COMMAND_TURN_WIFI_ONOFF:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:TURN_WIFI_ONOFF_COMMAND_TAG withParams:params delegate:delegate];
-            break;
-        default:
-            [self failedToSendCommandOverTCPWithError:[AppHelper nserrorWithDescription:[NSString stringWithFormat:@"Command ID %d not supported!", [commandId intValue]] code:200]];        
-            break;
+    if([commandId intValue] == COMMAND_START_ROBOT) {
+        params = [self updatedSpotParametersInParams:params forRobotWithId:robotId];
+    }
+    
+    if(TIMED_MODE_ENABLED && [self isTimedModeSupportedForCommand:commandId]) {
+        [self sendCommandOverServerToRobot:robotId commandId:commandId params:params delegate:delegate];
+                
+    }else {
+        [self sendCommandOverTCPXMPPToRobot:robotId commandId:commandId params:params delegate:delegate];
     }
 }
 
@@ -195,4 +177,76 @@
     return params;
 }
 
+- (void)failedtoSendCommandWithError:(NSError *)error {
+    debugLog(@"");
+    [self.delegate performSelector:@selector(failedtoSendCommandWithError:) withObject:error];
+    self.delegate = nil;
+    self.retainedSelf = nil;
+}
+
+- (void)commandSentWithResult:(NSDictionary *)result {
+    debugLog(@"");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate performSelector:@selector(commandSentWithResult:) withObject:result];
+        self.delegate = nil;
+        self.retainedSelf = nil;
+    });
+}
+
+- (void)sendCommandOverServerToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate {
+    debugLog(@"");
+    NSString *requestId = [AppHelper generateUniqueString];
+    
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager sendCommand:[[[XMPPCommandHelper alloc] init] getRobotCommand2WithId:commandId withParams:params andRequestId:requestId] toRobot:robotId];
+}
+
+- (void)sendCommandOverTCPXMPPToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate {
+    switch ([commandId intValue]) {
+        case COMMAND_START_ROBOT: {
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:START_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
+            break;
+        }
+        case COMMAND_STOP_ROBOT:
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:STOP_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
+            break;
+        case COMMAND_PAUSE_CLEANING:
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:PAUSE_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
+            break;
+        case COMMAND_SET_ROBOT_TIME:
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:SET_TIME_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
+            break;
+        case COMMAND_ENABLE_DISABLE_SCHEDULE: {
+            NSMutableDictionary *updatedParams = [params mutableCopy];
+            if([updatedParams objectForKey:@"enableSchedule"]) {
+                NSNumber *value = [updatedParams objectForKey:@"enableSchedule"];
+                if([value boolValue] == YES) {
+                    [updatedParams setObject:@"true" forKey:@"enableSchedule"];
+                }
+                else {
+                    [updatedParams setObject:@"false" forKey:@"enableSchedule"];
+                }
+            }
+            [self sendCommandWithId:[commandId intValue]toRobot2:robotId withCommandTag:ENABLE_DISABLE_SCHEDULE_COMMAND_TAG withParams:updatedParams delegate:delegate];
+            break;
+        }
+        case COMMAND_SEND_TO_BASE:
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:SEND_TO_BASE_COMMAND_TAG withParams:params delegate:delegate];
+            break;
+        case COMMAND_TURN_VACUUM_ONOFF:
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:TURN_VACUUM_ONOFF_COMMAND_TAG withParams:params delegate:delegate];
+            break;
+        case COMMAND_RESUME_CLEANING:
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:RESUME_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
+            break;
+        case COMMAND_TURN_WIFI_ONOFF:
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:TURN_WIFI_ONOFF_COMMAND_TAG withParams:params delegate:delegate];
+            break;
+        default:
+            [self failedToSendCommandOverTCPWithError:[AppHelper nserrorWithDescription:[NSString stringWithFormat:@"Command ID %d not supported!", [commandId intValue]] code:200]];
+            break;
+    }
+
+}
 @end

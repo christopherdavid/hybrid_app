@@ -771,4 +771,23 @@
     self.retained_self = nil;
     self.delegate = nil;
 }
+
+- (void)commandSentWithResult:(NSDictionary *)result {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(commandSentWithResult:callbackId:)]) {
+        [self.delegate commandSentWithResult:result callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)failedtoSendCommandWithError:(NSError *)error {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(failedtoSendCommandWithError:callbackId:)]) {
+        [self.delegate failedtoSendCommandWithError:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
 @end
