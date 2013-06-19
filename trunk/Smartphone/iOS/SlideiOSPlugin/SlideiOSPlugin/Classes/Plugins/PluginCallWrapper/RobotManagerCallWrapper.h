@@ -54,7 +54,8 @@
 - (void)failedToGetScheduleStatusWithError:(NSError *)error callbackId:(NSString *)callbackId;
 - (void)virtualOnlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
 - (void)failedToGetRobotVirtualOnlineStatusWithError:(NSError *)error callbackId:(NSString *)callbackId;
-
+- (void)failedtoSendCommandWithError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)commandSentWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId;
 @end
 
 @interface RobotManagerCallWrapper : NSObject

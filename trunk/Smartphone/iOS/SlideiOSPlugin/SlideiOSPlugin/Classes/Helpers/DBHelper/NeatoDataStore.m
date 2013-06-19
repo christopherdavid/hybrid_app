@@ -18,6 +18,7 @@
 #import "BasicScheduleEvent.h"
 #import "NeatoNotificationEntity.h"
 #import "CleaningAreaEntity.h"
+#import "XMPPCallbackEntity.h"
 
 #define ENTITY_COMMAND_TRACKER @"CommandTrackerEntity"
 #define NEATO_DATA_STORE_NAME @"NeatoDatastore.sqlite"
@@ -27,6 +28,7 @@
 #define ENTITY_NEATO_SOCIALNETWORKS @"NeatoSocialNetworksEntity"
 #define ENTITY_NEATO_NOTIFICATION @"NeatoNotificationEntity"
 #define ENTITY_CLEANING_AREA @"CleaningAreaEntity"
+#define ENTITY_NEATO_CALLBACKID @"XMPPCallbackEntity"
 
 //Schedule Entities
 #define ENTITY_SCHEDULE @"ScheduleEntity"
@@ -56,6 +58,7 @@ static NeatoDataStore *sharedInstance;
 -(CommandTrackerEntity *) getCommandTrackerEntityForRequestId:(NSString *) requestId;
 -(void) deleteOlderCommands;
 -(NSArray *) getCommandsOlderThanMins:(int) limit;
+- (void)insertOrUpdateXMPPCallbackId:(NSString *)xmppCallbackId;
 
 @end
 
@@ -1356,4 +1359,84 @@ static NeatoDataStore *sharedInstance;
         return [AppHelper nserrorWithDescription:@"Database could not start properly." code:ERROR_DB_ERROR];
     }
 }
+
+- (void)saveXMPPCallbackId:(NSString *)xmppCallbackId {
+    debugLog(@"");
+    if(!xmppCallbackId) {
+        debugLog(@"xmppCallbackId is nil won't insert");
+        return;
+    }
+    [self insertOrUpdateXMPPCallbackId:xmppCallbackId];
+}
+
+- (void)insertOrUpdateXMPPCallbackId:(NSString *)xmppCallbackId {
+    @synchronized(self) {
+        if(self.managedObjectContext) {
+            // Find or create the callbackid
+            XMPPCallbackEntity *callbackEntity = [self xmppCallbackEntityFromStore];
+            
+            if (!callbackEntity) {
+                callbackEntity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_NEATO_CALLBACKID inManagedObjectContext:self.managedObjectContext];
+                callbackEntity.callbackId = xmppCallbackId;
+            }
+            else {
+                callbackEntity.callbackId = xmppCallbackId;
+            }
+            [self saveDatabase];
+        }
+        else {
+            debugLog(@"Managed object context is nil");
+        }
+    }
+}
+
+- (NSString *)xmppCallbackId {
+    debugLog(@"");
+    @synchronized(self) {
+        if (self.managedObjectContext) {
+            return [self xmppCallbackEntityFromStore].callbackId;
+        }
+        else {
+            debugLog(@"Managed object context is nil!");
+            return nil;
+        }
+    }
+}
+
+- (void)removeXMPPCallbackId {
+    @synchronized(self) {
+        XMPPCallbackEntity *neatoCallbackEntity = [self xmppCallbackEntityFromStore];
+        if(neatoCallbackEntity && self.managedObjectContext) {
+            [self.managedObjectContext deleteObject:neatoCallbackEntity];
+            [self saveDatabase];
+            debugLog(@"xmpp callbackid deleted successfully from db");
+        }
+        else {
+            debugLog(@"Failed to remove XMPP callbackId");
+        }
+    }
+}
+
+- (XMPPCallbackEntity *)xmppCallbackEntityFromStore {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_CALLBACKID];
+    
+    NSError *error = nil;
+    NSArray *callbackIds = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if(error) {
+        debugLog(@"There is an error while retrieving callbackid");
+        return nil;
+    }
+    if ([callbackIds count] > 1) {
+        debugLog(@"!!!ERROR!! there cannot be more than one callbackid in our database(According to our schema)");
+        [self removeXMPPCallbackId];
+        return nil;
+    }
+    if([callbackIds count] == 0) {
+        debugLog(@"There is no XMPP callbackId in our database");
+        return nil;
+    }
+    XMPPCallbackEntity *callbackEntity = [callbackIds lastObject];
+    return callbackEntity;
+}
+
 @end

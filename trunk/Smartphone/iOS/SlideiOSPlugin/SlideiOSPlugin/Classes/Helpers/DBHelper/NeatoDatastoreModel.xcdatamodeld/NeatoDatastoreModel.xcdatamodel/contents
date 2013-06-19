@@ -66,8 +66,12 @@
         <relationship name="hasBasicScheduleEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="BasicScheduleEventEntity" inverseName="ofScheduleEvent" inverseEntity="BasicScheduleEventEntity" syncable="YES"/>
         <relationship name="ofSchedule" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="ScheduleEntity" inverseName="hasScheduleEvent" inverseEntity="ScheduleEntity" syncable="YES"/>
     </entity>
+    <entity name="XMPPCallbackEntity" representedClassName="XMPPCallbackEntity" syncable="YES">
+        <attribute name="callbackId" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <elements>
         <element name="BasicScheduleEventEntity" positionX="-261" positionY="81" width="128" height="90"/>
+        <element name="CleaningAreaEntity" positionX="160" positionY="192" width="128" height="90"/>
         <element name="CommandTrackerEntity" positionX="-999" positionY="-49" width="128" height="103"/>
         <element name="NeatoNotificationEntity" positionX="160" positionY="192" width="128" height="90"/>
         <element name="NeatoRobotEntity" positionX="-1008" positionY="180" width="128" height="195"/>
@@ -75,6 +79,6 @@
         <element name="NeatoUserEntity" positionX="-1233" positionY="216" width="128" height="240"/>
         <element name="ScheduleEntity" positionX="-747" positionY="216" width="128" height="135"/>
         <element name="ScheduleEventsEntity" positionX="-477" positionY="243" width="128" height="73"/>
-        <element name="CleaningAreaEntity" positionX="160" positionY="192" width="128" height="90"/>
+        <element name="XMPPCallbackEntity" positionX="160" positionY="192" width="128" height="60"/>
     </elements>
 </model>

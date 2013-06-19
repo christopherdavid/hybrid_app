@@ -20,7 +20,7 @@
 #import "GetScheduleDataPluginResult.h"
 #import "NeatoUserHelper.h"
 #import "CleaningArea.h"
-
+#import "NeatoRobotHelper.h"
 
 
 @implementation RobotManagerPlugin
@@ -967,19 +967,52 @@
 }
 
 - (void)failedToGetScheduleStatusWithError:(NSError *)error callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[[NSNumber numberWithInt:error.code] stringValue] forKey:KEY_ERROR_CODE];
-    
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 - (void)setRobotName:(CDVInvokedUrlCommand *)command {
-  debugLog(@"");
-  NSError *error = [AppHelper nserrorWithDescription:@" API'setRobotName' is deprecated, use 'setRobotName2' instead." code:ERROR_NOT_SUPPORTED];
-  [self sendError:error forCallbackId:command.callbackId];
+    debugLog(@"");
+    NSError *error = [AppHelper nserrorWithDescription:@" API 'setRobotName' is deprecated, use 'setRobotName2' instead." code:ERROR_NOT_SUPPORTED];
+    [self sendError:error forCallbackId:command.callbackId];
+}
+
+- (void)registerRobotNotifications2:(CDVInvokedUrlCommand *)command {
+    __weak RobotManagerPlugin *weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *callbackId = command.callbackId;
+        [NeatoRobotHelper saveXMPPCallbackId:callbackId];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            [result setKeepCallbackAsBool:YES];
+            [weakSelf writeJavascript:[result toSuccessCallbackString:callbackId]];
+        });
+    });
+}
+
+- (void)unregisterRobotNotifications2:(CDVInvokedUrlCommand *)command {
+    __weak RobotManagerPlugin *weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [NeatoRobotHelper removeXMPPCallbackId];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            [result setKeepCallbackAsBool:NO];
+            [weakSelf writeJavascript:[result toSuccessCallbackString:command.callbackId]];
+        });
+    });
+}
+
+- (void)failedtoSendCommandWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"Failed to send command with error  = %@", error);
+    [self sendError:error forCallbackId:callbackId];
+}
+
+- (void)commandSentWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId {
+    debugLog(@"commandSentWithResult = %@", resultData);
+    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+    [data setValue:[resultData valueForKeyPath:NEATO_RESPONSE_EXPECTED_TIME] forKey:NEATO_RESPONSE_EXPECTED_TIME];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
 @end
