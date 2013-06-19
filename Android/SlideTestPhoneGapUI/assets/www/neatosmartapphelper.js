@@ -37,6 +37,19 @@ var ROBOT_SCHEDULE_STATE_CHANGED 	= 4005;
 // The keyCode for the schedule is updated notification
 var ROBOT_SCHEDULE_UPDATED 			= 4006;
 
+
+// Robot state codes
+var ROBOT_STATE_UNKNOWN 	= 10001;
+var ROBOT_STATE_CLEANING 	= 10002;
+var ROBOT_STATE_IDLE 		= 10003;
+var ROBOT_STATE_CHARGING 	= 10004;
+var ROBOT_STATE_STOPPED 	= 10005;
+var ROBOT_STATE_STUCK 		= 10006;
+var ROBOT_STATE_PAUSED 		= 10007;
+var ROBOT_STATE_RESUMED		= 10008;
+var ROBOT_STATE_ON_BASE		= 10009;
+
+
 var PLUGIN_JSON_KEYS  =  (function() {
     var keys = {
             'DISCOVERY_NOTIFICATION_KEY': 'notificationType', 

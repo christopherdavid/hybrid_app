@@ -29,6 +29,8 @@ public class RobotSchedulerManager2 {
 	private static final String DEFAULT_TEMP_SCHEDULE_ID = "default_temp_id";
 	private static final String DEFAULT_TEMP_SCHEDULE_VERSION = "default_temp_version";	
 	
+	private Object mScheduleLock = new Object();
+	
 	private RobotSchedulerManager2(Context context)
 	{
 		mContext = context.getApplicationContext();
@@ -116,29 +118,31 @@ public class RobotSchedulerManager2 {
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
-				Schedules scheduleGroup = ScheduleHelper.getScheduleGroupById(mContext, scheduleId);
-				if (scheduleGroup == null) {
-					listener.onServerError(ErrorTypes.INVALID_SCHEDULE_ID, "No schedule Id found in DB.");
-				}
-				else {
-					scheduleGroup.addSchedule(event);
-					String scheduleData = scheduleGroup.getJSON();
-					boolean success = ScheduleHelper.saveScheduleData(mContext, scheduleId, scheduleData);
-					if (success) {						
-						try {
-							JSONObject jsonResult = new JSONObject();
-							jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-							jsonResult.put(JsonMapKeys.KEY_SCHEDULE_EVENT_ID, event.getEventId());
-							listener.onScheduleData(jsonResult);
-						} 
-						catch (JSONException ex) {
-							LogHelper.log(TAG, "JSONException in addScheduleEvent", ex);
-							listener.onServerError(ErrorTypes.JSON_CREATION_ERROR, "Unable to create result JSON object");
-						}
+				synchronized (mScheduleLock) {
+					Schedules scheduleGroup = ScheduleHelper.getScheduleGroupById(mContext, scheduleId);
+					if (scheduleGroup == null) {
+						listener.onServerError(ErrorTypes.INVALID_SCHEDULE_ID, "No schedule Id found in DB.");
 					}
 					else {
-						LogHelper.log(TAG, "addScheduleEvent - Unable to insert newly created event in DB");
-						listener.onServerError(ErrorTypes.ERROR_DB_ERROR, "Unable to add event info in DB");
+						scheduleGroup.addSchedule(event);
+						String scheduleData = scheduleGroup.getJSON();
+						boolean success = ScheduleHelper.saveScheduleData(mContext, scheduleId, scheduleData);
+						if (success) {						
+							try {
+								JSONObject jsonResult = new JSONObject();
+								jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
+								jsonResult.put(JsonMapKeys.KEY_SCHEDULE_EVENT_ID, event.getEventId());
+								listener.onScheduleData(jsonResult);
+							} 
+							catch (JSONException ex) {
+								LogHelper.log(TAG, "JSONException in addScheduleEvent", ex);
+								listener.onServerError(ErrorTypes.JSON_CREATION_ERROR, "Unable to create result JSON object");
+							}
+						}
+						else {
+							LogHelper.log(TAG, "addScheduleEvent - Unable to insert newly created event in DB");
+							listener.onServerError(ErrorTypes.ERROR_DB_ERROR, "Unable to add event info in DB");
+						}
 					}
 				}
 			}
@@ -153,35 +157,37 @@ public class RobotSchedulerManager2 {
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
-				Schedules scheduleGroup = ScheduleHelper.getScheduleGroupById(mContext, scheduleId);
-				if (scheduleGroup == null) {
-					listener.onServerError(ErrorTypes.INVALID_SCHEDULE_ID, "No schedule Id found in DB.");
-				} 
-				else {					
-					boolean success = scheduleGroup.removeScheduleEvent(eventId);
-					if (success) {
-						String scheduleData = scheduleGroup.getJSON();
-						success = ScheduleHelper.saveScheduleData(mContext, scheduleId, scheduleData);
-						if (success) {						
-							try {
-								JSONObject jsonResult = new JSONObject();
-								jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-								jsonResult.put(JsonMapKeys.KEY_SCHEDULE_EVENT_ID, eventId);
-								listener.onScheduleData(jsonResult);
-							} 
-							catch (JSONException ex) {
-								success = false;
-								LogHelper.log(TAG, "JSONException in deleteScheduleEvent", ex);								
-								listener.onServerError(ErrorTypes.JSON_CREATION_ERROR, "Unable to create result JSON object");
+				synchronized (mScheduleLock) {
+					Schedules scheduleGroup = ScheduleHelper.getScheduleGroupById(mContext, scheduleId);
+					if (scheduleGroup == null) {
+						listener.onServerError(ErrorTypes.INVALID_SCHEDULE_ID, "No schedule Id found in DB.");
+					} 
+					else {					
+						boolean success = scheduleGroup.removeScheduleEvent(eventId);
+						if (success) {
+							String scheduleData = scheduleGroup.getJSON();
+							success = ScheduleHelper.saveScheduleData(mContext, scheduleId, scheduleData);
+							if (success) {						
+								try {
+									JSONObject jsonResult = new JSONObject();
+									jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
+									jsonResult.put(JsonMapKeys.KEY_SCHEDULE_EVENT_ID, eventId);
+									listener.onScheduleData(jsonResult);
+								} 
+								catch (JSONException ex) {
+									success = false;
+									LogHelper.log(TAG, "JSONException in deleteScheduleEvent", ex);								
+									listener.onServerError(ErrorTypes.JSON_CREATION_ERROR, "Unable to create result JSON object");
+								}
 							}
 						}
+						
+						if (!success) {
+							LogHelper.log(TAG, "deleteScheduleEvent - Unable to delete event");
+							listener.onServerError(ErrorTypes.ERROR_DB_ERROR, "Unable to delete event info");
+						}	
 					}
-					
-					if (!success) {
-						LogHelper.log(TAG, "deleteScheduleEvent - Unable to delete event");
-						listener.onServerError(ErrorTypes.ERROR_DB_ERROR, "Unable to delete event info");
-					}	
-				}
+				}				
 			}
 		};
 		TaskUtils.scheduleTask(task, 0);
@@ -194,33 +200,35 @@ public class RobotSchedulerManager2 {
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
-				Schedules scheduleGroup = ScheduleHelper.getScheduleGroupById(mContext, scheduleId);
-				if (scheduleGroup == null) {
-					listener.onServerError(ErrorTypes.INVALID_SCHEDULE_ID, "No schedule id found in DB.");
-				} 
-				else {
-					boolean success  = scheduleGroup.updateScheduleEvent(event);
-					if (success) {
-						String scheduleData = scheduleGroup.getJSON();
-						success = ScheduleHelper.saveScheduleData(mContext, scheduleId, scheduleData);
-						try {
-							JSONObject jsonResult = new JSONObject();
-							jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-							jsonResult.put(JsonMapKeys.KEY_SCHEDULE_EVENT_ID, event.getEventId());
-							listener.onScheduleData(jsonResult);
-						} 
-						catch (JSONException ex) {
-							success = false;
-							LogHelper.log(TAG, "JSONException in updateScheduleEvent", ex);								
-							listener.onServerError(ErrorTypes.JSON_CREATION_ERROR, "Unable to create result JSON object");
+				synchronized (mScheduleLock) {
+					Schedules scheduleGroup = ScheduleHelper.getScheduleGroupById(mContext, scheduleId);
+					if (scheduleGroup == null) {
+						listener.onServerError(ErrorTypes.INVALID_SCHEDULE_ID, "No schedule id found in DB.");
+					} 
+					else {
+						boolean success  = scheduleGroup.updateScheduleEvent(event);
+						if (success) {
+							String scheduleData = scheduleGroup.getJSON();
+							success = ScheduleHelper.saveScheduleData(mContext, scheduleId, scheduleData);
+							try {
+								JSONObject jsonResult = new JSONObject();
+								jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
+								jsonResult.put(JsonMapKeys.KEY_SCHEDULE_EVENT_ID, event.getEventId());
+								listener.onScheduleData(jsonResult);
+							} 
+							catch (JSONException ex) {
+								success = false;
+								LogHelper.log(TAG, "JSONException in updateScheduleEvent", ex);								
+								listener.onServerError(ErrorTypes.JSON_CREATION_ERROR, "Unable to create result JSON object");
+							}
+						}
+						
+						if (!success) {
+							LogHelper.log(TAG, "updateScheduleEvent - Unable to update event");
+							listener.onServerError(ErrorTypes.ERROR_DB_ERROR, "Unable to update event info");
 						}
 					}
-					
-					if (!success) {
-						LogHelper.log(TAG, "updateScheduleEvent - Unable to update event");
-						listener.onServerError(ErrorTypes.ERROR_DB_ERROR, "Unable to update event info");
-					}
-				}
+				}				
 			}
 		};
 		TaskUtils.scheduleTask(task, 0);
@@ -304,69 +312,71 @@ public class RobotSchedulerManager2 {
 		Runnable task = new Runnable() {
 			public void run() 
 			{
-				try {
-					String serverId = "";
-					String scheduleVersion = "";
-					String scheduleType =  "";
-					String scheduleJson =  "";
-					String blobData =  "";
-					
-					String robotId = ScheduleHelper.getRobotIdForSchedule(mContext, scheduleId);
-					
-					ScheduleInfo2 scheduleInfo = ScheduleHelper.getScheduleInfoById(mContext, scheduleId);
-					if (scheduleInfo != null) {
+				synchronized (mScheduleLock) {
+					try {
+						String serverId = "";
+						String scheduleVersion = "";
+						String scheduleType =  "";
+						String scheduleJson =  "";
+						String blobData =  "";
 						
-						serverId = scheduleInfo.getServerId();
-						scheduleVersion = scheduleInfo.getDataVersion();
-						scheduleType = scheduleInfo.getScheduleType();
+						String robotId = ScheduleHelper.getRobotIdForSchedule(mContext, scheduleId);
 						
-						Schedules scheduleGroup = ScheduleHelper.getScheduleGroupById(mContext, scheduleId);						
-						scheduleJson = scheduleGroup.getJSON();				
-					}
-					
-					if (serverId.equals(DEFAULT_TEMP_SCHEDULE_ID)) {
-						ScheduleDetails details = getCurrentScheduleIdAndVersion(robotId, SchedulerConstants2.getScheduleIntType(scheduleType));
-						if (details != null) {
-							serverId = details.getServerScheduleId();
-							scheduleVersion = details.getScheduleVersion();
-						} else {
-							serverId = "";
-							scheduleVersion = "";
+						ScheduleInfo2 scheduleInfo = ScheduleHelper.getScheduleInfoById(mContext, scheduleId);
+						if (scheduleInfo != null) {
+							
+							serverId = scheduleInfo.getServerId();
+							scheduleVersion = scheduleInfo.getDataVersion();
+							scheduleType = scheduleInfo.getScheduleType();
+							
+							Schedules scheduleGroup = ScheduleHelper.getScheduleGroupById(mContext, scheduleId);						
+							scheduleJson = scheduleGroup.getJSON();				
+						}
+						
+						if (serverId.equals(DEFAULT_TEMP_SCHEDULE_ID)) {
+							ScheduleDetails details = getCurrentScheduleIdAndVersion(robotId, SchedulerConstants2.getScheduleIntType(scheduleType));
+							if (details != null) {
+								serverId = details.getServerScheduleId();
+								scheduleVersion = details.getScheduleVersion();
+							} else {
+								serverId = "";
+								scheduleVersion = "";
+							}
+						}
+						
+						boolean success = false;
+						if (!TextUtils.isEmpty(serverId)) { 
+							UpdateNeatoRobotScheduleResult result = NeatoRobotScheduleWebservicesHelper.updateNeatoRobotScheduleDataRequest(mContext, serverId, scheduleType, scheduleJson, scheduleVersion);
+							success = result.success();
+							LogHelper.log(TAG, "Sucessfully updated scheduling data with robot schedule id: " + serverId);
+							ScheduleHelper.updateScheduleVersion(mContext, scheduleId, result.result.schedule_version);
+						} 
+						else {
+							AddNeatoRobotScheduleDataResult result = NeatoRobotScheduleWebservicesHelper.addNeatoRobotScheduleDataRequest(mContext, robotId, scheduleType, scheduleJson, blobData);
+							success = result.success();
+						}
+						if (success) {
+							try {
+								JSONObject jsonResult = new JSONObject();				
+								jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
+								listener.onScheduleData(jsonResult);
+							}
+							catch (JSONException ex) {
+								LogHelper.logD(TAG, "JSONException in addUpdateSchedule");
+								listener.onServerError(ErrorTypes.JSON_CREATION_ERROR, "Unable to create result JSON object");
+							}
 						}
 					}
-					
-					boolean success = false;
-					if (!TextUtils.isEmpty(serverId)) { 
-						UpdateNeatoRobotScheduleResult result = NeatoRobotScheduleWebservicesHelper.updateNeatoRobotScheduleDataRequest(mContext, serverId, scheduleType, scheduleJson, scheduleVersion);
-						success = result.success();
-						LogHelper.log(TAG, "Sucessfully updated scheduling data with robot schedule id: " + serverId);
-						ScheduleHelper.updateScheduleVersion(mContext, scheduleId, result.result.schedule_version);
+					catch (UserUnauthorizedException ex) {
+						listener.onServerError(ex.getErrorMessage());
+					}
+					catch (NeatoServerException ex) {
+						listener.onServerError(ex.getErrorMessage());
+					}
+					catch (IOException ex) {
+						listener.onNetworkError(ex.getMessage());
 					} 
-					else {
-						AddNeatoRobotScheduleDataResult result = NeatoRobotScheduleWebservicesHelper.addNeatoRobotScheduleDataRequest(mContext, robotId, scheduleType, scheduleJson, blobData);
-						success = result.success();
-					}
-					if (success) {
-						try {
-							JSONObject jsonResult = new JSONObject();				
-							jsonResult.put(JsonMapKeys.KEY_SCHEDULE_ID, scheduleId);
-							listener.onScheduleData(jsonResult);
-						}
-						catch (JSONException ex) {
-							LogHelper.logD(TAG, "JSONException in addUpdateSchedule");
-							listener.onServerError(ErrorTypes.JSON_CREATION_ERROR, "Unable to create result JSON object");
-						}
-					}
 				}
-				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
-				}
-				catch (NeatoServerException ex) {
-					listener.onServerError(ex.getErrorMessage());
-				}
-				catch (IOException ex) {
-					listener.onNetworkError(ex.getMessage());
-				} 
 			}
 		};
 		TaskUtils.scheduleTask(task, 0);
