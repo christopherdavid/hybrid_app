@@ -533,7 +533,7 @@ public class NeatoSmartAppService extends Service {
 		super.onCreate();
 
 		AppUtils.logLibraryVersion();
-		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.DEMO2_SERVER_ID);
+		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
 		LogHelper.log(TAG, "Server information = " + getFormattedServerInfo());
 		
 		// Get XMPP started.

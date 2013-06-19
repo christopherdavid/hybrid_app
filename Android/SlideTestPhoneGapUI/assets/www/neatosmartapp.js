@@ -514,7 +514,8 @@ var neatoSmartApp = (function() {
 			}
 			
 			neatoSmartApp.showProgressBar();
-			RobotPluginManager.sendCommandToRobot2(robotId, COMMAND_GET_ROBOT_STATE, [], neatoSmartApp.getRobotStateSuccess, neatoSmartApp.getRobotStateError);			
+			RobotPluginManager.getRobotCleaningState(robotId, neatoSmartApp.getRobotStateSuccess, neatoSmartApp.getRobotStateError);
+			// RobotPluginManager.sendCommandToRobot2(robotId, COMMAND_GET_ROBOT_STATE, {}, neatoSmartApp.getRobotStateSuccess, neatoSmartApp.getRobotStateError);			
 		},
 		
 		getRobotStateSuccess: function(result) {

@@ -27,7 +27,7 @@ public class SlidePluginBaseActivity extends DroidGap {
 		
 		AppUtils.logLibraryVersion();
 
-		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.DEMO2_SERVER_ID);
+		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
 		
 		mServiceManager = new NeatoServiceManager(getApplicationContext());
 		

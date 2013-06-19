@@ -68,6 +68,12 @@ public class RobotProfileDataUtils {
 		return actualState;
 	}
 	
+	public static String getState(Context context, GetRobotProfileDetailsResult2 details) {
+		String virtualState = getRobotVirtualState(context, details);
+		String currentState = getRobotCurrentState(context, details);
+		return getState(virtualState, currentState);
+	}
+	
 	private static boolean isDataChanged(Context context, GetRobotProfileDetailsResult2 details, String robotId, String key) {
 		long timeStamp = details.getProfileParameterTimeStamp(key);
 		return RobotHelper.isProfileDataChanged(context, robotId, key, timeStamp);
@@ -75,7 +81,7 @@ public class RobotProfileDataUtils {
 	
 	//Returns true if data is changed or existing data was deleted.
 	//It also updates the database accordingly.
-	protected static boolean isDataChangedAndSave(Context context, GetRobotProfileDetailsResult2 details, String robotId, String key) {
+	public static boolean updateDataTimestampIfChanged(Context context, GetRobotProfileDetailsResult2 details, String robotId, String key) {
 		
 		//Check if the key is available in the details.
 		if (details.contains(key)) {
