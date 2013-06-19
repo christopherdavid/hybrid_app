@@ -36,25 +36,25 @@ public class RobotDataNotifyUtils {
 	
 	protected static void notifyProfileDataIfChanged(Context context, String robotId, GetRobotProfileDetailsResult2 details) {
 		
-		boolean isRobotNameChanged = RobotProfileDataUtils.isDataChangedAndSave(context, details, robotId, ProfileAttributeKeys.ROBOT_NAME);
+		boolean isRobotNameChanged = RobotProfileDataUtils.updateDataTimestampIfChanged(context, details, robotId, ProfileAttributeKeys.ROBOT_NAME);
 		// Notify if robot name is changed.
 		if (isRobotNameChanged) {
 			notifyRobotNameChange(context, robotId, details);
 		}
 		
-		boolean isRobotCleaningCommandChanged = RobotProfileDataUtils.isDataChangedAndSave(context, details, robotId, ProfileAttributeKeys.ROBOT_CLEANING_COMMAND);
-		boolean isRobotCurrentStateChanged = RobotProfileDataUtils.isDataChangedAndSave(context, details, robotId, ProfileAttributeKeys.ROBOT_CURRENT_STATE);
+		boolean isRobotCleaningCommandChanged = RobotProfileDataUtils.updateDataTimestampIfChanged(context, details, robotId, ProfileAttributeKeys.ROBOT_CLEANING_COMMAND);
+		boolean isRobotCurrentStateChanged = RobotProfileDataUtils.updateDataTimestampIfChanged(context, details, robotId, ProfileAttributeKeys.ROBOT_CURRENT_STATE);
 		// Notify only when one of the virtual or current has changed.
 		if (isRobotCleaningCommandChanged || isRobotCurrentStateChanged) {
 			notifyStateChange(context, robotId, details);
 		}
 		
-		boolean isRobotScheduleStateChanged = RobotProfileDataUtils.isDataChangedAndSave(context, details, robotId, ProfileAttributeKeys.ROBOT_ENABLE_BASIC_SCHEDULE);
+		boolean isRobotScheduleStateChanged = RobotProfileDataUtils.updateDataTimestampIfChanged(context, details, robotId, ProfileAttributeKeys.ROBOT_ENABLE_BASIC_SCHEDULE);
 		if (isRobotScheduleStateChanged) {
 			notifyScheduleStateChange(context, robotId, details);
 		}
 		
-		boolean isScheduleChanged = RobotProfileDataUtils.isDataChangedAndSave(context, details, robotId, ProfileAttributeKeys.ROBOT_SCHEDULE_UPDATED);
+		boolean isScheduleChanged = RobotProfileDataUtils.updateDataTimestampIfChanged(context, details, robotId, ProfileAttributeKeys.ROBOT_SCHEDULE_UPDATED);
 		if (isScheduleChanged) {
 			notifyScheduleUpdated(context, robotId, details);
 		}

@@ -37,6 +37,7 @@ import com.neatorobotics.android.slide.framework.robot.settings.SettingsManager;
 import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
 import com.neatorobotics.android.slide.framework.robotdata.RobotDataNotifyUtils;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants;
+import com.neatorobotics.android.slide.framework.robotdata.RobotProfileDataUtils;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.DataConversionUtils;
@@ -46,6 +47,7 @@ import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotOnlineStatusResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotVirtualOnlineStatusResult;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult3;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.IsScheduleEnabledResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.RobotSchedulerManager2;
@@ -70,7 +72,7 @@ public class RobotManagerPlugin extends Plugin {
 		ENABLE_SCHEDULE, SET_SPOT_DEFINITION,
 		GET_SPOT_DEFINITION, START_CLEANING, STOP_CLEANING, PAUSE_CLEANING, RESUME_CLEANING,
 		DRIVE_ROBOT, TURN_VACUUM_ON_OFF, TURN_WIFI_ON_OFF, REGISTER_FOR_ROBOT_MESSAGES, UNREGISTER_FOR_ROBOT_MESSAGES, 
-		REGISTER_ROBOT_NOTIFICATIONS2, UNREGISTER_ROBOT_NOTIFICATIONS2};
+		REGISTER_ROBOT_NOTIFICATIONS2, UNREGISTER_ROBOT_NOTIFICATIONS2, GET_ROBOT_CLEANING_STATE};
 
 		static {
 			ACTION_MAP.put(ActionTypes.DISCOVER_NEAR_BY_ROBOTS, RobotManagerPluginMethods.DISCOVER_NEAR_BY_ROBOTS);
@@ -116,6 +118,7 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_MAP.put(ActionTypes.UNREGISTER_FOR_ROBOT_MESSAGES, RobotManagerPluginMethods.UNREGISTER_FOR_ROBOT_MESSAGES);
 			ACTION_MAP.put(ActionTypes.REGISTER_ROBOT_NOTIFICATIONS2, RobotManagerPluginMethods.REGISTER_ROBOT_NOTIFICATIONS2);
 			ACTION_MAP.put(ActionTypes.UNREGISTER_ROBOT_NOTIFICATIONS2, RobotManagerPluginMethods.UNREGISTER_ROBOT_NOTIFICATIONS2);
+			ACTION_MAP.put(ActionTypes.GET_ROBOT_CLEANING_STATE, RobotManagerPluginMethods.GET_ROBOT_CLEANING_STATE);
 		}
 
 		private RobotPluginDiscoveryListener mRobotPluginDiscoveryListener;
@@ -310,9 +313,39 @@ public class RobotManagerPlugin extends Plugin {
 				LogHelper.log(TAG, "UNREGISTER_ROBOT_NOTIFICATIONS2 initiated");
 				unregisterRobotNotifications2(context, jsonData, callbackId);
 				break;
+			case GET_ROBOT_CLEANING_STATE:
+				LogHelper.log(TAG, "GET_ROBOT_CLEANING_STATE initiated");
+				getRobotCleaningState(context, jsonData, callbackId);
+				break;
 			}
 		}
 		
+		private void getRobotCleaningState(final Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "getRobotCleaningState is called");
+			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			RobotManager.getInstance(context).getRobotCleaningState(context, robotId, new RobotRequestListenerWrapper(callbackId) {
+				@Override
+				public JSONObject getResultObject(
+						NeatoWebserviceResult responseResult)
+						throws JSONException {
+					JSONObject jsonResult = new JSONObject();
+					if((responseResult != null) && (responseResult instanceof GetRobotProfileDetailsResult2)) {
+						GetRobotProfileDetailsResult2 result = (GetRobotProfileDetailsResult2) responseResult;
+						String currentState = RobotProfileDataUtils.getRobotCurrentState(context, result);
+						String state = RobotProfileDataUtils.getState(context, result);
+						if (!TextUtils.isEmpty(currentState)) {
+							jsonResult.put(JsonMapKeys.KEY_ROBOT_CURRENT_STATE, currentState);
+						}
+						if (!TextUtils.isEmpty(state)) {
+							jsonResult.put(JsonMapKeys.KEY_ROBOT_NEW_VIRTUAL_STATE, state);
+						}
+						jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+					}
+					return jsonResult;
+				}
+			});
+		}
+
 		private void registerForRobotsMessages(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "registerForRobotsMessages called");
 			PushNotificationMessageHandler.getInstance(context).addPushNotificationListener(new RobotPushNotificationListener(callbackId));
@@ -949,6 +982,7 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String UNREGISTER_FOR_ROBOT_MESSAGES = "unregisterForRobotMessages";
 			public static final String REGISTER_ROBOT_NOTIFICATIONS2 = "registerRobotNotifications2";
 			public static final String UNREGISTER_ROBOT_NOTIFICATIONS2 = "unregisterRobotNotifications2";
+			public static final String GET_ROBOT_CLEANING_STATE = "getRobotCleaningState";
 		}
 
 		private JSONObject getErrorJsonObject(int errorCode, String errMessage) {

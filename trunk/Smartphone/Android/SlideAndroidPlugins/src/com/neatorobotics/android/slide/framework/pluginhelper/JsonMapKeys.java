@@ -104,5 +104,6 @@ public class JsonMapKeys {
 	public static final String KEY_ROBOT_CURRENT_STATE = "robotCurrentState";
 	public static final String KEY_SCHEDULE_STATE = "scheduleState";
 	public static final String KEY_ROBOT_STATE_UPDATE = "robotStateUpdate";
+	public static final String KEY_ROBOT_NEW_VIRTUAL_STATE = "robotNewVirtualState";
 	
 }

@@ -5,10 +5,13 @@ import java.util.HashMap;
 import android.content.Context;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.robotdata.RobotProfileDataUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails2.ProfileAttributeKeys;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebservicesHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult3;
 import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
@@ -158,5 +161,33 @@ public class RobotManager {
 		
 		TaskUtils.scheduleTask(task, 0);
 	}
-	
+
+	public void getRobotCleaningState(final Context context, final String robotId, final WebServiceBaseRequestListener listener) {
+		LogHelper.logD(TAG, "getRobotCleaningState called for RobotID = " + robotId);
+		
+		Runnable task = new Runnable() {			
+			@Override
+			public void run() {
+				try {
+					GetRobotProfileDetailsResult2 result = NeatoRobotDataWebservicesHelper.getRobotProfileDetailsRequest2(mContext, robotId, "");
+					
+					RobotProfileDataUtils.updateDataTimestampIfChanged(context, result, robotId, ProfileAttributeKeys.ROBOT_CLEANING_COMMAND);
+					RobotProfileDataUtils.updateDataTimestampIfChanged(context, result, robotId, ProfileAttributeKeys.ROBOT_CURRENT_STATE);
+					
+					listener.onReceived(result);
+				}
+				catch (UserUnauthorizedException ex) {
+					listener.onServerError(ex.getErrorMessage());
+				}
+				catch (NeatoServerException ex) {
+					listener.onServerError(ex.getErrorMessage());
+				}
+				catch (IOException ex) {
+					listener.onNetworkError(ex.getMessage());
+				}
+			}
+		};
+		
+		TaskUtils.scheduleTask(task, 0);
+	}
 }
