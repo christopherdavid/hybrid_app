@@ -4,8 +4,13 @@
   background-size: 18px 18px;
 }
 
-.ui-checkbox-on .ui-icon, .ui-checkbox-off .ui-icon {
+.ui-checkbox-on .ui-icon {
   background-color: rgba(0,0,0,0.8);
+}
+
+.ui-checkbox-off .ui-icon {
+  background-color: rgba(0,0,0,0.8);
+  background-image:none;
 }
 
 .textWithButton {
@@ -98,13 +103,13 @@ div.ui-slider.ui-slider-switch{
 
     &.ui-slider-label-a{
       
-      color: #5F7F00;
+      color: #FFF;
       
-      background: rgb(90,112,29);
-      background: -moz-linear-gradient(top, rgba(90,112,29,1) 0%, rgba(148,190,28,1) 100%);
-      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(90,112,29,1)), color-stop(100%,rgba(148,190,28,1)));
-      background: -webkit-linear-gradient(top, rgba(90,112,29,1) 0%,rgba(148,190,28,1) 100%);
-      background: linear-gradient(to bottom, rgba(90,112,29,1) 0%,rgba(148,190,28,1) 100%);
+      background: rgb(245,115,33);
+      background: -moz-linear-gradient(top, rgba(232,77,40,1) 0%, rgba(245,115,33,1) 100%);
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(232,77,40,1)), color-stop(100%,rgba(245,115,33,1)));
+      background: -webkit-linear-gradient(top, rgba(232,77,40,1) 0%,rgba(245,115,33,1) 100%);
+      background: linear-gradient(to bottom, rgba(232,77,40,1) 0%,rgba(245,115,33,1) 100%);
     }
     
     &.ui-slider-label-b{
@@ -311,9 +316,11 @@ div.ui-slider.ui-slider-switch{
 }
 
 .ui-popup-screen.in {
-  opacity: 0.7;
+  /*opacity: 0.7;
   filter: Alpha(Opacity=70);
+  */
   background-color: #666;
+  background-image:none;
 }
 
 .ui-popup-container.ui-popup-active{
@@ -348,7 +355,9 @@ div.ui-slider.ui-slider-switch{
   display:none;
 
   .ui-header h1{
-    text-shadow: 0 -1px 0 black!important;
+    /*text-shadow: 0 -1px 0 black!important;*/
+    font-weight:normal!important;
+    font-size:19px;
   }
   
   .ui-header h1:before{
@@ -367,11 +376,11 @@ div.ui-slider.ui-slider-switch{
   &.dialogType_1 {
     display:block;
     .popupHeaderLine{
-      background: #00bf4c;
+     /* background: #00bf4c;
       background: -moz-linear-gradient(top,  #00bf4c 0%, #009a3d 100%);
       background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#00bf4c), color-stop(100%,#009a3d));
       background: -webkit-linear-gradient(top,  #00bf4c 0%,#009a3d 100%);
-      background: linear-gradient(to bottom,  #00bf4c 0%,#009a3d 100%);
+      background: linear-gradient(to bottom,  #00bf4c 0%,#009a3d 100%);*/
       position: fixed;
     }
     .ui-header h1{
@@ -386,11 +395,11 @@ div.ui-slider.ui-slider-switch{
   &.dialogType_2 {
     display:block;
     .popupHeaderLine{
-      background: #edea00;
+      /*background: #edea00;
       background: -moz-linear-gradient(top,  #fffc2d 0%, #edea00 100%);
       background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fffc2d), color-stop(100%,#edea00));
       background: -webkit-linear-gradient(top,  #fffc2d 0%,#edea00 100%);
-      background: linear-gradient(to bottom,  #fffc2d 0%,#edea00 100%);
+      background: linear-gradient(to bottom,  #fffc2d 0%,#edea00 100%);*/
       position: fixed;
     }
     .ui-header h1{
@@ -404,11 +413,11 @@ div.ui-slider.ui-slider-switch{
   &.dialogType_3 {
     display:block;
     .popupHeaderLine{
-      background: #cf2424;
+     /* background: #cf2424;
       background: -moz-linear-gradient(top,  #cf2424 0%, #ad0505 100%);
       background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cf2424), color-stop(100%,#ad0505));
       background: -webkit-linear-gradient(top,  #cf2424 0%,#ad0505 100%);
-      background: linear-gradient(to bottom,  #cf2424 0%,#ad0505 100%);
+      background: linear-gradient(to bottom,  #cf2424 0%,#ad0505 100%);*/
       position: fixed;
     }
     .ui-header h1{
@@ -430,7 +439,22 @@ div.ui-slider.ui-slider-switch{
   
   .dialogPopupContent {
     min-height: 80px;
+    color:#000;
   }
   
 }
 
+fieldset.aboutInfo {
+  width:250px;
+  margin:auto;
+  text-align: center;
+  
+  .appIcon {
+    background-image:url(../../img/icons/app_icon_512x512.png);
+    background-repeat:no-repeat;
+    background-size:contain;
+    min-width:250px;
+    min-height:250px;
+    margin:auto;
+  }
+}

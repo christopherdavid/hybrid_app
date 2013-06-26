@@ -13,6 +13,32 @@
             "message": "I'm finished and returning to my base!"
         }
     },
+    "dialogs":{
+        "EVENT_DELETE": {
+            "title":"Do you really want to delete the event?",
+            "title_plural":"Do you really want to delete the events?",
+            "message":"",
+            "button_1":"Delete",
+            "button_2":"No"
+        },
+        "ROBOT_DELETE": {
+            "title":"Do you really want to delete __robotName__?",
+            "message":"",
+            "button_1":"Delete",
+            "button_2":"No"
+        }
+    },
+    "robotStateCodes":{
+        "10001":"State Unknown",
+        "10002":"Started Cleaning",
+        "10003":"Idle",
+        "10004":"Charging",
+        "10005":"Stopped Cleaning",
+        "10006":"Stucked",
+        "10007":"Paused Cleaning",
+        "10008":"Resumed Cleaning",
+        "10009":"On Base"
+    },
     "pattern": {
         "week":"0,1,2,3,4,5,6",
         "time":"hhiiA"
@@ -20,6 +46,7 @@
     "common": {
         "back": "back",
         "next": "next",
+        "stop": "Stop",
         "ok": "OK",
         "cancel": "Cancel",
         "edit": "Edit",
@@ -46,7 +73,13 @@
     "communication": {
         "fetch_robots": "Robot list is being fetched...",
         "fetch_map": "Maps are being fetched...",
-        "update_scheduler": "Scheduler is being synchronized..."
+        "update_scheduler": "Scheduler is being synchronized...",
+        "reset_password":"Password is being reseted...",
+        "reset_password_done":"Password successfully reseted",
+        "delete_robot_done":"Robot __robotName__ was deleted.",
+        "stop_robot":"Robot is stopping to clean",
+        "send_to_base":"Robot is being send back to base",
+        "robot_added": "Robot __robotName__ has been added."
     },
     "cleaning": {
         "navi": {
@@ -129,12 +162,14 @@
             "next": "login"
         },
         "page": {
-            "title": "Please enter name and password for your Vorwerk Account.",
+            "title": "Please enter name and password for your Neato Account.",
             "email": "Email Address",
             "password": "Password",
             "password_lost": "Lost your password?",
             "password_show": "Show password",
-            "tap_here": "Tap here."
+            "tap_here": "Tap here.",
+            "password_reset":"Password reset",
+            "description":"To get a new password enter your registered email, please.<br>You'll receive an email with a new password immediately."
         }
     },
     "settings": {
@@ -145,7 +180,8 @@
             "robot_management": "Robot Management",
             "user_settings": "User Settings",
             "general_settings": "General Settings",
-            "terms":"Terms of use"
+            "terms":"Terms of use",
+            "about":"About"
         }
     },
     "robotManagement": {
@@ -238,6 +274,6 @@
         }
     },
     "app": {
-        "name": "i18next EN"
+        "name": "CleaningRobotApp"
     }
 }

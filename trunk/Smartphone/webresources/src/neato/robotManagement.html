@@ -15,7 +15,7 @@
             </div>
         </h1>
         <div class="ui-btn-right">
-            <a href="#" data-role="button" class="ui-disabled" data-theme="b" data-mini="false" data-inline="true" 
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" 
                 data-i18n="common.delete"
                 data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: deleteRobot">[delete]</a>
         </div>
@@ -82,8 +82,8 @@
                     data-i18n="common.ok"
                     data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: newRobotName().length != '', click: commitEdit">[ok]</a>
                 <a href="#" class="second-button" data-role="button" data-theme="b" data-mini="false" 
-                    data-i18n="common.cancel" data-rel="back"
-                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[cancel]</a>
+                    data-i18n="common.cancel"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: cancelEdit">[cancel]</a>
             </div> 
 		</div>
 	</div>

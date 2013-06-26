@@ -3,10 +3,9 @@ resourceHandler.registerFunction('settings_ViewModel.js', function(parent) {
     var that = this;
     this.conditions = {};
     this.backConditions = {};
-    this.robot = ko.observable();
+    this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     
     this.init = function() {
-        that.robot(ko.mapping.fromJS(parent.communicationWrapper.dataValues["activeRobot"]), null, that.robot);
     };
     
     this.changeRobot = function() {
@@ -36,6 +35,11 @@ resourceHandler.registerFunction('settings_ViewModel.js', function(parent) {
     
     this.terms = function() {
         that.conditions['terms'] = true;
+        parent.flowNavigator.next();
+    }
+    
+    this.about = function() {
+        that.conditions['about'] = true;
         parent.flowNavigator.next();
     }
 

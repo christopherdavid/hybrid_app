@@ -2,7 +2,8 @@
 
     <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
         <div class="ui-btn-left">
-            <a data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup">Menu</a>
+            <a data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup"
+                data-i18n="common.menu" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[menu]</a>
         </div>
         <h1>
             <div class="robotName">
@@ -15,15 +16,19 @@
         <div class="ui-btn-right">
             <a href="#" class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true"
                 data-i18n="cleaning.page.send_to_base"
-                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:sendToBase">[send to base]</a>
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:sendToBase, visible:!isStopVisible(), jqLinkButtonEnable: !waitingForRobot()">[send to base]</a>
+            <a href="#" class="first-button" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.stop"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:stopRobot, visible:isStopVisible, jqLinkButtonEnable: !waitingForRobot()">[stop]</a>
+                
         </div>
     </div>
     
     <div data-role="content">
         <div>
-        <div id="statusTxt" data-bind="text:robotServerState"></div>
+       <div id="stsImg" class="img-robot_status" data-bind="attr : {'robot-state':robot().stateCode}"></div><div id="statusTxt" data-bind=text:robot().stateString></div>
     
-        <div style="margin:auto; width:275px;">
+        <div style="margin:auto; width:300px;">
             <div id="startContainer">
                 <div id="startArea">
                     <div id="remote" data-bind="visible: isRemoteSelected()">
@@ -35,7 +40,18 @@
                         <div id="remoteDiagRight" class="img-remote_diagonal" data-bind="css: {'remoteDiagRight-disabled':isRemoteDisabled()}"></div>
                     </div>
                     
-                    <div id="startBtn" class="img-startstopbtn startbtn-up" data-state="inactive"></div>
+                    <div id="startBtn" class="img-startstopbtn startbtn-up" data-state="inactive">
+                        <div id="loadingSpinnerButton">
+                            <div class="f_circleG" id="frotateG_01"></div>
+                            <div class="f_circleG" id="frotateG_02"></div>
+                            <div class="f_circleG" id="frotateG_03"></div>
+                            <div class="f_circleG" id="frotateG_04"></div>
+                            <div class="f_circleG" id="frotateG_05"></div>
+                            <div class="f_circleG" id="frotateG_06"></div>
+                            <div class="f_circleG" id="frotateG_07"></div>
+                            <div class="f_circleG" id="frotateG_08"></div>
+                        </div>
+                    </div>
                     
                     <div id="eventArea"></div>
                     
@@ -45,16 +61,16 @@
             <div class="ui-bar-flyout-button">
                 <div class="ui-btn-left" data-bind="css:{'two-buttons':isSpotSelected()}">
                         <select data-native-menu="false" data-corners="false" data-icon="false" id="cleaningType"
-                            data-bind="jqmOptions: cleaningType, optionsText: 'text', optionsValue : 'id', value: selectedType, optionsCaption: ' ', jqmButtonClass:'first-button'">
+                            data-bind="jqmOptions: cleaningType, optionsText: 'text', optionsValue : 'id', value: selectedType, optionsCaption: ' ', jqmButtonClass:'first-button', jqOptionsEnable: !waitingForRobot()">
                         </select>
                         
                         <a data-role="button" class="second-button" data-theme="b" data-mini="false" data-inline="true" href="#"
-                            data-bind="visible:isSpotSelected(), jqLinkButtonText:spotSize, click:editSpotSize"
+                            data-bind="visible:isSpotSelected(), jqLinkButtonText:spotSize, click:editSpotSize, jqLinkButtonEnable: !waitingForRobot()"
                         >[spot]</a>
                 </div>
                 <div class="ui-btn-right">
                     <select data-native-menu="false" data-corners="false" data-icon="false"
-                        data-bind="jqmOptions: cleaningMode, optionsText: 'text', optionsValue : 'id', value: selectedMode, optionsCaption: ' '">
+                        data-bind="jqmOptions: cleaningMode, optionsText: 'text', optionsValue : 'id', value: selectedMode, optionsCaption: ' ', jqOptionsEnable: !waitingForRobot()">
                     </select>
                 </div>
             </div>

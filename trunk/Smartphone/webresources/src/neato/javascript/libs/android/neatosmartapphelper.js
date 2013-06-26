@@ -24,6 +24,32 @@ var DAY_SATURDAY = 6;
 var SCHEDULE_TYPE_BASIC = 0;
 var SCHEDULE_TYPE_ADVANCED = 1;
 
+//robotNotifications2 keyCodes
+
+// The current state of the robot
+var ROBOT_CURRENT_STATE_CHANGED 	= 4001;
+// The keyCode for the state update of the robot.
+var ROBOT_STATE_UPDATE				= 4003;
+// The keyCode for the name update of the robot.
+var ROBOT_NAME_UPDATE  				= 4004;
+// The keyCode for the schedulestate update of the robot.
+var ROBOT_SCHEDULE_STATE_CHANGED 	= 4005;
+// The keyCode for the schedule is updated notification
+var ROBOT_SCHEDULE_UPDATED 			= 4006;
+
+
+// Robot state codes
+//TODO: added manually should be included from raja by default
+var ROBOT_STATE_UNKNOWN     = 10001;
+var ROBOT_STATE_CLEANING    = 10002;
+var ROBOT_STATE_IDLE        = 10003;
+var ROBOT_STATE_CHARGING    = 10004;
+var ROBOT_STATE_STOPPED     = 10005;
+var ROBOT_STATE_STUCK       = 10006;
+var ROBOT_STATE_PAUSED      = 10007;
+var ROBOT_STATE_RESUMED     = 10008;
+var ROBOT_STATE_ON_BASE     = 10009;
+
 var PLUGIN_JSON_KEYS  =  (function() {
     var keys = {
             'DISCOVERY_NOTIFICATION_KEY': 'notificationType', 
@@ -106,9 +132,8 @@ var ACTION_TYPE_GET_SCHEDULE_EVENTS 			= "getScheduleEvents";
 var ACTION_TYPE_GET_SCHEDULE_DATA 				= "getScheduleData";
 var ACTION_TYPE_CREATE_SCHEDULE 				= "createSchedule";
 var ACTION_TYPE_IS_SCHEDULE_ENABLED 			= "isScheduleEnabled";
-var ACTION_TYPE_ENABLE_SCHEDUL					= "enableSchedule";
-
-
+var ACTION_TYPE_ENABLE_SCHEDULE				= "enableSchedule";
+var ACTION_TYPE_GET_ROBOT_CLEANING_STATE					= "getRobotCleaningState";
 
 //List of keys to send data:
 
@@ -758,12 +783,8 @@ RobotMgr.prototype.discoverNearbyRobots = function(callbackSuccess, callbackErro
 };
 
 /**
- * This API tries to establish a direct peer-to-peer connection with the robot. For a successful
- * connection robot and smart app need to be on the same network. This API is deprecated. Please
- * use tryDirectConnection2 instead.
+ * This API is deprecated. Please use tryDirectConnection2 instead.
  * <p>
- * This API calls Neato Smart App Service to make a TCP connection with the robot. This API
- * returns an error if connection could not be established.
  * 
  * @param robotId			the serial number of the robot
  * @param callbackSuccess 	success callback for the API
@@ -811,15 +832,8 @@ RobotMgr.prototype.disconnectDirectConnection  = function(robotId, callbackSucce
 };
 
 /**
- * This API sends a command to a specific robot. The robot and smart app need to be on the
- * same network for successful connection. This API is deprecated. Please use sendCommandToRobot2
- * instead. This API sends command via the presence server (XMPP) and does not use direct connection
- * as of now
+ * This API is deprecated. Please use sendCommandToRobot2.
  * <p>
- * This API calls Neato Smart App Service to send command to robot. The command Id is the id of the
- * command to be executed on the robot. Currently supported commands are - 
- * <br>101 - Start Cleaning
- * <br>102 - Stop Cleaning
  * 
  * @param robotId			the serial number of the robot
  * @param commandId			command ID of the command to be executed on the robot.
@@ -1593,7 +1607,7 @@ RobotMgr.prototype.isScheduleEnabled = function (robotId, scheduleType, callback
 RobotMgr.prototype.enableSchedule = function (robotId, scheduleType, enable, callbackSuccess, callbackError) {
 	var params = {'robotId':robotId, 'scheduleType':scheduleType, 'enableSchedule':enable};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
-			ACTION_TYPE_ENABLE_SCHEDUL, [params]);
+			ACTION_TYPE_ENABLE_SCHEDULE, [params]);
 };
 
 /**
@@ -1618,6 +1632,26 @@ RobotMgr.prototype.unregisterForRobotMessages = function(callbackSuccess, callba
 			ACTION_TYPE_UNREGISTER_FOR_ROBOT_MESSAGES, []);
 };
 
+/**
+ * This API gets the current state of the robot
+ *  on success this API returns a JSON Object
+ * <br>{robotCurrentState:"robotCurrentState", robotNewVirtualState: <robotNewVirtualState>, robotId:"robotId"}
+ * <br>robotCurrentState is an integer value of the current actual state of the robot
+ * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
+ * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
+ * <br>robotId is the serial number of the robot
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * @param robotId 			the serial number of the robot
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ */
+ RobotMgr.prototype.getRobotCleaningState = function(robotId, callbackSuccess, callbackError) {
+	var params = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ROBOT_CLEANING_STATE, [params]);
+};
+ 
 var UserPluginManager = (function() {
 	return {
 		/**
@@ -2071,12 +2105,8 @@ var RobotPluginManager = (function() {
 		},
 		
 		/**
-		 * This API tries to establish a direct peer-to-peer connection with the robot. For a successful
-		 * connection robot and smart app need to be on the same network. This API is deprecated. Please
-		 * use tryDirectConnection2 instead.
+		 * This API is deprecated. Please use tryDirectConnection2 instead.
 		 * <p>
-		 * This API calls Neato Smart App Service to make a TCP connection with the robot. This API
-		 * returns an error if connection could not be established.
 		 * 
 		 * @param robotId			the serial number of the robot
 		 * @param callbackSuccess 	success callback for the API
@@ -2118,15 +2148,7 @@ var RobotPluginManager = (function() {
 		},
 		
 		/**
-		 * This API sends a command to a specific robot. The robot and smart app need to be on the
-		 * same network for successful connection. This API is deprecated. Please use sendCommandToRobot2
-		 * instead. This API sends command via the presence server (XMPP) and does not use direct connection
-		 * as of now
-		 * <p>
-		 * This API calls Neato Smart App Service to send command to robot. The command Id is the id of the
-		 * command to be executed on the robot. Currently supported commands are - 
-		 * <br>101 - Start Cleaning
-		 * <br>102 - Stop Cleaning
+		 * This API is deprecated. Please use sendCommandToRobot2.
 		 * 
 		 * @param robotId			the serial number of the robot
 		 * @param commandId			command ID of the command to be executed on the robot.
@@ -2906,6 +2928,25 @@ var RobotPluginManager = (function() {
 		 */
 		enableSchedule: function(robotId, scheduleType, enable, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.enableSchedule(robotId, scheduleType, enable, callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API gets the current state of the robot
+		 *  on success this API returns a JSON Object
+		 * <br>{robotCurrentState:"robotCurrentState", robotNewVirtualState: <robotNewVirtualState>, robotId:"robotId"}
+		 * <br>robotCurrentState is an integer value of the current actual state of the robot
+		 * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
+		 * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
+		 * <br>robotId is the serial number of the robot
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * @param robotId 			the serial number of the robot
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 */
+		
+		getRobotCleaningState: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotCleaningState(robotId, callbackSuccess, callbackError);
 		}		
 	}
 }());
@@ -2933,7 +2974,7 @@ var PluginManagerHelper =  (function() {
 		 *  - startTime
 		 *  - cleaningMode
 		 *  Returns: Basic Schedule JSON object
-		 *  {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
+		 *  {'day':day, 'startTime': startTime, ï¿½cleaningModeï¿½:cleaningMode}
 		 */
 		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {

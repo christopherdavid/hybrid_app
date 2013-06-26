@@ -3,24 +3,17 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     var that = this, schedulerModified = false;
     this.conditions = {};
     this.backConditions = {};
-    this.robot = ko.observable();
+    this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     
     this.scheduler = 'undefined';
     this.blockedDays = [];
 
     /* <enviroment functions> */
     this.init = function() {
-        /*
-        parent.communicationWrapper.dataValues["activeRobot"] = {
-                        "robotName" : "Nexus One",
-                        "robotId" : "rr1234"
-                    };
-        */
-        that.robot(ko.mapping.fromJS(parent.communicationWrapper.dataValues["activeRobot"]), null, that.robot);
         that.scheduler = new Scheduler($('#schedulerTarget'), 0);
         $('#schedulerTarget').on('updatedEvent', that.updateEvent);
         
-        console.log("getScheduleEvents for robot with id: " + parent.communicationWrapper.dataValues["activeRobot"].robotId)
+        console.log("getScheduleEvents for robot with id: " + that.robot().robotId());
         that.loadScheduler();
 
         if (that.bundle) {
@@ -60,7 +53,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
 
     this.loadScheduler = function() {
         //RobotPluginManager.getScheduleEvents(robotId, scheduleType, callbackSuccess, callbackError)
-        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getScheduleEvents, [parent.communicationWrapper.dataValues["activeRobot"].robotId, 0]);
+        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getScheduleEvents, [that.robot().robotId(), 0]);
         tDeffer.done(that.getScheduleEventsSuccess);
         tDeffer.fail(that.getScheduleEventsError);
     }
@@ -68,10 +61,10 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     // callbacks
     this.getScheduleEventsSuccess = function(result) {
         console.log("getScheduleEventsSuccess:\n" +JSON.stringify(result));
-        parent.communicationWrapper.storeDataValue("scheduleId", result.scheduleId);
+        parent.communicationWrapper.setDataValue("scheduleId", result.scheduleId);
         // catch result with an empty scheduleId
         if(result.scheduleId == "") {
-            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.createSchedule, [parent.communicationWrapper.dataValues["activeRobot"].robotId, 0]);
+            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.createSchedule, [that.robot().robotId(), 0]);
             tDeffer.done(that.createScheduleEventsSuccess);
             tDeffer.fail(that.createScheduleEventsError);
         } else {
@@ -82,7 +75,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             for (var i = 0, max = result.scheduleEventLists.length; i < max; i++) {
                 //RobotPluginManager.getScheduleEventData(scheduleId, scheduleEventData, callbackSuccess, callbackError)
                 var tempDeferred = parent.communicationWrapper.exec(RobotPluginManager.getScheduleEventData, [result.scheduleId, result.scheduleEventLists[i]], 
-                    { type: notificationType.SPINNER, message: "" , callback: null, bHide: false });
+                    { type: notificationType.SPINNER, message: "" , bHide: false });
                 
                 tempDeferred.done(that.loadScheduleDataSuccess);
                 tempDeferred.fail(that.loadScheduleEventsError);
@@ -97,7 +90,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     this.getScheduleEventsError = function(error) {
         // Server Error create an empty scheduler
         if(error && error.errorCode == 1003) {
-            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.createSchedule, [parent.communicationWrapper.dataValues["activeRobot"].robotId, 0]);
+            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.createSchedule, [that.robot().robotId(), 0]);
             tDeffer.done(that.createScheduleEventsSuccess);
             tDeffer.fail(that.createScheduleEventsError);
         }
@@ -105,7 +98,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     }
     this.createScheduleEventsSuccess = function(result) {
         console.log("createScheduleEventsSuccess\n" +JSON.stringify(result));
-        parent.communicationWrapper.storeDataValue("scheduleId", result.scheduleId);
+        parent.communicationWrapper.setDataValue("scheduleId", result.scheduleId);
         $('#addButton').removeClass("ui-disabled");
     }
     this.createScheduleEventsError = function(error) {
@@ -148,12 +141,42 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
 
     this.del = function() {
         var events = that.scheduler.selectedEvents();
+        var weekIndex = $.map($.i18n.t("pattern.week").split(","), function(value){
+            return +value;
+            });
+            jQuery.inArray((2), weekIndex);
+        var contextBuffer = {};
+        var contextBufferAsString = "";
+        
+        // create text for each event and store it in buffer localization dependent (pattern.week)
+        $.each(events, function(index, item) {
+            var sContext = "";
+            sContext += $.i18n.t("common.day." + item.scheduleEventData.day);
+            sContext += " " + localizeTime(item.scheduleEventData.startTime)+",";
+            sContext += $.i18n.t("common.cleaningMode." + item.scheduleEventData.cleaningMode);
+            contextBuffer[jQuery.inArray((item.scheduleEventData.day), weekIndex)] = sContext;
+        });
+        
+        // loop through buffer an create a single string 
+        $.each(contextBuffer, function(index, item) {
+            if(index > 0) {
+                contextBufferAsString += "<br>";
+            }
+            contextBufferAsString += item;
+        });
+        // show delete warning message 
+        parent.notification.showDialog(dialogType.WARNING,'Delete event', $.i18n.t('dialogs.EVENT_DELETE.title',{count:events.length}) +"</br>"+ contextBufferAsString, 
+            [{label:$.i18n.t('dialogs.EVENT_DELETE.button_1'), callback:that.commitDel}, {label:$.i18n.t('dialogs.EVENT_DELETE.button_2')}]); 
+    }
+    this.commitDel = function() {
+        var events = that.scheduler.selectedEvents();
         var aDeffer = [];
+        parent.notification.closeDialog();
 
         $.each(events, function(index, item) {
             //RobotPluginManager.deleteScheduleEvent(scheduleId, scheduleEventId, callbackSuccess, callbackError)
             var tempDeferred = parent.communicationWrapper.exec(RobotPluginManager.deleteScheduleEvent, [parent.communicationWrapper.dataValues["scheduleId"], item.scheduleEventId], 
-                { type: notificationType.SPINNER, message: "" , callback: null, bHide: false });
+                { type: notificationType.SPINNER, message: "" , bHide: false });
             
             tempDeferred.done(function() {
                 that.scheduler.deleteEvent(item);
@@ -168,16 +191,21 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             aDeffer.push(tempDeferred);
         });
         $.when.apply(window, aDeffer).then(function(result, notificationOptions) {
-            parent.notification.showLoadingArea(false, notificationOptions.type);
+            if(notificationOptions && notificationOptions.type) {
+                parent.notification.showLoadingArea(false, notificationOptions.type);
+            } else {
+                parent.notification.reset();
+            }
             that.updateSchedule(null);
         });
     }
+    
     this.updateSchedule = function(element) {
         var sUpdate = $.i18n.t('communication.update_scheduler');
         
         //RobotPluginManager.updateSchedule(scheduleId, callbackSuccess, callbackError)
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.updateSchedule, [parent.communicationWrapper.dataValues["scheduleId"]],
-            { type: notificationType.OPERATION, message: sUpdate, callback: null}
+            { type: notificationType.OPERATION, message: sUpdate}
         );
         tDeffer.done(function(result) {that.updateScheduleSuccess(result, element)});
         tDeffer.fail(that.updateScheduleError);
@@ -197,7 +225,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         var item = $(element).data('reference');
         console.log(JSON.stringify(item))
         var tempDeferred = parent.communicationWrapper.exec(RobotPluginManager.updateScheduleEvent, [parent.communicationWrapper.dataValues["scheduleId"],item.scheduleEventId, { startTime:item.scheduleEventData.startTime,day:item.scheduleEventData.day, cleaningMode:item.scheduleEventData.cleaningMode}], 
-            { type: notificationType.NONE, message: "", callback: null});
+            { type: notificationType.NONE, message: ""});
         
         tempDeferred.done(function(result) {that.updateScheduleEventSuccess(result, element)});
         tempDeferred.fail(that.updateScheduleEventError);

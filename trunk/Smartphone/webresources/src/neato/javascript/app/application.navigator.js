@@ -119,7 +119,7 @@ function WorkflowNavigator(parent, workflow) {
      *  Hides all loading indicators and hints if the screen is left. 
      */
     function hideLoadingIndicators() {
-        parent.notification.showLoadingArea(false, notificationType.SPINNER, "", true);
+        parent.notification.reset();
     }
     
     /**
