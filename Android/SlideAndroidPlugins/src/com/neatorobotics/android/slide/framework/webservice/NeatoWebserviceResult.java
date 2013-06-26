@@ -10,6 +10,7 @@ public abstract class NeatoWebserviceResult {
 	
 	public int status = -1; // 0 is returned as success from the webservice so we should not initialize to 0
 	public String message;
+	public ServerError error;
 	
 	public NeatoWebserviceResult () 
 	{
@@ -48,6 +49,31 @@ public abstract class NeatoWebserviceResult {
 	public boolean success() {
 		return (status == RESPONSE_STATUS_SUCCESS);
 	}
+	
+	public static class ServerError {
+		public int code;
+		public String message;
+	}
 
-
+	public int getErrorCode() {
+		int code;
+		if (error != null) {
+			code = error.code;
+		}
+		else {
+			code = mResponseStatus;
+		}
+		return code;
+	}
+	
+	public String getErrorMessage() {
+		String errMessage;
+		if (error != null) {
+			errMessage = error.message;
+		}
+		else {
+			errMessage = message;
+		}
+		return errMessage;
+	}
 }

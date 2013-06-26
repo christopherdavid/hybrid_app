@@ -131,7 +131,7 @@ public class AppUtils {
 	public static <T extends NeatoWebserviceResult> T  checkResponseResult(String response, Class<T> responseClassType) throws NeatoServerException {
 		T result = NeatoWebserviceUtils.readValueHelper(response, responseClassType);
 		if (!result.success()) {
-			throw new NeatoServerException(result.mResponseStatus, result.message);
+			throw new NeatoServerException(result.getErrorCode(), result.getErrorMessage());
 		}
 		return result;
 	}

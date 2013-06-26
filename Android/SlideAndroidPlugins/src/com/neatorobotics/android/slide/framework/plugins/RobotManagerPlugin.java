@@ -1329,12 +1329,6 @@ public class RobotManagerPlugin extends Plugin {
 			}
 			
 			@Override
-			public void onServerError(String errorMessage) {
-				LogHelper.logD(TAG, "Server Error: " + errorMessage);
-				sendError(mCallbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
-			}
-			
-			@Override
 			public void onNetworkError(String errorMessage) {
 				LogHelper.logD(TAG, "Network Error: " + errorMessage);
 				sendError(mCallbackId, ErrorTypes.ERROR_NETWORK_ERROR, errorMessage);
@@ -1424,12 +1418,6 @@ public class RobotManagerPlugin extends Plugin {
 			}
 
 			@Override
-			public void onServerError(String errorMessage) {
-				LogHelper.logD(TAG, "Server Error: " + errorMessage);
-				sendError(mCallbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
-			}			
-			
-			@Override
 			public void onServerError(int errorType, String errMessage) {
 				LogHelper.logD(TAG, "Server Error: " + errMessage);
 				sendError(mCallbackId, errorType, errMessage);
@@ -1496,11 +1484,6 @@ public class RobotManagerPlugin extends Plugin {
 				LogHelper.log(TAG, "NoActionWebServiceRequestListener: onNetworkError errMessage = " + errMessage);
 			}
 
-			@Override
-			public void onServerError(String errMessage) {
-				LogHelper.log(TAG, "NoActionWebServiceRequestListener: onServerError errMessage = " + errMessage);
-				
-			}
 
 			@Override
 			public void onServerError(int errorType, String errMessage) {

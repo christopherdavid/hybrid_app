@@ -210,7 +210,7 @@ public class UserManagerPlugin extends Plugin {
 			
 			// Send default notification settings.
 			@Override
-			public void onServerError(String errorMessage) {
+			public void onServerError(int errorCode, String errorMessage) {
 				LogHelper.logD(TAG, String.format("Server Message = %s ", errorMessage));
 				JSONObject notificationSettings = RobotHelper.getDefaultSettings();
 				PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, notificationSettings);		
@@ -641,12 +641,6 @@ public class UserManagerPlugin extends Plugin {
 		
 		public UserRequestListenerWrapper(String callbackId) {
 			mCallbackId = callbackId;
-		}
-		
-		@Override
-		public void onServerError(String errorMessage) {
-			LogHelper.logD(TAG, "Server Error: " + errorMessage);
-			sendError(mCallbackId, ErrorTypes.ERROR_SERVER_ERROR, errorMessage);
 		}
 		
 		@Override

@@ -368,10 +368,10 @@ public class RobotSchedulerManager2 {
 						}
 					}
 					catch (UserUnauthorizedException ex) {
-						listener.onServerError(ex.getErrorMessage());
+						listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 					}
 					catch (NeatoServerException ex) {
-						listener.onServerError(ex.getErrorMessage());
+						listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
 					}
 					catch (IOException ex) {
 						listener.onNetworkError(ex.getMessage());
@@ -432,7 +432,7 @@ public class RobotSchedulerManager2 {
 					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
 				}
 				catch (IOException ex) {
 					listener.onNetworkError(ex.getMessage());
@@ -461,7 +461,7 @@ public class RobotSchedulerManager2 {
 				} catch (UserUnauthorizedException e) {
 					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
 				} catch (NeatoServerException e) {
-					listener.onServerError(e.getErrorMessage());
+					listener.onServerError(e.getStatusCode(), e.getErrorMessage());
 				} catch (IOException e) {
 					listener.onNetworkError(e.getMessage());
 				}
@@ -481,7 +481,7 @@ public class RobotSchedulerManager2 {
 				} catch (UserUnauthorizedException e) {
 					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
 				} catch (NeatoServerException e) {
-					listener.onServerError(e.getErrorMessage());
+					listener.onServerError(e.getStatusCode(), e.getErrorMessage());
 				} catch (IOException e) {
 					listener.onNetworkError(e.getMessage());
 				}

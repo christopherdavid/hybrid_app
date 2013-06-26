@@ -106,7 +106,7 @@ public class SettingsManager {
 					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
 				} 
 				catch (NeatoServerException e) {
-					listener.onServerError(e.getErrorMessage());
+					listener.onServerError(e.getStatusCode(), e.getErrorMessage());
 				}
 				catch (IOException e) {
 					listener.onNetworkError(e.getMessage());
@@ -134,7 +134,7 @@ public class SettingsManager {
 					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
 				} 
 				catch (NeatoServerException e) {
-					listener.onServerError(e.getErrorMessage());
+					listener.onServerError(e.getStatusCode(), e.getErrorMessage());
 				}
 				catch (IOException e) {
 					listener.onNetworkError(e.getMessage());
