@@ -5,6 +5,7 @@ import java.util.HashMap;
 import android.content.Context;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileDataUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
@@ -51,10 +52,10 @@ public class RobotManager {
 					listener.onReceived(result);
 				}
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
 				}
 				catch (IOException ex) {
 					listener.onNetworkError(ex.getMessage());
@@ -99,10 +100,10 @@ public class RobotManager {
 					listener.onReceived(result);
 				}
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
 				}
 				catch (IOException ex) {
 					listener.onNetworkError(ex.getMessage());
@@ -123,10 +124,10 @@ public class RobotManager {
 					listener.onReceived(result);
 				}
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
 				}
 				catch (IOException ex) {
 					listener.onNetworkError(ex.getMessage());
@@ -148,10 +149,10 @@ public class RobotManager {
 					listener.onReceived(result);
 				}
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
 				}
 				catch (IOException ex) {
 					listener.onNetworkError(ex.getMessage());
@@ -177,10 +178,10 @@ public class RobotManager {
 					listener.onReceived(result);
 				}
 				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
 				}
 				catch (NeatoServerException ex) {
-					listener.onServerError(ex.getErrorMessage());
+					listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
 				}
 				catch (IOException ex) {
 					listener.onNetworkError(ex.getMessage());

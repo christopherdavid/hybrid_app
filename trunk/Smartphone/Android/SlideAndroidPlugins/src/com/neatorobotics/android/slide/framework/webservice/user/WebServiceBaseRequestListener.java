@@ -9,6 +9,5 @@ import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResul
 public interface WebServiceBaseRequestListener {
 	public void onReceived(NeatoWebserviceResult responseResult);
 	public void onNetworkError(String errMessage);
-	public void onServerError(String errMessage);
 	public void onServerError(int errorType, String errMessage);
 }

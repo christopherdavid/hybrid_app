@@ -6,9 +6,9 @@ import java.util.Map;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.MobileWebServiceClient;
-import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceUtils;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.AssociateNeatoRobotToUser;
@@ -38,7 +38,7 @@ public class NeatoUserWebservicesHelper {
 		reqParams.put(GetNeatoUserDetails.Attribute.AUTHENTICATION_TOKEN, authToken);		
 
 		String response = MobileWebServiceClient.executeHttpPost(context, GetNeatoUserDetails.METHOD_NAME, reqParams);
-		return checkResponseResult(response, GetNeatoUserDetailsResult.class);
+		return AppUtils.checkResponseResult(response, GetNeatoUserDetailsResult.class);
 	}
 	
 	public static LoginNeatoUserTokenResult loginNeatoUserToken(Context context, String email, String password) 
@@ -60,10 +60,10 @@ public class NeatoUserWebservicesHelper {
 		}
 		
 		if (loginResult.extra_params != null) {
-			throw new UserUnauthorizedException(loginResult.mResponseStatus, loginResult.extra_params.message);
+			throw new UserUnauthorizedException(loginResult.getErrorCode(), loginResult.extra_params.message);
 		}
 		else {
-			throw new NeatoServerException(loginResult.mResponseStatus, loginResult.message);
+			throw new NeatoServerException(loginResult.getErrorCode(), loginResult.getErrorMessage());
 		}
 		
 	}
@@ -79,7 +79,7 @@ public class NeatoUserWebservicesHelper {
 	
 		
 		String createUserResponse = MobileWebServiceClient.executeHttpPost(context, CreateNeatoUser.METHOD_NAME, createUserReqParams);		
-		return checkResponseResult(createUserResponse, CreateNeatoUserResult.class);
+		return AppUtils.checkResponseResult(createUserResponse, CreateNeatoUserResult.class);
 	}
 	
 	public static CreateNeatoUserResult createNeatoUser2RequestNative(Context context, String name, String email, String alternateEmail, 
@@ -95,7 +95,7 @@ public class NeatoUserWebservicesHelper {
 		}
 		
 		String response = MobileWebServiceClient.executeHttpPost(context, CreateNeatoUser2.METHOD_NAME, createUser2ReqParams);
-		return checkResponseResult(response, CreateNeatoUserResult.class);
+		return AppUtils.checkResponseResult(response, CreateNeatoUserResult.class);
 	}
 	
 	public static IsUserValidatedResult isUserValidatedRequest(Context context, String email) 
@@ -105,7 +105,7 @@ public class NeatoUserWebservicesHelper {
 		validateReqParams.put(IsUserValidated.Attribute.EMAIL, email);
 		
 		String validateUserResponse = MobileWebServiceClient.executeHttpPost(context, IsUserValidated.METHOD_NAME, validateReqParams);
-		return checkResponseResult(validateUserResponse, IsUserValidatedResult.class);
+		return AppUtils.checkResponseResult(validateUserResponse, IsUserValidatedResult.class);
 	}
 	
 	public static ResendValidationMailResult resendValidationMailResult(Context context, String email)
@@ -115,7 +115,7 @@ public class NeatoUserWebservicesHelper {
 		resendValidationMailParams.put(ResendValidationMail.Attribute.EMAIL, email);
 		
 		String resendValidationMailResponse = MobileWebServiceClient.executeHttpPost(context, ResendValidationMail.METHOD_NAME, resendValidationMailParams);
-		return checkResponseResult(resendValidationMailResponse, ResendValidationMailResult.class);
+		return AppUtils.checkResponseResult(resendValidationMailResponse, ResendValidationMailResult.class);
 	}
 	
 	public static RobotAssociationDisassociationResult associateNeatoRobotRequest(Context context, String email, String robotId)
@@ -126,7 +126,7 @@ public class NeatoUserWebservicesHelper {
 		associateRobotReqParams.put(AssociateNeatoRobotToUser.Attribute.SERIAL_NUMBER, robotId);
 		
 		String associateRobotResponse = MobileWebServiceClient.executeHttpPost(context, AssociateNeatoRobotToUser.METHOD_NAME, associateRobotReqParams);
-		return checkResponseResult(associateRobotResponse, RobotAssociationDisassociationResult.class);
+		return AppUtils.checkResponseResult(associateRobotResponse, RobotAssociationDisassociationResult.class);
 	}
 	
 	public static RobotAssociationDisassociationResult disassociateNeatoRobotRequest(Context context, String email, String robotId)
@@ -137,7 +137,7 @@ public class NeatoUserWebservicesHelper {
 		associateRobotReqParams.put(DisassociateNeatoRobotToUser.Attribute.SERIAL_NUMBER, robotId);
 		
 		String dissociateResponse = MobileWebServiceClient.executeHttpPost(context, DisassociateNeatoRobotToUser.METHOD_NAME, associateRobotReqParams);		
-		return checkResponseResult(dissociateResponse, RobotAssociationDisassociationResult.class);
+		return AppUtils.checkResponseResult(dissociateResponse, RobotAssociationDisassociationResult.class);
 	}
 	
 	public static RobotAssociationDisassociationResult dissociateAllNeatoRobotsRequest(Context context, String email)
@@ -148,7 +148,7 @@ public class NeatoUserWebservicesHelper {
 		dissociateRobotReqParams.put(DisassociateNeatoRobotToUser.Attribute.SERIAL_NUMBER, "");	
 		
 		String dissociateResponse = MobileWebServiceClient.executeHttpPost(context, DissociateAllNeatoRobotsFromUser.METHOD_NAME, dissociateRobotReqParams);		
-		return checkResponseResult(dissociateResponse, RobotAssociationDisassociationResult.class);
+		return AppUtils.checkResponseResult(dissociateResponse, RobotAssociationDisassociationResult.class);
 	}
 	
 	public static GetUserAssociatedRobotsResult getUserAssociatedRobots(Context context, String email, String authToken) 
@@ -158,7 +158,7 @@ public class NeatoUserWebservicesHelper {
 		reqParams.put(GetUserAssociatedRobots.Attribute.EMAIL, email);
 		reqParams.put(GetUserAssociatedRobots.Attribute.AUTHENTICATION_TOKEN, authToken);		
 		String associatedRobotsResponse = MobileWebServiceClient.executeHttpPost(context, GetUserAssociatedRobots.METHOD_NAME, reqParams);		
-		return checkResponseResult(associatedRobotsResponse, GetUserAssociatedRobotsResult.class);
+		return AppUtils.checkResponseResult(associatedRobotsResponse, GetUserAssociatedRobotsResult.class);
 	}
 	
 	public static SetUserAttributesResult setUserAttributeRequest(Context context, String authToken, HashMap<String, String> profileDetailsParams) 
@@ -168,7 +168,7 @@ public class NeatoUserWebservicesHelper {
 		userSetAttributesParams.put(SetUserAttributes.Attribute.AUTHENTICATION_TOKEN, authToken);
 		userSetAttributesParams.putAll(addProfilePrefix(profileDetailsParams));
 		String associatedRobotsResponse = MobileWebServiceClient.executeHttpPost(context, SetUserAttributes.METHOD_NAME, userSetAttributesParams);
-		return checkResponseResult(associatedRobotsResponse, SetUserAttributesResult.class);
+		return AppUtils.checkResponseResult(associatedRobotsResponse, SetUserAttributesResult.class);
 	}
 	
 	public static SendMessageToRobotResult sendMessageToRobotRequest(Context context, String userId, String robotId, String message)
@@ -179,7 +179,7 @@ public class NeatoUserWebservicesHelper {
 		sendRobotMessageParams.put(SendMessageToRobot.Attribute.SERIAL_NUMBER, robotId);
 		sendRobotMessageParams.put(SendMessageToRobot.Attribute.MESSAGE, message);
 		String response = MobileWebServiceClient.executeHttpPost(context, SendMessageToRobot.METHOD_NAME, sendRobotMessageParams);		
-		return checkResponseResult(response, SendMessageToRobotResult.class);
+		return AppUtils.checkResponseResult(response, SendMessageToRobotResult.class);
 	}
 	
 	public static ForgetPasswordResult forgetPasswordRequest(Context context, String email) 
@@ -189,7 +189,7 @@ public class NeatoUserWebservicesHelper {
 		changePasswordParams.put(ForgetPassword.Attribute.EMAIL, email);
 		
 		String response = MobileWebServiceClient.executeHttpPost(context, ForgetPassword.METHOD_NAME, changePasswordParams);
-		return checkResponseResult(response, ForgetPasswordResult.class);
+		return AppUtils.checkResponseResult(response, ForgetPasswordResult.class);
 	}
 	
 	public static RegisterPushNotificationResult registerPushNotification(Context context, String email, int deviceType, String registrationId)
@@ -200,7 +200,7 @@ public class NeatoUserWebservicesHelper {
 		registerPushNotificationParams.put(RegisterPushNotifications.Attribute.REGISTRATION_ID, registrationId);
 		
 		String response = MobileWebServiceClient.executeHttpPost(context, RegisterPushNotifications.METHOD_NAME, registerPushNotificationParams);
-		return checkResponseResult(response, RegisterPushNotificationResult.class);
+		return AppUtils.checkResponseResult(response, RegisterPushNotificationResult.class);
 	}
 	
 	public static UnregisterPushNotificationResult unregisterPushNotification(Context context, String registrationId)
@@ -209,7 +209,7 @@ public class NeatoUserWebservicesHelper {
 		unregisterPushNotificationParams.put(UnregisterPushNotifications.Attribute.REGISTRATION_ID, registrationId);
 		
 		String response = MobileWebServiceClient.executeHttpPost(context, UnregisterPushNotifications.METHOD_NAME, unregisterPushNotificationParams);
-		return checkResponseResult(response, UnregisterPushNotificationResult.class);
+		return AppUtils.checkResponseResult(response, UnregisterPushNotificationResult.class);
 	}
 	
 	public static ChangePasswordResult changePasswordRequest(Context context, String authToken, String oldPassword, String newPassword)
@@ -221,16 +221,8 @@ public class NeatoUserWebservicesHelper {
 		changePasswordParams.put(ChangePassword.Attribute.PASSWORD_NEW, newPassword);
 		
 		String response = MobileWebServiceClient.executeHttpPost(context, ChangePassword.METHOD_NAME, changePasswordParams);
-		return checkResponseResult(response, ChangePasswordResult.class);		
+		return AppUtils.checkResponseResult(response, ChangePasswordResult.class);		
 	}	
-	
-	private static <T extends NeatoWebserviceResult> T  checkResponseResult(String response, Class<T> responseClassType) throws NeatoServerException {
-		T result = NeatoWebserviceUtils.readValueHelper(response, responseClassType);
-		if (!result.success()) {
-			throw new NeatoServerException(result.mResponseStatus, result.message);
-		}
-		return result;
-	}
 	
 	private static HashMap<String, String> addProfilePrefix(HashMap<String, String> profileParams) {
 		HashMap<String, String> profile = new HashMap<String, String>();
