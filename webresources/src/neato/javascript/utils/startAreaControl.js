@@ -295,14 +295,58 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
                 case "paused":
                     className += " startbtn_paused";
                     break;
+                case "waiting":
+                    that.startBtnDown = false;
+                    className += " startbtn_waiting";
+                    break;
             }
 
-            if (state != "disabled") {
+            if (state != "disabled" && state != "waiting") {
                 className += isMouseDown ? "-down" : "-up";
                 that.startBtnDown = isMouseDown;
             }
             divElement[0].className = className;
         }
+    }
+    
+    
+     this.updateTxtState = function(state) {
+        
+        var className = "img-robot_status";
+       // var state = $("#stsImg").attr("robot-state");
+		console.log("Update Text State "+ state);
+		
+        // If the state is set...
+       // if (state != undefined) {
+            switch(state) {
+                case 10009:
+                case 10005:
+                    className = "robotsts_onbase-nn";
+                    break;
+                case 10002:
+                case 10008:
+                	className = "robotsts_cleaning-nn";
+                    break;
+                case 10007:
+                    className = "robotsts_stop-nn";
+                    break;
+                case 10003:
+				case 10004:
+				case 10006:
+					className = "robotsts_error-nn";
+                    break;
+                default:
+                    className = "robotsts_unknown-nn";
+                    break;
+            }
+             $('#stsImg').removeClass("robotsts_stop-nn");
+             $('#stsImg').removeClass("robotsts_cleaning-nn");
+             $('#stsImg').removeClass("robotsts_unknown-nn");
+             $('#stsImg').removeClass("robotsts_onbase-nn");
+             $('#stsImg').removeClass("robotsts_error-nn");
+			console.log("Update Text State "+ className);
+              $('#stsImg').addClass(className);
+        //}
     }
 }
 

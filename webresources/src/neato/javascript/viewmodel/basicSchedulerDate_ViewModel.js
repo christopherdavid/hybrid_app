@@ -11,7 +11,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     this.selectedCleaningDays = ko.observableArray([]);
     this.blockedDays = ko.observableArray([]);
     this.cleaningMode = ko.observable();
-    this.robot = ko.observable();
+    this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     
     this.isNextEnabled = ko.computed(function() {
         return (that.selectedCleaningDays().length > 0 && this.cleaningMode() != null);
@@ -19,7 +19,6 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     
     /* <enviroment functions> */
     this.init = function() {
-        that.robot(ko.mapping.fromJS(parent.communicationWrapper.dataValues["activeRobot"]), null, that.robot);
         if (that.cleaningDays().length == 0) {
             for (var i = 0; i < weekIndex.length; i++) {
                 that.cleaningDays.push({
@@ -127,7 +126,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
         
         // loop trough all selectedCleaningDays and update or create events
         ko.utils.arrayForEach(that.selectedCleaningDays(), function(item) {
-            console.log("startTime:" + startTime, "day:" + item.id);
+            console.log("startTime:" + startTime + "day:" + item.id);
             
             // check if it is a new event or an update
             if(that.bundle && that.bundle.events && that.bundle.events.length > 0) {
@@ -136,7 +135,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
                 //RobotPluginManager.updateScheduleEvent(scheduleId, scheduleEventId, scheduleEventData, callbackSuccess, callbackError) 
                 
                 var tempDeferred = parent.communicationWrapper.exec(RobotPluginManager.updateScheduleEvent, [parent.communicationWrapper.dataValues["scheduleId"],tempEvent.scheduleEventId, { startTime:startTime,day:item.id, cleaningMode:that.cleaningMode()}], 
-                    { type: notificationType.SPINNER, message: "" , callback: null, bHide: false });
+                    { type: notificationType.SPINNER, message: "" , bHide: false });
                 
                 tempDeferred.done(that.updateScheduleEventSuccess);
                 tempDeferred.fail(that.updateScheduleEventError);
@@ -144,9 +143,8 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
                 aDeffer.push(tempDeferred);
             } else {
                 // create a new event
-                //RobotPluginManager.addScheduleEvent(scheduleId, scheduleEventData, callbackSuccess, callbackError)
                 var tempDeferredAdd = parent.communicationWrapper.exec(RobotPluginManager.addScheduleEvent, [parent.communicationWrapper.dataValues["scheduleId"], { startTime:startTime,day:item.id, cleaningMode:that.cleaningMode()}], 
-                    { type: notificationType.SPINNER, message: "" , callback: null, bHide: false });
+                    { type: notificationType.SPINNER, message: "" , bHide: false });
                 
                 tempDeferredAdd.done(that.addScheduleEventSuccess);
                 tempDeferredAdd.fail(that.addScheduleEventError);
@@ -156,9 +154,11 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
         });
         
         $.when.apply(window, aDeffer).then(function(result, notificationOptions) {
+            console.log("all events have been created or updated")
             //parent.notification.showLoadingArea(false, notificationOptions.type);
             
             if(that.bundle && that.bundle.events && that.bundle.events.length > 0) {
+                console.log("remove remaining events contained in bundle")
                 var aDefferRem = [];    
                 $.each(that.bundle.events, function(index, item) {
                     //RobotPluginManager.deleteScheduleEvent(scheduleId, scheduleEventId, callbackSuccess, callbackError)
@@ -167,11 +167,11 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
                         that.delScheduleEventSuccess, that.delScheduleEventError);
                     
                     var tempRemDeferred = parent.communicationWrapper.exec(RobotPluginManager.deleteScheduleEvent, [parent.communicationWrapper.dataValues["scheduleId"], item.scheduleEventId], 
-                        { type: notificationType.SPINNER, message: "" , callback: null, bHide: false });
+                        { type: notificationType.SPINNER, message: "" , bHide: false });
                     aDefferRem.push(tempRemDeferred);
                 });
                 
-                $.when.apply(window, aDeffer).then(function(result, notificationOptions) {
+                $.when.apply(window, aDefferRem).then(function(result, notificationOptions) {
                     parent.notification.showLoadingArea(false, notificationOptions.type);
                     that.updateSchedule();
                 });

@@ -12,7 +12,7 @@
     font-size: 20px;
     z-index: 3500;
     
-    .contentWrapper{
+    .contentWrapper {
         height: 42px;
         .vertical-gradient(#000000, 0%, #707070, 3px, @notificationbar_background, 15%);
         padding-bottom: 5px;
@@ -20,14 +20,88 @@
         box-shadow: inset 0px -35px 20px -40px #000;
         padding-left: 8px;
         padding-right: 8px;
+        
+        .ui-notificationbar_text{
+          color: @notificationbar-textcolor;
+          float:left;
+          text-shadow:none;
+          line-height: 40px;
+        }
+        
+        #ui-notificationbar_icon {
+          position:relative;
+          float:left;
+          display:none;
+          width:40px;
+          height:40px;
+        }
+        &.icon {
+            #ui-notificationbar_icon {
+              display:block;
+            }
+            
+            .ui-notificationbar_text {
+              padding-left:10px;
+            }
+        }
+        
+        
+        &.spinner #loadingSpinnerSmall {
+            display:block;
+        }
+        
+        &.getready #ui-notificationbar_icon {
+            background-image:url(../../img/icons/robot_animation_360x120.png);
+            background-position:0 0;
+            background-size:240px 80px;
+            background-repeat:no-repeat;
+            -webkit-animation-name:sixFrames;
+            -webkit-animation-duration:1s;
+            -webkit-animation-timing-function:steps(1, end);
+            -webkit-animation-delay:0.5s;
+            -webkit-animation-iteration-count:infinite;
+            -webkit-animation-play-state:running;
+        }
+        &.wakeup #ui-notificationbar_icon {
+            background-image:url(../../img/icons/robot_animation_360x120.png);
+            background-position:0 -40px;
+            background-size:240px 80px;
+            background-repeat:no-repeat;
+            -webkit-animation-name:sixFrames;
+            -webkit-animation-duration:1s;
+            -webkit-animation-timing-function:steps(1, end);
+            -webkit-animation-delay:0.5s;
+            -webkit-animation-iteration-count:infinite;
+            -webkit-animation-play-state:running;
+        }
+        
     }
 }
 
 
-
-.ui-notificationbar_text{
-  color: @notificationbar-textcolor;
-  float:left;
-  text-shadow:none;
-  line-height: 40px;
+@-webkit-keyframes sixFrames {
+  0%   {
+    background-position-x:0;
+  }
+  16%   {
+    background-position-x:-40px;
+  }
+  33%   {
+    background-position-x:-80px;
+  }
+  49%  {
+    background-position-x:-120px;
+  }
+  66%  {
+    background-position-x:-160px;
+  }
+  83%  {
+    background-position-x:-200px;
+  }
+  100%  {
+    background-position-x:-240px;
+  }
 }
+
+
+

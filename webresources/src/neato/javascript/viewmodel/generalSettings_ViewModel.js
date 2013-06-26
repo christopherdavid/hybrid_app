@@ -4,7 +4,7 @@ resourceHandler.registerFunction('generalSettings_ViewModel.js', function(parent
     var initDone = false;
 
     this.conditions = {};
-    this.robot = ko.observable();
+    this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     this.user = ko.observable();
     
     this.selectedPushType = ko.observable();
@@ -13,8 +13,7 @@ resourceHandler.registerFunction('generalSettings_ViewModel.js', function(parent
     this.robotStuck = ko.observable();
 
     this.init = function() {
-        that.robot(ko.mapping.fromJS(parent.communicationWrapper.dataValues["activeRobot"]), null, that.robot);
-        that.user(ko.mapping.fromJS(parent.communicationWrapper.dataValues["user"]), null, that.user);
+        that.user(ko.mapping.fromJS(parent.communicationWrapper.getDataValue("user")), null, that.user);
         
         var tDeffer = parent.communicationWrapper.exec(UserPluginManager.getNotificationSettings, [that.user().email()]);
         tDeffer.done(that.successGetNotifications);

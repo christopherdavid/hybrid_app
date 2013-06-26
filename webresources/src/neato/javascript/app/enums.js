@@ -34,7 +34,8 @@ var robotScreenCaller = {
     REGISTER : "register",
     LOGIN : "login",
     CHANGE : "change",
-    MANAGE : "manage"
+    MANAGE : "manage",
+    DELETE : "delete"
 }
 
 /**
@@ -44,7 +45,9 @@ var notificationType = {
     SPINNER : "0", // simple loading spinner in the center of the screen
     OPERATION : "1", // Notification area with text display and spinner, will be displayed until dismissed. 
     HINT: "2", // short displayed hint text (will be visible for ~ 2 sec. and disappear automatically)
-    NONE:"3" // no notification will be displayed 
+    NONE:"3", // no notification will be displayed 
+    GETREADY:"4", // Notification area with text display and get ready animation, will be displayed until dismissed.
+    WAKEUP:"5" // Notification area with text display and wake up animation, will be displayed until dismissed.
 }
 
 var dialogType = {

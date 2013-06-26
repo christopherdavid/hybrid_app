@@ -260,22 +260,9 @@ function Scheduler($root, scheduleType) {
     function fillTimeColumn() {
         var timeFormat = $.i18n.t("pattern.time");
         for (var i = 0; i < 24; i++) {
-            var amPmMarker = "";
-            var hour = i;
-            if (timeFormat == "hhiiA") {
-                hour = hour % 12;
-                if (hour == 0 && i >= 12) {
-                    hour = 12;
-                }
-                amPmMarker = i <= 12 ? ' am' : ' pm';
-            }
-
-            // add leading zero
-            hour = hour < 10 ? "0" + hour : hour;
-
             $timeColumn.append($('<div/>', {
                 'class' : 'time',
-                'text' : hour + ':00' + amPmMarker,
+                'text' : localizeTime(i+":00"),
             }))
         }
     }

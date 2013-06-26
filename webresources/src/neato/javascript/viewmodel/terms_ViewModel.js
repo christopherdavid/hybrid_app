@@ -2,10 +2,9 @@ resourceHandler.registerFunction('terms_ViewModel.js', function(parent) {
     console.log('instance created for: terms_ViewModel');
     var that = this;
     this.conditions = {};
-    this.robot = ko.observable();
+    this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     
     this.init = function() {
-        that.robot(ko.mapping.fromJS(parent.communicationWrapper.dataValues["activeRobot"]), null, that.robot);
     };
     
     this.changeRobot = function() {

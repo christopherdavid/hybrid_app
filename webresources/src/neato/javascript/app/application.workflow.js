@@ -77,7 +77,8 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "homeScreen",
                     "value" : true
                 }]
-            }]
+            }],
+            clearHistory : true
         },
         "loginUser" : {
             navrules : [{
@@ -90,12 +91,6 @@ Application.prototype.loadWorkflow = function() {
         },
         "cleaning" : {
             navrules : [{
-                targetScreenId : "start",
-                conditions : [{
-                    "key" : "logout",
-                    "value" : true
-                }]
-            }, {
                 targetScreenId : "robotSelection",
                 conditions : [{
                     "key" : "changeRobot",
@@ -139,6 +134,12 @@ Application.prototype.loadWorkflow = function() {
                 targetScreenId : "generalSettings",
                 conditions : [{
                     "key" : "generalSettings",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "about",
+                conditions : [{
+                    "key" : "about",
                     "value" : true
                 }]
             },{
@@ -264,6 +265,21 @@ Application.prototype.loadWorkflow = function() {
                 targetScreenId : "robotSelection",
                 conditions : [{
                     "key" : "changeRobot",
+                    "value" : true
+                }]
+            }]
+        },
+        "about" : {
+            navrules : [{
+                targetScreenId : "robotSelection",
+                conditions : [{
+                    "key" : "changeRobot",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "settings",
+                conditions : [{
+                    "key" : "back",
                     "value" : true
                 }]
             }]
