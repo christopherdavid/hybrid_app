@@ -28,7 +28,7 @@
     return command;
 }
 
-- (NSString *)getRobotCommand2WithId:(int)commandId withParams:(NSDictionary *)params andRequestId:(NSString *)requestId {
+- (NSString *)getRobotCommand2WithId:(NSInteger)commandId withParams:(NSDictionary *)params andRequestId:(NSString *)requestId {
     debugLog(@"");
     CommandsHelper *commandHelper = [[CommandsHelper alloc] init];
     NSString *command = [NSString stringWithFormat:TEMP_XMPP_NEW_ROBOT_COMMAND_FORMAT, [commandHelper versionForCommand], [AppHelper getAppSignature], commandId, requestId, [[NSNumber numberWithDouble:[AppHelper currentTimeStamp]] stringValue], [commandHelper commandRetryCount], [commandHelper commandResponseNeeded], [NeatoUserHelper getNeatoUser].userId, [commandHelper distributionModeForCommandType:@"XMPP"], [commandHelper generateXMLForParams:params]];

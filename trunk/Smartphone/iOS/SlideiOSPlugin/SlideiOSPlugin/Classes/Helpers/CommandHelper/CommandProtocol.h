@@ -6,6 +6,6 @@
 - (id)getStartRobotCommand;
 - (id)getStopRobotCommand;
 
-- (id)getRobotCommand2WithId:(int)commandId withParams:(NSDictionary *)params andRequestId:(NSString *)requestId;
+- (id)getRobotCommand2WithId:(NSInteger)commandId withParams:(NSDictionary *)params andRequestId:(NSString *)requestId;
 
 @end

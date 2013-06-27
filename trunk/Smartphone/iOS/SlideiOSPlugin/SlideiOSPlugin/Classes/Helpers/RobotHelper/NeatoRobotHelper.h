@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 #import "NeatoRobot.h"
 
+@class ProfileDetail;
+
 @interface NeatoRobotHelper : NSObject
 
 + (void)saveNeatoRobot:(NeatoRobot *) neatoRobot;
@@ -13,4 +15,8 @@
 + (void)saveXMPPCallbackId:(NSString *)xmppCallbackId;
 + (NSString *)xmppCallbackId;
 + (void)removeXMPPCallbackId;
++ (id)updateProfileDetail:(ProfileDetail *)profileDetail forRobotWithId:(NSString *)robotId;
++ (id)timestampForRobotProfileKey:(NSString *)key forRobotWithId:(NSString *)robotId;
++ (id)profileDetailForKey:(NSString *)key robotWithId:(NSString *)robotId;
++ (id)deleteProfileDetail:(ProfileDetail *)profileDetail forRobot:(NSString *)robotId;
 @end

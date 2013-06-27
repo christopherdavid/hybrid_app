@@ -12,6 +12,7 @@
 #import "ScheduleEvent.h"
 #import "Schedule.h"
 #import "ScheduleUtils.h"
+#import "XMPPRobotDataChangeManager.h"
 
 //PluginResult Classes
 #import "CreateSchedulePluginResult.h"
@@ -416,6 +417,9 @@
     debugLog(@"received parameters : %@", parameters);
     
     NSString *commandId = [parameters objectForKey:KEY_COMMAND_ID];
+    if (![commandId isKindOfClass:[NSString class]]) {
+        commandId = [NSString stringWithFormat:@"%@", commandId];
+    }
     NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
     NSDictionary *commandParams = [parameters objectForKey:KEY_COMMAND_PARAMETERS];
     NSMutableDictionary *params = [commandParams objectForKey:KEY_PARAMS];
@@ -895,8 +899,8 @@
     debugLog(@"");
     NSString *callbackId = command.callbackId;
     debugLog(@"callbackId = %@", callbackId);
-    [[PushNotificationHelper sharedInstance] registerForPushNotificationsForCallbackId:callbackId];
     [PushNotificationHelper sharedInstance].pushNotificationDelegate = self;
+    [[PushNotificationHelper sharedInstance] registerForPushNotificationsForCallbackId:callbackId];
 }
 
 - (void)unregisterForRobotMessages:(CDVInvokedUrlCommand *)command {
@@ -977,30 +981,40 @@
 }
 
 - (void)registerRobotNotifications2:(CDVInvokedUrlCommand *)command {
-    __weak RobotManagerPlugin *weakSelf = self;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *callbackId = command.callbackId;
-        [NeatoRobotHelper saveXMPPCallbackId:callbackId];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-            [result setKeepCallbackAsBool:YES];
-            [weakSelf writeJavascript:[result toSuccessCallbackString:callbackId]];
-        });
-    });
+    // Start listening for robot data change xmpp notification.
+    XMPPRobotDataChangeManager *dataChangeManager = [XMPPRobotDataChangeManager sharedXmppDataChangeManager];
+    [dataChangeManager startListeningRobotDataChangeNotificationsFor:self];
+    NSString *callbackId = command.callbackId;
+    [NeatoRobotHelper saveXMPPCallbackId:callbackId];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [result setKeepCallbackAsBool:YES];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
 - (void)unregisterRobotNotifications2:(CDVInvokedUrlCommand *)command {
-    __weak RobotManagerPlugin *weakSelf = self;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [NeatoRobotHelper removeXMPPCallbackId];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-            [result setKeepCallbackAsBool:NO];
-            [weakSelf writeJavascript:[result toSuccessCallbackString:command.callbackId]];
-        });
-    });
+    // Stop listening for robot data change xmpp notification.
+    XMPPRobotDataChangeManager *dataChangeManager = [XMPPRobotDataChangeManager sharedXmppDataChangeManager];
+    [dataChangeManager stopListeningRobotDataChangeNotificationsFor:self];
+    [NeatoRobotHelper removeXMPPCallbackId];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [result setKeepCallbackAsBool:NO];
+    [self writeJavascript:[result toSuccessCallbackString:command.callbackId]];
 }
+
+- (void)updateUIForRobotDataChangeNotification:(NSNotification *)notification {
+    debugLog(@"");
+    NSNumber *successCallback = [notification.userInfo objectForKey:SUCCESS_CALLBACK];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([successCallback boolValue]) {
+            CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:[notification.userInfo objectForKey:KEY_UI_UPDATE_DATA]];
+            [result setKeepCallbackAsBool:YES];
+            [self writeJavascript:[result toSuccessCallbackString:[notification.userInfo objectForKey:KEY_CALLBACK_ID]]];
+        }
+        else {
+            // TODO: Do we need to send error back?
+        }
+    });
+};
 
 - (void)failedtoSendCommandWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Failed to send command with error  = %@", error);

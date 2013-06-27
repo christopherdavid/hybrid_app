@@ -2,6 +2,7 @@
 #import "LogHelper.h"
 #import "NeatoServerHelper.h"
 #import "NeatoRobotHelper.h"
+#import "NeatoUserHelper.h"
 
 @interface SetRobotNameListener()
 
@@ -29,7 +30,9 @@
 -(void)start {
     NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
     helper.delegate = self;
-    [helper setRobotName2:self.robotName forRobotWithId:self.robotId];
+    // TODO: As causing agent ID will remain constan at the app level, the Server helper can get
+    // it from AppHelper. No need to pass it from here.
+    [helper setRobotName2:self.robotName forRobotWithId:self.robotId forUserWithEmail:[NeatoUserHelper getLoggedInUserEmail] withCauseAgentId:[NeatoUserHelper uniqueDeviceIdForUser]];
 }
 
 - (void)robotNameUpdated {

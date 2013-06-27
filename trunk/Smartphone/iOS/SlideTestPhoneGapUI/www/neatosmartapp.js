@@ -240,6 +240,7 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.hideRegisterShowHomePage();
 			neatoSmartApp.registerForRobotMessages();
+                        neatoSmartApp.registerRobotNotification2();
 		},
 
 

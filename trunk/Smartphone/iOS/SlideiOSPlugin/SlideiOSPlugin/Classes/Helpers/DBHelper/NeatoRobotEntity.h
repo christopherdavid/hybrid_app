@@ -12,9 +12,10 @@
 @property (nonatomic, retain) NSString * robotId;
 @property (nonatomic, retain) NSString * serialNumber;
 @property (nonatomic, retain) NSString * userId;
+@property (nonatomic, retain) CleaningAreaEntity *hasCleaningArea;
 @property (nonatomic, retain) NSSet *hasSchedule;
 @property (nonatomic, retain) NSSet *hasUsers;
-@property (nonatomic, retain) CleaningAreaEntity *hasCleaningArea;
+@property (nonatomic, retain) NSSet *hasProfileDetails;
 @end
 
 @interface NeatoRobotEntity (CoreDataGeneratedAccessors)
@@ -28,5 +29,10 @@
 - (void)removeHasUsersObject:(NeatoUserEntity *)value;
 - (void)addHasUsers:(NSSet *)values;
 - (void)removeHasUsers:(NSSet *)values;
+
+- (void)addHasProfileDetailsObject:(NSManagedObject *)value;
+- (void)removeHasProfileDetailsObject:(NSManagedObject *)value;
+- (void)addHasProfileDetails:(NSSet *)values;
+- (void)removeHasProfileDetails:(NSSet *)values;
 
 @end

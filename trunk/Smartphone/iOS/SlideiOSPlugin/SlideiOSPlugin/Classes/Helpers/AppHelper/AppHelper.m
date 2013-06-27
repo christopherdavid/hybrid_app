@@ -2,6 +2,7 @@
 #import "LogHelper.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "Build.h"
+#import <UIKit/UIDevice.h>
 
 @implementation AppHelper
 
@@ -198,5 +199,17 @@
     else {
         return STRING_FALSE;
     }
+}
+
++ (NSString *)deviceSystemName {
+    return [[UIDevice currentDevice] systemName];
+}
+
++ (NSString *)deviceSystemVersion {
+    return [[UIDevice currentDevice] systemVersion];
+}
+
++ (NSString *)deviceModelName {
+    return [[UIDevice currentDevice] model];
 }
 @end

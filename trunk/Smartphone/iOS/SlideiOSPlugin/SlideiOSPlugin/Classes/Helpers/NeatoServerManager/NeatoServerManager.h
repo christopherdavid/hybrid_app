@@ -5,6 +5,8 @@
 #import "NeatoServerHelper.h"
 #import "NeatoNotification.h"
 
+@class NeatoRobotCommand;
+
 @protocol NeatoServerManagerProtocol <NSObject>
 
 -(void) loginSuccess:(NeatoUser *) user;
@@ -46,6 +48,8 @@
 - (void)virtualOnlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId;
 - (void)failedToGetRobotVirtualOnlineStatusWithError:(NSError *)error;
 
+- (void)gotRobotProfileDetails2WithResult:(NSDictionary *)result;
+- (void)failedToGetRobotProfileDetails2WithError:(NSError *)error;
 - (void)commandSentWithResult:(NSDictionary *)result;
 - (void)failedtoSendCommandWithError:(NSError *)error;
 
@@ -82,5 +86,6 @@
 - (void)notificationSettingsForUserWithEmail:(NSString *)email;
 - (void)isScheduleType:(NSString *)scheduleType enabledForRobotWithId:(NSString *)robotId;
 - (void)virtualOnlineStatusForRobotWithId:(NSString *)robotId;
-- (void)sendCommand:(NSString *)command toRobot:(NSString *)robotId;
+- (void)profileDetails2ForRobotWithId:(NSString *)robotId;
+- (void)sendCommand:(NeatoRobotCommand *)command;
 @end

@@ -6,6 +6,6 @@
 #ifndef SlideiOSPlugin_Build_h
 #define SlideiOSPlugin_Build_h
 
-#define SLIDE_IOS_PLUGIN_VERSION    @"0.3.13"
+#define SLIDE_IOS_PLUGIN_VERSION    @"0.3.16"
 
 #endif

@@ -19,6 +19,8 @@
 #import "NeatoNotificationEntity.h"
 #import "CleaningAreaEntity.h"
 #import "XMPPCallbackEntity.h"
+#import "ProfileDetailEntity.h"
+#import "ProfileDetail.h"
 
 #define ENTITY_COMMAND_TRACKER @"CommandTrackerEntity"
 #define NEATO_DATA_STORE_NAME @"NeatoDatastore.sqlite"
@@ -29,6 +31,7 @@
 #define ENTITY_NEATO_NOTIFICATION @"NeatoNotificationEntity"
 #define ENTITY_CLEANING_AREA @"CleaningAreaEntity"
 #define ENTITY_NEATO_CALLBACKID @"XMPPCallbackEntity"
+#define ENTITY_PROFILE_DETAIL @"ProfileDetailEntity"
 
 //Schedule Entities
 #define ENTITY_SCHEDULE @"ScheduleEntity"
@@ -1437,6 +1440,114 @@ static NeatoDataStore *sharedInstance;
     }
     XMPPCallbackEntity *callbackEntity = [callbackIds lastObject];
     return callbackEntity;
+}
+
+- (id)updateProfileDetail:(ProfileDetail *)profileDetail forRobotWithId:(NSString *)robotId {
+    @synchronized(self) {
+        if (self.managedObjectContext) {
+            NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
+            if (robotEntity) {
+                ProfileDetailEntity *profileDetailEntity = [self insertOrUpdateProfileDetailEntity:profileDetail forRobotEntity:robotEntity];
+                [robotEntity addHasProfileDetailsObject:profileDetailEntity];
+                [self saveDatabase];
+                return [NSNumber numberWithBool:YES];
+            }
+            else {
+                return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:ERROR_DB_ERROR];
+            }
+        }
+        else {
+            return [AppHelper nserrorWithDescription:@"Database could not start properly." code:ERROR_DB_ERROR];
+        }
+    }
+}
+
+- (ProfileDetailEntity *)insertOrUpdateProfileDetailEntity:(ProfileDetail *)profileDetail forRobotEntity:(NeatoRobotEntity *)robotEntity {
+    ProfileDetailEntity *profileDetailEntity = [self profileDetailEntityWithKey:profileDetail.key forRobotEntity:robotEntity];
+    if (profileDetailEntity) {
+        debugLog(@"Updating Profile detail entity.");
+        profileDetailEntity.timestamp = profileDetail.timestamp;
+        return profileDetailEntity;
+    }
+    else {
+        debugLog(@"Inserting new profile detail entity.");
+        ProfileDetailEntity *insertedProfileDetailEntity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_PROFILE_DETAIL inManagedObjectContext:self.managedObjectContext];
+        insertedProfileDetailEntity.key = profileDetail.key;
+        insertedProfileDetailEntity.timestamp = profileDetail.timestamp;
+        return insertedProfileDetailEntity;
+    }
+}
+
+- (ProfileDetailEntity *)profileDetailEntityWithKey:(NSString *)key forRobotEntity:(NeatoRobotEntity *)robotEntity {
+   debugLog(@"");
+    for (ProfileDetailEntity *profileDetailEntity in robotEntity.hasProfileDetails) {
+        if ([profileDetailEntity.key isEqualToString:key]) {
+            return profileDetailEntity;
+        }
+    }
+    return nil;
+}
+
+- (id)timestampForRobotProfileKey:(NSString *)key forRobotWithId:(NSString *)robotId {
+    if (self.managedObjectContext) {
+        NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
+        if (robotEntity) {
+            ProfileDetailEntity *profileDetailEntity = [self profileDetailEntityWithKey:key forRobotEntity:robotEntity];
+            if (profileDetailEntity) {
+                return profileDetailEntity.timestamp;
+            }
+            // If there is no timestamp entity for 'robotId'  we return @"-1".
+            return @"-1";
+        }
+        else {
+            return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:ERROR_DB_ERROR];
+        }
+    }
+    else {
+      return [AppHelper nserrorWithDescription:@"Database could not start properly" code:ERROR_DB_ERROR];  
+    }
+}
+
+- (id)profileDetailForKey:(NSString *)key robotWithId:(NSString *)robotId {
+    if (self.managedObjectContext) {
+        ProfileDetail *robotProfileDetail = [[ProfileDetail alloc] init];
+        NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
+        if (robotEntity) {
+            ProfileDetailEntity *profileDetailEntity = [self profileDetailEntityWithKey:key forRobotEntity:robotEntity];
+            if (profileDetailEntity) {
+                robotProfileDetail.key = profileDetailEntity.key;
+                robotProfileDetail.timestamp = profileDetailEntity.timestamp;
+                return robotProfileDetail;
+            }
+            // If there is no profile detail entity for this key in database
+            // we return nil.
+            return nil;
+        }
+        else {
+            return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:ERROR_DB_ERROR];
+        }  
+    }
+    else {
+        return [AppHelper nserrorWithDescription:@"Database could not start properly" code:ERROR_DB_ERROR];
+    }
+}
+
+- (id)deleteProfileDetail:(ProfileDetail *)profileDetail forRobot:(NSString *)robotId {
+    debugLog(@"");
+    if (self.managedObjectContext) {
+        NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
+        if (robotEntity) {
+            ProfileDetailEntity *profileDetailEntity = [self profileDetailEntityWithKey:profileDetail.key forRobotEntity:robotEntity];
+            if (profileDetailEntity) {
+                [self.managedObjectContext deleteObject:profileDetailEntity];
+                [self saveDatabase];
+                [NSNumber numberWithBool:YES];
+            }
+            return [AppHelper nserrorWithDescription:[NSString stringWithFormat:@"No profile detail with key : %@", profileDetail.key] code:ERROR_DB_ERROR];
+        }
+        return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:ERROR_DB_ERROR]; 
+    }
+    return [AppHelper nserrorWithDescription:@"Database could not start properly" code:ERROR_DB_ERROR];
 }
 
 @end

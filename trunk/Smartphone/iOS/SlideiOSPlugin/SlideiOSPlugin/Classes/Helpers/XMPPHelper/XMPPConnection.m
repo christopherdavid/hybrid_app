@@ -1,6 +1,6 @@
 #import "XMPPConnection.h"
 #import "LogHelper.h"
-
+#import "CommandsHelper.h"
 
 static XMPPConnection *sharedInstance;
 
@@ -174,10 +174,12 @@ static XMPPConnection *sharedInstance;
 	return NO;
 }
 
-- (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
-{
-	debugLog(@"didReceiveMessage called. message = %@", message);
+- (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message {
+    debugLog(@"Sender : %@", sender);
+    debugLog(@"didReceiveMessage called. message = %@", [message stringValue]);
     [self.delegate xmppStream:sender didReceiveMessage:message];
+    // Post notfication if received message is robot data changed.
+    [self postNotificationIfRobotDataChangedWithMessage:message];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
@@ -196,6 +198,20 @@ static XMPPConnection *sharedInstance;
 {
 	debugLog(@"xmppStreamDidDisconnect called. error = %@", error);
     [self.delegate xmppStreamDidDisconnect:sender withError:error];
+}
+
+- (void)postNotificationIfRobotDataChangedWithMessage:(XMPPMessage *)message {
+    CommandsHelper *commandHelper = [[CommandsHelper alloc] init];
+    NSString *messageBody = [[message elementForName:@"body"] stringValue];
+    // Check if command is of request type.
+    if ([commandHelper isCommandOfRequestType:messageBody]) {
+        if ([commandHelper isXMPPDataChangeCommand:messageBody]) {
+            NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+            [userInfo setObject:messageBody forKey:KEY_XMPP_MESSAGE];
+            [userInfo setObject:[message fromStr] forKey:KEY_CHAT_ID];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_XMPP_DATA_CHANGE object:nil userInfo:userInfo];
+        }
+    }
 }
 
 @end

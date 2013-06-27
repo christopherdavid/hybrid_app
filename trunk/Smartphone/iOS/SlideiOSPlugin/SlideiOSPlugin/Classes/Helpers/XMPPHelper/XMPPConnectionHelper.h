@@ -3,11 +3,12 @@
 
 @protocol XMPPConnectionHelperProtocol <NSObject>
 
--(void) didConnectOverXMPP;
--(void) didDisConnectFromXMPP;
--(void) commandSentOverXMPP;
--(void) failedToSendCommandOverXMPP;
--(void) commandReceivedOverXMPP:(XMPPMessage *)message sender:(XMPPStream *) sender;
+- (void)didConnectOverXMPP;
+- (void)didDisConnectFromXMPP;
+- (void)commandSentOverXMPP;
+- (void)failedToSendCommandOverXMPP;
+- (void)commandReceivedOverXMPP:(XMPPMessage *)message sender:(XMPPStream *) sender;
+- (void)xmppLoginfailedWithError:(NSXMLElement *)error;
 
 @end
 

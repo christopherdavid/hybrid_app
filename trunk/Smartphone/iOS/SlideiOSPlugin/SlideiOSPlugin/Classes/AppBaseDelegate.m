@@ -3,6 +3,7 @@
 #import "NeatoUserHelper.h"
 #import "LogHelper.h"
 #import "PushNotificationHelper.h"
+#import "XMPPConnectionHelper.h"
 
 #define DEVICE_TYPE_IPHONE      2
 
@@ -15,6 +16,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     debugLog(@"didFinishLaunchingWithOptions called");
+    [self connectOverXMPPIfRequired];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectOverXMPPIfRequired) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disconnectXMPPConnection) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
     bool loggedIn = [[[UserManagerCallWrapper alloc] init] isUserLoggedIn];
     if (loggedIn) {
         // Let the device know we want to receive push notifications
@@ -81,5 +86,51 @@
     [[PushNotificationHelper sharedInstance] setPushNotification:userInfo];
 }
 
+- (void)connectOverXMPPIfRequired {
+    debugLog(@"connectOverXMPPIfRequired called.");
+    bool loggedIn = [[[UserManagerCallWrapper alloc] init] isUserLoggedIn];
+    if (loggedIn) {
+        NeatoUser *user = [NeatoUserHelper getNeatoUser];
+        if (!user) {
+            debugLog(@"Couldn't find the logged-in user. Will not connect over XMPP!");
+            return;
+        }
+        XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
+        if ([helper isConnected]) {
+            debugLog(@"Already connected over XMPP!");
+            return;
+        }
+        helper.delegate = self;
+        [helper connectJID:user.chatId password:user.chatPassword host:NEATO_XMPP_SERVER_ADDRESS];
+        
+    }
+    else {
+        debugLog(@"User not logged-in. Will not connect over XMPP!");
+    }
+}
+
+- (void)disconnectXMPPConnection {
+    debugLog(@"disconnectXMPPConnection called");
+    XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper disconnectFromRobot];
+}
+
+- (void)didConnectOverXMPP {
+    debugLog(@"didConnectOverXMPP called");
+}
+
+- (void)xmppLoginfailedWithError:(NSXMLElement *)error; {
+    debugLog(@"xmppLoginfailedWithError called. error = %@", error);
+}
+
+- (void)didDisConnectFromXMPP {
+    debugLog(@"didDisConnectFromXMPP called");
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+}
 
 @end

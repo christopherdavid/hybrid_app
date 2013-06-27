@@ -3,6 +3,9 @@
 #import "NeatoUser.h"
 #import "NeatoServerHelper.h"
 #import "NeatoUserHelper.h"
+#import "NeatoUserAttributes.h"
+#import "AppHelper.h"
+#import "XMPPConnectionHelper.h"
 
 @interface CreateUserListener2()
 
@@ -28,9 +31,11 @@
     debugLog(@"");
     // Save the details to local storage
     [NeatoUserHelper saveNeatoUser:neatoUser];
-    [self.delegate performSelector:@selector(userCreated2:) withObject:neatoUser];
-    self.delegate = nil;
-    self.retained_self = nil;
+    
+    // XMPP login.
+    XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper connectJID:neatoUser.chatId password:neatoUser.chatPassword host:NEATO_XMPP_SERVER_ADDRESS];
 }
 
 - (void)start {
@@ -60,6 +65,43 @@
 
 - (void)failedToGetUserDetailsWithError:(NSError *)error {
     debugLog(@"");
+    [self.delegate performSelector:@selector(failedToCreateUser2WithError:) withObject:error];
+    self.delegate = nil;
+    self.retained_self = nil;
+}
+                   
+- (void)failedToSetUserAttributesWithError:(NSError *)error {
+    debugLog(@"Failed to set user attribute.");
+    self.delegate = nil;
+    self.retained_self = nil;
+}
+
+- (void)setUserAttributesSucceeded {
+    debugLog(@"Set user attributes succeeded.");
+    self.delegate = nil;
+    self.retained_self = nil;
+}
+
+- (void)didConnectOverXMPP {
+    debugLog(@"Did connect over XMPP.");
+    NeatoUser *user = [NeatoUserHelper getNeatoUser];
+    [self.delegate performSelector:@selector(userCreated2:) withObject:user];
+    
+    // Set user attributes.
+    NSString *authToken = [NeatoUserHelper getUsersAuthToken];
+    NeatoUserAttributes *attributes = [[NeatoUserAttributes alloc] init];
+    attributes.systemName = [AppHelper deviceSystemName];
+    attributes.systemVersion = [AppHelper deviceSystemVersion];
+    attributes.deviceModelName = [AppHelper deviceModelName];
+    
+    // Setting user attributes
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self;
+    [helper setUserAttributes:attributes forAuthToken:authToken];
+}
+
+- (void)xmppLoginfailedWithError:(NSXMLElement *)error {
+	debugLog(@"XMPP login failed.");
     [self.delegate performSelector:@selector(failedToCreateUser2WithError:) withObject:error];
     self.delegate = nil;
     self.retained_self = nil;

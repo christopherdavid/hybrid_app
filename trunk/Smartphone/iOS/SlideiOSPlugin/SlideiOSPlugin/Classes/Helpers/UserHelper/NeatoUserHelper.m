@@ -2,7 +2,7 @@
 #import "LogHelper.h"
 #import "NeatoDataStore.h"
 #import "NeatoUser.h"
-
+#import "AppHelper.h"
 
 #define KEY_USER_LOOGED_IN @"neato_has_user_logged_in"
 #define KEY_USER_AUTH_TOKEN @"neato_user_current_auth_token"
@@ -15,7 +15,7 @@
 #define KEY_USER_PASSWORD @"neato_user_password"
 #define KEY_EXTERNAL_SOCIAL_ID @"neato_user_external_social_id"
 #define KEY_DEVICE_PUSH_AUTH_TOKEN  @"device_push_auth_token"
-
+#define KEY_UNIQUE_DEVICE_ID_FOR_USER @"unique_device_id_for_user"
 
 @implementation NeatoUserHelper
 
@@ -116,6 +116,26 @@
 
 + (NSArray *)notificationsForUserWithEmail:(NSString *)email {
    return [[NeatoDataStore sharedNeatoDataStore] notificationsForUserWithEmail:email];
+}
+
++ (NSString *)uniqueDeviceIdForUser {
+    debugLog(@"");
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *uniqueId = [userDefaults valueForKey:KEY_UNIQUE_DEVICE_ID_FOR_USER];
+    if (!uniqueId) {
+        uniqueId = [AppHelper generateUniqueString];
+        [userDefaults setValue:uniqueId forKey:KEY_UNIQUE_DEVICE_ID_FOR_USER];
+        [userDefaults synchronize];
+    }
+    
+    return uniqueId;
+}
+
++ (void)deleteUniqueDeviceIdForUser {
+    debugLog(@"");
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults removeObjectForKey:KEY_UNIQUE_DEVICE_ID_FOR_USER];
+    [userDefaults synchronize];
 }
 
 @end

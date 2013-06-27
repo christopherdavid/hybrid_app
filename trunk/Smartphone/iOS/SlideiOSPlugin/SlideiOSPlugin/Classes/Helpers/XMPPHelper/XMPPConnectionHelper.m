@@ -125,8 +125,7 @@
 {
     debugLog(@"xmppStreamDidAuthenticate called");
     [self notifyCaller:@selector(didConnectOverXMPP)];
-    if (self.needToSendACommand)
-    {
+    if (self.needToSendACommand) {
         debugLog(@"Connected over XMPP. Now sending pending command.");
         [XMPPConnection getSharedXMPPConnection].delegate = self;
         [[XMPPConnection getSharedXMPPConnection] sendData:self.commandToSend to:self.sendTo];
@@ -167,6 +166,12 @@
         debugLog(@"Failed to connect to XMPP server.Command could not be sent.");
         [self notifyCaller:@selector(failedToSendCommandOverXMPP)];
     }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.delegate respondsToSelector:@selector(xmppLoginfailedWithError:)])
+        {
+            [self.delegate performSelector:@selector(xmppLoginfailedWithError:) withObject:error];
+        }
+    });
     self.needToSendACommand = NO;
     self.retained_self = nil;
 }
