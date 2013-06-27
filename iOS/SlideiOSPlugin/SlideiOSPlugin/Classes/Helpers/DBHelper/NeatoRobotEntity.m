@@ -13,8 +13,9 @@
 @dynamic robotId;
 @dynamic serialNumber;
 @dynamic userId;
+@dynamic hasCleaningArea;
 @dynamic hasSchedule;
 @dynamic hasUsers;
-@dynamic hasCleaningArea;
+@dynamic hasProfileDetails;
 
 @end

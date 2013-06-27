@@ -12,4 +12,8 @@
 - (NSString *)commandResponseNeeded;
 - (NSInteger)distributionModeForCommandType:(NSString *)connectionType;
 - (NSString *)generateXMLForParams:(NSDictionary *)params;
+- (BOOL)isXMPPDataChangeCommand:(NSString *)xmlCommand;
+- (NSDictionary *)parseXMPPDataChangeNotification:(NSString *)xmlCommand;
+- (NSString *)commandIdFromXmlCommand:(NSString *)xmlCommand;
+- (BOOL)isCommandOfRequestType:(NSString *)xmlCommand;
 @end

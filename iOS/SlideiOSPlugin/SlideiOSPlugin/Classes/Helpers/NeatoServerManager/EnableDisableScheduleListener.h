@@ -4,8 +4,8 @@
 
 @property(nonatomic, retain) NSString *email;
 @property(nonatomic, retain) NSString *robotId;
-@property int *scheduleType;
-@property BOOL *enable;
+@property NSInteger scheduleType;
+@property BOOL enable;
 
 - (id)initWithDelegate:(id)delegate;
 - (void)start;

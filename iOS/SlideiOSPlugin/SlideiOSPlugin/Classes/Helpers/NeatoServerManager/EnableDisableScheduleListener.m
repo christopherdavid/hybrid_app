@@ -2,6 +2,8 @@
 #import "LogHelper.h"
 #import "NeatoServerHelper.h"
 #import "PluginConstants.h"
+#import "NeatoUserHelper.h"
+#import "AppHelper.h"
 
 @interface EnableDisableScheduleListener()
 
@@ -29,9 +31,18 @@
 }
 
 -(void)start {
+   // Return error if advance schedule type.
+    if (self.scheduleType == NEATO_SCHEDULE_ADVANCE_INT) {
+        NSError *error = [AppHelper nserrorWithDescription:@"Invalid schedule type." code:INVALID_SCHEDULE_TYPE];
+        [self.delegate performSelector:@selector(failedToEnableDisableScheduleWithError:) withObject:error];
+        self.delegate = nil;
+        self.retained_self = nil;
+        return;
+    }
     NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
     helper.delegate = self;
-    [helper enableDisable:self.enable scheduleType:self.scheduleType forRobot:self.robotId withUserEmail:self.email];
+    // TODO: Server helper should get the causing agent Id from NeatoUserHelper.
+    [helper enableDisable:self.enable scheduleType:self.scheduleType forRobot:self.robotId withUserEmail:self.email withCauseAgentId:[NeatoUserHelper uniqueDeviceIdForUser]];
 }
 
 

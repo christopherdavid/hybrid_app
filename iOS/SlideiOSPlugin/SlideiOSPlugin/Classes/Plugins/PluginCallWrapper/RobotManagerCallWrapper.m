@@ -11,7 +11,7 @@
 #import "NeatoRobotHelper.h"
 #import "RobotScheduleManager.h"
 
-@interface RobotManagerCallWrapper() <TCPConnectionHelperProtocol, XMPPConnectionHelperProtocol, RobotScheduleManagerProtocol>
+@interface RobotManagerCallWrapper() <TCPConnectionHelperProtocol, RobotScheduleManagerProtocol>
 
 
 @property(nonatomic, retain) RobotManagerCallWrapper *retained_self;

@@ -23,4 +23,7 @@
 + (NSString *)getEmptyStringIfNil:(NSString *)input;
 + (BOOL)boolValueFromString:(NSString *)string;
 + (NSString *)stringFromBool:(BOOL)boolValue;
++ (NSString *)deviceSystemName;
++ (NSString *)deviceSystemVersion;
++ (NSString *)deviceModelName;
 @end

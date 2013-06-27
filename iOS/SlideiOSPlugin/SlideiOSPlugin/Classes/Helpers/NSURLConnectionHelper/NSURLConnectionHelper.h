@@ -29,6 +29,8 @@
 @interface NSURLConnectionHelper : NSObject
 
 @property(nonatomic, weak) id delegate;
+@property(nonatomic) NSInteger retryCount;
+
 -(NSURLConnection *) getDataForRequest:(NSURLRequest *) request;
 -(NSURLConnection *) downloadDataForRequest:(NSURLRequest *) request andSaveAtPath:(NSURL *) path;
 

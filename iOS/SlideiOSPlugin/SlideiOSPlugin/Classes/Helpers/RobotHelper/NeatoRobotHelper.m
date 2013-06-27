@@ -78,4 +78,30 @@
     NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
     return [helper removeXMPPCallbackId];
 }
+
++ (id)updateProfileDetail:(ProfileDetail *)profileDetail forRobotWithId:(NSString *)robotId {
+    debugLog(@"");
+    NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
+    return [helper updateProfileDetail:profileDetail forRobotWithId:robotId];
+}
+
++ (id)timestampForRobotProfileKey:(NSString *)key forRobotWithId:(NSString *)robotId {
+    debugLog(@"");
+    NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
+    return [helper timestampForRobotProfileKey:key forRobotWithId:robotId];
+}
+
++ (id)profileDetailForKey:(NSString *)key robotWithId:(NSString *)robotId {
+    debugLog(@"");
+    NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
+    return [helper profileDetailForKey:key robotWithId:robotId ];
+}
+
+
++ (id)deleteProfileDetail:(ProfileDetail *)profileDetail forRobot:(NSString *)robotId {
+    debugLog(@"");
+    NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
+    return [helper deleteProfileDetail:profileDetail forRobot:robotId];
+}
+
 @end

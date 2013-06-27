@@ -272,4 +272,62 @@
     }
 }
 
+- (NSString *)commandIdFromXmlCommand:(NSString *)xmlCommand {
+    debugLog(@"");
+    NSError *error = nil;
+    DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:xmlCommand options:0 error:&error];
+    NSArray *commadArr = [document.rootElement nodesForXPath:@"//command" error:&error];
+    if (error || [commadArr count] == 0) {
+        // This is not normal. The reply must contain a command tag.
+        debugLog(@"Request does not contain <command> tag!!");
+        return nil;
+    }
+    else {
+        DDXMLElement *child = [commadArr objectAtIndex:0];
+        NSString *commandId = child.stringValue;
+        debugLog(@"CommandId retreived from xmlCommand is : %@",commandId);
+        return commandId;
+    }
+}
+
+- (BOOL)isXMPPDataChangeCommand:(NSString *)xmlCommand {
+    debugLog(@"");
+    if ([self commandIdFromXmlCommand:xmlCommand]) {
+        if ([[self commandIdFromXmlCommand:xmlCommand] isEqualToString:[NSString stringWithFormat:@"%d", COMMAND_ROBOT_PROFILE_DATA_CHANGED]]) {
+            return YES;
+        }
+        return NO;
+    }
+    return NO;
+}
+
+- (NSDictionary *)parseXMPPDataChangeNotification:(NSString *)xmlCommand {
+    NSError *error = nil;
+    DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:xmlCommand options:0 error:&error];
+    NSMutableDictionary *notificationData = [[NSMutableDictionary alloc] init];
+    NSArray *robotIdArray = [document.rootElement nodesForXPath:@"//robotId" error:&error];
+    if ([robotIdArray count] != 0)
+    {
+        [notificationData setValue:[[robotIdArray objectAtIndex:0] stringValue] forKey:@"robotId"];
+    }
+    NSArray *causeAgentIdArray = [document.rootElement nodesForXPath:@"//causeAgentId" error:&error];
+    if ([robotIdArray count] != 0)
+    {
+        [notificationData setValue:[[causeAgentIdArray objectAtIndex:0] stringValue] forKey:@"causeAgentId"];
+    }
+    return notificationData;
+}
+
+- (BOOL)isCommandOfRequestType:(NSString *)xmlCommand {
+    debugLog(@"");
+    NSError *error = nil;
+    DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:xmlCommand options:0 error:&error];
+     NSArray *requestTag = [document.rootElement nodesForXPath:@"//request" error:&error];
+    if ([requestTag count] != 0) {
+        debugLog(@"Command is of request type.");
+        return YES;
+    }
+    return NO;
+}
+
 @end

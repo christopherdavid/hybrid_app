@@ -123,7 +123,61 @@
 #define TIMED_MODE_ENABLED 0
 #define NOTIFICATION_FLAG_FALSE 0
 #define NOTIFICATION_FLAG_TRUE 1
-#define KEY_CLEANING_COMMAND @"cleaningCommand"
+
+// Command expiry constants
+#define COMMAND_EXPIRY_TIME 180
+
+// Notification constants
+#define NOTIFICATION_XMPP_DATA_CHANGE @"com.neato.plugin.xmppchange.robotDataChanged"
+#define KEY_XMPP_MESSAGE @"XMPPMessage"
+#define KEY_UI_UPDATE_DATA @"UIUpdateData"
+#define KEY_CALLBACK_ID @"callBackId"
+#define SUCCESS_CALLBACK @"successCallback"
+
+// TODO:5001 is used at other places as well so confirm if it won't create a
+// conflict.
+#define COMMAND_ROBOT_PROFILE_DATA_CHANGED 5001
+
+
+// Profile Detail keys
+#define KEY_ROBOT_CURRENT_STATE @"robotCurrentState"
+#define KEY_ROBOT_CLEANING_COMMAND @"cleaningCommand"
+#define KEY_ROBOT_STATE_UPDATE @"robotStateUpdate"
+#define KEY_SERIAL_NUMBER @"serial_number"
+#define KEY_VALUE @"value"
+#define KEY_TIMESTAMP @"timestamp"
+#define KEY_NAME @"name"
+#define KEY_ROBOT_NAME @"robotName"
+#define KEY_ENABLE_BASIC_SCHEDULE @"enable_basic_schedule"
+#define KEY_SCHEDULE_STATE @"scheduleState"
+#define KEY_SCHEDULE_TYPE @"scheduleType"
+#define KEY_ROBOT_SCHEDULE_UPDATED @"schedule_updated"
+
+//Key Codes for profile data changes.
+#define ROBOT_CURRENT_STATE_CHANGED_CODE 4001
+#define ROBOT_STATE_UPDATE_CODE 4003
+#define ROBOT_NAME_UPDATE 4004
+#define ROBOT_SCHEDULE_STATE_CHANGED 4005
+#define ROBOT_HAS_SCHEDULE_UPDATED 4006
+
+// Robot states
+#define ROBOT_STATE_CLEANING 10002
+#define ROBOT_STATE_STOPPED 10005
+#define ROBOT_STATE_PAUSED 10007
+#define ROBOT_STATE_RESUMED 10008
+#define ROBOT_STATE_ON_BASE	10009
+#define ROBOT_STATE_INVALID	19999
+
+#define KEY_ROBOT_ID @"robotId"
+#define KEY_ROBOT_DATA_ID @"robotDataKeyId"
+#define KEY_ROBOT_DATA @"robotData"
+
+// Send command request constants.
+#define KEY_COMMAND_ID @"commandId"
+#define KEY_XML_COMMAND @"xmlCommand"
+
+#define KEY_CHAT_ID @"chatId"
+#define KEY_CAUSE_AGENT_ID @"causeAgentId"
 
 #define NETWORK_CONNECTION_FAILURE_MSG @"Request failed!Please check your network settings."
 // To switch to prod server, uncomment SWITCH_TO_PROD_SERVER variable
@@ -231,3 +285,4 @@
 #define NEATO_UPDATE_ROBOT_SCHEDULE_DATA @"method=robotschedule.update_data"
 #define NEATO_DELETE_SCHEDULE_DATA @"method=robotschedule.delete_data"
 #define NEATO_GET_SCHEDULE_BASED_ON_TYPE @"method=robotschedule.get_schedule_based_on_type"
+#define NEATO_SET_USER_ATTRIBUTES @"method=user.set_attributes"

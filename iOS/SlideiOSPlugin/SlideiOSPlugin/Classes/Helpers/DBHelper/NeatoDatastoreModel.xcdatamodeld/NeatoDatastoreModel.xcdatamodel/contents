@@ -30,6 +30,7 @@
         <attribute name="serialNumber" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="hasCleaningArea" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="CleaningAreaEntity" inverseName="ofRobot" inverseEntity="CleaningAreaEntity" syncable="YES"/>
+        <relationship name="hasProfileDetails" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ProfileDetailEntity" inverseName="ofRobot" inverseEntity="ProfileDetailEntity" syncable="YES"/>
         <relationship name="hasSchedule" optional="YES" toMany="YES" maxCount="2" deletionRule="Cascade" destinationEntity="ScheduleEntity" inverseName="ofRobot" inverseEntity="ScheduleEntity" syncable="YES"/>
         <relationship name="hasUsers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NeatoUserEntity" inverseName="hasRobots" inverseEntity="NeatoUserEntity" syncable="YES"/>
     </entity>
@@ -54,6 +55,11 @@
         <relationship name="hasRobots" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NeatoRobotEntity" inverseName="hasUsers" inverseEntity="NeatoRobotEntity" syncable="YES"/>
         <relationship name="hasSocialNetowrks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NeatoSocialNetworksEntity" inverseName="socialNetworkOfUser" inverseEntity="NeatoSocialNetworksEntity" syncable="YES"/>
     </entity>
+    <entity name="ProfileDetailEntity" representedClassName="ProfileDetailEntity" syncable="YES">
+        <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="ofRobot" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="NeatoRobotEntity" inverseName="hasProfileDetails" inverseEntity="NeatoRobotEntity" syncable="YES"/>
+    </entity>
     <entity name="ScheduleEntity" representedClassName="ScheduleEntity" syncable="YES">
         <attribute name="schedule_version" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="scheduleId" optional="YES" attributeType="String" syncable="YES"/>
@@ -74,9 +80,10 @@
         <element name="CleaningAreaEntity" positionX="160" positionY="192" width="128" height="90"/>
         <element name="CommandTrackerEntity" positionX="-999" positionY="-49" width="128" height="103"/>
         <element name="NeatoNotificationEntity" positionX="160" positionY="192" width="128" height="90"/>
-        <element name="NeatoRobotEntity" positionX="-1008" positionY="180" width="128" height="195"/>
+        <element name="NeatoRobotEntity" positionX="-1008" positionY="180" width="128" height="210"/>
         <element name="NeatoSocialNetworksEntity" positionX="-929" positionY="491" width="128" height="103"/>
         <element name="NeatoUserEntity" positionX="-1233" positionY="216" width="128" height="240"/>
+        <element name="ProfileDetailEntity" positionX="160" positionY="192" width="128" height="90"/>
         <element name="ScheduleEntity" positionX="-747" positionY="216" width="128" height="135"/>
         <element name="ScheduleEventsEntity" positionX="-477" positionY="243" width="128" height="73"/>
         <element name="XMPPCallbackEntity" positionX="160" positionY="192" width="128" height="60"/>

@@ -11,6 +11,7 @@
 #import "XMPPCommandHelper.h"
 #import "CleaningArea.h"
 #import "NeatoUserHelper.h"
+#import "NeatoCommandExpiryHelper.h"
 
 #define START_ROBOT_COMMAND_TAG                 1001
 #define STOP_ROBOT_COMMAND_TAG                  1002
@@ -33,6 +34,7 @@
 - (BOOL)isTimedModeSupportedForCommand:(NSString *)commandId;
 - (void)sendCommandOverTCPXMPPToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate;
 - (void)sendCommandOverServerToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate;
+- (BOOL)isExpirableCommand:(NSInteger)commandId;
 @end
 
 @implementation RobotCommandHelper
@@ -45,6 +47,18 @@
         case COMMAND_STOP_ROBOT:
         case COMMAND_PAUSE_CLEANING:
         case COMMAND_SEND_TO_BASE:
+        case COMMAND_RESUME_CLEANING:
+            return YES;
+        default:
+            return NO;
+    }
+}
+
+- (BOOL)isExpirableCommand:(NSInteger)commandId {
+    switch(commandId) {
+        case COMMAND_START_ROBOT:
+        case COMMAND_STOP_ROBOT:
+        case COMMAND_PAUSE_CLEANING:
         case COMMAND_RESUME_CLEANING:
             return YES;
         default:
@@ -184,8 +198,13 @@
     self.retainedSelf = nil;
 }
 
-- (void)commandSentWithResult:(NSDictionary *)result {
+- (void)command:(NeatoRobotCommand *)command sentWithResult:(NSDictionary *)result {
     debugLog(@"");
+    // Start a timer if the command is expirable and if a timer is not already in progress
+    if ([self isExpirableCommand:[command.commandId integerValue]] && ![[NeatoCommandExpiryHelper expirableCommandHelper] isTimerRunningForRobotId:command.robotId]) {
+        [[NeatoCommandExpiryHelper expirableCommandHelper] startCommandTimerForRobotId:command.robotId];
+    }
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.delegate performSelector:@selector(commandSentWithResult:) withObject:result];
         self.delegate = nil;
@@ -197,9 +216,15 @@
     debugLog(@"");
     NSString *requestId = [AppHelper generateUniqueString];
     
+    NeatoRobotCommand *robotCommand = [[NeatoRobotCommand alloc] init];
+    robotCommand.xmlCommand = [[[XMPPCommandHelper alloc] init] getRobotCommand2WithId:[commandId integerValue] withParams:params andRequestId:requestId];
+    robotCommand.commandId = commandId;
+    robotCommand.robotId = robotId;
+    robotCommand.causingAgentId = [NeatoUserHelper uniqueDeviceIdForUser];
+    
     NeatoServerManager *manager = [[NeatoServerManager alloc] init];
     manager.delegate = self;
-    [manager sendCommand:[[[XMPPCommandHelper alloc] init] getRobotCommand2WithId:commandId withParams:params andRequestId:requestId] toRobot:robotId];
+    [manager sendCommand:robotCommand];
 }
 
 - (void)sendCommandOverTCPXMPPToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate {

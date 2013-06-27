@@ -8,6 +8,7 @@
 #import "CleaningArea.h"
 
 @class Schedule;
+@class ProfileDetail;
 
 @interface NeatoDataStore : NSObject
 
@@ -58,4 +59,9 @@
 - (void)setNotificationsFromNotificationsArray:(NSArray *)notificationOptionsArray forEmail:(NSString *)email;
 - (NSArray *)notificationsForUserWithEmail:(NSString *)email;
 
+// ProfileDetails method.
+- (id)updateProfileDetail:(ProfileDetail *)profileDetail forRobotWithId:(NSString *)robotId;
+- (id)timestampForRobotProfileKey:(NSString *)key forRobotWithId:(NSString *)robotId;
+- (id)profileDetailForKey:(NSString *)key robotWithId:(NSString *)robotId;
+- (id)deleteProfileDetail:(ProfileDetail *)profileDetail forRobot:(NSString *)robotId;
 @end

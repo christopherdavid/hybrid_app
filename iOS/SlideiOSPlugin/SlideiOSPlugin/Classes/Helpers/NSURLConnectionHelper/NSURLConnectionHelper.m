@@ -4,6 +4,8 @@
 
 #define SMART_APP_ERROR_DOMAIN @"NeatoSmartApp"
 
+#define INVALID_RETRY_COUNT -10
+
 @interface NSURLConnectionHelper()
 {
     
@@ -18,6 +20,8 @@
 @property(nonatomic, retain) NSURLConnection *connection;
 @property(readwrite) bool connectionFinished;
 @property(nonatomic, retain) NSURL *destinationPath;
+@property(nonatomic, retain) NSURLRequest *originalRequest;
+@property(nonatomic) NSInteger currentRetryCount;
 
 - (void) writeToFileHelper:(NSString *) fileNameWithPath data:(NSData*) dataToWrite;
 @end
@@ -32,19 +36,20 @@
 @synthesize destinationPath = _destinationPath;
 @synthesize expectedSize = _expectedSize;
 @synthesize downloadedSize = _downloadedSize;
+@synthesize originalRequest = _originalRequest;
+@synthesize retryCount = _retryCount;
 
--(NSURLConnection *) getDataForRequest:(NSURLRequest *) request
-{
+- (NSURLConnection *)getDataForRequest:(NSURLRequest *)request {
     debugLog(@"");
-    if (request == nil)
-    {
+    if (request == nil) {
         debugLog(@"URLRequest cannot be nil. Stopping!");
         return nil;
     }
+    self.originalRequest = request;
     self.connectionFinished = NO;
     self.retained_self = self;
     self.responseData = [[NSMutableData alloc] init];
-    
+  
     // Trace app info
     [AppHelper traceAppInfo];
     
@@ -79,31 +84,32 @@
     return [self getDataForRequest:request];
 }
 
--(void) notifyRequestFailed:(NSError *) error
-{
+- (void)notifyRequestFailed:(NSError *)error {
     debugLog(@"");
     
     // Delele the downloaded file if it exsts
     NSFileManager *filemgr = [NSFileManager defaultManager];
-    if ([filemgr fileExistsAtPath: [self.destinationPath path]] == YES)
-    {
-        if([filemgr removeItemAtPath:[self.destinationPath path] error:nil])
-        {
+    if ([filemgr fileExistsAtPath: [self.destinationPath path]] == YES) {
+        if ([filemgr removeItemAtPath:[self.destinationPath path] error:nil]) {
             debugLog(@"Partial\\Corrupt downloaded file deleted.");
         }
-        else
-        {
+        else {
             debugLog(@"Could NOT delete partila\\corrupt downloaded file. Terrible things may happen!");
         }
     }
     
-    if ([self.delegate respondsToSelector:@selector(requestFailedForConnection:error:)])
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(requestFailedForConnection:error:) withObject:self.connection withObject:error];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
+    if (self.currentRetryCount > 0) {
+        self.currentRetryCount--;
+        [self getDataForRequest:self.originalRequest];  
+    }
+    else {
+        if ([self.delegate respondsToSelector:@selector(requestFailedForConnection:error:)]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate performSelector:@selector(requestFailedForConnection:error:) withObject:self.connection withObject:error];
+                self.delegate = nil;
+                self.retained_self = nil;
+            });
+        }
     }
 }
 
@@ -247,6 +253,21 @@
         NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:[[NSNumber  numberWithInt:self.responseCode] integerValue] userInfo:details];
         [self notifyRequestFailed:error];
     }
+}
+
+- (NSInteger)currentRetryCount {
+  if (_currentRetryCount == INVALID_RETRY_COUNT) {
+    _currentRetryCount = self.retryCount;
+    return _currentRetryCount;
+  }
+  return _currentRetryCount;
+}
+
+- (id)init {
+  if ((self = [super init])) {
+    self.currentRetryCount = INVALID_RETRY_COUNT;
+  }
+  return self;
 }
 
 @end

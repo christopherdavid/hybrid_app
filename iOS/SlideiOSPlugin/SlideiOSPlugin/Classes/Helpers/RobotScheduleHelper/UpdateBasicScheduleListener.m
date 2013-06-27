@@ -10,6 +10,10 @@
 #import "ScheduleUtils.h"
 #import "ScheduleJsonHelper.h"
 #import "SchedulerConstants.h"
+#import "NeatoServerHelper.h"
+#import "RobotProfileDetails3.h"
+#import "NeatoUserHelper.h"
+
 
 @interface UpdateBasicScheduleListener()
 
@@ -71,11 +75,11 @@
 
 - (void)updatedScheduleWithResult:(id)result {
     NSDictionary *resultDict = (NSDictionary *)result;
+    [self notifyScheduleUpdated];
+    
     // Update schedule version in DB.
     [ScheduleDBHelper updateScheduleVersion:[resultDict stringForKey:KEY_SCHEDULE_VERSION] forScheduleWithScheduleId:self.scheduleId];
     [self.delegate performSelector:@selector(updatedSchedule:) withObject:self.scheduleId];
-    self.delegate = nil;
-    self.retained_self = nil;
 }
 
 - (void)updateScheduleError:(NSError *)error {
@@ -145,5 +149,33 @@
     [serverHelper updateScheduleDataForScheduleId:scheduleId withScheduleVersion:scheduleVersion withScheduleData:data ofScheduleType:scheduleType];
 }
 
+- (void)notifyScheduleUpdated {
+    debugLog(@"");
+    
+    RobotProfileDetails3 *profileDetails = [[RobotProfileDetails3 alloc] init];
+    profileDetails.robotId = self.robotId;
+    profileDetails.email = [NeatoUserHelper getLoggedInUserEmail];
+    profileDetails.causeAgentId = [NeatoUserHelper uniqueDeviceIdForUser];
+    profileDetails.notificationFlag = [NSNumber numberWithInt:NOTIFICATION_FLAG_TRUE];
+    profileDetails.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
+    [profileDetails.profileDict setValue:@"true" forKey:KEY_ROBOT_SCHEDULE_UPDATED];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    serverHelper.delegate = self;
+    [serverHelper notifyScheduleUpdatedForProfileDetails:profileDetails];
+}
+
+- (void)notifyScheduleUpdatedSucceeded {
+    debugLog(@"");
+    self.delegate = nil;
+    self.retained_self = nil;
+}
+
+- (void)failedToNotifyScheduleUpdatedWithError:(NSError *)error {
+    debugLog(@"");
+    self.delegate = nil;
+    self.retained_self = nil;
+    
+}
 
 @end
