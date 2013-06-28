@@ -739,25 +739,17 @@ public class RobotManagerPlugin extends Plugin {
 		private void setRobotName2(final Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "setRobotName2 action initiated in Robot plugin");	
 			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-			String robotName = jsonData.getString(JsonMapKeys.KEY_ROBOT_NAME);
+			final String robotName = jsonData.getString(JsonMapKeys.KEY_ROBOT_NAME);
 			
 			RobotManager.getInstance(context).setRobotName(robotId, robotName, new RobotRequestListenerWrapper(callbackId) {
 				
 				@Override
 				public void onReceived(NeatoWebserviceResult responseResult) {					
-					RobotItem robotItem = RobotHelper.getRobotItem(context, robotId);
-					if (robotItem != null) {
-						JSONObject robotJsonObj = getRobotDetailJsonObject(robotItem);
-						
-						PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, robotJsonObj);	
-						pluginResult.setKeepCallback(false);
-						success(pluginResult, callbackId);
-						
-						sendDataChangedCommand(context, robotItem.serial_number, RobotCommandPacketConstants.KEY_ROBOT_DETAILS_CHANGED);
-					}
-					else {
-						sendError(callbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
-					}
+					JSONObject robotJsonObj = getRobotDetailJsonObject(robotId, robotName);
+					PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, robotJsonObj);	
+					pluginResult.setKeepCallback(false);
+					success(pluginResult, callbackId);
+					sendDataChangedCommand(context, robotId, RobotCommandPacketConstants.KEY_ROBOT_DETAILS_CHANGED);
 				}
 			});	
 		}
@@ -827,6 +819,19 @@ public class RobotManagerPlugin extends Plugin {
 				}
 			}
 			
+			return robotJsonObj;
+		}
+
+		// Private helper method to create the Robot JSON
+		private JSONObject getRobotDetailJsonObject(String robotId, String robotName) {
+			JSONObject robotJsonObj = new JSONObject();
+			try {
+				robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+				robotJsonObj.put(JsonMapKeys.KEY_ROBOT_NAME, robotName);				
+			}
+			catch (JSONException e) {
+				LogHelper.logD(TAG, "Exception in getRobotDetailJsonObject", e);
+			}
 			return robotJsonObj;
 		}
 		
