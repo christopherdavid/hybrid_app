@@ -34,18 +34,20 @@ public class DBHelper {
 	private SQLiteDatabase mNeatoDB;
 	private Context mContext;
 	
+	private static final String UPPER_CASE_KEY = "UPPER";
+	
 	// Select query statements
 	private static final String SELECTION_USER_BY_USER_ID = Tables.TABLE_NAME_USER_INFO + "." + UserInfoColumns.COL_NAME_USER_ID + " = ?";
-	private static final String SELECTION_USER_BY_USER_EMAIL = Tables.TABLE_NAME_USER_INFO + "." + UserInfoColumns.COL_NAME_USER_EMAIL + " = ?";
+	private static final String SELECTION_USER_BY_USER_EMAIL = UPPER_CASE_KEY + "(" + Tables.TABLE_NAME_USER_INFO + "." + UserInfoColumns.COL_NAME_USER_EMAIL + ")" + " = ?";
 	
-	private static final String SELECTION_ROBOT_BY_SERIAL_ID = Tables.TABLE_NAME_ROBOT_INFO + "." + RobotInfoColumns.COL_NAME_ROBOT_SERIAL_ID + " = ?";
+	private static final String SELECTION_ROBOT_BY_SERIAL_ID = UPPER_CASE_KEY + "(" + Tables.TABLE_NAME_ROBOT_INFO + "." + RobotInfoColumns.COL_NAME_ROBOT_SERIAL_ID + ")" + " = ?";
 
 	private static final String SELECTION_SCHEDULE_INFO_BY_ID = Tables.TABLE_NAME_SCHEDULE_INFO + "." + ScheduleInfoColumns.COL_NAME_SCHEDULE_ID + " = ?";
-	private static final String SELECTION_ROBOT_SCHEDULE_BY_ID = Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_ROBOT_ID + " = ?";
+	private static final String SELECTION_ROBOT_SCHEDULE_BY_ID = UPPER_CASE_KEY + "(" + Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_ROBOT_ID  + ")" + " = ?";
 	private static final String SELECTION_ROBOT_BY_BASIC_SCHEDULE_ID = Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_BASIC_SCHEDULE_ID + " = ?";
 	private static final String SELECTION_ROBOT_BY_ADVANCED_SCHEDULE_ID = Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_ADVANCED_SCHEDULE_ID + " = ?";
-	private static final String SELECTION_CLEANING_SETTINGS_BY_ROBOTID = Tables.TABLE_NAME_CLEANING_SETTINGS + "." + CleaningSettingsColumns.COL_NAME_ROBOT_ID + " = ?";
-	private static final String SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL = Tables.TABLE_NAME_NOTIFICATION_SETTINGS + "." + NotificationSettingsColumns.COL_NAME_EMAIL + " = ?";
+	private static final String SELECTION_CLEANING_SETTINGS_BY_ROBOTID =  UPPER_CASE_KEY + "(" + Tables.TABLE_NAME_CLEANING_SETTINGS + "." + CleaningSettingsColumns.COL_NAME_ROBOT_ID + ")" + " = ?";
+	private static final String SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL = UPPER_CASE_KEY + "(" + Tables.TABLE_NAME_NOTIFICATION_SETTINGS + "." + NotificationSettingsColumns.COL_NAME_EMAIL + ")" + " = ?";
 	
 	private static final String SELECTION_ROBOT_PROFILE_PARAM_BY_ROBOTID_AND_KEY = Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS + "." + RobotProfileParameters.COL_NAME_ROBOT_ID + " = ? AND " + Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS + "." + RobotProfileParameters.COL_NAME_ROBOT_PARAM_KEY + " = ?";
 	private DBHelper (Context context) {
@@ -143,7 +145,7 @@ public class DBHelper {
 	
 	public UserItem getUserByEmail(String email) {
 		UserItem userInfo = null;
-		String[] selectionArgs = new String[] {email};
+		String[] selectionArgs = new String[] {email.toUpperCase()};
 		
 		SQLiteDatabase db = getDatabase();		
 		Cursor cursor = db.query(Tables.TABLE_NAME_USER_INFO, null, SELECTION_USER_BY_USER_EMAIL, selectionArgs, null, null, null);
@@ -166,7 +168,7 @@ public class DBHelper {
 	}
 	
 	public boolean deleteUserByEmail(String userEmail) {
-		String[] selectionArgs = new String[] {userEmail};
+		String[] selectionArgs = new String[] {userEmail.toUpperCase()};
 		
 		SQLiteDatabase db = getDatabase();		
 		int count = db.delete(Tables.TABLE_NAME_USER_INFO, SELECTION_USER_BY_USER_EMAIL, selectionArgs);
@@ -248,7 +250,7 @@ public class DBHelper {
 	
 	public RobotItem getRobotBySerialId(String serialId) {
 		RobotItem robotItem = null;
-		String[] selectionArgs = new String[] {serialId};
+		String[] selectionArgs = new String[] {serialId.toUpperCase()};
 		
 		SQLiteDatabase db = getDatabase();		
 		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_INFO, null, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs, null, null, null);
@@ -293,7 +295,7 @@ public class DBHelper {
 	}
 	
 	public RobotItem updateRobotNameBySerialId(String serialId, String name) {		
-		String[] selectionArgs = new String[] {serialId};
+		String[] selectionArgs = new String[] {serialId.toUpperCase()};
 		
 		ContentValues values = new ContentValues();
 		values.put(RobotInfoColumns.COL_NAME_ROBOT_NAME, name);
@@ -315,7 +317,7 @@ public class DBHelper {
 	}
 	
 	public boolean deleteRobotBySerialId(String serialId) {
-		String[] selectionArgs = new String[] {serialId};
+		String[] selectionArgs = new String[] {serialId.toUpperCase()};
 		
 		SQLiteDatabase db = getDatabase();		
 		int count = db.delete(Tables.TABLE_NAME_ROBOT_INFO, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs);
@@ -437,7 +439,7 @@ public class DBHelper {
 	}
 	
 	public boolean isScheduleInfoExistsForRobot(String robotId) {
-		String[] selectionArgs = new String[] {robotId};
+		String[] selectionArgs = new String[] {robotId.toUpperCase()};
 		SQLiteDatabase db = getDatabase();
 		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
 		return cursor.moveToFirst();
@@ -446,7 +448,7 @@ public class DBHelper {
 	// Robot schedule IDs helper function
 	public String getAdvancedScheduleIdForRobot(String robotId) {
 		String scheduleId = null;
-		String[] selectionArgs = new String[] {robotId};
+		String[] selectionArgs = new String[] {robotId.toUpperCase()};
 
 		SQLiteDatabase db = getDatabase();
 		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
@@ -460,7 +462,7 @@ public class DBHelper {
 
 	public String getBasicScheduleIdForRobot(String robotId) {
 		String scheduleId = null;
-		String[] selectionArgs = new String[] {robotId};
+		String[] selectionArgs = new String[] {robotId.toUpperCase()};
 
 		SQLiteDatabase db = getDatabase();
 		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
@@ -485,7 +487,7 @@ public class DBHelper {
 
 	public boolean updateBasicScheduleId(String robotId, String basicScheduleId) {
 		ContentValues values = getBasicContentValues(robotId, basicScheduleId);		
-		String[] selectionArgs = new String[] {robotId};
+		String[] selectionArgs = new String[] {robotId.toUpperCase()};
 		SQLiteDatabase db = getDatabase();
 		int count = db.update(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, values, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs);
 		return (count > 0) ? true : false;
@@ -493,7 +495,7 @@ public class DBHelper {
 
 	public boolean updateAdvancedScheduleId(String robotId, String advacnedScheduleId) {
 		ContentValues values = getAdvancedContentValues(robotId, advacnedScheduleId);		
-		String[] selectionArgs = new String[] {robotId};
+		String[] selectionArgs = new String[] {robotId.toUpperCase()};
 		SQLiteDatabase db = getDatabase();
 		int count = db.update(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, values, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs);
 		return (count > 0) ? true : false;
@@ -588,7 +590,7 @@ public class DBHelper {
 	public CleaningSettings getCleaningSettings(String robotId) {
 		CleaningSettings robotSettings = null;
 
-		String[] selectionArgs = new String[] {robotId};
+		String[] selectionArgs = new String[] {robotId.toUpperCase()};
 
 		SQLiteDatabase db = getDatabase();
 		Cursor cursor = db.query(Tables.TABLE_NAME_CLEANING_SETTINGS, null, SELECTION_CLEANING_SETTINGS_BY_ROBOTID,
@@ -605,7 +607,7 @@ public class DBHelper {
 	public boolean updateCleaningSettings(String robotId, CleaningSettings cleaningSettings) {
 		int count = 0;
 
-		String[] selectionArgs = new String[] {robotId};
+		String[] selectionArgs = new String[] {robotId.toUpperCase()};
 
 		ContentValues values = getContentValues(cleaningSettings);
 
@@ -637,7 +639,7 @@ public class DBHelper {
 
 		ContentValues values = getContentValues(email, notificationSettingsJson);
 		
-		String[] selectionArgs = new String[] {email};
+		String[] selectionArgs = new String[] {email.toUpperCase()};
 		SQLiteDatabase db = getDatabase();
 
 		Cursor cursor = db.query(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, 
@@ -663,7 +665,7 @@ public class DBHelper {
 		String notificationsJson = "";
 		
 		SQLiteDatabase db = getDatabase();
-		String[] selectionArgs = new String[] {email};
+		String[] selectionArgs = new String[] {email.toUpperCase()};
 		Cursor cursor = db.query(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, 
 				SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL, selectionArgs, null, null, null);
 		
