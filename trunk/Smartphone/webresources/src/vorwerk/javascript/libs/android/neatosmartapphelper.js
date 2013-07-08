@@ -205,6 +205,95 @@ var NOTIFICATION_ROBOT_STUCK = "101";
 var NOTIFICATION_DIRT_BIN_FULL = "102";
 var NOTIFICATION_CLEANING_DONE = "103";
 
+// List of Error Code values returned from the plugin.
+
+/**
+ * Authentication of the user failed.
+ */
+var ERROR_AUTHENTICATION_FAILED = -101;
+
+/**
+ * User Account type is not supported.
+ */
+var ERROR_UNSUPPORTED_ACCOUNT_TYPE = -103;
+
+/**
+ * Email id entered does not match the usual format of the email id.
+ */
+var ERROR_INVALID_EMAIL_ID = -105
+
+/**
+ * Email id is already registered with the server.
+ */
+var ERROR_EMAIL_ALREADY_REGISTERED = -106;
+
+/**
+ * Jabber server is not responding, User is not created. Please try again.
+ * May not be used by the UI
+ */
+var ERROR_JABBER_SERVER_NOT_RESPONDING = -108;
+
+/**
+ * User account-detail value entered is invalid.
+ */
+var ERROR_INVALID_USER_ACCOUNT_DETAIL = -109;
+
+/**
+ * Old password does not match to the current password of the user.
+ */
+var ERROR_OLD_PASSWORD_MISMATCH = -110;
+
+/**
+ * Robot detail value entered is invalid (Example while setting robot name).
+ */
+var ERROR_INVALID_ROBOT_ACCOUNT_DETAIL = -111;
+
+/**
+ * Email id not found on the server.
+ */
+var ERROR_INCORRECT_EMAIL_ID = -112;
+
+/**
+ * Robot id not found on the server.
+ */
+var ERROR_INCORRECT_ROBOT_ID = -114;
+
+/**
+ * Alternate email id entered does not match the usual format of the email id.
+ */
+var ERROR_INVALID_ALTERNATE_EMAIL_ID = -115
+
+/**
+ * Resend validation-email limit reached.
+ */
+var ERROR_RESEND_VALIDATION_EMAIL_LIMIT_REACHED = -116;
+
+/**
+ * Email Id already validated.
+ */
+var ERROR_EMAIL_ALREADY_VALIDATED = -117;
+
+/**
+ * User preference for push notifications is not set.
+ */
+var ERROR_NO_USER_PREFERENCE_SET = -124;
+
+/**
+ * Schedule version does not match. Please retrieve the latest schedule and then edit.
+ */
+var ERROR_SCHEDULE_VERSION_MIS_MATCH = -129;
+
+/**
+ * Schedule type is not supported.
+ */
+var ERROR_INVALID_SCHEDULE_TYPE = -133;
+
+/**
+ * No schedule exists for given robot.
+ */
+var ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT = -159;
+
+
 if(!window.plugins) {
 	window.plugins = {};
 }
