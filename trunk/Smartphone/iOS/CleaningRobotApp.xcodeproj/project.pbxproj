@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19048CD9178AF4FC0008C7EE /* NeatoDataStore.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 19048CD8178AF4FC0008C7EE /* NeatoDataStore.bundle */; };
 		192420E8163FCF8700479217 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 192420E7163FCF8600479217 /* Default-568h@2x.png */; };
 		1964078416C406D200C71028 /* libSlideiOSPlugin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964077F16C406A200C71028 /* libSlideiOSPlugin.a */; };
 		1964078616C4073C00C71028 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964078516C4073C00C71028 /* Security.framework */; };
@@ -76,6 +77,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		19048CD8178AF4FC0008C7EE /* NeatoDataStore.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = NeatoDataStore.bundle; path = SlideiOSPlugin/ResourceBundle/NeatoDataStore.bundle; sourceTree = "<group>"; };
 		192420E7163FCF8600479217 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		1964077716C406A000C71028 /* SlideiOSPlugin.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SlideiOSPlugin.xcodeproj; path = SlideiOSPlugin/SlideiOSPlugin.xcodeproj; sourceTree = "<group>"; };
 		1964078516C4073C00C71028 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -213,6 +215,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				19048CD8178AF4FC0008C7EE /* NeatoDataStore.bundle */,
 				1964077716C406A000C71028 /* SlideiOSPlugin.xcodeproj */,
 				199568001623FA7C00EF3215 /* www */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -421,6 +424,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19048CD9178AF4FC0008C7EE /* NeatoDataStore.bundle in Resources */,
 				30E1352710E2C1420031B30D /* Cordova.plist in Resources */,
 				308D05371370CCF300D202BF /* icon-72.png in Resources */,
 				308D05381370CCF300D202BF /* icon.png in Resources */,
@@ -455,7 +459,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "env\n/usr/local/ant/bin/ant -buildfile '$PROJECT_DIR/../webresources/buildtool/build.xml' createiOS";
+			shellScript = "env\n/usr/local/ant/bin/ant -buildfile '$PROJECT_DIR/../webresources/buildtool/build.xml' createiOSVorwerk";
 		};
 		304B58A110DAC018002A0835 /* Touch www folder */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -554,6 +558,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Vorwerk International Mittelsten Scheid & Co.";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CleaningRobotApp/CleaningRobotApp-Prefix.pch";
@@ -571,6 +576,7 @@
 					"\"/Users/uid/Library/Developer/Xcode/DerivedData/CleaningRobotApp-fjjopscayftduodhuhxpfnpddrra/Build/Products/Debug-iphoneos\"",
 				);
 				PRODUCT_NAME = CleaningRobotApp;
+				PROVISIONING_PROFILE = "92DF6EF2-77C2-4B91-820D-10A6BDDE5D2A";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
