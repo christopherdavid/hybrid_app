@@ -13,6 +13,7 @@ function Scheduler($root, scheduleType) {
     var HOUR = 60;
     var HOUR_IN_PX = deviceSize.getResolution() == "high" ? 160 : 80;
     var MIN_IN_PX = HOUR_IN_PX / 60;
+    var DEFAULT_START_TIME = "8:00";
     var scroller;
     var $content;
     var $scrollWrapper;
@@ -24,6 +25,8 @@ function Scheduler($root, scheduleType) {
         });
 
     var columns = new Array(7);
+    // better use a variable instead of read and convert webkit-transform value using a matrix 
+    var containerScrollY = 0;
 
     this.selectedEvents = ko.observableArray([]);
     this.updatedEvents = ko.observableArray([]);
@@ -64,8 +67,8 @@ function Scheduler($root, scheduleType) {
         // listener after all divs got a size
         $(document).one("pageshow.scheduler", function(e) {
             initLayout();
+            scrollToTime(DEFAULT_START_TIME);
         });
-
     }
     /**
      * remove event handler and destroy objects
@@ -156,7 +159,7 @@ function Scheduler($root, scheduleType) {
         }
         $task.append($taskInner);
         
-        $taskInner.on("tap.scheduler", function() {
+        $taskInner.on("vclick.scheduler", function() {
             that.clickedEvent($(event.target.parentElement));
             event.preventDefault();
         });
@@ -166,11 +169,13 @@ function Scheduler($root, scheduleType) {
         $task.draggable({
             grid : [HOUR_IN_PX/4, HOUR_IN_PX/4],
             containment: "parent",
+            scroll:true,
             handle: "div."+clazz+"Inner",
             axis: "y",
             start : function(event, ui) {
                 // disable iScroll, to drag the selection area
                 scroller.disable();
+                
             },
             stop : function(event, ui) {
                 // dragging done: enable iScroll
@@ -199,7 +204,6 @@ function Scheduler($root, scheduleType) {
             }
         });
     }
-    
     this.movedEvent = function(element, newPos) {
         var oEvent = element.data('reference');
         var newHour = Math.floor(newPos/HOUR_IN_PX);
@@ -292,9 +296,16 @@ function Scheduler($root, scheduleType) {
 
         that.updateLayout();
     }
+    function scrollToTime(time) {
+        var parsedStartTime = $.scroller.parseDate('HH:ii', time);
+        var startTimeInMin = parsedStartTime.getHours() * 60 + parsedStartTime.getMinutes();
+        containerScrollY = -(MIN_IN_PX * startTimeInMin);
+        $content.css('-webkit-transform', 'translate(0px, ' + containerScrollY + 'px)');
+        $('.timeColumn').css('-webkit-transform', 'translate(0px, ' + containerScrollY + 'px)');
+    }
 
     function onScrollpositionChanged(x, y) {
-
+        containerScrollY = y;
         $('.dayRow').css('-webkit-transform', 'translate(' + x + 'px, 0px)');
         $('.timeColumn').css('-webkit-transform', 'translate(0px, ' + y + 'px)');
     }

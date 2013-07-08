@@ -89,7 +89,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     }
     this.getScheduleEventsError = function(error) {
         // Server Error create an empty scheduler
-        if(error && error.errorCode == 1003) {
+        if(error && error.errorCode == ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT) {
             var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.createSchedule, [that.robot().robotId(), 0]);
             tDeffer.done(that.createScheduleEventsSuccess);
             tDeffer.fail(that.createScheduleEventsError);
