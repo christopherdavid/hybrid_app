@@ -7,6 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.content.Context;
 import android.text.TextUtils;
+
+import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.database.ScheduleHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
@@ -18,6 +20,7 @@ import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConsta
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult3;
 
 public class RobotSchedulerManager2 {
@@ -452,6 +455,8 @@ public class RobotSchedulerManager2 {
 						SetRobotProfileDetailsResult3 result = NeatoRobotScheduleWebservicesHelper.setEnableSchedule(mContext, robotId, scheduleType, enableSchedule);
 						if(result.success()) {
 							listener.onReceived(result);
+							long timestamp = result.extra_params.timestamp;
+							RobotHelper.saveProfileParam(mContext, robotId, ProfileAttributeKeys.ROBOT_ENABLE_BASIC_SCHEDULE, timestamp);
 						} else {
 							listener.onServerError(ErrorTypes.ERROR_TYPE_UNKNOWN, "Result is not of type set profile details result");
 						}						

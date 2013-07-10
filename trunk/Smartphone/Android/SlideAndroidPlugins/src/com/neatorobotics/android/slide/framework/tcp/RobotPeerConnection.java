@@ -1,12 +1,9 @@
 package com.neatorobotics.android.slide.framework.tcp;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 
 
@@ -16,10 +13,7 @@ import android.os.Handler;
 import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
-import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
-import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandBuilder;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacket;
-import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandParser;
 import com.neatorobotics.android.slide.framework.transport.Transport;
 import com.neatorobotics.android.slide.framework.transport.TransportFactory;
 import com.neatorobotics.android.slide.framework.udp.RobotDiscoveryListener;
@@ -32,7 +26,6 @@ public class RobotPeerConnection {
 	private static final String TAG = RobotPeerConnection.class.getSimpleName();
 	
 	private static final int TCP_ROBOT_SERVER_PORT = AppConstants.TCP_ROBOT_SERVER_SOCKET_PORT;
-	private static final int PACKET_READ_CHUNK_SIZE = (4 * 1024);
 	
 	private Context mContext;
 	private Handler mHandler;
@@ -56,7 +49,6 @@ public class RobotPeerConnection {
 
 	private void notifyRobotConnected(final String robotId)
 	{
-		NeatoPrefs.setPeerConnectionStatus(mContext, true);
 		if (mRobotPeerDataListener != null) {
 			if (mHandler != null) {
 				mHandler.post(new Runnable() {
@@ -73,7 +65,6 @@ public class RobotPeerConnection {
 
 	private void notifyRobotDisconnected(final String robotId)
 	{
-		NeatoPrefs.setPeerConnectionStatus(mContext, false);
 		if (mRobotPeerDataListener != null) {
 			if (mHandler != null) {
 				mHandler.post(new Runnable() {
@@ -228,7 +219,7 @@ public class RobotPeerConnection {
 								mTransport.close();
 								break;
 							}
-							commandPacket = readPacket(din);
+							commandPacket = RobotPeerConnectionUtils.readPacket(din);
 						}
 						else {
 							LogHelper.log(TAG, "Peer is not connected");
@@ -273,7 +264,6 @@ public class RobotPeerConnection {
 	{
 		LogHelper.log(TAG, "closePeerConnection called");
 		if(isPeerRobotConnected(robotId)) {	
-			NeatoPrefs.setPeerConnectionStatus(mContext, false);
 			RobotConnectionInfo robotConnection = getRobotConnectionInfo(robotId);
 			Transport transport = robotConnection.getTransport();
 			if (transport != null) {
@@ -302,117 +292,23 @@ public class RobotPeerConnection {
 	}
 
 	public  void sendRobotCommand(String robotId, RobotCommandPacket robotPacket) {
-		byte[] packet = getRobotPacket(robotPacket);
+		byte[] packet = RobotPeerConnectionUtils.getRobotPacketBytes(robotPacket);
 		RobotConnectionInfo robotConnectionInfo = getRobotConnectionInfo(robotId);
 		if (robotConnectionInfo != null) {
 			Transport transport = robotConnectionInfo.getTransport();
 			LogHelper.log(TAG, "Connection exist. Sending command.");
-			sendRobotPacketAsync(transport, packet);
+			RobotPeerConnectionUtils.sendRobotPacketAsync(transport, packet);
 		} else {
 			LogHelper.log(TAG, "Connection does not exist.");
 		}
 	}
 
-	private  byte[] getRobotPacket(RobotCommandPacket robotPacket)
-	{
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(bos);
-		RobotCommandBuilder builder = new RobotCommandBuilder();
-		byte[] packet =  builder.convertRobotCommandsToBytes(robotPacket);
-		int signature = robotPacket.getHeader().getSignature();
-		int version = robotPacket.getHeader().getVersion();
-		try {
-			dos.writeInt(signature);
-			dos.writeInt(version);
-			dos.writeInt(packet.length);
-			dos.write(packet);
-		}
-		catch (Exception e) {
-			LogHelper.log(TAG, "Exception in getBytes", e);
-			return null;
-		}
-		return bos.toByteArray();
-	}
-
-	private  void sendRobotPacketAsync(final Transport transport, final  byte[] packet )
-	{
-		if (transport == null) {
-			LogHelper.log(TAG, "Transport is null. Cannot send packet");
-			return;
-		}
-		if (packet == null) {
-			LogHelper.log(TAG, "Packet is null");
-			return;
-		}
-
-		Runnable task = new Runnable() {
-
-			public void run() {
-				try {
-					transport.send(packet);
-					LogHelper.log(TAG, "Packet is sent");
-				}
-				catch (IOException e) {
-					LogHelper.log(TAG, "Exception in sendRobotPacket", e);
-				}
-			}
-		};
-		Thread t = new Thread(task);
-		t.start();
-	}
-
-	private RobotCommandPacket readPacket(DataInputStream din) throws EOFException, IOException 
-	{
-		RobotCommandPacket commandPacket = null;
-
-		int length = din.readInt();
-		LogHelper.log(TAG, "length = " + length);
-		byte [] commandData = new byte[length];
-		readByteArrayHelper(din, commandData, length);
-		logAsString(commandData);
-		LogHelper.log(TAG, "Header Version and Signature match");
-		RobotCommandParser commandParser = new RobotCommandParser();
-		commandPacket = commandParser.convertBytesToRobotCommands(commandData);
-
-		return commandPacket;
-	}
-	
 	private int readInt(DataInputStream din) throws IOException
 	{
 		int data = din.readInt();
 		return data;
 	}
 
-	private void logAsString(byte [] data)
-	{
-		String dataAsStr;
-		try {
-			dataAsStr = new String(data, "UTF-8");
-			LogHelper.logD(TAG, "Message received");
-			LogHelper.logD(TAG, "Message = " + dataAsStr);
-		} catch (UnsupportedEncodingException e) {
-
-		}
-
-	}
-
-	private void readByteArrayHelper(DataInputStream din, byte [] byData, int length) throws IOException
-	{
-		int chunkLength = (length > PACKET_READ_CHUNK_SIZE)? PACKET_READ_CHUNK_SIZE:length;
-		byte [] buffer = new byte[chunkLength];
-		int offSet = 0;
-		while (length > 0) {
-			int dataReadSize = (length > PACKET_READ_CHUNK_SIZE)? PACKET_READ_CHUNK_SIZE:length;
-			int dataRead = din.read(buffer, 0, dataReadSize);
-			length -= dataRead;
-			System.arraycopy(buffer, 0, byData, offSet, dataRead);
-			offSet += dataRead;
-			if (length > 0) {
-				TaskUtils.sleep(100);
-			}
-		}
-	}
-	
 	private RobotConnectionInfo getConnectedRobotInfo() {
 		synchronized (mRobotConnectionInfoLock) {
 			LogHelper.log(TAG, "getConnectedRobotInfo called. mRobotConnectionInfo = " + mRobotConnectionInfo);

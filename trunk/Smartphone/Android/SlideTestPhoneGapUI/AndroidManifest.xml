@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.neatorobotics.android.slide.phonegap.ui"
-    android:versionCode="80"
-    android:versionName="0.5.2.05" >
+    android:versionCode="81"
+    android:versionName="0.5.2.06" >
 
     <uses-sdk
         android:minSdkVersion="15"

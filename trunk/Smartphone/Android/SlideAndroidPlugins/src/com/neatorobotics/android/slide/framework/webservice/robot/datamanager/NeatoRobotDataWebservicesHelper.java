@@ -15,7 +15,6 @@ import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedExce
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.DeleteRobotProfileKey;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.GetRobotPresenceStatus;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.GetRobotProfileDetails2;
-import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3;
 
 
@@ -24,17 +23,7 @@ public class NeatoRobotDataWebservicesHelper {
 	private static final String PROFILE_KEY_FORMAT = "%s[%s]";
 	
 
-	public static SetRobotProfileDetailsResult2 setRobotProfileDetailsRequest2(Context context, String robotId, HashMap<String, String> profileDetailsParams) 
-			throws UserUnauthorizedException, NeatoServerException, IOException {		
-		
-		Map<String, String> robotSetDetailParams = new HashMap<String, String>();
-		robotSetDetailParams.put(SetRobotProfileDetails2.Attribute.SERIAL_NUMBER, robotId);
-		robotSetDetailParams.put(SetRobotProfileDetails2.Attribute.SOURCE_SMARTAPP_ID, NeatoPrefs.getUserEmailId(context));
-		robotSetDetailParams.putAll(addProfilePrefix(profileDetailsParams));
-		String response = MobileWebServiceClient.executeHttpPost(context, SetRobotProfileDetails2.METHOD_NAME, robotSetDetailParams);
-		return AppUtils.checkResponseResult(response, SetRobotProfileDetailsResult2.class);
-	}
-	
+
 	public static SetRobotProfileDetailsResult3 setRobotProfileDetailsRequest3(Context context, String robotId, HashMap<String, String> profileDetailsParams) 
 			throws UserUnauthorizedException, NeatoServerException, IOException {		
 		
@@ -94,10 +83,12 @@ public class NeatoRobotDataWebservicesHelper {
 		return AppUtils.checkResponseResult(response, DeleteRobotProfileKeyResult.class);
 	}
 	
-	public static SetRobotProfileDetailsResult3 resetRobotProfileValue(Context context, String robotId, String key) throws UserUnauthorizedException, 
+	public static SetRobotProfileDetailsResult3 resetRobotProfileValue(Context context, String robotId, String... keys) throws UserUnauthorizedException, 
 	NeatoServerException, IOException {
 		HashMap<String, String> robotStateChangeMap = new HashMap<String, String>();
-		robotStateChangeMap.put(key, "");
+		for (String key : keys) {
+			robotStateChangeMap.put(key, "");
+		}
 		return setRobotProfileDetailsRequest3(context, robotId, robotStateChangeMap);
 	}
 }

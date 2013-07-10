@@ -11,7 +11,6 @@ public class JsonMapKeys {
 	public static final String KEY_PASSWORD = "password";
 	public static final String KEY_USER_NAME = "userName";
 	public static final String KEY_USER_ID = "userId";
-	public static final String KEY_AUTH_TOKEN = "authToken";
 	public static final String KEY_CURRENT_PASSWORD = "currentPassword";
 	public static final String KEY_NEW_PASSWORD = "newPassword";
 	public static final String KEY_IS_VALIDATED_USER = "isValidated";
@@ -22,21 +21,14 @@ public class JsonMapKeys {
 	public static final String KEY_COMMAND_ID = "commandId";
 	public static final String KEY_COMMAND_PARAMETERS = "commandParams";
 	public static final String KEY_ROBOT_ID = "robotId";
-	public static final String KEY_USE_XMPP = "useXMPP";
 	public static final String KEY_ROBOT_NAME = "robotName";
-	public static final String KEY_ROBOT_IP_ADDRESS = "robotIpaddress";
 	public static final String KEY_ROBOT_ONLINE_STATUS = "online";
 	
 	// Cleaning API params
-	public static final String KEY_SPOT_CLEANING_CATEGORY = "cleaningCategory";
+	public static final String KEY_CLEANING_CATEGORY = "cleaningCategory";
 	public static final String KEY_SPOT_CLEANING_AREA_LENGTH = "spotCleaningAreaLength";
 	public static final String KEY_SPOT_CLEANING_AREA_HEIGHT = "spotCleaningAreaHeight";
 
-	// Used for notification in robot plugin
-	public static final String KEY_RESPONSE_STATUS = "responseStatus";
-	public static final String KEY_RESPONSE_PARAMS = "responseParams";
-	public static final String KEY_ROBOT_COMMANDS = "robotCommands";
-	
 	//Used for error
 	public static final String KEY_ERROR_CODE = "errorCode";
 	public static final String KEY_ERROR_MESSAGE = "errorMessage";

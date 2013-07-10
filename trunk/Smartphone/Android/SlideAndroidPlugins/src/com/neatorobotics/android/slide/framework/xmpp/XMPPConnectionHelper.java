@@ -19,14 +19,12 @@ import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandBuilder;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacket;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandParser;
-import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 
 public class XMPPConnectionHelper {
 
 	private static final String TAG = XMPPConnectionHelper.class.getSimpleName();
 	
 	private static final int MAX_RETRY_CONNECT_COUNT = 3;
-	public static final String STRING_ENCODING = "UTF-8";
 	
 	private String serverIpAddress;
 	private String webServiceName;
@@ -89,26 +87,6 @@ public class XMPPConnectionHelper {
 		}
 	}
 
-	public void connectAsync()
-	{
-		Runnable task = new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					connect();
-					notifyConnectionSuccessful();
-				} 
-				catch (XMPPException e) {
-					LogHelper.log(TAG, "Exception in connect", e);
-					notifyConnectionFailed(e);
-				}
-			}
-		};
-		TaskUtils.scheduleTask(task, 0);
-	}
-
-
 	public void login(String userId, String password) throws XMPPException {
 		LogHelper.log(TAG, "login called");
 		synchronized (mConnectionObjectLock) {
@@ -133,34 +111,13 @@ public class XMPPConnectionHelper {
 		return (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(password));
 	}
 
-	public void loginAsync(final String userId, final String password) {
-
-		Runnable task = new Runnable() {
-
-			@Override
-			public void run() {
-				synchronized (mConnectionObjectLock) {
-					try {
-						login(userId, password);
-						notifyLoginSuccessful();
-					} catch (XMPPException e) {
-						LogHelper.log(TAG, "Exception in loginAsync: ",e);
-						notifyLoginFailed(e);
-					} 
-				}
-
-			}
-		};
-		TaskUtils.scheduleTask(task, 0);
-	}
-
 	private void startReceivingPackets()
 	{
 		PacketFilter filter = new MessageTypeFilter(Message.Type.chat);
 		mConnection.addPacketListener(mPacketListener, filter);
 	}
 
-	public void logout()
+	private void logout()
 	{
 		LogHelper.logD(TAG, "logout called");
 		synchronized (mConnectionObjectLock) {

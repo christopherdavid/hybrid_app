@@ -9,7 +9,6 @@ public class RobotItem {
 	public String name;	
 	public String serial_number;
 	public String chat_id;
-	public String chatPwd;
 	
 	public ArrayList<UserItem> users = new ArrayList<UserItem>();
 	

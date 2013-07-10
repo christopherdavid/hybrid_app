@@ -8,10 +8,10 @@ public class UserValidationHelper {
 	
 	
 	// We convert the user validation server status code to internal status code
-	public static final int VALIDATION_STATUS_UNKNOWN		 	=  -99;
-	public static final int VALIDATION_STATUS_VALIDATED 		=   0;
-	public static final int VALIDATION_STATUS_PENDING 			=  -1;
-	public static final int VALIDATION_STATUS_NOT_VALIDATED 	=  -2;
+	private static final int VALIDATION_STATUS_UNKNOWN		 	=  -99;
+	private static final int VALIDATION_STATUS_VALIDATED 		=   0;
+	private static final int VALIDATION_STATUS_PENDING 			=  -1;
+	private static final int VALIDATION_STATUS_NOT_VALIDATED 	=  -2;
 	
 	
 	

@@ -78,7 +78,7 @@ public class NeatoWebserviceHelper {
 		return result;
 	}
 	
-	public static String getUrlFromMethodName(String methodName) {
+	private static String getUrlFromMethodName(String methodName) {
 
 		String baseUrl = NeatoWebConstants.getBaseJsonUrl();
 		LogHelper.logD(TAG, "Url Used:  " + baseUrl);

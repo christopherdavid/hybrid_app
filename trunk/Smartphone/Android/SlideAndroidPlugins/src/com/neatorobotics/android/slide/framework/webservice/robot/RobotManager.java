@@ -11,8 +11,7 @@ import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
-import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3;
-import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails2.ProfileAttributeKeys;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebservicesHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult3;
 import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
@@ -92,7 +91,7 @@ public class RobotManager {
 			public void run() {
 				try {
 					HashMap<String, String> profileParams = new HashMap<String, String>();
-					profileParams.put(SetRobotProfileDetails3.ProfileAttributeKeys.ROBOT_NAME, robotName);					
+					profileParams.put(ProfileAttributeKeys.ROBOT_NAME, robotName);					
 					SetRobotProfileDetailsResult3 result = NeatoRobotDataWebservicesHelper.setRobotProfileDetailsRequest3(mContext, robotId, profileParams);
 					
 					// Robot Name updated on the server, we now update the name in the database

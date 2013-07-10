@@ -62,13 +62,15 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 		
 			case NeatoSmartAppsEventConstants.ROBOT_CONNECTED:
 				if (mRobotPeerConnectionListener != null) {
-					mRobotPeerConnectionListener.onRobotConnected();
+					String robotId = resultData.getString(RobotCommandPacketConstants.KEY_ROBOT_ID);
+					mRobotPeerConnectionListener.onRobotConnected(robotId);
 				}
 				break;
 
 			case NeatoSmartAppsEventConstants.ROBOT_DISCONNECTED:
 				if (mRobotPeerConnectionListener != null) {
-					mRobotPeerConnectionListener.onRobotDisconnected();
+					String robotId = resultData.getString(RobotCommandPacketConstants.KEY_ROBOT_ID);
+					mRobotPeerConnectionListener.onRobotDisconnected(robotId);
 				}
 				break;
 		
@@ -77,7 +79,8 @@ public class NeatoRobotResultReceiver extends ResultReceiver
 	
 			case NeatoSmartAppsEventConstants.ROBOT_CONNECTION_ERROR:
 				if (mRobotPeerConnectionListener != null) {
-					mRobotPeerConnectionListener.errorInConnecting();
+					String robotId = resultData.getString(RobotCommandPacketConstants.KEY_ROBOT_ID);
+					mRobotPeerConnectionListener.errorInConnecting(robotId);
 				}
 				break;
 			

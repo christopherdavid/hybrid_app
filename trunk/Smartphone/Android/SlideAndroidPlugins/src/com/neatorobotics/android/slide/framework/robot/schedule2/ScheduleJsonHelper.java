@@ -31,7 +31,7 @@ public class ScheduleJsonHelper {
 							
 							
 							BasicScheduleEvent2 scheduleEvent = new BasicScheduleEvent2(event.optString(JsonMapKeys.KEY_SCHEDULE_EVENT_ID),
-										SchedulerConstants2.detrmineDay(event.optInt(JsonMapKeys.KEY_DAY)),
+										SchedulerConstants2.determineDay(event.optInt(JsonMapKeys.KEY_DAY)),
 										new ScheduleTimeObject2(event.optString(JsonMapKeys.KEY_START_TIME)),
 										event.optString(JsonMapKeys.KEY_CLEANING_MODE));
 							

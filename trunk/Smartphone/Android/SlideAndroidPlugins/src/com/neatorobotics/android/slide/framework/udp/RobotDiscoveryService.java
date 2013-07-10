@@ -34,7 +34,7 @@ public class RobotDiscoveryService {
 	private static final int UDP_SEND_ROBOT_DISCOVERY_BROADCAST_PORT = 48002;
 	private static final int UDP_ROBOT_DISCOVERY_BROADCAST_PORT = 48003;
 	
-	public static final int ROBOT_DISCOVERY_REQUEST = 5001;
+	private static final int ROBOT_DISCOVERY_REQUEST = 5001;
 	
 	private static final int DISCOVERY_PACKET_SIGNATURE = 0xCafeBabe;
 	private static final int DISCOVERY_PACKET_VERSION = 1;
@@ -56,11 +56,6 @@ public class RobotDiscoveryService {
 	}
 	
 	private HashMap<String, RobotInfo> robotMap = new HashMap<String, RobotInfo>();
-	
-	public RobotDiscoveryService(Context context)
-	{
-		mContext = context.getApplicationContext();
-	}
 	
 	private RobotDiscoveryService(Context context, int localBindPort, String userId, RobotDiscoveryListener listener)
 	{
