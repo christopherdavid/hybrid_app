@@ -15,7 +15,7 @@ import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
-import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails2.ProfileAttributeKeys;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
 
 public class RobotHelper {	
 	private static final String TAG = RobotHelper.class.getSimpleName();
@@ -191,7 +191,7 @@ public class RobotHelper {
 	}
 	
 	// Robot profile
-	public static boolean isProfileKeyExists(Context context, String robotId, String key) {
+	private static boolean isProfileKeyExists(Context context, String robotId, String key) {
 		if (DBHelper.getInstance(context).getProfileParamTimestamp(robotId, key) != -1) {
 			return true;
 		}
@@ -201,7 +201,8 @@ public class RobotHelper {
 	public static boolean isProfileDataChanged(Context context, String robotId, String key, long timeStamp) {
 		long currentTimestamp = DBHelper.getInstance(context).getProfileParamTimestamp(robotId, key);
 		if (currentTimestamp != -1) {
-			// Hack for robotName. the timestamp is always 0. So check the robotName.
+			// TODO: Hack for robotName. the timestamp is always 0. So check the robotName.
+			// Once the the server sends correct timestamp, this check will be removed.
 			if (key.equals(ProfileAttributeKeys.ROBOT_NAME)) {
 				// From here we will always return true.
 				return true;

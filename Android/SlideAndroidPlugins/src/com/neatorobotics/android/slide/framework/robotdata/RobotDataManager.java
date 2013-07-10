@@ -16,20 +16,20 @@ import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
-import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails2.ProfileAttributeKeys;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebservicesHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult3;
 import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
 
 public class RobotDataManager {
 	
-	public static final String TAG = RobotDataManager.class.getSimpleName();
+	private static final String TAG = RobotDataManager.class.getSimpleName();
 	private static final String EMPTY_STRING = "";
 	
-	//Used to send command. This will send the standard command format as value.
+	// Used to send command. This will send the standard command format as value.
 	public static void sendRobotCommand (Context context, String robotId, int commandId, HashMap<String, String> commandParams, WebServiceBaseRequestListener listener) {
 		LogHelper.logD(TAG, "Send command action initiated sendRobotCommand - RobotSerialId = " + robotId);
-		String robotPacketInXmlFormat =  RobotCommandPacketUtils.getRobotCommandPacket(context, commandId, commandParams, RobotPacketConstants.DISTRIBUTION_MODE_TYPE_TIME_MODE_SERVER);
+		String robotPacketInXmlFormat =  RobotCommandPacketUtils.getRobotCommandPacketXml(context, commandId, commandParams, RobotPacketConstants.DISTRIBUTION_MODE_TYPE_TIME_MODE_SERVER);
 		String keyType = RobotProfileConstants.getProfileKeyTypeForCommand(commandId);
 		setRobotProfileParam(context, robotId, keyType, robotPacketInXmlFormat, listener);
 	}
@@ -52,7 +52,7 @@ public class RobotDataManager {
 					SetRobotProfileDetailsResult3 result = NeatoRobotDataWebservicesHelper.setRobotProfileDetailsRequest3(context, robotId, profileParams);
 					long timestamp = result.extra_params.timestamp;
 					RobotHelper.saveProfileParam(context, robotId, key, timestamp);
-					//Do not start timer for every set profile data change.
+					// Do not start timer for every set profile data change.
 					if (RobotProfileConstants.isTimerExpirableForProfileKey(key)) {
 						RobotCommandTimerHelper.getInstance(context).startCommandExpiryTimer(robotId);
 					}	
@@ -74,7 +74,6 @@ public class RobotDataManager {
 	
 	public static void getServerData(final Context context, final String robotId) {
 		
-		//Disabling as of now. Should be enabled later.
 		if (!AppConstants.isServerDataModeEnabled()) {
 			return;
 		}

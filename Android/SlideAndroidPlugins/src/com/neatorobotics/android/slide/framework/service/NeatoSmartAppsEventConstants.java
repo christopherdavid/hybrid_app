@@ -11,18 +11,11 @@ public class NeatoSmartAppsEventConstants {
 	public static final int ROBOT_DATA_RECEIVED = 5;
 	public static final int ROBOT_CONNECTION_ERROR = 10;
 	
-	public static final int ROBOT_ASSOCIATION_STARTED = 6;
-	public static final int ROBOT_ASSOCIATION_END = 7;
-	public static final int ROBOT_ASSOCIATION_STATUS_FAILED = 8;
-	public static final int ROBOT_ASSOCIATION_STATUS_SUCCESS = 9;
-	
 	public static final int ROBOT_PACKET_RECEIVED_ON_PEER_CONNETION = 11;
 
 	public static final int ROBOT_STATE = 12;
 	public static final int ROBOT_STATUS_NOTIFICATION = 13;
 	public static final int ROBOT_REGISTER_STATUS_NOTIFICATIONS = 14;
 	public static final int ROBOT_UNREGISTER_STATUS_NOTIFICATIONS = 15;
-	public static final int ROBOT_DIRT_BAG_FULL = 16;
-	public static final int ROBOT_STUCK = 17;
 	public static final int ROBOT_DATA = 18;
 }

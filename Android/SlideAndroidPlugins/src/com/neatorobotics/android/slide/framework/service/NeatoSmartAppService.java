@@ -5,9 +5,6 @@ import java.util.Map;
 
 import org.jivesoftware.smack.XMPPException;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,11 +21,9 @@ import android.os.ResultReceiver;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import com.neatorobotics.android.slide.framework.AppConstants;
-import com.neatorobotics.android.slide.framework.R;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
-import com.neatorobotics.android.slide.framework.plugins.RobotConstants;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiverConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
@@ -59,7 +54,6 @@ public class NeatoSmartAppService extends Service {
 	public static final String EXTRA_RESULT_RECEIVER = "extra.result_receiver";
 	public static final String NEATO_RESULT_RECEIVER_ACTION = "com.neato.simulator.result_receiver.action";
 	
-	private static final int ROBOT_NOTIFICATION_ID = 100; // arbitrary number
 	private static SparseBooleanArray notificationCommands = new SparseBooleanArray();
 	
 	static {
@@ -110,7 +104,7 @@ public class NeatoSmartAppService extends Service {
 		@Override
 		public void onDataReceived(String from, RobotCommandPacket packet) {
 			LogHelper.log(TAG, "XMPP onDataReceived. New Packet Data = " + packet);
-			//If data changed command recevied, retrieve the changed data from server.
+			// If data changed command recevied, retrieve the changed data from server.
 			if (packet.isRequest()) {
 				RequestPacket request = packet.getRobotCommands().getCommand(0);
 				if (isDataChangedCommand(request)) {
@@ -152,20 +146,26 @@ public class NeatoSmartAppService extends Service {
 
 		public void onConnect(String robotId) {			
 			if (mResultReceiver != null) {
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_CONNECTED, null);
+				Bundle bundle = new Bundle();
+				bundle.putString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID, robotId);
+				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_CONNECTED, bundle);
 			}
 		}
 
 		public void onDisconnect(String robotId) {			
 			if (mResultReceiver != null) {
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_DISCONNECTED, null);
+				Bundle bundle = new Bundle();
+				bundle.putString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID, robotId);
+				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_DISCONNECTED, bundle);
 			}
 		}
 
 		@Override
 		public void errorInConnecting(String robotId) {
 			if (mResultReceiver != null) {
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_CONNECTION_ERROR, null);
+				Bundle bundle = new Bundle();
+				bundle.putString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID, robotId);
+				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_CONNECTION_ERROR, bundle);
 			}
 		}
 
@@ -261,37 +261,8 @@ public class NeatoSmartAppService extends Service {
 	private void sendNotification(RobotCommandPacket robotPacket) {		
 		if (robotPacket.isResponse()) {
 			sendResponseNotification(robotPacket);
-		} else if (robotPacket.isRequest()) {
-			sendRequestNotification(robotPacket);
 		}
 	}
-
-
-	private void sendRequestNotification(RobotCommandPacket robotPacket) {
-		RobotRequests requests = robotPacket.getRobotCommands();
-		int requestSize = requests.getNumberOfCommands();
-		for (int i = 0; i < requestSize; i++) {
-			int commandId = requests.getCommand(i).getCommand();
-			Bundle requestDataParams = getParamsBundle(requests.getCommand(i).getCommandParams());
-			switch (commandId) {			
-			case RobotCommandPacketConstants.COMMAND_DIRT_BAG_FULL:	
-				LogHelper.log(TAG, "COMMAND_DIRT_BAG_FULL");
-				notifyRobotState(getApplicationContext(), getString(R.string.notification_text_dirt_bag_full));
-				if (mResultReceiver != null) {
-					mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_DIRT_BAG_FULL, requestDataParams);
-				}
-				break;
-			case RobotCommandPacketConstants.COMMAND_ROBOT_STUCK:
-				LogHelper.logD(TAG, "COMMAND_ROBOT_STUCK");
-				notifyRobotState(getApplicationContext(), getString(R.string.notification_text_robot_stuck));
-				if (mResultReceiver != null) {
-					mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_STUCK, requestDataParams);
-				}
-				break;
-			}
-		}
-	}
-
 
 	private void sendResponseNotification(RobotCommandPacket robotPacket) {
 		ResponsePacket responsePacket =  robotPacket.getCommandResponse();
@@ -324,29 +295,6 @@ public class NeatoSmartAppService extends Service {
 		}
 	}
 	
-	private void notifyRobotState(Context context, String notification) {
-		LogHelper.logD(TAG, "generateNotification:" + notification);
-		String robotState = getString(R.string.notification_text_robot_state);
-		PendingIntent intent = getNotificationIntent(context, R.drawable.ic_launcher, notification, robotState);
-		//TODO: Use builder.
-		NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-		Notification n = new Notification();
-		n.flags = Notification.FLAG_AUTO_CANCEL;
-		n.icon = R.drawable.ic_launcher;
-		n.tickerText = notification;
-		n.setLatestEventInfo(context, notification, robotState, intent);
-
-		nm.notify(ROBOT_NOTIFICATION_ID, n);
-	}
-	
-	private PendingIntent getNotificationIntent(Context context, int icon, String title, String text)
-	{
-		Intent notifyIntent = new Intent();
-		notifyIntent.setAction(RobotConstants.ROBOT_NOTIFICATION_ACTION);
-		notifyIntent.addCategory(Intent.CATEGORY_DEFAULT);
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notifyIntent, android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
-		return pendingIntent;
-	}
 	private Bundle getParamsBundle(Map<String, String> params) {
 		Bundle dataParams = new Bundle();
 		for (String key: params.keySet()) {
@@ -428,7 +376,6 @@ public class NeatoSmartAppService extends Service {
 				} else {
 					// This should not be hit., Still catching the if at all.
 					LogHelper.logD(TAG, "Close peer connection when peer already closed.");
-					NeatoPrefs.setPeerConnectionStatus(getApplicationContext(), false);
 					mRobotPeerDataListener.onDisconnect(robotId);
 				}
 			}
@@ -556,15 +503,6 @@ public class NeatoSmartAppService extends Service {
 		registerReceiver(mWifiStateChange, new IntentFilter( ConnectivityManager.CONNECTIVITY_ACTION));
 		registerReceiver(mResultReceiverBroadcast, new IntentFilter(NEATO_RESULT_RECEIVER_ACTION));
 	}
-
-
-
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		LogHelper.logD(TAG, "startId is " + startId);
-		return super.onStartCommand(intent, flags, startId);
-	}
-
 
 	@Override
 	public IBinder onBind(Intent intent) {

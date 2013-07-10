@@ -486,7 +486,9 @@ var neatoSmartApp = (function() {
 		},
 		
 		sendToBaseSuccess: function(result) {
+			localStorage.setItem('robotStateUpdate', ROBOT_STATE_ON_BASE);
 			neatoSmartApp.hideProgressBar();
+			neatoSmartApp.toggleStartStop();
 			neatoSmartApp.setResponseText(result);
 		},
 		
@@ -1987,15 +1989,20 @@ var neatoSmartApp = (function() {
 			var data = result['robotData'];
 			var message = "";
 			
+			var currentRobotId = localStorage.getItem('robotId');
 			if (dataKeyCode == ROBOT_CURRENT_STATE_CHANGED) {
-				var state = data['robotCurrentState'];
-				localStorage.setItem('robotCurrentState', state);
+				
+				if (currentRobotId.toUpperCase() == robotId.toUpperCase()) {
+					var state = data['robotCurrentState'];
+					localStorage.setItem('robotCurrentState', state);
+				}
 				message = "Robot Current State Changed";
-			
 			}
 			if (dataKeyCode == ROBOT_STATE_UPDATE) {
-				var state = data['robotStateUpdate'];
-				localStorage.setItem('robotStateUpdate', state);
+				if (currentRobotId.toUpperCase() == robotId.toUpperCase()) {
+					var state = data['robotStateUpdate'];
+					localStorage.setItem('robotStateUpdate', state);
+				}
 				message = "Robot State Updated";
 			}
 			if (dataKeyCode == ROBOT_SCHEDULE_STATE_CHANGED) {
@@ -2007,7 +2014,7 @@ var neatoSmartApp = (function() {
 			if (dataKeyCode == ROBOT_SCHEDULE_UPDATED) {
 				message = "Robot Schedule Updated";
 			}
-			alert(message);
+			alert(robotId + ": "+ message);
 			neatoSmartApp.toggleStartStop();
 		},
 		

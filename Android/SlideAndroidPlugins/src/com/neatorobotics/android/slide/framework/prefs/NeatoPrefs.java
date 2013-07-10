@@ -5,11 +5,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 public class NeatoPrefs {
-	public static final String PREFERANCE_NAME = "NeatoPref";
+	private static final String PREFERANCE_NAME = "NeatoPref";
 	
 	private static final String USER_EMAIL_ID_KEY = "user_email_id";
 	private static final String KEY_NEATO_USER_AUTH_TOKEN = "neato_user_auth_token";
-	private static final String PEER_CONNECTION_STATUS = "peer_conn_status";
 	private static final String MANAGED_ROBOT_SERIAL_ID = "managed_robot_serial_id";
 	private static final String NEATO_USER_DEVICE_ID 			= "cause_agent_id";
 
@@ -76,22 +75,6 @@ public class NeatoPrefs {
 		savePreference(context, KEY_NEATO_USER_AUTH_TOKEN, "");
 	}
 	
-	
-	
-	public static void setPeerConnectionStatus(Context context, boolean enable) {
-		SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
-		Editor preferencesEditor = preferences.edit();
-		preferencesEditor.putBoolean(PEER_CONNECTION_STATUS, enable);
-		preferencesEditor.commit();
-	}
-
-	public static boolean getPeerConnectionStatus(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
-		boolean preferenceValue = preferences.getBoolean(PEER_CONNECTION_STATUS, false);
-		
-		return preferenceValue;
-	}
-
 	public static boolean saveNeatoUserAuthToken(Context context, String authToken) {
 		return savePreference(context, NeatoPrefs.KEY_NEATO_USER_AUTH_TOKEN , authToken);
 	}

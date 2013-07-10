@@ -25,7 +25,7 @@ public class MobileWebServiceClient {
 
 	private static final String TAG = MobileWebServiceClient.class.getSimpleName();
 
-	public static InputStream executeHttpPostAndReturnStream(Context context, String methodName, Map<String, String> postParams) throws IOException, UserUnauthorizedException {
+	private static InputStream executeHttpPostAndReturnStream(Context context, String methodName, Map<String, String> postParams) throws IOException, UserUnauthorizedException {
 		String url = getUrlFromMethodName(methodName);
 		LogHelper.logD(TAG, "Executing URL = " + url);
 		postParams.put(NeatoWebConstants.QUERY_KEY_APIKEY, NeatoWebConstants.getApiKey());
@@ -70,7 +70,7 @@ public class MobileWebServiceClient {
 	}
 	
 
-	public static String getUrlFromMethodName(String methodName) {
+	private static String getUrlFromMethodName(String methodName) {
 
 		String baseUrl = NeatoWebConstants.getBaseJsonUrl();
 		LogHelper.logD(TAG, "Url Used:  " + baseUrl);

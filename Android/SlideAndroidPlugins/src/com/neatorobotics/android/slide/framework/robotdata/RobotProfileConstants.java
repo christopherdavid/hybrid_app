@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
-import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails2.ProfileAttributeKeys;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
 
 public class RobotProfileConstants {
 	
@@ -61,6 +61,10 @@ public class RobotProfileConstants {
 	
 	public static String getProfileKeyType(String key) {
 		return key;
+	}
+	
+	public static enum RobotProfileValueChangedStatus {
+		ROBOT_VALUE_NOT_CHANGED, ROBOT_VALUE_DELETED, ROBOT_VALUE_CHANGED
 	}
 	
 	//Key Codes for profile data changes.

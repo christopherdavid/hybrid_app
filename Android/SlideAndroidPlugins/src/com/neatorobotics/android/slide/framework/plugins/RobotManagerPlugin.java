@@ -22,6 +22,7 @@ import com.neatorobotics.android.slide.framework.model.RobotInfo;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
+import com.neatorobotics.android.slide.framework.pluginhelper.RobotNotificationUtil;
 import com.neatorobotics.android.slide.framework.pluginhelper.ScheduleJsonDataHelper2;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDataListener;
@@ -35,7 +36,6 @@ import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings
 import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettingsListener;
 import com.neatorobotics.android.slide.framework.robot.settings.SettingsManager;
 import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
-import com.neatorobotics.android.slide.framework.robotdata.RobotDataNotifyUtils;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileDataUtils;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
@@ -371,8 +371,8 @@ public class RobotManagerPlugin extends Plugin {
 			// Get cleaning category
 			int cleaningCategory = 0;
 			if (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_START) {
-				if (!TextUtils.isEmpty(commadParamsMap.get(JsonMapKeys.KEY_SPOT_CLEANING_CATEGORY))) {
-					cleaningCategory = Integer.valueOf(commadParamsMap.get(JsonMapKeys.KEY_SPOT_CLEANING_CATEGORY));
+				if (!TextUtils.isEmpty(commadParamsMap.get(JsonMapKeys.KEY_CLEANING_CATEGORY))) {
+					cleaningCategory = Integer.valueOf(commadParamsMap.get(JsonMapKeys.KEY_CLEANING_CATEGORY));
 				}
 				if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_SPOT) {
 					CleaningSettings cleaningSettings = RobotHelper.getCleaningSettings(context, robotId);
@@ -408,9 +408,6 @@ public class RobotManagerPlugin extends Plugin {
 		// Private helper method to turn on/off vacuum
 		// These are utilities functions and can be used by the PhoneGap plugin to turn on/off the
 		// vacuum. As of now there is no UI to turn on/off the vacuum
-		// TODO: We directly send this information to the robot via XMPP. We may want to send
-		// this information to the robot via server
-		// There is no API for get the vacuum state as of now
 		private void turnVacuumOnOff(Context context, RobotJsonData jsonData, String callbackId) {
 			LogHelper.logD(TAG, "turnVacuumOnOff called");
 
@@ -429,8 +426,6 @@ public class RobotManagerPlugin extends Plugin {
 		// WiFi on. After this time out WiFi may turn off
 		// These are utilities functions and can be used by the PhoneGap plugin to turn on/off the
 		// vacuum. As of now there is no UI to turn on/off the vacuum
-		// TODO: We directly send this information to the robot via XMPP. We may want to send
-		// this information to the robot via server
 		private void turnWiFiOnOff(Context context, RobotJsonData jsonData, String callbackId) {
 			LogHelper.logD(TAG, "turnWiFiOnOff called");
 			
@@ -691,19 +686,14 @@ public class RobotManagerPlugin extends Plugin {
 		private void registerRobotNotifications2(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "registerRobotNotifications2 action initiated in Robot plugin");
 			
-			RobotDataNotifyUtils.addRobotDataChangedListener(context, new RobotDataListener() {
+			RobotNotificationUtil.addRobotDataChangedListener(context, new RobotDataListener() {
 				@Override
 				public void onDataReceived(String robotId, int dataCode, HashMap<String, String> data) {
-					JSONObject robotData = new JSONObject();
-					try {
-						robotData.put(JsonMapKeys.KEY_ROBOT_DATA_ID, dataCode);
-						robotData.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
-						robotData.put(JsonMapKeys.KEY_ROBOT_DATA, DataConversionUtils.mapToJsonObject(data));
+					JSONObject robotData = RobotNotificationUtil.getNotificationObject(robotId, dataCode, data);
+					if (robotData != null) {
 						PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, robotData);
 						pluginResult.setKeepCallback(true);
 						success(pluginResult, callbackId);
-					} catch (JSONException e) {
-						LogHelper.log(TAG, "JSONException in onDataReceived", e);
 					}
 				}
 			});
@@ -711,7 +701,7 @@ public class RobotManagerPlugin extends Plugin {
 		
 		private void unregisterRobotNotifications2(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "unregisterRobotNotifications2 action initiated in Robot plugin");
-			RobotDataNotifyUtils.removeRobotDataChangedListener(context);
+			RobotNotificationUtil.removeRobotDataChangedListener(context);
 			PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
 			pluginResult.setKeepCallback(false);
 			success(pluginResult, callbackId);
@@ -1073,7 +1063,7 @@ public class RobotManagerPlugin extends Plugin {
 			}
 
 			@Override
-			public void onRobotConnected() {
+			public void onRobotConnected(String robotId) {
 				PluginResult peerConnectionPluginResult = new  PluginResult(PluginResult.Status.OK);
 				peerConnectionPluginResult.setKeepCallback(true);
 				LogHelper.log(TAG, "Connected to peer");
@@ -1081,7 +1071,7 @@ public class RobotManagerPlugin extends Plugin {
 			}
 
 			@Override
-			public void onRobotDisconnected() {
+			public void onRobotDisconnected(String robotId) {
 				PluginResult peerConnectionPluginResult = new  PluginResult(PluginResult.Status.OK);
 				LogHelper.log(TAG, "Disconnected from peer");
 				peerConnectionPluginResult.setKeepCallback(false);
@@ -1089,7 +1079,7 @@ public class RobotManagerPlugin extends Plugin {
 			}
 
 			@Override
-			public void errorInConnecting() {
+			public void errorInConnecting(String robotId) {
 				PluginResult peerConnectionPluginResult = new  PluginResult(PluginResult.Status.ERROR);
 				peerConnectionPluginResult.setKeepCallback(true);
 				LogHelper.log(TAG, "Robot could not be connected");

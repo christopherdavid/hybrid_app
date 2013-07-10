@@ -22,11 +22,11 @@ public class ScheduleJsonDataHelper2 {
 		AdvancedScheduleEvent2 schedule = null;
 		try {
 			int day = jsonObject.getInt(JsonMapKeys.KEY_DAY);
-			Day eventDay = SchedulerConstants2.detrmineDay(day);			
+			Day eventDay = SchedulerConstants2.determineDay(day);			
 			String startTimeStr = jsonObject.getString(JsonMapKeys.KEY_START_TIME);
 			String endTImeStr = jsonObject.getString(JsonMapKeys.KEY_END_TIME);
 			int eventType = jsonObject.getInt(JsonMapKeys.KEY_EVENT_TYPE);
-			SchedularEvent event = SchedulerConstants2.detrmineEvent(eventType);
+			SchedularEvent event = SchedulerConstants2.determineEvent(eventType);
 			String area = jsonObject.getString(JsonMapKeys.KEY_AREA);
 			ScheduleTimeObject2 startTime = new ScheduleTimeObject2(startTimeStr);
 			ScheduleTimeObject2 endTime = new ScheduleTimeObject2(endTImeStr);
@@ -41,7 +41,7 @@ public class ScheduleJsonDataHelper2 {
 		BasicScheduleEvent2 schedule = null;
 		try {
 			int dayInt = jsonObject.getInt(JsonMapKeys.KEY_DAY);
-			Day day = SchedulerConstants2.detrmineDay(dayInt);
+			Day day = SchedulerConstants2.determineDay(dayInt);
 			// If "cleaning mode" is not provided in the JSON then we use default cleaning mode
 			String cleaningMode = String.valueOf(SchedulerConstants2.CLEANING_MODE_NORMAL); // default to normal mode
 			
