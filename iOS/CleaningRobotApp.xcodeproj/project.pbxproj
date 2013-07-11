@@ -531,6 +531,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Vorwerk International Mittelsten Scheid & Co.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Vorwerk International Mittelsten Scheid & Co.";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -550,6 +552,8 @@
 					"\"/Users/uid/Library/Developer/Xcode/DerivedData/CleaningRobotApp-fjjopscayftduodhuhxpfnpddrra/Build/Products/Debug-iphoneos\"",
 				);
 				PRODUCT_NAME = CleaningRobotApp;
+				PROVISIONING_PROFILE = "AD7A69AB-4F8F-453F-935E-B7FF7C17B611";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "AD7A69AB-4F8F-453F-935E-B7FF7C17B611";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -559,6 +563,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Vorwerk International Mittelsten Scheid & Co.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Vorwerk International Mittelsten Scheid & Co.";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CleaningRobotApp/CleaningRobotApp-Prefix.pch";
@@ -576,7 +581,8 @@
 					"\"/Users/uid/Library/Developer/Xcode/DerivedData/CleaningRobotApp-fjjopscayftduodhuhxpfnpddrra/Build/Products/Debug-iphoneos\"",
 				);
 				PRODUCT_NAME = CleaningRobotApp;
-				PROVISIONING_PROFILE = "92DF6EF2-77C2-4B91-820D-10A6BDDE5D2A";
+				PROVISIONING_PROFILE = "AD7A69AB-4F8F-453F-935E-B7FF7C17B611";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "AD7A69AB-4F8F-453F-935E-B7FF7C17B611";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
