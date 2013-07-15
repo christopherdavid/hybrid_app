@@ -1,47 +1,50 @@
 {
     "messages": {
         "101": {
-            "title":"I'm stuck",
+            "title": "I'm stuck",
             "message": "Please clear my path. Help me so I can continue cleaning."
         },
         "102": {
-            "title":"I'm scruffy",
+            "title": "I'm scruffy",
             "message": "Please empty my Dirt Bin and Filter if needed."
         },
         "103": {
-            "title":"Return to base",
+            "title": "Return to base",
             "message": "I'm finished and returning to my base!"
         }
     },
-    "dialogs":{
+    "dialogs": {
         "EVENT_DELETE": {
-            "title":"Do you really want to delete the event?",
-            "title_plural":"Do you really want to delete the events?",
-            "message":"",
-            "button_1":"Delete",
-            "button_2":"No"
+            "title": "Do you really want to delete the event?",
+            "title_plural": "Do you really want to delete the events?",
+            "message": "",
+            "button_1": "Delete",
+            "button_2": "No"
         },
         "ROBOT_DELETE": {
-            "title":"Do you really want to delete __robotName__?",
-            "message":"",
-            "button_1":"Delete",
-            "button_2":"No"
+            "title": "Do you really want to delete __robotName__?",
+            "message": "",
+            "button_1": "Delete",
+            "button_2": "No"
         }
     },
-    "robotStateCodes":{
-        "10001":"State Unknown",
-        "10002":"Started Cleaning",
-        "10003":"Idle",
-        "10004":"Charging",
-        "10005":"Stopped Cleaning",
-        "10006":"Stucked",
-        "10007":"Paused Cleaning",
-        "10008":"Resumed Cleaning",
-        "10009":"On Base"
+    "robotStateCodes": {
+        "10001": "State Unknown",
+        "10002": "Started Cleaning",
+        "10003": "Idle",
+        "10004": "Charging",
+        "10005": "Stopped Cleaning",
+        "10006": "Stucked",
+        "10007": "Paused Cleaning",
+        "10008": "Resumed Cleaning",
+        "10009": "On Base"
     },
     "pattern": {
-        "week":"0,1,2,3,4,5,6",
-        "time":"hhiiA"
+        "week": "0,1,2,3,4,5,6",
+        "time": "hhiiA",
+        "spotUnit": "ft",
+        "spotFactor": "3",
+        "spotConverter": "30.48"
     },
     "common": {
         "back": "back",
@@ -74,11 +77,11 @@
         "fetch_robots": "Robot list is being fetched...",
         "fetch_map": "Maps are being fetched...",
         "update_scheduler": "Scheduler is being synchronized...",
-        "reset_password":"Password is being reseted...",
-        "reset_password_done":"Password successfully reseted",
-        "delete_robot_done":"Robot __robotName__ was deleted.",
-        "stop_robot":"Robot is stopping to clean",
-        "send_to_base":"Robot is being send back to base",
+        "reset_password": "Password is being reseted...",
+        "reset_password_done": "Password successfully reseted",
+        "delete_robot_done": "Robot __robotName__ was deleted.",
+        "stop_robot": "Robot is stopping to clean",
+        "send_to_base": "Robot is being send back to base",
         "robot_added": "Robot __robotName__ has been added."
     },
     "cleaning": {
@@ -95,9 +98,9 @@
             "send_to_base": "Send to base",
             "spot_size_title": "Spot size: ",
             "cleaningType": {
-                "1":"Manual",
-                "2":"All",
-                "3":"Spot"
+                "1": "Manual",
+                "2": "All",
+                "3": "Spot"
             }
         }
     },
@@ -168,8 +171,8 @@
             "password_lost": "Lost your password?",
             "password_show": "Show password",
             "tap_here": "Tap here.",
-            "password_reset":"Password reset",
-            "description":"To get a new password enter your registered email, please.<br>You'll receive an email with a new password immediately."
+            "password_reset": "Password reset",
+            "description": "To get a new password enter your registered email, please.<br>You'll receive an email with a new password immediately."
         }
     },
     "settings": {
@@ -180,8 +183,8 @@
             "robot_management": "Robot Management",
             "user_settings": "User Settings",
             "general_settings": "General Settings",
-            "terms":"Terms of use",
-            "about":"About"
+            "terms": "Terms of use",
+            "about": "About"
         }
     },
     "robotManagement": {
@@ -194,7 +197,7 @@
             "robot_type": "Type",
             "cleaning_options": {
                 "title": "Cleaning Options",
-                "schedule":"Use Scheduled Cleaning"
+                "schedule": "Use Scheduled Cleaning"
             }
         }
     },
@@ -205,15 +208,15 @@
         "page": {
             "email_adress": "eMail Adress",
             "password": "Password",
-            "old_password" : "Old password",
-            "new_password" : "New password",
-            "new_password_verify" : "New password verification",
-            "password_is_being_changed" : "Password is being changed",
-            "password_was_not_changed" : "Password was not changed"
+            "old_password": "Old password",
+            "new_password": "New password",
+            "new_password_verify": "New password verification",
+            "password_is_being_changed": "Password is being changed",
+            "password_was_not_changed": "Password was not changed"
         },
-        "message" : {
-            "title" : "Unable to change password",
-            "no_server" : "The server could not be reached, your password couldn't be changed."
+        "message": {
+            "title": "Unable to change password",
+            "no_server": "The server could not be reached, your password couldn't be changed."
         }
     },
     "generalSettings": {
@@ -221,20 +224,20 @@
             "title": "General Settings"
         },
         "page": {
-            "notify_with" : "Notify me with...",
-            "notify_when" : "Notify me when...",
-            "push_on_phone" : "Push Notification on my Phone",
-            "robot_need_cleaning" : "Robot needs to be cleaned",
-            "cleaning_done" : "Cleaning is done",
-            "robot_stuck" : "Robot is stuck"
+            "notify_with": "Notify me with...",
+            "notify_when": "Notify me when...",
+            "push_on_phone": "Push Notification on my Phone",
+            "robot_need_cleaning": "Robot needs to be cleaned",
+            "cleaning_done": "Cleaning is done",
+            "robot_stuck": "Robot is stuck"
         }
     },
     "terms": {
         "navi": {
-            "title":"Terms of use"
+            "title": "Terms of use"
         },
         "page": {
-            "paragraph":"TODO: add missing text from vorwerk/neato"
+            "paragraph": "TODO: add missing text from vorwerk/neato"
         }
     },
     "basicScheduler": {
@@ -255,7 +258,6 @@
             "quiet_time": "Quiet Time",
             "starting_time": "Starting time",
             "clean_every": "Clean every...",
-            "starting_time": "Starting time",
             "ending_time": "Ending time",
             "dnd_on": "Do not disturb every..."
         }

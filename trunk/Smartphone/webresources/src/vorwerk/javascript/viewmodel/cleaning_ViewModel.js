@@ -7,7 +7,9 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             cellHeight:50,
             maxWidth:125,
             maxHeight:250,
-        };
+        },
+        spotFactor = parseInt($.i18n.t("pattern.spotFactor"),10),
+        spotUnit = $.i18n.t("pattern.spotUnit");
     this.conditions = {};
     this.startAreaControl = null;
     // set reference to helper class
@@ -85,13 +87,13 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.newSpotSizeLength = ko.observable();
     this.newSpotSizeHeight = ko.observable();
     this.newSpotSize = ko.computed(function() {
-         return (that.newSpotSizeLength()  + "x" + that.newSpotSizeHeight() + " m");
+         return ((that.newSpotSizeLength()*spotFactor)  + "x" + (that.newSpotSizeHeight()*spotFactor) + " " + spotUnit);
     }, this);  
     
     this.spotSizeLength = ko.observable(1);
     this.spotSizeHeight = ko.observable(1);
     this.spotSize = ko.computed(function() {
-         return (that.spotSizeLength()  + "x" + that.spotSizeHeight());
+         return ((that.spotSizeLength()*spotFactor)  + "x" + (that.spotSizeHeight()*spotFactor));
     }, this); 
     
     this.editSpotSize = function() {
@@ -114,9 +116,9 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     }
     this.popupOk = function() {
         $spotPopup.popup("close");
-        
-        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.setSpotDefinition, [that.robot().robotId(), that.spotSizeLength(), that.spotSizeHeight()],
-        { type: notificationType.OPERATION, message: "Set new Spotsize: " + that.newSpotSizeLength() + "x" +  that.newSpotSizeHeight() , bHide: true });
+        var newSize = convertSpotsize(that.newSpotSizeLength(), that.newSpotSizeHeight()); 
+        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.setSpotDefinition, [that.robot().robotId(), newSize.length, newSize.height],
+        { type: notificationType.OPERATION, message: "Set new Spotsize: " + (that.newSpotSizeLength()*spotFactor) + "x" +  (that.newSpotSizeHeight()*spotFactor) , bHide: true });
         tDeffer.done(function(result) {
             that.spotSizeLength(that.newSpotSizeLength());
             that.spotSizeHeight(that.newSpotSizeHeight());
@@ -301,11 +303,10 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     }
     
     this.successGetSpotDefinition = function(result) {
-        if(result.spotCleaningAreaLength > 0) {
-            this.spotSizeLength = ko.observable(result.spotCleaningAreaLength);
-        }
-        if(result.spotCleaningAreaHeight > 0) {
-            this.spotSizeHeight = ko.observable(result.spotCleaningAreaHeight);
+        if(result.spotCleaningAreaLength > 0 && result.spotCleaningAreaHeight > 0) {
+            var convSize = convertSpotsize(result.spotCleaningAreaLength, result.spotCleaningAreaHeight, true);
+            this.spotSizeLength = ko.observable(convSize.length);
+            this.spotSizeHeight = ko.observable(convSize.height);
         }
     }
     

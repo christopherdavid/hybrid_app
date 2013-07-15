@@ -68,6 +68,33 @@ function localizeTime(time) {
     hour = hour < 10 ? "0" + hour : hour;
     return hour + ':' + min + amPmMarker;
 }
+
+// convert the spot size (meter or feet) into centimeters for robot 
+// depending on the spot converter factor
+/**
+ * convert the spot size (meter or feet) into centimeters for robot 
+ * or with reverse set to true convert it back to meter/feet  
+ * @param {Object} spotL the spot length
+ * @param {Object} spotH the spot height
+ * @param {Object} reverse indicates conversion mode if false or not set it 
+ *                 converts to cm if true into m or ft   
+ */
+function convertSpotsize(spotL, spotH, reverse) {
+    var spotFactor = parseFloat($.i18n.t("pattern.spotConverter"));
+    if(typeof reverse != "undefined" && reverse === true) {
+        var tempSize = {
+            length: Math.round((spotL / spotFactor)),
+            height: Math.round((spotH / spotFactor))
+        };
+    } else {
+      var tempSize = {
+            length: (spotL * spotFactor),
+            height: (spotH * spotFactor)
+        };  
+    }
+    return tempSize;
+}
+
 // helper class for robot state
 var robotStateMachine = {
     lastState:"inactive",

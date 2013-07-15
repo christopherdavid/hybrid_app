@@ -23,13 +23,9 @@ function WorkflowNotification(parent) {
         $("#dialogPopup").popup();
         $("#dialogPopup").bind({
             popupafterclose: function(event, ui) { 
-                $("#dialogPopup").removeClass("dialogType_1");
-                $("#dialogPopup").removeClass("dialogType_2");
-                $("#dialogPopup").removeClass("dialogType_3");
-                $("#dialogPopup .ui-bar-buttons").removeClass("buttons_0");
-                $("#dialogPopup .ui-bar-buttons").removeClass("buttons_1");
-                $("#dialogPopup .ui-bar-buttons").removeClass("buttons_2");
-                $("#dialogPopup .ui-bar-buttons").removeClass("buttons_3");
+                $("#dialogPopup").removeClass("dialogType_1 dialogType_2 dialogType_3");
+                $("#dialogPopup .ui-bar-buttons").attr("class", "ui-bar-buttons");
+                $("#dialogPopup .ui-bar-buttons .ui-btn").removeClass("ui-disabled");
             }
         });
     }
@@ -163,6 +159,8 @@ function WorkflowNotification(parent) {
                      $(this).find("span.ui-btn-text").text(buttons[index].label);
                      if(typeof buttons[index].callback != "undefined") {
                          $(this).click(function (e) {
+                            // disable to prevent multiple clicks
+                            $(this).addClass("ui-disabled");
                             buttons[index].callback(e);
                         });
                     } else {
@@ -185,7 +183,7 @@ function WorkflowNotification(parent) {
     }
     
     this.closeDialog = function() {
-        $("#dialogPopup").popup("close"); 
+        $("#dialogPopup").popup("close");
     }
     
     
