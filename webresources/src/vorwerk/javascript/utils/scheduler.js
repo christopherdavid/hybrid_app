@@ -299,7 +299,8 @@ function Scheduler($root, scheduleType) {
     function scrollToTime(time) {
         var parsedStartTime = $.scroller.parseDate('HH:ii', time);
         var startTimeInMin = parsedStartTime.getHours() * 60 + parsedStartTime.getMinutes();
-        containerScrollY = -(MIN_IN_PX * startTimeInMin);
+        // scroll to new time but to max of visible area
+        containerScrollY = -Math.min( (MIN_IN_PX * startTimeInMin),($content.height() - $scrollWrapper.height()) );
         $content.css('-webkit-transform', 'translate(0px, ' + containerScrollY + 'px)');
         $('.timeColumn').css('-webkit-transform', 'translate(0px, ' + containerScrollY + 'px)');
     }

@@ -17,8 +17,9 @@ function Application() {
     this.config = {
         firstScreen : "start",
         pageTransition : "none",
-        version:"0.5.4.03",
-        pluginVersion:"0.5.2.05",
+        version:"0.5.4.11",
+        pluginVersion:"0.5.2.07",
+        fallbackLanguage:"en-GB",
         emailRegEx: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/
         //emailRegEx : /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
     };
@@ -53,12 +54,12 @@ function Application() {
             console.log('plugin.getLocaleName: ' + locale.value);
             locale.value = locale.value.replace('_', '-');
             that.changeLanguage(locale.value, function() {
-                loadFirstPage()
+                loadFirstPage();
             });
         }, function() {
             console.log('language couldn\'t be detected. Load fallback en-US');
-            that.changeLanguage('en-US', function() {
-                loadFirstPage()
+            that.changeLanguage(that.config.fallbackLanguage, function() {
+                loadFirstPage();
             });
         });
     }
@@ -198,8 +199,8 @@ function Application() {
             // file).
             $.i18n.init({
                 lng : sLang,
-                fallbackLng : 'en-GB'
-            }, function() {
+                fallbackLng : that.config.fallbackLanguage
+            }).done(function() {
                 that.language = ko.observable($.i18n.lng());
                 console.log('init lang ' + $.i18n.lng() + ' app: ' + that.language());
                 if ( typeof fncCallback === 'function') {

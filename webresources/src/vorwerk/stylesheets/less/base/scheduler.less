@@ -121,7 +121,7 @@
                     height:@taskIconHeight;
                     background-image:url(../../img/icons/scheduler_icons_106x112.png);
                     background-repeat:no-repeat;
-                    background-size:106px 224px;
+                    background-size:@taskImageWidth @taskImageHeight;
                     background-position:0 0;
                     
                     // eco
@@ -141,15 +141,15 @@
                         border: 2px dotted #fff;
                     }
                     */
-                   
+                   // zoom factor 1.5
                     &:active {
-                        background-size:164px 347px;
+                        background-size:@taskImageWidth*1.5 @taskImageHeight*1.5;
                         background-position-x:0px;
-                        width:82px;
-                        height:87px;
+                        width:@taskIconWidth*1.5;
+                        height:@taskIconHeight*1.5;
                         // eco
                         &.mode-1 {
-                          background-position-y:-87px;
+                          background-position-y:-@taskIconHeight*1.5;
                         }
                     }
                 }
@@ -166,7 +166,7 @@
                 &.basicTask.selected .basicTaskInner {
                     background-position-x:-@taskIconWidth;
                     &:active {
-                        background-position-x:-82px;
+                        background-position-x:-@taskIconWidth*1.5;
                     }
                 }
                 

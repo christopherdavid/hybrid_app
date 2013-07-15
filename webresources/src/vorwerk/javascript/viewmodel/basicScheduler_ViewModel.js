@@ -69,22 +69,25 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             tDeffer.fail(that.createScheduleEventsError);
         } else {
             $('#addButton').removeClass("ui-disabled");
-            var aDeffer = [];
-    
-            // load event data
-            for (var i = 0, max = result.scheduleEventLists.length; i < max; i++) {
-                //RobotPluginManager.getScheduleEventData(scheduleId, scheduleEventData, callbackSuccess, callbackError)
-                var tempDeferred = parent.communicationWrapper.exec(RobotPluginManager.getScheduleEventData, [result.scheduleId, result.scheduleEventLists[i]], 
-                    { type: notificationType.SPINNER, message: "" , bHide: false });
-                
-                tempDeferred.done(that.loadScheduleDataSuccess);
-                tempDeferred.fail(that.loadScheduleEventsError);
-                
-                aDeffer.push(tempDeferred);
+            
+            if(result.scheduleEventLists.length > 0) {
+                var aDeffer = [];
+                // load event data
+                for (var i = 0, max = result.scheduleEventLists.length; i < max; i++) {
+                    console.log("loop through schedule events");
+                    //RobotPluginManager.getScheduleEventData(scheduleId, scheduleEventData, callbackSuccess, callbackError)
+                    var tempDeferred = parent.communicationWrapper.exec(RobotPluginManager.getScheduleEventData, [result.scheduleId, result.scheduleEventLists[i]], 
+                        { type: notificationType.SPINNER, message: "" , bHide: false });
+                    
+                    tempDeferred.done(that.loadScheduleDataSuccess);
+                    tempDeferred.fail(that.loadScheduleEventsError);
+                    
+                    aDeffer.push(tempDeferred);
+                }
+                $.when.apply(window, aDeffer).then(function(result, notificationOptions) {
+                    parent.notification.showLoadingArea(false, notificationOptions.type);
+                });
             }
-            $.when.apply(window, aDeffer).then(function(result, notificationOptions) {
-                parent.notification.showLoadingArea(false, notificationOptions.type);
-            });
         }
     }
     this.getScheduleEventsError = function(error) {
@@ -191,11 +194,8 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             aDeffer.push(tempDeferred);
         });
         $.when.apply(window, aDeffer).then(function(result, notificationOptions) {
-            if(notificationOptions && notificationOptions.type) {
-                parent.notification.showLoadingArea(false, notificationOptions.type);
-            } else {
-                parent.notification.reset();
-            }
+            console.log("done deleting all selected events.");
+            parent.notification.showLoadingArea(false, notificationType.SPINNER);
             that.updateSchedule(null);
         });
     }
