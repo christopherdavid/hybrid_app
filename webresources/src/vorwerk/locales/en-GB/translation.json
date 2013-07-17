@@ -44,7 +44,7 @@
         "time": "hhiiA",
         "spotUnit": "ft",
         "spotFactor": "3",
-        "spotConverter": "30.48"
+        "spotConverter": "91"
     },
     "common": {
         "back": "back",

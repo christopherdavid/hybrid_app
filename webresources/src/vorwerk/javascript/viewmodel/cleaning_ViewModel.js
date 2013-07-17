@@ -360,6 +360,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         that.startAreaControl = null;
         $('#startBtn').off("startClick");
         $('#remote').off('remotePressed');
+        $rightSpotContainer.off('resize');
         that.robotStateMachine.callback = null;
     }
 })
