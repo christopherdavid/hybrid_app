@@ -98,7 +98,8 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
         that.conditions = {};
     }
 
-    this.deinit = function() {+$(document).off(".timeset");
+    this.deinit = function() {
+        $(window).off(".timeset");
     }
     /* </enviroment functions> */
 

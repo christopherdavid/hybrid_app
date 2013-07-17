@@ -78,7 +78,8 @@ function Scheduler($root, scheduleType) {
         scroller.destroy();
         columns = null;
         // remove all event handler for scheduler
-        $(document).off(".scheduler");
+        $('.event div').off(".scheduler");
+        $(window).off(".scheduler");
     }
 
     /**
@@ -200,6 +201,8 @@ function Scheduler($root, scheduleType) {
         $('.event').each(function(index, element) {
             var revEvent = $(this).data('reference');
             if (revEvent == event) {
+                // remove eventhandler
+                $(this).find("div").off();
                 $(this).remove();
             }
         });

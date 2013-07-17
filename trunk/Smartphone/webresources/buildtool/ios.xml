@@ -9,10 +9,8 @@
         <js>/../../javascript/app/enums.js</js>
         <js>/../../javascript/utils/resourceHandler.js</js>
         <js>/../../javascript/utils/ko.bindingHandler.js</js>
-        <js>/../../javascript/utils/map.js</js>
         <js>/../../javascript/utils/startAreaControl.js</js>
         <js>/../../javascript/utils/scheduler.js</js>
-        <js>/../../javascript/utils/remoteControl.js</js>
         <js>/../../javascript/utils/makeScrollable.js</js>
     </group>
     <group name="jquery.ui.plugins">

@@ -69,32 +69,53 @@ function localizeTime(time) {
     return hour + ':' + min + amPmMarker;
 }
 
-// convert the spot size (meter or feet) into centimeters for robot 
-// depending on the spot converter factor
+
 /**
  * convert the spot size (meter or feet) into centimeters for robot 
  * or with reverse set to true convert it back to meter/feet  
  * @param {Object} spotL the spot length
  * @param {Object} spotH the spot height
- * @param {Object} reverse indicates conversion mode if false or not set it 
+ * @param {Object} reverse indicates conversion mode if false or not set 
  *                 converts to cm if true into m or ft   
  */
 function convertSpotsize(spotL, spotH, reverse) {
-    var spotFactor = parseFloat($.i18n.t("pattern.spotConverter"));
+    var spotConverter = parseFloat($.i18n.t("pattern.spotConverter"));
+    var tempSize = {
+        length:1,
+        height:1
+    };
+    // we need to make sure that converting from ft/m to cm and back we have the 
+    // right multiplier. thats why on revert we always round to 100cm 
+    // baseMultiplier to have a clean base
     if(typeof reverse != "undefined" && reverse === true) {
-        var tempSize = {
-            length: Math.round((spotL / spotFactor)),
-            height: Math.round((spotH / spotFactor))
-        };
+        tempSize.length = convertToBase(spotL, spotConverter);
+        tempSize.height = convertToBase(spotH, spotConverter);
     } else {
-      var tempSize = {
-            length: (spotL * spotFactor),
-            height: (spotH * spotFactor)
-        };  
+      tempSize.length = (spotL * spotConverter);
+      tempSize.height = (spotH * spotConverter);
     }
     return tempSize;
 }
-
+function convertToBase(value, spotConverter) {
+    var baseValue = 1;
+    var baseMultiplier = 100;
+    // ensure that we always get a clean base 1-5
+    // first figure out if value conforms to the current format (spotConverter)
+    if(value%spotConverter > 0) {
+        // different format
+        if(spotConverter < baseMultiplier) {
+            // round down
+            baseValue = Math.max(1, Math.floor(value / spotConverter));
+        } else {
+            // round up
+            baseValue = Math.min(5, Math.ceil(value / spotConverter));
+        }
+    } else {
+        // same format
+        baseValue = (value / spotConverter);
+    }
+    return baseValue;
+} 
 // helper class for robot state
 var robotStateMachine = {
     lastState:"inactive",

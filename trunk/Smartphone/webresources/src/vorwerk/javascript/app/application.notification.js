@@ -25,7 +25,10 @@ function WorkflowNotification(parent) {
             popupafterclose: function(event, ui) { 
                 $("#dialogPopup").removeClass("dialogType_1 dialogType_2 dialogType_3");
                 $("#dialogPopup .ui-bar-buttons").attr("class", "ui-bar-buttons");
+                // remove disabled style
                 $("#dialogPopup .ui-bar-buttons .ui-btn").removeClass("ui-disabled");
+                // remove event listener
+                $("#dialogPopup .ui-bar-buttons .ui-btn").off(".dialog");
             }
         });
     }
@@ -158,13 +161,14 @@ function WorkflowNotification(parent) {
                 if(index < buttons.length) {
                      $(this).find("span.ui-btn-text").text(buttons[index].label);
                      if(typeof buttons[index].callback != "undefined") {
-                         $(this).click(function (e) {
-                            // disable to prevent multiple clicks
+                         $(this).on("vclick.dialog", function() {
+                            // disable button to prevent multiple clicks
                             $(this).addClass("ui-disabled");
-                            buttons[index].callback(e);
-                        });
+                            buttons[index].callback(event);
+                            event.preventDefault();
+                         });
                     } else {
-                         $(this).click(function (e) {
+                         $(this).on("vclick.dialog", function() {
                             that.closeDialog();
                         });
                     }
@@ -175,7 +179,7 @@ function WorkflowNotification(parent) {
         } else {
             $("#dialogPopup .ui-bar-buttons").addClass("buttons_1");
             $("#dialogPopup .first-button .ui-btn-text").text("Ok"); 
-            $("#dialogPopup .first-button").click(function (e) {
+            $("#dialogPopup .first-button").on("vclick.dialog", function() {
                 that.closeDialog();
             });
         }

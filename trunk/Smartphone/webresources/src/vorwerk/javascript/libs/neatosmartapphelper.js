@@ -797,6 +797,17 @@ var RobotPluginManager = ( function() {
                             );
                         }, 1500);
                     break;
+                    case "5d31a4e8-5eca-41b8-87bc-fa10a13c4151":
+                        window.setTimeout(function() {
+                            callbackSuccess(
+                                {   
+                                    'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
+                                    'scheduleEventId':'5d31a4e8-5eca-41b8-87bc-fa10a13c4151'
+                                    
+                                }
+                            );
+                        }, 2500);
+                    break;
                 }
                 
             },

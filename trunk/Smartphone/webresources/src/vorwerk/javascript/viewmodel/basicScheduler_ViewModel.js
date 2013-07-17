@@ -41,6 +41,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     }
 
     this.deinit = function() {
+        $('#schedulerTarget').off('updatedEvent');
         that.scheduler.destroy();
     }
     /* </enviroment functions> */
@@ -180,6 +181,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             //RobotPluginManager.deleteScheduleEvent(scheduleId, scheduleEventId, callbackSuccess, callbackError)
             var tempDeferred = parent.communicationWrapper.exec(RobotPluginManager.deleteScheduleEvent, [parent.communicationWrapper.dataValues["scheduleId"], item.scheduleEventId], 
                 { type: notificationType.SPINNER, message: "" , bHide: false });
+            console.log("deleteScheduleEvent: " + item.scheduleEventId);
             
             tempDeferred.done(function() {
                 that.scheduler.deleteEvent(item);
