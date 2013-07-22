@@ -59,8 +59,7 @@
     
     if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Get schedules request failed. With Error = %@!", value);
-        NSError *serverError = (NSError *)value;
-        [self.delegate failedToGetSchedulesForRobotId:robotId withError:[AppHelper nserrorWithDescription:[serverError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR]];
+        [self.delegate failedToGetSchedulesForRobotId:robotId withError:value];
         return;
     }
     
@@ -83,39 +82,55 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection responseData:(NSData *)responseData {
     debugLog(@"");
+    id serverResponse = responseData;
+    if ([AppHelper hasServerRequestFailedForResponse:[AppHelper parseJSON:responseData]]) {
+        NSDictionary *errorDict = [serverResponse objectForKey:KEY_NEATO_SERVER_ERROR];
+        serverResponse = [AppHelper nserrorWithDescription:[errorDict objectForKey:NEATO_RESPONSE_MESSAGE] code:[[errorDict objectForKey:KEY_NEATO_SERVER_ERROR_CODE] integerValue]];
+    }
     NSURLRequest *request = [connection originalRequest];
     NSString *selectorStr = [request valueForHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     SEL selector = NSSelectorFromString(selectorStr);
     if ([selectorStr isEqualToString:GET_SCHEDULES_RESPONSE_HANDLER]) {
         NSString *robotId = [request valueForHTTPHeaderField:ROBOT_ID_SERVER_KEY];
-        [self performSelector:selector withObject:responseData withObject:robotId];
+        [self performSelector:selector withObject:serverResponse withObject:robotId];
         return;
     }
     else if ([selectorStr isEqualToString:GET_SCHEDULE_DATA_RESPONSE_HANDLER]) {
         NSString *scheduleId = [request valueForHTTPHeaderField:SCHEDULE_ID_SERVER_KEY];
-        [self performSelector:selector withObject:responseData withObject:scheduleId];
+        [self performSelector:selector withObject:serverResponse withObject:scheduleId];
         return;
     }
-    [self performSelector:selector withObject:responseData];
+    [self performSelector:selector withObject:serverResponse];
 }
 
 // This gets called when the connection fails for any reason.
+// We are sending 'user unauthorized' error code if that error is
+// returned otherwise we send 'network error' code.
 - (void)requestFailedForConnection:(NSURLConnection *)connection error:(NSError *) error {
     debugLog(@"");
+  
+    NSError *neatoError = nil;
+    if (error.code == 401) {
+        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_TYPE_USER_UNAUTHORIZED];
+    }
+    else {
+        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
+    }
+  
     NSURLRequest *request = [connection originalRequest];
     NSString *selectorStr = [request valueForHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     SEL selector = NSSelectorFromString(selectorStr);
     if ([selectorStr isEqualToString:GET_SCHEDULES_RESPONSE_HANDLER]) {
         NSString *robotId = [request valueForHTTPHeaderField:ROBOT_ID_SERVER_KEY];
-        [self performSelector:selector withObject:error withObject:robotId];
+        [self performSelector:selector withObject:neatoError withObject:robotId];
         return;
     }
     else if ([selectorStr isEqualToString:GET_SCHEDULE_DATA_RESPONSE_HANDLER]) {
         NSString *scheduleId = [request valueForHTTPHeaderField:SCHEDULE_ID_SERVER_KEY];
-        [self performSelector:selector withObject:error withObject:scheduleId];
+        [self performSelector:selector withObject:neatoError withObject:scheduleId];
         return;
     }
-    [self performSelector:selector withObject:error];
+    [self performSelector:selector withObject:neatoError];
 }
 
 - (void)getDataForScheduleWithId:(NSString *)scheduleId {
@@ -230,9 +245,7 @@
     }
     
     if ([value isKindOfClass:[NSError class]]) {
-        NSError *networkError = (NSError *)value;
-        NSError *error = [AppHelper nserrorWithDescription:[networkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
-        [self notifyRequestFailed:@selector(updateScheduleError:) withError:error];
+        [self notifyRequestFailed:@selector(updateScheduleError:) withError:value];
         return;
     }
     NSDictionary *jsonData = [AppHelper parseJSON:value];
@@ -332,10 +345,8 @@
         return;
     }
     if ([value isKindOfClass:[NSError class]]) {
-        NSError *networkError = (NSError *)value;
-        NSError *error = [AppHelper nserrorWithDescription:[networkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
         debugLog(@"Get schedule based on type failed!");
-        [self notifyRequestFailed:@selector(failedToGetScheduleWithError:) withError:error];
+        [self notifyRequestFailed:@selector(failedToGetScheduleWithError:) withError:value];
         return;
     }
     NSDictionary *jsonData = [AppHelper parseJSON:value];

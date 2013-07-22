@@ -31,13 +31,7 @@
 }
 
 -(void) loginFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
-    debugLog(@"Error = %@", error);
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
-    
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 -(void) loginSuccess:(NeatoUser *) user  callbackId:(NSString *)callbackId {
@@ -70,12 +64,7 @@
 
 -(void) failedToCreateUserWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
-    
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 
@@ -89,23 +78,12 @@
 }
 
 -(void)logoutRequestFailedWithEror:(NSError *)error callbackId:(NSString *)callbackId {
-    debugLog(@"Error = %@", error);
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
-    
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 -(void)userCreationFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
-    
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 - (void) createUser:(CDVInvokedUrlCommand *)command {
@@ -135,8 +113,7 @@
 
 -(void) failedToGetUserDetailsWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 - (void)getUserDetails:(CDVInvokedUrlCommand *)command {
@@ -153,12 +130,7 @@
 
 -(void) robotAssociationFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
-    
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 
@@ -188,12 +160,7 @@
 
 - (void)robotAssociation2FailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
-    
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 - (void)userAssociateWithRobot:(NeatoRobot *)neatoRobot callbackId:(NSString *)callbackId {
@@ -298,14 +265,12 @@
 
 - (void)failedToDissociateAllRobots:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];  
+    [self sendError:error forCallbackId:callbackId];
 }
 
 - (void)failedToDissociateRobotWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 - (void)robotDissociatedWithMessage:(NSString *)message callbackId:(NSString *)callbackId {
     debugLog(@"");
@@ -330,8 +295,7 @@
 
 - (void)failedToGetAssociatedRobotsWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]]; 
+    [self sendError:error forCallbackId:callbackId];
 }
 
 - (void)isUserValidated:(CDVInvokedUrlCommand *)command {
@@ -360,12 +324,7 @@
 
 - (void)userValidationFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
-    
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 - (void)resendValidationMail:(CDVInvokedUrlCommand *)command {
@@ -383,12 +342,7 @@
 
 - (void)failedToResendValidationEmailWithError:(NSError *)error callbackId:(NSString *)callbackId {    
     debugLog(@"Error = %@", error);
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
-    
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 - (void)resendValidationEmailSucceededWithMessage:(NSString *)message callbackId:(NSString *)callbackId {
@@ -420,11 +374,7 @@
 
 - (void)failedToForgetPasswordWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInteger:[error code]] forKey:KEY_ERROR_CODE];
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 - (void)changePassword:(CDVInvokedUrlCommand *)command {
@@ -446,11 +396,7 @@
 
 - (void)failedToChangePasswordWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInteger:[error code]] forKey:KEY_ERROR_CODE];
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 - (void)createUser2:(CDVInvokedUrlCommand *)command {
     // Get the callback id
@@ -484,11 +430,7 @@
 
 - (void)failedToCreateUser2WithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInt:[error code]] forKey:KEY_ERROR_CODE];
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 - (void)turnNotificationOnOff:(CDVInvokedUrlCommand *)command {
@@ -513,11 +455,7 @@
 
 - (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInt:[error code]] forKey:KEY_ERROR_CODE];
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]]; 
+    [self sendError:error forCallbackId:callbackId];
 }
 
 - (void)getNotificationSettings:(CDVInvokedUrlCommand *)command {
@@ -537,11 +475,15 @@
 }
 - (void)failedToGetUserPushNotificationSettingsWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
+    [self sendError:error forCallbackId:callbackId];
+}
+
+- (void)sendError:(NSError *)error forCallbackId:(NSString *)callbackId {
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInt:[error code]] forKey:KEY_ERROR_CODE];
+    [dictionary setValue:[NSNumber numberWithInt:error.code] forKey:KEY_ERROR_CODE];
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]]; 
+    [self writeJavascript:[result toErrorCallbackString:callbackId]];
 }
 
 @end

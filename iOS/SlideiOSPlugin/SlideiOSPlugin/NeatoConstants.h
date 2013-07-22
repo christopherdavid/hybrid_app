@@ -49,6 +49,9 @@
 #define NEATO_RESPONSE_GRID_BLOB_FILE_URL @"blob_data_file_name"
 
 #define NEATO_STATUS_SUCCESS 0
+#define NEATO_STATUS_ERROR  -1
+#define KEY_NEATO_SERVER_ERROR @"error"
+#define KEY_NEATO_SERVER_ERROR_CODE @"code"
 
 #define NEATO_STAGING_SERVER @"Staging"
 #define NEATO_PROD_SERVER @"Production"
@@ -141,6 +144,7 @@
 
 // Profile Detail keys
 #define KEY_ROBOT_CURRENT_STATE @"robotCurrentState"
+#define KEY_ROBOT_NEW_VIRTUAL_STATE @"robotNewVirtualState"
 #define KEY_ROBOT_CLEANING_COMMAND @"cleaningCommand"
 #define KEY_ROBOT_STATE_UPDATE @"robotStateUpdate"
 #define KEY_SERIAL_NUMBER @"serial_number"

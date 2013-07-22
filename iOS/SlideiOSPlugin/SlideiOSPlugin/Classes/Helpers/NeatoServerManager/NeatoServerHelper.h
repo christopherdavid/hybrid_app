@@ -2,7 +2,6 @@
 #import "NeatoUser.h"
 #import "NeatoRobot.h"
 #import "NSURLConnectionHelper.h"
-#import "RobotProfileDetails3.h"
 
 @class NeatoRobotCommand;
 @class NeatoUserAttributes;
@@ -89,7 +88,7 @@
 - (void)logoutUserEmail:(NSString *)email authToken:(NSString *)auth_token;
 - (void)associatedRobotsForUserWithEmail:(NSString *)email authToken:(NSString *)authToken;
 - (void)updateUserAuthToken:(NSString *)authToken;
-- (void)setRobotName2:(NSString *)robotName forRobotWithId:(NSString *)robotId forUserWithEmail:(NSString *)email withCauseAgentId:(NSString *)causeAgentId;
+- (void)setRobotName2:(NSString *)robotName forRobotWithId:(NSString *)robotId forUserWithEmail:(NSString *)email;
 - (void)onlineStatusForRobotWithId:(NSString *)robotId;
 - (void)dissociateAllRobotsForUserWithEmail:(NSString *)email;
 - (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)email;
@@ -100,7 +99,7 @@
 - (void)forgetPasswordForEmail:(NSString *)email;
 - (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword authToken:(NSString *)authToken;
 - (void)createUser2:(NeatoUser *)neatoUser;
-- (void)enableDisable:(BOOL)enable scheduleType:(int)scheduleType forRobot:(NSString *)robotId withUserEmail:(NSString *)email withCauseAgentId:(NSString *)causeAgentId;
+- (void)enableDisable:(BOOL)enable scheduleType:(int)scheduleType forRobot:(NSString *)robotId withUserEmail:(NSString *)email;
 - (void)setUserPushNotificationOptions:(NSString *)jsonString forUserWithEmail:(NSString *)email;
 - (void)notificationSettingsForUserWithEmail:(NSString *)email;
 - (void)isScheduleType:(NSString *)scheduleType enabledForRobotWithId:(NSString *)robotId;
@@ -108,5 +107,5 @@
 - (void)sendCommand:(NeatoRobotCommand *)command withSourceEmailId:(NSString *)email;
 - (void)getProfileDetails2ForRobotWithId:(NSString *)robotId;
 - (void)setUserAttributes:(NeatoUserAttributes *)attributes forAuthToken:(NSString *)authToken;
-- (void)notifyScheduleUpdatedForProfileDetails:(RobotProfileDetails3 *)profileDetails;
+- (void)notifyScheduleUpdatedForProfileDetails:(NeatoRobotCommand *)profileDetails forUserWithEmail:(NSString *)email;
 @end

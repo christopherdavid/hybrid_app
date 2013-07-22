@@ -5,7 +5,7 @@
 #import "AppSettings.h"
 #import "NeatoRobotCommand.h"
 #import "NeatoUserAttributes.h"
-#import "RobotProfileDetails3.h"
+#import "NeatoUserHelper.h"
 
 #define SERVER_REPONSE_HANDLER_KEY @"key_server_response_handler"
 #define RESEND_VALIDATION_EMAIL_HANDLER @"resendValidationEmailHandler:"
@@ -51,7 +51,7 @@
 #define UPDATE_AUTH_TOKEN_POST_STRING @"api_key=%@&auth_token=%@"
 #define GET_ASSOCIATED_ROBOTS_POST_STRING @"api_key=%@&auth_token=%@&email=%@"
 #define SET_ROBOT_PROFILE_POST_STRING @"api_key=%@&serial_number=%@&%@"
-#define ROBOT_PROFILE_DATA_FORMAT @"profile[%@]=%@"
+#define ROBOT_PROFILE_DATA_FORMAT @"&profile[%@]=%@"
 #define DISSOCIATE_ALL_ROBOTS_POST_STRING @"api_key=%@&email=%@&serial_number=%@"
 #define GET_ROBOT_ONLINE_STATUS_POST_STRING @"api_key=%@&serial_number=%@"
 
@@ -67,7 +67,7 @@
 #define GET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING @"api_key=%@&email=%@"
 #define IS_SCHEDULE_ENABLED_POST_STRING @"api_key=%@&serial_number=%@"
 #define GET_ROBOT_VIRTUAL_ONLINE_STATUS_POST_STRING @"api_key=%@&serial_number=%@"
-#define SET_ROBOT_PROFILE_DETAILS_3_POST_STRING @"api_key=%@&serial_number=%@&source_serial_number=%@&source_smartapp_id=%@&cause_agent_id=%@&value_extra=%@&notification_flag=%@&%@"
+#define SET_ROBOT_PROFILE_DETAILS_3_POST_STRING @"api_key=%@&serial_number=%@&source_serial_number=%@&source_smartapp_id=%@&cause_agent_id=%@&value_extra=%@&notification_flag=%@%@"
 #define GET_ROBOT_PROFILE_DETAILS_2_POST_STRING @"api_key=%@&serial_number=%@&key=%@"
 #define SET_USER_ATTRIBUTES_POST_STRING @"api_key=%@&auth_token=%@&profile[operating_system]=%@&profile[version]=%@&profile[name]=%@"
 
@@ -79,7 +79,6 @@
 - (void)notifyRequestFailed:(SEL)selector withError:(NSError *)error;
 - (NSString *)getRobotProfileDataFromKey:(NSString *)key value:(NSString *)value;
 - (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)email handler:(NSString *)handler;
-- (NSString *)paramsForEnabledSchedule:(BOOL)enable ofType:(int)scheduleType;
 @end
 
 
@@ -109,17 +108,21 @@
     [helper getDataForRequest:request];
 }
 
--(void)connectionDidFinishLoading:(NSURLConnection *)connection responseData:(NSData *) responseData
-{
+-(void)connectionDidFinishLoading:(NSURLConnection *)connection responseData:(NSData *) responseData {
     debugLog(@"");
+    id serverResponse = responseData;
+    if ([AppHelper hasServerRequestFailedForResponse:[AppHelper parseJSON:responseData]]) {
+        NSDictionary *errorDict = [serverResponse objectForKey:KEY_NEATO_SERVER_ERROR];
+        serverResponse = [AppHelper nserrorWithDescription:[errorDict objectForKey:NEATO_RESPONSE_MESSAGE] code:[[errorDict objectForKey:KEY_NEATO_SERVER_ERROR_CODE] integerValue]];
+    }
     NSString *selectorStr = [[connection originalRequest] valueForHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     NSInteger parameterCount = [[selectorStr mutableCopy] replaceOccurrencesOfString:@":" withString:@"," options:NSLiteralSearch range:NSMakeRange(0, [selectorStr length])];
     SEL selector = NSSelectorFromString(selectorStr);
     if (parameterCount == 1) {
-        [self performSelector:selector withObject:responseData];
+        [self performSelector:selector withObject:serverResponse];
     }
     else if (parameterCount == 2) {
-        [self performSelector:selector withObject:responseData withObject:connection];
+        [self performSelector:selector withObject:serverResponse withObject:connection];
     }
     else {
         debugLog(@"connectionDidFinishLoading called with invalid number of arguments. Selector = %@, Parameters required = %d", selectorStr, parameterCount);
@@ -127,17 +130,27 @@
 }
 
 // This gets called when the connection fails for any reason.
--(void) requestFailedForConnection:(NSURLConnection *)connection error:(NSError *) error
-{
+// We are sending 'user unauthorized' error code if that error is
+// returned otherwise we send 'network error' code.
+- (void)requestFailedForConnection:(NSURLConnection *)connection error:(NSError *)error {
     debugLog(@"");
+    
+    NSError *neatoError = nil;
+    if (error.code == 401) {
+        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_TYPE_USER_UNAUTHORIZED];
+    }
+    else {
+        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
+    }
+
     NSString *selectorStr = [[connection originalRequest] valueForHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     SEL selector = NSSelectorFromString(selectorStr);
     NSInteger parameterCount = [[selectorStr mutableCopy] replaceOccurrencesOfString:@":" withString:@"," options:NSLiteralSearch range:NSMakeRange(0, [selectorStr length])];
     if (parameterCount == 1) {
-        [self performSelector:selector withObject:error];
+        [self performSelector:selector withObject:neatoError];
     }
     else if (parameterCount == 2) {
-        [self performSelector:selector withObject:error withObject:connection];
+        [self performSelector:selector withObject:neatoError withObject:connection];
     }
     else {
         debugLog(@"requestFailedForConnection called with invalid number of arguments. Selector = %@, Parameters required = %d", selectorStr, parameterCount);
@@ -407,10 +420,8 @@
 }
 
 
--(void) loginNativeUserHandler:(id) value
-{
-    if (value == nil)
-    {
+- (void)loginNativeUserHandler:(id)value {
+    if (value == nil) {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
         
@@ -420,8 +431,7 @@
         return;
     }
     
-    if ([value isKindOfClass:[NSError class]])
-    {
+    if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Login request failed!");
         [self notifyRequestFailed:@selector(failedToGetLoginHandle:) withError:value];
         return;
@@ -430,9 +440,16 @@
     NSDictionary *jsonData = [AppHelper parseJSON:value];
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
-    if ([status intValue] == NEATO_STATUS_SUCCESS)
-    {
-        NSString *authToken = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
+         NSString *authToken = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
+        // NOTE: If auth token value is NULL then validation status would
+        // be -2 and we have to send back error message in extra params
+        // to caller.
+        if ([AppHelper isStringNilOrEmpty:authToken]) {
+            NSError *error = [AppHelper nserrorWithDescription:[[jsonData valueForKey:NEATO_RESPONSE_EXTRA_PARAMS] valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_TYPE_USER_UNAUTHORIZED];
+            [self notifyRequestFailed:@selector(failedToGetLoginHandle:) withError:error];
+            return;
+        }
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.delegate respondsToSelector:@selector(gotUserHandleForLogin:)])
             {
@@ -745,21 +762,19 @@
     return [NSString stringWithFormat:ROBOT_PROFILE_DATA_FORMAT, key, value];
 }
 
-- (void)setRobotName2:(NSString *)robotName forRobotWithId:(NSString *)robotId forUserWithEmail:(NSString *)email withCauseAgentId:(NSString *)causeAgentId {
+- (void)setRobotName2:(NSString *)robotName forRobotWithId:(NSString *)robotId forUserWithEmail:(NSString *)email {
     debugLog(@"");
-    if (robotId == nil || robotName == nil)
-    {
+    if (robotId == nil || robotName == nil) {
         debugLog(@"robotId or robotName is NIL. Will not update robot name.");
         return;
     }
-    RobotProfileDetails3 *profileDetails = [[RobotProfileDetails3 alloc] init];
-    profileDetails.robotId = robotId;
-    profileDetails.email = email;
-    profileDetails.causeAgentId = causeAgentId;
-    profileDetails.notificationFlag = [NSNumber numberWithInt:NOTIFICATION_FLAG_TRUE];
-    profileDetails.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
-    [profileDetails.profileDict setValue:robotName forKey:KEY_NAME];
-    [self setRobotProfileDetails3:profileDetails withHandler:SET_ROBOT_NAME_RESPONSE_HANDLER];
+    NeatoRobotCommand *robotCommand = [[NeatoRobotCommand alloc] init];
+    robotCommand.robotId = robotId;
+    robotCommand.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
+    [robotCommand.profileDict setValue:robotName forKey:KEY_NAME];
+    NSMutableDictionary *httpHeaderFields = [[NSMutableDictionary alloc] initWithCapacity:1];
+    [httpHeaderFields setValue:SET_ROBOT_NAME_RESPONSE_HANDLER forKey:SERVER_REPONSE_HANDLER_KEY];
+    [self setRobotProfileDetails3:robotCommand forUserWithEmail:email withHttpHeaderFields:httpHeaderFields];
  }
 
 - (void)setRobotNameHandler:(id)value {
@@ -1238,9 +1253,7 @@
     
     if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Forget password failed!");
-        NSError *netowrkError = (NSError *)value;
-        NSError *error = [AppHelper nserrorWithDescription:[netowrkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
-        [self notifyRequestFailed:@selector(failedToForgetPasswordWithError:) withError:error];
+        [self notifyRequestFailed:@selector(failedToForgetPasswordWithError:) withError:value];
         return;
     }
     
@@ -1285,9 +1298,7 @@
     
     if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Change password failed!");
-        NSError *netowrkError = (NSError *)value;
-        NSError *error = [AppHelper nserrorWithDescription:[netowrkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
-        [self notifyRequestFailed:@selector(failedToChangePasswordWithError:) withError:error];
+        [self notifyRequestFailed:@selector(failedToChangePasswordWithError:) withError:value];
         return;
     }
     
@@ -1331,9 +1342,7 @@
     
     if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"User creation2 failed!");
-        NSError *netowrkError = (NSError *)value;
-        NSError *error = [AppHelper nserrorWithDescription:[netowrkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
-        [self notifyRequestFailed:@selector(failedToGetCreateUserHandle2Error:) withError:error];
+        [self notifyRequestFailed:@selector(failedToGetCreateUserHandle2Error:) withError:value];
         return;
     }
     
@@ -1359,27 +1368,14 @@
     }
 }
 
-- (NSString *)paramsForEnabledSchedule:(BOOL)enable ofType:(int)scheduleType {
-    if(scheduleType == NEATO_SCHEDULE_BASIC_INT) {
-        return [self getRobotProfileDataFromKey:ENABLE_BASIC_SCHEDULE value:enable?@"TRUE":@"FALSE"];
-    }
-    else if(scheduleType == NEATO_SCHEDULE_ADVANCE_INT) {
-        return [self getRobotProfileDataFromKey:ENABLE_ADVANCED_SCHEDULE value:enable?@"TRUE":@"FALSE"];
-    }
-    else {
-        return @"";
-    }
-}
-
-- (void)enableDisable:(BOOL)enable scheduleType:(int)scheduleType forRobot:(NSString *)robotId withUserEmail:(NSString *)email withCauseAgentId:(NSString *)causeAgentId {
-    RobotProfileDetails3 *profileDetails = [[RobotProfileDetails3 alloc] init];
-    profileDetails.robotId = robotId;
-    profileDetails.email = email;
-    profileDetails.causeAgentId = causeAgentId;
-    profileDetails.notificationFlag = [NSNumber numberWithInt:NOTIFICATION_FLAG_TRUE];
-    profileDetails.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
-    [profileDetails.profileDict setValue:[AppHelper stringFromBool:enable] forKey:KEY_ENABLE_BASIC_SCHEDULE];
-    [self setRobotProfileDetails3:profileDetails withHandler:ENABLE_DISABLE_SCHEDULE_RESPONSE_HANDLER];
+- (void)enableDisable:(BOOL)enable scheduleType:(int)scheduleType forRobot:(NSString *)robotId withUserEmail:(NSString *)email {
+    NeatoRobotCommand *robotCommand = [[NeatoRobotCommand alloc] init];
+    robotCommand.robotId = robotId;
+    robotCommand.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
+    [robotCommand.profileDict setValue:[AppHelper stringFromBool:enable] forKey:KEY_ENABLE_BASIC_SCHEDULE];
+    NSMutableDictionary *httpHeaderFields = [[NSMutableDictionary alloc] init];
+    [httpHeaderFields setValue:ENABLE_DISABLE_SCHEDULE_RESPONSE_HANDLER forKey:SERVER_REPONSE_HANDLER_KEY];
+    [self setRobotProfileDetails3:robotCommand forUserWithEmail:email withHttpHeaderFields:httpHeaderFields];
 }
 
 
@@ -1442,9 +1438,7 @@
     
     if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Set push notification options failed!");
-        NSError *networkError = (NSError *)value;
-        NSError *error = [AppHelper nserrorWithDescription:[networkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
-        [self notifyRequestFailed:@selector(failedToSetUserPushNotificationOptionsWithError:) withError:error];
+        [self notifyRequestFailed:@selector(failedToSetUserPushNotificationOptionsWithError:) withError:value];
         return;
     }
     
@@ -1491,9 +1485,7 @@
     
     if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Get push notification options failed!");
-        NSError *networkError = (NSError *)value;
-        NSError *error = [AppHelper nserrorWithDescription:[networkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
-        [self notifyRequestFailed:@selector(failedToGetUserPushNotificationSettingsWithError:) withError:error];
+        [self notifyRequestFailed:@selector(failedToGetUserPushNotificationSettingsWithError:) withError:value];
         return;
     }
     
@@ -1548,9 +1540,7 @@
     
     if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Failed to get robot online status!");
-        NSError *networkError = (NSError *)value;
-        NSError *error = [AppHelper nserrorWithDescription:[networkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
-        [self notifyRequestFailed:@selector(failedToGetRobotVirtualOnlineStatusWithError:) withError:error];
+        [self notifyRequestFailed:@selector(failedToGetRobotVirtualOnlineStatusWithError:) withError:value];
         return;
     }
     
@@ -1632,36 +1622,31 @@
 }
 
 - (void)sendCommand:(NeatoRobotCommand *)command withSourceEmailId:(NSString *)email {
-    RobotProfileDetails3 *profileDetails = [[RobotProfileDetails3 alloc] init];
-    profileDetails.robotId = command.robotId;
-    profileDetails.email = email;
-    profileDetails.causeAgentId = command.causingAgentId;
-    profileDetails.notificationFlag = [NSNumber numberWithInt:NOTIFICATION_FLAG_TRUE];
-    profileDetails.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
-    [profileDetails.profileDict setValue:command.xmlCommand forKey:KEY_ROBOT_CLEANING_COMMAND];
-    profileDetails.httpHeaderFields = [[NSMutableDictionary alloc] initWithCapacity:3];
-    [profileDetails.httpHeaderFields setValue:command.commandId forKey:KEY_COMMAND_ID];
-    [profileDetails.httpHeaderFields setValue:command.robotId forKey:KEY_ROBOT_ID];
-    [profileDetails.httpHeaderFields setValue:command.xmlCommand forKey:KEY_XML_COMMAND];
-    [self setRobotProfileDetails3:profileDetails withHandler:SEND_COMMAND_RESPONSE_HANDLER];
+    NSMutableDictionary *httpHeaderFields = [[NSMutableDictionary alloc] initWithCapacity:4];
+    [httpHeaderFields setValue:command.commandId forKey:KEY_COMMAND_ID];
+    [httpHeaderFields setValue:command.robotId forKey:KEY_ROBOT_ID];
+    [httpHeaderFields setValue:command.xmlCommand forKey:KEY_XML_COMMAND];
+    [httpHeaderFields setValue:SEND_COMMAND_RESPONSE_HANDLER forKey:SERVER_REPONSE_HANDLER_KEY];
+    [self setRobotProfileDetails3:command forUserWithEmail:email withHttpHeaderFields:httpHeaderFields];
 }
 
-- (void)setRobotProfileDetails3:(RobotProfileDetails3 *)profile withHandler:(NSString *)handler {
+- (void)setRobotProfileDetails3:(NeatoRobotCommand *)profile forUserWithEmail:(NSString *)email withHttpHeaderFields:(NSDictionary *)httpHeaderFields {
     self.retained_self = self;
-    NSArray *keys = [profile.profileDict allKeys];
-    // TODO: What if there are multiple entries in the profileDict?
-    NSString *profileKey = [self getRobotProfileDataFromKey:keys[0] value:[profile.profileDict valueForKey:keys[0]]];
-    
+    NSArray *keysArray = [profile.profileDict allKeys];
+    NSMutableString *profileKeys = [[NSMutableString alloc] init];
+    for (NSString *key in keysArray) {
+      NSString *profileKey = [self getRobotProfileDataFromKey:key value:[profile.profileDict valueForKey:key]];
+      [profileKeys appendString:profileKey];
+    }
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_SET_ROBOT_PROFILE_DETAILS_3]];
     [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:[[NSString stringWithFormat:SET_ROBOT_PROFILE_DETAILS_3_POST_STRING, NEATO_API_KEY, profile.robotId, @"", profile.email, profile.causeAgentId, @"", profile.notificationFlag, profileKey] dataUsingEncoding:NSUTF8StringEncoding]];
+    // TODO: Assuming Notification flag value is always true.
+    [request setHTTPBody:[[NSString stringWithFormat:SET_ROBOT_PROFILE_DETAILS_3_POST_STRING, NEATO_API_KEY, profile.robotId, @"", email, [NeatoUserHelper uniqueDeviceIdForUser], @"", [NSNumber numberWithInt:NOTIFICATION_FLAG_TRUE], profileKeys] dataUsingEncoding:NSUTF8StringEncoding]];
     // Set Header fields.
-    NSArray *httpHeaderFieldKeys = [profile.httpHeaderFields allKeys];
-    for (NSString *key in httpHeaderFieldKeys) {
-        [request setValue:[profile.httpHeaderFields valueForKey:key] forHTTPHeaderField:key];
+    NSArray *httpHeaderFieldKeysArray = [httpHeaderFields allKeys];
+    for (NSString *key in httpHeaderFieldKeysArray) {
+        [request setValue:[httpHeaderFields valueForKey:key] forHTTPHeaderField:key];
     }
-    [request setValue:handler forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
-    
     NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
     helper.delegate = self;
     [helper getDataForRequest:request];
@@ -1783,9 +1768,7 @@
     
     if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"set user attribute failed!");
-        NSError *netowrkError = (NSError *)value;
-        NSError *error = [AppHelper nserrorWithDescription:[netowrkError.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
-        [self notifyRequestFailed:@selector(failedToSetUserAttributesWithError:) withError:error];
+        [self notifyRequestFailed:@selector(failedToSetUserAttributesWithError:) withError:value];
         return;
     }
  
@@ -1808,8 +1791,10 @@
     }
 }
 
-- (void)notifyScheduleUpdatedForProfileDetails:(RobotProfileDetails3 *)profileDetails {
-    [self setRobotProfileDetails3:profileDetails withHandler:SET_PROFILE_DETAILS_HANDLER];
+- (void)notifyScheduleUpdatedForProfileDetails:(NeatoRobotCommand *)profileDetails forUserWithEmail:(NSString *)email {
+    NSMutableDictionary *httpHeaderFields = [[NSMutableDictionary alloc] initWithCapacity:1];
+    [httpHeaderFields setValue:SET_PROFILE_DETAILS_HANDLER forKey:SERVER_REPONSE_HANDLER_KEY];
+    [self setRobotProfileDetails3:profileDetails forUserWithEmail:email withHttpHeaderFields:httpHeaderFields];
 }
 
 - (void)notifyScheduleUpdatedHandler:(id)value {

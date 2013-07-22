@@ -7,7 +7,6 @@
 @interface XMPPRobotCleaningStateHelper()
 // Returns the state of robot based on the command Id. (server command to robot state)
 + (NSInteger)robotStateFromCommandId:(NSInteger)commandId;
-+ (NSInteger)robotVirtualStateFromRobotProfile:(NSDictionary *)robotProfile;
 + (NSInteger)robotActualStateFromRobotProfile:(NSDictionary *)robotProfile;
 @end
 @implementation XMPPRobotCleaningStateHelper

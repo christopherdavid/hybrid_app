@@ -11,8 +11,8 @@
 #import "ScheduleJsonHelper.h"
 #import "SchedulerConstants.h"
 #import "NeatoServerHelper.h"
-#import "RobotProfileDetails3.h"
 #import "NeatoUserHelper.h"
+#import "NeatoRobotCommand.h"
 
 
 @interface UpdateBasicScheduleListener()
@@ -152,17 +152,13 @@
 - (void)notifyScheduleUpdated {
     debugLog(@"");
     
-    RobotProfileDetails3 *profileDetails = [[RobotProfileDetails3 alloc] init];
-    profileDetails.robotId = self.robotId;
-    profileDetails.email = [NeatoUserHelper getLoggedInUserEmail];
-    profileDetails.causeAgentId = [NeatoUserHelper uniqueDeviceIdForUser];
-    profileDetails.notificationFlag = [NSNumber numberWithInt:NOTIFICATION_FLAG_TRUE];
-    profileDetails.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
-    [profileDetails.profileDict setValue:@"true" forKey:KEY_ROBOT_SCHEDULE_UPDATED];
-    
+    NeatoRobotCommand *robotCommand = [[NeatoRobotCommand alloc] init];
+    robotCommand.robotId = self.robotId;
+    robotCommand.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
+    [robotCommand.profileDict setValue:@"true" forKey:KEY_ROBOT_SCHEDULE_UPDATED];
     NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
     serverHelper.delegate = self;
-    [serverHelper notifyScheduleUpdatedForProfileDetails:profileDetails];
+    [serverHelper notifyScheduleUpdatedForProfileDetails:robotCommand forUserWithEmail:[NeatoUserHelper getLoggedInUserEmail]];
 }
 
 - (void)notifyScheduleUpdatedSucceeded {

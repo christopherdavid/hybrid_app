@@ -125,6 +125,9 @@
 
 // Retruns true if a string is nil or empty
 + (bool)isStringNilOrEmpty:(NSString *)input {
+    if (![input isKindOfClass:[NSString class]]) {
+        return YES;
+    }
     if (!input || [input length] == 0)
     {
         return YES;
@@ -212,4 +215,13 @@
 + (NSString *)deviceModelName {
     return [[UIDevice currentDevice] model];
 }
+
+// Returns YES if the server has responded with an error code of -1.
+// NO otherwise.
++ (BOOL)hasServerRequestFailedForResponse:(NSDictionary *)serverResponse {
+    NSNumber *status = [NSNumber numberWithInt:[[serverResponse valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    NSDictionary *serverError = [serverResponse objectForKey:KEY_NEATO_SERVER_ERROR];
+    return (([status intValue] == NEATO_STATUS_ERROR) && serverError);
+}
+
 @end

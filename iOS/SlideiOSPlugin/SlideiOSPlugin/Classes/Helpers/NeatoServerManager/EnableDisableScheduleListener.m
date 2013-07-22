@@ -41,8 +41,7 @@
     }
     NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
     helper.delegate = self;
-    // TODO: Server helper should get the causing agent Id from NeatoUserHelper.
-    [helper enableDisable:self.enable scheduleType:self.scheduleType forRobot:self.robotId withUserEmail:self.email withCauseAgentId:[NeatoUserHelper uniqueDeviceIdForUser]];
+    [helper enableDisable:self.enable scheduleType:self.scheduleType forRobot:self.robotId withUserEmail:self.email];
 }
 
 

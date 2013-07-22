@@ -52,4 +52,5 @@
 - (void)setRobotName:(CDVInvokedUrlCommand *)command;
 - (void)registerRobotNotifications2:(CDVInvokedUrlCommand *)command;
 - (void)unregisterRobotNotifications2:(CDVInvokedUrlCommand *)command;
+- (void)getRobotCleaningState:(CDVInvokedUrlCommand *)command;
 @end

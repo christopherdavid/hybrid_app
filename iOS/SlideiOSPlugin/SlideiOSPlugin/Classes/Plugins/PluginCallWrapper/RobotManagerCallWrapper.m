@@ -790,4 +790,32 @@
     self.delegate = nil;
 }
 
+- (void)getCleaningStateForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId{
+  debugLog(@"");
+  self.retained_self = self;
+  self.callbackId = callbackId;
+  
+  NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+  manager.delegate = self;
+  [manager profileDetails2ForRobotWithId:robotId];
+}
+
+- (void)gotRobotProfileDetails2WithResult:(NSDictionary *)result {
+  debugLog(@"");
+  if ([self.delegate respondsToSelector:@selector(gotCleaningStateWithResult:callbackId:)]) {
+    [self.delegate gotCleaningStateWithResult:result callbackId:self.callbackId];
+  }
+  self.retained_self = nil;
+  self.delegate = nil;
+}
+
+- (void)failedToGetRobotProfileDetails2WithError:(NSError *)error {
+  debugLog(@"");
+  if ([self.delegate respondsToSelector:@selector(failedToGetCleaningStateWithError:callbackId:)]) {
+    [self.delegate failedToGetCleaningStateWithError:error callbackId:self.callbackId];
+  }
+  self.retained_self = nil;
+  self.delegate = nil;
+}
+
 @end
