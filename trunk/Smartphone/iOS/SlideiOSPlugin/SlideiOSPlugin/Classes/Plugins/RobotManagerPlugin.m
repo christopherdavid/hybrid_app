@@ -13,6 +13,7 @@
 #import "Schedule.h"
 #import "ScheduleUtils.h"
 #import "XMPPRobotDataChangeManager.h"
+#import "XMPPRobotCleaningStateHelper.h"
 
 //PluginResult Classes
 #import "CreateSchedulePluginResult.h"
@@ -1027,6 +1028,44 @@
     [data setValue:[resultData valueForKeyPath:NEATO_RESPONSE_EXPECTED_TIME] forKey:NEATO_RESPONSE_EXPECTED_TIME];
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)getRobotCleaningState:(CDVInvokedUrlCommand *)command {
+  debugLog(@"");
+  NSString *callbackId = command.callbackId;
+  NSDictionary *parameters = [command.arguments objectAtIndex:0];
+  debugLog(@"received parameters : %@", parameters);
+  NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+  
+  RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
+  callWrapper.delegate = self;
+  [callWrapper getCleaningStateForRobotWithId:robotId callbackId:callbackId];
+}
+
+- (void)gotCleaningStateWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId {
+  NSDictionary *neatoResult = [resultData valueForKeyPath:NEATO_RESPONSE_RESULT];
+  NSDictionary *robotProfileDetails = [neatoResult valueForKeyPath:NEATO_PROFILE_DETAILS];
+  debugLog(@"RobotProfileDetails received from server : %@", robotProfileDetails);
+  XMPPRobotDataChangeManager *xmppDataChangeManager = [XMPPRobotDataChangeManager sharedXmppDataChangeManager];
+  // Update the timestamp in DB.
+  [xmppDataChangeManager updateDataTimestampIfChangedForKey:KEY_ROBOT_CURRENT_STATE withProfile:robotProfileDetails];
+  
+  // Send the data back to UI layer.
+  NSString *robotId = [[robotProfileDetails valueForKey:KEY_SERIAL_NUMBER] valueForKey:KEY_VALUE];
+  NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+  NSInteger *robotVirtualState = [XMPPRobotCleaningStateHelper robotVirtualStateFromRobotProfile:robotProfileDetails];
+  NSInteger *robotCurrentState = [XMPPRobotCleaningStateHelper robotCurrentStateFromRobotProfile:robotProfileDetails];
+  [data setValue:[NSNumber numberWithInteger:robotCurrentState] forKey:KEY_ROBOT_CURRENT_STATE];
+  [data setValue:[NSNumber numberWithInteger:robotVirtualState] forKey:KEY_ROBOT_NEW_VIRTUAL_STATE];
+  [data setValue:robotId forKey:KEY_ROBOT_ID];
+  CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
+  [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+  
+}
+
+- (void)failedToGetCleaningStateWithError:(NSError *)error callbackId:(NSString *)callbackId {
+  debugLog(@"Failed to send command with error  = %@", error);
+  [self sendError:error forCallbackId:callbackId];
 }
 
 @end

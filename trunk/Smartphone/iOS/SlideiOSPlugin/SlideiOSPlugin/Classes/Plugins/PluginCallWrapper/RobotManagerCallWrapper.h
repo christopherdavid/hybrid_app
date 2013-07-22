@@ -56,6 +56,8 @@
 - (void)failedToGetRobotVirtualOnlineStatusWithError:(NSError *)error callbackId:(NSString *)callbackId;
 - (void)failedtoSendCommandWithError:(NSError *)error callbackId:(NSString *)callbackId;
 - (void)commandSentWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId;
+- (void)gotCleaningStateWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId;
+- (void)failedToGetCleaningStateWithError:(NSError *)error callbackId:(NSString *)callbackId;
 @end
 
 @interface RobotManagerCallWrapper : NSObject
@@ -94,4 +96,5 @@
 - (id)setSpotDefinitionForRobotWithId:(NSString *)robotId cleaningAreaLength:(int)cleaningAreaLength cleaningAreaHeight:(int)cleaningAreaHeight;
 - (id)spotDefinitionForRobotWithId:(NSString *)robotId;
 - (void)virtualOnlineStatusForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
+- (void)getCleaningStateForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
 @end

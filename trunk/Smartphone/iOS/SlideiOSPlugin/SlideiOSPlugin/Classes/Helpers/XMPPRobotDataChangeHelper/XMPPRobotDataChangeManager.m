@@ -27,7 +27,6 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 - (BOOL)hasRobotCurrentStateChangedForProfile:(NSDictionary *)robotProfile;
 - (void)notifyDataChangeForRobotId:(NSString *)robotId withKeyCode:(NSNumber *)key andData:(NSDictionary *)data;
 - (void)notifyCleaningStateChangedForProfile:(NSDictionary *)robotProfile;
-- (BOOL)updateDataTimestampIfChangedForKey:(NSString *)key withProfile:(NSDictionary *)robotProfile;
 - (BOOL)hasRobotNameChangedForProfile:(NSDictionary *)robotProfile;
 - (void)notifyRobotNameChangeForProfile:(NSDictionary *)robotProfile;
 - (BOOL)hasRobotScheduleStateChangedForProfile:(NSDictionary *)robotProfile;

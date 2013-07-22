@@ -39,7 +39,7 @@
 	<key>CFBundleIconFile</key>
 	<string>icon.png</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.neato.plugin</string>
+	<string>com.neato.plugin.testui</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -49,13 +49,13 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.0.24</string>
+	<string>0.0.25</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSMainNibFile</key>
 	<string></string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.0.24</string>
+	<string>0.0.25</string>
 	<key>NSMainNibFile~ipad</key>
 	<string></string>
 </dict>

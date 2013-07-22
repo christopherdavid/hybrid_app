@@ -30,9 +30,7 @@
 -(void)start {
     NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
     helper.delegate = self;
-    // TODO: As causing agent ID will remain constan at the app level, the Server helper can get
-    // it from AppHelper. No need to pass it from here.
-    [helper setRobotName2:self.robotName forRobotWithId:self.robotId forUserWithEmail:[NeatoUserHelper getLoggedInUserEmail] withCauseAgentId:[NeatoUserHelper uniqueDeviceIdForUser]];
+    [helper setRobotName2:self.robotName forRobotWithId:self.robotId forUserWithEmail:[NeatoUserHelper getLoggedInUserEmail]];
 }
 
 - (void)robotNameUpdated {

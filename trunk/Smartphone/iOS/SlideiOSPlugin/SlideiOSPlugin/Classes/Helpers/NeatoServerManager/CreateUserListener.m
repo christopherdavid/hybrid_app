@@ -32,6 +32,8 @@
 
 - (void)gotUserDetails:(NeatoUser *)neatoUser {
     debugLog(@"");
+    // Save user details in DB.
+    [NeatoUserHelper saveNeatoUser:neatoUser];
     // XMPP login.
     XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
     helper.delegate = self;

@@ -15,4 +15,7 @@
 - (void)startListeningRobotDataChangeNotificationsFor:(id)notificationObserver;
 // Stops listening XMPP data change notifications
 - (void)stopListeningRobotDataChangeNotificationsFor:(id)notificationObserver;
+
+- (BOOL)updateDataTimestampIfChangedForKey:(NSString *)key withProfile:(NSDictionary *)robotProfile;
+
 @end

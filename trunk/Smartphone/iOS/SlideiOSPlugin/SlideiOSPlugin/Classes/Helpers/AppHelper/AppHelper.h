@@ -26,4 +26,5 @@
 + (NSString *)deviceSystemName;
 + (NSString *)deviceSystemVersion;
 + (NSString *)deviceModelName;
++ (BOOL)hasServerRequestFailedForResponse:(NSDictionary *)serverResponse;
 @end

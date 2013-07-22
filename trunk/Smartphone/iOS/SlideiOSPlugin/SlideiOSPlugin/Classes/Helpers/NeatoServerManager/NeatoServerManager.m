@@ -144,20 +144,14 @@
 {
     debugLog(@"");
     self.retained_self = self;
-    
     NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
     helper.delegate = self;
     [helper createUser:neatoUser];
 }
 
--(void)userCreated:(NeatoUser *) user
-{
+-(void)userCreated:(NeatoUser *) user {
     debugLog(@"");
-    // Save the details to local storage
-    [NeatoUserHelper saveNeatoUser:user];
-    
-    if ([self.delegate respondsToSelector:@selector(userCreated:)])
-    {
+    if ([self.delegate respondsToSelector:@selector(userCreated:)]) {
         [self.delegate performSelectorOnMainThread:@selector(userCreated:) withObject:user waitUntilDone:NO];
         self.delegate = nil;
         self.retained_self = nil;
@@ -650,7 +644,6 @@
 
 - (void)userCreated2:(NeatoUser *)user {
     debugLog(@"");
-    // TODO: Need to implement setAttributes web API and call from here.
     if ([self.delegate respondsToSelector:@selector(userCreated2:)]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.delegate performSelector:@selector(userCreated2:) withObject:user];

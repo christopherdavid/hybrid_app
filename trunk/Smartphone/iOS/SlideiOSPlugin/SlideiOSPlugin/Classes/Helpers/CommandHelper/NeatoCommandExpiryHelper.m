@@ -79,8 +79,8 @@ static NeatoCommandExpiryHelper *sharedInstance = nil;
     robotCommand.xmlCommand = @"";
     robotCommand.commandId = @"";
     robotCommand.robotId = robotId;
-    robotCommand.causingAgentId = [NeatoUserHelper uniqueDeviceIdForUser];
-    
+    robotCommand.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
+    [robotCommand.profileDict setValue:robotCommand.xmlCommand forKey:KEY_ROBOT_CLEANING_COMMAND];
     NeatoServerManager *manager = [[NeatoServerManager alloc] init];
     manager.delegate = self;
     [manager sendCommand:robotCommand];

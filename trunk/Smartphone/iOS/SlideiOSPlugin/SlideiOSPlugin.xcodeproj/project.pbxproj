@@ -160,7 +160,6 @@
 		E1D40FC61754832A00EBCD62 /* CleaningAreaEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D40FC51754832A00EBCD62 /* CleaningAreaEntity.m */; };
 		E1D40FCF17548F3900EBCD62 /* CleaningArea.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D40FCE17548F3900EBCD62 /* CleaningArea.m */; };
 		E1EC9CE6174F96FD0016FF47 /* RobotCommandManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E1EC9CE5174F96FD0016FF47 /* RobotCommandManager.m */; };
-		E1FDCAB6177AD2DE00952774 /* RobotProfileDetails3.m in Sources */ = {isa = PBXBuildFile; fileRef = E1FDCAB5177AD2DE00952774 /* RobotProfileDetails3.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -527,8 +526,6 @@
 		E1D40FCE17548F3900EBCD62 /* CleaningArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CleaningArea.m; sourceTree = "<group>"; };
 		E1EC9CE4174F96FD0016FF47 /* RobotCommandManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotCommandManager.h; sourceTree = "<group>"; };
 		E1EC9CE5174F96FD0016FF47 /* RobotCommandManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotCommandManager.m; sourceTree = "<group>"; };
-		E1FDCAB4177AD2DE00952774 /* RobotProfileDetails3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotProfileDetails3.h; sourceTree = "<group>"; };
-		E1FDCAB5177AD2DE00952774 /* RobotProfileDetails3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotProfileDetails3.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1020,8 +1017,6 @@
 		E1A064D01695639D009C22F7 /* NeatoServerManager */ = {
 			isa = PBXGroup;
 			children = (
-				E1FDCAB4177AD2DE00952774 /* RobotProfileDetails3.h */,
-				E1FDCAB5177AD2DE00952774 /* RobotProfileDetails3.m */,
 				E189F09E1771C8DE004BA38C /* LoginListener2.h */,
 				E189F09F1771C8DE004BA38C /* LoginListener2.m */,
 				E189F0921771BAF2004BA38C /* NeatoUserAttributes.h */,
@@ -1652,7 +1647,6 @@
 				E189F0A01771C8DE004BA38C /* LoginListener2.m in Sources */,
 				E177F3E7177879CE00589638 /* XMPPRobotCleaningStateHelper.m in Sources */,
 				E177F3EA177879EE00589638 /* ProfileDetailEntity.m in Sources */,
-				E1FDCAB6177AD2DE00952774 /* RobotProfileDetails3.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
