@@ -14,6 +14,7 @@ import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
+import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceErrorCodeWrapper;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceUtils;
 import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
@@ -131,7 +132,10 @@ public class AppUtils {
 	public static <T extends NeatoWebserviceResult> T  checkResponseResult(String response, Class<T> responseClassType) throws NeatoServerException {
 		T result = NeatoWebserviceUtils.readValueHelper(response, responseClassType);
 		if (!result.success()) {
-			throw new NeatoServerException(result.getErrorCode(), result.getErrorMessage());
+			int errorCode = result.getErrorCode();
+			int notifyErrorCode = NeatoWebserviceErrorCodeWrapper.convertServerErrorToUIErrorCodes(errorCode);
+			String notifyErrorMessage = result.getErrorMessage();
+			throw new NeatoServerException(notifyErrorCode, notifyErrorMessage);
 		}
 		return result;
 	}

@@ -25,6 +25,6 @@ public class DeleteRobotProfileKeyResult extends NeatoWebserviceResult {
 	}
 	
 	public static class Result {
-		boolean success;
+		public boolean success;
 	}
 }

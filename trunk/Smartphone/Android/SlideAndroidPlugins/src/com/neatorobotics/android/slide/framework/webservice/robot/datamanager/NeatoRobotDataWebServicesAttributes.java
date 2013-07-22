@@ -25,8 +25,18 @@ public class NeatoRobotDataWebServicesAttributes {
 			public static final String ROBOT_TURN_VACUUM_ONOFF  = "vacuum_onoff";
 			public static final String ROBOT_TURN_WIFI_ONOFF  	= "wifi_onoff";
 			public static final String ROBOT_SCHEDULE_UPDATED 	= "schedule_updated";
+			public static final String INTEND_TO_DRIVE 	= "intend_to_drive";
+			public static final String AVAILABLE_TO_DRIVE 		= "available_to_drive";
 		}
 		
+		public static class ProfileAttributeValueKeys {
+			public static final String DEVICE_ID			= "device_id";
+			public static final String ROBOT_WIFI_ON_TIME_IN_MS  	= "wifi_on_time_ms";
+			public static final String DRIVE_AVAILABLE_STATUS				= "driveAvailableStatus";
+			public static final String ERROR_DRIVE_REASON_CODE			= "errorDriveReasonCode";
+			public static final String ROBOT_IP_ADDRESS 		= "robotIpAddress";
+		}
+
 		public static enum ProfileAttributeKeysEnum {
 			 ROBOT_CURRENT_STATE,
 			 ROBOT_CLEANING_COMMAND,
@@ -36,6 +46,8 @@ public class NeatoRobotDataWebServicesAttributes {
 			 ROBOT_TURN_VACUUM_ONOFF,
 			 ROBOT_TURN_WIFI_ONOFF,
 			 ROBOT_SCHEDULE_UPDATED,
+			 INTEND_TO_DRIVE,
+			 AVAILABLE_TO_DRIVE
 		}
 		
 		public static String getProfileKey(ProfileAttributeKeysEnum key) {
@@ -56,6 +68,10 @@ public class NeatoRobotDataWebServicesAttributes {
 					return ProfileAttributeKeys.ROBOT_SCHEDULE_UPDATED;
 				case ROBOT_TURN_WIFI_ONOFF:
 					return ProfileAttributeKeys.ROBOT_TURN_WIFI_ONOFF;
+				case AVAILABLE_TO_DRIVE:
+					return ProfileAttributeKeys.AVAILABLE_TO_DRIVE;
+				case INTEND_TO_DRIVE:
+					return ProfileAttributeKeys.INTEND_TO_DRIVE;
 				default:
 					return null;
 			}

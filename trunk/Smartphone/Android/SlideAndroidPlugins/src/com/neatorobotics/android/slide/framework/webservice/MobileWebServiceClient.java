@@ -20,6 +20,7 @@ import android.content.Context;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
+import com.neatorobotics.android.slide.framework.utils.NetworkConnectionUtils;
 
 public class MobileWebServiceClient {
 
@@ -28,6 +29,13 @@ public class MobileWebServiceClient {
 	private static InputStream executeHttpPostAndReturnStream(Context context, String methodName, Map<String, String> postParams) throws IOException, UserUnauthorizedException {
 		String url = getUrlFromMethodName(methodName);
 		LogHelper.logD(TAG, "Executing URL = " + url);
+		
+		if (!NetworkConnectionUtils.hasNetworkConnection(context)) {
+			LogHelper.log(TAG, "Internet connection not available");
+			IOException exception = new IOException("No internet connection available");
+			throw exception;
+		}
+		
 		postParams.put(NeatoWebConstants.QUERY_KEY_APIKEY, NeatoWebConstants.getApiKey());
 		HttpPost postHttpRequest = new HttpPost(url);
 		

@@ -11,6 +11,7 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiver;
 import com.neatorobotics.android.slide.framework.service.INeatoRobotService;
 import com.neatorobotics.android.slide.framework.service.NeatoSmartAppService;
+import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 
 public class NeatoServiceManager {
@@ -22,12 +23,23 @@ public class NeatoServiceManager {
 	private   ResultReceiver mResultReciever;
 	private   Handler mHandler = new Handler();
 	private Context mContext;
+	private static NeatoServiceManager sNeatoServiceManager;
+	private static final Object INSTANCE_LOCK = new Object();
 	
-	public NeatoServiceManager(Context context) {
+	public static NeatoServiceManager getInstance (Context context) {
+		synchronized (INSTANCE_LOCK) {
+			if (sNeatoServiceManager == null) {
+				sNeatoServiceManager = new NeatoServiceManager(context);
+			}
+		}
+		return sNeatoServiceManager;
+	}	
+	
+	private NeatoServiceManager(Context context) {
 		mContext = context;
 	}
 	
-	private  ServiceConnection mNeatoRobotServiceConnection = new ServiceConnection() {
+	private ServiceConnection mNeatoRobotServiceConnection = new ServiceConnection() {
 
 		public void onServiceDisconnected(ComponentName name) {
 			LogHelper.logD(TAG, "onServiceDisconnected called");
@@ -56,7 +68,9 @@ public class NeatoServiceManager {
 		mContext.startService(serviceIntent);
 		Intent bindServiceIntent = new Intent(mContext, NeatoSmartAppService.class);
 		bindServiceIntent.putExtra(NeatoSmartAppService.EXTRA_RESULT_RECEIVER, mResultReciever);
-		mServiceBound = mContext.bindService(bindServiceIntent, mNeatoRobotServiceConnection, Context.BIND_AUTO_CREATE);
+		if (!mServiceBound) {
+			mServiceBound = mContext.bindService(bindServiceIntent, mNeatoRobotServiceConnection, Context.BIND_AUTO_CREATE);
+		}
 	}
 	
 	public void uninitialize() {
@@ -65,8 +79,10 @@ public class NeatoServiceManager {
 			mServiceBound = false;
 			// For now we are stopping the service as soon as the App goes off.
 			Intent serviceIntent = new Intent(mContext, NeatoSmartAppService.class);
+			RobotCommandServiceManager.cleanUp(mContext);
 			mContext.stopService(serviceIntent);
 		}
-
 	}
+	
+	
 }

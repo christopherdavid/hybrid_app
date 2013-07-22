@@ -46,4 +46,7 @@ public class DeviceUtils {
 		return userAttributes;
 	}
 	
+	public static boolean isUdpBroadcastSupported() {
+		return true;
+	}
 }

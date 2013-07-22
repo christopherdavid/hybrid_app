@@ -67,6 +67,16 @@ public class RobotCommandTimerHelper {
 		}
 	}
 	
+	public void stopAllCommandTimers() {
+		if (mTimerMap != null) {
+			for (String robotId : mTimerMap.keySet()) {
+				CommandTimer timer = mTimerMap.get(robotId);
+				timer.stopTimer();
+			}
+			mTimerMap.clear();
+		}
+	}
+	
 	private void removeTimer(String robotId) {
 		mTimerMap.remove(robotId);
 	}

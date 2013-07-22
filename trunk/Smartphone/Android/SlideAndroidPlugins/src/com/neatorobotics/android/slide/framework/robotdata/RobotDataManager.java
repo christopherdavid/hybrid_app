@@ -11,10 +11,12 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacketUtils;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotPacketConstants;
+import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper;
 import com.neatorobotics.android.slide.framework.timedmode.RobotCommandTimerHelper;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.DeleteRobotProfileKeyResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebservicesHelper;
@@ -39,8 +41,8 @@ public class RobotDataManager {
 		LogHelper.logD(TAG, "Send command action initiated sendRobotScheduleUpdated - RobotSerialId = " + robotId);
 		setRobotProfileParam(context, robotId, ProfileAttributeKeys.ROBOT_SCHEDULE_UPDATED, String.valueOf(true) , listener);
 	}
-	
-	private static void setRobotProfileParam (final Context context, final String robotId, final String key,  final String value, final WebServiceBaseRequestListener listener) {
+
+	public static void setRobotProfileParam (final Context context, final String robotId, final String key,  final String value, final WebServiceBaseRequestListener listener) {
 		LogHelper.logD(TAG, "setRobotProfileParam called");
 		LogHelper.logD(TAG, "Robot Id = " + robotId + " Key: " + key + "Value: "+ value);
 		
@@ -52,10 +54,12 @@ public class RobotDataManager {
 					SetRobotProfileDetailsResult3 result = NeatoRobotDataWebservicesHelper.setRobotProfileDetailsRequest3(context, robotId, profileParams);
 					long timestamp = result.extra_params.timestamp;
 					RobotHelper.saveProfileParam(context, robotId, key, timestamp);
+					
 					// Do not start timer for every set profile data change.
 					if (RobotProfileConstants.isTimerExpirableForProfileKey(key)) {
 						RobotCommandTimerHelper.getInstance(context).startCommandExpiryTimer(robotId);
 					}	
+					
 					listener.onReceived(result);
 				}
 				catch (UserUnauthorizedException ex) {
@@ -108,7 +112,8 @@ public class RobotDataManager {
 				try {
 					//Reset cleaningCommand so that robot does not fetch it. Also to update the UI of other smartapps.
 					//TODO: Reset other values too when support added.
-					NeatoRobotDataWebservicesHelper.resetRobotProfileValue(context, robotId, ProfileAttributeKeys.ROBOT_CLEANING_COMMAND);
+					RobotDriveHelper.getInstance(context).notifyDriveFailedAsRobotOffline(robotId);
+					NeatoRobotDataWebservicesHelper.resetRobotProfileValue(context, robotId, ProfileAttributeKeys.ROBOT_CLEANING_COMMAND, ProfileAttributeKeys.INTEND_TO_DRIVE);
 					//Get the current profile parameters to reflect in the UI
 					GetRobotProfileDetailsResult2  details = NeatoRobotDataWebservicesHelper.getRobotProfileDetailsRequest2(context, robotId, EMPTY_STRING);
 					if (details.success()) {
@@ -130,4 +135,19 @@ public class RobotDataManager {
 		robotCommandExpiryResetData(context, robotId);
 	}
 	
+	public static void deleteProfileDetailKey(final Context context, final String robotId, final String key, boolean notify, final WebServiceBaseRequestListener listener) {
+		try {
+			DeleteRobotProfileKeyResult result = NeatoRobotDataWebservicesHelper.deleteRobotProfileKey(context, robotId, key, notify);
+			listener.onReceived(result);
+		}
+		catch (UserUnauthorizedException ex) {
+			listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
+		}
+		catch (NeatoServerException ex) {
+			listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
+		}
+		catch (IOException ex) {
+			listener.onNetworkError(ex.getMessage());
+		}
+	}
 }

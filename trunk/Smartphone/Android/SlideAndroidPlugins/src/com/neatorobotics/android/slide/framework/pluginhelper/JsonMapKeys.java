@@ -77,6 +77,7 @@ public class JsonMapKeys {
 	public static final String KEY_NAVIGATION_CONTROL_ID = "navigationControlId";
 	public static final String KEY_FLAG_ON = "on";
 	public static final String KEY_WIFI_TURN_ON_DURATION_INSEC = "wiFiTurnOnDurationInSec";
+	public static final String KEY_IS_PEER_CONNECTED = "isConnected";
 	
 	// Used by notifications APIs
 	public static final String KEY_GLOBAL_NOTIFICATIONS = "global";
@@ -98,4 +99,6 @@ public class JsonMapKeys {
 	public static final String KEY_ROBOT_STATE_UPDATE = "robotStateUpdate";
 	public static final String KEY_ROBOT_NEW_VIRTUAL_STATE = "robotNewVirtualState";
 	
+	// Drive Robot
+	public static final String ERROR_DRIVE_RESPONSE_CODE = "errorDriveResponseCode";
 }

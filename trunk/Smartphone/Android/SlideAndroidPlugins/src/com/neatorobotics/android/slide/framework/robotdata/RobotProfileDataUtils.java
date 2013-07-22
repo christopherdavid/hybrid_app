@@ -4,11 +4,12 @@ package com.neatorobotics.android.slide.framework.robotdata;
 import java.util.HashMap;
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacketUtils;
+import com.neatorobotics.android.slide.framework.robot.drive.RobotAvailabilityToDriveStatus;
+import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants.RobotProfileValueChangedStatus;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3;
@@ -51,9 +52,16 @@ public class RobotProfileDataUtils {
 		return currentState;
 	}
 	
-	public static String getBasicScheduleState(Context context, GetRobotProfileDetailsResult2 details) {
-		String scheduleState = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_ENABLE_BASIC_SCHEDULE);
-		LogHelper.logD(TAG, "getBasicScheduleState, retrived ROBOT_SCHEDULE");
+	public static String getScheduleState(Context context, int scheduleType, GetRobotProfileDetailsResult2 details) {
+		String scheduleState = null;
+		if (scheduleType == SchedulerConstants2.SCHEDULE_TYPE_BASIC) {
+			scheduleState = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_ENABLE_BASIC_SCHEDULE);
+			LogHelper.logD(TAG, "getBasicScheduleState, retrived ROBOT_SCHEDULE");
+		}
+		else if (scheduleType == SchedulerConstants2.SCHEDULE_TYPE_ADVANCED) {
+			scheduleState = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_ENABLE_ADVANCED_SCHEDULE);
+			LogHelper.logD(TAG, "getBasicScheduleState, retrived ROBOT_SCHEDULE");
+		}
 		return scheduleState;
 	}
 	
@@ -63,14 +71,48 @@ public class RobotProfileDataUtils {
 		return Boolean.valueOf(isScheduleUpdated);
 	}
 	
+	public static RobotAvailabilityToDriveStatus getRobotAvailableResponse(Context context, GetRobotProfileDetailsResult2 details) {
+		String isAvailableForDrive = details.getProfileParameterValue(ProfileAttributeKeys.AVAILABLE_TO_DRIVE);
+		if (!TextUtils.isEmpty(isAvailableForDrive)) {
+			return RobotAvailabilityToDriveStatus.getAvailabilityStatus(isAvailableForDrive);
+		}
+		return null;
+	}
+	
+	public static String getRobotDriveRequest(Context context, GetRobotProfileDetailsResult2 details) {
+		String getRobotDriveRequest = details.getProfileParameterValue(ProfileAttributeKeys.INTEND_TO_DRIVE);
+		if (!TextUtils.isEmpty(getRobotDriveRequest)) {
+			LogHelper.logD(TAG, "getRobotDriveRequest retrieved");
+			return getRobotDriveRequest;
+		}
+		LogHelper.logD(TAG, "No robot drive request found");
+		return null;
+	}
+	
 	public static String getState(String virtualState, String currentState) {
 		String actualState = null;
+		try {
+			// If manually controlled always return the current state.
+			if (isRobotManuallyControlled(Integer.valueOf(currentState))) {
+				actualState = currentState;
+				return actualState;
+			}
+		}
+		catch (NumberFormatException e) {
+			LogHelper.log(TAG, "Current state is not valid");
+		}
+		
 		if (!TextUtils.isEmpty(virtualState)) {
 			actualState = virtualState;
 		} else if (!TextUtils.isEmpty(currentState)) {
 			actualState = currentState;
 		}
 		return actualState;
+	}
+	
+	private static boolean isRobotManuallyControlled(int currentState) {
+		return ((currentState == RobotCommandPacketConstants.ROBOT_STATE_MANUAL_PLAY_MODE) || 
+				(currentState == RobotCommandPacketConstants.ROBOT_STATE_MANUAL_CLEANING));
 	}
 	
 	public static String getState(Context context, GetRobotProfileDetailsResult2 details) {

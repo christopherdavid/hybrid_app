@@ -17,6 +17,7 @@ import com.neatorobotics.android.slide.framework.gcm.PushNotificationListener;
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationMessageHandler;
 import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
+import com.neatorobotics.android.slide.framework.R;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.RobotInfo;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
@@ -30,6 +31,7 @@ import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotD
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotNotificationsListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotStateListener;
+import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper;
 import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleEvent;
 import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2;
 import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
@@ -41,15 +43,16 @@ import com.neatorobotics.android.slide.framework.robotdata.RobotProfileDataUtils
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.DataConversionUtils;
+import com.neatorobotics.android.slide.framework.utils.NetworkConnectionUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotDetailResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotOnlineStatusResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotVirtualOnlineStatusResult;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.DeleteRobotProfileKeyResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult3;
-import com.neatorobotics.android.slide.framework.webservice.robot.schedule.IsScheduleEnabledResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.RobotSchedulerManager2;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.ScheduleRequestListener;
 import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
@@ -71,8 +74,9 @@ public class RobotManagerPlugin extends Plugin {
 		UPDATE_SCHEDULE, CREATE_SCHEDULE, SYNC_SCHEDULE_FROM_SERVER, IS_SCHEDULE_ENABLED, 
 		ENABLE_SCHEDULE, SET_SPOT_DEFINITION,
 		GET_SPOT_DEFINITION, START_CLEANING, STOP_CLEANING, PAUSE_CLEANING, RESUME_CLEANING,
-		DRIVE_ROBOT, TURN_VACUUM_ON_OFF, TURN_WIFI_ON_OFF, REGISTER_FOR_ROBOT_MESSAGES, UNREGISTER_FOR_ROBOT_MESSAGES, 
-		REGISTER_ROBOT_NOTIFICATIONS2, UNREGISTER_ROBOT_NOTIFICATIONS2, GET_ROBOT_CLEANING_STATE};
+		DRIVE_ROBOT, TURN_MOTOR_ON_OFF, TURN_WIFI_ON_OFF, REGISTER_FOR_ROBOT_MESSAGES, UNREGISTER_FOR_ROBOT_MESSAGES, 
+		REGISTER_ROBOT_NOTIFICATIONS2, UNREGISTER_ROBOT_NOTIFICATIONS2, GET_ROBOT_CLEANING_STATE, 
+		INTEND_TO_DRIVE, STOP_ROBOT_DRIVE, CANCEL_INTEND_TO_DRIVE, IS_ROBOT_PEER_CONNECTED};
 
 		static {
 			ACTION_MAP.put(ActionTypes.DISCOVER_NEAR_BY_ROBOTS, RobotManagerPluginMethods.DISCOVER_NEAR_BY_ROBOTS);
@@ -111,7 +115,7 @@ public class RobotManagerPlugin extends Plugin {
 
 			ACTION_MAP.put(ActionTypes.DRIVE_ROBOT, RobotManagerPluginMethods.DRIVE_ROBOT);
 			
-			ACTION_MAP.put(ActionTypes.TURN_VACUUM_ON_OFF, RobotManagerPluginMethods.TURN_VACUUM_ON_OFF);
+			ACTION_MAP.put(ActionTypes.TURN_MOTOR_ON_OFF, RobotManagerPluginMethods.TURN_MOTOR_ON_OFF);
 			ACTION_MAP.put(ActionTypes.TURN_WIFI_ON_OFF, RobotManagerPluginMethods.TURN_WIFI_ON_OFF);			
 			
 			ACTION_MAP.put(ActionTypes.REGISTER_FOR_ROBOT_MESSAGES, RobotManagerPluginMethods.REGISTER_FOR_ROBOT_MESSAGES);
@@ -119,8 +123,11 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_MAP.put(ActionTypes.REGISTER_ROBOT_NOTIFICATIONS2, RobotManagerPluginMethods.REGISTER_ROBOT_NOTIFICATIONS2);
 			ACTION_MAP.put(ActionTypes.UNREGISTER_ROBOT_NOTIFICATIONS2, RobotManagerPluginMethods.UNREGISTER_ROBOT_NOTIFICATIONS2);
 			ACTION_MAP.put(ActionTypes.GET_ROBOT_CLEANING_STATE, RobotManagerPluginMethods.GET_ROBOT_CLEANING_STATE);
+			ACTION_MAP.put(ActionTypes.INTEND_TO_DRIVE, RobotManagerPluginMethods.INTEND_TO_DRIVE);
+			ACTION_MAP.put(ActionTypes.CANCEL_INTEND_TO_DRIVE, RobotManagerPluginMethods.CANCEL_INTEND_TO_DRIVE);
+			ACTION_MAP.put(ActionTypes.STOP_ROBOT_DRIVE, RobotManagerPluginMethods.STOP_ROBOT_DRIVE);
+			ACTION_MAP.put(ActionTypes.IS_ROBOT_PEER_CONNECTED, RobotManagerPluginMethods.IS_ROBOT_PEER_CONNECTED);
 		}
-
 		private RobotPluginDiscoveryListener mRobotPluginDiscoveryListener;
 		private RobotNotificationsPluginListener mRobotNotificationsPluginListener;		
 		private RobotStateNotificationPluginListener mRobotStateNotificationPluginListener;
@@ -288,9 +295,9 @@ public class RobotManagerPlugin extends Plugin {
 				LogHelper.log(TAG, "ENABLE_SCHEDULE action initiated");
 				enableSchedule(context, jsonData, callbackId);
 				break;
-			case TURN_VACUUM_ON_OFF:
-				LogHelper.log(TAG, "TURN_VACUUM_ON_OFF action initiated");
-				turnVacuumOnOff(context, jsonData, callbackId);
+			case TURN_MOTOR_ON_OFF:
+				LogHelper.log(TAG, "TURN_MOTOR_ON_OFF action initiated");
+				turnMotorOnOff(context, jsonData, callbackId);
 				break;
 			case TURN_WIFI_ON_OFF:
 				LogHelper.log(TAG, "TURN_WIFI_ON_OFF action Initiated");
@@ -317,6 +324,46 @@ public class RobotManagerPlugin extends Plugin {
 				LogHelper.log(TAG, "GET_ROBOT_CLEANING_STATE initiated");
 				getRobotCleaningState(context, jsonData, callbackId);
 				break;
+			case INTEND_TO_DRIVE:
+				LogHelper.log(TAG, "INTEND_TO_DRIVE initiated");
+				intendToDrive(context, jsonData, callbackId);
+				break;
+			case STOP_ROBOT_DRIVE:
+				LogHelper.log(TAG, "STOP_ROBOT_DRIVE initiated");
+				stopRobotDrive(context, jsonData, callbackId);
+				break;
+			case CANCEL_INTEND_TO_DRIVE:
+				LogHelper.log(TAG, "CANCEL_INTEND_TO_DRIVE initiated");
+				cancelIntendToDrive(context, jsonData, callbackId);
+				break;
+			case IS_ROBOT_PEER_CONNECTED:
+				LogHelper.log(TAG, "IS_ROBOT_PEER_CONNECTED initiated");
+				isRobotPeerConnected(context, jsonData, callbackId);
+				break;
+			}
+		}
+		
+		private void isRobotPeerConnected(final Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "isRobotPeerConnected is called");
+			// If nothing exists, this API returns an empty robotId: ""
+			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			boolean isPeerConnected = false;
+			if (TextUtils.isEmpty(robotId)) {
+				isPeerConnected = RobotCommandServiceManager.isDirectConnectionExists(context);
+			}
+			else {
+				isPeerConnected = RobotCommandServiceManager.isRobotDirectConnected(context, robotId);
+			}
+			JSONObject jsonResult = new JSONObject();
+			try {
+				jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+				jsonResult.put(JsonMapKeys.KEY_IS_PEER_CONNECTED, isPeerConnected);
+				PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
+				pluginResult.setKeepCallback(false);
+				success(pluginResult, callbackId);
+			} catch (JSONException e) {
+				LogHelper.logD(TAG, "JSON Error");
+				sendError(callbackId, ErrorTypes.JSON_PARSING_ERROR, e.getMessage());
 			}
 		}
 		
@@ -344,6 +391,67 @@ public class RobotManagerPlugin extends Plugin {
 					return jsonResult;
 				}
 			});
+		}
+		
+		private void intendToDrive(final Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "intendToDrive is called");
+			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			
+			if (!NetworkConnectionUtils.isConnectedOverWiFi(context)) {
+				LogHelper.logD(TAG, "Wifi connection isn't being used. Cannot drive");
+				sendError(callbackId, ErrorTypes.ERROR_TYPE_WIFI_NOT_CONNECTED, "Drive Robot needs wifi connection");
+				return;
+			}
+ 			
+			RobotDriveHelper.getInstance(context).setRobotDriveRequest(robotId, new RobotSetProfileDataRequestListener(callbackId) {
+				@Override
+				public JSONObject getResultObject(NeatoWebserviceResult result)
+						throws JSONException {
+					RobotDriveHelper.getInstance(context).trackRobotDriveRequest(robotId);
+					return super.getResultObject(result);
+				}
+			});
+		}
+		
+		private void cancelIntendToDrive(final Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "cancelIntendToDrive is called");
+			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			
+			RobotDriveHelper.getInstance(context).cancelRobotDriveRequest(robotId, new RobotRequestListenerWrapper(callbackId) {
+				@Override
+				public void onReceived(NeatoWebserviceResult result)
+						 {
+					if (result != null && result instanceof DeleteRobotProfileKeyResult) {
+						DeleteRobotProfileKeyResult profileResult = (DeleteRobotProfileKeyResult) result;
+						if (profileResult.result.success) {
+							RobotDriveHelper.getInstance(context).untrackRobotDriveRequest(robotId);
+							PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+							pluginResult.setKeepCallback(false);
+							success(pluginResult, callbackId);
+						}
+						else {
+							sendError(callbackId, ErrorTypes.ROBOT_UNABLE_TO_CANCEL_INTEND_TO_DRIVE, "Unable to cancel intend to drive");
+						}
+					}
+					
+				}
+			});
+		}
+		
+		private void stopRobotDrive(final Context context, RobotJsonData jsonData, final String callbackId) {
+			LogHelper.logD(TAG, "stopRobotDrive is called");
+			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+			
+			// If no connection exits, send error result.
+			if (!RobotCommandServiceManager.isRobotDirectConnected(context, robotId)) {
+				sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, "Robot is not connected");
+				return;
+			}
+			// Disconnect the robot connection and send success plugin result.
+			RobotDriveHelper.getInstance(context).stopRobotDrive(robotId);
+			PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+			pluginResult.setKeepCallback(false);
+			success(pluginResult, callbackId);
 		}
 
 		private void registerForRobotsMessages(Context context, RobotJsonData jsonData, final String callbackId) {
@@ -374,6 +482,12 @@ public class RobotManagerPlugin extends Plugin {
 				if (!TextUtils.isEmpty(commadParamsMap.get(JsonMapKeys.KEY_CLEANING_CATEGORY))) {
 					cleaningCategory = Integer.valueOf(commadParamsMap.get(JsonMapKeys.KEY_CLEANING_CATEGORY));
 				}
+				if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_MANUAL) {
+					LogHelper.log(TAG, "Cleaning called with manual category. Send error result.");
+					sendError(callbackId, ErrorTypes.ERROR_NOT_SUPPORTED, "This API does not supports Manual Cleaning");
+					return;
+				}
+				
 				if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_SPOT) {
 					CleaningSettings cleaningSettings = RobotHelper.getCleaningSettings(context, robotId);
 					if (cleaningSettings == null) {
@@ -398,27 +512,36 @@ public class RobotManagerPlugin extends Plugin {
 			LogHelper.logD(TAG, "Params\n\tRobotId=" + robotId);
 			LogHelper.logD(TAG, "\n\tNavigation Control Id = " + navigationControlId);
 			
-			HashMap<String, String> commandParams = new HashMap<String, String>();
-			commandParams.put(JsonMapKeys.KEY_NAVIGATION_CONTROL_ID, navigationControlId);
+			if (!RobotCommandServiceManager.isRobotDirectConnected(context, robotId)) {
+				LogHelper.logD(TAG, "Drive Robot action cannot complete as robot connection does not exist");	
+				String errMessage = context.getString(R.string.error_robot_not_directly_connected);
+				sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, errMessage);
+				return;
+			}
 			
-			sendCommandHelper(context, robotId, RobotCommandPacketConstants.COMMAND_DRIVE_ROBOT, 
-					commandParams, callbackId);
+			RobotDriveHelper.getInstance(context).driveRobot(robotId, navigationControlId);
+			PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+			pluginResult.setKeepCallback(false);
+			success(pluginResult, callbackId);
 		}
 		
-		// Private helper method to turn on/off vacuum
-		// These are utilities functions and can be used by the PhoneGap plugin to turn on/off the
-		// vacuum. As of now there is no UI to turn on/off the vacuum
-		private void turnVacuumOnOff(Context context, RobotJsonData jsonData, String callbackId) {
-			LogHelper.logD(TAG, "turnVacuumOnOff called");
-
+		private void turnMotorOnOff(Context context, RobotJsonData jsonData, String callbackId) {
+			LogHelper.logD(TAG, "turn on/off motor called");
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			String flagOn = jsonData.getString(JsonMapKeys.KEY_FLAG_ON);
-
+			if (!RobotCommandServiceManager.isRobotDirectConnected(context, robotId)) {
+				LogHelper.logD(TAG, "turnMotorOnOff action cannot complete as robot connection does not exist");	
+				String errMessage = context.getString(R.string.error_robot_not_directly_connected);
+				sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, errMessage);
+				return;
+			}
 			HashMap<String, String> commandParamsMap = new HashMap<String, String>();
 			commandParamsMap.put(JsonMapKeys.KEY_FLAG_ON_OFF, flagOn);
-						
-			sendCommandHelper(context, robotId, RobotCommandPacketConstants.COMMAND_TURN_VACUUM_ONOFF, 
-					commandParamsMap, callbackId);
+			LogHelper.logD(TAG, "Direct connection exists. Send motor command.");
+			RobotCommandServiceManager.sendCommandToPeer(context, robotId, RobotCommandPacketConstants.COMMAND_TURN_MOTOR_ONOFF, commandParamsMap);	
+			PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+			pluginResult.setKeepCallback(false);
+			success(pluginResult, callbackId);
 		}
 
 		// Private helper method to turn on/off WiFi
@@ -521,29 +644,32 @@ public class RobotManagerPlugin extends Plugin {
 		}
 		
 		// Private helper method to return the schedule enable/disable state.
-		private void isScheduleEnabled(Context context, RobotJsonData jsonData, final String callbackId) {
+		private void isScheduleEnabled(final Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "isScheduleEnabled action initiated in Robot plugin");
 			final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			final int scheduleType = jsonData.getInt(JsonMapKeys.KEY_SCHEDULE_TYPE);
 			int scheduleTypeOnServer = SchedulerConstants2.convertToServerConstants(scheduleType);
-			
 			RobotSchedulerManager2.getInstance(context).isScheduleEnabled(robotId, scheduleTypeOnServer, new ScheduleRequestListenerWrapper(callbackId) {
 
 				@Override
-				public JSONObject getResultObject(NeatoWebserviceResult responseResult)
+				public JSONObject getResultObject(
+						NeatoWebserviceResult responseResult)
 						throws JSONException {
-					JSONObject jsonResult;
-					if((responseResult != null) && (responseResult instanceof IsScheduleEnabledResult)) {
-						IsScheduleEnabledResult result = (IsScheduleEnabledResult) responseResult;					
+					JSONObject jsonResult = null;
+					if((responseResult != null) && (responseResult instanceof GetRobotProfileDetailsResult2)) {
+						GetRobotProfileDetailsResult2 result = (GetRobotProfileDetailsResult2) responseResult;
+						String scheduleState = RobotProfileDataUtils.getScheduleState(context, scheduleType, result);
+						boolean isScheduleEnabled = Boolean.valueOf(scheduleState);
 						jsonResult = new JSONObject();
-						jsonResult.put(JsonMapKeys.KEY_IS_SCHEDULE_ENABLED, result.isScheduledEnabled);
+						jsonResult.put(JsonMapKeys.KEY_IS_SCHEDULE_ENABLED, isScheduleEnabled);
 						jsonResult.put(JsonMapKeys.KEY_SCHEDULE_TYPE, scheduleType);
 						jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
-					} else {
+					}
+					else {
 						jsonResult = getErrorJsonObject(ErrorTypes.ERROR_TYPE_UNKNOWN, "response result is not of type is schedule enabled result");
 					}
 					return jsonResult;
-				}				
+				}
 			});
 		}
 		
@@ -796,21 +922,7 @@ public class RobotManagerPlugin extends Plugin {
 			});
 		}
 		
-		private JSONObject getRobotDetailJsonObject(RobotItem robotItem) {
-			JSONObject robotJsonObj = new JSONObject();
-			
-			if (robotItem != null) {				
-				try {
-					robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotItem.serial_number);
-					robotJsonObj.put(JsonMapKeys.KEY_ROBOT_NAME, robotItem.name);				
-				}
-				catch (JSONException e) {
-					LogHelper.logD(TAG, "Exception in getRobotDetailJsonObject", e);
-				}
-			}
-			
-			return robotJsonObj;
-		}
+		
 
 		// Private helper method to create the Robot JSON
 		private JSONObject getRobotDetailJsonObject(String robotId, String robotName) {
@@ -852,22 +964,16 @@ public class RobotManagerPlugin extends Plugin {
 			LogHelper.logD(TAG, "disconnectPeerConnection action initiated in Robot plugin");
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			RobotCommandServiceManager.disconnectDirectConnection(context, robotId, new RobotPluginPeerConnectionListener(callbackId));
-			PluginResult pluginLogoutResult = new PluginResult(PluginResult.Status.OK);
-			pluginLogoutResult.setKeepCallback(false);
-			success(pluginLogoutResult, callbackId);
 		}
 
 		private void tryDirectConnection2(Context context, RobotJsonData jsonData, String callbackId) {
 			LogHelper.logD(TAG, "Try direct connection action initiated in Robot plugin");
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-			RobotCommandServiceManager.tryDirectConnection2(context, robotId, new RobotPluginPeerConnectionListener(callbackId));	
+			RobotCommandServiceManager.tryDirectConnection(context, robotId, new RobotPluginPeerConnectionListener(callbackId));	
 		}
 
 
 		private void setAdvancedSchedule(final Context context, RobotJsonData jsonData, final String callbackId) {
-
-			PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
-			pluginResult.setKeepCallback(false);
 			sendError(callbackId, ErrorTypes.ERROR_NOT_SUPPORTED, "This API is not supported");
 		}
 
@@ -890,7 +996,7 @@ public class RobotManagerPlugin extends Plugin {
 				mRobotStateNotificationPluginListener.addCallbackId(robotId, callbackId);
 			}
 			
-			RobotCommandServiceManager.sendCommand2(context, robotId, commandId, params);
+			RobotCommandServiceManager.sendCommandThroughServer(context, robotId, commandId, params);
 			
 			if (commandId != RobotCommandPacketConstants.COMMAND_GET_ROBOT_STATE) {
 				PluginResult pluginStartResult = new PluginResult(PluginResult.Status.OK);
@@ -917,8 +1023,6 @@ public class RobotManagerPlugin extends Plugin {
 
 		private void getRobotSchedule(Context context, RobotJsonData jsonData, final String callbackId) {
 			LogHelper.logD(TAG, "getRobotSchedule action initiated in Robot plugin");
-			PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
-			pluginResult.setKeepCallback(false);
 			sendError(callbackId, ErrorTypes.ERROR_NOT_SUPPORTED, "This API is not supported");
 		}
 		
@@ -969,7 +1073,7 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String PAUSE_CLEANING = "pauseCleaning";
 			public static final String RESUME_CLEANING = "resumeCleaning";
 			public static final String DRIVE_ROBOT = "driveRobot";
-			public static final String TURN_VACUUM_ON_OFF = "turnVacuumOnOff";
+			public static final String TURN_MOTOR_ON_OFF = "turnMotorOnOff";
 			public static final String TURN_WIFI_ON_OFF = "turnWiFiOnOff";
 			public static final String IS_SCHEDULE_ENABLED = "isScheduleEnabled";
 			public static final String ENABLE_SCHEDULE = "enableSchedule";
@@ -978,6 +1082,10 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String REGISTER_ROBOT_NOTIFICATIONS2 = "registerRobotNotifications2";
 			public static final String UNREGISTER_ROBOT_NOTIFICATIONS2 = "unregisterRobotNotifications2";
 			public static final String GET_ROBOT_CLEANING_STATE = "getRobotCleaningState";
+			public static final String INTEND_TO_DRIVE = "intendToDrive";
+			public static final String STOP_ROBOT_DRIVE = "stopRobotDrive";
+			public static final String CANCEL_INTEND_TO_DRIVE = "cancelIntendToDrive";
+			public static final String IS_ROBOT_PEER_CONNECTED = "isRobotPeerConnected";
 		}
 
 		private JSONObject getErrorJsonObject(int errorCode, String errMessage) {
@@ -1307,7 +1415,7 @@ public class RobotManagerPlugin extends Plugin {
 			HashMap<String, String> commandParams = new HashMap<String, String>();
 			String dataCodeStr = DataConversionUtils.convertIntToString(dataCode);
 			commandParams.put(RobotCommandPacketConstants.KEY_DATA_CODE_CHANGED_ON_SERVER, dataCodeStr);
-			RobotCommandServiceManager.sendCommand2(context, robotId, RobotCommandPacketConstants.COMMAND_DATA_CHANGED_ON_SERVER, commandParams);
+			RobotCommandServiceManager.sendCommandThroughServer(context, robotId, RobotCommandPacketConstants.COMMAND_DATA_CHANGED_ON_SERVER, commandParams);
 		}
 		
 		public int getScheduleTypeFromId(Context context, String id) {

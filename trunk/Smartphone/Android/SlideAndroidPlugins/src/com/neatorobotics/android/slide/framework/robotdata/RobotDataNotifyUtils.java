@@ -10,7 +10,8 @@ import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotNotificationUtil;
-
+import com.neatorobotics.android.slide.framework.robot.drive.RobotAvailabilityToDriveStatus;
+import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper;
 import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants.RobotProfileValueChangedStatus;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
@@ -43,10 +44,37 @@ public class RobotDataNotifyUtils {
 				notifyRobotNameChange(context, robotId, details);
 				break;
 			case ROBOT_ENABLE_BASIC_SCHEDULE:
-				notifyScheduleStateChange(context, robotId, details);
+				notifyBasicScheduleStateChange(context, robotId, details);
 				break;
 			case ROBOT_SCHEDULE_UPDATED:
 				notifyScheduleUpdated(context, robotId, details);
+				break;
+			case AVAILABLE_TO_DRIVE:
+				// Notify if the available for drive robot is changed.
+				if (changedStatus == RobotProfileValueChangedStatus.ROBOT_VALUE_CHANGED) {
+					RobotAvailabilityToDriveStatus availabiltyReponse = RobotProfileDataUtils.getRobotAvailableResponse(context, details);
+					if (availabiltyReponse != null) {
+						if (availabiltyReponse.isRobotAvailableToDrive()) {
+							String robotDriveIp = availabiltyReponse.getRobotDriveIp();
+							RobotDriveHelper.getInstance(context).robotReadyToDrive(robotId, robotDriveIp);
+						}
+						else {
+							int responseCode = availabiltyReponse.getDriveErrorCode();
+							RobotDriveHelper.getInstance(context).notifyRobotNotAvailableForDrive(robotId, responseCode);
+						}
+					}
+				}
+				break;
+			case INTEND_TO_DRIVE:
+				// Notify if intend to drive is set for the robot
+				if (changedStatus == RobotProfileValueChangedStatus.ROBOT_VALUE_CHANGED) {
+					String intendToDrive = RobotProfileDataUtils.getRobotDriveRequest(context, details);
+					RobotDriveHelper.getInstance(context).robotDriveRequestInitiated(robotId, intendToDrive);
+				}
+				// Notify if intend to drive is deleted for the robot
+				else if (changedStatus == RobotProfileValueChangedStatus.ROBOT_VALUE_DELETED) {
+					RobotDriveHelper.getInstance(context).robotDriveRequestRemoved(robotId);
+				}
 				break;
 			case ROBOT_TURN_WIFI_ONOFF:
 				break;
@@ -59,8 +87,8 @@ public class RobotDataNotifyUtils {
 		}
 	}
 	// Private helper method to consume the profile data parameters.
-	private static void notifyScheduleStateChange(Context context, String robotId, GetRobotProfileDetailsResult2 details) {
-		String basicScheduleState = RobotProfileDataUtils.getBasicScheduleState(context, details);
+	private static void notifyBasicScheduleStateChange(Context context, String robotId, GetRobotProfileDetailsResult2 details) {
+		String basicScheduleState = RobotProfileDataUtils.getScheduleState(context, SchedulerConstants2.SCHEDULE_TYPE_BASIC, details);
 		LogHelper.logD(TAG, "Robot Schedule State :" + basicScheduleState);
 		if(!TextUtils.isEmpty(basicScheduleState)) {
 			HashMap<String, String> stateData = new HashMap<String, String>();

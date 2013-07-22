@@ -8,6 +8,7 @@ import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 
 public class UdpUtils {
 
@@ -34,5 +35,9 @@ public class UdpUtils {
 			LogHelper.log(TAG, "EXCEPTION in getBroadcastIp", e);
 			return null;
 		}
+	}
+	
+	public static boolean isUdpBroadcastSupported() {
+		return DeviceUtils.isUdpBroadcastSupported();
 	}
 }

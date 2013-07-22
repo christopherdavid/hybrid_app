@@ -84,6 +84,7 @@ public class XMPPConnectionHelper {
 		synchronized (mConnectionObjectLock) {
 			Connection connection = getConnection();
 			connection.connect();
+			notifyConnectionSuccessful();
 		}
 	}
 
@@ -98,6 +99,7 @@ public class XMPPConnectionHelper {
 			if (isValidUserIdAndPassword(userId, password)) {
 				String resourceId = getResourceId();
 				connection.login(userId, password, resourceId);
+				notifyLoginSuccessful();
 				startReceivingPackets();
 				LogHelper.log(TAG, "XMPP Login Successful");
 			} else {
@@ -310,19 +312,7 @@ public class XMPPConnectionHelper {
 			});
 		}
 	}
-
-	private void notifyConnectionFailed(XMPPException e)
-	{
-		if (mHandler != null) {
-			mHandler.post(new Runnable() {
-				@Override
-				public void run() {
-					mListener.onConnectFailed();
-				}
-			});
-		}
-	}
-
+	
 	private void notifyLoginSuccessful()
 	{
 		if (mHandler != null) {
@@ -336,18 +326,6 @@ public class XMPPConnectionHelper {
 		}
 	}
 
-	private void notifyLoginFailed(XMPPException e)
-	{
-		if (mHandler != null) {
-			mHandler.post(new Runnable() {
-				@Override
-				public void run() {
-					mListener.onLoginFailed();
-				}
-			});
-		}
-	}
-	
 	private String getUserChatId() {
 		String jabberUserId = UserHelper.getChatId(mContext);		
 		jabberUserId = XMPPUtils.removeJabberDomain(jabberUserId);

@@ -17,10 +17,13 @@ import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleEvent;
 import com.neatorobotics.android.slide.framework.robot.schedule2.Schedules;
 import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleInfo2;
 import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2;
+import com.neatorobotics.android.slide.framework.robotdata.RobotProfileDataUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebservicesHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult3;
 
 public class RobotSchedulerManager2 {
@@ -274,39 +277,32 @@ public class RobotSchedulerManager2 {
 		TaskUtils.scheduleTask(task, 0);
 	}
 	
+	
 	private ScheduleDetails getCurrentScheduleIdAndVersion(String robotId, int scheduleInt) {
-		ScheduleDetails scheduleDetails = null;
-		String scheduleType = SchedulerConstants2.getScheduleType(scheduleInt);
-		if (scheduleType == null) {
-			LogHelper.log(TAG, "Invalid schedule type: " + scheduleInt);
-			return null;
-		}
-		GetNeatoRobotSchedulesResult schedulesResult = NeatoRobotScheduleWebservicesHelper.getNeatoRobotSchedulesRequest(mContext, robotId);
-		if (schedulesResult.success()) {
-			int scheduleListSize = schedulesResult.mResult.size();
-			// NOTE: Though server supports multiple schedules but ideally we should not have
-			// multiple schedules on server. We programatically takes care of not creating
-			// multiple schedules on server but in case there are multiple schedules, we update
-			// the latest schedule on server
-			for (int scheduleIterator = (scheduleListSize-1); scheduleIterator >= 0 ; scheduleIterator--) {
-				if (scheduleType.equals(schedulesResult.mResult.get(scheduleIterator).mSchedule_Type)) {
-					String scheduleId = schedulesResult.mResult.get(scheduleIterator).mId;
-					String scheduleVersion = schedulesResult.mResult.get(scheduleIterator).mXml_Data_Version;
-					scheduleDetails = new ScheduleDetails(scheduleId, scheduleVersion);
-					LogHelper.log(TAG, "Current schedule id is: "+scheduleId);
-					LogHelper.log(TAG, "Current schedule version is: "+scheduleVersion);
-					break;
-				}
-			}
+		ScheduleDetails details = null;
+		final int serverScheduleType = SchedulerConstants2.convertToServerConstants(scheduleInt);
+		try {
+			GetRobotScheduleByTypeResult result = NeatoRobotScheduleWebservicesHelper.getScheduleBasedOnType(mContext, robotId, String.valueOf(serverScheduleType));				
+			if (result.isRobotScheduleAvailable()) {
+				GetRobotScheduleByTypeResult.Result scheduleResult = result.getScheduleData();
+				String scheduleId = scheduleResult.schedule_id;
+				String scheduleVersion = scheduleResult.schedule_version;
+				LogHelper.log(TAG, "Current schedule id is: "+scheduleId);
+				LogHelper.log(TAG, "Current schedule version is: "+scheduleVersion);
+				details = new ScheduleDetails(scheduleId, scheduleVersion);
+			}	
 		} 
-		else if (schedulesResult.isNetworkError()) {
-			LogHelper.log(TAG, "sendRobotSchedule error: Network Error");
+		catch (UserUnauthorizedException ex) {
+			LogHelper.log(TAG, "Error in getCurrentScheduleIdAndVersion: ", ex);
 		}
-		else {
-			LogHelper.log(TAG, "sendRobotSchedule error: Server Error: "+schedulesResult.mMessage);
+		catch (NeatoServerException ex) {
+			LogHelper.log(TAG, "Error in getCurrentScheduleIdAndVersion: ", ex);
 		}
-		return scheduleDetails;
-	}	
+		catch (IOException ex) {
+			LogHelper.log(TAG, "Error in getCurrentScheduleIdAndVersion: ", ex);
+		}
+		return details;
+	}
 	
 	/*
 	 * This will update the local copy of the schedule to the server.
@@ -455,13 +451,14 @@ public class RobotSchedulerManager2 {
 						SetRobotProfileDetailsResult3 result = NeatoRobotScheduleWebservicesHelper.setEnableSchedule(mContext, robotId, scheduleType, enableSchedule);
 						if(result.success()) {
 							listener.onReceived(result);
+							// TODO: One central place to get profile params
 							long timestamp = result.extra_params.timestamp;
 							RobotHelper.saveProfileParam(mContext, robotId, ProfileAttributeKeys.ROBOT_ENABLE_BASIC_SCHEDULE, timestamp);
 						} else {
 							listener.onServerError(ErrorTypes.ERROR_TYPE_UNKNOWN, "Result is not of type set profile details result");
 						}						
 					} else if(scheduleType == SchedulerConstants2.SERVER_SCHEDULE_TYPE_ADVANCED){
-						listener.onServerError(ErrorTypes.INVALID_SCHEDULE_TYPE, "Advanced Schedule Type not supported yet");
+						listener.onServerError(ErrorTypes.ERROR_INVALID_SCHEDULE_TYPE, "Advanced Schedule Type not supported yet");
 					}					
 				} catch (UserUnauthorizedException e) {
 					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
@@ -481,7 +478,8 @@ public class RobotSchedulerManager2 {
 			@Override
 			public void run() {
 				try {
-					IsScheduleEnabledResult result = NeatoRobotScheduleWebservicesHelper.isScheduleEnabled(mContext, robotId, scheduleType);
+					GetRobotProfileDetailsResult2 result = NeatoRobotDataWebservicesHelper.getRobotProfileDetailsRequest2(mContext, robotId, "");
+					RobotProfileDataUtils.updateDataTimestampIfChanged(mContext, result, robotId, ProfileAttributeKeys.ROBOT_ENABLE_BASIC_SCHEDULE);
 					listener.onReceived(result);
 				} catch (UserUnauthorizedException e) {
 					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
