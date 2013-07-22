@@ -10,5 +10,6 @@
     <string name="notification_text_title">Robot Alert</string>    
     <string name="notification_text_generic_message">You have a message from your robot.</string>  
     <string name="notification_text_cleaning_done">Cleaning complete.</string>
+    <string name="error_robot_not_directly_connected">Robot not directly connected.</string>
 
 </resources>

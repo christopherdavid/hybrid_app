@@ -21,12 +21,16 @@ public class RobotCommandPacketConstants {
 	public static final int COMMAND_STATUS_NOTIFICATION = 113;
 	public static final int COMMAND_RESUME_CLEANING = 114;
 	public static final int COMMAND_DRIVE_ROBOT = 115;
-	public static final int COMMAND_TURN_VACUUM_ONOFF = 116;
+	public static final int COMMAND_TURN_MOTOR_ONOFF = 116;
 	public static final int COMMAND_TURN_WIFI_ONOFF = 117;
 	
 	
 	
 	public static final int COMMAND_ROBOT_PROFILE_DATA_CHANGED = 5001;
+	public static final int COMMAND_ROBOT_CONFIGURATION_CHANGED = 5002;
+	public static final int COMMAND_ROBOT_CONNECTION_PING = 5003;
+	public static final int COMMAND_ROBOT_CONNECTION_BREAK = 9999;
+	
 	
 	// Notification Ids
 	public static final String NOTIFICATIONS_ID_GLOBAL	 		= "global";
@@ -62,6 +66,9 @@ public class RobotCommandPacketConstants {
 	public static final int ROBOT_STATE_PAUSED 								= 10007;
 	public static final int ROBOT_STATE_RESUMED 							= 10008;
 	public static final int ROBOT_STATE_ON_BASE								= 10009;
+	// Robot Driving State Codes.
+	public static final int ROBOT_STATE_MANUAL_CLEANING						= 10010;
+	public static final int ROBOT_STATE_MANUAL_PLAY_MODE					= 10011;
 	public static final int ROBOT_STATE_INVALID								= 19999;
 	
 	//Codes for data changed on server

@@ -12,7 +12,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
-import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationMessageHandler;
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
@@ -20,8 +19,9 @@ import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.UserJsonData;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
+import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper;
 import com.neatorobotics.android.slide.framework.robot.settings.SettingsManager;
-import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
+import com.neatorobotics.android.slide.framework.timedmode.RobotCommandTimerHelper;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
@@ -311,8 +311,6 @@ public class UserManagerPlugin extends Plugin {
 					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);
 					int validationCode = UserValidationHelper.getUserValidationStatus(userItem.validation_status);
 					userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
-					
-					RobotCommandServiceManager.loginToXmpp(context);
 					PushNotificationUtils.registerForPushNotification(context);
 					AppUtils.createNeatoUserDeviceIdIfNotExists(context);
 				}					
@@ -349,12 +347,15 @@ public class UserManagerPlugin extends Plugin {
 					return;
 				}
 				
-				UserHelper.logout(context);
+				UserManager.getInstance(context).logoutUser();
 				PluginResult logoutPluginResult = new  PluginResult(PluginResult.Status.OK);
-				LogHelper.logD(TAG, "Logout successful.");
 				success(logoutPluginResult, callbackId);
+				LogHelper.logD(TAG, "Logout successful.");
+				// Clean-up
 				PushNotificationMessageHandler.getInstance(context).removePushNotificationListener();
 				PushNotificationUtils.unregisterPushNotification(context);
+				RobotCommandTimerHelper.getInstance(context).stopAllCommandTimers();
+				RobotDriveHelper.getInstance(context).untrackAllRobotDriveRequest();
 				AppUtils.clearNeatoUserDeviceId(context);
 			}
 		};
@@ -386,7 +387,7 @@ public class UserManagerPlugin extends Plugin {
 					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);
 					int validationCode = UserValidationHelper.getUserValidationStatus(userItem.validation_status);
 					userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
-					RobotCommandServiceManager.loginToXmpp(context);
+					
 					PushNotificationUtils.registerForPushNotification(context);
 					AppUtils.createNeatoUserDeviceIdIfNotExists(context);
 				}				
@@ -421,7 +422,8 @@ public class UserManagerPlugin extends Plugin {
 					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);
 					int validationCode = UserValidationHelper.getUserValidationStatus(userItem.validation_status);
 					userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
-					RobotCommandServiceManager.loginToXmpp(context);
+					
+					
 					PushNotificationUtils.registerForPushNotification(context);
 					AppUtils.createNeatoUserDeviceIdIfNotExists(context);
 				}		
@@ -670,7 +672,7 @@ public class UserManagerPlugin extends Plugin {
 				}
 			}
 			catch (JSONException ex) {
-				LogHelper.logD(TAG, "JSON Error");
+				LogHelper.logD(TAG, "JSON Error", ex);
 				sendError(mCallbackId, ErrorTypes.JSON_PARSING_ERROR, ex.getMessage());
 			}
 		}	

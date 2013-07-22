@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
+import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
 
 public class RobotProfileConstants {
@@ -13,6 +14,7 @@ public class RobotProfileConstants {
 	
 	static {
 		PROFILE_KEY_TIMER_EXPIRY_MAP.put(ProfileAttributeKeys.ROBOT_CLEANING_COMMAND, true);
+		PROFILE_KEY_TIMER_EXPIRY_MAP.put(ProfileAttributeKeys.INTEND_TO_DRIVE, true);
 	}
 	
 	public static String getProfileKeyTypeForCommand(int commandId) {
@@ -25,8 +27,6 @@ public class RobotProfileConstants {
 			case RobotCommandPacketConstants.COMMAND_RESUME_CLEANING:
 			case RobotCommandPacketConstants.COMMAND_SEND_BASE:
 				return ProfileAttributeKeys.ROBOT_CLEANING_COMMAND;
-			case RobotCommandPacketConstants.COMMAND_TURN_VACUUM_ONOFF:
-				return ProfileAttributeKeys.ROBOT_TURN_VACUUM_ONOFF;
 			case RobotCommandPacketConstants.COMMAND_TURN_WIFI_ONOFF:
 				return ProfileAttributeKeys.ROBOT_TURN_WIFI_ONOFF;
 			default:
@@ -51,7 +51,7 @@ public class RobotProfileConstants {
 			case RobotCommandPacketConstants.COMMAND_PAUSE_CLEANING:
 			case RobotCommandPacketConstants.COMMAND_RESUME_CLEANING:
 			case RobotCommandPacketConstants.COMMAND_SEND_BASE:
-			case RobotCommandPacketConstants.COMMAND_TURN_VACUUM_ONOFF:
+			case RobotCommandPacketConstants.COMMAND_TURN_MOTOR_ONOFF:
 			case RobotCommandPacketConstants.COMMAND_TURN_WIFI_ONOFF:
 				return true;
 			default:
@@ -74,4 +74,19 @@ public class RobotProfileConstants {
 	public static final int ROBOT_NAME_UPDATE  				= 4004;
 	public static final int ROBOT_SCHEDULE_STATE_CHANGED 	= 4005;
 	public static final int ROBOT_IS_SCHEDULE_UPDATED 		= 4006;
+	public static final int ROBOT_IS_CONNECTED		 		= 4007;
+	public static final int ROBOT_IS_DISCONNECTED		 	= 4008;
+	public static final int ROBOT_ERROR_IN_CONNECTING		= 4009;
+	
+	public static String getScheduleKey(int scheduleType) {
+		String scheduleTypeInStr = null;
+		if (scheduleType == SchedulerConstants2.SERVER_SCHEDULE_TYPE_BASIC) {
+			scheduleTypeInStr = ProfileAttributeKeys.ROBOT_ENABLE_BASIC_SCHEDULE;
+		}
+		else if (scheduleType == SchedulerConstants2.SERVER_SCHEDULE_TYPE_ADVANCED) {
+			scheduleTypeInStr = ProfileAttributeKeys.ROBOT_ENABLE_ADVANCED_SCHEDULE;
+		}
+		return scheduleTypeInStr;
+	}
+	
 }

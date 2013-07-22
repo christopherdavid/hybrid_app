@@ -2,6 +2,7 @@ package com.neatorobotics.android.slide.framework.webservice.user;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Observable;
 
 import android.content.Context;
 
@@ -23,7 +24,7 @@ import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
  * We can check NULL value by creating WRAPPER class, passing input 
  * listener to this WRAPPER class object and calling wrapper class methods.  
  */
-public class UserManager {	
+public class UserManager extends Observable {	
 	private static final String TAG = UserManager.class.getSimpleName();
 	protected Context mContext;
 	
@@ -122,7 +123,10 @@ public class UserManager {
 					GetNeatoUserDetailsResult userDetailsResult = NeatoUserWebservicesHelper.getNeatoUserDetails(mContext, email , loginResult.getAuthToken());
 					UserHelper.saveLoggedInUserDetails(mContext, userDetailsResult.result, loginResult.getAuthToken());
 					setUserAttributesOnServer(loginResult.getAuthToken(), DeviceUtils.getUserAttributes(mContext));
-					listener.onReceived(userDetailsResult);											
+					listener.onReceived(userDetailsResult);
+					
+					setChanged();
+					notifyObservers();
 				}
 				catch (UserUnauthorizedException ex) {
 					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
@@ -149,6 +153,8 @@ public class UserManager {
 					UserHelper.saveLoggedInUserDetails(mContext, userDetailsResult.result, createUserResult.result.user_handle);
 					setUserAttributesOnServer(createUserResult.result.user_handle, DeviceUtils.getUserAttributes(mContext));
 					listener.onReceived(userDetailsResult);
+					setChanged();
+					notifyObservers();
 				}
 				catch (UserUnauthorizedException ex) {
 					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
@@ -177,6 +183,8 @@ public class UserManager {
 					UserHelper.saveLoggedInUserDetails(mContext, userDetailsResult.result, createUserResult.result.user_handle);
 					setUserAttributesOnServer(createUserResult.result.user_handle, DeviceUtils.getUserAttributes(mContext));
 					listener.onReceived(userDetailsResult);
+					setChanged();
+					notifyObservers();
 				} 
 				catch (UserUnauthorizedException e) {
 					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
@@ -379,5 +387,11 @@ public class UserManager {
 			}
 		};
 		TaskUtils.scheduleTask(task, 0);
+	}
+	
+	public void logoutUser() {
+		UserHelper.logout(mContext);
+		setChanged();
+		notifyObservers();
 	}
 }

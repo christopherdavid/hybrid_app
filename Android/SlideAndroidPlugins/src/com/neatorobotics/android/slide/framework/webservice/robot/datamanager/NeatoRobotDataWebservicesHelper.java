@@ -70,15 +70,19 @@ public class NeatoRobotDataWebservicesHelper {
 		return keyWithProfilePrefix;
 	}
 	
-	public static DeleteRobotProfileKeyResult deleteRobotProfileKey(Context context, String robotId, String key) 
+	public static DeleteRobotProfileKeyResult deleteRobotProfileKey(Context context, String robotId, String key, boolean notify) 
 			throws UserUnauthorizedException, NeatoServerException, IOException {		
 		
 		Map<String, String> robotDeleteKeyParams = new HashMap<String, String>();
 		robotDeleteKeyParams.put(DeleteRobotProfileKey.Attribute.SERIAL_NUMBER, robotId);
 		robotDeleteKeyParams.put(DeleteRobotProfileKey.Attribute.PROFILE_KEY, key);
 		robotDeleteKeyParams.put(DeleteRobotProfileKey.Attribute.CAUSING_AGENT_ID, NeatoPrefs.getNeatoUserDeviceId(context));
-		robotDeleteKeyParams.put(DeleteRobotProfileKey.Attribute.NOTIFICATION_FLAG, DeleteRobotProfileKey.DATA_CHANGED_NOTIFICATION_FLAG_OFF);
-		
+		if (notify) {
+			robotDeleteKeyParams.put(DeleteRobotProfileKey.Attribute.NOTIFICATION_FLAG, DeleteRobotProfileKey.DATA_CHANGED_NOTIFICATION_FLAG_ON);
+		}
+		else {
+			robotDeleteKeyParams.put(DeleteRobotProfileKey.Attribute.NOTIFICATION_FLAG, DeleteRobotProfileKey.DATA_CHANGED_NOTIFICATION_FLAG_OFF);
+		}
 		String response = MobileWebServiceClient.executeHttpPost(context, DeleteRobotProfileKey.METHOD_NAME, robotDeleteKeyParams);
 		return AppUtils.checkResponseResult(response, DeleteRobotProfileKeyResult.class);
 	}

@@ -69,7 +69,7 @@ public class NeatoSmartAppService extends Service {
 	private XMPPConnectionHelper mXMPPConnectionHelper;
 	private RobotPeerConnection mRobotPeerConnection;
 	
-	private XMPPNotificationListener xmppNotificationListener = new XMPPNotificationListener() {
+	private XMPPNotificationListener mXmppNotificationListener = new XMPPNotificationListener() {
 
 		@Override
 		public void onConnectFailed() {
@@ -326,11 +326,32 @@ public class NeatoSmartAppService extends Service {
 					userId, mRobotDiscoveryListener);
 		}
 
-		public void sendCommand2(String robotId, RobotRequests requests) throws RemoteException {
-			LogHelper.logD(TAG, "sendCommand Called. Using new command structure");
-			sendCommandUsingNewCommandStructure(robotId, requests);
-		} 
-
+		
+		public void sendCommand(String robotId, RobotRequests requests, int mode) throws RemoteException {
+			LogHelper.logD(TAG, "sendCommand Called. Using new command structure with mode - " + mode);
+			RobotCommandPacketHeader header = RobotCommandPacketHeader.getRobotCommandHeader(RobotCommandPacketConstants.COMMAND_PACKET_SIGNATURE, RobotCommandPacketConstants.COMMAND_PACKET_VERSION);
+			if (mode == RobotPacketConstants.DISTRIBUTION_MODE_TYPE_PEER) {
+				if(isPeerConnectionExists(robotId)) {
+					LogHelper.logD(TAG, "SendCommand Called using TCP connection as transport");
+					requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_PEER);
+					RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header, requests);
+					mRobotPeerConnection.sendRobotCommand(robotId, robotCommandPacket);
+				} else {
+					LogHelper.logD(TAG, "peer connection does not exist: Request = " + requests);
+				}
+			} else if (mode == RobotPacketConstants.DISTRIBUTION_MODE_TYPE_XMPP) {
+				if(isXmppConnectionExists(robotId)) {
+					String chatId = XMPPUtils.getRobotChatId(NeatoSmartAppService.this, robotId);
+					LogHelper.logD(TAG, "SendCommand Called using XMPP connection as transport. Request:-" + requests);
+					requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_XMPP);
+					RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header, requests);
+					mXMPPConnectionHelper.sendRobotCommand(chatId, robotCommandPacket);
+				} else {
+					LogHelper.logD(TAG, "Xmpp connection does not exist: Request = " + requests);
+				}
+			}
+		}
+		
 		public void connectToRobot2(String robotId) throws RemoteException {
 			LogHelper.log(TAG, "connectToRobot2 Called. robotId -" + robotId);
 			
@@ -338,6 +359,21 @@ public class NeatoSmartAppService extends Service {
 			if (mRobotPeerConnection != null) {
 				LogHelper.logD(TAG, "Using new command structure");
 				mRobotPeerConnection.connectToRobot(robotId);
+			}
+		}
+		
+		public void connectToRobot3(String robotId, String robotIpAddress) throws RemoteException {
+			LogHelper.log(TAG, "connectToRobot3 Called. robotId -" + robotId);
+			
+			initializeNewPeerHelperClassIfRequired();
+			if (mRobotPeerConnection != null) {
+				LogHelper.logD(TAG, "Using new command structure");
+				if (TextUtils.isEmpty(robotIpAddress)) {
+					mRobotPeerConnection.connectToRobot(robotId);
+				}
+				else {
+					mRobotPeerConnection.connectToRobot(robotId, robotIpAddress);
+				}
 			}
 		}
 
@@ -428,7 +464,23 @@ public class NeatoSmartAppService extends Service {
 			robotRequests.addCommand(request);
 			
 			sendCommandUsingNewCommandStructure(robotId, robotRequests);
+		}
+
+		@Override
+		public boolean isRobotDirectConnected(String robotId) throws RemoteException {
+			if (mRobotPeerConnection != null) {
+				return mRobotPeerConnection.isConnectedAndPingRobot(robotId);
+			}
+			return false;
 		};
+		
+		@Override
+		public boolean isAnyPeerConnectionExists() throws RemoteException{
+			if (mRobotPeerConnection != null) {
+				return mRobotPeerConnection.isConnectedAndSendPingPacket();
+			}
+			return false;
+		}
 	};
 
 	private BroadcastReceiver mWifiStateChange = new BroadcastReceiver() {
@@ -487,7 +539,7 @@ public class NeatoSmartAppService extends Service {
 		mXMPPConnectionHelper =  XMPPConnectionHelper.getInstance(this);
 		String xmppDomain = NeatoWebConstants.getXmppServerDomain();
 		mXMPPConnectionHelper.setServerInformation(xmppDomain, AppConstants.JABBER_SERVER_PORT, AppConstants.JABBER_WEB_SERVICE);
-		mXMPPConnectionHelper.setXmppNotificationListener(xmppNotificationListener, mHandler);
+		mXMPPConnectionHelper.setXmppNotificationListener(mXmppNotificationListener, mHandler);
 		
 		if (isConnectedToWifiNetwork()) {
 			Runnable task = new Runnable() {
@@ -587,24 +639,14 @@ public class NeatoSmartAppService extends Service {
 		
 		LogHelper.logD(TAG, "sendCommandUsingNewCommandStructure called");
 		RobotCommandPacketHeader header = RobotCommandPacketHeader.getRobotCommandHeader(RobotCommandPacketConstants.COMMAND_PACKET_SIGNATURE, RobotCommandPacketConstants.COMMAND_PACKET_VERSION);
-		if(isPeerConnectionExists(robotId)) {
-			LogHelper.logD(TAG, "SendCommand Called using TCP connection as transport");
-			requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_PEER);
+		if(isXmppConnectionExists(robotId)) {
+			String chatId = XMPPUtils.getRobotChatId(NeatoSmartAppService.this, robotId);
+			LogHelper.logD(TAG, "SendCommand Called using XMPP connection as transport. Request:-" + requests);
+			requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_XMPP);
 			RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header, requests);
-			mRobotPeerConnection.sendRobotCommand(robotId, robotCommandPacket);
-		} 
-		else {
-			LogHelper.log(TAG, "Tcp peer connection does not exist.");
-			
-			if(isXmppConnectionExists(robotId)) {
-				String chatId = XMPPUtils.getRobotChatId(NeatoSmartAppService.this, robotId);
-				LogHelper.logD(TAG, "SendCommand Called using XMPP connection as transport. Request:-" + requests);
-				requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_XMPP);
-				RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header, requests);
-				mXMPPConnectionHelper.sendRobotCommand(chatId, robotCommandPacket);
-			} else {
-				LogHelper.logD(TAG, "Xmpp connection does not exist: Request = " + requests);
-			}
+			mXMPPConnectionHelper.sendRobotCommand(chatId, robotCommandPacket);
+		} else {
+			LogHelper.logD(TAG, "Xmpp connection does not exist: Request = " + requests);
 		}
 	}
 	

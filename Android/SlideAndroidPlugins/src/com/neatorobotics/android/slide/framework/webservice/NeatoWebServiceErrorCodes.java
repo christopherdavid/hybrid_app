@@ -1,26 +1,9 @@
-package com.neatorobotics.android.slide.framework.pluginhelper;
+package com.neatorobotics.android.slide.framework.webservice;
 
-public class ErrorTypes {
-
-	public static final int ERROR_TYPE_UNKNOWN = -501;
-	public static final int ERROR_NETWORK_ERROR = -502;
-	public static final int JSON_PARSING_ERROR = -503;
-	public static final int INVALID_SCHEDULE_ID = -504;
-	public static final int INVALID_EVENT_ID	= -505;
-	public static final int ERROR_DB_ERROR = -506;
-	public static final int JSON_CREATION_ERROR = -507;
-	public static final int INVALID_PARAMETER = -508;
-	public static final int ERROR_TYPE_USER_UNAUTHORIZED = -509;
-	public static final int ERROR_NOT_SUPPORTED = -510;		
-	public static final int ROBOT_NOT_CONNECTED = -511;
-	public static final int ROBOT_ALREADY_CONNECTED = -512;
-	public static final int ROBOT_UNABLE_TO_CANCEL_INTEND_TO_DRIVE = -513;
-	public static final int ROBOT_NO_DRIVE_REQUEST_FOUND = -514;
-	public static final int DIFFERENT_ROBOT_ALREADY_CONNECTED = -515;
-	
-	public static final int ERROR_TYPE_WIFI_NOT_CONNECTED = -516;
-	public static final int ERROR_TYPE_NO_INTERNET_CONNECTION = -517;
-	
+/*
+ * This file contains the integer error codes which the server will return.
+ */
+public class NeatoWebServiceErrorCodes {
 	/**
 	 * Authentication of the user failed.
 	 *  - This will occur when the email and/or the password is incorrect while Logging-in.
@@ -106,13 +89,11 @@ public class ErrorTypes {
 	 * - This will occur if the application sends an invalid schedule type to the plugin layer.
 	 *   Currently supported schedule type is Basic schedule.
 	 */
-	 public static final int ERROR_INVALID_SCHEDULE_TYPE = -133;
-	 
-	 /**
+	public static final int ERROR_INVALID_SCHEDULE_TYPE = -133;
+	
+	/**
 	  * No schedule exists for given robot.
 	  * - This will occur if there is no schedule for the robot. The user/application should create a new schedule.
 	  */
 	 public static final int ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT = -159;
-	
-	
 }

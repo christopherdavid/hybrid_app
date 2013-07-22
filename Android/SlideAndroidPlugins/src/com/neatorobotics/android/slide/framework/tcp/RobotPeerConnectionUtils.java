@@ -6,11 +6,17 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+
+import android.content.Context;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandBuilder;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacket;
+import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacketUtils;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandParser;
+import com.neatorobotics.android.slide.framework.robot.commands.request.RobotPacketConstants;
 import com.neatorobotics.android.slide.framework.transport.Transport;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 
@@ -41,12 +47,12 @@ public class RobotPeerConnectionUtils {
 	
 	}
 	
-	protected static void sendRobotPacketAsync(final Transport transport, final  byte[] packet )
+	protected static void sendRobotPacketAsync(final Transport transport, final  RobotCommandPacket robotPacket )
 	{
 		Runnable task = new Runnable() {
-
+			
 			public void run() {
-				
+				byte[] packet = getRobotPacketBytes(robotPacket);
 				if (transport == null) {
 					LogHelper.log(TAG, "Transport is null. Cannot send packet");
 					return;
@@ -69,7 +75,7 @@ public class RobotPeerConnectionUtils {
 		t.start();
 	}
 	
-	protected  static byte[] getRobotPacketBytes(RobotCommandPacket robotPacket)
+	private  static byte[] getRobotPacketBytes(RobotCommandPacket robotPacket)
 	{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(bos);
@@ -119,7 +125,7 @@ public class RobotPeerConnectionUtils {
 		return commandPacket;
 	}
 	
-	private static void readByteArrayHelper(DataInputStream din, byte [] byData, int length) throws IOException
+	private static void readByteArrayHelper(DataInputStream din, byte [] byData, int length) throws EOFException, IOException
 	{
 		int chunkLength = (length > PACKET_READ_CHUNK_SIZE)? PACKET_READ_CHUNK_SIZE:length;
 		byte [] buffer = new byte[chunkLength];
@@ -134,5 +140,19 @@ public class RobotPeerConnectionUtils {
 				TaskUtils.sleep(100);
 			}
 		}
+	}
+	
+	protected static RobotCommandPacket getConnectionBreakPacket(Context context) {
+		int commandId = RobotCommandPacketConstants.COMMAND_ROBOT_CONNECTION_BREAK;
+		HashMap<String, String> commandParams = new HashMap<String, String>();
+		int distributionMode = RobotPacketConstants.DISTRIBUTION_MODE_TYPE_PEER;
+		return RobotCommandPacketUtils.getRobotCommandPacket(context, commandId, commandParams, distributionMode);
+	}
+	
+	protected static RobotCommandPacket getConnectionPingPacket(Context context) {
+		int commandId = RobotCommandPacketConstants.COMMAND_ROBOT_CONNECTION_PING;
+		HashMap<String, String> commandParams = new HashMap<String, String>();
+		int distributionMode = RobotPacketConstants.DISTRIBUTION_MODE_TYPE_PEER;
+		return RobotCommandPacketUtils.getRobotCommandPacket(context, commandId, commandParams, distributionMode);
 	}
 }
