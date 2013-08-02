@@ -17,8 +17,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.NetworkConnectionUtils;
 
@@ -38,6 +40,23 @@ public class MobileWebServiceClient {
 		
 		postParams.put(NeatoWebConstants.QUERY_KEY_APIKEY, NeatoWebConstants.getApiKey());
 		HttpPost postHttpRequest = new HttpPost(url);
+		
+		postHttpRequest.addHeader("Accept-Language", AppUtils.getCurrentLocale(context));
+		
+		String deviceId = NeatoPrefs.getNeatoUserDeviceId(context);
+		if (!TextUtils.isEmpty(deviceId)) {
+			postHttpRequest.addHeader("X-NEATO-UUID", NeatoPrefs.getNeatoUserDeviceId(context));
+		}
+		
+		String authKey = NeatoPrefs.getNeatoUserAuthToken(context);
+		if (!TextUtils.isEmpty(authKey)) {
+			postHttpRequest.addHeader("X-NEATO-SESSION-ID", authKey);
+		}
+		
+		String headerTrack =  NeatoHttpHeaderUtils.getNeatoHttpHeaderString(context);
+		if (!TextUtils.isEmpty(headerTrack)) {
+			postHttpRequest.addHeader("X-NEATO-APPINFO", headerTrack);
+		}
 		
 		final List<NameValuePair> pairs = new ArrayList<NameValuePair>();	
 

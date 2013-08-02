@@ -25,6 +25,7 @@ import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.Ne
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebservicesHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult3;
+import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
 
 public class RobotSchedulerManager2 {
 
@@ -441,7 +442,7 @@ public class RobotSchedulerManager2 {
 		TaskUtils.scheduleTask(task, 0);
 	}
 	
-	public void setEnableSchedule(final String robotId, final int scheduleType, final boolean enableSchedule, final ScheduleRequestListener listener) {
+	public void setEnableSchedule(final String robotId, final int scheduleType, final boolean enableSchedule, final WebServiceBaseRequestListener listener) {
 		Runnable task = new Runnable() {
 			
 			@Override
@@ -472,7 +473,7 @@ public class RobotSchedulerManager2 {
 		TaskUtils.scheduleTask(task, 0);
 	}
 	
-	public void isScheduleEnabled(final String robotId, final int scheduleType, final ScheduleRequestListener listener) {
+	public void isScheduleEnabled(final String robotId, final int scheduleType, final WebServiceBaseRequestListener listener) {
 		Runnable task = new Runnable() {
 			
 			@Override

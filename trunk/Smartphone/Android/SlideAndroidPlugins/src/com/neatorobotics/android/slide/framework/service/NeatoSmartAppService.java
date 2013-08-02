@@ -58,7 +58,6 @@ public class NeatoSmartAppService extends Service {
 	
 	static {
 		// Notification commands are always sent to the plugin layers
-		notificationCommands.append(RobotCommandPacketConstants.COMMAND_GET_ROBOT_STATE, true);
 		notificationCommands.append(RobotCommandPacketConstants.COMMAND_STATUS_NOTIFICATION, true);
 		notificationCommands.append(RobotCommandPacketConstants.COMMAND_REGISTER_STATUS_NOTIFICATIONS, true);
 		notificationCommands.append(RobotCommandPacketConstants.COMMAND_UNREGISTER_STATUS_NOTIFICATIONS, true);
@@ -275,10 +274,6 @@ public class NeatoSmartAppService extends Service {
 				LogHelper.log(TAG, "sendNotification for commandId = " + commandId);
 				Bundle responseDataParams = getParamsBundle(responsePacket.getParams());		
 				switch (commandId) {			
-					case RobotCommandPacketConstants.COMMAND_GET_ROBOT_STATE:				
-						mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_STATE, responseDataParams);
-						break;
-						
 					case RobotCommandPacketConstants.COMMAND_STATUS_NOTIFICATION:
 						mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_STATUS_NOTIFICATION, responseDataParams);
 						break;
