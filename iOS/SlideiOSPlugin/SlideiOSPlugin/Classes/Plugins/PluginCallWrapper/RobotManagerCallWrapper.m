@@ -52,7 +52,7 @@
     self.retained_self = self;
     self.callbackId = callbackId;
     
-    TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
+    TCPConnectionHelper *helper = [TCPConnectionHelper sharedTCPConnectionHelper];
     [helper connectToRobotOverTCP:robot delegate:self];
 }
 
@@ -63,7 +63,7 @@
     self.retained_self = self;
     self.callbackId = callbackId;
     
-    TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
+    TCPConnectionHelper *helper = [TCPConnectionHelper sharedTCPConnectionHelper];
     [helper disconnectFromRobot:robotId delegate:self];
 }
 
@@ -225,7 +225,7 @@
         // Now we should associate the user with the robot
         NeatoRobot *robot = (NeatoRobot *) value;
         debugLog(@"Robot IP address = %@", robot.ipAddress);
-        TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
+        TCPConnectionHelper *helper = [TCPConnectionHelper sharedTCPConnectionHelper];
         [helper connectToRobotOverTCP:robot delegate:self];
     }
     else

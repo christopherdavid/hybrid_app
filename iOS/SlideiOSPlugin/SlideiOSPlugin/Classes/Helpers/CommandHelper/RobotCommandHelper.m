@@ -140,7 +140,7 @@
     debugLog(@"");
     NSString *requestId = [AppHelper generateUniqueString];
     if (overTCP) {
-        TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
+        TCPConnectionHelper *helper = [TCPConnectionHelper sharedTCPConnectionHelper];
         if ([helper isConnected]) {
             NSData *command = [[[TCPCommandHelper alloc] init] getRobotCommand2WithId:commandId withParams:params andRequestId:requestId];
             [helper sendCommandToRobot2:[self formattedTCPCommandFromCommand:command] withTag:commandTag requestId:requestId delegate:self];

@@ -50,7 +50,7 @@
 }
 
 - (void)connectToRobotOverTCP2:(NeatoRobot *)robot {
-    TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
+    TCPConnectionHelper *helper = [TCPConnectionHelper sharedTCPConnectionHelper];
     [helper connectToRobotOverTCP2:robot delegate:self];
 }
 

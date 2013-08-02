@@ -74,6 +74,8 @@ static TCPSocket *sharedInstance = nil;
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     debugLog(@"");
     [self.delegate socket:sock didConnectToHost:host port:port];
+    // Always keep a read in the queue.
+    [self beginReadingData];
 }
 
 /**
@@ -83,6 +85,8 @@ static TCPSocket *sharedInstance = nil;
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
     debugLog(@"");
     [self.delegate socket:sock didReadData:data withTag:tag];
+    // Always keep a read in the queue.
+    [self beginReadingData];
 }
 
 /**

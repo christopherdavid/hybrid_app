@@ -178,37 +178,39 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 // database.)
 - (BOOL)updateDataTimestampIfChangedForKey:(NSString *)key withProfile:(NSDictionary *)robotProfile {
     debugLog(@"");
-    if ([robotProfile objectForKey:key]) {
-        if ([self hasDataChangedForKey:key withRobotProfile:robotProfile]) {
-            // Update timestamp for key in database.
-            ProfileDetail *profileDetail = [[ProfileDetail alloc] init];
-            profileDetail.key = key;
-            profileDetail.timestamp = [NSNumber numberWithLongLong:[[[robotProfile objectForKey:key] objectForKey:KEY_TIMESTAMP] longLongValue]];
-            [NeatoRobotHelper updateProfileDetail:profileDetail forRobotWithId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE]];
-            return YES;
-        }
-        debugLog(@"Data has not changed for key : %@", key);
-        return NO;
-    }
-    else {
-        // Delete the key from database.
-        // Return true only if the delete was successful. If the key is not
-        // present in database then return false.
-        id dbResult = [NeatoRobotHelper profileDetailForKey:key robotWithId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE]];
-        if ([dbResult isKindOfClass:[NSError class]]) {
+    @synchronized (self) {
+        if ([robotProfile objectForKey:key]) {
+            if ([self hasDataChangedForKey:key withRobotProfile:robotProfile]) {
+                // Update timestamp for key in database.
+                ProfileDetail *profileDetail = [[ProfileDetail alloc] init];
+                profileDetail.key = key;
+                profileDetail.timestamp = [NSNumber numberWithLongLong:[[[robotProfile objectForKey:key] objectForKey:KEY_TIMESTAMP] longLongValue]];
+                [NeatoRobotHelper updateProfileDetail:profileDetail forRobotWithId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE]];
+                return YES;
+            }
+            debugLog(@"Data has not changed for key : %@", key);
             return NO;
         }
-        if (dbResult) {
-            // Key exists in database now delete it.
-            debugLog(@"Deleting profile detail record from database with Key = %@ for robotId = %@.", key, [[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE]);
-            id deletedRobotProfile = [NeatoRobotHelper deleteProfileDetail:(ProfileDetail *)dbResult forRobot:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE]];
-            if ([deletedRobotProfile isKindOfClass:[NSError class]]) {
+        else {
+            // Delete the key from database.
+            // Return true only if the delete was successful. If the key is not
+            // present in database then return false.
+            id dbResult = [NeatoRobotHelper profileDetailForKey:key robotWithId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE]];
+            if ([dbResult isKindOfClass:[NSError class]]) {
                 return NO;
             }
-            return YES;
+            if (dbResult) {
+                // Key exists in database now delete it.
+                debugLog(@"Deleting profile detail record from database with Key = %@ for robotId = %@.", key, [[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE]);
+                id deletedRobotProfile = [NeatoRobotHelper deleteProfileDetail:(ProfileDetail *)dbResult forRobot:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE]];
+                if ([deletedRobotProfile isKindOfClass:[NSError class]]) {
+                    return NO;
+                }
+                return YES;
+            }
+            // Key doesn't exists in database.
+            return NO;
         }
-        // Key doesn't exists in database.
-        return NO;
     }
 }
 
@@ -311,24 +313,26 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 
 - (void)notifyDataChangeForRobotId:(NSString *)robotId withKeyCode:(NSNumber *)key andData:(NSDictionary *)data {
     debugLog(@"");
-    NSMutableDictionary *dataChanged = [[NSMutableDictionary alloc] init];
-    [dataChanged setObject:robotId forKey:KEY_ROBOT_ID];
-    [dataChanged setObject:key forKey:KEY_ROBOT_DATA_ID];
-    [dataChanged setObject:data forKey:KEY_ROBOT_DATA];
-    NSString *callBackId = [NeatoRobotHelper xmppCallbackId];
-    // Post UI update notification.
-    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-    if (callBackId) {
-        [userInfo setObject:dataChanged forKey:KEY_UI_UPDATE_DATA];
-        [userInfo setObject:callBackId forKey:KEY_CALLBACK_ID];
-        [userInfo setObject:[NSNumber numberWithBool:YES] forKey:SUCCESS_CALLBACK];
+    @synchronized (self) {
+        NSMutableDictionary *dataChanged = [[NSMutableDictionary alloc] init];
+        [dataChanged setObject:robotId forKey:KEY_ROBOT_ID];
+        [dataChanged setObject:key forKey:KEY_ROBOT_DATA_ID];
+        [dataChanged setObject:data forKey:KEY_ROBOT_DATA];
+        NSString *callBackId = [NeatoRobotHelper xmppCallbackId];
+        // Post UI update notification.
+        NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+        if (callBackId) {
+            [userInfo setObject:dataChanged forKey:KEY_UI_UPDATE_DATA];
+            [userInfo setObject:callBackId forKey:KEY_CALLBACK_ID];
+            [userInfo setObject:[NSNumber numberWithBool:YES] forKey:SUCCESS_CALLBACK];
+        }
+        else {
+            // TODO: Do we need to send back any error to UI??
+            debugLog(@"ERROR!!CallBackId is nil.");
+            return;
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_UPDATE_UI_FOR_XMPP_DATA_CHANGE object:nil userInfo:userInfo];
     }
-    else {
-        // TODO: Do we need to send back any error to UI??
-        debugLog(@"ERROR!!CallBackId is nil.");
-        return;
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_UPDATE_UI_FOR_XMPP_DATA_CHANGE object:nil userInfo:userInfo];
 }
 
 // Checks if the notification received is due to local changes.
