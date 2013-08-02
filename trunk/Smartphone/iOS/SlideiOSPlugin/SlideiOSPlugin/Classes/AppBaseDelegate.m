@@ -29,6 +29,9 @@
     else {
         [[UIApplication sharedApplication]  unregisterForRemoteNotifications];
     }
+    if ([launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]) {
+        [self application:application didReceiveRemoteNotification:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]];
+    }
     return YES;
 }
 
