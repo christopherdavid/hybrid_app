@@ -6,6 +6,7 @@
 #import "AppHelper.h"
 #import "NeatoRobotHelper.h"
 #import "ProfileDetail.h"
+#import "NeatoErrorCodes.h"
 
 @interface EnableDisableScheduleListener()
 
@@ -35,7 +36,7 @@
 -(void)start {
    // Return error if advance schedule type.
     if (self.scheduleType == NEATO_SCHEDULE_ADVANCE_INT) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Invalid schedule type." code:INVALID_SCHEDULE_TYPE];
+        NSError *error = [AppHelper nserrorWithDescription:@"Invalid schedule type." code:UI_ERROR_INVALID_SCHEDULE_TYPE];
         [self.delegate performSelector:@selector(failedToEnableDisableScheduleWithError:) withObject:error];
         self.delegate = nil;
         self.retained_self = nil;

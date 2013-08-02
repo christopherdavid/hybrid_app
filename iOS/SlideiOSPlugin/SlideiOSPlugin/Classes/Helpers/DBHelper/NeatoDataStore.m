@@ -21,6 +21,7 @@
 #import "XMPPCallbackEntity.h"
 #import "ProfileDetailEntity.h"
 #import "ProfileDetail.h"
+#import "NeatoErrorCodes.h"
 
 #define ENTITY_COMMAND_TRACKER @"CommandTrackerEntity"
 #define NEATO_DATA_STORE_NAME @"NeatoDatastore.sqlite"
@@ -865,19 +866,19 @@ static NeatoDataStore *sharedInstance;
             else {
                 debugLog(@"robotEntity is not inserted.");
                 // Create NSError
-                return [AppHelper nserrorWithDescription:@"Schedule not inserted in database" code:ERROR_DB_ERROR];
+                return [AppHelper nserrorWithDescription:@"Schedule not inserted in database" code:UI_ERROR_DB_ERROR];
             }
         }
         else {
             debugLog(@"robot with robotId %@ does not exist.", serialNumber);
             // create NSError
-            return [AppHelper nserrorWithDescription:@"Robot does not exist" code:ERROR_DB_ERROR];
+            return [AppHelper nserrorWithDescription:@"Robot does not exist" code:UI_ERROR_DB_ERROR];
         }
     }
     else {
         debugLog(@"Managed object context is nil");
         // Create NSError
-        return [AppHelper nserrorWithDescription:@"Database did not start properly" code:ERROR_DB_ERROR];
+        return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
     }
 }
 
@@ -934,13 +935,13 @@ static NeatoDataStore *sharedInstance;
       return scheduleEntity.scheduleType;
     }
     else {
-      return [AppHelper nserrorWithDescription:@"Could not get scheduleEventType" code:ERROR_DB_ERROR];
+      return [AppHelper nserrorWithDescription:@"Could not get scheduleEventType" code:UI_ERROR_DB_ERROR];
     }
   }
   else {
     debugLog(@"Managed object context is nil");
     // Create NSError
-    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:ERROR_DB_ERROR];
+    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
   }
 }
 
@@ -955,11 +956,11 @@ static NeatoDataStore *sharedInstance;
       return [NSNumber numberWithBool:YES];
     }
     else {
-      return [AppHelper nserrorWithDescription:@"Could not get ScheduleEvent for this ScheduleId" code:ERROR_DB_ERROR];
+      return [AppHelper nserrorWithDescription:@"Could not get ScheduleEvent for this ScheduleId" code:UI_ERROR_DB_ERROR];
     }
   }
   else {
-    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:ERROR_DB_ERROR];
+    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
   }
 }
 
@@ -984,7 +985,7 @@ static NeatoDataStore *sharedInstance;
     return nil;
   }
   if([basicScheduleEventEntities count] == 0) {
-    return [AppHelper nserrorWithDescription:@"No BasicScheduleEventEntity with this id" code:ERROR_DB_ERROR];
+    return [AppHelper nserrorWithDescription:@"No BasicScheduleEventEntity with this id" code:UI_ERROR_DB_ERROR];
   }
   else {
     return [basicScheduleEventEntities lastObject];
@@ -1003,10 +1004,10 @@ static NeatoDataStore *sharedInstance;
       [self saveDatabase];
       return [NSNumber numberWithBool:YES];
     }
-    return [AppHelper nserrorWithDescription:@"Could not update schedule." code:ERROR_DB_ERROR];    
+    return [AppHelper nserrorWithDescription:@"Could not update schedule." code:UI_ERROR_DB_ERROR];    
   }
   else {
-   return [AppHelper nserrorWithDescription:@"Database did not start properly" code:ERROR_DB_ERROR];
+   return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
   }
 }
 
@@ -1023,9 +1024,9 @@ static NeatoDataStore *sharedInstance;
     }
   }
   else {
-    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:ERROR_DB_ERROR];
+    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
   }
-  return [AppHelper nserrorWithDescription:@"Error in Database" code:ERROR_DB_ERROR];
+  return [AppHelper nserrorWithDescription:@"Error in Database" code:UI_ERROR_DB_ERROR];
 }
 
 - (id)basicScheduleEventWithId:(NSString *)scheduleEventId {
@@ -1042,9 +1043,9 @@ static NeatoDataStore *sharedInstance;
     }
   }
   else {
-    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:ERROR_DB_ERROR];
+    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
   }
-  return [AppHelper nserrorWithDescription:@"Error in Database" code:ERROR_DB_ERROR];
+  return [AppHelper nserrorWithDescription:@"Error in Database" code:UI_ERROR_DB_ERROR];
 }
 
 - (id)basicScheduleForScheduleId:(NSString *)scheduleId {
@@ -1146,11 +1147,11 @@ static NeatoDataStore *sharedInstance;
             return [NSNumber numberWithBool:YES];
         }
         else {
-            return [AppHelper nserrorWithDescription:@"No Schedule with this ScheduleId." code:INVALID_SCHEDULE_ID];
+            return [AppHelper nserrorWithDescription:@"No Schedule with this ScheduleId." code:UI_INVALID_SCHEDULE_ID];
         }
     }
     else {
-        return [AppHelper nserrorWithDescription:@"Database could start properly." code:ERROR_DB_ERROR];
+        return [AppHelper nserrorWithDescription:@"Database could start properly." code:UI_ERROR_DB_ERROR];
     }
 }
 
@@ -1163,11 +1164,11 @@ static NeatoDataStore *sharedInstance;
             return [NSNumber numberWithBool:YES];
         }
         else {
-            return [AppHelper nserrorWithDescription:@"No Schedule with this ScheduleId." code:INVALID_SCHEDULE_ID];
+            return [AppHelper nserrorWithDescription:@"No Schedule with this ScheduleId." code:UI_INVALID_SCHEDULE_ID];
         }
     }
     else {
-        return [AppHelper nserrorWithDescription:@"Database could not start properly." code:ERROR_DB_ERROR];
+        return [AppHelper nserrorWithDescription:@"Database could not start properly." code:UI_ERROR_DB_ERROR];
     }
 }
 
@@ -1330,11 +1331,11 @@ static NeatoDataStore *sharedInstance;
             }
         } else {
             debugLog(@"Robot with Serial no. = %@ does not exist", cleaningArea.robotId);
-            return [AppHelper nserrorWithDescription:@"Robot does not exist" code:ERROR_DB_ERROR];
+            return [AppHelper nserrorWithDescription:@"Robot does not exist" code:UI_ERROR_DB_ERROR];
         }
     } else {
         debugLog(@"Managed object context is nil");
-        return [AppHelper nserrorWithDescription:@"Database could not start properly." code:ERROR_DB_ERROR];
+        return [AppHelper nserrorWithDescription:@"Database could not start properly." code:UI_ERROR_DB_ERROR];
     }
 }
 
@@ -1354,12 +1355,12 @@ static NeatoDataStore *sharedInstance;
         }
         else {
             debugLog(@"Couldn't fetch robotEntity with this serialNumber %@",robotId);
-            return [AppHelper nserrorWithDescription:@"Robot does not exist" code:ERROR_DB_ERROR];
+            return [AppHelper nserrorWithDescription:@"Robot does not exist" code:UI_ERROR_DB_ERROR];
         }
     }
     else {
         debugLog(@"Managed object context is nil");
-        return [AppHelper nserrorWithDescription:@"Database could not start properly." code:ERROR_DB_ERROR];
+        return [AppHelper nserrorWithDescription:@"Database could not start properly." code:UI_ERROR_DB_ERROR];
     }
 }
 
@@ -1453,11 +1454,11 @@ static NeatoDataStore *sharedInstance;
                 return [NSNumber numberWithBool:YES];
             }
             else {
-                return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:ERROR_DB_ERROR];
+                return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:UI_ERROR_DB_ERROR];
             }
         }
         else {
-            return [AppHelper nserrorWithDescription:@"Database could not start properly." code:ERROR_DB_ERROR];
+            return [AppHelper nserrorWithDescription:@"Database could not start properly." code:UI_ERROR_DB_ERROR];
         }
     }
 }
@@ -1500,11 +1501,11 @@ static NeatoDataStore *sharedInstance;
             return @"-1";
         }
         else {
-            return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:ERROR_DB_ERROR];
+            return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:UI_ERROR_DB_ERROR];
         }
     }
     else {
-      return [AppHelper nserrorWithDescription:@"Database could not start properly" code:ERROR_DB_ERROR];  
+      return [AppHelper nserrorWithDescription:@"Database could not start properly" code:UI_ERROR_DB_ERROR];  
     }
 }
 
@@ -1524,11 +1525,11 @@ static NeatoDataStore *sharedInstance;
             return nil;
         }
         else {
-            return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:ERROR_DB_ERROR];
+            return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:UI_ERROR_DB_ERROR];
         }  
     }
     else {
-        return [AppHelper nserrorWithDescription:@"Database could not start properly" code:ERROR_DB_ERROR];
+        return [AppHelper nserrorWithDescription:@"Database could not start properly" code:UI_ERROR_DB_ERROR];
     }
 }
 
@@ -1543,11 +1544,11 @@ static NeatoDataStore *sharedInstance;
                 [self saveDatabase];
                 [NSNumber numberWithBool:YES];
             }
-            return [AppHelper nserrorWithDescription:[NSString stringWithFormat:@"No profile detail with key : %@", profileDetail.key] code:ERROR_DB_ERROR];
+            return [AppHelper nserrorWithDescription:[NSString stringWithFormat:@"No profile detail with key : %@", profileDetail.key] code:UI_ERROR_DB_ERROR];
         }
-        return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:ERROR_DB_ERROR]; 
+        return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:UI_ERROR_DB_ERROR]; 
     }
-    return [AppHelper nserrorWithDescription:@"Database could not start properly" code:ERROR_DB_ERROR];
+    return [AppHelper nserrorWithDescription:@"Database could not start properly" code:UI_ERROR_DB_ERROR];
 }
 
 - (id)setDriveRequestForRobotWithId:(NSString *)robotId {
@@ -1558,7 +1559,7 @@ static NeatoDataStore *sharedInstance;
         return [NSNumber numberWithBool:YES];
     }
     else {
-       return [AppHelper nserrorWithDescription:@"Database could not start properly" code:ERROR_DB_ERROR];
+       return [AppHelper nserrorWithDescription:@"Database could not start properly" code:UI_ERROR_DB_ERROR];
     }
 }
 
@@ -1568,7 +1569,7 @@ static NeatoDataStore *sharedInstance;
         return robotEntity.driveRequestSent;
     }
     else {
-        return [AppHelper nserrorWithDescription:@"Database could not start properly" code:ERROR_DB_ERROR];
+        return [AppHelper nserrorWithDescription:@"Database could not start properly" code:UI_ERROR_DB_ERROR];
     }
 }
 
@@ -1580,7 +1581,7 @@ static NeatoDataStore *sharedInstance;
         return [NSNumber numberWithBool:YES];
     }
     else {
-        return [AppHelper nserrorWithDescription:@"Database could not start properly" code:ERROR_DB_ERROR];
+        return [AppHelper nserrorWithDescription:@"Database could not start properly" code:UI_ERROR_DB_ERROR];
     }
 }
 

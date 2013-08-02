@@ -6,6 +6,8 @@
 #import "NeatoRobotCommand.h"
 #import "NeatoUserAttributes.h"
 #import "NeatoUserHelper.h"
+#import "NeatoErrorCodes.h"
+#import "NeatoErrorCodesHelper.h"
 
 #define SERVER_REPONSE_HANDLER_KEY @"key_server_response_handler"
 #define RESEND_VALIDATION_EMAIL_HANDLER @"resendValidationEmailHandler:"
@@ -118,7 +120,7 @@
     id serverResponse = responseData;
     if ([AppHelper hasServerRequestFailedForResponse:[AppHelper parseJSON:responseData]]) {
         NSDictionary *errorDict = [[AppHelper parseJSON:serverResponse] objectForKey:KEY_NEATO_SERVER_ERROR];
-        serverResponse = [AppHelper nserrorWithDescription:[errorDict objectForKey:NEATO_RESPONSE_MESSAGE] code:[[errorDict objectForKey:KEY_NEATO_SERVER_ERROR_CODE] integerValue]];
+        serverResponse = [AppHelper nserrorWithDescription:[errorDict objectForKey:NEATO_RESPONSE_MESSAGE] code:[[NeatoErrorCodesHelper sharedErrorCodesHelper] uiErrorCodeForServerErrorCode:[[errorDict objectForKey:KEY_NEATO_SERVER_ERROR_CODE] integerValue]]];
     }
     NSString *selectorStr = [[connection originalRequest] valueForHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     NSInteger parameterCount = [[selectorStr mutableCopy] replaceOccurrencesOfString:@":" withString:@"," options:NSLiteralSearch range:NSMakeRange(0, [selectorStr length])];
@@ -142,10 +144,10 @@
     
     NSError *neatoError = nil;
     if (error.code == 401) {
-        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_TYPE_USER_UNAUTHORIZED];
+        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:UI_ERROR_TYPE_USER_UNAUTHORIZED];
     }
     else {
-        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
+        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:UI_ERROR_NETWORK_ERROR];
     }
     
     NSString *selectorStr = [[connection originalRequest] valueForHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -451,7 +453,7 @@
         // be -2 and we have to send back error message in extra params
         // to caller.
         if ([AppHelper isStringNilOrEmpty:authToken]) {
-            NSError *error = [AppHelper nserrorWithDescription:[[jsonData valueForKey:NEATO_RESPONSE_EXTRA_PARAMS] valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_TYPE_USER_UNAUTHORIZED];
+            NSError *error = [AppHelper nserrorWithDescription:[[jsonData valueForKey:NEATO_RESPONSE_EXTRA_PARAMS] valueForKey:NEATO_RESPONSE_MESSAGE] code:UI_ERROR_TYPE_USER_UNAUTHORIZED];
             [self notifyRequestFailed:@selector(failedToGetLoginHandle:) withError:error];
             return;
         }
@@ -1252,7 +1254,7 @@
 
 - (void)forgetPasswordHandler:(id)value {
     if (value == nil) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:UI_ERROR_TYPE_UNKNOWN];
         debugLog(@"Forget password failed!");
         [self notifyRequestFailed:@selector(failedToForgetPasswordWithError:) withError:error];
         return;
@@ -1278,7 +1280,7 @@
     }
     else {
         debugLog(@"Forget password unsuccessful");
-        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:UI_ERROR_TYPE_UNKNOWN];
         [self notifyRequestFailed:@selector(failedToForgetPasswordWithError:) withError:error];
     }
 }
@@ -1297,7 +1299,7 @@
 
 - (void)changePasswordHandler:(id)value {
     if (value == nil) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:UI_ERROR_TYPE_UNKNOWN];
         debugLog(@"Change password failed!");
         [self notifyRequestFailed:@selector(failedToChangePasswordWithError:) withError:error];
         return;
@@ -1323,7 +1325,7 @@
     }
     else {
         debugLog(@"Change password unsuccessful");
-        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:UI_ERROR_TYPE_UNKNOWN];
         [self notifyRequestFailed:@selector(failedToChangePasswordWithError:) withError:error];
     }
 }
@@ -1341,7 +1343,7 @@
 
 - (void)createUserHandler2:(id)value {
     if (value == nil) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:UI_ERROR_TYPE_UNKNOWN];
         debugLog(@"User creation2 failed!");
         [self notifyRequestFailed:@selector(failedToGetCreateUserHandle2Error:) withError:error];
         return;
@@ -1370,7 +1372,7 @@
     }
     else {
         debugLog(@"User creation2 unsuccessful");
-        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:UI_ERROR_CREATE_USER_FAILED_TRY_AGAIN];
         [self notifyRequestFailed:@selector(failedToGetCreateUserHandle2Error:) withError:error];
     }
 }
@@ -1437,7 +1439,7 @@
 
 - (void)setUserPushNotificationOptionHandler:(id)value {
     if (value == nil) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:UI_ERROR_TYPE_UNKNOWN];
         debugLog(@"Set push notification options failed!");
         [self notifyRequestFailed:@selector(failedToSetUserPushNotificationOptionsWithError:) withError:error];
         return;
@@ -1466,7 +1468,7 @@
     }
     else {
         debugLog(@"Set push notification options unsuccessful");
-        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:UI_ERROR_TYPE_UNKNOWN];
         [self notifyRequestFailed:@selector(failedToSetUserPushNotificationOptionsWithError:) withError:error];
     }
 }
@@ -1484,7 +1486,7 @@
 
 - (void)getUserPushNotificationOptionHandler:(id)value {
     if (value == nil) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:UI_ERROR_TYPE_UNKNOWN];
         debugLog(@"Get push notification options failed!");
         [self notifyRequestFailed:@selector(failedToGetUserPushNotificationSettingsWithError:) withError:error];
         return;
@@ -1500,7 +1502,7 @@
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
     if ([status intValue] == NEATO_STATUS_SUCCESS) {
-        debugLog(@"Set push notification options successful");
+        debugLog(@"Get push notification options successful");
         NSDictionary *data = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.delegate respondsToSelector:@selector(userNotificationSettingsData:)]) {
@@ -1511,15 +1513,15 @@
         });
     }
     else {
-        debugLog(@"Set push notification options unsuccessful");
-        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        debugLog(@"Get push notification options unsuccessful");
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:UI_ERROR_TYPE_UNKNOWN];
         [self notifyRequestFailed:@selector(failedToGetUserPushNotificationSettingsWithError:) withError:error];
     }
 }
 
 - (void)virtualOnlineStatusForRobotWithId:(NSString *)robotId {
     if (robotId == nil) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Robot Id cannot be nil!" code:INVALID_PARAMETER];
+        NSError *error = [AppHelper nserrorWithDescription:@"Robot Id cannot be nil!" code:UI_INVALID_PARAMETER];
         debugLog(@"Robot Id cannot be nil!");
         [self notifyRequestFailed:@selector(failedToGetRobotVirtualOnlineStatusWithError:) withError:error];
         return;
@@ -1539,7 +1541,7 @@
 -(void)getRobotVirtualOnlineStatusHandler:(id)value {
     debugLog(@"");
     if (value == nil) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:UI_ERROR_TYPE_UNKNOWN];
         debugLog(@"Failed to get robot online status!");
         [self notifyRequestFailed:@selector(failedToGetRobotVirtualOnlineStatusWithError:) withError:error];
         return;
@@ -1567,7 +1569,7 @@
         
     }
     else {
-        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:UI_ERROR_TYPE_UNKNOWN];
         [self notifyRequestFailed:@selector(failedToGetRobotVirtualOnlineStatusWithError:) withError:error];
     }
 }
@@ -1767,7 +1769,7 @@
 - (void)setUserAttributesHandler:(id)value {
     debugLog(@"");
     if (!value) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:UI_ERROR_TYPE_UNKNOWN];
         debugLog(@"set user attribute failed!");
         [self notifyRequestFailed:@selector(failedToSetUserAttributesWithError:) withError:error];
         return;
@@ -1793,7 +1795,7 @@
     }
     else {
         debugLog(@"set user attribute failed");
-        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:UI_ERROR_TYPE_UNKNOWN];
         [self notifyRequestFailed:@selector(failedToSetUserAttributesWithError:) withError:error];
     }
 }

@@ -67,28 +67,9 @@
 
 #define TAG_FIND_ROBOT_COMMAND 9001
 
-#define ERROR_TYPE_UNKNOWN -501
-#define ERROR_NETWORK_ERROR -502
-#define JSON_PARSING_ERROR -503
-#define INVALID_SCHEDULE_ID -504
-#define INVALID_EVENT_ID -505
-#define ERROR_DB_ERROR -506
-#define JSON_CREATION_ERROR -507
-#define INVALID_PARAMETER -508
-#define ERROR_TYPE_USER_UNAUTHORIZED -509
-#define ERROR_NOT_SUPPORTED -510
-#define ROBOT_NOT_CONNECTED -511
-#define ROBOT_ALREADY_CONNECTED -512
-#define ROBOT_UNABLE_TO_CANCEL_INTEND_TO_DRIVE -513
-#define ROBOT_NO_DRIVE_REQUEST_FOUND -514
-#define DIFFERENT_ROBOT_ALREADY_CONNECTED -515
-// TODO: Android doesn't have following error codes so remove them.
-#define INVALID_SCHEDULE_TYPE 1008
-#define ERROR_SERVER_ERROR 1003
-
-
 #define STRING_TRUE @"true"
 #define STRING_FALSE @"false"
+
 // Notification constants
 // Total notifications options:4 - global, robot stuck, needs clean and cleaning done.
 #define TOTAL_NOTIFICATION_OPTIONS 4

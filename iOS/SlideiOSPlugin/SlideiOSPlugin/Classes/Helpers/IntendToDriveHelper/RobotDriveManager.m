@@ -13,6 +13,8 @@
 #import "XMPPRobotDataChangeManager.h"
 #import "RobotCommandHelper.h"
 #import "ProfileDetail.h"
+#import "NeatoErrorCodes.h"
+#import "NeatoErrorCodesHelper.h"
 
 @interface RobotDriveManager()
 @property(nonatomic, strong) RobotDriveManager *retainedSelf;
@@ -136,7 +138,7 @@
         [commandHelper sendCommandOverTCPToRobotWithId:robotId commandId:[NSString stringWithFormat:@"%d", COMMAND_DRIVE_ROBOT] params:params delegate:self];
     }
     else {
-        NSError *error = [AppHelper nserrorWithDescription:@"Drive Robot action cannot complete as robot connection does not exist." code:ROBOT_NOT_CONNECTED];
+        NSError *error = [AppHelper nserrorWithDescription:@"Drive Robot action cannot complete as robot connection does not exist." code:UI_ROBOT_NOT_CONNECTED];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.delegate respondsToSelector:@selector(driveRobotFailedWithError:)]) {
                 [self.delegate performSelector:@selector(driveRobotFailedWithError:) withObject:error];
@@ -175,7 +177,7 @@
     TCPConnectionHelper *tcpConnectionHelper = [[TCPConnectionHelper alloc] init];
     if ([tcpConnectionHelper isRobotConnectedOverTCP:robotId]) {
         // Send error back.
-        NSError *error = [AppHelper nserrorWithDescription:@"Robot already connected cannot cancel intend to drive." code:ROBOT_ALREADY_CONNECTED];
+        NSError *error = [AppHelper nserrorWithDescription:@"Robot already connected cannot cancel intend to drive." code:UI_ROBOT_ALREADY_CONNECTED];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.delegate respondsToSelector:@selector(cancelIntendToDriveFailedWithError:)]) {
                 [self.delegate performSelector:@selector(cancelIntendToDriveFailedWithError:) withObject:error];
@@ -192,7 +194,7 @@
     }
     else {
         // Send error back.
-        NSError *error = [AppHelper nserrorWithDescription:@"No robot drive request found" code:ROBOT_NO_DRIVE_REQUEST_FOUND];
+        NSError *error = [AppHelper nserrorWithDescription:@"No robot drive request found" code:UI_ROBOT_NO_DRIVE_REQUEST_FOUND];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.delegate respondsToSelector:@selector(cancelIntendToDriveFailedWithError:)]) {
                 [self.delegate performSelector:@selector(cancelIntendToDriveFailedWithError:) withObject:error];
@@ -220,12 +222,9 @@
     });
 }
 
-// TODO: For now ignoring serve error and sending our error code and message.
-// Android team have created a map as to when we have to send server error code
-// and we have to send local error code.
 - (void)failedToDeleteProfileDetailKeyWithError:(NSError *)error {
     debugLog(@"Delete profile detail key failed.");
-    NSError *localError = [AppHelper nserrorWithDescription:@"Unable to cancel intend to drive" code:ROBOT_UNABLE_TO_CANCEL_INTEND_TO_DRIVE];
+    NSError *localError = [AppHelper nserrorWithDescription:@"Unable to cancel intend to drive" code:[[NeatoErrorCodesHelper sharedErrorCodesHelper] uiErrorCodeForServerErrorCode:error.code]];
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([self.delegate respondsToSelector:@selector(cancelIntendToDriveFailedWithError:)]) {
             [self.delegate performSelector:@selector(cancelIntendToDriveFailedWithError:) withObject:localError];
@@ -241,7 +240,7 @@
     TCPConnectionHelper *tcpConnectionHelper = [[TCPConnectionHelper alloc] init];
     if (![tcpConnectionHelper isRobotConnectedOverTCP:robotId]) {
         // Send error back.
-        NSError *error = [AppHelper nserrorWithDescription:@"Robot is not connected" code:ROBOT_NOT_CONNECTED];
+        NSError *error = [AppHelper nserrorWithDescription:@"Robot is not connected" code:UI_ROBOT_NOT_CONNECTED];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.delegate respondsToSelector:@selector(stopRobotDriveFailedWithError:)]) {
                 [self.delegate performSelector:@selector(stopRobotDriveFailedWithError:) withObject:error];

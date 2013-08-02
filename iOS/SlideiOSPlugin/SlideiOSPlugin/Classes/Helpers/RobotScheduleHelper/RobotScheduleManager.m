@@ -14,6 +14,7 @@
 #import "GetAdvancedScheduleListener.h"
 #import "DeleteAdvancedScheduleListener.h"
 #import "ScheduleJsonHelper.h"
+#import "NeatoErrorCodes.h"
 
 // PluginResult Classes
 #import "CreateSchedulePluginResult.h"
@@ -41,7 +42,7 @@
 - (id)createScheduleForRobotId:(NSString *)robotId forScheduleType:(NSString *)scheduleType {
     debugLog(@"");
     if([NEATO_SCHEDULE_ADVANCE isEqualToString:[ScheduleUtils scheduleTypeString:scheduleType]]) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:ERROR_NOT_SUPPORTED];
+        NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:UI_ERROR_NOT_SUPPORTED];
         return error;
     }
     NSString *scheduleId = [AppHelper generateUniqueString];
@@ -69,7 +70,7 @@
             return [self addBasicScheduleEventData:scheduleEventData forscheduleWithScheduleId:scheduleId];
         }
         else {
-            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:ERROR_NOT_SUPPORTED];
+            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:UI_ERROR_NOT_SUPPORTED];
             return error;
         }
     }
@@ -102,7 +103,7 @@
             return [self updateBasicScheduleEventWithScheduleEventId:scheduleEventId forScheduleId:scheduleId withScheduleEventdata:scheduleEventData];
         }
         else {
-            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:ERROR_NOT_SUPPORTED];
+            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:UI_ERROR_NOT_SUPPORTED];
             return error;
         }
     }
@@ -133,7 +134,7 @@
             return [self deleteBasicScheduleWithScheduleEventId:scheduleEventId forScheduleId:scheduleId];
         }
         else {
-            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:ERROR_NOT_SUPPORTED];
+            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:UI_ERROR_NOT_SUPPORTED];
             return error;
         }
     }
@@ -163,7 +164,7 @@
             return [self basicScheduleWithScheduleEventId:scheduleEventId withScheduleId:scheduleId];
         }
         else {
-            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:ERROR_NOT_SUPPORTED];
+            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:UI_ERROR_NOT_SUPPORTED];
             return error;
         }
     }
@@ -194,7 +195,7 @@
             return [self basicScheduleWithScheduleId:scheduleId];
         }
         else {
-            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:ERROR_NOT_SUPPORTED];
+            NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported" code:UI_ERROR_NOT_SUPPORTED];
             return error;
         }
     }
@@ -222,7 +223,7 @@
     debugLog(@"");
     NSString *scheduleTypeStr = [ScheduleUtils scheduleTypeString:scheduleType];
     if (!scheduleTypeStr) {
-        [self.scheduleDelegate failedToGetScheduleEventsWithError:[AppHelper nserrorWithDescription:@"Invalid schedule type." code:INVALID_SCHEDULE_TYPE]];
+        [self.scheduleDelegate failedToGetScheduleEventsWithError:[AppHelper nserrorWithDescription:@"Invalid schedule type." code:UI_ERROR_INVALID_SCHEDULE_TYPE]];
         return;
     }
     GetScheduleEventsListener *eventsListener = [[GetScheduleEventsListener alloc]initWithDelegate:self];
@@ -260,7 +261,7 @@
     id dbResult = [ScheduleDBHelper scheduleTypeForScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         debugLog(@"Error in database.");
-        NSError *error = [AppHelper nserrorWithDescription:@"Could not get schedule type from database." code:ERROR_DB_ERROR];
+        NSError *error = [AppHelper nserrorWithDescription:@"Could not get schedule type from database." code:UI_ERROR_DB_ERROR];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.scheduleDelegate respondsToSelector:@selector(updateScheduleError:)]) {
                 [self.scheduleDelegate performSelector:@selector(updateScheduleError:) withObject:error];
@@ -275,7 +276,7 @@
         [self updateBasicScheduleForScheduleId:scheduleId];
     }
     else {
-        NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported." code:ERROR_NOT_SUPPORTED];
+        NSError *error = [AppHelper nserrorWithDescription:@"Advance Schedule Type is not supported." code:UI_ERROR_NOT_SUPPORTED];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.scheduleDelegate respondsToSelector:@selector(updateScheduleError:)]) {
                 [self.scheduleDelegate performSelector:@selector(updateScheduleError:) withObject:error];

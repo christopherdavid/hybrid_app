@@ -15,6 +15,7 @@
 #import "NeatoRobotCommand.h"
 #import "ProfileDetail.h"
 #import "NeatoRobotHelper.h"
+#import "NeatoErrorCodes.h"
 
 
 @interface UpdateBasicScheduleListener()
@@ -47,7 +48,7 @@
 - (void)start {
     id dbResult = [ScheduleDBHelper basicScheduleForScheduleId:self.scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
-        [self updateScheduleError:[AppHelper nserrorWithDescription:@"No basic schedule for this scheduleId in database." code:INVALID_SCHEDULE_ID]];
+        [self updateScheduleError:[AppHelper nserrorWithDescription:@"No basic schedule for this scheduleId in database." code:UI_INVALID_SCHEDULE_ID]];
         return;
     }
     self.schedule = (Schedule *)dbResult;
@@ -100,7 +101,7 @@
 - (void)gotSchedulesData:(id)scheduleData forRobotId:(NSString *)robotId {
     debugLog(@"");
     if (![scheduleData isKindOfClass:[NSArray class]]) {
-        [self.delegate performSelector:@selector(failedToGetSchedulesForRobotId:withError:) withObject:robotId withObject:[AppHelper nserrorWithDescription:@"Failed to parse server response!" code:ERROR_SERVER_ERROR]];
+        [self.delegate performSelector:@selector(failedToGetSchedulesForRobotId:withError:) withObject:robotId withObject:[AppHelper nserrorWithDescription:@"Failed to parse server response!" code:UI_JSON_PARSING_ERROR]];
         self.delegate = nil;
         self.retained_self = nil;
         return;

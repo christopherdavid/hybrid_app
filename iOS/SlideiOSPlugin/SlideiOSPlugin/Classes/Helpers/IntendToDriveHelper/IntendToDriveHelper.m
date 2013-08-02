@@ -9,6 +9,7 @@
 #import "ProfileDetail.h"
 #import "LogHelper.h"
 #import "NeatoCommandExpiryHelper.h"
+#import "NeatoErrorCodes.h"
 
 // Default time is 2 minutes.
 #define DEFAULT_ROBOT_DRIVE_WIFI_ON_TIME 2 * 60 * 1000
@@ -56,11 +57,11 @@
     TCPConnectionHelper *tcpConnectionHelper = [[TCPConnectionHelper alloc] init];
     BOOL tcpConnected = [tcpConnectionHelper isConnected];
     if (tcpConnected) {
-        NSInteger errorCode = DIFFERENT_ROBOT_ALREADY_CONNECTED;
+        NSInteger errorCode = UI_DIFFERENT_ROBOT_ALREADY_CONNECTED;
         NSString *errorMessage = @"Different robot is currrently being driven.";
         // Check if this robot is connected on TCP.
         if ([tcpConnectionHelper isRobotConnectedOverTCP:robotId]) {
-            errorCode = ROBOT_ALREADY_CONNECTED;
+            errorCode = UI_ROBOT_ALREADY_CONNECTED;
             errorMessage = @"Robot already connected.";
         }
         return [AppHelper nserrorWithDescription:errorMessage code:errorCode];
