@@ -6,6 +6,8 @@
 #import "PostScheduleResult.h"
 #import "NeatoConstants.h"
 #import "AppSettings.h"
+#import "NeatoErrorCodes.h"
+#import "NeatoErrorCodesHelper.h"
 
 #define GET_SCHEDULE_DATA_POST_STRING @"api_key=%@&robot_schedule_id=%@"
 #define GET_SCHEDULE_DATA_RESPONSE_HANDLER @"gotScheduleResponseData:forScheduleId:"
@@ -53,7 +55,7 @@
     debugLog(@"");
     if (value == nil) {
         debugLog(@"Get schedules request failed!");
-        [self.delegate failedToGetSchedulesForRobotId:robotId withError:[AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN]];
+        [self.delegate failedToGetSchedulesForRobotId:robotId withError:[AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:UI_ERROR_TYPE_UNKNOWN]];
         return;
     }
     
@@ -75,7 +77,7 @@
         });
     }
     else {
-        [self.delegate failedToGetSchedulesForRobotId:robotId withError:[AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR]];
+        [self.delegate failedToGetSchedulesForRobotId:robotId withError:[AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:UI_ERROR_TYPE_UNKNOWN]];
     }
 }
 
@@ -85,7 +87,7 @@
     id serverResponse = responseData;
     if ([AppHelper hasServerRequestFailedForResponse:[AppHelper parseJSON:responseData]]) {
         NSDictionary *errorDict = [[AppHelper parseJSON:serverResponse] objectForKey:KEY_NEATO_SERVER_ERROR];
-        serverResponse = [AppHelper nserrorWithDescription:[errorDict objectForKey:NEATO_RESPONSE_MESSAGE] code:[[errorDict objectForKey:KEY_NEATO_SERVER_ERROR_CODE] integerValue]];
+        serverResponse = [AppHelper nserrorWithDescription:[errorDict objectForKey:NEATO_RESPONSE_MESSAGE] code:[[NeatoErrorCodesHelper sharedErrorCodesHelper] uiErrorCodeForServerErrorCode:[[errorDict objectForKey:KEY_NEATO_SERVER_ERROR_CODE] integerValue]]];
     }
     NSURLRequest *request = [connection originalRequest];
     NSString *selectorStr = [request valueForHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -111,10 +113,10 @@
   
     NSError *neatoError = nil;
     if (error.code == 401) {
-        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_TYPE_USER_UNAUTHORIZED];
+        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:UI_ERROR_TYPE_USER_UNAUTHORIZED];
     }
     else {
-        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:ERROR_NETWORK_ERROR];
+        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:UI_ERROR_NETWORK_ERROR];
     }
   
     NSURLRequest *request = [connection originalRequest];
@@ -239,7 +241,7 @@
 - (void)upadateRobotScheduleHandler:(id)value {
     debugLog(@"");
     if (value == nil) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:UI_ERROR_TYPE_UNKNOWN];
         [self notifyRequestFailed:@selector(updateScheduleError:) withError:error];
         return;
     }
@@ -262,7 +264,7 @@
         });
     }
     else {
-        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:UI_ERROR_TYPE_UNKNOWN];
         [self notifyRequestFailed:@selector(updateScheduleError:) withError:error];
     }
 }
@@ -339,7 +341,7 @@
 - (void)getScheduleBasedOnTypeResponseHandler:(id)value {
     debugLog(@"");
     if (value == nil) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:ERROR_TYPE_UNKNOWN];
+        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:UI_ERROR_TYPE_UNKNOWN];
         debugLog(@"Get schedule based on type failed!");
         [self notifyRequestFailed:@selector(failedToGetScheduleWithError:) withError:error];
         return;
@@ -363,7 +365,7 @@
         });
     }
     else {
-        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:ERROR_SERVER_ERROR];
+        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:UI_ERROR_TYPE_UNKNOWN];
         debugLog(@"error reason : %@",[error localizedDescription]);
         [self notifyRequestFailed:@selector(failedToGetScheduleWithError:) withError:error];
     }

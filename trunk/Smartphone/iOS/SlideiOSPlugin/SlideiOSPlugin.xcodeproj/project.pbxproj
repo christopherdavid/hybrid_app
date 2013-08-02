@@ -159,6 +159,7 @@
 		E1B60E0B16B0400300342422 /* NeatoServerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0616B0400300342422 /* NeatoServerHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
 		E1B60E0C16B0400300342422 /* RobotAssociationListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0816B0400300342422 /* RobotAssociationListener.m */; };
 		E1B6A6A616AEA49E0077DB08 /* CommandTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B6A6A516AEA49E0077DB08 /* CommandTracker.m */; };
+		E1C1BE5C17A8DA0A004B2365 /* NeatoErrorCodesHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1C1BE5B17A8DA0A004B2365 /* NeatoErrorCodesHelper.m */; };
 		E1D40FC61754832A00EBCD62 /* CleaningAreaEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D40FC51754832A00EBCD62 /* CleaningAreaEntity.m */; };
 		E1D40FCF17548F3900EBCD62 /* CleaningArea.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D40FCE17548F3900EBCD62 /* CleaningArea.m */; };
 		E1EC9CE6174F96FD0016FF47 /* RobotCommandManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E1EC9CE5174F96FD0016FF47 /* RobotCommandManager.m */; };
@@ -526,6 +527,9 @@
 		E1B60E0816B0400300342422 /* RobotAssociationListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotAssociationListener.m; sourceTree = "<group>"; };
 		E1B6A6A416AEA49E0077DB08 /* CommandTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandTracker.h; sourceTree = "<group>"; };
 		E1B6A6A516AEA49E0077DB08 /* CommandTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandTracker.m; sourceTree = "<group>"; };
+		E1C1BE5917A8DA0A004B2365 /* NeatoErrorCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoErrorCodes.h; sourceTree = "<group>"; };
+		E1C1BE5A17A8DA0A004B2365 /* NeatoErrorCodesHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoErrorCodesHelper.h; sourceTree = "<group>"; };
+		E1C1BE5B17A8DA0A004B2365 /* NeatoErrorCodesHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoErrorCodesHelper.m; sourceTree = "<group>"; };
 		E1D40FC41754832A00EBCD62 /* CleaningAreaEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CleaningAreaEntity.h; sourceTree = "<group>"; };
 		E1D40FC51754832A00EBCD62 /* CleaningAreaEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CleaningAreaEntity.m; sourceTree = "<group>"; };
 		E1D40FCD17548F3900EBCD62 /* CleaningArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CleaningArea.h; sourceTree = "<group>"; };
@@ -686,6 +690,7 @@
 		B22BDB10168D848800FFCB76 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				E1C1BE5817A8DA0A004B2365 /* NeatoErrorCodesHelper */,
 				E1A5007617A170EE00D80307 /* IntendToDriveHelper */,
 				E189F07C1771ABF3004BA38C /* XMPPRobotDataChangeHelper */,
 				E190E6D217561186002B7BE6 /* AppSettings */,
@@ -1366,6 +1371,16 @@
 			path = IntendToDriveHelper;
 			sourceTree = "<group>";
 		};
+		E1C1BE5817A8DA0A004B2365 /* NeatoErrorCodesHelper */ = {
+			isa = PBXGroup;
+			children = (
+				E1C1BE5917A8DA0A004B2365 /* NeatoErrorCodes.h */,
+				E1C1BE5A17A8DA0A004B2365 /* NeatoErrorCodesHelper.h */,
+				E1C1BE5B17A8DA0A004B2365 /* NeatoErrorCodesHelper.m */,
+			);
+			path = NeatoErrorCodesHelper;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1667,6 +1682,7 @@
 				E1A5007517A170CD00D80307 /* NeatoRobotEntity.m in Sources */,
 				E1A5007B17A170EE00D80307 /* IntendToDriveHelper.m in Sources */,
 				E1A5007C17A170EE00D80307 /* RobotDriveManager.m in Sources */,
+				E1C1BE5C17A8DA0A004B2365 /* NeatoErrorCodesHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -23,7 +23,7 @@
 #import "NeatoUserHelper.h"
 #import "CleaningArea.h"
 #import "NeatoRobotHelper.h"
-
+#import "NeatoErrorCodes.h"
 
 @implementation RobotManagerPlugin
 
@@ -194,7 +194,7 @@
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
+    [dictionary setValue:[NSNumber numberWithInteger:UI_ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
@@ -234,7 +234,7 @@
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInteger:ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
+    [dictionary setValue:[NSNumber numberWithInteger:UI_ERROR_TYPE_UNKNOWN] forKey:KEY_ERROR_CODE];
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
@@ -977,7 +977,7 @@
 
 - (void)setRobotName:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
-    NSError *error = [AppHelper nserrorWithDescription:@" API 'setRobotName' is deprecated, use 'setRobotName2' instead." code:ERROR_NOT_SUPPORTED];
+    NSError *error = [AppHelper nserrorWithDescription:@" API 'setRobotName' is deprecated, use 'setRobotName2' instead." code:UI_ERROR_NOT_SUPPORTED];
     [self sendError:error forCallbackId:command.callbackId];
 }
 

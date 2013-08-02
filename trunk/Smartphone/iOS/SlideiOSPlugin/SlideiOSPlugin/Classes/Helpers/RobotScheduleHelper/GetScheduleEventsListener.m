@@ -9,6 +9,7 @@
 #import "ScheduleDBHelper.h"
 #import "ScheduleUtils.h"
 #import "ScheduleJsonHelper.h"
+#import "NeatoErrorCodes.h"
 
 @interface GetScheduleEventsListener()
 @property(nonatomic, strong) GetScheduleEventsListener *retainedSelf;
@@ -34,7 +35,7 @@
 - (void)start {
     debugLog(@"scheduleType = %@", self.scheduleType);
     if ([self.scheduleType isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Advance schedule type is not supported" code:ERROR_NOT_SUPPORTED];
+        NSError *error = [AppHelper nserrorWithDescription:@"Advance schedule type is not supported" code:UI_ERROR_NOT_SUPPORTED];
         [self.delegate performSelector:@selector(failedToGetScheduleEventsWithError:) withObject:error];
         self.delegate = nil;
         self.retainedSelf = nil;
@@ -49,7 +50,7 @@
     debugLog(@"");
     if (![data isKindOfClass:[NSArray class]]) {
         if ([self.delegate respondsToSelector:@selector(failedToGetScheduleEventsWithError:)]) {
-            [self.delegate performSelector:@selector(failedToGetScheduleEventsWithError:) withObject:[AppHelper nserrorWithDescription:@"Failed to parse server response!" code:ERROR_SERVER_ERROR]];
+            [self.delegate performSelector:@selector(failedToGetScheduleEventsWithError:) withObject:[AppHelper nserrorWithDescription:@"Failed to parse server response!" code:UI_JSON_PARSING_ERROR]];
             self.delegate = nil;
             self.retainedSelf = nil;     
         }
