@@ -13,6 +13,8 @@
 #import "NeatoServerHelper.h"
 #import "NeatoUserHelper.h"
 #import "NeatoRobotCommand.h"
+#import "ProfileDetail.h"
+#import "NeatoRobotHelper.h"
 
 
 @interface UpdateBasicScheduleListener()
@@ -65,8 +67,7 @@
     // Save serverScheduleId and schedule version in DB.
     [ScheduleDBHelper updateServerScheduleId:result.serverScheduleId andScheduleVersion:result.scheduleVersion forScheduleWithScheduleId:self.scheduleId];
     [self.delegate performSelector:@selector(updatedSchedule:) withObject:self.scheduleId];
-    self.delegate = nil;
-    self.retained_self = nil;
+    [self notifyScheduleUpdated];
 }
 
 - (void)postScheduleError:(NSError *)error {
@@ -75,11 +76,11 @@
 
 - (void)updatedScheduleWithResult:(id)result {
     NSDictionary *resultDict = (NSDictionary *)result;
-    [self notifyScheduleUpdated];
     
     // Update schedule version in DB.
     [ScheduleDBHelper updateScheduleVersion:[resultDict stringForKey:KEY_SCHEDULE_VERSION] forScheduleWithScheduleId:self.scheduleId];
     [self.delegate performSelector:@selector(updatedSchedule:) withObject:self.scheduleId];
+     [self notifyScheduleUpdated];
 }
 
 - (void)updateScheduleError:(NSError *)error {
@@ -161,8 +162,13 @@
     [serverHelper notifyScheduleUpdatedForProfileDetails:robotCommand forUserWithEmail:[NeatoUserHelper getLoggedInUserEmail]];
 }
 
-- (void)notifyScheduleUpdatedSucceeded {
+- (void)notifyScheduleUpdatedSucceededWithResult:(NSDictionary *)result {
     debugLog(@"");
+    // Save timestamp returned from server in db.
+    ProfileDetail *profileDetail = [[ProfileDetail alloc] init];
+    profileDetail.key = KEY_ROBOT_SCHEDULE_UPDATED;
+    profileDetail.timestamp = [result objectForKey:KEY_TIMESTAMP];
+    [NeatoRobotHelper updateProfileDetail:profileDetail forRobotWithId:self.robotId];
     self.delegate = nil;
     self.retained_self = nil;
 }

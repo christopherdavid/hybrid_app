@@ -112,7 +112,7 @@
     debugLog(@"");
     id serverResponse = responseData;
     if ([AppHelper hasServerRequestFailedForResponse:[AppHelper parseJSON:responseData]]) {
-        NSDictionary *errorDict = [serverResponse objectForKey:KEY_NEATO_SERVER_ERROR];
+        NSDictionary *errorDict = [[AppHelper parseJSON:serverResponse] objectForKey:KEY_NEATO_SERVER_ERROR];
         serverResponse = [AppHelper nserrorWithDescription:[errorDict objectForKey:NEATO_RESPONSE_MESSAGE] code:[[errorDict objectForKey:KEY_NEATO_SERVER_ERROR_CODE] integerValue]];
     }
     NSString *selectorStr = [[connection originalRequest] valueForHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -795,13 +795,13 @@
     }
     NSDictionary *jsonData = [AppHelper parseJSON:value];
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    NSDictionary *extraParams = [jsonData valueForKey:NEATO_RESPONSE_EXTRA_PARAMS];
     debugLog(@"status = %d", [status intValue]);
     if ([status intValue] == NEATO_STATUS_SUCCESS) {
         // Notify caller on main thread
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:@selector(robotNameUpdated)])
-            {
-                [self.delegate performSelector:@selector(robotNameUpdated)];
+            if ([self.delegate respondsToSelector:@selector(robotNameUpdatedWithResult:)]) {
+                [self.delegate performSelector:@selector(robotNameUpdatedWithResult:) withObject:extraParams];
             }
             self.delegate = nil;
             self.retained_self = nil;
@@ -1396,12 +1396,12 @@
     
     NSDictionary *jsonData = [AppHelper parseJSON:value];
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    NSDictionary *extraParams = [jsonData valueForKey:NEATO_RESPONSE_EXTRA_PARAMS];
     debugLog(@"status = %d", [status intValue]);
     if ([status intValue] == NEATO_STATUS_SUCCESS) {
        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:@selector(enabledDisabledScheduleSuccess)])
-            {
-                [self.delegate performSelector:@selector(enabledDisabledScheduleSuccess)];
+            if ([self.delegate respondsToSelector:@selector(enabledDisabledScheduleSuccessWithResult:)]) {
+                [self.delegate performSelector:@selector(enabledDisabledScheduleSuccessWithResult:) withObject:extraParams];
             }
             self.delegate = nil;
             self.retained_self = nil;
@@ -1817,9 +1817,10 @@
     
     debugLog(@"status = %d", [status intValue]);
     if ([status intValue] == NEATO_STATUS_SUCCESS) {
+        NSDictionary *extraParams = [jsonData valueForKey:NEATO_RESPONSE_EXTRA_PARAMS];
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:@selector(notifyScheduleUpdatedSucceeded)]) {
-                [self.delegate performSelector:@selector(notifyScheduleUpdatedSucceeded)];
+            if ([self.delegate respondsToSelector:@selector(notifyScheduleUpdatedSucceededWithResult:)]) {
+                [self.delegate performSelector:@selector(notifyScheduleUpdatedSucceededWithResult:) withObject:extraParams];
             }
             self.delegate = nil;
             self.retained_self = nil;

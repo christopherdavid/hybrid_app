@@ -156,6 +156,9 @@
 #define KEY_SCHEDULE_STATE @"scheduleState"
 #define KEY_SCHEDULE_TYPE @"scheduleType"
 #define KEY_ROBOT_SCHEDULE_UPDATED @"schedule_updated"
+#define KEY_TURN_VACUUM_ONOFF @"vacuum_onoff"
+#define KEY_TURN_WIFI_ONOFF @"wifi_onoff"
+
 
 //Key Codes for profile data changes.
 #define ROBOT_CURRENT_STATE_CHANGED_CODE 4001

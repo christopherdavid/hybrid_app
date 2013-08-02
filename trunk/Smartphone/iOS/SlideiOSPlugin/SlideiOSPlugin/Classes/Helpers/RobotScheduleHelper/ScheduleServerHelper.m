@@ -84,7 +84,7 @@
     debugLog(@"");
     id serverResponse = responseData;
     if ([AppHelper hasServerRequestFailedForResponse:[AppHelper parseJSON:responseData]]) {
-        NSDictionary *errorDict = [serverResponse objectForKey:KEY_NEATO_SERVER_ERROR];
+        NSDictionary *errorDict = [[AppHelper parseJSON:serverResponse] objectForKey:KEY_NEATO_SERVER_ERROR];
         serverResponse = [AppHelper nserrorWithDescription:[errorDict objectForKey:NEATO_RESPONSE_MESSAGE] code:[[errorDict objectForKey:KEY_NEATO_SERVER_ERROR_CODE] integerValue]];
     }
     NSURLRequest *request = [connection originalRequest];

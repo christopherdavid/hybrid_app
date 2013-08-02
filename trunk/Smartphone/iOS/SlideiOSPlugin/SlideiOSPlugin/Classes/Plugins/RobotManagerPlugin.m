@@ -1053,10 +1053,10 @@
   // Send the data back to UI layer.
   NSString *robotId = [[robotProfileDetails valueForKey:KEY_SERIAL_NUMBER] valueForKey:KEY_VALUE];
   NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-  NSInteger *robotVirtualState = [XMPPRobotCleaningStateHelper robotVirtualStateFromRobotProfile:robotProfileDetails];
-  NSInteger *robotCurrentState = [XMPPRobotCleaningStateHelper robotCurrentStateFromRobotProfile:robotProfileDetails];
+  NSInteger robotActualState = [XMPPRobotCleaningStateHelper robotActualStateFromRobotProfile:robotProfileDetails];
+  NSInteger robotCurrentState = [XMPPRobotCleaningStateHelper robotCurrentStateFromRobotProfile:robotProfileDetails];
   [data setValue:[NSNumber numberWithInteger:robotCurrentState] forKey:KEY_ROBOT_CURRENT_STATE];
-  [data setValue:[NSNumber numberWithInteger:robotVirtualState] forKey:KEY_ROBOT_NEW_VIRTUAL_STATE];
+  [data setValue:[NSNumber numberWithInteger:robotActualState] forKey:KEY_ROBOT_NEW_VIRTUAL_STATE];
   [data setValue:robotId forKey:KEY_ROBOT_ID];
   CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
   [self writeJavascript:[result toSuccessCallbackString:callbackId]];
