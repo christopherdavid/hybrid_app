@@ -18,4 +18,7 @@
 
 - (BOOL)updateDataTimestampIfChangedForKey:(NSString *)key withProfile:(NSDictionary *)robotProfile;
 
+// Call this method to notify UI about any change in data for a robot.
+- (void)notifyDataChangeForRobotId:(NSString *)robotId withKeyCode:(NSNumber *)key andData:(NSDictionary *)data;
+
 @end

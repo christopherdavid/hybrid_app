@@ -6,12 +6,13 @@ static TCPSocket *sharedInstance = nil;
 @interface TCPSocket()
 
 @property(nonatomic, retain) GCDAsyncSocket *tcpScoket;
+@property(nonatomic, strong) NSString *connectedRobotId;
 
 -(void) initializeTCPSocket;
 @end
 
 @implementation TCPSocket
-@synthesize tcpScoket = _tcpScoket, delegate = _delegate;
+@synthesize tcpScoket = _tcpScoket, delegate = _delegate, connectedRobotId = _connectedRobotId;
 
 + (TCPSocket *)getSharedTCPSocket {
     @synchronized(self) {
@@ -41,7 +42,7 @@ static TCPSocket *sharedInstance = nil;
     [self.tcpScoket readDataWithTimeout:-1 tag:0];
 }
 
-- (BOOL)connectHost:(NSString *)host overPort:(int)port {
+- (BOOL)connectToRobotWithId:(NSString *)robotId host:(NSString *)host overPort:(int)port {
     debugLog(@"");
     if (self.tcpScoket && [self.tcpScoket isConnected]) {
         debugLog(@"Device is already connected over TCP!");
@@ -53,10 +54,12 @@ static TCPSocket *sharedInstance = nil;
         self.tcpScoket = nil;
         [self initializeTCPSocket];
     }
-    debugLog(@"Connecting to IP : %@, over Port : %d", host, port);
+    debugLog(@"Connecting to IP : %@, over Port : %d forRobotId: %@", host, port, robotId);
     NSError *error = nil;
     bool didConnect = [self.tcpScoket connectToHost:host onPort:port error:&error];
     if (didConnect && error == nil) {
+        // If TCP is successfully connected save robotId.
+         self.connectedRobotId = robotId;
         return YES;
     }
     return NO;
@@ -131,6 +134,15 @@ static TCPSocket *sharedInstance = nil;
     debugLog(@"");
     [self.delegate socketDidDisconnect:sock withError:err];
     sharedInstance = nil;
+}
+
+- (BOOL)isConnectedToRobotWithId:(NSString *)robotId {
+    if ([self isConnected]) {
+        if ([self.connectedRobotId caseInsensitiveCompare:robotId] == NSOrderedSame) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end

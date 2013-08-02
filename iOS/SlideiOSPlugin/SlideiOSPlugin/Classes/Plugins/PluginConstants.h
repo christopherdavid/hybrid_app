@@ -10,7 +10,6 @@
 #define KEY_ROBOT_ID @"robotId"
 #define KEY_USE_XMPP @"useXMPP"
 #define KEY_ROBOT_NAME @"robotName"
-#define KEY_ROBOT_IP_ADDRESS @"robot_ipaddress"
 #define KEY_ATLAS_GRID_ID @"gridId"
 #define KEY_ATLAS_METADATA @"atlasMetadata"
 #define KEY_ATLAS_VERSION @"atlasVersion"

@@ -53,4 +53,9 @@
 - (void)registerRobotNotifications2:(CDVInvokedUrlCommand *)command;
 - (void)unregisterRobotNotifications2:(CDVInvokedUrlCommand *)command;
 - (void)getRobotCleaningState:(CDVInvokedUrlCommand *)command;
+- (void)intendToDrive:(CDVInvokedUrlCommand *)command;
+- (void)driveRobot:(CDVInvokedUrlCommand *)command;
+- (void)cancelIntendToDrive:(CDVInvokedUrlCommand *)command;
+- (void)stopRobotDrive:(CDVInvokedUrlCommand *)command;
+- (void)isRobotPeerConnected:(CDVInvokedUrlCommand *)command;
 @end

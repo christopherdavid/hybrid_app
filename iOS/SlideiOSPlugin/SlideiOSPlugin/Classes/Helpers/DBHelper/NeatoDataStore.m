@@ -1550,4 +1550,38 @@ static NeatoDataStore *sharedInstance;
     return [AppHelper nserrorWithDescription:@"Database could not start properly" code:ERROR_DB_ERROR];
 }
 
+- (id)setDriveRequestForRobotWithId:(NSString *)robotId {
+    if (self.managedObjectContext) {
+        NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
+        robotEntity.driveRequestSent = [NSNumber numberWithBool:YES];
+        [self saveDatabase];
+        return [NSNumber numberWithBool:YES];
+    }
+    else {
+       return [AppHelper nserrorWithDescription:@"Database could not start properly" code:ERROR_DB_ERROR];
+    }
+}
+
+- (id)driveRequestForRobotWithId:(NSString *)robotId {
+    if (self.managedObjectContext) {
+        NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
+        return robotEntity.driveRequestSent;
+    }
+    else {
+        return [AppHelper nserrorWithDescription:@"Database could not start properly" code:ERROR_DB_ERROR];
+    }
+}
+
+- (id)removeDriveRequestForRobotWihId:(NSString *)robotId {
+    if (self.managedObjectContext) {
+        NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
+        robotEntity.driveRequestSent = [NSNumber numberWithBool:NO];
+        [self saveDatabase];
+        return [NSNumber numberWithBool:YES];
+    }
+    else {
+        return [AppHelper nserrorWithDescription:@"Database could not start properly" code:ERROR_DB_ERROR];
+    }
+}
+
 @end

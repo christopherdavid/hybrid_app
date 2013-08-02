@@ -23,6 +23,7 @@
     </entity>
     <entity name="NeatoRobotEntity" representedClassName="NeatoRobotEntity" syncable="YES">
         <attribute name="chatId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="driveRequestSent" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="ipAddress" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="port" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -80,7 +81,7 @@
         <element name="CleaningAreaEntity" positionX="160" positionY="192" width="128" height="90"/>
         <element name="CommandTrackerEntity" positionX="-999" positionY="-49" width="128" height="103"/>
         <element name="NeatoNotificationEntity" positionX="160" positionY="192" width="128" height="90"/>
-        <element name="NeatoRobotEntity" positionX="-1008" positionY="180" width="128" height="210"/>
+        <element name="NeatoRobotEntity" positionX="-1008" positionY="180" width="128" height="225"/>
         <element name="NeatoSocialNetworksEntity" positionX="-929" positionY="491" width="128" height="103"/>
         <element name="NeatoUserEntity" positionX="-1233" positionY="216" width="128" height="240"/>
         <element name="ProfileDetailEntity" positionX="160" positionY="192" width="128" height="90"/>

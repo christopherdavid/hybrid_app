@@ -67,21 +67,24 @@
 
 #define TAG_FIND_ROBOT_COMMAND 9001
 
-#define ERROR_TYPE_UNKNOWN 1001
-#define ERROR_NETWORK_ERROR 1002
-#define ERROR_SERVER_ERROR 1003
-#define JSON_PARSING_ERROR 1004
-#define INVALID_SCHEDULE_ID 1005
-#define INVALID_EVENT_ID 1006
-#define NO_SCHEDULE_FOR_ROBOT 1007
+#define ERROR_TYPE_UNKNOWN -501
+#define ERROR_NETWORK_ERROR -502
+#define JSON_PARSING_ERROR -503
+#define INVALID_SCHEDULE_ID -504
+#define INVALID_EVENT_ID -505
+#define ERROR_DB_ERROR -506
+#define JSON_CREATION_ERROR -507
+#define INVALID_PARAMETER -508
+#define ERROR_TYPE_USER_UNAUTHORIZED -509
+#define ERROR_NOT_SUPPORTED -510
+#define ROBOT_NOT_CONNECTED -511
+#define ROBOT_ALREADY_CONNECTED -512
+#define ROBOT_UNABLE_TO_CANCEL_INTEND_TO_DRIVE -513
+#define ROBOT_NO_DRIVE_REQUEST_FOUND -514
+#define DIFFERENT_ROBOT_ALREADY_CONNECTED -515
+// TODO: Android doesn't have following error codes so remove them.
 #define INVALID_SCHEDULE_TYPE 1008
-#define FILE_DOWNLOAD_ERROR 1009
-#define FILE_PARSE_ERROR 1010
-#define ERROR_DB_ERROR 1011
-#define JSON_CREATION_ERROR 1012
-#define INVALID_PARAMETER 1013
-#define ERROR_TYPE_USER_UNAUTHORIZED 1014
-#define ERROR_NOT_SUPPORTED 1015
+#define ERROR_SERVER_ERROR 1003
 
 
 #define STRING_TRUE @"true"
@@ -108,6 +111,7 @@
 #define COMMAND_RESUME_CLEANING             114
 #define COMMAND_VACUUM_ONOFF                116
 #define COMMAND_TURN_WIFI_ONOFF             117
+#define COMMAND_DRIVE_ROBOT                 115
 
 // Cleaning API params
 #define KEY_CLEANING_CATEGORY @"cleaningCategory"
@@ -156,6 +160,8 @@
 #define KEY_SCHEDULE_STATE @"scheduleState"
 #define KEY_SCHEDULE_TYPE @"scheduleType"
 #define KEY_ROBOT_SCHEDULE_UPDATED @"schedule_updated"
+#define KEY_INTEND_TO_DRIVE @"intend_to_drive"
+#define KEY_AVAILABLE_TO_DRIVE @"available_to_drive"
 #define KEY_TURN_VACUUM_ONOFF @"vacuum_onoff"
 #define KEY_TURN_WIFI_ONOFF @"wifi_onoff"
 
@@ -166,6 +172,9 @@
 #define ROBOT_NAME_UPDATE 4004
 #define ROBOT_SCHEDULE_STATE_CHANGED 4005
 #define ROBOT_HAS_SCHEDULE_UPDATED 4006
+#define ROBOT_IS_CONNECTED 4007
+#define ROBOT_IS_DISCONNECTED 4008
+#define ROBOT_ERROR_IN_CONNECTING 4009
 
 // Robot states
 #define ROBOT_STATE_CLEANING 10002
@@ -185,6 +194,19 @@
 
 #define KEY_CHAT_ID @"chatId"
 #define KEY_CAUSE_AGENT_ID @"causeAgentId"
+
+// Drive robot constants.
+#define KEY_DEVICE_ID @"device_id"
+#define KEY_ROBOT_WIFI_ON_TIME_IN_MS @"wifi_on_time_ms"
+#define KEY_NAVIGATION_CONTROL_ID @"navigationControlId"
+#define KEY_IS_CONNECTED @"isConnected"
+#define KEY_DRIVE_AVAILABLE_STATUS @"driveAvailableStatus"
+#define KEY_ROBOT_IP_ADDRESS @"robotIpAddress"
+#define KEY_ERROR_DRIVE_REASON_CODE @"errorDriveReasonCode"
+#define ERROR_DRIVE_RESPONSE_CODE @"errorDriveResponseCode"
+
+#define KEY_FORCED_DISCONNECTED @"forcedDisconnected"
+
 
 #define NETWORK_CONNECTION_FAILURE_MSG @"Request failed!Please check your network settings."
 // To switch to prod server, uncomment SWITCH_TO_PROD_SERVER variable
@@ -288,6 +310,7 @@
 #define NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL @"method=message.get_user_push_notification_options"
 #define NEATO_GET_ROBOT_VIRTUAL_ONLINE_STATUS_URL @"method=robot.is_robot_online_virtual"
 #define NEATO_SET_ROBOT_PROFILE_DETAILS_3 @"method=robot.set_profile_details3"
+#define NEATO_DELETE_ROBOT_PROFILE_KEY_2 @"method=robot.delete_robot_profile_key2"
 //Schedule URL Constants
 #define NEATO_GET_SCHEDULES_URL @"method=robotschedule.get_schedules"
 #define NEATO_GET_SCHEDULE_DATA_URL @"method=robotschedule.get_data"

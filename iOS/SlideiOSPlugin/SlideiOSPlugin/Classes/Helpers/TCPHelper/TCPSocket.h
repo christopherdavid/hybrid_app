@@ -8,10 +8,12 @@
 
 +(TCPSocket *) getSharedTCPSocket;
 
-- (BOOL)connectHost:(NSString *)host overPort:(int)port;
+- (BOOL)connectToRobotWithId:(NSString *)robotId host:(NSString *)host overPort:(int)port;
 - (void)beginReadingData;
 - (BOOL)isConnected;
 - (void)writeData:(NSData *)data withTag:(long)tag;
 - (void)disconnect;
+- (NSString *)connectedRobotId;
+- (BOOL)isConnectedToRobotWithId:(NSString *)robotId;
 
 @end

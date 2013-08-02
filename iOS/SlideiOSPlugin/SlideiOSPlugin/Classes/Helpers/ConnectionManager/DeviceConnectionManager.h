@@ -3,9 +3,8 @@
 
 @protocol DeviceConnectionManagerProtocol <NSObject>
 
-- (void)connectedOverTCP2:(NSString*)host;
-- (void)failedToConnectToTCP2WithError:(NSError *)error;
-
+- (void)connectedOverTCP2:(NSString*)host toRobotWithId:(NSString *)robotId;
+- (void)failedToConnectToTCP2WithError:(NSError *)error forRobot:(NeatoRobot *)robot forcedDisconnected:(BOOL)forcedDisconnected;
 @end
 
 @interface DeviceConnectionManager : NSObject

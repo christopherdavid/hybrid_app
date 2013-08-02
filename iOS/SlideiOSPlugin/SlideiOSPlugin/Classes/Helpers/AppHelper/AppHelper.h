@@ -27,6 +27,6 @@
 + (NSString *)deviceSystemVersion;
 + (NSString *)deviceModelName;
 + (BOOL)hasServerRequestFailedForResponse:(NSDictionary *)serverResponse;
-+ (NSString *) getApplicationId;
-+ (NSString *) getNotificationServerType;
++ (NSString *)getApplicationId;
++ (NSString *)getNotificationServerType;
 @end

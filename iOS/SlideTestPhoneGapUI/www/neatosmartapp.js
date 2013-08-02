@@ -12,17 +12,6 @@ var neatoSmartApp = (function() {
 	var EVENT_ID_UNREGISTER 	= EVENT_ID_BASE + 1;
 	var EVENT_ID_STATUS		 	= EVENT_ID_BASE + 2;
 	
-	// Robot state codes
-	var ROBOT_STATE_UNKNOWN 	= 10001;
-	var ROBOT_STATE_CLEANING 	= 10002;
-	var ROBOT_STATE_IDLE 		= 10003;
-	var ROBOT_STATE_CHARGING 	= 10004;
-	var ROBOT_STATE_STOPPED 	= 10005;
-	var ROBOT_STATE_STUCK 		= 10006;
-	var ROBOT_STATE_PAUSED 		= 10007;
-	var ROBOT_STATE_RESUMED		= 10008;
-	var ROBOT_STATE_ON_BASE		= 10009;
-	
 	var WELCOME_PAGE = 101;
 	var USER_LOGIN_PAGE = 102;
 	var REGISTER_USER_PAGE = 103;
@@ -49,6 +38,7 @@ var neatoSmartApp = (function() {
 	var MANAGE_ROBOT_WIFI_PAGE = 124;
 	var NOTIFICATION_SETTINGS_PAGE = 125;
     var ABOUT_PAGE = 126;
+    var TEST_DRIVE_PAGE = 127;
 	
 	// List of cleaning modes
 	var CLEANING_MODE_ECO_TEXT = "Eco";
@@ -499,7 +489,9 @@ var neatoSmartApp = (function() {
 		},
 		
 		sendToBaseSuccess: function(result) {
+			localStorage.setItem('robotStateUpdate', ROBOT_STATE_ON_BASE);
 			neatoSmartApp.hideProgressBar();
+			neatoSmartApp.toggleStartStop();
 			neatoSmartApp.setResponseText(result);
 		},
 		
@@ -2000,15 +1992,21 @@ var neatoSmartApp = (function() {
 			var data = result['robotData'];
 			var message = "";
 			
+			var currentRobotId = localStorage.getItem('robotId');
 			if (dataKeyCode == ROBOT_CURRENT_STATE_CHANGED) {
-				var state = data['robotCurrentState'];
-				localStorage.setItem('robotCurrentState', state);
+				
+				if (currentRobotId.toUpperCase() == robotId.toUpperCase()) {
+				    var state = data['robotCurrentState'];
+				    localStorage.setItem('robotCurrentState', state);
+				}
 				message = "Robot Current State Changed";
 			
 			}
 			if (dataKeyCode == ROBOT_STATE_UPDATE) {
-				var state = data['robotStateUpdate'];
-				localStorage.setItem('robotStateUpdate', state);
+				if (currentRobotId.toUpperCase() == robotId.toUpperCase()) {
+				   var state = data['robotStateUpdate'];
+				   localStorage.setItem('robotStateUpdate', state);
+				}
 				message = "Robot State Updated";
 			}
 			if (dataKeyCode == ROBOT_SCHEDULE_STATE_CHANGED) {
@@ -2020,8 +2018,18 @@ var neatoSmartApp = (function() {
 			if (dataKeyCode == ROBOT_SCHEDULE_UPDATED) {
 				message = "Robot Schedule Updated";
 			}
-      if (message != "") {
-        alert(message);
+			if (dataKeyCode == ROBOT_CONNECTED) {
+				message = "Robot peer connection established";
+			}
+			if (dataKeyCode == ROBOT_DISCONNECTED) {
+				message = "Robot peer dis-connected";
+			}
+			if (dataKeyCode == ROBOT_NOT_CONNECTED) {
+				message = "Robot not able to connect - response code: " + data['errorDriveResponseCode'];
+				
+			}
+      if (message != "" && robotId != "") {
+       alert(robotId + ": "+ message);
       }
 			
 			neatoSmartApp.toggleStartStop();
@@ -2058,6 +2066,60 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseTextAppend(error);
 		},
 		
+		intendToDrive: function() {
+			neatoSmartApp.setResponseText(null);
+			var robotId = localStorage.getItem('robotId');
+			
+			if ((robotId == null) || (robotId.length == 0)) {
+				alert("Please associate a Robot");
+				return;
+			}
+			
+			neatoSmartApp.showProgressBar();
+
+			// TODO: add appropriate success callbacks.
+			RobotPluginManager.intendToDrive(robotId, neatoSmartApp.driveRobotSuccess, 
+					neatoSmartApp.driveRobotError);	
+		},
+		
+		validatePeerConnection: function() {
+			neatoSmartApp.setResponseText(null);
+			var robotId = localStorage.getItem('robotId');
+			
+			if ((robotId == null) || (robotId.length == 0)) {
+				alert("Please associate a Robot");
+				return;
+			}
+			neatoSmartApp.showProgressBar();
+			RobotPluginManager.isRobotPeerConnected(robotId, neatoSmartApp.driveRobotSuccess, 
+					neatoSmartApp.driveRobotError);	
+		},
+		
+		stopRobotDrive: function() {
+			neatoSmartApp.setResponseText(null);
+			var robotId = localStorage.getItem('robotId');
+			
+			if ((robotId == null) || (robotId.length == 0)) {
+				alert("Please associate a Robot");
+				return;
+			}
+			neatoSmartApp.showProgressBar();
+			RobotPluginManager.stopRobotDrive(robotId, neatoSmartApp.driveRobotSuccess, 
+					neatoSmartApp.driveRobotError);	
+		},
+		
+		cancelIntendToDrive: function() {
+			neatoSmartApp.setResponseText(null);
+			var robotId = localStorage.getItem('robotId');
+			
+			if ((robotId == null) || (robotId.length == 0)) {
+				alert("Please associate a Robot");
+				return;
+			}
+			neatoSmartApp.showProgressBar();
+			RobotPluginManager.cancelIntendToDrive(robotId, neatoSmartApp.driveRobotSuccess, 
+					neatoSmartApp.driveRobotError);	
+		},
 		//##################FUNCTIONS RELATED TO HIDE-SHOW SECTIONS ON HTML#####################################
 		
 		showWelcomePage: function() {
@@ -2205,6 +2267,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnGoToDebug').addEventListener('click', neatoSmartApp.goToDebugOptionsPage , true);
 			document.querySelector('#btnGoToTestCleaningPage').addEventListener('click', neatoSmartApp.goToTestCleaningPage , true);
 			document.querySelector('#btnGoToSchedule').addEventListener('click', neatoSmartApp.goToNewSchedulePage , true);
+			document.querySelector('#btnGoToDrive').addEventListener('click', neatoSmartApp.hideHomeShowDrive, true);
 			document.querySelector('#btnGoToSettings').addEventListener('click', neatoSmartApp.goToSettingsPage , true);			
 			document.querySelector('#btnLogout').addEventListener('click', neatoSmartApp.logoutUser , true);
             document.querySelector('#aboutButton').addEventListener('click', neatoSmartApp.aboutButtonPressed, false);
@@ -2219,6 +2282,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnGoToDebug').removeEventListener('click', neatoSmartApp.goToDebugOptionsPage , true);
 			document.querySelector('#btnGoToTestCleaningPage').removeEventListener('click', neatoSmartApp.goToTestCleaningPage , true);
 			document.querySelector('#btnGoToSchedule').removeEventListener('click', neatoSmartApp.goToNewSchedulePage , true);
+			document.querySelector('#btnGoToDrive').removeEventListener('click', neatoSmartApp.hideHomeShowDrive, true);
 			document.querySelector('#btnGoToSettings').removeEventListener('click', neatoSmartApp.goToSettingsPage , true);
 			document.querySelector('#btnLogout').removeEventListener('click', neatoSmartApp.logoutUser , true);
             document.querySelector('#aboutButton').removeEventListener('click', neatoSmartApp.aboutButtonPressed, false);
@@ -2659,8 +2723,89 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(error);
 			neatoSmartApp.hideProgressBar();
 		},
-			
+		
+		// Drive Page
+		showDrivePage: function() {
+			neatoSmartApp.setResponseText(null);
 
+			document.querySelector('#btnDriveRobot').addEventListener('click', neatoSmartApp.driveRobot, true);
+			document.querySelector('#btnIntendToDrive').addEventListener('click', neatoSmartApp.intendToDrive, true);
+			document.querySelector('#btnIsPeerConnected').addEventListener('click', neatoSmartApp.validatePeerConnection, true);
+			document.querySelector('#btnStopRobotDrive').addEventListener('click', neatoSmartApp.stopRobotDrive, true);
+			document.querySelector('#btnCancelIntendToDrive').addEventListener('click', neatoSmartApp.cancelIntendToDrive, true);
+			neatoSmartApp.populateDriveControlList();
+	
+			// set the page as the current page and make it visible
+			CURRENT_PAGE = TEST_DRIVE_PAGE;
+			document.querySelector('#driveAPIs').setAttribute('aria-hidden', 'false');
+		},
+		
+		hideDrivePage: function() {
+			neatoSmartApp.setResponseText(null);
+			
+			// hide the page
+			document.querySelector('#driveAPIs').setAttribute('aria-hidden', 'true');
+			
+			document.querySelector('#btnDriveRobot').removeEventListener('click', neatoSmartApp.driveRobot, true);
+			document.querySelector('#btnIntendToDrive').removeEventListener('click', neatoSmartApp.intendToDrive, true);
+			document.querySelector('#btnIsPeerConnected').removeEventListener('click', neatoSmartApp.validatePeerConnection, true);
+			document.querySelector('#btnStopRobotDrive').removeEventListener('click', neatoSmartApp.stopRobotDrive, true);
+			document.querySelector('#btnCancelIntendToDrive').removeEventListener('click', neatoSmartApp.cancelIntendToDrive, true);
+		},
+		
+		populateDriveControlList: function () {
+			var navigationControlId = document.querySelector('#DriveControlList');
+			for (var i = 0; i < navigationControlId.options.length; i++) {
+				navigationControlId.options[i] = null;
+			}
+			navigationControlId.options[0] = new Option(NAVIGATION_CONTROL_1, '');
+			navigationControlId.options[1] = new Option(NAVIGATION_CONTROL_2, '');
+			navigationControlId.options[2] = new Option(NAVIGATION_CONTROL_3, '');
+			navigationControlId.options[3] = new Option(NAVIGATION_CONTROL_4, '');
+			navigationControlId.options[4] = new Option(NAVIGATION_CONTROL_5, '');
+			navigationControlId.options[5] = new Option(NAVIGATION_CONTROL_BACK, '');
+			navigationControlId.options[navigationControlId.selectedIndex].selected = true;
+		},
+		
+		driveRobot:function() {
+			neatoSmartApp.setResponseText(null);
+			
+			var robotId = localStorage.getItem('robotId');
+			
+			if ((robotId == null) || (robotId.length == 0)) {
+				alert("Please associate a Robot");
+				return;
+			}
+			
+			neatoSmartApp.showProgressBar();
+
+			var navigationControlList = document.querySelector('#DriveControlList');
+			var navigationControlId = navigationControlList.options[navigationControlList.selectedIndex].text;						
+			
+			RobotPluginManager.driveRobot(robotId, navigationControlId, neatoSmartApp.driveRobotSuccess, 
+					neatoSmartApp.driveRobotError);	
+		},
+		
+		driveRobotSuccess: function(result) {
+			neatoSmartApp.hideProgressBar();
+			neatoSmartApp.setResponseText(result);
+		},
+		
+		driveRobotError: function(error) {
+			neatoSmartApp.setResponseText(error);
+			neatoSmartApp.hideProgressBar();
+		},
+			
+		hideHomeShowDrive: function() {
+			neatoSmartApp.hideUserHomePage();
+			neatoSmartApp.showDrivePage();
+		},
+		
+		hideDriveShowHome: function() {
+			neatoSmartApp.hideDrivePage();
+			neatoSmartApp.showUserHomepage();			
+		},
+		
 		populateSpotAreaLists: function () {
 			// Fill the Area-Length list
 			var spotAreaLengthList = document.querySelector('#SpotAreaLengthList');
@@ -3142,7 +3287,10 @@ var neatoSmartApp = (function() {
 			}
 			else if (CURRENT_PAGE == NOTIFICATION_SETTINGS_PAGE) {
 		 		neatoSmartApp.hideNotificationSettingsPage();
-		 	} 						
+		 	}
+            else if (CURRENT_PAGE == TEST_DRIVE_PAGE) {
+                neatoSmartApp.hideDriveShowHome();
+            }
             else if (CURRENT_PAGE == ABOUT_PAGE) {
                 neatoSmartApp.hideAboutPageShowHomePage();
             }
@@ -3248,7 +3396,7 @@ var neatoSmartApp = (function() {
       // Picked up this from : http://docs.phonegap.com/en/2.1.0/cordova_notification_notification.md.html
       // All 'alert' calls will now be redirected to Cordova's implementation and not the
       // systems.
-      window.alert = navigator.notification.alert;
+       window.alert = navigator.notification.alert;
 		},
 
 		successUserValidation: function(result) {

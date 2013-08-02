@@ -484,65 +484,65 @@
 - (void)failedToDissociateRobotWithError:(NSError *)error {
     debugLog(@"");
     [self notifyRequestFailed:@selector(failedToDissociateRobotWithError:) withError:error];
-
+    
 }
 
 - (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken {
-  debugLog(@"registerPushNotification called");
-  self.retained_self = self;
-  
-  NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-  helper.delegate = self;
-  NSString *serverType = [AppHelper getNotificationServerType];
-  NSString *appId = [AppHelper getApplicationId];
-  [helper registerPushNotificationForEmail:email deviceType:deviceType deviceToken:deviceToken notificationServerType:serverType applicationId:appId];
+    debugLog(@"registerPushNotification called");
+    self.retained_self = self;
+    
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self;
+    NSString *serverType = [AppHelper getNotificationServerType];
+    NSString *appId = [AppHelper getApplicationId];
+    [helper registerPushNotificationForEmail:email deviceType:deviceType deviceToken:deviceToken notificationServerType:serverType applicationId:appId];
 }
 
 - (void)unregisterPushNotificationForDeviceToken:(NSString *)deviceToken {
-  debugLog(@"unregisterPushNotification called");
-  self.retained_self = self;
-  
-  NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-  helper.delegate = self;
-  [helper unregisterPushNotificationForDeviceToken:deviceToken];
+    debugLog(@"unregisterPushNotification called");
+    self.retained_self = self;
+    
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self;
+    [helper unregisterPushNotificationForDeviceToken:deviceToken];
 }
 
 
 - (void)pushNotificationRegistrationFailedWithError:(NSError *) error {
-  debugLog(@"pushNotificationRegistrationFailed called");
-  [self notifyRequestFailed:@selector(pushNotificationRegistrationFailedWithError:) withError:error];
-  self.delegate = nil;
-  self.retained_self = nil;
+    debugLog(@"pushNotificationRegistrationFailed called");
+    [self notifyRequestFailed:@selector(pushNotificationRegistrationFailedWithError:) withError:error];
+    self.delegate = nil;
+    self.retained_self = nil;
 }
 - (void)pushNotificationRegisteredForDeviceToken:(NSString *)deviceToken {
-  debugLog(@"pushNotificationRegisteredForDeviceToken called");
-  if ([self.delegate respondsToSelector:@selector(pushNotificationRegisteredForDeviceToken:)])
-  {
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [self.delegate performSelector:@selector(pushNotificationRegisteredForDeviceToken:) withObject:deviceToken];
-      self.delegate = nil;
-      self.retained_self = nil;
-    });
-  }
+    debugLog(@"pushNotificationRegisteredForDeviceToken called");
+    if ([self.delegate respondsToSelector:@selector(pushNotificationRegisteredForDeviceToken:)])
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate performSelector:@selector(pushNotificationRegisteredForDeviceToken:) withObject:deviceToken];
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
 }
 
 
 - (void)pushNotificationUnregistrationFailedWithError:(NSError *)error {
-  debugLog(@"pushNotificationUnregistrationFailedWithError called");
-  [self notifyRequestFailed:@selector(pushNotificationUnregistrationFailedWithError:) withError:error];
-  self.delegate = nil;
-  self.retained_self = nil;
+    debugLog(@"pushNotificationUnregistrationFailedWithError called");
+    [self notifyRequestFailed:@selector(pushNotificationUnregistrationFailedWithError:) withError:error];
+    self.delegate = nil;
+    self.retained_self = nil;
 }
 - (void)pushNotificationUnregistrationSuccess {
-  debugLog(@"pushNotificationUnregistrationSuccess called");
-  if ([self.delegate respondsToSelector:@selector(pushNotificationUnregistrationSuccess:)])
-  {
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [self.delegate performSelector:@selector(pushNotificationUnregistrationSuccess:)];
-      self.delegate = nil;
-      self.retained_self = nil;
-    });
-  }
+    debugLog(@"pushNotificationUnregistrationSuccess called");
+    if ([self.delegate respondsToSelector:@selector(pushNotificationUnregistrationSuccess:)])
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate performSelector:@selector(pushNotificationUnregistrationSuccess:)];
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
 }
 
 -(void)isUserValidatedForEmail:(NSString *)email {
@@ -799,7 +799,7 @@
 - (void)command:(NeatoRobotCommand *)command sentWithResult:(NSDictionary *)result {
     debugLog(@"");
     dispatch_async(dispatch_get_main_queue(), ^{
-       [self.delegate performSelector:@selector(command:sentWithResult:) withObject:command withObject:result];
+        [self.delegate performSelector:@selector(command:sentWithResult:) withObject:command withObject:result];
         self.delegate = nil;
         self.retained_self = nil;
     });
@@ -827,6 +827,28 @@
 - (void)failedToGetRobotProfileDetails2WithError:(NSError *)error {
     debugLog(@"");
     [self notifyRequestFailed:@selector(failedToGetRobotProfileDetails2WithError:) withError:error];
+}
+
+- (void)deleteProfileDetailKey:(NSString *)key forRobotWithId:(NSString *)robotId notfify:(BOOL)notify {
+    debugLog(@"");
+    self.retained_self = self;
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    serverHelper.delegate = self;
+    NSInteger notifyInteger = notify ? NOTIFICATION_FLAG_TRUE:NOTIFICATION_FLAG_FALSE;
+    [serverHelper deleteProfileDetailKey:key forRobotWithId:robotId notfify:notifyInteger];
+}
+
+- (void)deleteProfileDetailKeySuccededforRobotId:(NSString *)robotId {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(deleteProfileDetailKeySuccededforRobotId:)]) {
+        [self.delegate performSelector:@selector(deleteProfileDetailKeySuccededforRobotId:) withObject:robotId];
+        self.delegate = nil;
+        self.retained_self = nil;
+    }
+}
+
+- (void)failedToDeleteProfileDetailKeyWithError:(NSError *)error {
+    [self notifyRequestFailed:@selector(failedToDeleteProfileDetailKeyWithError:) withError:error];
 }
 
 @end

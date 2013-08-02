@@ -10,20 +10,23 @@
 @property(nonatomic, retain) TCPConnectionHelper *retained_self;
 @property(nonatomic, weak) id<TCPConnectionHelperProtocol> delegate;
 @property(nonatomic, retain) NeatoRobot *neatoRobot;
+// If caller initated disconnection of TCP then it is YES otherwise NO.
+@property(nonatomic) BOOL isForcedDisconnecting;
 
--(void) notifyCallback :(SEL) callbackAction withObject:(id) object;
 @end
 
 @implementation TCPConnectionHelper
 @synthesize retained_self = _retained_self;
 @synthesize delegate = _delegate;
 @synthesize neatoRobot = _neatoRobot;
+@synthesize isForcedDisconnecting = _isForcedDisconnecting;
 
 -(void) disconnectFromRobot:(NSString *) robotId delegate:(id) delegate
 {
     debugLog(@"");
     self.retained_self = self;
     self.delegate = delegate;
+    self.isForcedDisconnecting = YES;
     // 'robotId' is not being used right now. Smartphone can connect to only one
     // robot over TCP for now. We just disconnect from the one we are connected to.
     [TCPSocket getSharedTCPSocket].delegate = self;
@@ -50,8 +53,8 @@
     
     debugLog(@"Will try to associate the robot with the logged-in user.");
     /*[TCPSocket getSharedTCPSocket].delegate = self;
-    
-    [[TCPSocket getSharedTCPSocket] connectHost:robot.ipAddress overPort:TCP_ROBOT_SERVER_SOCKET_PORT];*/
+     
+     [[TCPSocket getSharedTCPSocket] connectHost:robot.ipAddress overPort:TCP_ROBOT_SERVER_SOCKET_PORT];*/
     
     NeatoServerManager *manager = [[NeatoServerManager alloc] init];
     manager.delegate = self;
@@ -62,13 +65,16 @@
 -(void) robotAssociationFailedWithError:(NSError *)error
 {
     debugLog(@"Robot association failed with user. Will not connect over TCP.");
-    if ([self.delegate respondsToSelector:@selector(tcpConnectionDisconnected:)])
+    if ([self.delegate respondsToSelector:@selector(tcpConnectionDisconnectedWithError:forRobot:forcedDisconnected:)])
     {
+        NeatoRobot *connectedRobot = [NeatoRobotHelper getRobotForId:[[TCPSocket getSharedTCPSocket] connectedRobotId]];
+        connectedRobot.robotId = [[TCPSocket getSharedTCPSocket] connectedRobotId];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(tcpConnectionDisconnected:) withObject:error];
-            self.delegate = nil;
-            self.retained_self = nil;
+            [self.delegate tcpConnectionDisconnectedWithError:error forRobot:connectedRobot forcedDisconnected:self.isForcedDisconnecting];
         });
+        self.retained_self = nil;
+        self.delegate = nil;
+        self.isForcedDisconnecting = NO;
     }
 }
 
@@ -77,7 +83,7 @@
     debugLog(@"");
     debugLog(@"Robot associated with the user. Will try to connect over TCP");
     [TCPSocket getSharedTCPSocket].delegate = self;
-    [[TCPSocket getSharedTCPSocket] connectHost:self.neatoRobot.ipAddress overPort:TCP_ROBOT_SERVER_SOCKET_PORT];
+    [[TCPSocket getSharedTCPSocket] connectToRobotWithId:robotId host:self.neatoRobot.ipAddress overPort:TCP_ROBOT_SERVER_SOCKET_PORT];
 }
 
 -(BOOL) sendCommandToRobot:(NSData *)command withTag:(long)tag delegate:(id<TCPConnectionHelperProtocol>) delegate
@@ -116,10 +122,15 @@
  * Called when a socket connects and is ready for reading and writing.
  * The host parameter will be an IP address, not a DNS name.
  **/
-- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port
-{
+- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     debugLog(@"");
-    [self notifyCallback:@selector(connectedOverTCP:) withObject:host];
+    @synchronized(self) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(connectedOverTCP:toRobotWithId:)]) {
+                [self.delegate performSelector:@selector(connectedOverTCP:toRobotWithId:) withObject:host withObject:[[TCPSocket getSharedTCPSocket] connectedRobotId]];
+            }
+        });
+    }
 }
 
 /**
@@ -129,7 +140,13 @@
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
     debugLog(@"");
-    [self notifyCallback:@selector(receivedDataOverTCP:) withObject:data];
+    @synchronized(self) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(receivedDataOverTCP:toRobotWithId:)]) {
+                [self.delegate performSelector:@selector(receivedDataOverTCP:) withObject:data];
+            }
+        });
+    }
 }
 
 /**
@@ -138,7 +155,13 @@
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag
 {
     debugLog(@"");
-    [self notifyCallback:@selector(commandSentOverTCP) withObject:[NSNumber numberWithLong:tag]];
+    @synchronized(self) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(commandSentOverTCP)]) {
+                [self.delegate performSelector:@selector(commandSentOverTCP)];
+            }
+        });
+    }
 }
 
 /**
@@ -162,21 +185,16 @@
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
     debugLog(@"");
-    [self notifyCallback:@selector(tcpConnectionDisconnected:) withObject:err];
-}
-
--(void) notifyCallback :(SEL) callbackAction withObject:(id) object
-{
-    debugLog(@"");
-    @synchronized(self)
-    {
+    @synchronized(self) {
+        NeatoRobot *connectedRobot = [NeatoRobotHelper getRobotForId:[[TCPSocket getSharedTCPSocket] connectedRobotId]];
+        connectedRobot.robotId = [[TCPSocket getSharedTCPSocket] connectedRobotId];
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:callbackAction])
-            {
-                [self.delegate performSelector:callbackAction withObject:object];
+            if ([self.delegate respondsToSelector:@selector(tcpConnectionDisconnectedWithError:forRobot:forcedDisconnected:)]) {
+                [self.delegate tcpConnectionDisconnectedWithError:err forRobot:connectedRobot forcedDisconnected:self.isForcedDisconnecting];
             }
             self.delegate = nil;
             self.retained_self = nil;
+            self.isForcedDisconnecting = NO;
         });
     }
 }
@@ -193,30 +211,31 @@
     
     debugLog(@"connecting to TCP...");
     [TCPSocket getSharedTCPSocket].delegate = self;
-    [[TCPSocket getSharedTCPSocket] connectHost:self.neatoRobot.ipAddress overPort:TCP_ROBOT_SERVER_SOCKET_PORT2];
+    [[TCPSocket getSharedTCPSocket] connectToRobotWithId:robot.robotId host:robot.ipAddress overPort:TCP_ROBOT_SERVER_SOCKET_PORT2];
 }
 
 - (void)sendCommandToRobot2:(NSData *)command withTag:(long)tag requestId:(NSString *)requestId delegate:(id)delegate {
     debugLog(@"");
     self.retained_self = self;
     self.delegate = delegate;
-    if([[TCPSocket getSharedTCPSocket] isConnected])
-    {
+    if([[TCPSocket getSharedTCPSocket] isConnected]) {
         [TCPSocket getSharedTCPSocket].delegate = self;
         [[TCPSocket getSharedTCPSocket] writeData:command withTag:tag];
     }
-    else
-    {
+    else {
         debugLog(@"Device isn't connected to the Robot.");
-        if ([self.delegate respondsToSelector:@selector(failedToSendCommandOverTCPWithError:)])
-        {
+        if ([self.delegate respondsToSelector:@selector(failedToSendCommandOverTCPWithError:)]) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.delegate performSelector:@selector(failedToSendCommandOverTCPWithError:) withObject:[AppHelper nserrorWithDescription:@"Device not connected over TCP" code:200]];
                 self.delegate = nil;
                 self.retained_self = nil;
             });
         }
-        self.retained_self = nil;
     }
 }
+
+- (BOOL)isRobotConnectedOverTCP:(NSString *)robotId {
+    return [[TCPSocket getSharedTCPSocket] isConnectedToRobotWithId:robotId];
+}
+
 @end

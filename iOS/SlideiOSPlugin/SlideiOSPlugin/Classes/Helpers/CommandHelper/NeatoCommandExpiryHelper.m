@@ -68,12 +68,13 @@ static NeatoCommandExpiryHelper *sharedInstance = nil;
 - (void)commandTimerExpiredForRobot:(NSTimer *)commandTimer {
     @synchronized (self) {
         [self.runningCommandExpiryTimers removeObjectForKey:commandTimer.userInfo];
-        [self clearCleaningCommandForRobotWithId:commandTimer.userInfo];
+        [self resetStateForRobotWithId:commandTimer.userInfo];
     }
 }
 
-// Resets state for the robot at the server
-- (void)clearCleaningCommandForRobotWithId:(NSString *)robotId {
+// Resets state for the robot at the server.
+// Clears cleaning and intend to drive commands at server.
+- (void)resetStateForRobotWithId:(NSString *)robotId {
     debugLog(@"");
     NeatoRobotCommand *robotCommand = [[NeatoRobotCommand alloc] init];
     robotCommand.xmlCommand = @"";
@@ -81,6 +82,7 @@ static NeatoCommandExpiryHelper *sharedInstance = nil;
     robotCommand.robotId = robotId;
     robotCommand.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
     [robotCommand.profileDict setValue:robotCommand.xmlCommand forKey:KEY_ROBOT_CLEANING_COMMAND];
+    [robotCommand.profileDict setValue:@"" forKey:KEY_INTEND_TO_DRIVE];
     NeatoServerManager *manager = [[NeatoServerManager alloc] init];
     manager.delegate = self;
     [manager sendCommand:robotCommand];
