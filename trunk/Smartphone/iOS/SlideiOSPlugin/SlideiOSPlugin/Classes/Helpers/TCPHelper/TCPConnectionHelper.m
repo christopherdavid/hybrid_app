@@ -5,9 +5,10 @@
 #import "NeatoUserHelper.h"
 #import "NeatoRobotHelper.h"
 
+static TCPConnectionHelper *sharedInstance = nil;
+
 @interface TCPConnectionHelper()
 
-@property(nonatomic, retain) TCPConnectionHelper *retained_self;
 @property(nonatomic, weak) id<TCPConnectionHelperProtocol> delegate;
 @property(nonatomic, retain) NeatoRobot *neatoRobot;
 // If caller initated disconnection of TCP then it is YES otherwise NO.
@@ -16,15 +17,21 @@
 @end
 
 @implementation TCPConnectionHelper
-@synthesize retained_self = _retained_self;
 @synthesize delegate = _delegate;
 @synthesize neatoRobot = _neatoRobot;
 @synthesize isForcedDisconnecting = _isForcedDisconnecting;
 
++ (id)sharedTCPConnectionHelper {
+    static dispatch_once_t pred = 0;
+    dispatch_once(&pred, ^{
+        sharedInstance = [[TCPConnectionHelper alloc] init];
+    });
+    return sharedInstance;
+}
+
 -(void) disconnectFromRobot:(NSString *) robotId delegate:(id) delegate
 {
     debugLog(@"");
-    self.retained_self = self;
     self.delegate = delegate;
     self.isForcedDisconnecting = YES;
     // 'robotId' is not being used right now. Smartphone can connect to only one
@@ -48,7 +55,6 @@
         return;
     }
     self.delegate = delegate;
-    self.retained_self = self;
     self.neatoRobot = robot;
     
     debugLog(@"Will try to associate the robot with the logged-in user.");
@@ -72,7 +78,6 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.delegate tcpConnectionDisconnectedWithError:error forRobot:connectedRobot forcedDisconnected:self.isForcedDisconnecting];
         });
-        self.retained_self = nil;
         self.delegate = nil;
         self.isForcedDisconnecting = NO;
     }
@@ -89,7 +94,6 @@
 -(BOOL) sendCommandToRobot:(NSData *)command withTag:(long)tag delegate:(id<TCPConnectionHelperProtocol>) delegate
 {
     debugLog(@"");
-    self.retained_self = self;
     self.delegate = delegate;
     if([[TCPSocket getSharedTCPSocket] isConnected])
     {
@@ -112,7 +116,6 @@
     else
     {
         debugLog(@"Device isn't connected to the Robot.");
-        self.retained_self = nil;
         return NO;
     }
 }
@@ -189,11 +192,15 @@
         NeatoRobot *connectedRobot = [NeatoRobotHelper getRobotForId:[[TCPSocket getSharedTCPSocket] connectedRobotId]];
         connectedRobot.robotId = [[TCPSocket getSharedTCPSocket] connectedRobotId];
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:@selector(tcpConnectionDisconnectedWithError:forRobot:forcedDisconnected:)]) {
-                [self.delegate tcpConnectionDisconnectedWithError:err forRobot:connectedRobot forcedDisconnected:self.isForcedDisconnecting];
+            debugLog(@"Post robot disconnection notification.");
+            NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+            [userInfo setObject:connectedRobot.robotId forKey:KEY_ROBOT_ID];
+            if (err) {
+                [userInfo setObject:err forKey:KEY_DISCONNECTION_ERROR];
             }
+            [userInfo setObject:[NSNumber numberWithBool:self.isForcedDisconnecting] forKey:KEY_TCP_FORCED_DISCONNECTED];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_TCP_DISCONNECTION object:nil userInfo:userInfo];
             self.delegate = nil;
-            self.retained_self = nil;
             self.isForcedDisconnecting = NO;
         });
     }
@@ -206,7 +213,6 @@
         return;
     }
     self.delegate = delegate;
-    self.retained_self = self;
     self.neatoRobot = robot;
     
     debugLog(@"connecting to TCP...");
@@ -216,7 +222,6 @@
 
 - (void)sendCommandToRobot2:(NSData *)command withTag:(long)tag requestId:(NSString *)requestId delegate:(id)delegate {
     debugLog(@"");
-    self.retained_self = self;
     self.delegate = delegate;
     if([[TCPSocket getSharedTCPSocket] isConnected]) {
         [TCPSocket getSharedTCPSocket].delegate = self;
@@ -228,7 +233,6 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.delegate performSelector:@selector(failedToSendCommandOverTCPWithError:) withObject:[AppHelper nserrorWithDescription:@"Device not connected over TCP" code:200]];
                 self.delegate = nil;
-                self.retained_self = nil;
             });
         }
     }

@@ -122,6 +122,12 @@
 #define KEY_CALLBACK_ID @"callBackId"
 #define SUCCESS_CALLBACK @"successCallback"
 
+// Robot TCP disconnection constants
+#define NOTIFICATION_TCP_DISCONNECTION @"com.neato.plugin.tcp.disconnection"
+#define KEY_DISCONNECTION_ERROR @"error"
+#define KEY_TCP_FORCED_DISCONNECTED @"isForcedDisconnected"
+
+
 // TODO:5001 is used at other places as well so confirm if it won't create a
 // conflict.
 #define COMMAND_ROBOT_PROFILE_DATA_CHANGED 5001

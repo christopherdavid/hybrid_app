@@ -178,8 +178,8 @@ static XMPPConnection *sharedInstance;
     debugLog(@"Sender : %@", sender);
     debugLog(@"didReceiveMessage called. message = %@", [message stringValue]);
     [self.delegate xmppStream:sender didReceiveMessage:message];
-    // Post notfication if received message is robot data changed.
-    [self postNotificationIfRobotDataChangedWithMessage:message];
+    // Notify if we have recevied 'data changed' from remote.
+    [self performSelectorOnMainThread:@selector(postNotificationIfRobotDataChangedWithMessage:) withObject:message waitUntilDone:NO];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence

@@ -16,6 +16,8 @@
 
 @interface TCPConnectionHelper : NSObject <GCDAsyncSocketDelegate>
 
++ (id)sharedTCPConnectionHelper;
+
 - (void)connectToRobotOverTCP:(NeatoRobot *)robot delegate:(id<TCPConnectionHelperProtocol>)delegate;
 - (BOOL)sendCommandToRobot:(NSData *)command withTag:(long)tag delegate:(id<TCPConnectionHelperProtocol>)delegate;
 - (void)disconnectFromRobot:(NSString *)robotId delegate:(id)delegate;

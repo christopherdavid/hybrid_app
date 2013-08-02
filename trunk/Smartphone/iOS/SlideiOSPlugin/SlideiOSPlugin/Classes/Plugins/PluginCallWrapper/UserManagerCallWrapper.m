@@ -217,7 +217,7 @@
         UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
         [callWrapper unregisterPushNotificationForDeviceToken:deviceToken];
     }
-    TCPConnectionHelper *tcpHelper = [[TCPConnectionHelper alloc] init];
+    TCPConnectionHelper *tcpHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
     [tcpHelper disconnectFromRobot:@"" delegate:self];
     XMPPConnectionHelper *xmppHelper = [[XMPPConnectionHelper alloc] init];
     xmppHelper.delegate = self;

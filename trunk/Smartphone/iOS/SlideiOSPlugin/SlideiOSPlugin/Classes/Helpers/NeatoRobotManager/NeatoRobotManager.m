@@ -14,7 +14,7 @@
 // The device can send commands to any number of robots over XMPP
 +(void) sendStartCleaningTo:(NSString *) roboId delegate:(id) delegate
 {
-    TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
+    TCPConnectionHelper *helper = [TCPConnectionHelper sharedTCPConnectionHelper];
     // TODO: check if connected devices robot ID is same as to which the
     // user wnats to send TCP command
     // If it is not, then we should send the command over XMPP
@@ -59,7 +59,7 @@
 // The device can send commands to any number of robots over XMPP
 +(void) sendStopCleaningTo:(NSString *) roboId delegate:(id) delegate
 {
-    TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
+    TCPConnectionHelper *helper = [TCPConnectionHelper sharedTCPConnectionHelper];
     // TODO: check if connected devices robot ID is same as to which the
     // user wnats to send TCP command
     // If it is not, then we should send the command over XMPP

@@ -32,6 +32,18 @@
 
 @synthesize delegate = _delegate, retainedSelf = _retainedSelf;
 
+- (id)init {
+    if (self = [super init]) {
+        // Listen for TCP disconnection notification.
+        // Remove if already observing.
+        // Every object will listen for notification.
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notifyTCPDisconnected:) name:NOTIFICATION_TCP_DISCONNECTION object:nil];
+    }
+    return self;
+}
+
+
 - (void)robotWithRobotId:(NSString *)robotId isReadyToDriveWithIP:(NSString *)robotIp {
     debugLog(@"");
     self.retainedSelf = self;
@@ -74,7 +86,7 @@
         NeatoRobot *robot = [[NeatoRobot alloc] init];
         robot.robotId = robotId;
         robot.ipAddress = ipAddress;
-        TCPConnectionHelper *tcpHelper = [[TCPConnectionHelper alloc] init];
+        TCPConnectionHelper *tcpHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
         [tcpHelper connectToRobotOverTCP2:robot delegate:self];
     }
     else {
@@ -131,7 +143,7 @@
     self.retainedSelf = self;
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     [params setObject:navigationControlId forKey:KEY_NAVIGATION_CONTROL_ID];
-    TCPConnectionHelper *tcpConnectionHelper = [[TCPConnectionHelper alloc] init];
+    TCPConnectionHelper *tcpConnectionHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
     if ([tcpConnectionHelper isRobotConnectedOverTCP:robotId]) {
         debugLog(@"Sending drive robot over TCP to robotId: %@ navigationControlId : %@.", robotId, navigationControlId);
         RobotCommandHelper *commandHelper = [[RobotCommandHelper alloc] init];
@@ -174,7 +186,7 @@
 - (void)cancelIntendToDriveForRobotId:(NSString *)robotId {
     // If the user is already connected to the robot via direct connection, return with a error that cannot cancel drive robot.
     self.retainedSelf = self;
-    TCPConnectionHelper *tcpConnectionHelper = [[TCPConnectionHelper alloc] init];
+    TCPConnectionHelper *tcpConnectionHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
     if ([tcpConnectionHelper isRobotConnectedOverTCP:robotId]) {
         // Send error back.
         NSError *error = [AppHelper nserrorWithDescription:@"Robot already connected cannot cancel intend to drive." code:UI_ROBOT_ALREADY_CONNECTED];
@@ -237,7 +249,7 @@
 - (void)stopDriveRobotForRobotId:(NSString *)robotId {
     debugLog(@"");
     self.retainedSelf = self;
-    TCPConnectionHelper *tcpConnectionHelper = [[TCPConnectionHelper alloc] init];
+    TCPConnectionHelper *tcpConnectionHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
     if (![tcpConnectionHelper isRobotConnectedOverTCP:robotId]) {
         // Send error back.
         NSError *error = [AppHelper nserrorWithDescription:@"Robot is not connected" code:UI_ROBOT_NOT_CONNECTED];
@@ -257,7 +269,7 @@
 - (id)isConnectedOverTCPWithRobotId:(NSString *)robotId {
     debugLog(@"");
     BOOL isPeerConnected = NO;
-    TCPConnectionHelper *tcpHelper = [[TCPConnectionHelper alloc] init];
+    TCPConnectionHelper *tcpHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
     if (robotId.length == 0) {
         isPeerConnected = [tcpHelper isConnected];
     }
@@ -268,6 +280,17 @@
     [data setObject:robotId forKey:KEY_ROBOT_ID];
     [data setObject:[NSNumber numberWithBool:isPeerConnected] forKey:KEY_IS_CONNECTED];
     return data;
+}
+
+- (void)notifyTCPDisconnected:(NSNotification *)notification {
+    debugLog(@"Tcp disconnected by notification received: %@", notification.userInfo);
+    NeatoRobot *robot = [NeatoRobotHelper getRobotForId:[notification.userInfo objectForKey:KEY_ROBOT_ID]];
+    robot.robotId = [notification.userInfo objectForKey:KEY_ROBOT_ID];
+    [self tcpConnectionDisconnectedWithError:[notification.userInfo objectForKey:KEY_DISCONNECTION_ERROR] forRobot:robot forcedDisconnected:[[notification.userInfo objectForKey:KEY_TCP_FORCED_DISCONNECTED] boolValue]];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

@@ -11,7 +11,7 @@
 -(void) startCleaning:(id<TCPConnectionHelperProtocol>) delegate
 {
     debugLog(@"");
-    TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
+    TCPConnectionHelper *helper = [TCPConnectionHelper sharedTCPConnectionHelper];
     [helper sendCommandToRobot:[[[TCPCommandHelper alloc] init] getStartRobotCommand] withTag:START_ROBOT_COMMAND_TAG delegate:delegate];
 }
 
@@ -19,7 +19,7 @@
 -(void) stopCleaning:(id<TCPConnectionHelperProtocol>) delegate
 {
     debugLog(@"");
-    TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
+    TCPConnectionHelper *helper = [TCPConnectionHelper sharedTCPConnectionHelper];
     [helper sendCommandToRobot:[[[TCPCommandHelper alloc] init] getStopRobotCommand] withTag:STOP_ROBOT_COMMAND_TAG delegate:delegate];
 }
 @end

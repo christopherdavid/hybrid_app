@@ -30,9 +30,9 @@ static NeatoCommandExpiryHelper *sharedInstance = nil;
 - (void)startCommandTimerForRobotId:(NSString *)robotId {
     debugLog(@"");
     @synchronized (self) {
-        if(![self isTimerRunningForRobotId:robotId]) {
-            NSTimer *commandExpiryTimer = [NSTimer scheduledTimerWithTimeInterval:COMMAND_EXPIRY_TIME target:self selector:@selector(commandTimerExpiredForRobot:) userInfo:robotId repeats:NO];
-            [self.runningCommandExpiryTimers setValue:commandExpiryTimer forKey:robotId];
+        if(![self isTimerRunningForRobotId:[robotId lowercaseString]]) {
+            NSTimer *commandExpiryTimer = [NSTimer scheduledTimerWithTimeInterval:COMMAND_EXPIRY_TIME target:self selector:@selector(commandTimerExpiredForRobot:) userInfo:[robotId lowercaseString] repeats:NO];
+            [self.runningCommandExpiryTimers setValue:commandExpiryTimer forKey:[robotId lowercaseString]];
         }
         else {
             debugLog(@"Command timer already running for robot with id = %@", robotId);
@@ -43,10 +43,10 @@ static NeatoCommandExpiryHelper *sharedInstance = nil;
 - (void)stopCommandTimerForRobotId:(NSString *)robotId {
     debugLog(@"");
     @synchronized (self) {
-        if ([self isTimerRunningForRobotId:robotId]) {
-            NSTimer *commandExpiryTimer = [self.runningCommandExpiryTimers valueForKey:robotId];
+        if ([self isTimerRunningForRobotId:[robotId lowercaseString]]) {
+            NSTimer *commandExpiryTimer = [self.runningCommandExpiryTimers valueForKey:[robotId lowercaseString]];
             [commandExpiryTimer invalidate];
-            [self.runningCommandExpiryTimers removeObjectForKey:robotId];
+            [self.runningCommandExpiryTimers removeObjectForKey:[robotId lowercaseString]];
         }
         else {
             debugLog(@"No running timer for robot with Id = %@", robotId);
@@ -56,7 +56,7 @@ static NeatoCommandExpiryHelper *sharedInstance = nil;
 
 - (BOOL)isTimerRunningForRobotId:(NSString *)robotId {
     debugLog(@"");
-    NSTimer *commandExpiryTimer = [self.runningCommandExpiryTimers valueForKey:robotId];
+    NSTimer *commandExpiryTimer = [self.runningCommandExpiryTimers valueForKey:[robotId lowercaseString]];
     if (commandExpiryTimer) {
         return [commandExpiryTimer isValid];
     }

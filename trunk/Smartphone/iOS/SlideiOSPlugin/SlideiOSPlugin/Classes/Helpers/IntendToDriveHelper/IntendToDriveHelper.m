@@ -54,7 +54,7 @@
 // robot is allowed otherwise not.
 - (id)isDriveRobotAllowedForRobotId:(NSString *)robotId {
     // Check frst if TCP is connected.
-    TCPConnectionHelper *tcpConnectionHelper = [[TCPConnectionHelper alloc] init];
+    TCPConnectionHelper *tcpConnectionHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
     BOOL tcpConnected = [tcpConnectionHelper isConnected];
     if (tcpConnected) {
         NSInteger errorCode = UI_DIFFERENT_ROBOT_ALREADY_CONNECTED;
