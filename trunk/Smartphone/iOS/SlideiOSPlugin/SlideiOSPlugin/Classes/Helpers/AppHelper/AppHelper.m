@@ -4,6 +4,13 @@
 #import "Build.h"
 #import <UIKit/UIDevice.h>
 
+// We need to identify the UID app and RSL test application
+// because we need to tell server which certificate to use for the push notification
+
+#define APPLICATION_TEST_APP_BUNDLE_ID   @"com.neato.plugin.testui"
+#define APPLICATION_ID_MAIN_APP          @"1"
+#define APPLICATION_ID_TEST_APP          @"2"
+
 @implementation AppHelper
 
 + (NSDictionary *)parseJSON:(NSData *)jsonData {
@@ -222,6 +229,21 @@
     NSNumber *status = [NSNumber numberWithInt:[[serverResponse valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     NSDictionary *serverError = [serverResponse objectForKey:KEY_NEATO_SERVER_ERROR];
     return (([status intValue] == NEATO_STATUS_ERROR) && serverError);
+}
+
++ (NSString *) getApplicationId {
+  NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+  debugLog(@"Bundle identifier = [%@]", bundleIdentifier);
+  if ([bundleIdentifier isEqualToString:APPLICATION_TEST_APP_BUNDLE_ID]) {
+    return APPLICATION_ID_TEST_APP;
+  }
+  
+  return APPLICATION_ID_MAIN_APP;
+}
+
++ (NSString *) getNotificationServerType {
+   debugLog(@"NOTIFICATION_SERVER_TYPE = [%@]", NOTIFICATION_SERVER_TYPE);
+  return NOTIFICATION_SERVER_TYPE;
 }
 
 @end

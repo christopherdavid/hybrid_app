@@ -25,6 +25,9 @@
 #define PUSH_NOTIFICATION_REGISTRATION_REPOSNE_HANDLER @"pushNotificationRegistrationHandler:connection:"
 #define PUSH_NOTIFICATION_UNREGISTRATION_REPOSNE_HANDLER @"pushNotificationUnregistrationHandler:"
 #define PUSH_NOTIFICATION_DEVICE_TOKEN  @"deviceTokenForPush"
+#define PUSH_NOTIFICATION_SERVER_TYPE   @"notification_server_type"
+#define PUSH_NOTIFICATION_APPLICATION_ID   @"application_id"
+
 #define IS_USER_VALIDATED_HANDLER @"isUserValidatedHandler:"
 #define FORGET_PASSWORD_HANDLER @"forgetPasswordHandler:"
 #define CHANGE_PASSWORD_HANDLER @"changePasswordHandler:"
@@ -1003,7 +1006,7 @@
     }
 }
 
-- (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken {
+- (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken  notificationServerType:(NSString *)serverType applicationId:(NSString *)applicationId {
     debugLog(@"registerPushNotification called. Email = %@, deviceToken = %@", email, deviceToken);
     self.retained_self = self;
     
@@ -1012,6 +1015,8 @@
     [request setHTTPBody:[[NSString stringWithFormat:PUSH_NOTIFICATION_REGISTRATION_POST_STRING, NEATO_API_KEY,
                            email, (long)deviceType, deviceToken] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:deviceToken forHTTPHeaderField:PUSH_NOTIFICATION_DEVICE_TOKEN];
+    [request setValue:serverType forHTTPHeaderField:PUSH_NOTIFICATION_SERVER_TYPE];
+    [request setValue:applicationId forHTTPHeaderField:PUSH_NOTIFICATION_APPLICATION_ID];
     [request setValue:PUSH_NOTIFICATION_REGISTRATION_REPOSNE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     
     NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
