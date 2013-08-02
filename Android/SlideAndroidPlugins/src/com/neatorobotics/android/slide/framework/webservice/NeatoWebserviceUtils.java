@@ -164,4 +164,8 @@ public class NeatoWebserviceUtils {
 		} 
 		return result;
 	}
+	
+	public static ObjectMapper getObjectMapper() {
+		return resultMapper;
+	}
 }

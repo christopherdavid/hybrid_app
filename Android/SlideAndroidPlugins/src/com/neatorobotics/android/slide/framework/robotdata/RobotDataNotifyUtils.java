@@ -67,6 +67,7 @@ public class RobotDataNotifyUtils {
 				break;
 			case INTEND_TO_DRIVE:
 				// Notify if intend to drive is set for the robot
+				// TODO: What if the request is empty. Would it notify?
 				if (changedStatus == RobotProfileValueChangedStatus.ROBOT_VALUE_CHANGED) {
 					String intendToDrive = RobotProfileDataUtils.getRobotDriveRequest(context, details);
 					RobotDriveHelper.getInstance(context).robotDriveRequestInitiated(robotId, intendToDrive);

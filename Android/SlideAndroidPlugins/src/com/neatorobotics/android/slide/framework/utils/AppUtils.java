@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import org.json.JSONException;
@@ -27,6 +29,9 @@ import android.util.Base64;
 public class AppUtils {
 	
 	private static final String TAG = AppUtils.class.getSimpleName();
+	
+	private static final long TIME_ONE_HOUR = (60 * 60 * 1000);
+
 	
 	// Public static helper function to return the Version number of the application.
 	// This returns the version number as specified in AndroidManifest.xml
@@ -178,4 +183,24 @@ public class AppUtils {
 		NeatoPrefs.clearNeatoUserDeviceId(context);
 	}
 	
+	public static String getCurrentLocale(Context context) {
+        Locale currentLocale = context.getResources().getConfiguration().locale;
+        String currentLocaleStr = currentLocale.toString();
+        
+        if (TextUtils.isEmpty(currentLocaleStr)) {
+        	Locale defaultLocale = Locale.US;
+        	currentLocaleStr = defaultLocale.toString();
+        }
+        return currentLocaleStr;
+    }
+	
+	public static String getAppPackage(Context context) {
+		return context.getPackageName();
+	}
+
+	public static String getTimezoneHoursOffset() {
+		double timezoneSecondOffet = (double) TimeZone.getDefault().getRawOffset();
+		double timezoneHourOffset = (timezoneSecondOffet/TIME_ONE_HOUR);
+		return String.valueOf(timezoneHourOffset);
+	}
 }
