@@ -202,11 +202,14 @@
     // Switch for robot's Atlas API
     #define ROBOT_ATLAS_SERVER_PROD  1
 
+    #define NOTIFICATION_SERVER_TYPE  @"PROD"
+
 #else
     #define NEATO_API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917" 
     // Logging would be 'ON' only in DEV mode.
     #define LOGGING_ENABLED             1
     #define ENABLE_DB_CREATION_IN_DOCUMENTS_DIR 1
+    #define NOTIFICATION_SERVER_TYPE  @"DEV"
 
     // For internal testing we are going to use Dev server
     // Uncomment flag SWITCH_TO_DEV_SERVER to enable DEV server.

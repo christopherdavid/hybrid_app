@@ -92,7 +92,7 @@
 - (void)onlineStatusForRobotWithId:(NSString *)robotId;
 - (void)dissociateAllRobotsForUserWithEmail:(NSString *)email;
 - (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)email;
-- (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken;
+- (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken notificationServerType:(NSString *)serverType applicationId:(NSString *)applicationId;
 - (void)unregisterPushNotificationForDeviceToken:(NSString *)deviceToken;
 - (void)isUserValidatedForEmail:(NSString *)email;
 - (void)resendValidationEmail:(NSString *)email;

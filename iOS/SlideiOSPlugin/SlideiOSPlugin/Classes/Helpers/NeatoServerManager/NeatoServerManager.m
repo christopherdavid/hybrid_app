@@ -493,7 +493,9 @@
   
   NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
   helper.delegate = self;
-  [helper registerPushNotificationForEmail:email deviceType:deviceType deviceToken:deviceToken];
+  NSString *serverType = [AppHelper getNotificationServerType];
+  NSString *appId = [AppHelper getApplicationId];
+  [helper registerPushNotificationForEmail:email deviceType:deviceType deviceToken:deviceToken notificationServerType:serverType applicationId:appId];
 }
 
 - (void)unregisterPushNotificationForDeviceToken:(NSString *)deviceToken {
