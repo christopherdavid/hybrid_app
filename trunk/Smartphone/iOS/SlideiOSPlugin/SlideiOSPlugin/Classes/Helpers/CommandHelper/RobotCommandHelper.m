@@ -23,17 +23,18 @@
 #define TURN_VACUUM_ONOFF_COMMAND_TAG           1016
 #define RESUME_ROBOT_COMMAND_TAG                1007
 #define TURN_WIFI_ONOFF_COMMAND_TAG             1008
+#define TURN_ROBOT_DRIVE_COMMAND_TAG            1009
 
 @interface RobotCommandHelper()
 
 @property(nonatomic, weak) id delegate;
 @property(nonatomic, retain) RobotCommandHelper *retainedSelf;
 
-- (void)sendCommandWithId:(int)commandId toRobot2:(NSString *)robotId withCommandTag:(long)commandTag withParams:(NSDictionary *)params delegate:(id)delegate;
+- (void)sendCommandWithId:(int)commandId toRobot2:(NSString *)robotId withCommandTag:(long)commandTag withParams:(NSDictionary *)params delegate:(id)delegate overTCP:(BOOL)overTCP;
 - (NSMutableData *)tcpCommandHeaderForCommand:(NSData *)command;
 - (NSData *)formattedTCPCommandFromCommand:(NSData *)command;
 - (BOOL)isTimedModeSupportedForCommand:(NSString *)commandId;
-- (void)sendCommandOverTCPXMPPToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate;
+- (void)sendCommandOverTCPXMPPToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate overTCP:(BOOL)overTCP;
 - (void)sendCommandOverServerToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate;
 - (BOOL)isExpirableCommand:(NSInteger)commandId;
 - (NSString *)profileKeyForCommandId:(NSInteger)commandId;
@@ -101,7 +102,7 @@
                 
     }
     else {
-        [self sendCommandOverTCPXMPPToRobot:robotId commandId:commandId params:params delegate:delegate];
+        [self sendCommandOverXMPPToRobotWithId:robotId commandId:commandId params:params delegate:delegate];
     }
 }
 
@@ -135,13 +136,15 @@
     return finalCommand;
 }
 
-- (void)sendCommandWithId:(int)commandId toRobot2:(NSString *)robotId withCommandTag:(long)commandTag withParams:(NSDictionary *)params delegate:(id)delegate {
+- (void)sendCommandWithId:(int)commandId toRobot2:(NSString *)robotId withCommandTag:(long)commandTag withParams:(NSDictionary *)params delegate:(id)delegate overTCP:(BOOL)overTCP {
     debugLog(@"");
-    TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
     NSString *requestId = [AppHelper generateUniqueString];
-    if ([helper isConnected]) {
-        NSData *command = [[[TCPCommandHelper alloc] init] getRobotCommand2WithId:commandId withParams:params andRequestId:requestId];
-        [helper sendCommandToRobot2:[self formattedTCPCommandFromCommand:command] withTag:commandTag requestId:requestId delegate:self];
+    if (overTCP) {
+        TCPConnectionHelper *helper = [[TCPConnectionHelper alloc] init];
+        if ([helper isConnected]) {
+            NSData *command = [[[TCPCommandHelper alloc] init] getRobotCommand2WithId:commandId withParams:params andRequestId:requestId];
+            [helper sendCommandToRobot2:[self formattedTCPCommandFromCommand:command] withTag:commandTag requestId:requestId delegate:self];
+        }     
     }
     else {
         NeatoRobot *robot = [NeatoRobotHelper getRobotForId:robotId];
@@ -254,20 +257,20 @@
     [manager sendCommand:robotCommand];
 }
 
-- (void)sendCommandOverTCPXMPPToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate {
+- (void)sendCommandOverTCPXMPPToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate overTCP:(BOOL)overTCP {
     switch ([commandId intValue]) {
         case COMMAND_START_ROBOT: {
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:START_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:START_ROBOT_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
             break;
         }
         case COMMAND_STOP_ROBOT:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:STOP_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:STOP_ROBOT_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
             break;
         case COMMAND_PAUSE_CLEANING:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:PAUSE_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:PAUSE_ROBOT_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
             break;
         case COMMAND_SET_ROBOT_TIME:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:SET_TIME_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:SET_TIME_ROBOT_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
             break;
         case COMMAND_ENABLE_DISABLE_SCHEDULE: {
             NSMutableDictionary *updatedParams = [params mutableCopy];
@@ -280,20 +283,23 @@
                     [updatedParams setObject:@"false" forKey:@"enableSchedule"];
                 }
             }
-            [self sendCommandWithId:[commandId intValue]toRobot2:robotId withCommandTag:ENABLE_DISABLE_SCHEDULE_COMMAND_TAG withParams:updatedParams delegate:delegate];
+            [self sendCommandWithId:[commandId intValue]toRobot2:robotId withCommandTag:ENABLE_DISABLE_SCHEDULE_COMMAND_TAG withParams:updatedParams delegate:delegate overTCP:overTCP];
             break;
         }
         case COMMAND_SEND_TO_BASE:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:SEND_TO_BASE_COMMAND_TAG withParams:params delegate:delegate];
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:SEND_TO_BASE_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
             break;
         case COMMAND_TURN_VACUUM_ONOFF:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:TURN_VACUUM_ONOFF_COMMAND_TAG withParams:params delegate:delegate];
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:TURN_VACUUM_ONOFF_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
             break;
         case COMMAND_RESUME_CLEANING:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:RESUME_ROBOT_COMMAND_TAG withParams:params delegate:delegate];
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:RESUME_ROBOT_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
             break;
         case COMMAND_TURN_WIFI_ONOFF:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:TURN_WIFI_ONOFF_COMMAND_TAG withParams:params delegate:delegate];
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:TURN_WIFI_ONOFF_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
+            break;
+        case COMMAND_DRIVE_ROBOT:
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:TURN_ROBOT_DRIVE_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
             break;
         default:
             [self failedToSendCommandOverTCPWithError:[AppHelper nserrorWithDescription:[NSString stringWithFormat:@"Command ID %d not supported!", [commandId intValue]] code:200]];
@@ -301,4 +307,16 @@
     }
 
 }
+
+- (void)sendCommandOverXMPPToRobotWithId:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate {
+    [self sendCommandOverTCPXMPPToRobot:robotId commandId:commandId params:params delegate:delegate overTCP:NO];
+}
+
+- (void)sendCommandOverTCPToRobotWithId:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate {
+    debugLog(@"commandId value is %d",[commandId intValue]);
+    self.retainedSelf = self;
+    self.delegate = delegate;
+    [self sendCommandOverTCPXMPPToRobot:robotId commandId:commandId params:params delegate:delegate overTCP:YES];
+}
+
 @end

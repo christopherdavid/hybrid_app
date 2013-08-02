@@ -58,6 +58,14 @@
 - (void)commandSentWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId;
 - (void)gotCleaningStateWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId;
 - (void)failedToGetCleaningStateWithError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)intentToDriveRequestSuccededWithResult:(NSDictionary *)result callbackId:(NSString *)callbackId;
+- (void)intentToDriveRequestFailedWithError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)driveRobotSentforCallBackId:(NSString *)callbackId;
+- (void)driveRobotFailedWithError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)cancelIntendToDriveSuccededForCallbackId:(NSString *)callbackId;
+- (void)cancelIntendToDriveFailedWithError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)stopRobotDriveSuccededForCallbackId:(NSString *)callbackId;
+- (void)stopRobotDriveFailedWithError:(NSError *)error callbackId:(NSString *)callbackId;
 @end
 
 @interface RobotManagerCallWrapper : NSObject
@@ -97,4 +105,9 @@
 - (id)spotDefinitionForRobotWithId:(NSString *)robotId;
 - (void)virtualOnlineStatusForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
 - (void)getCleaningStateForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
+- (void)requestIntentToDriveForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
+- (void)driveRobotWithId:(NSString *)robotId navigationControlId:(NSString *)navigationControlId callbackId:(NSString *)callbackId;
+- (void)cancelIntendToDriveForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
+- (void)stopRobotDriveForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
+- (id)isConnectedOverTCPWithRobotId:(NSString *)robotId callbackId:(NSString *)callbackId;
 @end

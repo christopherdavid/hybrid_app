@@ -10,8 +10,10 @@
 #import "RobotCommandHelper.h"
 #import "NeatoRobotHelper.h"
 #import "RobotScheduleManager.h"
+#import "RobotDriveManager.h"
+#import "IntendToDriveHelper.h"
 
-@interface RobotManagerCallWrapper() <TCPConnectionHelperProtocol, RobotScheduleManagerProtocol>
+@interface RobotManagerCallWrapper() <TCPConnectionHelperProtocol, RobotScheduleManagerProtocol, IntendToDriveProtocol, RobotDriveManagerProtocol>
 
 
 @property(nonatomic, retain) RobotManagerCallWrapper *retained_self;
@@ -32,7 +34,7 @@
     
     FindNearByRobotsHelper *helper = [[FindNearByRobotsHelper alloc] init];
     [helper findNearbyRobots:self action:@selector(findRobotsNearByHandler:)];
-
+    
 }
 
 -(void) findRobotsNearByHandler:(id) value
@@ -195,11 +197,9 @@
     [NeatoRobotManager sendStopCleaningTo:robotId delegate:self];
 }
 
--(void) connectedOverTCP:(NSString*) host
-{
+- (void)connectedOverTCP:(NSString*)host toRobotWithId:(NSString *)robotId {
     debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(connectedOverTCP:callbackId:)])
-    {
+    if ([self.delegate respondsToSelector:@selector(connectedOverTCP:callbackId:)]) {
         [self.delegate connectedOverTCP:host callbackId:self.callbackId];
     }
     self.retained_self = nil;
@@ -246,11 +246,9 @@
 }
 
 
--(void) tcpConnectionDisconnected:(NSError *) error
-{
+- (void)tcpConnectionDisconnectedWithError:(NSError *)error forRobot:(NeatoRobot *)neatoRobot forcedDisconnected:(BOOL)forcedDisconneted {
     debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(tcpConnectionDisconnected:callbackId:)])
-    {
+    if ([self.delegate respondsToSelector:@selector(tcpConnectionDisconnected:callbackId:)]) {
         [self.delegate tcpConnectionDisconnected:error callbackId:self.callbackId];
     }
     self.retained_self = nil;
@@ -448,19 +446,19 @@
     [deviceConnectionManager tryDirectConnection2:robotId delegate:self];
 }
 
-- (void)failedToConnectToTCP2WithError:(NSError *)error {
+- (void)connectedOverTCP2:(NSString*)host toRobotWithId:(NSString *)robotId {
     debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(failedToConnectToTCP2WithError:callbackId:)]) {
-        [self.delegate failedToConnectToTCP2WithError:error callbackId:self.callbackId];
+    if ([self.delegate respondsToSelector:@selector(connectedOverTCP2:callbackId:)]) {
+        [self.delegate connectedOverTCP2:host callbackId:self.callbackId];
     }
     self.retained_self = nil;
     self.delegate = nil;
 }
 
-- (void)connectedOverTCP2:(NSString*) host {
+- (void)failedToConnectToTCP2WithError:(NSError *)error forRobot:(NeatoRobot *)robot forcedDisconnected:(BOOL)forcedDisconnected {
     debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(connectedOverTCP2:callbackId:)]) {
-        [self.delegate connectedOverTCP2:host callbackId:self.callbackId];
+    if ([self.delegate respondsToSelector:@selector(failedToConnectToTCP2WithError:callbackId:)]) {
+        [self.delegate failedToConnectToTCP2WithError:error callbackId:self.callbackId];
     }
     self.retained_self = nil;
     self.delegate = nil;
@@ -674,7 +672,7 @@
     debugLog(@"");
     self.retained_self = self;
     self.callbackId = callbackId;
-
+    
     NeatoServerManager *manager = [[NeatoServerManager alloc] init];
     manager.delegate = self;
     [manager enabledDisable:enable schedule:scheduleType forRobotWithId:robotId withUserEmail:email];
@@ -791,31 +789,146 @@
 }
 
 - (void)getCleaningStateForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId{
-  debugLog(@"");
-  self.retained_self = self;
-  self.callbackId = callbackId;
-  
-  NeatoServerManager *manager = [[NeatoServerManager alloc] init];
-  manager.delegate = self;
-  [manager profileDetails2ForRobotWithId:robotId];
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager profileDetails2ForRobotWithId:robotId];
 }
 
 - (void)gotRobotProfileDetails2WithResult:(NSDictionary *)result {
-  debugLog(@"");
-  if ([self.delegate respondsToSelector:@selector(gotCleaningStateWithResult:callbackId:)]) {
-    [self.delegate gotCleaningStateWithResult:result callbackId:self.callbackId];
-  }
-  self.retained_self = nil;
-  self.delegate = nil;
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(gotCleaningStateWithResult:callbackId:)]) {
+        [self.delegate gotCleaningStateWithResult:result callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
 }
 
 - (void)failedToGetRobotProfileDetails2WithError:(NSError *)error {
-  debugLog(@"");
-  if ([self.delegate respondsToSelector:@selector(failedToGetCleaningStateWithError:callbackId:)]) {
-    [self.delegate failedToGetCleaningStateWithError:error callbackId:self.callbackId];
-  }
-  self.retained_self = nil;
-  self.delegate = nil;
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(failedToGetCleaningStateWithError:callbackId:)]) {
+        [self.delegate failedToGetCleaningStateWithError:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)requestIntentToDriveForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    IntendToDriveHelper *driveHelper = [[IntendToDriveHelper alloc] init];
+    driveHelper.delegate = self;
+    [driveHelper requestIntentToDriveForRobotWithId:robotId];
+}
+
+- (void)intentToDriveRequestSuccededWithResult:(NSDictionary *)result {
+    if ([self.delegate respondsToSelector:@selector(intentToDriveRequestSuccededWithResult:callbackId:)]) {
+        [self.delegate intentToDriveRequestSuccededWithResult:result callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)intentToDriveRequestFailedWithError:(NSError *)error {
+    if ([self.delegate respondsToSelector:@selector(intentToDriveRequestFailedWithError:callbackId:)]) {
+        [self.delegate intentToDriveRequestFailedWithError:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)driveRobotWithId:(NSString *)robotId navigationControlId:(NSString *)navigationControlId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    RobotDriveManager *driveManager = [[RobotDriveManager alloc] init];
+    driveManager.delegate = self;
+    [driveManager driveRobotWithRobotId:robotId navigationControlId:navigationControlId];
+}
+
+- (void)driveRobotSent {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(driveRobotSentforCallBackId:)]) {
+        [self.delegate performSelector:@selector(driveRobotSentforCallBackId:) withObject:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+    
+}
+
+- (void)driveRobotFailedWithError:(NSError *)error {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(driveRobotFailedWithError:callbackId:)]) {
+        [self.delegate performSelector:@selector(driveRobotFailedWithError:callbackId:) withObject:error withObject:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)cancelIntendToDriveForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    RobotDriveManager *driveManager = [[RobotDriveManager alloc] init];
+    driveManager.delegate = self;
+    [driveManager cancelIntendToDriveForRobotId:robotId];
+}
+
+- (void)cancelIntendToDriveSucceded {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(cancelIntendToDriveSuccededForCallbackId:)]) {
+        [self.delegate performSelector:@selector(cancelIntendToDriveSuccededForCallbackId:) withObject:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+    
+}
+
+- (void)cancelIntendToDriveFailedWithError:(NSError *)error {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(cancelIntendToDriveFailedWithError:callbackId:)]) {
+        [self.delegate performSelector:@selector(cancelIntendToDriveFailedWithError:callbackId:) withObject:error withObject:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)stopRobotDriveForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    RobotDriveManager *driveManager = [[RobotDriveManager alloc] init];
+    driveManager.delegate = self;
+    [driveManager stopDriveRobotForRobotId:robotId];
+}
+
+- (void)stopRobotDriveSucceded {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(stopRobotDriveSuccededForCallbackId:)]) {
+        [self.delegate performSelector:@selector(stopRobotDriveSuccededForCallbackId:) withObject:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (void)stopRobotDriveFailedWithError:(NSError *)error {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(stopRobotDriveFailedWithError:callbackId:)]) {
+        [self.delegate performSelector:@selector(stopRobotDriveFailedWithError:callbackId:) withObject:error withObject:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
+- (id)isConnectedOverTCPWithRobotId:(NSString *)robotId callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    RobotDriveManager *driveManager = [[RobotDriveManager alloc] init];
+    driveManager.delegate = self;
+    return [driveManager isConnectedOverTCPWithRobotId:robotId];
 }
 
 @end

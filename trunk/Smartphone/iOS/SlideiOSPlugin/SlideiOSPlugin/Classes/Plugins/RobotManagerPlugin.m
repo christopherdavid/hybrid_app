@@ -597,7 +597,7 @@
     [resultDictionary setValue:robotId forKey:KEY_ROBOT_ID];
     [resultDictionary setValue:[NSNumber numberWithInteger:scheduleType] forKey:KEY_SCHEDULE_TYPE];
     [resultDictionary setValue:[schedule arrayOfScheduleEventIdsForType:scheduleType] forKey:KEY_SCHEDULE_EVENTS_LIST];
-
+    
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultDictionary];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
@@ -753,7 +753,7 @@
     debugLog(@"received parameters : %@", parameters);
     
     NSString *commandId = [NSString stringWithFormat:@"%d", COMMAND_START_ROBOT];
-
+    
     NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
     NSDictionary *commandParams = [parameters objectForKey:KEY_COMMAND_PARAMETERS];
     NSMutableDictionary *params = [commandParams objectForKey:KEY_PARAMS];
@@ -920,27 +920,27 @@
 
 
 - (void)getRobotVirtualOnlineStatus:(CDVInvokedUrlCommand *)command {
-  debugLog(@"");
-  NSString *callbackId = command.callbackId;
-  NSDictionary *parameters = [command.arguments objectAtIndex:0];
-  debugLog(@"received parameters : %@", parameters);
-  NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
-  RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
-  call.delegate = self;
-  [call virtualOnlineStatusForRobotWithId:robotId callbackId:callbackId];
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call virtualOnlineStatusForRobotWithId:robotId callbackId:callbackId];
 }
 
 - (void)virtualOnlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
-  debugLog(@"");
-  NSMutableDictionary *jsonRobot = [[NSMutableDictionary alloc] init];
-  [jsonRobot setObject:robotId forKey:KEY_ROBOT_ID];
-  [jsonRobot setObject:[NSNumber numberWithBool:[status boolValue]] forKey:KEY_ROBOT_ONLINE_STATUS];
-  CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonRobot];
-  [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    debugLog(@"");
+    NSMutableDictionary *jsonRobot = [[NSMutableDictionary alloc] init];
+    [jsonRobot setObject:robotId forKey:KEY_ROBOT_ID];
+    [jsonRobot setObject:[NSNumber numberWithBool:[status boolValue]] forKey:KEY_ROBOT_ONLINE_STATUS];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonRobot];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
 - (void)failedToGetRobotVirtualOnlineStatusWithError:(NSError *)error callbackId:(NSString *)callbackId {
-  [self sendError:error forCallbackId:callbackId];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 - (void)dealloc {
@@ -1031,41 +1031,141 @@
 }
 
 - (void)getRobotCleaningState:(CDVInvokedUrlCommand *)command {
-  debugLog(@"");
-  NSString *callbackId = command.callbackId;
-  NSDictionary *parameters = [command.arguments objectAtIndex:0];
-  debugLog(@"received parameters : %@", parameters);
-  NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
-  
-  RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
-  callWrapper.delegate = self;
-  [callWrapper getCleaningStateForRobotWithId:robotId callbackId:callbackId];
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    
+    RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper getCleaningStateForRobotWithId:robotId callbackId:callbackId];
 }
 
 - (void)gotCleaningStateWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId {
-  NSDictionary *neatoResult = [resultData valueForKeyPath:NEATO_RESPONSE_RESULT];
-  NSDictionary *robotProfileDetails = [neatoResult valueForKeyPath:NEATO_PROFILE_DETAILS];
-  debugLog(@"RobotProfileDetails received from server : %@", robotProfileDetails);
-  XMPPRobotDataChangeManager *xmppDataChangeManager = [XMPPRobotDataChangeManager sharedXmppDataChangeManager];
-  // Update the timestamp in DB.
-  [xmppDataChangeManager updateDataTimestampIfChangedForKey:KEY_ROBOT_CURRENT_STATE withProfile:robotProfileDetails];
-  
-  // Send the data back to UI layer.
-  NSString *robotId = [[robotProfileDetails valueForKey:KEY_SERIAL_NUMBER] valueForKey:KEY_VALUE];
-  NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-  NSInteger robotActualState = [XMPPRobotCleaningStateHelper robotActualStateFromRobotProfile:robotProfileDetails];
-  NSInteger robotCurrentState = [XMPPRobotCleaningStateHelper robotCurrentStateFromRobotProfile:robotProfileDetails];
-  [data setValue:[NSNumber numberWithInteger:robotCurrentState] forKey:KEY_ROBOT_CURRENT_STATE];
-  [data setValue:[NSNumber numberWithInteger:robotActualState] forKey:KEY_ROBOT_NEW_VIRTUAL_STATE];
-  [data setValue:robotId forKey:KEY_ROBOT_ID];
-  CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
-  [self writeJavascript:[result toSuccessCallbackString:callbackId]];
-  
+    NSDictionary *neatoResult = [resultData valueForKeyPath:NEATO_RESPONSE_RESULT];
+    NSDictionary *robotProfileDetails = [neatoResult valueForKeyPath:NEATO_PROFILE_DETAILS];
+    debugLog(@"RobotProfileDetails received from server : %@", robotProfileDetails);
+    XMPPRobotDataChangeManager *xmppDataChangeManager = [XMPPRobotDataChangeManager sharedXmppDataChangeManager];
+    // Update the timestamp in DB.
+    [xmppDataChangeManager updateDataTimestampIfChangedForKey:KEY_ROBOT_CURRENT_STATE withProfile:robotProfileDetails];
+    
+    // Send the data back to UI layer.
+    NSString *robotId = [[robotProfileDetails valueForKey:KEY_SERIAL_NUMBER] valueForKey:KEY_VALUE];
+    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+    NSInteger robotActualState = [XMPPRobotCleaningStateHelper robotActualStateFromRobotProfile:robotProfileDetails];
+    NSInteger robotCurrentState = [XMPPRobotCleaningStateHelper robotCurrentStateFromRobotProfile:robotProfileDetails];
+    [data setValue:[NSNumber numberWithInteger:robotCurrentState] forKey:KEY_ROBOT_CURRENT_STATE];
+    [data setValue:[NSNumber numberWithInteger:robotActualState] forKey:KEY_ROBOT_NEW_VIRTUAL_STATE];
+    [data setValue:robotId forKey:KEY_ROBOT_ID];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    
 }
 
 - (void)failedToGetCleaningStateWithError:(NSError *)error callbackId:(NSString *)callbackId {
-  debugLog(@"Failed to send command with error  = %@", error);
-  [self sendError:error forCallbackId:callbackId];
+    debugLog(@"Failed to send command with error  = %@", error);
+    [self sendError:error forCallbackId:callbackId];
+}
+
+- (void)intendToDrive:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper requestIntentToDriveForRobotWithId:robotId callbackId:callbackId];
+}
+
+- (void)intentToDriveRequestSuccededWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId {
+    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+    [data setValue:[resultData valueForKeyPath:NEATO_RESPONSE_EXPECTED_TIME] forKey:NEATO_RESPONSE_EXPECTED_TIME];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)intentToDriveRequestFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    [self sendError:error forCallbackId:callbackId];
+}
+
+- (void)driveRobot:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    NSString *navigationControlId = [parameters objectForKey:KEY_NAVIGATION_CONTROL_ID];
+    RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper driveRobotWithId:robotId navigationControlId:navigationControlId callbackId:callbackId];
+}
+
+- (void)driveRobotSentforCallBackId:(NSString *)callbackId {
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)driveRobotFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    [self sendError:error forCallbackId:callbackId];
+}
+
+- (void)cancelIntendToDrive:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper cancelIntendToDriveForRobotWithId:robotId callbackId:callbackId];
+}
+
+- (void)cancelIntendToDriveSuccededForCallbackId:(NSString *)callbackId {
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)cancelIntendToDriveFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    [self sendError:error forCallbackId:callbackId];
+}
+
+- (void)stopRobotDrive:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper stopRobotDriveForRobotWithId:robotId callbackId:callbackId];
+}
+
+- (void)stopRobotDriveSuccededForCallbackId:(NSString *)callbackId {
+    debugLog(@"");
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)stopRobotDriveFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    [self sendError:error forCallbackId:callbackId];
+}
+
+- (void)isRobotPeerConnected:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    id data = [callWrapper isConnectedOverTCPWithRobotId:robotId callbackId:callbackId];
+    if ([data isKindOfClass:[NSMutableDictionary class]]) {
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:(NSDictionary *)data];
+        [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    }
 }
 
 @end

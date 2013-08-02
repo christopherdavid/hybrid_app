@@ -42,6 +42,7 @@
 - (void)gotRobotProfileDetails2WithResult:(NSDictionary *)result;
 - (void)setUserAttributesSucceeded;
 - (void)notifyScheduleUpdatedSucceededWithResult:(NSDictionary *)result;
+- (void)deleteProfileDetailKeySuccededforRobotId:(NSString *)robotId;
 
 // Failure cases
 - (void)failedToGetCreateUserHandle:(NSError *) error;
@@ -71,6 +72,7 @@
 - (void)failedToGetRobotProfileDetails2WithError:(NSError *)error;
 - (void)failedToSetUserAttributesWithError:(NSError *)error;
 - (void)failedToNotifyScheduleUpdatedWithError:(NSError *)error;
+- (void)failedToDeleteProfileDetailKeyWithError:(NSError *)error;
 
 @end
 
@@ -108,4 +110,5 @@
 - (void)getProfileDetails2ForRobotWithId:(NSString *)robotId;
 - (void)setUserAttributes:(NeatoUserAttributes *)attributes forAuthToken:(NSString *)authToken;
 - (void)notifyScheduleUpdatedForProfileDetails:(NeatoRobotCommand *)profileDetails forUserWithEmail:(NSString *)email;
+- (void)deleteProfileDetailKey:(NSString *)key forRobotWithId:(NSString *)robotId notfify:(NSInteger)notify;
 @end

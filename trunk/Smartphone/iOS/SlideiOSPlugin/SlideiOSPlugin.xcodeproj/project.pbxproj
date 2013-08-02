@@ -50,7 +50,6 @@
 		E16FBA5D176226AF00FC2856 /* XMPPCallbackEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E16FBA5C176226AF00FC2856 /* XMPPCallbackEntity.m */; };
 		E177F3E7177879CE00589638 /* XMPPRobotCleaningStateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E177F3E6177879CE00589638 /* XMPPRobotCleaningStateHelper.m */; };
 		E177F3EA177879EE00589638 /* ProfileDetailEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E177F3E9177879EE00589638 /* ProfileDetailEntity.m */; };
-		E189F0721771A8C5004BA38C /* NeatoRobotEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E189F0711771A8C5004BA38C /* NeatoRobotEntity.m */; };
 		E189F0831771ABF3004BA38C /* ProfileDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = E189F07E1771ABF3004BA38C /* ProfileDetail.m */; };
 		E189F0851771ABF3004BA38C /* XMPPRobotDataChangeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E189F0821771ABF3004BA38C /* XMPPRobotDataChangeManager.m */; };
 		E189F08A1771AC96004BA38C /* NeatoCommandExpiryHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E189F0871771AC96004BA38C /* NeatoCommandExpiryHelper.m */; };
@@ -140,6 +139,9 @@
 		E1A2B7BD16DA52BE003DC9C8 /* RobotDissociationListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A2B7BC16DA52BE003DC9C8 /* RobotDissociationListener.m */; };
 		E1A44BD616D3828B00898959 /* SetRobotNameListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A44BD516D3828B00898959 /* SetRobotNameListener.m */; };
 		E1A44BEF16D3BDC900898959 /* RobotAssociationListener2.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A44BEE16D3BDC900898959 /* RobotAssociationListener2.m */; };
+		E1A5007517A170CD00D80307 /* NeatoRobotEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5007417A170CD00D80307 /* NeatoRobotEntity.m */; };
+		E1A5007B17A170EE00D80307 /* IntendToDriveHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5007817A170EE00D80307 /* IntendToDriveHelper.m */; };
+		E1A5007C17A170EE00D80307 /* RobotDriveManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5007A17A170EE00D80307 /* RobotDriveManager.m */; };
 		E1A5D39017523AB300E01DCF /* ScheduleEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5D38F17523AB300E01DCF /* ScheduleEntity.m */; };
 		E1A5D39317523AC300E01DCF /* BasicScheduleEventEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5D39217523AC300E01DCF /* BasicScheduleEventEntity.m */; };
 		E1A5D39717523B7200E01DCF /* ScheduleJsonHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5D39617523B7200E01DCF /* ScheduleJsonHelper.m */; };
@@ -291,8 +293,6 @@
 		E177F3E6177879CE00589638 /* XMPPRobotCleaningStateHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRobotCleaningStateHelper.m; sourceTree = "<group>"; };
 		E177F3E8177879EE00589638 /* ProfileDetailEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileDetailEntity.h; sourceTree = "<group>"; };
 		E177F3E9177879EE00589638 /* ProfileDetailEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileDetailEntity.m; sourceTree = "<group>"; };
-		E189F0701771A8C5004BA38C /* NeatoRobotEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoRobotEntity.h; sourceTree = "<group>"; };
-		E189F0711771A8C5004BA38C /* NeatoRobotEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoRobotEntity.m; sourceTree = "<group>"; };
 		E189F07D1771ABF3004BA38C /* ProfileDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileDetail.h; sourceTree = "<group>"; };
 		E189F07E1771ABF3004BA38C /* ProfileDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileDetail.m; sourceTree = "<group>"; };
 		E189F0811771ABF3004BA38C /* XMPPRobotDataChangeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRobotDataChangeManager.h; sourceTree = "<group>"; };
@@ -490,6 +490,12 @@
 		E1A44BD516D3828B00898959 /* SetRobotNameListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetRobotNameListener.m; sourceTree = "<group>"; };
 		E1A44BED16D3BDC900898959 /* RobotAssociationListener2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotAssociationListener2.h; sourceTree = "<group>"; };
 		E1A44BEE16D3BDC900898959 /* RobotAssociationListener2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotAssociationListener2.m; sourceTree = "<group>"; };
+		E1A5007317A170CD00D80307 /* NeatoRobotEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoRobotEntity.h; sourceTree = "<group>"; };
+		E1A5007417A170CD00D80307 /* NeatoRobotEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoRobotEntity.m; sourceTree = "<group>"; };
+		E1A5007717A170EE00D80307 /* IntendToDriveHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntendToDriveHelper.h; sourceTree = "<group>"; };
+		E1A5007817A170EE00D80307 /* IntendToDriveHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntendToDriveHelper.m; sourceTree = "<group>"; };
+		E1A5007917A170EE00D80307 /* RobotDriveManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotDriveManager.h; sourceTree = "<group>"; };
+		E1A5007A17A170EE00D80307 /* RobotDriveManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotDriveManager.m; sourceTree = "<group>"; };
 		E1A5D38E17523AB300E01DCF /* ScheduleEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleEntity.h; sourceTree = "<group>"; };
 		E1A5D38F17523AB300E01DCF /* ScheduleEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleEntity.m; sourceTree = "<group>"; };
 		E1A5D39117523AC300E01DCF /* BasicScheduleEventEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicScheduleEventEntity.h; sourceTree = "<group>"; };
@@ -680,6 +686,7 @@
 		B22BDB10168D848800FFCB76 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				E1A5007617A170EE00D80307 /* IntendToDriveHelper */,
 				E189F07C1771ABF3004BA38C /* XMPPRobotDataChangeHelper */,
 				E190E6D217561186002B7BE6 /* AppSettings */,
 				2838B97C17549B2C00145B6C /* PushNotification */,
@@ -781,10 +788,10 @@
 				E168BBC1169D461800BA6AD3 /* NeatoDBHelper.h */,
 				E168BBC2169D461800BA6AD3 /* NeatoDBHelper.m */,
 				E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */,
+				E1A5007317A170CD00D80307 /* NeatoRobotEntity.h */,
+				E1A5007417A170CD00D80307 /* NeatoRobotEntity.m */,
 				E177F3E8177879EE00589638 /* ProfileDetailEntity.h */,
 				E177F3E9177879EE00589638 /* ProfileDetailEntity.m */,
-				E189F0701771A8C5004BA38C /* NeatoRobotEntity.h */,
-				E189F0711771A8C5004BA38C /* NeatoRobotEntity.m */,
 				E16FBA5B176226AF00FC2856 /* XMPPCallbackEntity.h */,
 				E16FBA5C176226AF00FC2856 /* XMPPCallbackEntity.m */,
 				E1D40FC41754832A00EBCD62 /* CleaningAreaEntity.h */,
@@ -1348,6 +1355,17 @@
 			path = PluginCallWrapper;
 			sourceTree = "<group>";
 		};
+		E1A5007617A170EE00D80307 /* IntendToDriveHelper */ = {
+			isa = PBXGroup;
+			children = (
+				E1A5007717A170EE00D80307 /* IntendToDriveHelper.h */,
+				E1A5007817A170EE00D80307 /* IntendToDriveHelper.m */,
+				E1A5007917A170EE00D80307 /* RobotDriveManager.h */,
+				E1A5007A17A170EE00D80307 /* RobotDriveManager.m */,
+			);
+			path = IntendToDriveHelper;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1638,7 +1656,6 @@
 				2838B97F17549B4200145B6C /* PushNotificationHelper.m in Sources */,
 				E1938E34175F399100149F30 /* AppSettings.m in Sources */,
 				E16FBA5D176226AF00FC2856 /* XMPPCallbackEntity.m in Sources */,
-				E189F0721771A8C5004BA38C /* NeatoRobotEntity.m in Sources */,
 				E189F0831771ABF3004BA38C /* ProfileDetail.m in Sources */,
 				E189F0851771ABF3004BA38C /* XMPPRobotDataChangeManager.m in Sources */,
 				E189F08A1771AC96004BA38C /* NeatoCommandExpiryHelper.m in Sources */,
@@ -1647,6 +1664,9 @@
 				E189F0A01771C8DE004BA38C /* LoginListener2.m in Sources */,
 				E177F3E7177879CE00589638 /* XMPPRobotCleaningStateHelper.m in Sources */,
 				E177F3EA177879EE00589638 /* ProfileDetailEntity.m in Sources */,
+				E1A5007517A170CD00D80307 /* NeatoRobotEntity.m in Sources */,
+				E1A5007B17A170EE00D80307 /* IntendToDriveHelper.m in Sources */,
+				E1A5007C17A170EE00D80307 /* RobotDriveManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

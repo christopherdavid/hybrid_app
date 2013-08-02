@@ -231,7 +231,7 @@
     return (([status intValue] == NEATO_STATUS_ERROR) && serverError);
 }
 
-+ (NSString *) getApplicationId {
++ (NSString *)getApplicationId {
   NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
   debugLog(@"Bundle identifier = [%@]", bundleIdentifier);
   if ([bundleIdentifier isEqualToString:APPLICATION_TEST_APP_BUNDLE_ID]) {
@@ -241,7 +241,7 @@
   return APPLICATION_ID_MAIN_APP;
 }
 
-+ (NSString *) getNotificationServerType {
++ (NSString *)getNotificationServerType {
    debugLog(@"NOTIFICATION_SERVER_TYPE = [%@]", NOTIFICATION_SERVER_TYPE);
   return NOTIFICATION_SERVER_TYPE;
 }

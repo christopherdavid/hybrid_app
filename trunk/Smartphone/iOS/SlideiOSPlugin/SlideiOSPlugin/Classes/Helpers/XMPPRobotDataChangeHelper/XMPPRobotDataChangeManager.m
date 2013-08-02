@@ -11,6 +11,7 @@
 #import "XMPP.h"
 #import "NeatoUserHelper.h"
 #import "AppHelper.h"
+#import "RobotDriveManager.h"
 
 #define NOTIFICATION_UPDATE_UI_FOR_XMPP_DATA_CHANGE @"com.neato.plugin.xmpp.updateUI"
 static XMPPRobotDataChangeManager *sharedInstance  = nil;
@@ -128,7 +129,24 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
     if (robotScheduleUpdated) {
         [self notifyScheduleUpdatedForProfile:robotProfile];
     }
-    
+    // Check for intend to drive.
+    BOOL robotIntendToDriveStatusChanged = [self hasRobotIntendToDriveStatusChangedForProfile:robotProfile];
+    if (robotIntendToDriveStatusChanged) {
+        [self processRobotIntendToDriveForProfile:robotProfile];
+    }
+    // Check for available to drive.
+    BOOL robotDriveAvailableStatusChanged = [self hasRobotDriveAvailableStatusChangedForProfile:robotProfile];
+    if (robotDriveAvailableStatusChanged) {
+        [self processRobotAvailableToDriveForProfile:robotProfile];
+    }
+}
+
+- (BOOL)hasRobotIntendToDriveStatusChangedForProfile:(NSDictionary *)robotProfile {
+    return [self updateDataTimestampIfChangedForKey:KEY_INTEND_TO_DRIVE withProfile:robotProfile];
+}
+
+- (BOOL)hasRobotDriveAvailableStatusChangedForProfile:(NSDictionary *)robotProfile {
+    return [self updateDataTimestampIfChangedForKey:KEY_AVAILABLE_TO_DRIVE withProfile:robotProfile];
 }
 
 - (BOOL)hasRobotNameChangedForProfile:(NSDictionary *)robotProfile {
@@ -136,7 +154,7 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 }
 
 - (BOOL)hasRobotCleaningStateChangedForProfile:(NSDictionary *)robotProfile {
-   return [self updateDataTimestampIfChangedForKey:KEY_ROBOT_CLEANING_COMMAND withProfile:robotProfile];
+    return [self updateDataTimestampIfChangedForKey:KEY_ROBOT_CLEANING_COMMAND withProfile:robotProfile];
 }
 
 - (BOOL)hasRobotCurrentStateChangedForProfile:(NSDictionary *)robotProfile {
@@ -216,8 +234,8 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
         }
     }
     else {
-      // Profile detail for this key is not there in database so return YES.
-      return YES;   
+        // Profile detail for this key is not there in database so return YES.
+        return YES;
     }
 }
 
@@ -333,9 +351,43 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     if (self.robotStateChangeObserver) {
-      [[NSNotificationCenter defaultCenter] removeObserver:self.robotStateChangeObserver];
+        [[NSNotificationCenter defaultCenter] removeObserver:self.robotStateChangeObserver];
     }
     self.robotStateChangeObserver = nil;
+}
+
+- (void)processRobotAvailableToDriveForProfile:(NSDictionary *)robotProfile {
+    // Assuming that availability reposnse will be a JSON string.
+    NSDictionary *availabilityResponse = [AppHelper parseJSON:[[[robotProfile objectForKey:KEY_AVAILABLE_TO_DRIVE] objectForKey:KEY_VALUE] dataUsingEncoding:NSUTF8StringEncoding]];
+    if (availabilityResponse) {
+        NSNumber *driveAvailableStatus = [availabilityResponse objectForKey:KEY_DRIVE_AVAILABLE_STATUS];
+        if ([driveAvailableStatus boolValue]) {
+            // Robot is ready to drive.
+            [[[RobotDriveManager alloc] init] robotWithRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE] isReadyToDriveWithIP:[availabilityResponse objectForKey:KEY_ROBOT_IP_ADDRESS]];
+        }
+        else {
+            // Robot not available to drive.
+            [[[RobotDriveManager alloc] init] robotWithRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE] isNotAvailableToDriveWithErrorCode:[[availabilityResponse objectForKey:KEY_ERROR_DRIVE_REASON_CODE] integerValue]];
+        }
+    }
+    else {
+        // Log
+    }
+}
+
+- (void)processRobotIntendToDriveForProfile:(NSDictionary *)robotProfile {
+    // If value of intend to drive is an empty string or it doesn't not exist in
+    // robotProfile then somebody has deleted intend to drive on server otherwise
+    // somebody has initiated intend to drive.
+    NSString *intenToDriveProfileDetail = [[robotProfile objectForKey:KEY_INTEND_TO_DRIVE] objectForKey:KEY_VALUE];
+    if (!intenToDriveProfileDetail || (intenToDriveProfileDetail.length == 0)) {
+        // Somebody deleted intend to drive on server.
+        debugLog(@"Somebody deleted intend to drive on server.");
+    }
+    else {
+        // Somebody initiated intend to drive on server.
+        debugLog(@"Somebody initiated intend to drive on server.");
+    }
 }
 
 @end

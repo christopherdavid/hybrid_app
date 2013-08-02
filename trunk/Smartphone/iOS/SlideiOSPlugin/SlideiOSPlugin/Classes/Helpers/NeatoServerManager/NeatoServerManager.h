@@ -52,6 +52,8 @@
 - (void)failedToGetRobotProfileDetails2WithError:(NSError *)error;
 - (void)commandSentWithResult:(NSDictionary *)result;
 - (void)failedtoSendCommandWithError:(NSError *)error;
+- (void)deleteProfileDetailKeySuccededforRobotId:(NSString *)robotId;
+- (void)failedToDeleteProfileDetailKeyWithError:(NSError *)error;
 
 @end
 
@@ -88,4 +90,5 @@
 - (void)virtualOnlineStatusForRobotWithId:(NSString *)robotId;
 - (void)profileDetails2ForRobotWithId:(NSString *)robotId;
 - (void)sendCommand:(NeatoRobotCommand *)command;
+- (void)deleteProfileDetailKey:(NSString *)key forRobotWithId:(NSString *)robotId notfify:(BOOL)notify;
 @end

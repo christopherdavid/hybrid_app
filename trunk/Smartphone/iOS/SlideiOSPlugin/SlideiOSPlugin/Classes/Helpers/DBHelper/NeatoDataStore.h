@@ -64,4 +64,9 @@
 - (id)timestampForRobotProfileKey:(NSString *)key forRobotWithId:(NSString *)robotId;
 - (id)profileDetailForKey:(NSString *)key robotWithId:(NSString *)robotId;
 - (id)deleteProfileDetail:(ProfileDetail *)profileDetail forRobot:(NSString *)robotId;
+
+// Drive Requests APIs.
+- (id)setDriveRequestForRobotWithId:(NSString *)robotId;
+- (id)driveRequestForRobotWithId:(NSString *)robotId;
+- (id)removeDriveRequestForRobotWihId:(NSString *)robotId;
 @end

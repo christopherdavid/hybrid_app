@@ -104,4 +104,19 @@
     return [helper deleteProfileDetail:profileDetail forRobot:robotId];
 }
 
++ (id)setDriveRequestForRobotWithId:(NSString *)robotId {
+      NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
+    return [helper setDriveRequestForRobotWithId:robotId];
+}
+
++ (id)driveRequestForRobotWithId:(NSString *)robotId {
+     NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
+    return [helper driveRequestForRobotWithId:robotId];
+}
+
++ (id)removeDriveRequestForRobotWihId:(NSString *)robotId {
+    NeatoDataStore *helper = [NeatoDataStore sharedNeatoDataStore];
+    return [helper removeDriveRequestForRobotWihId:robotId];
+}
+
 @end

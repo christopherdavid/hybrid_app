@@ -118,6 +118,7 @@
 			
 			<br><br><input type="button" id="btnGoToDebug" value="Test APIs" class="gradientButton">
 			<br><input type="button" id="btnGoToTestCleaningPage" value="Test Cleaning APIs" class="gradientButton">
+			<br><input type="button" id="btnGoToDrive" value="Test Drive APIs" class="gradientButton"></input>
 			<br><input type="button" id="btnLogout" value="Logout" class="gradientButton"></input>
             <br><input type="button" id="aboutButton" value="About" class="gradientButton"></input>
 		<br>
@@ -188,6 +189,22 @@
 		<label id="currentRobotState">Actual State: Not Available</label>
 		</br>
 		<label id="robotState">State: Not Available</label>
+	</section>
+	
+	<section id="driveAPIs"  aria-hidden=true>
+		<div class="defaultSectionHeader">Test Drive APIs</div>
+		<div id="divDriveControls" class="cmdParams">
+			<label for="NavigationControlList">Control Id:</label>
+			<select name="NavigationControlList" id="DriveControlList">
+			</select>
+		</div>
+			<br><input type="button" id="btnIntendToDrive" value="Intend to drive" class="gradientButton"></input>
+			<br><input type="button" id="btnCancelIntendToDrive" value="Cancel Intend to Drive" class="gradientButton"></input>
+			<br><input type="button" id="btnDriveRobot" value="Drive" class="gradientButton"></input>
+			<br><input type="button" id="btnStopRobotDrive" value="Stop Robot Drive" class="gradientButton"></input>
+			<br><input type="button" id="btnIsPeerConnected" value="Validate Peer Connection" class="gradientButton"></input>
+			
+		
 	</section>
 	
 	<section id="spotDefinitionAPIs"  aria-hidden=true>

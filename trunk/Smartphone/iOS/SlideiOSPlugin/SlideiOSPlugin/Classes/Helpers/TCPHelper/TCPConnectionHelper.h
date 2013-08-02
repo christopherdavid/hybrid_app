@@ -5,8 +5,8 @@
 
 @protocol TCPConnectionHelperProtocol <NSObject>
 
-- (void)connectedOverTCP:(NSString*)host;
-- (void)tcpConnectionDisconnected:(NSError *)error;
+- (void)connectedOverTCP:(NSString*)host toRobotWithId:(NSString *)robotId;
+- (void)tcpConnectionDisconnectedWithError:(NSError *)error forRobot:(NeatoRobot *)neatoRobot forcedDisconnected:(BOOL)forcedDisconneted;
 - (void)commandSentOverTCP;
 - (void)receivedDataOverTCP:(NSData *)data;
 - (void)failedToSendCommandOverTCP;
@@ -22,5 +22,5 @@
 - (BOOL)isConnected;
 - (void)connectToRobotOverTCP2:(NeatoRobot *)robot delegate:(id)delegate;
 - (void)sendCommandToRobot2:(NSData *)command withTag:(long)tag requestId:(NSString *)requestId delegate:(id)delegate;
-
+- (BOOL)isRobotConnectedOverTCP:(NSString *)robotId;
 @end
