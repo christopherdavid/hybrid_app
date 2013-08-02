@@ -18,7 +18,7 @@
 - (void)userLoggedOut;
 - (void)gotUserAssociatedRobots:(NSMutableArray *) robots;
 - (void)gotHandleForCreateUser:(NSString *) authToken;
-- (void)robotNameUpdated;
+- (void)robotNameUpdatedWithResult:(NSDictionary *)result;
 - (void)onlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId;
 - (void)dissociatedAllRobots:(NSString *)message;
 - (void)robotDissociatedWithMessage:(NSString *)message;
@@ -32,7 +32,7 @@
 - (void)failedToChangePasswordWithError:(NSError *)error;
 - (void)gotHandleForCreateUser2:(NSString *)authToken;
 - (void)failedToGetCreateUserHandle2Error:(NSError *)error;
-- (void)enabledDisabledScheduleSuccess;
+- (void)enabledDisabledScheduleSuccessWithResult:(NSDictionary *)result;
 - (void)setUserPushNotificationOptionsSuccess;
 - (void)userNotificationSettingsData:(NSDictionary *)notification;
 - (void)gotScheduleStatus:(NSDictionary *)status;
@@ -41,7 +41,7 @@
 - (void)commandSentWithResult:(NSDictionary *)result;
 - (void)gotRobotProfileDetails2WithResult:(NSDictionary *)result;
 - (void)setUserAttributesSucceeded;
-- (void)notifyScheduleUpdatedSucceeded;
+- (void)notifyScheduleUpdatedSucceededWithResult:(NSDictionary *)result;
 
 // Failure cases
 - (void)failedToGetCreateUserHandle:(NSError *) error;

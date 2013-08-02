@@ -3,6 +3,7 @@
 #import "NeatoServerHelper.h"
 #import "NeatoRobotHelper.h"
 #import "NeatoUserHelper.h"
+#import "ProfileDetail.h"
 
 @interface SetRobotNameListener()
 
@@ -33,9 +34,14 @@
     [helper setRobotName2:self.robotName forRobotWithId:self.robotId forUserWithEmail:[NeatoUserHelper getLoggedInUserEmail]];
 }
 
-- (void)robotNameUpdated {
+- (void)robotNameUpdatedWithResult:(NSDictionary *)result {
     debugLog(@"");
     [NeatoRobotHelper updateName:self.robotName forRobotwithId:self.robotId];
+    // Update timestamp returned from server in db.
+    ProfileDetail *profileDetail = [[ProfileDetail alloc] init];
+    profileDetail.key = KEY_NAME;
+    profileDetail.timestamp = [result objectForKey:KEY_TIMESTAMP];
+    [NeatoRobotHelper updateProfileDetail:profileDetail forRobotWithId:self.robotId];
     
     [self.delegate performSelector:@selector(robotName:updatedForRobotWithId:) withObject:self.robotName withObject:self.robotId];
     self.delegate = nil;

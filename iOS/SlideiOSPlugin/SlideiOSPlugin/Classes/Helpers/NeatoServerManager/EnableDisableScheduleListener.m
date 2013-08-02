@@ -4,6 +4,8 @@
 #import "PluginConstants.h"
 #import "NeatoUserHelper.h"
 #import "AppHelper.h"
+#import "NeatoRobotHelper.h"
+#import "ProfileDetail.h"
 
 @interface EnableDisableScheduleListener()
 
@@ -52,8 +54,14 @@
     self.retained_self = nil;
 }
 
-- (void)enabledDisabledScheduleSuccess {
+- (void)enabledDisabledScheduleSuccessWithResult:(NSDictionary *)result {
     debugLog(@"");
+    // Save timestamp returned from server in db.
+    ProfileDetail *profileDetail = [[ProfileDetail alloc] init];
+    profileDetail.key = KEY_ENABLE_BASIC_SCHEDULE;
+    profileDetail.timestamp = [result objectForKey:KEY_TIMESTAMP];
+    [NeatoRobotHelper updateProfileDetail:profileDetail forRobotWithId:self.robotId];
+    
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
     [data setValue:self.robotId forKey:KEY_ROBOT_ID];
     [data setValue:[NSNumber numberWithInteger:self.scheduleType] forKey:KEY_SCHEDULE_TYPE];

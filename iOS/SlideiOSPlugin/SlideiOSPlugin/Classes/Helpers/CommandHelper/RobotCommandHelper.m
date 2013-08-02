@@ -12,6 +12,7 @@
 #import "CleaningArea.h"
 #import "NeatoUserHelper.h"
 #import "NeatoCommandExpiryHelper.h"
+#import "ProfileDetail.h"
 
 #define START_ROBOT_COMMAND_TAG                 1001
 #define STOP_ROBOT_COMMAND_TAG                  1002
@@ -35,6 +36,7 @@
 - (void)sendCommandOverTCPXMPPToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate;
 - (void)sendCommandOverServerToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate;
 - (BOOL)isExpirableCommand:(NSInteger)commandId;
+- (NSString *)profileKeyForCommandId:(NSInteger)commandId;
 @end
 
 @implementation RobotCommandHelper
@@ -48,6 +50,8 @@
         case COMMAND_PAUSE_CLEANING:
         case COMMAND_SEND_TO_BASE:
         case COMMAND_RESUME_CLEANING:
+        case COMMAND_TURN_VACUUM_ONOFF:
+        case COMMAND_TURN_WIFI_ONOFF:
             return YES;
         default:
             return NO;
@@ -66,6 +70,24 @@
     }
 }
 
+- (NSString *)profileKeyForCommandId:(NSInteger)commandId {
+    switch (commandId) {
+        case COMMAND_START_ROBOT:
+        case COMMAND_STOP_ROBOT:
+        case COMMAND_PAUSE_CLEANING:
+        case COMMAND_RESUME_CLEANING:
+        case COMMAND_SEND_TO_BASE:
+            return KEY_ROBOT_CLEANING_COMMAND;
+        case COMMAND_TURN_VACUUM_ONOFF:
+            return KEY_TURN_VACUUM_ONOFF;
+        case COMMAND_TURN_WIFI_ONOFF:
+            return KEY_TURN_WIFI_ONOFF;
+        default:
+            debugLog(@"No profile key for command id = %d returning nil.", commandId);
+            return nil;
+    }
+}
+
 - (void)sendCommandToRobot2:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate {
     debugLog(@"commandId value is %d",[commandId intValue]);
     self.retainedSelf = self;
@@ -77,7 +99,8 @@
     if(TIMED_MODE_ENABLED && [self isTimedModeSupportedForCommand:commandId]) {
         [self sendCommandOverServerToRobot:robotId commandId:commandId params:params delegate:delegate];
                 
-    }else {
+    }
+    else {
         [self sendCommandOverTCPXMPPToRobot:robotId commandId:commandId params:params delegate:delegate];
     }
 }
@@ -204,7 +227,11 @@
     if ([self isExpirableCommand:[command.commandId integerValue]] && ![[NeatoCommandExpiryHelper expirableCommandHelper] isTimerRunningForRobotId:command.robotId]) {
         [[NeatoCommandExpiryHelper expirableCommandHelper] startCommandTimerForRobotId:command.robotId];
     }
-    
+    // Save timestamp returned from server in DB.
+    ProfileDetail *profileDetail = [[ProfileDetail alloc] init];
+    profileDetail.key = [self profileKeyForCommandId:[command.commandId integerValue]];
+    profileDetail.timestamp = [result objectForKey:KEY_TIMESTAMP];
+    [NeatoRobotHelper updateProfileDetail:profileDetail forRobotWithId:command.robotId];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.delegate performSelector:@selector(commandSentWithResult:) withObject:result];
         self.delegate = nil;
@@ -221,7 +248,7 @@
     robotCommand.commandId = commandId;
     robotCommand.robotId = robotId;
     robotCommand.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
-    [robotCommand.profileDict setValue:robotCommand.xmlCommand forKey:KEY_ROBOT_CLEANING_COMMAND];
+    [robotCommand.profileDict setValue:robotCommand.xmlCommand forKey:[self profileKeyForCommandId:[commandId integerValue]]];
     NeatoServerManager *manager = [[NeatoServerManager alloc] init];
     manager.delegate = self;
     [manager sendCommand:robotCommand];
