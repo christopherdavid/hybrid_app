@@ -8,19 +8,15 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     this.scheduler = 'undefined';
     this.blockedDays = [];
 
-    /* <enviroment functions> */
     this.init = function() {
         that.scheduler = new Scheduler($('#schedulerTarget'), 0);
         $('#schedulerTarget').on('updatedEvent', that.updateEvent);
+        $('#schedulerTarget').on('newEvent', that.newEvent);
+        $('#schedulerTarget').on('selectEvent', that.selectEvent);
         
         console.log("getScheduleEvents for robot with id: " + that.robot().robotId());
         that.loadScheduler();
-
-        if (that.bundle) {
-            if (that.bundle.events) {
-                that.scheduler.addEvents(that.bundle.events);
-            }
-        }
+        
         that.scheduler.selectedEvents.subscribe(function(array) {
             if (that.scheduler.selectedEvents().length > 0) {
                 $('#editButton').removeClass("ui-disabled");
@@ -38,13 +34,13 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     this.reload = function() {
         // remove conditions
         that.conditions = {};
+        that.blockedDays.length = 0;
     }
 
     this.deinit = function() {
         $('#schedulerTarget').off('updatedEvent');
         that.scheduler.destroy();
     }
-    /* </enviroment functions> */
    
    this.changeRobot = function() {
         // Switch to robot selection dialog
@@ -123,22 +119,32 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     this.loadScheduleDataError = function(error) {
         console.log(error);
     }
-    /* <actionbar functions> */
-    this.back = function() {
-        parent.flowNavigator.previous();
-    };
-
-    this.edit = function() {
+    
+    this.newEvent = function(event, newEvent) {
+        // make sure day doesn't contain already an event
+        if(that.blockedDays.indexOf(newEvent.day) == -1) {
+            that.conditions['addEvent'] = true;
+            var bundle = {};
+            bundle.type = "add";
+            bundle.blockedDays = that.blockedDays;
+            bundle.newEvent = newEvent;
+            parent.flowNavigator.next(bundle);
+        }
+    }
+    
+    this.selectEvent = function(event, element) {
         that.conditions['editEvent'] = true;
         var bundle = {};
+        bundle.type = "edit";
         bundle.blockedDays = that.blockedDays;
-        bundle.events = that.scheduler.selectedEvents();
+        bundle.events = [element];
         parent.flowNavigator.next(bundle);
-    };
+    }
 
     this.add = function() {
         that.conditions['addEvent'] = true;
         var bundle = {};
+        bundle.type = "add";
         bundle.blockedDays = that.blockedDays;
         parent.flowNavigator.next(bundle);
     }

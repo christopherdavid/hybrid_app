@@ -11,6 +11,7 @@ var resourceHandler = {
     func : {},
     //maxEntries:5,
     posFile : [],
+    viewModelPath:"javascript/viewmodel/",
 
     getDomHeader : function() {
         if (!resourceHandler.oDomHeader) {
@@ -40,7 +41,7 @@ var resourceHandler = {
         
             var s=document.createElement('script');
             s.setAttribute("type","text/javascript");
-            s.setAttribute("src", 'javascript/viewmodel/' + src);
+            s.setAttribute("src", this.viewModelPath + src);
             
             // store reference for deletion
             resourceHandler.ressources[src] = {

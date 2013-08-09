@@ -1,0 +1,244 @@
+/*
+ * button.less
+ */
+
+// IN PAGE BUTTON
+
+.ui-btn-up-c {
+    background: transparent;
+}
+
+.ui-btn-hover-c{
+    background: transparent;
+}
+
+.ui-btn.ui-btn-plain {
+    padding: 0;
+    background: #FFF;
+    border: 1px solid #bbbbbb;
+    border-radius: 10px;
+    box-shadow: none;
+    background-clip: padding-box;
+    
+    .ui-btn-inner {
+        background: #FFF;
+        box-shadow: none;
+        border-radius: 10px;
+        .ui-collapsible-heading-toggle {
+            background: none;
+            padding: 15px 0;
+        }
+    }
+    
+    .ui-btn-text {
+        font-weight: bold;
+        font-size: 17px;
+        color: #000;
+        text-shadow: none;
+    }
+    
+    &.ui-disabled {
+        opacity: 1;
+    }
+    
+    &[disabled] {
+        cursor: default;
+        &.ui-btn-down-c .ui-btn-inner {
+            background: #FFF;
+        }
+    }
+}
+
+.ui-btn-hover-c:hover a.ui-link-inherit{
+	color: #fff;
+}
+
+.ui-btn.ui-btn-plain[disabled] span,
+.ui-btn.ui-disabled span,
+.ui-btn.ui-btn-plain[disabled].ui-btn-down-c span,
+.ui-btn.ui-disabled.ui-btn-down-c span {
+    color: #aaaaaa;
+}
+/* button active */
+.ui-btn.ui-btn-plain.ui-btn-down-c .ui-btn-inner,
+.ui-btn.ui-btn-plain.ui-btn-active .ui-btn-inner {
+    .vertical-gradient(#008bf5, #0f5be6);
+}
+.ui-btn.ui-btn-plain.ui-btn-down-c span {
+    color: #FFF;
+    text-shadow: none;
+}
+.ui-btn-inner {
+    border: 0px none;
+}
+
+/* === BUTTON STYLES - SURROUNDS DIALOG BUTTONS === */
+.ui-btn {
+    border-radius: 5px;
+    border-color: #000;
+    -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+    -moz-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+    .vertical-gradient(@button_bg_gradient_start,@button_bg_gradient_end);
+    
+}
+
+.ui-btn .ui-btn-inner {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.5); 
+}
+
+.ui-content .ui-btn.ui-btn-inline.ui-btn-active {
+  	background: #6a6a6a; /* Old browsers */
+    background: -moz-linear-gradient(top,  #006829 0%, #006829 49%, #003722 50%, #003722 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#006829), color-stop(49%,#006829), color-stop(50%,#003722), color-stop(100%,#003722)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #006829 0%,#006829 49%,#003722 50%,#003722 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #006829 0%,#006829 49%,#003722 50%,#003722 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #006829 0%,#006829 49%,#003722 50%,#003722 100%); /* IE10+ */
+    background: linear-gradient(top,  #006829 0%,#006829 49%,#003722 50%,#003722 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#006829', endColorstr='#003722',GradientType=0 ); /* IE6-9 */
+}
+
+
+.ui-select .ui-btn {
+    width: 200px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+/* === BACK BUTTON === */
+a[data-icon='back'], .ui-header a[data-icon='back'] {
+    background: transparent url(../../img/bg_back_button_500x60.png) 0 0 no-repeat !important;
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        box-shadow: none !important;
+            -webkit-border-radius: 0 !important;
+            -moz-border-radius: 0 !important;
+            border-radius: 0 !important;
+    border: 0 none !important;
+    height: 30px;
+}
+
+a[data-icon='back'] .ui-btn-inner {
+    background: transparent url(../../img/bg_back_button_500x60.png) right 0 no-repeat !important;
+    margin: 0 0 0 15px;
+    padding: 0 8px 0 0 !important;
+    height: 32px;
+    line-height: 31px;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+a[data-icon='back'] .ui-icon {
+    display: none;
+}
+
+/* === BLACK - BACK BUTTON === */
+.ui-bar-b a[data-icon='back'] {
+    background-position: 0 -30px !important;
+}
+.ui-bar-b a[data-icon='back'] .ui-btn-inner {
+    background-position: right -30px !important;
+}
+
+
+
+// CUSTOM HEADER BUTTONS
+.ui-header { 
+    // Default Blue
+    .ui-btn {
+        border-color: #375074;
+        top: 6px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        -moz-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        
+        .ui-btn-inner {
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+        }
+    }
+    // Black Button
+    .ui-btn-up-b, .ui-btn-hover-b  {
+        border-color: #000;
+        -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        -moz-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        
+        .ui-btn-text {
+            color: #FFF;
+            text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
+        }
+    }
+    
+    // Transparent Button
+    .ui-btn-up-transparent, .ui-btn-hover-transparent  {
+        border-color: #000;
+        -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        -moz-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        background: transparent;
+        
+        .ui-btn-text {
+            color: #FFF;
+            text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
+        }
+    }
+    
+    .ui-btn-up-c, .ui-btn-hover-c  {
+        border-color: #451c1b;
+        -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        -moz-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        background: #dc7679; /* Old browsers */
+        background: -moz-linear-gradient(top,  #dc7679 0%, #dc7679 49%, #cd2a27 50%, #c92a29 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#dc7679), color-stop(49%,#dc7679), color-stop(50%,#cd2a27), color-stop(100%,#c92a29)); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  #dc7679 0%,#dc7679 49%,#cd2a27 50%,#c92a29 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  #dc7679 0%,#dc7679 49%,#cd2a27 50%,#c92a29 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  #dc7679 0%,#dc7679 49%,#cd2a27 50%,#c92a29 100%); /* IE10+ */
+        background: linear-gradient(top,  #dc7679 0%,#dc7679 49%,#cd2a27 50%,#c92a29 100%); /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dc7679', endColorstr='#c92a29',GradientType=0 ); /* IE6-9 */
+        
+        .ui-btn-text {
+            color: #FFF;
+            text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
+        }
+    }
+    
+    .ui-btn-up-d, .ui-btn-hover-d  {
+        border-color: #375074;
+        -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        -moz-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+        background: #376fe0; /* Old browsers */
+        background: -moz-linear-gradient(top,  #376fe0 0%, #376fe0 49%, #2361de 50%, #2463de 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#376fe0), color-stop(49%,#376fe0), color-stop(50%,#2361de), color-stop(100%,#2463de)); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  #376fe0 0%,#376fe0 49%,#2361de 50%,#2463de 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  #376fe0 0%,#376fe0 49%,#2361de 50%,#2463de 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  #376fe0 0%,#376fe0 49%,#2361de 50%,#2463de 100%); /* IE10+ */
+        background: linear-gradient(top,  #376fe0 0%,#376fe0 49%,#2361de 50%,#2463de 100%); /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#376fe0', endColorstr='#2463de',GradientType=0 ); /* IE6-9 */
+        .ui-btn-text {
+            color: #FFF;
+            text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
+        }
+    }
+}
+
+/* Button pressed state */
+.ui-header .ui-btn-down-b, .ui-btn-down-b, .ui-btn-down-c {
+    border-color: #000;
+    -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+    -moz-box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.36), 0 1px 0 rgba(0,0,0,0.25) inset !important;
+    .vertical-gradient(@button_bg_gradient_end, @button_bg_gradient_start);
+}
+

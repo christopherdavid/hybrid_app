@@ -38,10 +38,20 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
         });
         
         $cleaningTimePicker = $('#cleaningTime');
-
+        console.log(that.bundle);
         if (that.bundle) {
             if (that.bundle.blockedDays && that.bundle.blockedDays.length > 0) {
                 that.blockedDays(that.bundle.blockedDays);
+            }
+            if (that.bundle.newEvent) {
+                var startTime = $.scroller.parseDate('HH:ii', that.bundle.newEvent.startTime);
+                // set event time to date picker
+                $cleaningTimePicker.scroller('setDate', startTime, true);
+                
+                // clear cleaning days and set the new ones from bundle
+                that.selectedCleaningDays.removeAll();
+                that.selectedCleaningDays.push(that.cleaningDays()[that.bundle.newEvent.day]);
+                
             }
             if (that.bundle.events && that.bundle.events.length > 0) {
                 var startTime = $.scroller.parseDate('HH:ii', that.bundle.events[0].scheduleEventData.startTime);

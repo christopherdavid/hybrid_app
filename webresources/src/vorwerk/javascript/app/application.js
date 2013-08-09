@@ -17,9 +17,10 @@ function Application() {
     this.config = {
         firstScreen : "start",
         pageTransition : "none",
-        version:"0.5.4.12",
+        version:"0.5.4.22_dev",
         pluginVersion:"0.5.2.07",
         fallbackLanguage:"en-GB",
+        viewPath:"",
         emailRegEx: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/
         //emailRegEx : /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
     };
@@ -115,7 +116,7 @@ function Application() {
      */
     this.loadView = function(screenId) {
         console.log('loadView ' + screenId);
-        $.mobile.changePage((screenId + ".html"), {
+        $.mobile.changePage((that.config.viewPath + screenId + ".html"), {
             transition : that.config.pageTransition
         });
     }

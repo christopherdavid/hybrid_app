@@ -1,0 +1,214 @@
+/*
+ * dialog.less
+ */
+
+
+.ui-dialog {
+    background: rgba(0, 0, 0, 0.6) none !important;
+    margin: 0;
+}
+.ui-dialog .ui-dialog-contain {
+    max-width: 100%;
+    width: 100%;
+    position: static;
+}
+.ui-dialog .ui-content {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%; /* fixes issue #24 */
+    padding: 0.75em;
+    margin: 0;
+    border-top: 1px solid #45484d;
+        background: #a8b1bd; /* Old browsers */
+        background: -moz-linear-gradient(top,  #a8b1bd 0%, #646d7b 15%, #535c68 16%, #535c68 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a8b1bd), color-stop(15%,#646d7b), color-stop(16%,#535c68), color-stop(100%,#535c68)); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  #a8b1bd 0%,#646d7b 15%,#535c68 16%,#535c68 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  #a8b1bd 0%,#646d7b 15%,#535c68 16%,#535c68 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  #a8b1bd 0%,#646d7b 15%,#535c68 16%,#535c68 100%); /* IE10+ */
+        background: linear-gradient(top,  #a8b1bd 0%,#646d7b 15%,#535c68 16%,#535c68 100%); /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a8b1bd', endColorstr='#535c68',GradientType=0 ); /* IE6-9 */
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+        -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset;
+        -moz-box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset;
+        box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+.ui-dialog .ui-btn {
+    border: none transparent !important;
+}
+
+/* === DIALOG BUTTONS E ===*/
+.ui-dialog .ui-btn-up-e .ui-btn-text, .ui-dialog .ui-btn-hover-e .ui-btn-text {
+    color: #FFF;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.3);
+}
+
+.ui-dialog .ui-btn-up-e .ui-btn-inner, .ui-dialog .ui-btn-hover-e .ui-btn-inner {
+    background: #e18285; /* Old browsers */
+    background: -moz-linear-gradient(top,  #e18285 0%, #d76369 49%, #cd2a27 50%, #bf2321 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e18285), color-stop(49%,#d76369), color-stop(50%,#cd2a27), color-stop(100%,#bf2321)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #e18285 0%,#d76369 49%,#cd2a27 50%,#bf2321 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #e18285 0%,#d76369 49%,#cd2a27 50%,#bf2321 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #e18285 0%,#d76369 49%,#cd2a27 50%,#bf2321 100%); /* IE10+ */
+    background: linear-gradient(top,  #e18285 0%,#d76369 49%,#cd2a27 50%,#bf2321 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e18285', endColorstr='#bf2321',GradientType=0 ); /* IE6-9 */
+}
+
+/* === DIALOG BUTTONS D ===*/
+.ui-dialog .ui-btn-up-d .ui-btn-text, .ui-dialog .ui-btn-hover-d .ui-btn-text {
+    color: #FFF;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.3);
+}
+
+.ui-dialog .ui-btn-up-d .ui-btn-inner, .ui-dialog .ui-btn-hover-d .ui-btn-inner {
+    background: #7bbf81; /* Old browsers */
+    background: -moz-linear-gradient(top,  #7bbf81 0%, #31ab3b 49%, #009e0f 50%, #009a0c 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7bbf81), color-stop(49%,#31ab3b), color-stop(50%,#009e0f), color-stop(100%,#009a0c)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #7bbf81 0%,#31ab3b 49%,#009e0f 50%,#009a0c 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #7bbf81 0%,#31ab3b 49%,#009e0f 50%,#009a0c 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #7bbf81 0%,#31ab3b 49%,#009e0f 50%,#009a0c 100%); /* IE10+ */
+    background: linear-gradient(top,  #7bbf81 0%,#31ab3b 49%,#009e0f 50%,#009a0c 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7bbf81', endColorstr='#009a0c',GradientType=0 ); /* IE6-9 */
+}
+
+/* === DIALOG BUTTONS C ===*/
+.ui-dialog .ui-btn-up-c .ui-btn-text, .ui-dialog .ui-btn-hover-c .ui-btn-text {
+    color: #000;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.ui-dialog .ui-btn-up-c .ui-btn-inner, .ui-dialog .ui-btn-hover-c .ui-btn-inner {
+    background: #e4d0a0; /* Old browsers */
+    background: -moz-linear-gradient(top,  #e4d0a0 0%, #efcd63 49%, #f0be22 50%, #f9dd24 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e4d0a0), color-stop(49%,#efcd63), color-stop(50%,#f0be22), color-stop(100%,#f9dd24)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #e4d0a0 0%,#efcd63 49%,#f0be22 50%,#f9dd24 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #e4d0a0 0%,#efcd63 49%,#f0be22 50%,#f9dd24 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #e4d0a0 0%,#efcd63 49%,#f0be22 50%,#f9dd24 100%); /* IE10+ */
+    background: linear-gradient(top,  #e4d0a0 0%,#efcd63 49%,#f0be22 50%,#f9dd24 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e4d0a0', endColorstr='#f9dd24',GradientType=0 ); /* IE6-9 */
+}
+
+/* === DIALOG BUTTONS B ===*/
+.ui-dialog .ui-btn-up-b .ui-btn-text, .ui-dialog .ui-btn-hover-b .ui-btn-text {
+    color: #FFF;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.3);
+}
+
+.ui-dialog .ui-btn-up-b .ui-btn-inner, .ui-dialog .ui-btn-hover-b .ui-btn-inner {
+    background: #5e636a; /* Old browsers */
+    background: -moz-linear-gradient(top,  #5e636a 0%, #272d37 49%, #171f28 50%, #252d36 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e636a), color-stop(49%,#272d37), color-stop(50%,#171f28), color-stop(100%,#252d36)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #5e636a 0%,#272d37 49%,#171f28 50%,#252d36 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #5e636a 0%,#272d37 49%,#171f28 50%,#252d36 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #5e636a 0%,#272d37 49%,#171f28 50%,#252d36 100%); /* IE10+ */
+    background: linear-gradient(top,  #5e636a 0%,#272d37 49%,#171f28 50%,#252d36 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e636a', endColorstr='#252d36',GradientType=0 ); /* IE6-9 */
+}
+
+/* === DIALOG BUTTONS A ===*/
+.ui-dialog .ui-btn-up-a .ui-btn-text, .ui-dialog .ui-btn-hover-a .ui-btn-text {
+    color: #000;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.ui-dialog .ui-btn-up-a .ui-btn-inner, .ui-dialog .ui-btn-hover-a .ui-btn-inner {
+    .vertical-gradient-3-offset(#ededee 0%, #cfd0d1 49%, #bababb 50%, #bdbfc2 100%);
+}
+
+
+// Dialog types:
+// INFO : "0"
+// WARNING : "1"
+// ERROR : "2"
+#dialogPopup{
+
+  display:none;
+
+  .ui-header h1{
+    text-shadow: 0 -1px 0 black!important;
+  }
+  
+  .ui-header h1:before{
+    content: "";
+    background-image: url(../../img/icons/dialog_icons.png);
+    background-repeat: no-repeat;
+    background-size: 16px 78px;
+    width: 20px;
+    position: relative;
+    height: 20px;
+    display: inline-block;
+    top: 1px;
+    right: 5px;
+  }
+  
+  &.dialogType_1 {
+    display:block;
+    .popupHeaderLine{
+      .vertical-gradient(#00bf4c, #009a3d);
+      position: fixed;
+    }
+    .ui-header h1{
+      color: #00b147;
+    }
+    
+    .ui-header h1:before{ 
+      background-position: left 4px;
+    }
+  }
+  
+  &.dialogType_2 {
+    display:block;
+    .popupHeaderLine{
+      background: #edea00;
+      background: -moz-linear-gradient(top,  #fffc2d 0%, #edea00 100%);
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fffc2d), color-stop(100%,#edea00));
+      background: -webkit-linear-gradient(top,  #fffc2d 0%,#edea00 100%);
+      background: linear-gradient(to bottom,  #fffc2d 0%,#edea00 100%);
+      position: fixed;
+    }
+    .ui-header h1{
+      color: #edea00;
+    }
+    .ui-header h1:before{ 
+      background-position: left -27px;
+    }
+  } 
+  
+  &.dialogType_3 {
+    display:block;
+    .popupHeaderLine{
+      background: #cf2424;
+      background: -moz-linear-gradient(top,  #cf2424 0%, #ad0505 100%);
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cf2424), color-stop(100%,#ad0505));
+      background: -webkit-linear-gradient(top,  #cf2424 0%,#ad0505 100%);
+      background: linear-gradient(to bottom,  #cf2424 0%,#ad0505 100%);
+      position: fixed;
+    }
+    .ui-header h1{
+      color: #cf2424;
+    }
+    .ui-header h1:before{ 
+      background-position: left -58px;
+    }
+  }  
+  
+  .popupHeaderLine {
+    height: 3px;
+    width: 100%;
+    position: relative;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+  }
+  
+  .dialogPopupContent {
+    min-height: 80px;
+  }
+  
+}

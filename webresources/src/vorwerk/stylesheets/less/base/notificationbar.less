@@ -1,4 +1,6 @@
-//
+/**
+ * notificationbar.less 
+ */
 // notification bar style for mobile.notificationbar widget
 
 .ui-notificationbar {
@@ -14,7 +16,7 @@
     
     .contentWrapper {
         height: 42px;
-        .vertical-gradient(#000000, 0%, #707070, 3px, @notificationbar_background, 15%);
+        .vertical-gradient-3-offset(#000000, 0%, #707070, 3px, @notificationbar_background, 15%);
         padding-bottom: 5px;
         padding-top: 10px;
         box-shadow: inset 0px -35px 20px -40px #000;
@@ -55,53 +57,60 @@
             background-position:0 0;
             background-size:240px 80px;
             background-repeat:no-repeat;
-            -webkit-animation-name:sixFrames;
-            -webkit-animation-duration:1s;
-            -webkit-animation-timing-function:steps(1, end);
-            -webkit-animation-delay:0.5s;
-            -webkit-animation-iteration-count:infinite;
-            -webkit-animation-play-state:running;
+            .animation(sixFrames, 1s, steps(1, end), 0.5s, infinite);
+            .animation-play-state(running);
+            
         }
         &.wakeup #ui-notificationbar_icon {
             background-image:url(../../img/icons/robot_animation_360x120.png);
             background-position:0 -40px;
             background-size:240px 80px;
             background-repeat:no-repeat;
-            -webkit-animation-name:sixFrames;
-            -webkit-animation-duration:1s;
-            -webkit-animation-timing-function:steps(1, end);
-            -webkit-animation-delay:0.5s;
-            -webkit-animation-iteration-count:infinite;
-            -webkit-animation-play-state:running;
+            .animation(sixFrames, 1s, steps(1, end), 0.5s, infinite);
+            .animation-play-state(running);
         }
         
     }
 }
 
 
-@-webkit-keyframes sixFrames {
-  0%   {
-    background-position-x:0;
-  }
-  16%   {
-    background-position-x:-40px;
-  }
-  33%   {
-    background-position-x:-80px;
-  }
-  49%  {
-    background-position-x:-120px;
-  }
-  66%  {
-    background-position-x:-160px;
-  }
-  83%  {
-    background-position-x:-200px;
-  }
-  100%  {
-    background-position-x:-240px;
-  }
+// define keyframe for sixFrames
+.sixFrames-frames() {
+    0%   {
+        background-position-x:0;
+    }
+    16%   {
+        background-position-x:-40px;
+    }
+    33%   {
+        background-position-x:-80px;
+    }
+    49%  {
+        background-position-x:-120px;
+    }
+    66%  {
+        background-position-x:-160px;
+    }
+    83%  {
+        background-position-x:-200px;
+    }
+    100%  {
+        background-position-x:-240px;
+    }
 }
 
-
-
+@-moz-keyframes sixFrames {
+    .sixFrames-frames();
+}
+@-webkit-keyframes sixFrames {
+    .sixFrames-frames();
+}
+@-ms-keyframes sixFrames {
+    .sixFrames-frames();
+}
+@-o-keyframes sixFrames {
+    .sixFrames-frames();
+}
+@keyframes sixFrames {
+    .sixFrames-frames();
+}
