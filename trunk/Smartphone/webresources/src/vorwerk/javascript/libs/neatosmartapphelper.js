@@ -841,7 +841,7 @@ var RobotPluginManager = ( function() {
                                     'scheduleEventData': {'startTime':'0:00','day':1, 'cleaningMode':'2'}
                                 }
                             );
-                        }, 1500);
+                        }, 500);
                     break;
                     case "5d31a4e8-5eca-41b8-87bc-fa10a13c4152":
                         window.setTimeout(function() {
@@ -852,7 +852,7 @@ var RobotPluginManager = ( function() {
                                     'scheduleEventData': {'startTime':'5:30','day':2, 'cleaningMode':'1'}
                                 }
                             );
-                        }, 1000);
+                        }, 200);
                     break;
                     case "5d31a4e8-5eca-41b8-87bc-fa10a13c4151":
                         window.setTimeout(function() {
@@ -863,7 +863,7 @@ var RobotPluginManager = ( function() {
                                     'scheduleEventData': {'startTime':'1:30','day':0, 'cleaningMode':'1'}
                                 }
                             );
-                        }, 1000);
+                        }, 300);
                     break;
                 }
                 

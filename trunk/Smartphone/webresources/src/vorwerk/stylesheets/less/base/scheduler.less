@@ -43,8 +43,8 @@
             height: @dayNameHeight;
             font-size: @labelFontSize;
             
-            &.filled {
-                
+            &.hasEvent {
+                color:#0f0;
             }
         }
     }
@@ -101,7 +101,10 @@
             height: 24*@hourHeight + @hourHeight*(3/4); 
             position: relative;
             margin-top: -(@hourHeight - @taskIconHeight)/2; // remove space from icon to task area
-          
+            
+            &.dragging {
+                background-color:rgba(255,255,255,0.1);
+            }
             .event {
                 height : @hourHeight;
                 z-index: 100;
@@ -228,6 +231,19 @@
                 }
                 &.quiet.selected .quietInner {
                     background-color: #002f46;
+                }
+                
+                .newEnty {
+                  position: absolute;
+                  width:50px;
+                  height:50px;
+                  top:0px;
+                  bottom:0px;
+                  left:0px;
+                  right:0px;
+                  margin:auto;
+                  border-radius:25px;
+                  border:1px solid #f0f;
                 }
             }
         }

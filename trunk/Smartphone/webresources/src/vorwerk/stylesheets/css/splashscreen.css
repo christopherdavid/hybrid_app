@@ -1,1 +1,85 @@
-.img-fullscreen-splash{background-image:url("../../img/splash_1024x768.png");background-repeat:no-repeat;background-size:cover;position:absolute;top:0;left:0;right:0;bottom:0}@media only screen and (orientation:portrait) and (max-device-width:2047px){.img-fullscreen-splash{background-image:url("../../img/splash_768x1024.png")}}@media only screen and (device-aspect-ratio:16/9){.img-fullscreen-splash{background-image:url("../../img/splash_1280x720.png")}}@media only screen and (device-aspect-ratio:16/9) and (orientation:portrait){.img-fullscreen-splash{background-image:url("../../img/splash_720x1280.png")}}@media only screen and (device-aspect-ratio:40/71){.img-fullscreen-splash{background-image:url("../../img/splash_1280x720.png")}}@media only screen and (device-aspect-ratio:40/71) and (orientation:portrait){.img-fullscreen-splash{background-image:url("../../img/splash_720x1280.png")}}@media only screen and (device-aspect-ratio:16/10){.img-fullscreen-splash{background-image:url("../../img/splash_1920x1200.png")}}@media only screen and (device-aspect-ratio:16/10) and (orientation:portrait){.img-fullscreen-splash{background-image:url("../../img/splash_1200x1920.png")}}@media only screen and (min-device-width:768px) and (max-device-width:1024px) and (-webkit-min-device-pixel-ratio:2){.img-fullscreen-splash{background-image:url("../../img/splash_2048x1536.png")}}@media only screen and (min-device-width:768px) and (max-device-width:1024px) and (-webkit-min-device-pixel-ratio:2) and (orientation:portrait){.img-fullscreen-splash{background-image:url("../../img/splash_1536x2048.png")}}
+/**
+ * utilities.less
+ * helper functions e.g. .border-radius creates the border raidus syntax for all browser
+ * 
+ */
+/**
+ *   Create an image definition with (optional) additional classes that are attached to the
+ *   img-imgFile name. i.e. if the imgFile name is "myPicture" and the additional classes are ".bright" the resulting
+ *   CSS will contain ".img-myPicture .bright {...}"
+ */
+/**
+ *   Create a simple image with the given dimensions.
+ */
+/**
+ *  Creates the sprite position offset styles for a specific image
+ *  using the states name supplied.
+ */
+/**
+ *   Create a sprite for a certain row with the defined states.
+ *   By default the names for the states are "up", "down", "disabled".
+ *   The name of the states can be set. Currently only three states are available.
+ *   @spriteName: The name for this sprite 
+ *   @width: width of one sprite
+ *   @height: height of one sprite
+ *   @stateAmount: The amount of states within this image
+ *   @state1: The name of the first state (default: up)
+ *   @state2: The name of the second state (default: down)
+ *   @state3: The name of the thrid state (default:disabled)
+ */
+.img-fullscreen-splash {
+  background-image: url("../../img/splash_1024x768.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+@media only screen and (orientation: portrait) and (max-device-width: 2047px) {
+  .img-fullscreen-splash {
+    background-image: url("../../img/splash_768x1024.png");
+  }
+}
+@media only screen and (device-aspect-ratio: 16/9) {
+  .img-fullscreen-splash {
+    background-image: url("../../img/splash_1280x720.png");
+  }
+}
+@media only screen and (device-aspect-ratio: 16/9) and (orientation: portrait) {
+  .img-fullscreen-splash {
+    background-image: url("../../img/splash_720x1280.png");
+  }
+}
+/* iPhone 5*/
+@media only screen and (device-aspect-ratio: 40/71) {
+  .img-fullscreen-splash {
+    background-image: url("../../img/splash_1280x720.png");
+  }
+}
+@media only screen and (device-aspect-ratio: 40/71) and (orientation: portrait) {
+  .img-fullscreen-splash {
+    background-image: url("../../img/splash_720x1280.png");
+  }
+}
+@media only screen and (device-aspect-ratio: 16/10) {
+  .img-fullscreen-splash {
+    background-image: url("../../img/splash_1920x1200.png");
+  }
+}
+@media only screen and (device-aspect-ratio: 16/10) and (orientation: portrait) {
+  .img-fullscreen-splash {
+    background-image: url("../../img/splash_1200x1920.png");
+  }
+}
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) {
+  .img-fullscreen-splash {
+    background-image: url("../../img/splash_2048x1536.png");
+  }
+}
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait) {
+  .img-fullscreen-splash {
+    background-image: url("../../img/splash_1536x2048.png");
+  }
+}

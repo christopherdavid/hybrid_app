@@ -1,0 +1,114 @@
+/*
+ * spinner.less
+ * loading animation
+ */
+
+#loadingArea {
+    position: absolute;
+    display: none;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 2999;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+#loadingSpinnerSmall {
+    position:relative;
+    display:none;
+    float:left;
+    width:128px;
+    height:128px;
+    .transform-scale(@spinner_scale_small);
+    .transform-origin(0, 0, 0);
+    z-index:3501;
+    left:7px;
+    top:8px;
+}
+
+#loadingSpinnerLarge {
+    position:absolute;
+    display:block;
+    left:50%;
+    top:50%;
+    margin-left: -64px;
+    margin-top: -64px;
+    z-index: 3000;
+    width:128px;
+    height:128px;
+    .transform-scale(@spinner_scale_normal);
+}
+
+.f_circleG {
+    position:absolute;
+    background-color:@color_spinner_normal;
+    height:23px;
+    width:23px;
+    .border-radius(12px);
+    .animation-noTime(f_fadeG, 0.88s, infinite, linear);
+}
+
+#frotateG_01 {
+    left:0;
+    top:52px;
+    .animation-delay(0.33s);
+}
+#frotateG_02 {
+    left:15px;
+    top:15px;
+    .animation-delay(0.44s);
+}
+#frotateG_03 {
+    left:52px;
+    top:0;
+    .animation-delay(0.55s);
+}
+#frotateG_04 {
+    right:15px;
+    top:15px;
+    .animation-delay(0.66s);
+}
+#frotateG_05 {
+    right:0;
+    top:52px;
+    .animation-delay(0.77s);
+}
+#frotateG_06 {
+    right:15px;
+    bottom:15px;
+    .animation-delay(0.88s);
+}
+#frotateG_07 {
+    left:52px;
+    bottom:0;
+    .animation-delay(0.99s);
+}
+#frotateG_08 {
+    left:15px;
+    bottom:15px;
+    .animation-delay(1.1s);
+}
+
+// define keyframe for f_fadeG
+.f_fadeG-frames() {
+    0%{background-color:@color_spinner_active}
+    100%{background-color:@color_spinner_normal}
+}
+
+@-moz-keyframes f_fadeG {
+    .f_fadeG-frames();
+}
+@-webkit-keyframes f_fadeG {
+    .f_fadeG-frames();
+}
+@-ms-keyframes f_fadeG {
+    .f_fadeG-frames();
+}
+@-o-keyframes f_fadeG {
+    .f_fadeG-frames();
+}
+@keyframes f_fadeG {
+    .f_fadeG-frames();
+}
+
