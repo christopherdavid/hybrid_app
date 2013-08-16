@@ -117,7 +117,8 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_COMMAND_MAP.put(ActionTypes.TURN_WIFI_ON_OFF, mTurnWifiOnOff);
 			
 			ACTION_COMMAND_MAP.put(ActionTypes.DRIVE_ROBOT, mRobotDriveRequest);
-			ACTION_COMMAND_MAP.put(ActionTypes.TURN_MOTOR_ON_OFF, mTurnMotorOnOffRequest);			
+			ACTION_COMMAND_MAP.put(ActionTypes.TURN_MOTOR_ON_OFF, mTurnMotorOnOffRequest);
+			ACTION_COMMAND_MAP.put(ActionTypes.TURN_MOTOR_ON_OFF2, mTurnMotorOnOffRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.INTEND_TO_DRIVE, mIntendToDriveRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.CANCEL_INTEND_TO_DRIVE, mCancelIntendToDriveRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.STOP_ROBOT_DRIVE, mStopRobotDriveRequest);
@@ -268,6 +269,7 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String RESUME_CLEANING = "resumeCleaning";
 			public static final String DRIVE_ROBOT = "driveRobot";
 			public static final String TURN_MOTOR_ON_OFF = "turnMotorOnOff";
+			public static final String TURN_MOTOR_ON_OFF2 = "turnMotorOnOff2";
 			public static final String TURN_WIFI_ON_OFF = "turnWiFiOnOff";
 			public static final String IS_SCHEDULE_ENABLED = "isScheduleEnabled";
 			public static final String ENABLE_SCHEDULE = "enableSchedule";

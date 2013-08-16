@@ -76,6 +76,7 @@ public class JsonMapKeys {
 	// Used by navigation APIs
 	public static final String KEY_NAVIGATION_CONTROL_ID = "navigationControlId";
 	public static final String KEY_FLAG_ON = "on";
+	public static final String KEY_MOTOR_TYPE = "motorType";
 	public static final String KEY_WIFI_TURN_ON_DURATION_INSEC = "wiFiTurnOnDurationInSec";
 	public static final String KEY_IS_PEER_CONNECTED = "isConnected";
 	

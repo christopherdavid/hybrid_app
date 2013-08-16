@@ -1480,15 +1480,55 @@ var neatoSmartApp = (function() {
 			var motorON = localStorage.getItem('isMotorON');
 			if (motorON == "true") {
 				localStorage.setItem('isMotorON', "false");
-				document.querySelector('#btnTurnMotorOnOff').value = "Turn Robot Motor ON";
+				document.querySelector('#btnTurnMotorOnOff').value = "Turn Robot Vacuum ON";
 			}
 			else {
 				localStorage.setItem('isMotorON', "true");
-				document.querySelector('#btnTurnMotorOnOff').value = "Turn Robot Motor OFF";
+				document.querySelector('#btnTurnMotorOnOff').value = "Turn Robot Vacuum OFF";
 			}
 		},
 		
 		turnMotorOnOffError: function(error) {
+			neatoSmartApp.setResponseText(error);
+			neatoSmartApp.hideProgressBar();
+		},
+		
+		turnBrushOnOff: function() {
+			var robotId = localStorage.getItem('robotId');
+			if ((robotId == null) || (robotId.length == 0)) {
+				alert("Please associate a Robot");
+				return;
+			}
+
+			neatoSmartApp.showProgressBar();
+
+			var brushON = localStorage.getItem('isBrushON');			
+			if (brushON == "true") {
+				RobotPluginManager.turnMotorOnOff2(robotId, MOTOR_TYPE_BRUSH, FLAG_OFF, neatoSmartApp.turnBrushOnOffSuccess, 
+							neatoSmartApp.turnBrushOnOffError);
+				
+			} else {
+				RobotPluginManager.turnMotorOnOff2(robotId, MOTOR_TYPE_BRUSH, FLAG_ON, neatoSmartApp.turnBrushOnOffSuccess, 
+						neatoSmartApp.turnBrushOnOffError);
+			}
+		},
+
+		turnBrushOnOffSuccess: function(result) {
+			neatoSmartApp.hideProgressBar();
+			neatoSmartApp.setResponseText(result);
+			
+			var motorON = localStorage.getItem('isBrushON');
+			if (motorON == "true") {
+				localStorage.setItem('isBrushON', "false");
+				document.querySelector('#btnTurnBrushOnOff').value = "Turn Robot Brush ON";
+			}
+			else {
+				localStorage.setItem('isBrushON', "true");
+				document.querySelector('#btnTurnBrushOnOff').value = "Turn Robot Brush OFF";
+			}
+		},
+		
+		turnBrushOnOffError: function(error) {
 			neatoSmartApp.setResponseText(error);
 			neatoSmartApp.hideProgressBar();
 		},
@@ -2572,10 +2612,10 @@ var neatoSmartApp = (function() {
 			}
 			
 			if (MotorON == "false") {
-				document.querySelector('#btnTurnMotorOnOff').value = "Turn Robot Motor ON";
+				document.querySelector('#btnTurnMotorOnOff').value = "Turn Robot Vacuum ON";
 			}
 			else {
-				document.querySelector('#btnTurnMotorOnOff').value = "Turn Robot Motor OFF";
+				document.querySelector('#btnTurnMotorOnOff').value = "Turn Robot Vacuum OFF";
 			}
 		},
 			
@@ -2724,6 +2764,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnStopRobotDrive').addEventListener('click', neatoSmartApp.stopRobotDrive, true);
 			document.querySelector('#btnCancelIntendToDrive').addEventListener('click', neatoSmartApp.cancelIntendToDrive, true);
 			document.querySelector('#btnTurnMotorOnOff').addEventListener('click',neatoSmartApp.turnMotorOnOff, true);
+			document.querySelector('#btnTurnBrushOnOff').addEventListener('click',neatoSmartApp.turnBrushOnOff, true);
 			neatoSmartApp.populateDriveControlList();
 	
 			// set the page as the current page and make it visible
@@ -2743,6 +2784,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnStopRobotDrive').removeEventListener('click', neatoSmartApp.stopRobotDrive, true);
 			document.querySelector('#btnCancelIntendToDrive').removeEventListener('click', neatoSmartApp.cancelIntendToDrive, true);
 			document.querySelector('#btnTurnMotorOnOff').removeEventListener('click',neatoSmartApp.turnMotorOnOff, true);
+			document.querySelector('#btnTurnBrushOnOff').removeEventListener('click',neatoSmartApp.turnBrushOnOff, true);
 		},
 		
 		populateDriveControlList: function () {
