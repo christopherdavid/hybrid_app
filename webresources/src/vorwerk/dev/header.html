@@ -3,8 +3,8 @@
         <div class="ui-btn-left" data-bind="visible:showLeftButton()">
             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
                 data-bind="jqLinkButtonText:leftButton, visible:!showLeftButtonIcon()"></a>
-            <a href="#" id="addButton" class="btn-with-image" data-role="button" data-theme="b" data-mini="false" data-inline="true"
-                data-bind="visible:showLeftButtonIcon()"></a>
+            <a href="#" id="addButton" class="btn-with-image" data-image="add" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-bind="visible:showLeftButtonIcon()">&nbsp;</a>
         </div>
         <h1>
             <div class="screenTitle">
@@ -17,8 +17,8 @@
         <div class="ui-btn-right" data-bind="visible:showRightButton()">
             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
                 data-bind="jqLinkButtonText:rightButton, visible:!showRightButtonIcon()"></a>
-            <a href="#" id="addButton" class="btn-with-image" data-role="button" data-theme="b" data-mini="false" data-inline="true"
-                data-bind="visible:showRightButtonIcon()"></a>
+            <a href="#" id="addButton" class="btn-with-image" data-image="add" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-bind="visible:showRightButtonIcon()">&nbsp;</a>
         </div>
     </div>
     <div data-role="content">
@@ -29,25 +29,25 @@
          <fieldset data-role="controlgroup">
              <legend>Robotname:</legend>
              <input type="text" data-bind="value: robotName, valueUpdate: 'afterkeydown'" placeholder="robot name"/>
-             <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" data-bind="checked: showRobotName" />
+             <input type="checkbox" name="checkbox-1" id="checkbox-1" data-bind="checked: showRobotName" data-theme="b" />
              <label for="checkbox-1">Visible</label>
          </fieldset>
          <fieldset data-role="controlgroup">
             <legend>Left Button:</legend>
             <input type="text" data-bind="value: leftButton, valueUpdate: 'afterkeydown'" placeholder="text for button">
-            <input type="checkbox" name="checkbox-2" id="checkbox-2" class="custom" data-bind="checked: showLeftButton" />
+            <input type="checkbox" name="checkbox-2" id="checkbox-2" data-bind="checked: showLeftButton"  data-theme="b"/>
             <label for="checkbox-2">Visible</label>
             
-            <input type="checkbox" name="checkbox-3" id="checkbox-3" class="custom" data-bind="checked:showLeftButtonIcon" />
+            <input type="checkbox" name="checkbox-3" id="checkbox-3" data-bind="checked:showLeftButtonIcon"  data-theme="b"/>
             <label for="checkbox-3">Icon</label>
          </fieldset>
          <fieldset data-role="controlgroup">
             <legend>Right Button:</legend>
             <input type="text" data-bind="value: rightButton, valueUpdate: 'afterkeydown'" placeholder="text for button"/>
-            <input type="checkbox" name="checkbox-4" id="checkbox-4" class="custom" data-bind="checked: showRightButton" />
+            <input type="checkbox" name="checkbox-4" id="checkbox-4" data-bind="checked: showRightButton"  data-theme="b"/>
             <label for="checkbox-4">Visible</label>
             
-            <input type="checkbox" name="checkbox-5" id="checkbox-5" class="custom" data-bind="checked:showRightButtonIcon" />
+            <input type="checkbox" name="checkbox-5" id="checkbox-5" data-bind="checked:showRightButtonIcon"  data-theme="b"/>
             <label for="checkbox-5">Icon</label>
             
         </fieldset>

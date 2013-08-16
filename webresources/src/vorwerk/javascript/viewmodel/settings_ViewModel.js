@@ -8,12 +8,6 @@ resourceHandler.registerFunction('settings_ViewModel.js', function(parent) {
     this.init = function() {
     };
     
-    this.changeRobot = function() {
-        // Switch to robot selection dialog
-        that.conditions['changeRobot'] = true;
-        parent.flowNavigator.next(robotScreenCaller.CHANGE);
-    };
-
     this.back = function() {
         parent.flowNavigator.previous();
     };

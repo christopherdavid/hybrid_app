@@ -11,7 +11,7 @@ function Scheduler($root, scheduleType) {
 
     var STANDARD_EVENT_DURATION = 60;
     var HOUR = 60;
-    var HOUR_IN_PX = deviceSize.getResolution() == "high" ? 160 : 80;
+    var HOUR_IN_PX = deviceSize.getResolution() == "high" ? 96 : 48;
     var MIN_IN_PX = HOUR_IN_PX / 60;
     var DEFAULT_START_TIME = "8:00";
     var scroller;
@@ -23,7 +23,8 @@ function Scheduler($root, scheduleType) {
     var weekIndex = $.map($.i18n.t("pattern.week").split(","), function(value){
         return +value;
         });
-
+    var labelEco = $.i18n.t("common.cleaningMode.1");
+    
     var columns = new Array(7);
     // better use a variable instead of read and convert webkit-transform value using a matrix 
     var containerScrollY = 0;
@@ -162,7 +163,8 @@ function Scheduler($root, scheduleType) {
             });
             $task.data('reference', oEvent);
             var $taskInner = $('<div/>', {
-                'class' : clazz + 'Inner mode-'+ oEvent.scheduleEventData.cleaningMode
+                'class' : clazz + 'Inner mode-'+ oEvent.scheduleEventData.cleaningMode,
+                'text' : oEvent.scheduleEventData.cleaningMode == 1 ? labelEco : ""
             });
             
             $task.css('top', MIN_IN_PX * startTimeInMin);
@@ -469,10 +471,18 @@ function Scheduler($root, scheduleType) {
     function fillTimeColumn() {
         var timeFormat = $.i18n.t("pattern.time");
         for (var i = 0; i < 24; i++) {
-            $timeColumn.append($('<div/>', {
+            var localTime = localizeTime(i+":00");
+            var $time = $('<div/>', {
                 'class' : 'time',
-                'text' : localizeTime(i+":00"),
-            }))
+                'text' : localTime.time
+            });
+            if(localTime.marker != "") {
+                $time.append($('<span/>', {
+                    'class' : 'marker',
+                    'text' : localTime.marker
+                }));
+            }
+            $timeColumn.append($time)
         }
     }
 

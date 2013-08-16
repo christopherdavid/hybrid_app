@@ -1,0 +1,35 @@
+<div data-role="page" id="start">
+    <div data-role="header" class="headerbar" data-theme="b" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+        </div>
+        <h1>
+            <div class="screenTitle">
+                <span>Button</span>
+            </div>
+        </h1>
+    </div>
+    <div data-role="content">
+         <fieldset>
+             <legend>open dialog:</legend>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-bind="click: showInfo">info</a>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-bind="click: showWarning">warning</a>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-bind="click: showError">error</a>
+         </fieldset>
+         <fieldset>
+             <legend>open dialog 2 buttons:</legend>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-bind="click: showInfo2">info</a>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-bind="click: showWarning2">warning</a>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-bind="click: showError2">error</a>
+         </fieldset>
+         <fieldset>
+             <legend>open dialog 3 buttons:</legend>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-bind="click: showInfo3">info</a>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-bind="click: showWarning3">warning</a>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-bind="click: showError3">error</a>
+         </fieldset>
+                 
+    </div><!-- /content -->
+</div><!-- /page -->

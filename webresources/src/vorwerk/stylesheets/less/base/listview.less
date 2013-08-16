@@ -1,0 +1,69 @@
+/*
+ * listview.less
+ */
+
+.ui-listview {
+    background-color:@listview_bg_color;
+    border-radius: 10px;
+    
+    .ui-btn {
+        border:0px none;
+        border-radius: 0px;
+        background: transparent;
+        border-top:1px solid @listview_separator_color;
+        .box-shadow-none()!important;
+        &:first-child {
+          border-top:0px none;
+          .border-radius-top(inherit)!important;
+        }
+        &:last-child {
+          .border-radius-bottom(inherit)!important;
+        }
+        
+        .ui-btn-text {
+            
+            h3 {
+                color:@listview_text_color;
+                font-weight:normal;
+                .font_big;
+            }
+            .ui-li-desc {
+                color:@listview_description_color;
+                .font_normal;
+            }
+        }
+        
+        &:before {
+            display:none;
+        }
+        
+        &.ui-first-child {
+            .border-radius-top(initial);
+        }
+        &.ui-last-child {
+            .border-radius-bottom(initial);
+        }
+        
+        &.ui-btn-down-a, &.ui-selected {
+            background: @listview_bg_down_color;
+            
+            .ui-btn-text {
+              
+                .ui-li-desc {
+                    color:@listview_description_selected_color;
+                }
+            }
+        }
+    }
+    
+    .ui-icon-arrow-r {
+        .box-shadow-none();
+        background: transparent url(../../img/icons/arrow_right_44x64.png) center center no-repeat !important;
+        background-size:@listview_icon_width @listview_icon_height;
+        width:@listview_icon_width;
+        height:@listview_icon_height;
+        margin-top:-@listview_icon_height/2!important;
+        right:15px;
+    }
+}
+

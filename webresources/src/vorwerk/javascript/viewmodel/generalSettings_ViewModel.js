@@ -44,12 +44,6 @@ resourceHandler.registerFunction('generalSettings_ViewModel.js', function(parent
         console.log("error GET" + JSON.stringify(error));
     };
     
-    this.changeRobot = function() {
-        // Switch to robot selection dialog
-        that.conditions['changeRobot'] = true;
-        parent.flowNavigator.next(robotScreenCaller.CHANGE);
-    };
-    
     this.selectedPushType.subscribe(function(newValue) {      
         var onoff = newValue == 'on' ? true : false;
         console.log("robotNeedsCleaning=" + onoff);

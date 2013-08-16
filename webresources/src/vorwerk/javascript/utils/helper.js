@@ -66,7 +66,7 @@ function localizeTime(time) {
     }
     // add leading zero
     hour = hour < 10 ? "0" + hour : hour;
-    return hour + ':' + min + amPmMarker;
+    return {time:(hour + ':' + min), marker:amPmMarker};
 }
 
 

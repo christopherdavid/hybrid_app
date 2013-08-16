@@ -21,10 +21,6 @@
       <js>/../../../../bin/copymin/jquery-ui-1.9.2.custom.min.js</js>
       <js>/../../../../bin/copymin/jquery.ui.touch-punch.min.js</js>
       <js>/../../../../bin/copymin/jquery.ui.plugins.js</js>
-      <js>/../../../../bin/copymin/mobiscroll.datetime-2.3.1.min.js</js>
-    </group>
-    <group name="jcanvas">
-      <js>/../../../../bin/copymin/jcanvas.min.js</js>
     </group>
     <group name="application">
         <js>/../../../../bin/copymin/application.js</js>

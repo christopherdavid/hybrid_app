@@ -31,7 +31,7 @@
                 data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'onblur',  jqmInputVisible:showPassword()"/>
             <input type="text" data-i18n="createAccount.page.password_verify" 
                 data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', jqmInputCSS: {invalid: passwordValid},  jqmInputVisible:showPassword()"/>
-            <input type="checkbox" name="togglePassword" id="togglePassword" class="custom" data-bind="checked: showPassword" />
+            <input type="checkbox" name="togglePassword" id="togglePassword" class="custom" data-bind="checked: showPassword" data-theme="b" />
             <label for="togglePassword" data-i18n="loginUser.page.password_show" 
                 data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[show pwd]</label>
         </fieldset>

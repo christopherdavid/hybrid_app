@@ -1,0 +1,59 @@
+<div data-role="page" id="start">
+    <div data-role="header" class="headerbar" data-theme="b" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+        </div>
+        <h1>
+            <div class="screenTitle">
+                <span>Button</span>
+            </div>
+        </h1>
+    </div>
+    <div data-role="content">
+         <fieldset>
+             <legend>inline:</legend>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true">data-theme="b"</a>
+             <a href="#" data-role="button" data-theme="c" data-mini="false" data-inline="true">data-theme="c"</a>
+         </fieldset>
+         <fieldset>
+             <legend>inline disabled:</legend>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" class="ui-disabled">data-theme="b"</a>
+             <a href="#" data-role="button" data-theme="c" data-mini="false" data-inline="true" class="ui-disabled">data-theme="c"</a>
+         </fieldset>
+         <fieldset>
+             <legend>full width:</legend>
+             <a href="#" data-role="button" data-theme="b" data-mini="false">data-theme="b"</a>
+             <a href="#" data-role="button" data-theme="c" data-mini="false">data-theme="c"</a>
+         </fieldset>
+         <fieldset>
+             <legend>full witdh disabled:</legend>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" class="ui-disabled">data-theme="b"</a>
+             <a href="#" data-role="button" data-theme="c" data-mini="false" class="ui-disabled">data-theme="c"</a>
+         </fieldset>
+         <fieldset>
+             <legend>inline with icon:</legend>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-image="add" class="btn-with-image">&nbsp;</a>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-image="menu" class="btn-with-image">&nbsp;</a>
+             <a href="#" data-role="button" data-theme="c" data-mini="false" data-inline="true" data-image="add" class="btn-with-image">&nbsp;</a>
+             <a href="#" data-role="button" data-theme="c" data-mini="false" data-inline="true" data-image="menu" class="btn-with-image">&nbsp;</a>
+         </fieldset>
+         <fieldset>
+             <legend>inline with icon disabled:</legend>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-image="add" class="btn-with-image ui-disabled">&nbsp;</a>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-image="menu" class="btn-with-image ui-disabled">&nbsp;</a>
+             <a href="#" data-role="button" data-theme="c" data-mini="false" data-inline="true" data-image="add" class="btn-with-image ui-disabled">&nbsp;</a>
+             <a href="#" data-role="button" data-theme="c" data-mini="false" data-inline="true" data-image="menu" class="btn-with-image ui-disabled">&nbsp;</a>
+         </fieldset>
+         <fieldset>
+             <legend>nested in controlgroup:</legend>
+             <div data-role="controlgroup" data-type="horizontal">
+                 <a href="#" data-role="button" data-theme="b" data-mini="false">button 1</a>
+                 <a href="#" data-role="button" data-theme="b" data-mini="false">button 2</a>
+                 <a href="#" data-role="button" data-theme="b" data-mini="false">button 3</a>
+             </div>
+         </fieldset>
+                 
+    </div><!-- /content -->
+</div><!-- /page -->

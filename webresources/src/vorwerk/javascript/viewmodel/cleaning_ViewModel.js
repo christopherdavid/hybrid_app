@@ -129,12 +129,6 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         $spotPopup.popup("close");
     }
     
-    this.changeRobot = function() {
-        // Switch to robot selection dialog
-        that.conditions['changeRobot'] = true;
-        parent.flowNavigator.next(robotScreenCaller.CHANGE);
-    };
-
     this.startBtnClick = function() {
         var tDeffer = null;
         // React on start states of the robot and react accordingly
