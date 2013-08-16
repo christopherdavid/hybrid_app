@@ -43,6 +43,10 @@ public class RobotCommandPacketConstants {
 	public static final int CLEANING_CATEGORY_ALL = 2;
 	public static final int CLEANING_CATEGORY_SPOT = 3;
 	
+	// Codes for Motor Types
+	public static final int MOTOR_TYPE_VACUUM = 101;
+	public static final int MOTOR_TYPE_BRUSH = 102;
+	
 	// Default Spot cleaning values
 	public static final int DEFAULT_SPOT_CLEANING_LENGTH					= 5;
 	public static final int DEFAULT_SPOT_CLEANING_HEIGHT					= 3;

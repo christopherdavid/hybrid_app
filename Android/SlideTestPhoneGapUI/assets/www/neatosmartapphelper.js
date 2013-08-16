@@ -24,6 +24,10 @@ var DAY_SATURDAY = 6;
 var SCHEDULE_TYPE_BASIC = 0;
 var SCHEDULE_TYPE_ADVANCED = 1;
 
+// Motor types
+var MOTOR_TYPE_VACUUM = 101;
+var MOTOR_TYPE_BRUSH  = 102;
+
 //robotNotifications2 keyCodes
 
 // The current state of the robot
@@ -118,6 +122,7 @@ var ACTION_TYPE_GET_SPOT_DEFINITION				= "getSpotDefinition";
 var ACTION_TYPE_DRIVE_ROBOT						= "driveRobot";
 var ACTION_TYPE_IS_ROBOT_PEER_CONNECTED			= "isRobotPeerConnected";
 var ACTION_TYPE_TURN_MOTOR_ON_OFF				= "turnMotorOnOff";
+var ACTION_TYPE_TURN_MOTOR_ON_OFF2				= "turnMotorOnOff2";
 var ACTION_TYPE_TURN_WIFI_ON_OFF				= "turnWiFiOnOff";
 var ACTION_TYPE_TURN_NOTIFICATION_ON_OFF		= "turnNotificationOnOff";
 var ACTION_TYPE_IS_NOTIFICATION_ENABLED			= "isNotificationEnabled";
@@ -1679,6 +1684,21 @@ RobotMgr.prototype.turnMotorOnOff = function(robotId, on, callbackSuccess, callb
 };
 
 /**
+ * This API turns the motor of the robot on or off. This API calls Neato Smart App Service
+ * 
+ * @param robotId 			the serial number of the robot
+ * @param motorType			Integer value to denote the type of motor being controlled. Must be: MOTOR_TYPE_VACUUM, MOTOR_TYPE_BRUSH.
+ * @param on 				Integer value. Must be FLAG_ON or FLAG_OFF
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ */
+RobotMgr.prototype.turnMotorOnOff2 = function(robotId, motorType, on, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId, 'motorType': motorType, 'on':on};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_TURN_MOTOR_ON_OFF2, [commandParams]);
+};
+
+/**
  * This API turns the WiFi on or off on the robot. If WiFi is turned off then
  * duration must be specified (in secs). This API calls Neato Smart App Service
  * 
@@ -2546,6 +2566,19 @@ var RobotPluginManager = (function() {
 		 */
 		turnMotorOnOff: function(robotId, flag, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.turnMotorOnOff(robotId, flag, callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API turns the motor of the robot on or off depending on the motortype. This API calls Neato Smart App Service
+		 * 
+		 * @param robotId 			the serial number of the robot
+		 * @param motorType			Integer value to denote the type of motor being controlled. Must be: MOTOR_TYPE_VACUUM, MOTOR_TYPE_BRUSH.
+		 * @param on 				Integer value. Must be FLAG_ON or FLAG_OFF
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 */
+		turnMotorOnOff2: function(robotId, motorType, flag, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.turnMotorOnOff2(robotId, motorType, flag, callbackSuccess, callbackError);
 		},
 
 		/**
