@@ -42,12 +42,6 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         that.scheduler.destroy();
     }
    
-   this.changeRobot = function() {
-        // Switch to robot selection dialog
-        that.conditions['changeRobot'] = true;
-        parent.flowNavigator.next(robotScreenCaller.CHANGE);
-    };
-
     this.loadScheduler = function() {
         //RobotPluginManager.getScheduleEvents(robotId, scheduleType, callbackSuccess, callbackError)
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getScheduleEvents, [that.robot().robotId(), 0]);
@@ -161,8 +155,9 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         // create text for each event and store it in buffer localization dependent (pattern.week)
         $.each(events, function(index, item) {
             var sContext = "";
+            var localTime = localizeTime(item.scheduleEventData.startTime);
             sContext += $.i18n.t("common.day." + item.scheduleEventData.day);
-            sContext += " " + localizeTime(item.scheduleEventData.startTime)+",";
+            sContext += " " + localTime.time + " " + localTime.marker + ",";
             sContext += $.i18n.t("common.cleaningMode." + item.scheduleEventData.cleaningMode);
             contextBuffer[jQuery.inArray((item.scheduleEventData.day), weekIndex)] = sContext;
         });

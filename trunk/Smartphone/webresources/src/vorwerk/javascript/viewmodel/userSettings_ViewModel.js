@@ -44,12 +44,6 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
         that.user(ko.mapping.fromJS(parent.communicationWrapper.getDataValue("user")), null, that.user);
     };
     
-    this.changeRobot = function() {
-        // Switch to robot selection dialog
-        that.conditions['changeRobot'] = true;
-        parent.flowNavigator.next(robotScreenCaller.CHANGE);
-    };
-    
     this.changePassword = function() {
         $("#changePasswordPopup").popup("open");
     };

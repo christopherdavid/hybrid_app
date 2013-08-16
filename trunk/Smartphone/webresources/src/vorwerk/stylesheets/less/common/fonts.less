@@ -19,17 +19,39 @@
 @fontColorGreen: #009a3d;
 
 @font-face {
-    font-family: TazText;
-    src: url("../../fonts/TazTextWt05-RegularG083.otf") format("opentype");
+    font-family: TazTextRegular;
+    src: url("../../fonts/TazText.ttf") format("truetype");
 }
 
 @font-face {
     font-family: TazText;
     font-weight: bold;
-    src: url("../../fonts/TazTextWt07-Bold.otf") format("opentype");
+    src: url("../../fonts/TazTextBold-Hinted.ttf") format("truetype");
 }
 
 *, body .ui-body-c, .ui-btn-up-c, .ui-btn-hover-c, .ui-btn-down-c{
-    font-family:"TazText";
+    font-family:"TazTextRegular";
+}
+
+.font_reg {
+  font-family:"TazTextRegular";
+}
+.font_bold {
+  font-family:"TazText";
+}
+
+// Taz 10pt
+.font_big {
+    font-size:@fontsize_big;
+}
+
+// Taz 7pt
+.font_normal {
+    font-size:@fontsize_normal;
+}
+
+// Taz 6pt
+.font_small {
+    font-size:@fontsize_small;
 }
 

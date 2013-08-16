@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+
+    <title>Mobiscroll</title>
+
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+
+    <style type="text/css">
+        body {
+            font-family: arial, verdana, sans-serif;
+            font-size: 12px;
+        }
+
+    </style>
+
+    <script src="js/mobiscroll.core.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.datetime.js" type="text/javascript"></script>
+<!--
+    
+    <script src="js/mobiscroll.select.js" type="text/javascript"></script>
+-->
+
+    <script src="js/mobiscroll.jqm.js" type="text/javascript"></script>
+    <!--
+    <script src="js/mobiscroll.ios.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.android.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.android-ics.js" type="text/javascript"></script>
+    <script src="js/mobiscroll.wp.js" type="text/javascript"></script>
+    -->
+<!--
+    <script src="js/i18n/mobiscroll.i18n.de.js" type="text/javascript"></script>
+    <script src="js/i18n/mobiscroll.i18n.es.js" type="text/javascript"></script>
+    <script src="js/i18n/mobiscroll.i18n.fr.js" type="text/javascript"></script>
+    <script src="js/i18n/mobiscroll.i18n.hu.js" type="text/javascript"></script>    
+    <script src="js/i18n/mobiscroll.i18n.it.js" type="text/javascript"></script>
+    <script src="js/i18n/mobiscroll.i18n.no.js" type="text/javascript"></script>
+    <script src="js/i18n/mobiscroll.i18n.pt-BR.js" type="text/javascript"></script>
+    <script src="js/i18n/mobiscroll.i18n.zh.js" type="text/javascript"></script>
+-->
+    <link href="css/mobiscroll.core.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.jqm.css" rel="stylesheet" type="text/css" />
+    <!--
+    <link href="css/mobiscroll.android.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.android-ics.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.ios.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.sense-ui.css" rel="stylesheet" type="text/css" />
+    <link href="css/mobiscroll.wp.css" rel="stylesheet" type="text/css" />
+    -->
+
+    <link href="css/mobiscroll.animation.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        $(document).on('pageinit', function(){
+            
+            $('.timePicker').mobiscroll().time({
+                theme : 'jqm',
+                display : 'inline',
+                timeWheels : "hhiiA",
+                mode : 'mixed',
+                stepMinute : 15
+            });
+        });
+        $(function () {
+            var curr = new Date().getFullYear();
+            
+            
+            /*
+            var opt = {
+                'time': {
+                    preset: 'time'
+                }
+            }
+
+            $('.settings select').bind('change', function() {
+                console.log("kkl")
+                var demo = $('#demo').val();
+
+                if (!demo.match(/select/i)) {
+                    $('.demo-test-' + demo).val('');
+                }
+
+                $('.demo-test-' + demo).scroller('destroy').scroller($.extend(opt[demo], {
+                    theme: $('#theme').val(),
+                    mode: $('#mode').val(),
+                    lang: $('#language').val(),
+                    display: $('#display').val(),
+                    animate: $('#animation').val()
+                }));
+                $('.demo').hide();
+                $('.demo-' + demo).show();
+            });
+
+            $('#demo').trigger('change');
+            */
+        });
+    </script>
+</head>
+
+<body>
+    <div data-role="page" data-theme="b">
+        <div data-role="header" data-theme="a">
+            <h1>Mobiscroll</h1>
+        </div>
+
+        <div data-role="content" data-theme="d">
+            <div class="settings">
+                <div data-role="fieldcontain">
+                    <label for="theme">Theme</label>
+                    <select name="theme" id="theme">
+                        <option value="default">Default</option>
+                        <option value="jqm">jQuery Mobile</option>
+                        <option value="android-ics">Android ICS</option>
+                        <option value="android-ics light">Android ICS Light</option>
+                        <option value="android">Android</option>
+                        <option value="sense-ui">Sense UI</option>
+                        <option value="ios">iOS</option>
+                        <option value="wp">Windows Phone</option>
+                        <option value="wp light">Windows Phone Light</option>
+                    </select>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="mode">Mode</label>
+                    <select name="mode" id="mode">
+                        <option value="scroller">Scroller</option>
+                        <option value="clickpick">Clickpick</option>
+                        <option value="mixed">Mixed</option>
+                    </select>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="language">Language</label>
+                    <select name="language" id="language">
+                        <option value="">English</option>
+                        <option value="de">Deutsch</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                        <option value="hu">Magyar</option>
+                        <option value="it">Italiano</option>
+                    </select>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="display">Display</label>
+                    <select name="display" id="display">
+                        <option value="modal">Modal</option>
+                        <option value="inline">Inline</option>
+                        <option value="bubble">Bubble</option>
+                        <option value="top">Top</option>
+                        <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="animation">Animation</label>
+                    <select name="animation" id="animation" class="settings">
+                        <option value="">None</option>
+                        <option value="fade">Fade</option>
+                        <option value="flip">Flip</option>
+                        <option value="pop">Pop</option>
+                        <option value="swing">Swing</option>
+                        <option value="slidehorizontal">Slide Horizontal</option>
+                        <option value="slidevertical">Slide Vertical</option>
+                        <option value="slidedown">Slide Down</option>
+                        <option value="slideup">Slide Up</option>
+                    </select>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="demo">Demo</label>
+                    <select name="demo" id="demo">
+                        <option value="time">Time</option>
+                    </select>
+                </div>
+            </div>
+            <div data-role="fieldcontain" class="demo demo-date demo-datetime demo-time demo-credit">
+                <label for="test">Click here to try</label>
+                <input name="test" id="test" class="demo-test-date demo-test-datetime demo-test-time demo-test-credit" />
+                
+                <div id="cleaningTime" class="timePicker"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

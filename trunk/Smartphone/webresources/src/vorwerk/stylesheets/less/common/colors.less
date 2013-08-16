@@ -1,4 +1,7 @@
 @color_page_background:#1a1a1a;
+@page_gradient_start:fade(@color_page_background,100%);
+@page_gradient_end:fade(@color_page_background,0%);
+
 
 // spinner.less
 @color_spinner_active:#95C11C;
@@ -13,8 +16,39 @@
 @header_subtitle_color:#8c8c8c;
 
 // button.less
-@button_bg_gradient_start:#262626;
-@button_bg_gradient_end:#404040;
+@button_bg_gradient_start:#404040;
+@button_bg_gradient_end:#262626;
+@button_bg_gradient_crit_start:#661919;
+@button_bg_gradient_crit_end:#401616;
+@button_border_color:fade(#FFFFFF, 10%);
+@button_inner_border_color:#141414;
+
+// listview.less
+@listview_bg_color:#333333;
+@listview_separator_color:#191919;
+@listview_bg_down_color:#0e7f3a;
+@listview_text_color:#FFFFFF;
+@listview_description_color:#009a3d;
+@listview_description_selected_color:#000000;
+
+// scheduler.less
+@scheduler_marker_color:#808080;
+@scheduler_day_blocked:#009a3d;
+@scheduler_time_column_odd:fade(#FFFFFF, 3%);
+
+// daypicker.less
+@daypicker_day_color:#FFFFFF;
+@daypicker_day_selected_color:#00b147;
+@daypicker_day_disabled_color:fade(#b1b2b3, 33%);
+
+
+// dialog.less
+@dialog_headline_color:#FFFFFF;
+@dialog_border_color:#1f1f1f;
+@dialog_info_color:#009a3d;
+@dialog_warning_color:#dddd00;
+@dialog_error_color:#cf2424;
+
 
 
 @color_robot_status:#009a3d;

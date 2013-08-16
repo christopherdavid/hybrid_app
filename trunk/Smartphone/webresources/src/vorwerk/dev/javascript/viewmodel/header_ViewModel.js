@@ -9,7 +9,7 @@ resourceHandler.registerFunction('header_ViewModel.js', function(parent) {
         that.conditions = {};
     };
     
-    this.titleText = ko.observable("");
+    this.titleText = ko.observable("Header");
     this.robotName = ko.observable("");
     this.showRobotName = ko.observable(false);
     

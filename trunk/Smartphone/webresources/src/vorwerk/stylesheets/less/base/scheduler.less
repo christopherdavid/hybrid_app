@@ -1,76 +1,78 @@
 .scheduler {
     position: absolute;
-    top: 70px;
+    top: @headerbar_height + @content_space;
     bottom: 0px;
     left: 0px;
     right: 0px;
     overflow: hidden;
     box-sizing: border-box;
-    background-color: @bg_gradient_start;
+    background-color: @color_page_background;
     
     .schedulerLeftCorner {
       position:absolute;
       top:0;
       left:0;
-      width:@timeColumnWidth;
-      height:@dayNameHeight;
-      /*
-      background-color:@bg_gradient_start;
-      */
+      width:@scheduler_time_column_width;
+      height:@scheduler_day_row_height;
       -webkit-transform:translateZ(0);
-      .horizontal-gradient(@bg_gradient_start,transparent);
+      .both-gradient-3-offset(@color_page_background, 0%, @page_gradient_start, 50%, @page_gradient_end, 100%,
+                              @color_page_background, 0%, @page_gradient_start, 66%, @page_gradient_end, 100%);
       z-index:1001;
     }
 
     .dayRow {
         -webkit-transform:translateZ(0);
-        min-width: 7*@dayMinColumnWidth + @timeColumnWidth;
+        min-width: 7*@scheduler_day_min_column_width + @scheduler_time_column_width;
         box-sizing: border-box; 
         z-index: 1000;
         position: relative;
-        /*
-        background-color:@bg_gradient_start;
-        */    
-        .vertical-gradient(@bg_gradient_start,transparent);
-        padding-left: @timeColumnWidth;
+        height:@scheduler_day_row_height;
+        .vertical-gradient-3-offset(@color_page_background, 0%, @page_gradient_start, 50%, @page_gradient_end, 100%);
+        
+        padding-left: @scheduler_time_column_width;
             
         .dayLabel {
             display : inline-block;
             width: floor(100%/ 7);
-            min-width: @dayMinColumnWidth;
+            min-width: @scheduler_day_min_column_width;
             text-overflow: ellipsis;
             text-align: center;
-            height: @dayNameHeight;
-            font-size: @labelFontSize;
+            height: @scheduler_day_row_height;
+            .font_normal;
             
             &.hasEvent {
-                color:#0f0;
+                color:@scheduler_day_blocked;
+                background-image: url('../../img/icons/schedule_day_blocked_14x14.png');
+                background-size:@scheduler_day_blocked_icon_size;
+                background-position:bottom center;
+                background-repeat:no-repeat;
             }
         }
     }
   
     .timeColumn {
         position: absolute;
-        width: @timeColumnWidth; 
+        width: @scheduler_time_column_width; 
         z-index: 1000;
         -webkit-transform:translateZ(0);
-        /*
-        background-color:@bg_gradient_start;
-        */
-        margin-top:@dayNameHeight;
-        .horizontal-gradient(@bg_gradient_start,transparent);
+        margin-top:@scheduler_day_row_height;
+        .horizontal-gradient-3-offset(@color_page_background, 0%, @page_gradient_start, 66%, @page_gradient_end, 100%);
         
         .time {
-            height: @hourHeight;
+            height: @scheduler_hour_height;
             text-align: right;
-            font-size: @labelFontSize;
             padding-right:5px;
+            .font_small;
             
             &:first-child {
-               padding-top: @taskIconHeight/2 - @labelFontSize/2 - @lineGridlineHeight; 
+               padding-top: @scheduler_event_height/2 - @fontsize_small/2 - @scheduler_grid_line_height; 
             }
             &:last-child {
-                padding-bottom:@hourHeight/2;
+                padding-bottom:@scheduler_hour_height/2;
+            }
+            
+            .marker {
+                color:@scheduler_marker_color;
             }
         }
     }
@@ -86,84 +88,68 @@
   
     .schedulerContent {
         height: 2000px;
-        min-width: 7*@dayMinColumnWidth + @timeColumnWidth; 
-        margin-left: @timeColumnWidth;
-        margin-top:@dayNameHeight;
+        min-width: 7*@scheduler_day_min_column_width + @scheduler_time_column_width; 
+        margin-left: @scheduler_time_column_width;
+        margin-top:@scheduler_day_row_height;
         box-sizing: border-box; 
-        background-image: url('../../img/bg_scheduler.png');
-        background-position-y: @taskIconHeight/2 - @lineGridlineHeight/2;
-        background-size:@lineGridSize;
+        background-image: url('../../img/bg_scheduler_6x96.png');
+        background-position-y: @scheduler_event_height/2 - @scheduler_grid_line_height/2;
+        background-size:@scheduler_grid_size;
       
         .day {
             display : inline-block;
             width: floor(100%/ 7);
-            min-width: @dayMinColumnWidth;
-            height: 24*@hourHeight + @hourHeight*(3/4); 
+            min-width: @scheduler_day_min_column_width;
+            height: 24*@scheduler_hour_height + @scheduler_hour_height*(3/4); 
             position: relative;
-            margin-top: -(@hourHeight - @taskIconHeight)/2; // remove space from icon to task area
+            margin-top: -(@scheduler_hour_height - @scheduler_event_height)/2; // remove space from icon to task area
+            
+            &:nth-child(odd) { 
+                background-color:@scheduler_time_column_odd;
+            }
             
             &.dragging {
                 background-color:rgba(255,255,255,0.1);
             }
             .event {
-                height : @hourHeight;
+                height : @scheduler_hour_height;
                 z-index: 100;
                 width: 100%;
                 position: absolute;
                 
                 &.basicTask .basicTaskInner {
                     position: absolute;
-                    top: 2px;
-                    left: 2px;
-                    bottom: 2px;
-                    right: 2px;
+                    top: @scheduler_event_space;
+                    left: @scheduler_event_space;
+                    bottom: @scheduler_event_space;
+                    right: @scheduler_event_space;
+                    height:@scheduler_event_height;
                     text-align:center;
                     margin:auto;
                     padding:0;
-                    width:@taskIconWidth;
-                    height:@taskIconHeight;
-                    background-image:url(../../img/icons/scheduler_icons_106x112.png);
-                    background-repeat:no-repeat;
-                    background-size:@taskImageWidth @taskImageHeight;
-                    background-position:0 0;
+                    background-color:@scheduler_day_blocked;
+                    border-radius:5px;
+                    line-height:@scheduler_event_height;
+                    .font_bold;
                     
-                    // eco
-                    &.mode-1 {
-                      background-position-y:-@taskIconHeight;
-                    }
-                    // normal
-                    &.mode-2 {
-                      background-position-y:0;
-                    }
-                    /*
-                    &.state-server {
-                        border: 2px dotted @color_green_bright;
-                    }
                     
-                    &.state-local {
-                        border: 2px dotted #fff;
-                    }
-                    */
-                   // zoom factor 1.5
+                    // zoom factor 1.5
                     &:active {
-                        background-size:@taskImageWidth*1.5 @taskImageHeight*1.5;
-                        background-position-x:0px;
-                        width:@taskIconWidth*1.5;
-                        height:@taskIconHeight*1.5;
-                        // eco
-                        &.mode-1 {
-                          background-position-y:-@taskIconHeight*1.5;
-                        }
+                        left:@scheduler_event_space - @scheduler_event_zoom/2;
+                        right:@scheduler_event_space - @scheduler_event_zoom/2;
+                        height:@scheduler_event_height + @scheduler_event_zoom;
+                        line-height:@scheduler_event_height + @scheduler_event_zoom;
+                        .font_big;
                     }
                 }
                 &.basicTask.state-local .basicTaskInner {
                     // eco
                     &.mode-1 {
-                      background-position-y:-@taskIconHeight*3;
+                      background-position-y:-@scheduler_event_height*3;
                     }
                     // normal
                     &.mode-2 {
-                      background-position-y:-@taskIconHeight*2;
+                      background-position-y:-@scheduler_event_height*2;
                     }
                 }
                 &.basicTask.selected .basicTaskInner {
@@ -248,30 +234,4 @@
             }
         }
     }
-}
-
-.ui-header .ui-btn-right{
-
-  .ui-btn.btn-with-image
-  {
-    span{
-      background-size: 32px;
-      background-repeat: no-repeat;
-      background-position: center center;
-    }
-   
-    &#addButton span{
-      background-image: url(../../img/icons/add_64x64.png);
-    }
-    
-    &#deleteButton span{
-      background-image: url(../../img/icons/delete_64x64.png);
-    }
-    
-    &#editButton span{
-      background-image: url(../../img/icons/edit_64x64.png);
-    }
-  
-  }
-  
 }

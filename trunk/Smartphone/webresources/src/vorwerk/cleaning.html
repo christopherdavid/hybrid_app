@@ -2,15 +2,14 @@
 
     <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
         <div class="ui-btn-left">
-            <a data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#menuPopup" data-rel="popup"
-                data-i18n="common.menu" data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[menu]</a>
+            <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image" data-image="menu" data-inline="true" href="#menuPopup" data-rel="popup">&nbsp;</a>
         </div>
         <h1>
-            <div class="robotName">
-                <span data-bind="click:changeRobot, text: robot().robotName">[robot name]</span>
-            </div>
             <div class="screenTitle">
                 <span data-i18n="cleaning.navi.title" data-bind="translate: language">[navi title]</span>
+            </div>
+            <div class="robotName">
+                <span data-bind="text: robot().robotName">[robot name]</span>
             </div>
         </h1>
         <div class="ui-btn-right">

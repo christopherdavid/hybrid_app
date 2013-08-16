@@ -27,7 +27,18 @@
     -o-transform-origin: 0 0 0;
     transform-origin: 0 0 0;
 }
-
+.box-shadow-none() {
+    -moz-box-shadow: none;
+    -o-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.box-shadow(@Hshadow:0, @Vshadow:0, @blur:0, @spread:0, @color:#FFF, @inset:'') {
+    -webkit-box-shadow: @arguments;
+    -moz-box-shadow: @arguments;
+    -o-box-shadow: @arguments;
+    box-shadow: @arguments;
+}
 // animation
 .animation(@name, @duration, @timingFunction, @delay, @iterationCount, @direction) {
     .animation-name(@name);
@@ -142,6 +153,35 @@
     background: -o-linear-gradient(left,  @startColor 0%,@endColor 100%);
     background: -ms-linear-gradient(left,  @startColor 0%,@endColor 100%);
     background: linear-gradient(to right,  @startColor 0%,@endColor 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=(~"'@{startColor}'"), endColorstr=(~"'@{endColor}'"),GradientType=1 );
+}
+
+.horizontal-gradient-3(@startColor, @midColor, @endColor) {
+    .horizontal-gradient-3-offset(@startColor, 0%, @midColor, 50%, @endColor, 100%);
+}
+.horizontal-gradient-3-offset(@startColor: #ff0000, @startOffset: 0%, @midColor:#00ff00, @midOffset: 50%, @endColor:#0000ff, @endOffset:100%) {
+    background: @startColor;
+    background: -moz-linear-gradient(left,  @startColor @startOffset, @midColor @midOffset, @endColor @endOffset);
+    background: -webkit-gradient(linear, left top, right top, color-stop(@startOffset,@startColor), color-stop(@midOffset,@midColor), color-stop(@endOffset,@endColor));
+    background: -webkit-linear-gradient(top,  @startColor @startOffset,@midColor @midOffset,@endColor @endOffset);
+    background: -o-linear-gradient(left,  @startColor @startOffset,@midColor @midOffset,@endColor @endOffset);
+    background: -ms-linear-gradient(left,  @startColor @startOffset,@midColor @midOffset,@endColor @endOffset);
+    background: linear-gradient(to right,  @startColor @startOffset,@midColor @midOffset,@endColor @endOffset);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=(~"'@{startColor}'"), endColorstr=(~"'@{endColor}'"),GradientType=1 );
+}
+
+.both-gradient-3(@startColor, @midColor, @endColor,@startHorColor, @midHorColor, @endHorColor) {
+    .both-gradient-3-offset(@startColor, 0%, @midColor, 50%, @endColor, 100%, @startHorColor, 0%, @midHorColor, 50%, @endHorColor, 100%);
+}
+.both-gradient-3-offset(@startColor: #ff0000, @startOffset: 0%, @midColor:#00ff00, @midOffset: 50%, @endColor:#0000ff, @endOffset:100%,
+                        @startHorColor: #ff0000, @startHorOffset: 0%, @midHorColor:#00ff00, @midHorOffset: 50%, @endHorColor:#0000ff, @endHorOffset:100%) {
+    background: @startColor;
+    background: -moz-linear-gradient(left,  @startColor @startOffset, @midColor @midOffset, @endColor @endOffset), -moz-linear-gradient(top,  @startHorColor @startHorOffset, @midHorColor @midHorOffset, @endHorColor @endHorOffset);
+    background: -webkit-gradient(linear, left top, right top, color-stop(@startOffset,@startColor), color-stop(@midOffset,@midColor), color-stop(@endOffset,@endColor)), -webkit-gradient(linear, left top, left bottom, color-stop(@startHorOffset,@startHorColor), color-stop(@midHorOffset,@midHorColor), color-stop(@endHorOffset,@endHorColor));
+    background: -webkit-linear-gradient(top,  @startColor @startOffset,@midColor @midOffset,@endColor @endOffset), -webkit-linear-gradient(top,  @startHorColor @startHorOffset,@midHorColor @midHorOffset,@endHorColor @endHorOffset);
+    background: -o-linear-gradient(left,  @startColor @startOffset,@midColor @midOffset,@endColor @endOffset), -o-linear-gradient(top,  @startHorColor @startHorOffset,@midHorColor @midHorOffset,@endHorColor @endHorOffset);
+    background: -ms-linear-gradient(left,  @startColor @startOffset,@midColor @midOffset,@endColor @endOffset), -ms-linear-gradient(top,  @startHorColor @startHorOffset,@midHorColor @midHorOffset,@endHorColor @endHorOffset);
+    background: linear-gradient(to right,  @startColor @startOffset,@midColor @midOffset,@endColor @endOffset), linear-gradient(to bottom,  @startHorColor @startHorOffset,@midHorColor @midHorOffset,@endHorColor @endHorOffset);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=(~"'@{startColor}'"), endColorstr=(~"'@{endColor}'"),GradientType=1 );
 }
 

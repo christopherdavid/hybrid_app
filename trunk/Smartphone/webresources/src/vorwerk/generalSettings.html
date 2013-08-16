@@ -7,11 +7,11 @@
                 data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
         </div>
         <h1>
-            <div class="robotName">
-                <span data-bind="click:changeRobot, text: robot().robotName">[robot name]</span>
-            </div>
             <div class="screenTitle">
                 <span data-i18n="generalSettings.navi.title" data-bind="translate: language">[navi title]</span> 
+            </div>
+            <div class="robotName">
+                <span data-bind="text: robot().robotName">[robot name]</span>
             </div>
         </h1>
     </div>

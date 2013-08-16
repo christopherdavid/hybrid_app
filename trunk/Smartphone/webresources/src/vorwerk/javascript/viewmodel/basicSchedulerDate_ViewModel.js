@@ -30,10 +30,11 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
 
         var langFormat = $.i18n.t("pattern.time");
         $('.timePicker').mobiscroll().time({
-            theme : 'default',
+            theme : 'jqm',
             display : 'inline',
+            showLabel: false,
             timeWheels : langFormat,
-            mode : 'scroller',
+            mode : 'clickpick',
             stepMinute : 15
         });
         
@@ -114,11 +115,6 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     /* </enviroment functions> */
 
     /* <actionbar functions> */
-    this.changeRobot = function() {
-        // Switch to robot selection dialog
-        that.conditions['changeRobot'] = true;
-        parent.flowNavigator.next(robotScreenCaller.CHANGE);
-    };
     
     this.back = function() {
         that.conditions['back'] = true;

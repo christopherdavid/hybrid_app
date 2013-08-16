@@ -1,0 +1,32 @@
+<div data-role="page" id="start">
+    <div data-role="header" class="headerbar" data-theme="b" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+        </div>
+        <h1>
+            <div class="screenTitle">
+                <span>daypicker &amp; timepicker</span>
+            </div>
+        </h1>
+    </div>
+    <div data-role="content">
+         <div data-role="fieldcontain">
+            <label for="timePicker">Daypicker</label>
+            <ul class="dayPicker" data-bind="foreach: cleaningDays">
+                <li data-bind="css:{'disabled': $parent.blockedDays.indexOf($data.id) != -1,
+                        'checked': $parent.selectedCleaningDays.indexOf($data) != -1},
+                        click: $root.cleaningDaySelected"><div data-bind="text: dayName" class="label">[Day]</div>
+                    <div class="icon"></div>
+                </li>
+            </ul>
+        </div>
+
+        <div data-role="fieldcontain">
+            <label for="timePicker">Time Picker</label>
+            <div id="cleaningTime" class="timePicker"></div>
+        </div>
+                 
+    </div><!-- /content -->
+</div><!-- /page -->

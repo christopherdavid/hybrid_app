@@ -12,23 +12,33 @@ resourceHandler.registerFunction('start_ViewModel.js', function(parent) {
     };
     
     
-    this.header = function() {
+    this.headerView = function() {
         that.conditions['header'] = true;
         parent.flowNavigator.next();
     };
+    
+    this.buttonView = function() {
+        that.conditions['button'] = true;
+        parent.flowNavigator.next();
+    };
+    
+    this.daypickerView = function() {
+        that.conditions['daypicker'] = true;
+        parent.flowNavigator.next();
+    }
 
-    this.form = function() {
+    this.formView = function() {
         that.conditions['form'] = true;
         parent.flowNavigator.next();
     };
     
-    this.list = function() {
-        that.conditions['list'] = true;
+    this.listView = function() {
+        that.conditions['listview'] = true;
         parent.flowNavigator.next();
     }
     
-    this.dialog = function() {
-        that.conditions['dialog'] = true;
+    this.dialogView = function() {
+        that.conditions['dialogview'] = true;
         parent.flowNavigator.next();
     }
     

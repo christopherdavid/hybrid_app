@@ -216,20 +216,30 @@ div.ui-slider-switch {
 
 
 // checkbox
-.ui-icon-checkbox-on {
-  background-position: 0 0;
-  background-image: url("../../img/icons/tick_34x35.png");
-  background-size: 18px 18px;
+.ui-checkbox {
+    .ui-btn {
+      border-radius:5px;
+    }
+    .ui-icon-checkbox-on {
+        background-position: 0 0;
+        background-image: url("../../img/icons/tick_34x35.png");
+        background-size: 18px 18px;
+      
+        &.ui-icon {
+            background-color: rgba(0,0,0,0.8);
+        }
+    }
+    
+    .ui-checkbox-off .ui-icon {
+        background-color: rgba(0,0,0,0.8);
+        background-image:none;
+    }
 }
 
-.ui-checkbox-on .ui-icon {
-  background-color: rgba(0,0,0,0.8);
-}
 
-.ui-checkbox-off .ui-icon {
-  background-color: rgba(0,0,0,0.8);
-  background-image:none;
-}
+
+
+
 
 
 
@@ -430,153 +440,37 @@ div.ui-slider.ui-slider-switch{
 
 
 // header button left and right
-.ui-popup-container
-{  
-
-  .ui-bar-buttons.buttons_1 {
-    
-    .ui-btn.first-button {
-          width:@button_width; // minus border-width
-        border-radius:@button_height/2 @button_height/2 @button_height/2 @button_height/2;
-    
-        .ui-btn-inner {
-            padding: 0 @button_height/2 0 @button_height/4; // small buttons cut in half the padding
-            width:(@button_width) - @button_height/2; // minus border-width - (padding-left + padding-right)
-            max-width:(@button_width) - @button_height/2;
-        }
-    }
-    
-    .ui-btn.second-button {
-      display: none;
-    }
-    
-    .ui-btn.third-button {
-      display: none;
-    }
-  }
-  
-  .ui-bar-buttons.buttons_2 {
-    
-    .ui-btn.first-button {
-        width:(@button_width)/2 - 1; // minus border-width
-        border-radius:@button_height/2 0 0 @button_height/2;
-    
-        .ui-btn-inner {
-            padding: 0 @button_height/4 0 @button_height/8; // small buttons cut in half the padding
-            width:(@button_width)/2 - 1 - @button_height/4; // minus border-width - (padding-left + padding-right)
-            max-width:(@button_width)/2 - 1 - @button_height/4;
-        }
-    }
-    
-    .ui-btn.second-button {
-        width:@button_width/2 - 2; // minus border-width - margin-left
-        margin-left:1px;
-        border-radius:0 @button_height/2 @button_height/2 0;
-        
-        .ui-btn-inner {
-            padding: 0 0 0 @button_height/8 - 2; // small buttons cut in half the padding
-            width:(@button_width)/2 - 2 - @button_height/4; // minus border-width - margin-left - (padding-left + padding-right)
-            max-width:(@button_width)/2 - 2 - @button_height/4;
-                    
-        .ui-btn-text {
-                padding-right:5px;
+.ui-popup-container {
+    .ui-bar-buttons.buttons_1 {
+        /*
+        .ui-btn.first-button {
+            .border-radius-right(5px);
+            &:before {
+              .border-radius-right(5px);
             }
         }
-    }
-    
-    .ui-btn.third-button {
-      display: none;
-    }
-  }
-  
-  .ui-bar-buttons.buttons_3 {
-    
-    .ui-btn.first-button {
-        width:(@button_width)/3 - 2; // minus border-width
-        border-radius:@button_height/2 0 0 @button_height/2;
-    
-        .ui-btn-inner {
-            padding: 0 @button_height/4 0 @button_height/8; // small buttons cut in half the padding
-            width:(@button_width)/3 - 2 - @button_height/6; // minus border-width - (padding-left + padding-right)
-            max-width:(@button_width)/3 - 2 - @button_height/6;
+        */
+        .ui-btn.second-button {
+            display: none;
+        }
+        .ui-btn.third-button {
+            display: none;
         }
     }
-    
-    .ui-btn.second-button {
-        width:@button_width/3 - 2; // minus border-width - margin-left
-        margin-left:1px;
-        border-radius:0 0 0 0;
-        
-        .ui-btn-inner {
-            padding: 0 0 0 @button_height/8 - 2; // small buttons cut in half the padding
-            width:(@button_width)/3 - 2 - @button_height/6; // minus border-width - margin-left - (padding-left + padding-right)
-            max-width:(@button_width)/3 - 2 - @button_height/6;
-                    
-        .ui-btn-text {
-                padding-right:5px;
+  
+    .ui-bar-buttons.buttons_2 {
+        /*
+        .ui-btn.second-button {
+            .border-radius-right(5px);
+            &:before {
+              .border-radius-right(5px);
             }
         }
-    }
-    
-    .ui-btn.third-button {
-        width:@button_width/3 - 3; // minus border-width - margin-left
-        margin-left:1px;
-        border-radius:0 @button_height/2 @button_height/2 0;
-        
-        .ui-btn-inner {
-            padding: 0 0 0 @button_height/8 - 3; // small buttons cut in half the padding
-            width:(@button_width)/3 - 3 - @button_height/6; // minus border-width - margin-left - (padding-left + padding-right)
-            max-width:(@button_width)/3 - 3 - @button_height/6;
-                    
-        .ui-btn-text {
-                padding-right:5px;
-            }
+        */
+        .ui-btn.third-button {
+            display: none;
         }
     }
-  }
-
-  .ui-bar-buttons {
-    
-    position: relative;
-    left: 18px;
-    margin:10px auto;
-    width: 261px;
-    height:54px;
-    
-        
-    .ui-btn {
-        margin:0;
-        top:6px;
-        height:@button_height;
-        border-radius:@button_height/2;
-        width:@button_width;
-        left:6px;
-        float:left;
-        
-        .ui-btn-inner {
-            display: table-cell;
-            height: @button_height;
-            width:@button_width - @button_height/2;
-            white-space: normal;
-            vertical-align: middle;
-            text-align: center;
-            padding: 0 @button_height/4 0 @button_height/4;
-            max-width: @button_width - @button_height/2;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-        
-        &.first-button {
-            
-        }
-        
-        &.second-button {
-
-        }
-    }
-  }
-  
 }
 
 .ui-popup-screen.in {

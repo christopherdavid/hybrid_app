@@ -143,12 +143,6 @@ Application.prototype.loadWorkflow = function() {
                     "value" : true
                 }]
             },{
-                targetScreenId : "terms",
-                conditions : [{
-                    "key" : "terms",
-                    "value" : true
-                }]
-            },{
                 targetScreenId : "basicScheduler",
                 conditions : [{
                     "key" : "schedule",
@@ -270,21 +264,6 @@ Application.prototype.loadWorkflow = function() {
             }]
         },
         "about" : {
-            navrules : [{
-                targetScreenId : "robotSelection",
-                conditions : [{
-                    "key" : "changeRobot",
-                    "value" : true
-                }]
-            },{
-                targetScreenId : "settings",
-                conditions : [{
-                    "key" : "back",
-                    "value" : true
-                }]
-            }]
-        },
-        "terms" : {
             navrules : [{
                 targetScreenId : "robotSelection",
                 conditions : [{

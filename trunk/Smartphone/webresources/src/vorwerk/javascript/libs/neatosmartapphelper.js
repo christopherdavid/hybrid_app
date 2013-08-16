@@ -444,7 +444,9 @@ var RobotPluginManager = ( function() {
         startCleaning: function(robotId, cleaningCategoryId, cleaningModeId, cleaningModifier,
                     callbackSuccess, callbackError) {
              window.setTimeout(function() {
-                callbackSuccess("OK");
+                //callbackSuccess("OK");
+                // timed mode
+                callbackSuccess({"expectedTimeToExecute":200});
             }, 1000);
         },
         

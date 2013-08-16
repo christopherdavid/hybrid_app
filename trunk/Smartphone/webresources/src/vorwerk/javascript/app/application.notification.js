@@ -24,7 +24,8 @@ function WorkflowNotification(parent) {
         $("#dialogPopup").bind({
             popupafterclose: function(event, ui) { 
                 $("#dialogPopup").removeClass("dialogType_1 dialogType_2 dialogType_3");
-                $("#dialogPopup .ui-bar-buttons").attr("class", "ui-bar-buttons");
+                //$("#dialogPopup .ui-bar-buttons").attr("class", "ui-bar-buttons");
+                $("#dialogPopup .ui-bar-buttons").removeClass("buttons_1 buttons_2 buttons_3");
                 // remove disabled style
                 $("#dialogPopup .ui-bar-buttons .ui-btn").removeClass("ui-disabled");
                 // remove event listener
@@ -160,6 +161,13 @@ function WorkflowNotification(parent) {
             $("#dialogPopup .ui-btn").each(function(index ){
                 if(index < buttons.length) {
                      $(this).find("span.ui-btn-text").text(buttons[index].label);
+                     // check for last button
+                     if(index + 1 == buttons.length) {
+                         $(this).addClass("ui-last-child");
+                     } else {
+                         $(this).removeClass("ui-last-child");
+                     }
+                     
                      if(typeof buttons[index].callback != "undefined") {
                          $(this).on("vclick.dialog", function() {
                             // disable button to prevent multiple clicks
@@ -178,6 +186,7 @@ function WorkflowNotification(parent) {
             })
         } else {
             $("#dialogPopup .ui-bar-buttons").addClass("buttons_1");
+            $("#dialogPopup .first-button").addClass("ui-last-child");
             $("#dialogPopup .first-button .ui-btn-text").text("Ok"); 
             $("#dialogPopup .first-button").on("vclick.dialog", function() {
                 that.closeDialog();

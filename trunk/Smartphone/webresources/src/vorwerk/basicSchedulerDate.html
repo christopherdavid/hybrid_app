@@ -7,11 +7,11 @@
                 data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
         </div>
         <h1>
-            <div class="robotName">
-				<span data-bind="click:changeRobot, text: robot().robotName">[robot name]</span>
-            </div>
             <div class="screenTitle">
                 <span data-i18n="basicSchedulerDate.navi.title" data-bind="translate: language">[navi title]</span>
+            </div>
+            <div class="robotName">
+                <span data-bind="text: robot().robotName">[robot name]</span>
             </div>
         </h1>
         <div class="ui-btn-right">
@@ -31,8 +31,7 @@
                 <li data-bind="css:{'disabled': $parent.blockedDays.indexOf($data.id) != -1,
                         'checked': $parent.selectedCleaningDays.indexOf($data) != -1},
                         click: $root.cleaningDaySelected"><div data-bind="text: dayName" class="label">[Day]</div>
-                    <div data-bind="css:{'ui-icon-struck': $parent.blockedDays.indexOf($data.id) != -1,
-                        'ui-icon-tick': $parent.selectedCleaningDays.indexOf($data) != -1}"></div>
+                    <div class="icon"></div>
                 </li>
             </ul>
         </div>

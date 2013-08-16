@@ -11,16 +11,51 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "header",
                     "value" : true
                 }]
-            }]
-        },
-        "header" : {
-            navrules : [{
-                targetScreenId : "header",
+            },
+            {
+                targetScreenId : "button",
                 conditions : [{
-                    "key" : "header",
+                    "key" : "button",
                     "value" : true
                 }]
-            }]
+            },
+            {
+                targetScreenId : "daypicker",
+                conditions : [{
+                    "key" : "daypicker",
+                    "value" : true
+                }]
+            },
+            {
+                targetScreenId : "listview",
+                conditions : [{
+                    "key" : "listview",
+                    "value" : true
+                }]
+            },
+            {
+                targetScreenId : "dialog",
+                conditions : [{
+                    "key" : "dialogview",
+                    "value" : true
+                }]
+            }
+            ]
+        },
+        "header" : {
+            navrules : []
+        },
+        "button" : {
+            navrules : []
+        },
+        "daypicker" : {
+            navrules : []
+        },
+        "listview" : {
+            navrules : []
+        },
+        "dialog" : {
+            navrules : []
         }
     };
 };
