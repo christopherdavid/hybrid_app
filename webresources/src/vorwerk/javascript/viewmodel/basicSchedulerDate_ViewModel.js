@@ -10,11 +10,13 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     this.cleaningDays = ko.observableArray([]);
     this.selectedCleaningDays = ko.observableArray([]);
     this.blockedDays = ko.observableArray([]);
-    this.cleaningMode = ko.observable();
+    // set eco as default
+    this.cleaningMode = ko.observable(1);
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
+    this.hasDelete = ko.observable(false);
     
     this.isNextEnabled = ko.computed(function() {
-        return (that.selectedCleaningDays().length > 0 && this.cleaningMode() != null);
+        return (that.selectedCleaningDays().length > 0);
     }, this)
     
     /* <enviroment functions> */
@@ -53,6 +55,9 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
                 that.selectedCleaningDays.removeAll();
                 that.selectedCleaningDays.push(that.cleaningDays()[that.bundle.newEvent.day]);
                 
+            } else {
+                //show delete Button
+                that.hasDelete(true);
             }
             if (that.bundle.events && that.bundle.events.length > 0) {
                 var startTime = $.scroller.parseDate('HH:ii', that.bundle.events[0].scheduleEventData.startTime);
@@ -248,6 +253,37 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     }
     this.selectNormal = function() {
         that.cleaningMode("2");
+    }
+    
+    this.del = function() {
+        if (that.bundle.events && that.bundle.events.length > 0) {
+            var item = that.bundle.events[0];
+            var sContext = "";
+            var localTime = localizeTime(item.scheduleEventData.startTime);
+            sContext += $.i18n.t("common.day." + item.scheduleEventData.day);
+            sContext += " " + localTime.time + " " + localTime.marker + ",";
+            sContext += $.i18n.t("common.cleaningMode." + item.scheduleEventData.cleaningMode);
+            
+            // show delete warning message 
+            parent.notification.showDialog(dialogType.WARNING,'Delete event', $.i18n.t('dialogs.EVENT_DELETE.title', 1) +"</br>"+ sContext, 
+                [{label:$.i18n.t('dialogs.EVENT_DELETE.button_1'), callback:that.commitDel}, {label:$.i18n.t('dialogs.EVENT_DELETE.button_2')}]);
+        } 
+    }
+    
+    this.commitDel = function() {
+        if (that.bundle.events && that.bundle.events.length > 0) {
+            var item = that.bundle.events[0];
+            parent.notification.closeDialog();
+            
+            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.deleteScheduleEvent, [parent.communicationWrapper.dataValues["scheduleId"], item.scheduleEventId], 
+                { type: notificationType.SPINNER, message: "" , bHide: false });
+            console.log("deleteScheduleEvent: " + item.scheduleEventId);
+            
+            tDeffer.done(function(){
+                parent.notification.showLoadingArea(false, notificationType.SPINNER);
+                that.updateSchedule();
+            });
+        }
     }
 
 

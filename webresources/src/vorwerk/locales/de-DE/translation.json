@@ -2,15 +2,15 @@
     "messages": {
         "101": {
             "title": "I'm stuck",
-            "message": "Please clear my path. Help me so I can continue cleaning."
+            "message": "<span class='font_bold'>__robotName__</span>: Please clear my path. Help me so I can continue cleaning."
         },
         "102": {
             "title": "I'm scruffy",
-            "message": "Please empty my Dirt Bin and Filter if needed."
+            "message": "<span class='font_bold'>__robotName__</span>: Please empty my Dirt Bin and Filter if needed."
         },
         "103": {
             "title": "Return to base",
-            "message": "I'm finished and returning to my base!"
+            "message": "<span class='font_bold'>__robotName__</span>: I'm finished and returning to my base!"
         }
     },
     "dialogs": {
@@ -122,7 +122,7 @@
             "password_verify": "Passwort verifizieren",
             "password_show": "Passwort anzeigen",
             "registration_done_title": "Registrierung abgeschlossen",
-            "registration_done_message": "Eine Bestätigungs-E-Mail wurde an Ihre E-Mail-Adresse gesendet. Bitte bestätigen sie Ihren Account innerhalb 48 Stunden.<br /><br />Nach der Bestätigung können Sie sich einloggen und zu Ihrem Roboter verbinden."
+            "registration_done_message": "Eine Bestätigungs-E-Mail wurde an Ihre E-Mail-Adresse gesendet. Bitte bestätigen sie Ihren Account innerhalb von 48 Stunden.<br /><br />Nach der Bestätigung können Sie sich einloggen und zu Ihrem Roboter verbinden."
         }
     },
     "robotSelection": {
@@ -181,10 +181,14 @@
         },
         "page": {
             "robot_management": "Roboter Einstellungen",
+            "robot_management_desc": "Verändern Sie diesen Roboter oder wechseln zu einem anderen.",
             "user_settings": "Benutzereinstellungen",
+            "user_settings_desc": "Ändern Sie ihr Passwort.",
             "general_settings": "Allgemeine Einstellungen",
+            "general_settings_desc": "Verwalten Sie die Benachrichtigung des Roboters.",
             "terms": "Nutzungsbedingungen",
-            "about": "Über"
+            "about": "Über",
+            "about_desc": "Zeige Versions Informationen."
         }
     },
     "robotManagement": {
@@ -192,6 +196,7 @@
             "title": "Roboter Einstellungen"
         },
         "page": {
+            "robot_change":"Roboter hinzufügen/wechseln",
             "robot_name": "Roboter Name",
             "robot_id": "Roboter ID",
             "robot_type": "Type",
@@ -254,7 +259,7 @@
         },
         "page": {
             "cleaning_event": "Reinigungsevent",
-            "cleaning_mode": "Reinigungsmodus",
+            "cleaning_mode": "Im ECO Modus reinigen",
             "quiet_time": "Ruhezeit",
             "starting_time": "Startzeit",
             "clean_every": "Sauge jeden...",

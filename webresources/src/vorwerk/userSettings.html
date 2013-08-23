@@ -14,11 +14,6 @@
                 <span data-bind="text: robot().robotName">[robot name]</span>
             </div>
         </h1>
-        <div class="ui-btn-right">
-            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
-                data-i18n="common.logout" 
-                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:logout">[next]</a>
-        </div>
     </div>
 
     <div data-role="content">
@@ -29,19 +24,25 @@
             <p class="label" data-bind="text: user().email">asd</p>
         </fieldset>
                 
-        <fieldset class="editWithButton">
+        <fieldset>
         
             <h2 data-i18n="userSettings.page.password"
                 data-bind="translate: language">[password]</h2>
             
-            <p class="label">*****</p>
-            <div class="ui-button-block">
-                <a href="#" data-role="button" data-theme="b" data-mini="false" 
-                    data-i18n="common.change"
-                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: changePassword">[change]</a> 
+            <div class="line">
+                <p class="label">*****</p>
+                <div class="right-block">
+                    <a href="#" data-role="button" data-theme="b" data-mini="false" 
+                        data-i18n="common.change"
+                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: changePassword">[change]</a> 
+                </div>
             </div>
-            
-        </fieldset>        
+        </fieldset>
+        <fieldset>
+            <a href="#" data-role="button" data-theme="b" data-mini="false"  
+                    data-i18n="common.logout"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: logout">[logout]</a>
+        </fieldset>
         
     </div>
     

@@ -1,0 +1,53 @@
+<div data-role="page" id="start">
+    <div data-role="header" class="headerbar" data-theme="b" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+        </div>
+        <h1>
+            <div class="screenTitle">
+                <span>formular</span>
+            </div>
+        </h1>
+    </div>
+    <div data-role="content">
+         <fieldset>
+             <h2>normal line height:</h2>
+             <div class="line">
+                <input type="text" placeholder="placeholder" />
+             </div>
+             <div class="line">
+                <input type="text" placeholder="placeholder invalid" data-bind="jqmInputCSS: {invalid: true}" />
+             </div>
+             <div class="line">
+                <p class="label">RIY label</p>
+                <div class="right-block">
+                    <a href="#" data-role="button" data-theme="b" data-mini="false">[change]</a>
+                </div>
+             </div>
+             <div class="line">
+                <p class="label">label for flip switch:</p>
+                <div class="right-block">
+                    <select name="flip-3" id="flip-3" data-role="slider">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                    </select>
+                </div>
+             </div>
+             <div class="line">
+                <p class="label">Type:</p>
+                <div class="right-block">
+                    <p>VR2000</p>
+                </div>
+             </div>
+             <div class="line">
+                <p class="label">Name:</p>
+                <div class="right-block">
+                    <p>Zoey</p>
+                    <a href="#" data-role="button" data-theme="b" data-mini="false">edit</a>
+                </div>
+             </div>
+         </fieldset>
+    </div><!-- /content -->
+</div><!-- /page -->

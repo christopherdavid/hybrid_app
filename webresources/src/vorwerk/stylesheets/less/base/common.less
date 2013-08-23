@@ -13,13 +13,13 @@
     background-position: 0% 100%;
     background-size:@page_logo_size
 }
-
+/*
 h2 {
     font-size: 24px;
     font-weight: 100;
     color: @color_text_light_grey;
 }
- 
+*/ 
 label {
     color: @color_text_light_grey;
     font-weight: 100;
@@ -41,25 +41,6 @@ label {
     padding-top: 39px;/* fix for fixed toolbar mode */
 }
 
-/* === SLIDER STYLES === */
-div.ui-slider {
-    height: 9px;
-    border: 1px solid #929292;
-    .vertical-gradient-3(#bababa, #f8f8f8, #f8f8f8);
-}
-a.ui-slider-handle {
-    width: 20px;
-    height: 20px;
-    border: 1px solid #bbbbbb;
-    margin-top: -12px;
-    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.75), 0 2px 0 rgba(255,255,255,0.75) inset;
-    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.75), 0 2px 0 rgba(255,255,255,0.75) inset;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.75), 0 2px 0 rgba(255,255,255,0.75) inset;
-    .vertical-gradient-offset(#fafafa, 100%, #d4d4d4, 0%);
-}
-input.ui-slider-input {
-    display: none !important;
-}
 
 /* generic inline and corner */
 .ui-inline{
@@ -123,6 +104,45 @@ input.ui-slider-input {
                border-radius: 0;   
                .border-radius-right(@size: 5px);
            }
+        }
+    }
+    
+    &.mode-switch {
+        padding-top:(@cleaning_last_line_height - @navbar_height)/2;
+        
+        ul {
+            display:table;
+            width:auto;
+            min-width:none;
+            margin:auto;
+            
+            
+            li {
+                width:auto;
+                margin:0;
+                
+                &+ li {
+                  margin-left:25px;
+                }
+                
+                .ui-btn {
+                    
+                    &.ui-btn-active {
+                        .ui-btn-inner .ui-btn-text {
+                            .font_bold;
+                            color:@navbar_item_selected_color;
+                        }
+                    }
+                  
+                    .ui-btn-inner {
+                        padding:0px 20px;
+                        
+                        .ui-btn-text {
+                            color:@navbar_item_color;
+                        }
+                    }
+                }
+            }
         }
     }
 }

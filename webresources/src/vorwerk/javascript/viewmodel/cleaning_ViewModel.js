@@ -9,7 +9,9 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             maxHeight:250,
         },
         spotFactor = parseInt($.i18n.t("pattern.spotFactor"),10),
-        spotUnit = $.i18n.t("pattern.spotUnit");
+        spotUnit = $.i18n.t("pattern.spotUnit"),
+        controlRendered = false;
+    
     this.conditions = {};
     this.startAreaControl = null;
     // set reference to helper class
@@ -28,6 +30,22 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     // set cleaning type "all" as default
     this.selectedType = ko.observable("2");
     
+    // everytime called when the user taps on an navbar item
+    this.changeType = function(data) {
+        if(data.id) {
+            that.selectedType(data.id);
+            
+            // show spot popup
+            if(that.isSpotSelected()) {
+                that.editSpotSize();
+            }
+            
+        }
+    }
+    
+    // set cleaning mode "eco" as default
+    this.ecoMode = ko.observable(true);
+    
     this.cleaningMode = ko.observableArray([{
             id : "1",
             text : $.i18n.t("common.cleaningMode.1")
@@ -35,8 +53,10 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             id : "2",
             text : $.i18n.t("common.cleaningMode.2")
         }]);
-    // set cleaning mode "eco" as default
-    this.selectedMode = ko.observable("1");
+            
+    this.selectedMode = ko.computed(function() {
+         return (that.ecoMode() ? "1" : "2");
+    }, this); 
     
     this.isSpotSelected = ko.computed(function() {
          return (that.selectedType() == "3");
@@ -63,8 +83,19 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.cleaningFrequency = ko.observableArray(["1","2"]);
     this.selectedFrequency = ko.observable("1");
         
-    this.selectFrequency = function(value){
-        that.selectedFrequency(value);
+    
+    this.renderedCleaningType = function(element, data) {
+        if(!controlRendered) {
+            // check for selection
+            if(data.id == that.selectedType()) {
+                $(element).children("a").addClass('ui-btn-active');
+            }
+            // check if navbar is complete and control could be initialized
+            if($(element).parent().children().length == that.cleaningType().length) {
+                $("#cleaningType").navbar();
+                controlRendered = true;
+            }
+        }
     }
         
     // register to selection change
@@ -82,6 +113,10 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             }
         }
     });
+    
+    this.toggleEcoMode = function() {
+        that.ecoMode(!that.ecoMode());
+    }
     
     // spot size popup
     this.newSpotSizeLength = ko.observable();

@@ -7,11 +7,16 @@
 var NOTIFICATION_DISCOVERY_STARTED = 1;
 var NOTIFICATION_DISCOVERY_RESULT = 2;
 
+
 var KEY_MAP_TYPE_XML = 1;
 var KEY_MAP_TYPE_BLOB = 2;
 
 var SCHEDULAR_EVENT_TYPE_QUIET = 0;
 var SCHEDULAR_EVENT_TYPE_CLEAN = 1;
+
+var USER_STATUS_VALIDATED = 0;
+var USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD = -1;
+var USER_STATUS_NOT_VALIDATED = -2;
 
 var DAY_SUNDAY = 0;
 var DAY_MONDAY = 1;
@@ -24,10 +29,11 @@ var DAY_SATURDAY = 6;
 var SCHEDULE_TYPE_BASIC = 0;
 var SCHEDULE_TYPE_ADVANCED = 1;
 
-var NOTIFICATIONS_GLOBAL_OPTION = "global";
-var NOTIFICATION_ROBOT_STUCK = "101";
-var NOTIFICATION_DIRT_BIN_FULL = "102";
-var NOTIFICATION_CLEANING_DONE = "103";
+// Motor types
+var MOTOR_TYPE_VACUUM = 101;
+var MOTOR_TYPE_BRUSH  = 102;
+
+//robotNotifications2 keyCodes
 
 // The current state of the robot
 var ROBOT_CURRENT_STATE_CHANGED     = 4001;
@@ -39,63 +45,103 @@ var ROBOT_NAME_UPDATE               = 4004;
 var ROBOT_SCHEDULE_STATE_CHANGED    = 4005;
 // The keyCode for the schedule is updated notification
 var ROBOT_SCHEDULE_UPDATED          = 4006;
+// The keyCodes to denote that the robot peer connection has 
+// been established/disconnected or not able to connect
+var ROBOT_CONNECTED                 = 4007;
+var ROBOT_DISCONNECTED              = 4008;
+var ROBOT_NOT_CONNECTED             = 4009;
 
 // Robot state codes
-    var ROBOT_STATE_UNKNOWN     = 10001;
-    var ROBOT_STATE_CLEANING    = 10002;
-    var ROBOT_STATE_IDLE        = 10003;
-    var ROBOT_STATE_CHARGING    = 10004;
-    var ROBOT_STATE_STOPPED     = 10005;
-    var ROBOT_STATE_STUCK       = 10006;
-    var ROBOT_STATE_PAUSED      = 10007;
-    var ROBOT_STATE_RESUMED     = 10008;
-    var ROBOT_STATE_ON_BASE     = 10009;
+var ROBOT_STATE_UNKNOWN     = 10001;
+var ROBOT_STATE_CLEANING    = 10002;
+var ROBOT_STATE_IDLE        = 10003;
+var ROBOT_STATE_CHARGING    = 10004;
+var ROBOT_STATE_STOPPED     = 10005;
+var ROBOT_STATE_STUCK       = 10006;
+var ROBOT_STATE_PAUSED      = 10007;
+var ROBOT_STATE_RESUMED     = 10008;
+var ROBOT_STATE_ON_BASE     = 10009;
+// Manual Cleaning State Codes
+var ROBOT_STATE_MANUAL_CLEANING     = 10010;
+var ROBOT_STATE_MANUAL_PLAY_MODE    = 10011;
 
-var PLUGIN_JSON_KEYS = (function() {
+
+var PLUGIN_JSON_KEYS  =  (function() {
     var keys = {
-        'DISCOVERY_NOTIFICATION_KEY' : 'notificationType',
-    };
+            'DISCOVERY_NOTIFICATION_KEY': 'notificationType', 
+        };
 
-    return {
-        get : function(name) {
-            return keys[name];
-        }
-    };
-})();
+        return {
+           get: function(name) { return keys[name]; }
+       };
+   })();
+
 
 //List of plugins.
 var USER_MANAGEMENT_PLUGIN = "UserManagement";
 var ROBOT_MANAGEMENT_PLUGIN = "RobotManagement";
 
-//List of action types of USER manager
-var ACTION_TYPE_LOGIN = "login";
-var ACTION_TYPE_LOGOUT = "logout";
-var ACTION_TYPE_ISLOGGEDIN = "isLoggedIn";
-var ACTION_TYPE_CREATE_USER = "createUser";
-var ACTION_TYPE_GET_USER_DETAILS = "getUserDetails";
-var ACTION_TYPE_ASSOCIATE_ROBOT = "associateRobot";
-var ACTION_TYPE_GET_ASSOCIATED_ROBOTS = "getAssociatedRobots"
-var ACTION_TYPE_DISASSOCIATE_ROBOT = "disassociateRobot";
-var ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS = "disassociateAllRobots";
+//List of action types of USER manager 
+var ACTION_TYPE_LOGIN                           = "login";
+var ACTION_TYPE_LOGOUT                          = "logout";
+var ACTION_TYPE_ISLOGGEDIN                      = "isLoggedIn";
+var ACTION_TYPE_CREATE_USER                     = "createUser";
+var ACTION_TYPE_CREATE_USER2                    = "createUser2";
+var ACTION_TYPE_RESEND_VALIDATION_MAIL          = "resendValidationMail";
+var ACTION_TYPE_IS_USER_VALIDATED               = "isUserValidated";
+var ACTION_TYPE_GET_USER_DETAILS                = "getUserDetails";
+var ACTION_TYPE_ASSOCIATE_ROBOT                 = "associateRobot";
+var ACTION_TYPE_GET_ASSOCIATED_ROBOTS           = "getAssociatedRobots";
+var ACTION_TYPE_DISASSOCIATE_ROBOT              = "disassociateRobot";
+var ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS         = "disassociateAllRobots";
+var ACTION_TYPE_FORGET_PASSWORD                 = "forgetPassword";
+var ACTION_TYPE_CHANGE_PASSWORD                 = "changePassword";
 var ACTION_TYPE_REGISTER_FOR_ROBOT_MESSAGES     = "registerForRobotMessges";
-
+var ACTION_TYPE_UNREGISTER_FOR_ROBOT_MESSAGES   = "unregisterForRobotMessages";
 // List of actions types of Robot Manager
-var ACTION_TYPE_DISCOVER_NEARBY_ROBOTS = "discoverNearByRobots";
-var ACTION_TYPE_TRY_CONNECT_CONNECTION = "tryDirectConnection";
-var ACTION_TYPE_SEND_COMMAND_TO_ROBOT = "sendCommandToRobot";
-var ACIION_TYPE_SET_SCHEDULE = "robotSetSchedule";
-var ACIION_TYPE_GET_ROBOT_SCHEDULE = "getSchedule";
-var ACTION_TYPE_GET_ROBOT_MAP = "getRobotMap";
-var ACTION_TYPE_SET_MAP_OVERLAY_DATA = "setMapOverlayData";
-var ACTION_TYPE_DISCONNECT_DIRECT_CONNETION = "disconnectDirectConnection";
-var ACTION_TYPE_GET_ROBOT_ATLAS_METADATA = "getRobotAtlasMetadata";
-var ACTION_TYPE_UPDATE_ROBOT_ATLAS_METADATA = "updateRobotAtlasMetadata";
-var ACTION_TYPE_GET_ATLAS_GRID_DATA = "getAtlasGridData";
-var ACTION_TYPE_SET_ROBOT_NAME = "setRobotName";
+var ACTION_TYPE_DISCOVER_NEARBY_ROBOTS          = "discoverNearByRobots";
+var ACTION_TYPE_TRY_CONNECT_CONNECTION          = "tryDirectConnection";
+var ACTION_TYPE_TRY_CONNECT_CONNECTION2         = "tryDirectConnection2";
+var ACTION_TYPE_SEND_COMMAND_TO_ROBOT           = "sendCommandToRobot";
+var ACTION_TYPE_SEND_COMMAND_TO_ROBOT2          = "sendCommandToRobot2";
+var ACIION_TYPE_SET_SCHEDULE                    = "robotSetSchedule";
+var ACIION_TYPE_GET_ROBOT_SCHEDULE              = "getSchedule";
+var ACTION_TYPE_GET_ROBOT_MAP                   = "getRobotMap";
+var ACTION_TYPE_SET_MAP_OVERLAY_DATA            = "setMapOverlayData";
+var ACTION_TYPE_DISCONNECT_DIRECT_CONNETION     = "disconnectDirectConnection";
+var ACTION_TYPE_GET_ROBOT_ATLAS_METADATA        = "getRobotAtlasMetadata";
+var ACTION_TYPE_UPDATE_ROBOT_ATLAS_METADATA     = "updateRobotAtlasMetadata";
+var ACTION_TYPE_GET_ATLAS_GRID_DATA             = "getAtlasGridData";
+var ACTION_TYPE_SET_ROBOT_NAME                  = "setRobotName";
+var ACTION_TYPE_DELETE_ROBOT_SCHEDULE           = "deleteScheduleData";
 var ACTION_TYPE_SET_ROBOT_NAME_2                = "setRobotName2";
 var ACTION_TYPE_GET_ROBOT_DETAIL                = "getRobotDetail";
-var ACTION_TYPE_REGISTER_ROBOT_NOTIFICATIONS    = "registerRobotNotifications";
-var ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS  = "unregisterRobotNotifications";
+var ACTION_TYPE_GET_ROBOT_ONLINE_STATUS         = "getRobotOnlineStatus";
+var ACTION_TYPE_GET_ROBOT_VIRTUAL_ONLINE_STATUS     = "getRobotVirtualOnlineStatus";
+var ACTION_TYPE_REGISTER_ROBOT_NOTIFICATIONS        = "registerRobotNotifications";
+var ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS      = "unregisterRobotNotifications";
+var ACTION_TYPE_REGISTER_ROBOT_NOTIFICATIONS_2      = "registerRobotNotifications2";
+var ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS_2    = "unregisterRobotNotifications2";
+var ACTION_TYPE_SET_SPOT_DEFINITION             = "setSpotDefinition";
+var ACTION_TYPE_GET_SPOT_DEFINITION             = "getSpotDefinition";
+var ACTION_TYPE_DRIVE_ROBOT                     = "driveRobot";
+var ACTION_TYPE_IS_ROBOT_PEER_CONNECTED         = "isRobotPeerConnected";
+var ACTION_TYPE_TURN_MOTOR_ON_OFF               = "turnMotorOnOff";
+var ACTION_TYPE_TURN_MOTOR_ON_OFF2              = "turnMotorOnOff2";
+var ACTION_TYPE_TURN_WIFI_ON_OFF                = "turnWiFiOnOff";
+var ACTION_TYPE_TURN_NOTIFICATION_ON_OFF        = "turnNotificationOnOff";
+var ACTION_TYPE_IS_NOTIFICATION_ENABLED         = "isNotificationEnabled";
+var ACTION_TYPE_GET_NOTIFICATION_SETTINGS       = "getNotificationSettings";
+var ACTION_TYPE_INTEND_TO_DRIVE_ROBOT           = "intendToDrive";
+var ACTION_TYPE_STOP_ROBOT_DRIVE                = "stopRobotDrive";
+var ACTION_TYPE_CANCEL_INTEND_TO_DRIVE          = "cancelIntendToDrive";
+
+var ACTION_TYPE_START_CLEANING                  = "startCleaning";
+var ACTION_TYPE_STOP_CLEANING                   = "stopCleaning";
+var ACTION_TYPE_PAUSE_CLEANING                  = "pauseCleaning";
+var ACTION_TYPE_RESUME_CLEANING                 = "resumeCleaning";
+
+
 
 // New schedule APis 
 var ACTION_TYPE_UPDATE_SCHEDULE                 = "updateSchedule";
@@ -106,19 +152,21 @@ var ACTION_TYPE_ADD_ROBOT_SCHEDULE_EVENT        = "addScheduleEventData";
 var ACTION_TYPE_GET_SCHEDULE_EVENTS             = "getScheduleEvents";
 var ACTION_TYPE_GET_SCHEDULE_DATA               = "getScheduleData";
 var ACTION_TYPE_CREATE_SCHEDULE                 = "createSchedule";
+var ACTION_TYPE_IS_SCHEDULE_ENABLED             = "isScheduleEnabled";
+var ACTION_TYPE_ENABLE_SCHEDULE             = "enableSchedule";
+var ACTION_TYPE_GET_ROBOT_CLEANING_STATE                    = "getRobotCleaningState";
 
 //List of keys to send data:
 
 var KEY_EMAIL = 'email';
 var KEY_PASSWORD = 'password';
-var KEY_USER_NAME = 'username';
+var KEY_USER_NAME = 'userName';
 
 //Used by robot plugin
 var KEY_COMMAND = 'command';
 var KEY_ROBOT_ID = 'robotId';
 var KEY_USE_XMPP = 'useXMPP';
 var KEY_ROBOT_NAME = "robotName";
-var KEY_ROBOT_IP_ADDRESS = "robotIpaddress";
 
 var KEY_SCHEDULE_TYPE = "scheduleType";
 
@@ -129,6 +177,7 @@ var KEY_AREA = 'area';
 
 var KEY_START_TIME = "startTime";
 var KEY_END_TIME = "endTime";
+
 
 //COMMAND IDS:
 var COMMAND_ROBOT_START = 101;
@@ -143,15 +192,184 @@ var COMMAND_DATA_CHANGED_ON_SERVER = 109;
 var COMMAND_SET_ROBOT_TIME = 110;
 var COMMAND_REGISTER_NOTIFICATIONS = 111;
 var COMMAND_UNREGISTER_NOTIFICATIONS = 112;
+var COMMAND_RESUME_CLEANING = 114;
 
-
+// NOTE: Cleaning type is now referred as cleaning category with new
+// names as listed below.
 var START_CLEAN_TYPE_HIGH = 1;
 var START_CLEAN_TYPE_NORMAL = 2;
 var START_CLEAN_TYPE_SPOT = 3;
 
+// Cleaning Category
+var CLEANING_CATEGORY_MANUAL = 1;
+var CLEANING_CATEGORY_ALL = 2;
+var CLEANING_CATEGORY_SPOT = 3;
+
 // Cleaning Mode
 var CLEANING_MODE_ECO = 1;
 var CLEANING_MODE_NORMAL = 2;
+
+// Navigation Control Ids
+var NAVIGATION_CONTROL_1 = 1;
+var NAVIGATION_CONTROL_2 = 2;
+var NAVIGATION_CONTROL_3 = 3;
+var NAVIGATION_CONTROL_4 = 4;
+var NAVIGATION_CONTROL_5 = 5;
+var NAVIGATION_CONTROL_BACK = 6;
+var FLAG_ON = 1;
+var FLAG_OFF = 0;
+
+//Special notification Ids - Must be 2 to power N (same values must be defined
+//in Plug-in and Robot)
+var NOTIFICATIONS_GLOBAL_OPTION = "global";
+var NOTIFICATION_ROBOT_STUCK = "101";
+var NOTIFICATION_DIRT_BIN_FULL = "102";
+var NOTIFICATION_CLEANING_DONE = "103";
+
+// List of Error Code values returned from the plugin.
+
+/**
+ * Authentication of the user failed.
+ *  - This will occur when the email and/or the password is incorrect while Logging-in.
+ *  - This will occur if the authentication token has expired.
+ *  In this case the user will need to login again with the correct credentials.
+ */
+var ERROR_AUTHENTICATION_FAILED = -101;
+
+/**
+ * Email id entered does not match the usual format of the email id.
+ * 
+ */
+var ERROR_INVALID_EMAIL_ID = -105
+
+/**
+ * Email id is already registered with the server.
+ * - This will occur while creating a user account with already registered user email id.
+ * The user needs to provide a email id which is not already registered.
+ */
+var ERROR_EMAIL_ALREADY_REGISTERED = -106;
+
+/**
+ * Create User failed due to some unknown server error.
+ * - User should retry.
+ */
+var ERROR_CREATE_USER_FAILED_TRY_AGAIN = -108;
+
+
+/**
+ * Old password does not match to the current password of the user.
+ * - To change the password, user needs to provide the current password. If entered password does not match
+ * the current password, ERROR_OLD_PASSWORD_MISMATCH error is returned
+ */
+var ERROR_OLD_PASSWORD_MISMATCH = -110;
+
+/**
+ * Robot name value entered is empty
+ * - This will occur when Robot name value is entered empty. 
+ * User should enter a non-empty for the robot name.
+ */
+var ERROR_INVALID_ROBOT_ACCOUNT_DETAIL = -111;
+
+/**
+ * Email id not found on the server.
+ * - This will occur when the user sends a forgot password request and email id given isn't registered on the server.
+ */
+var ERROR_EMAIL_NOT_REGISTERED = -112;
+
+/**
+ * Robot id not found on the server.
+ * - This will occur while associating a robot with the user.
+ */
+var ERROR_ROBOT_NOT_REGISTERED = -114;
+
+/**
+ * Alternate email id entered does not match the usual format of the email id.
+ */
+var ERROR_INVALID_ALTERNATE_EMAIL_ID = -115
+
+/**
+ * Resend validation-email limit reached.
+ * - This will occur when the validation email sending limit is reached.
+ *   Currently the limit is 5.
+ */
+var ERROR_RESEND_VALIDATION_EMAIL_LIMIT_REACHED = -116;
+
+/**
+ * Email Id already validated.
+ * - This will occur if the user requests to send a validation email, but the email is already validated on the server.
+ */
+var ERROR_EMAIL_ALREADY_VALIDATED = -117;
+
+/**
+ * Schedule version does not match. Please retrieve the latest schedule and then edit.
+ * - This will occur if the user does not have the latest schedule and the user tries to edit it (Some other user edited 
+ *   the schedule persay).
+ *   The application should request for the latest schedule so that the user can then edit the same. 
+ */
+var ERROR_SCHEDULE_VERSION_MISMATCH = -129;
+
+/**
+ * Schedule type is not supported.
+ * - This will occur if the application sends an invalid schedule type to the plugin layer.
+ *   Currently supported schedule type is Basic schedule.
+ */
+var ERROR_INVALID_SCHEDULE_TYPE = -133;
+
+/**
+ * No schedule exists for given robot.
+ * - This will occur if there is no schedule for the robot. The user/application should create a new schedule.
+ */
+var ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT = -159;
+
+/**
+ * Unknown error has occured. Please try again.
+ */
+var ERROR_TYPE_UNKNOWN = -501;
+
+/**
+ * No network connection. Please try again.
+ */
+var ERROR_NETWORK_CONNECTION_FAILURE = -502;
+
+/**
+ * Invalid schedule id for given robot.
+ * - This will occur if the application sends an invalid schedule id to the plugin layer.
+ */
+var ERROR_INVALID_SCHEDULE_ID = -504;
+
+/**
+ * Invalid schedule event id for given robot.
+ * - This will occur if the applicaiton sends an invalid schedule event id to the plugin layer.
+ */
+var ERROR_INVALID_SCHEDULE_EVENT_ID = -505;
+
+
+/**
+ *  This error type is returned 
+ *  - when the robot is not peer connected and a drive command is given to the robot.
+ *  - when the application tries to stop the drive for the robot, when it is already not connected.
+ */
+var ERROR_ROBOT_NOT_PEER_CONNECTED = -511;
+
+/**
+ * This error code is returned, 
+ * - when the application tries to peer-connect to a robot when it is already directly connected to the same robot.
+ * - When applicaiton tries to cancel intend to drive but the connection has already been formed.
+ */
+var ROBOT_ALREADY_CONNECTED = -512;
+
+/**
+ * This error code is returned when 
+ * - the application tries to cancel the intend to drive for the robot, but no request is found given to
+ *   drive the robot.
+ */
+var ROBOT_NO_INTEND_TO_DRIVE_REQUEST_FOUND = -514;
+
+/**
+ * This error code is returned when 
+ * - the application tries to peer-connect to a robot when a different robot is directly connected to the user.
+ */
+var DIFFERENT_ROBOT_CONNECTION_EXISTS = -515;
 
 
 var UserPluginManager = ( function() {
@@ -363,7 +581,14 @@ var RobotPluginManager = ( function() {
             },
             
             getRobotDetail : function(robotId, callbackSuccess, callbackError) {
-                window.plugins.neatoPluginLayer.robotMgr.getRobotDetail(robotId, callbackSuccess, callbackError);
+                //window.plugins.neatoPluginLayer.robotMgr.getRobotDetail(robotId, callbackSuccess, callbackError);
+                
+                window.setTimeout(function() {
+                    callbackSuccess({
+                        "robotName" : "Map Demo",
+                        "robotId" : "mapdemo123"
+                    });
+                }, 250);
             },            
             
             setSchedule : function(robotId, scheduleType, jsonArray, callbackSuccess, callbackError) {
@@ -446,7 +671,7 @@ var RobotPluginManager = ( function() {
              window.setTimeout(function() {
                 //callbackSuccess("OK");
                 // timed mode
-                callbackSuccess({"expectedTimeToExecute":200});
+                callbackSuccess({"expectedTimeToExecute":12});
             }, 1000);
         },
         
@@ -900,7 +1125,32 @@ var RobotPluginManager = ( function() {
                         }
                     );
                 }, 1000);
-            }
+            },
+            
+            isScheduleEnabled: function(robotId, scheduleType, callbackSuccess, callbackError) {
+                window.setTimeout(function() {
+                    callbackSuccess(
+                        {
+                            'isScheduleEnabled':true,
+                            'scheduleType':SCHEDULE_TYPE_BASIC,
+                            'robotId':'transformer23'
+                         }
+                    );
+                }, 1000);
+            },
+            
+            enableSchedule: function(robotId, scheduleType, enable, callbackSuccess, callbackError) {
+                //{isScheduleEnabled:"isScheduleEnabled", scheduleType:"scheduleType", robotId:"robotId"}
+                window.setTimeout(function() {
+                    callbackSuccess(
+                        {
+                            'isScheduleEnabled':!enable,
+                            'scheduleType':SCHEDULE_TYPE_BASIC,
+                            'robotId':'transformer23'
+                         }
+                    );
+                }, 1000);
+            },
         }
     }());
 

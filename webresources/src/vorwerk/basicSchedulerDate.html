@@ -43,22 +43,28 @@
             <div id="cleaningTime" class="timePicker"></div>
         </div>
         
-        <div data-role="fieldcontain">
-            <label 
-                data-i18n="basicSchedulerDate.page.cleaning_mode"
-                data-bind="translate: language">[Mode]</label>
-            <div data-role="navbar" style="max-width:500px;">
-                <ul>
-                    <li><a href="#" data-i18n="common.cleaningMode.1" data-bind="css:{'ui-btn-active ui-state-persist':cleaningMode() == '1'},translate:{obs:language(),target: textTarget.jqLinkButton}, click:selectEco">[eco]</a></li>
-                    <li><a href="#" data-i18n="common.cleaningMode.2" data-bind="css:{'ui-btn-active ui-state-persist':cleaningMode() == '2'},translate:{obs:language(),target: textTarget.jqLinkButton}, click:selectNormal">[normal]</a></li>
-                </ul>
-            </div>
-            <!--
-            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="false"
-                data-i18n="common.cancel"
-                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">Delete Event</a>
-            -->
-        </div>
+        <fieldset>
+            <div class="line">
+                <p class="label" 
+                    data-i18n="basicSchedulerDate.page.cleaning_mode"
+                    data-bind="translate: language">[Mode]</p>
+                
+                <div class="right-block">
+                    <select name="flip-3" id="flip-3" data-role="slider" data-bind="value: cleaningMode, jqmFlipValue:cleaningMode">
+                        <option value="2">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+             </div>
+         </fieldset>
+        
+        
+        <fieldset>
+            <a href="#" data-role="button" data-theme="c" data-mini="false"  
+                    data-i18n="common.delete"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: del, visible:hasDelete()">[delete]</a>
+        </fieldset>
+        
 
     </div>
 

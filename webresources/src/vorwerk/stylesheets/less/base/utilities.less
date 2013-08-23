@@ -33,7 +33,13 @@
     -webkit-box-shadow: none;
     box-shadow: none;
 }
-.box-shadow(@Hshadow:0, @Vshadow:0, @blur:0, @spread:0, @color:#FFF, @inset:'') {
+.box-shadow(@Hshadow:0, @Vshadow:0, @blur:0, @spread:0, @color:#FFF) {
+    -webkit-box-shadow: @arguments;
+    -moz-box-shadow: @arguments;
+    -o-box-shadow: @arguments;
+    box-shadow: @arguments;
+}
+.box-shadow-inner(@Hshadow:0, @Vshadow:0, @blur:0, @spread:0, @color:#FFF, @inset:inset) {
     -webkit-box-shadow: @arguments;
     -moz-box-shadow: @arguments;
     -o-box-shadow: @arguments;
@@ -117,7 +123,9 @@
     .vertical-gradient(@startColor, @endColor);
   }
 }
-
+.vertical-gradient(@startColor, @endColor){
+    .vertical-gradient-offset(@startColor, 0%, @endColor, 100%);
+}
 .vertical-gradient-offset(@startColor, @startOffset, @endColor, @endOffset) {
     background: @startColor;
     background: -moz-linear-gradient(top,  @startColor @startOffset, @endColor @endOffset);
@@ -127,9 +135,6 @@
     background: -ms-linear-gradient(top,  @startColor @startOffset,@endColor @endOffset);
     background: linear-gradient(to bottom,  @startColor @startOffset,@endColor @endOffset);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=(~"'@{startColor}'"), endColorstr=(~"'@{endColor}'"),GradientType=0 );
-}
-.vertical-gradient(@startColor, @endColor){
-    .vertical-gradient-offset(@startColor, 0%, @endColor, 100%);
 }
 .vertical-gradient-3(@startColor, @midColor, @endColor) {
     .vertical-gradient-3-offset(@startColor, 0%, @midColor, 50%, @endColor, 100%);

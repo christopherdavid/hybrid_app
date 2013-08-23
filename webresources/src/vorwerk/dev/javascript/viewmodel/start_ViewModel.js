@@ -26,7 +26,12 @@ resourceHandler.registerFunction('start_ViewModel.js', function(parent) {
         that.conditions['daypicker'] = true;
         parent.flowNavigator.next();
     }
-
+    
+    this.inputView = function() {
+        that.conditions['inputView'] = true;
+        parent.flowNavigator.next();
+    };
+    
     this.formView = function() {
         that.conditions['form'] = true;
         parent.flowNavigator.next();

@@ -1,4 +1,9 @@
+// common.less
 @color_page_background:#1a1a1a;
+@navbar_item_color:#545454;
+@navbar_item_selected_color:#FFFFFF;
+
+// general
 @page_gradient_start:fade(@color_page_background,100%);
 @page_gradient_end:fade(@color_page_background,0%);
 
@@ -41,7 +46,6 @@
 @daypicker_day_selected_color:#00b147;
 @daypicker_day_disabled_color:fade(#b1b2b3, 33%);
 
-
 // dialog.less
 @dialog_headline_color:#FFFFFF;
 @dialog_border_color:#1f1f1f;
@@ -49,6 +53,34 @@
 @dialog_warning_color:#dddd00;
 @dialog_error_color:#cf2424;
 
+// forms.less
+@inputfield_bg_color:#333333;
+@inputfield_bg_error_color:#540000;
+@inputfield_border_color:#333333;
+@inputfield_border_focus_color:#009A3D;
+@inputfield_error_border_color:#540000;
+@inputfield_error_border_focus_color:#FF4141;
+@inputfield_color:#FFFFFF;
+@inputfield_placeholder_color:#737373;
+
+@sliderswitch_on_bg_color:#009A3D;
+@sliderswitch_off_bg_color:#4d4d4d;
+@sliderswitch_on_color:#59de8e;
+@sliderswitch_off_color:#656565;
+@sliderswitch_slider_bg_gradient_start:#bfbfbf;
+@sliderswitch_slider_bg_gradient_end:#ffffff;
+@sliderswitch_slider_border:fade(#000000, 36%);
+
+@form_headline_color:#b1b2b3;
+
+// cleaningscreen.less
+@cleaning_bg_gradient_start:#1a1a1a;
+@cleaning_bg_gradient_end:#313131;
+@cleaning_box_shadow_color:fade(#000000,50);
+@cleaning_bg_spotsize:#113c2b;
+@cleaning_spotsize_border:#084b30;
+@cleaning_spotsize_selection_bg:fade(#00e159,25%);
+@cleaning_spotsize_selection_border:#00e159;
 
 
 @color_robot_status:#009a3d;
@@ -63,58 +95,10 @@
 @color_notficationbar: #009a3d;
 @color_notficationbar_expand: #dd0000;
 
-// map view
-@map_selection_border_spot:#95a11c;
-@map_selection_border_cut:#fcdf02;
-@map_selection_background_spot: fade(#95c11c,33%);
-@map_selection_background_cut: fade(#fcff02, 33%);
-@map_dialog_border: #191919;
-@map_dialog_cursor:#404040;
-@map_dialog_cursor_selected:@color_green_bright;
-@map_dialog_cursor_inner_shadow:fade(#000000, 50%);
-
-@bg_gradient_start: #0f0f0f;
-@bg_gradient_end: #333332;
-
-@home_btn_gradient_start: #4c4c4c;
-@home_btn_gradient_end: #1f1f1f;
-@home_btn_gradient_down_start: @home_btn_gradient_end;
-@home_btn_gradient_down_end: @home_btn_gradient_start;
-
-@home_btn_gradient_disabled_start: fade(@home_btn_gradient_end, 33%);
-@home_btn_gradient_disabled_end: fade(@home_btn_gradient_start, 33%);
-
 @home_btn_border_gradient_start: #4c4c4c;
 @home_btn_border_gradient_end: #403e3e;
-@home_btn_border_gradient_disabled_start: fade(#808080, 50%);
-@home_btn_border_gradient_disabled_quarter: fade(#333333, 50%);
-@home_btn_border_gradient_disabled_end: @home_btn_border_gradient_disabled_start;
 
-// input field colors
-@input_border: #454545;
-@input_gradient_start: fade(#99aac2, 10%);
-@input_gradient_mid: fade(#ffffff, 10%);
-@input_gradient_end: fade(#ffffff, 33%);
-@input_placeholder: #737373;
 
-// list views
-@listview_border: #393938;
-@listview_border_down: #005422; 
-@listView_border_selected: #005422;
-@listview_separator: #181818;
-@listview_cell: #333333;
-/*@listview_lastCell_gradient_mid: #353535:
-@listview_lastCell_gradient_end: #353535:*/
-@listview_lastCell_gradient_mid: fade(#ffffff, 10%);
-@listview_lastCell_gradient_end: fade(#ffffff, 33%);
-@listview_cell_selected: @color_green_bright;
-
-// notification bar
+// notificationbar.less
 @notificationbar_background: #f2f2f2;
 @notificationbar-textcolor: #000000;
-
-// scheduler
-@scheduler_task: #004D1F;
-
-
-

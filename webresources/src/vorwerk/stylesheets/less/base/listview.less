@@ -20,16 +20,28 @@
           .border-radius-bottom(inherit)!important;
         }
         
+        .ui-btn-inner {
+            line-height:normal;
+            padding:0;
+        }
+        
         .ui-btn-text {
-            
+            .ui-link-inherit {
+                padding-top:@listview_space;
+                padding-bottom:@listview_space;
+            }
             h3 {
                 color:@listview_text_color;
                 font-weight:normal;
                 .font_big;
+                margin:0;
+                line-height:@listview_item_line_height;
             }
             .ui-li-desc {
                 color:@listview_description_color;
                 .font_normal;
+                margin:0;
+                line-height:@listview_description_line_height;
             }
         }
         
@@ -58,12 +70,27 @@
     
     .ui-icon-arrow-r {
         .box-shadow-none();
-        background: transparent url(../../img/icons/arrow_right_44x64.png) center center no-repeat !important;
-        background-size:@listview_icon_width @listview_icon_height;
+        background: transparent url(../../img/icons/arrow_right_40x60.png) center center no-repeat !important;
+        background-size:@listview_icon_width @listview_icon_height!important;
         width:@listview_icon_width;
         height:@listview_icon_height;
         margin-top:-@listview_icon_height/2!important;
         right:15px;
+    }
+    
+    &.single {
+        .ui-btn {
+            .ui-btn-text {
+              
+                .ui-link-inherit {
+                    padding-top:0;
+                    padding-bottom:0;
+                }
+                h3 {
+                    .font_input
+                }
+            }
+        }
     }
 }
 

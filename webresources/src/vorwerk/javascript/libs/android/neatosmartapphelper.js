@@ -24,6 +24,10 @@ var DAY_SATURDAY = 6;
 var SCHEDULE_TYPE_BASIC = 0;
 var SCHEDULE_TYPE_ADVANCED = 1;
 
+// Motor types
+var MOTOR_TYPE_VACUUM = 101;
+var MOTOR_TYPE_BRUSH  = 102;
+
 //robotNotifications2 keyCodes
 
 // The current state of the robot
@@ -36,7 +40,11 @@ var ROBOT_NAME_UPDATE  				= 4004;
 var ROBOT_SCHEDULE_STATE_CHANGED 	= 4005;
 // The keyCode for the schedule is updated notification
 var ROBOT_SCHEDULE_UPDATED 			= 4006;
-
+// The keyCodes to denote that the robot peer connection has 
+// been established/disconnected or not able to connect
+var ROBOT_CONNECTED 				= 4007;
+var ROBOT_DISCONNECTED 				= 4008;
+var ROBOT_NOT_CONNECTED 			= 4009;
 
 // Robot state codes
 var ROBOT_STATE_UNKNOWN 	= 10001;
@@ -48,6 +56,9 @@ var ROBOT_STATE_STUCK 		= 10006;
 var ROBOT_STATE_PAUSED 		= 10007;
 var ROBOT_STATE_RESUMED		= 10008;
 var ROBOT_STATE_ON_BASE		= 10009;
+// Manual Cleaning State Codes
+var ROBOT_STATE_MANUAL_CLEANING		= 10010;
+var ROBOT_STATE_MANUAL_PLAY_MODE	= 10011;
 
 
 var PLUGIN_JSON_KEYS  =  (function() {
@@ -109,11 +120,16 @@ var ACTION_TYPE_UNREGISTER_ROBOT_NOTIFICATIONS_2  	= "unregisterRobotNotificatio
 var ACTION_TYPE_SET_SPOT_DEFINITION				= "setSpotDefinition";
 var ACTION_TYPE_GET_SPOT_DEFINITION				= "getSpotDefinition";
 var ACTION_TYPE_DRIVE_ROBOT						= "driveRobot";
-var ACTION_TYPE_TURN_VACUUM_ON_OFF				= "turnVacuumOnOff";
+var ACTION_TYPE_IS_ROBOT_PEER_CONNECTED			= "isRobotPeerConnected";
+var ACTION_TYPE_TURN_MOTOR_ON_OFF				= "turnMotorOnOff";
+var ACTION_TYPE_TURN_MOTOR_ON_OFF2				= "turnMotorOnOff2";
 var ACTION_TYPE_TURN_WIFI_ON_OFF				= "turnWiFiOnOff";
 var ACTION_TYPE_TURN_NOTIFICATION_ON_OFF		= "turnNotificationOnOff";
 var ACTION_TYPE_IS_NOTIFICATION_ENABLED			= "isNotificationEnabled";
 var ACTION_TYPE_GET_NOTIFICATION_SETTINGS		= "getNotificationSettings";
+var ACTION_TYPE_INTEND_TO_DRIVE_ROBOT			= "intendToDrive";
+var ACTION_TYPE_STOP_ROBOT_DRIVE				= "stopRobotDrive";
+var ACTION_TYPE_CANCEL_INTEND_TO_DRIVE 			= "cancelIntendToDrive";
 
 var ACTION_TYPE_START_CLEANING					= "startCleaning";
 var ACTION_TYPE_STOP_CLEANING					= "stopCleaning";
@@ -209,54 +225,57 @@ var NOTIFICATION_CLEANING_DONE = "103";
 
 /**
  * Authentication of the user failed.
+ *  - This will occur when the email and/or the password is incorrect while Logging-in.
+ *  - This will occur if the authentication token has expired.
+ *  In this case the user will need to login again with the correct credentials.
  */
 var ERROR_AUTHENTICATION_FAILED = -101;
 
 /**
- * User Account type is not supported.
- */
-var ERROR_UNSUPPORTED_ACCOUNT_TYPE = -103;
-
-/**
  * Email id entered does not match the usual format of the email id.
+ * 
  */
 var ERROR_INVALID_EMAIL_ID = -105
 
 /**
  * Email id is already registered with the server.
+ * - This will occur while creating a user account with already registered user email id.
+ * The user needs to provide a email id which is not already registered.
  */
 var ERROR_EMAIL_ALREADY_REGISTERED = -106;
 
 /**
- * Jabber server is not responding, User is not created. Please try again.
- * May not be used by the UI
+ * Create User failed due to some unknown server error.
+ * - User should retry.
  */
-var ERROR_JABBER_SERVER_NOT_RESPONDING = -108;
+var ERROR_CREATE_USER_FAILED_TRY_AGAIN = -108;
 
-/**
- * User account-detail value entered is invalid.
- */
-var ERROR_INVALID_USER_ACCOUNT_DETAIL = -109;
 
 /**
  * Old password does not match to the current password of the user.
+ * - To change the password, user needs to provide the current password. If entered password does not match
+ * the current password, ERROR_OLD_PASSWORD_MISMATCH error is returned
  */
 var ERROR_OLD_PASSWORD_MISMATCH = -110;
 
 /**
- * Robot detail value entered is invalid (Example while setting robot name).
+ * Robot name value entered is empty
+ * - This will occur when Robot name value is entered empty. 
+ * User should enter a non-empty for the robot name.
  */
 var ERROR_INVALID_ROBOT_ACCOUNT_DETAIL = -111;
 
 /**
  * Email id not found on the server.
+ * - This will occur when the user sends a forgot password request and email id given isn't registered on the server.
  */
-var ERROR_INCORRECT_EMAIL_ID = -112;
+var ERROR_EMAIL_NOT_REGISTERED = -112;
 
 /**
  * Robot id not found on the server.
+ * - This will occur while associating a robot with the user.
  */
-var ERROR_INCORRECT_ROBOT_ID = -114;
+var ERROR_ROBOT_NOT_REGISTERED = -114;
 
 /**
  * Alternate email id entered does not match the usual format of the email id.
@@ -265,33 +284,88 @@ var ERROR_INVALID_ALTERNATE_EMAIL_ID = -115
 
 /**
  * Resend validation-email limit reached.
+ * - This will occur when the validation email sending limit is reached.
+ *   Currently the limit is 5.
  */
 var ERROR_RESEND_VALIDATION_EMAIL_LIMIT_REACHED = -116;
 
 /**
  * Email Id already validated.
+ * - This will occur if the user requests to send a validation email, but the email is already validated on the server.
  */
 var ERROR_EMAIL_ALREADY_VALIDATED = -117;
 
 /**
- * User preference for push notifications is not set.
- */
-var ERROR_NO_USER_PREFERENCE_SET = -124;
-
-/**
  * Schedule version does not match. Please retrieve the latest schedule and then edit.
+ * - This will occur if the user does not have the latest schedule and the user tries to edit it (Some other user edited 
+ * 	 the schedule persay).
+ *   The application should request for the latest schedule so that the user can then edit the same. 
  */
-var ERROR_SCHEDULE_VERSION_MIS_MATCH = -129;
+var ERROR_SCHEDULE_VERSION_MISMATCH = -129;
 
 /**
  * Schedule type is not supported.
+ * - This will occur if the application sends an invalid schedule type to the plugin layer.
+ *   Currently supported schedule type is Basic schedule.
  */
 var ERROR_INVALID_SCHEDULE_TYPE = -133;
 
 /**
  * No schedule exists for given robot.
+ * - This will occur if there is no schedule for the robot. The user/application should create a new schedule.
  */
 var ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT = -159;
+
+/**
+ * Unknown error has occured. Please try again.
+ */
+var ERROR_TYPE_UNKNOWN = -501;
+
+/**
+ * No network connection. Please try again.
+ */
+var ERROR_NETWORK_CONNECTION_FAILURE = -502;
+
+/**
+ * Invalid schedule id for given robot.
+ * - This will occur if the application sends an invalid schedule id to the plugin layer.
+ */
+var ERROR_INVALID_SCHEDULE_ID = -504;
+
+/**
+ * Invalid schedule event id for given robot.
+ * - This will occur if the applicaiton sends an invalid schedule event id to the plugin layer.
+ */
+var ERROR_INVALID_SCHEDULE_EVENT_ID	= -505;
+
+
+/**
+ *  This error type is returned 
+ *  - when the robot is not peer connected and a drive command is given to the robot.
+ *  - when the application tries to stop the drive for the robot, when it is already not connected.
+ */
+var ERROR_ROBOT_NOT_PEER_CONNECTED = -511;
+
+/**
+ * This error code is returned, 
+ * - when the application tries to peer-connect to a robot when it is already directly connected to the same robot.
+ * - When applicaiton tries to cancel intend to drive but the connection has already been formed.
+ */
+var ROBOT_ALREADY_CONNECTED = -512;
+
+/**
+ * This error code is returned when 
+ * - the application tries to cancel the intend to drive for the robot, but no request is found given to
+ *   drive the robot.
+ */
+var ROBOT_NO_INTEND_TO_DRIVE_REQUEST_FOUND = -514;
+
+/**
+ * This error code is returned when 
+ * - the application tries to peer-connect to a robot when a different robot is directly connected to the user.
+ */
+var DIFFERENT_ROBOT_CONNECTION_EXISTS = -515;
+
 
 
 if(!window.plugins) {
@@ -1507,6 +1581,27 @@ RobotMgr.prototype.getSpotDefinition = function(robotId, callbackSuccess, callba
 };
 
 /**
+ * This API checks whether there  exists a direct-peer connection from the smartapp to robot.
+ * If a robotId is passed, then it returns whether it is directly connected to the smartapp.
+ * If an empty robotId is passed, it will return if any robot is directly connected.
+ * on success this API returns a JSON Object
+ * <br>{robotId:"robotId", isConnected: <isConnected>}
+ * isConnected is a boolean value and robotId is the id which is passed from the API. If an empty 
+ * robotId is passed then it returns the robotId of the robot directly connected, else if no direct
+ * connection is available it returns robotId as empty. 
+ * <p>
+ * 
+ * @param robotId 				the serial number of the robot
+ * @param callbackSuccess 		success callback for the API
+ * @param callbackError 		error callback for the API
+ */
+RobotMgr.prototype.isRobotPeerConnected = function(robotId, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_IS_ROBOT_PEER_CONNECTED, [commandParams]);
+};
+
+/**
  * This API sends drive command to the robot. This API calls Neato Smart App Service.
  * <p>
  * The navigation control id is an integer. It must be among the following values:
@@ -1529,17 +1624,78 @@ RobotMgr.prototype.driveRobot = function(robotId, navigationControlId, callbackS
 };
 
 /**
- * This API turns the vacuum of the robot on or off. This API calls Neato Smart App Service
+ * This API sends intend to drive command to the robot.
+ * The robot can be offline when the user needs to drive. This commands lets the robot know that the user intends 
+ * to drive it and so to keep the wifi connection on.
+ * <p>
+ * 
+ * @param robotId 				the serial number of the robot
+ * @param callbackSuccess 		success callback for the API
+ * @param callbackError 		error callback for the API
+ */
+RobotMgr.prototype.intendToDrive = function(robotId, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_INTEND_TO_DRIVE_ROBOT, [commandParams]);
+};
+
+/**
+ * This API cancels the intend to robot drive.
+ * <p>
+ * 
+ * @param robotId 				the serial number of the robot
+ * @param callbackSuccess 		success callback for the API
+ * @param callbackError 		error callback for the API
+ */
+RobotMgr.prototype.cancelIntendToDrive = function(robotId, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_CANCEL_INTEND_TO_DRIVE, [commandParams]);
+};
+
+/**
+ * This API stops the robot drive.
+ * Once this command is sent, unless peer connection is eastablished again.
+ * <p>
+ * 
+ * @param robotId 				the serial number of the robot
+ * @param callbackSuccess 		success callback for the API
+ * @param callbackError 		error callback for the API
+ */
+RobotMgr.prototype.stopRobotDrive = function(robotId, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_STOP_ROBOT_DRIVE, [commandParams]);
+};
+
+
+/**
+ * This API turns the motor of the robot on or off. This API calls Neato Smart App Service
  * 
  * @param robotId 			the serial number of the robot
  * @param on 				Integer value. Must be FLAG_ON or FLAG_OFF
  * @param callbackSuccess 	success callback for this API
  * @param callbackError 	error callback for this API
  */
-RobotMgr.prototype.turnVaccumOnOff = function(robotId, on, callbackSuccess, callbackError) {
+RobotMgr.prototype.turnMotorOnOff = function(robotId, on, callbackSuccess, callbackError) {
 	var commandParams = {'robotId':robotId, 'on':on};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
-			ACTION_TYPE_TURN_VACUUM_ON_OFF, [commandParams]);
+			ACTION_TYPE_TURN_MOTOR_ON_OFF, [commandParams]);
+};
+
+/**
+ * This API turns the motor of the robot on or off. This API calls Neato Smart App Service
+ * 
+ * @param robotId 			the serial number of the robot
+ * @param motorType			Integer value to denote the type of motor being controlled. Must be: MOTOR_TYPE_VACUUM, MOTOR_TYPE_BRUSH.
+ * @param on 				Integer value. Must be FLAG_ON or FLAG_OFF
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ */
+RobotMgr.prototype.turnMotorOnOff2 = function(robotId, motorType, on, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId, 'motorType': motorType, 'on':on};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_TURN_MOTOR_ON_OFF2, [commandParams]);
 };
 
 /**
@@ -1583,7 +1739,7 @@ RobotMgr.prototype.startCleaning = function(robotId, cleaningCategoryId, cleanin
 		callbackSuccess, callbackError) {
 	
 	var commandParams = {'cleaningCategory':cleaningCategoryId, 'cleaningMode':cleaningModeId, 
-			'cleaningModifier':cleaningModifier, 'cleanMode':cleaningCategoryId};
+			'cleaningModifier':cleaningModifier};
 	var params = {'params': commandParams};
 	var commandArray = {'robotId':robotId, 'commandParams':params};
 	
@@ -2401,15 +2557,28 @@ var RobotPluginManager = (function() {
 		},
 
 		/**
-		 * This API turns the vacuum of the robot on or off. This API calls Neato Smart App Service
+		 * This API turns the motor of the robot on or off. This API calls Neato Smart App Service
 		 * 
 		 * @param robotId 			the serial number of the robot
 		 * @param on 				Integer value. Must be FLAG_ON or FLAG_OFF
 		 * @param callbackSuccess 	success callback for this API
 		 * @param callbackError 	error callback for this API
 		 */
-		turnVaccumOnOff: function(robotId, flag, callbackSuccess, callbackError) {
-			window.plugins.neatoPluginLayer.robotMgr.turnVaccumOnOff(robotId, flag, callbackSuccess, callbackError);
+		turnMotorOnOff: function(robotId, flag, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.turnMotorOnOff(robotId, flag, callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API turns the motor of the robot on or off depending on the motortype. This API calls Neato Smart App Service
+		 * 
+		 * @param robotId 			the serial number of the robot
+		 * @param motorType			Integer value to denote the type of motor being controlled. Must be: MOTOR_TYPE_VACUUM, MOTOR_TYPE_BRUSH.
+		 * @param on 				Integer value. Must be FLAG_ON or FLAG_OFF
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 */
+		turnMotorOnOff2: function(robotId, motorType, flag, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.turnMotorOnOff2(robotId, motorType, flag, callbackSuccess, callbackError);
 		},
 
 		/**
@@ -3037,6 +3206,64 @@ var RobotPluginManager = (function() {
 		
 		getRobotCleaningState: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getRobotCleaningState(robotId, callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API checks whether there  exists a direct-peer connection from the smartapp to robot.
+		 * If a robotId is passed, then it returns whether it is directly connected to the smartapp.
+		 * If an empty robotId is passed, it will return if any robot is directly connected.
+		 * on success this API returns a JSON Object
+		 * <br>{robotId:"robotId", isConnected: <isConnected>}
+		 * isConnected is a boolean value and robotId is the id which is passed from the API. If an empty 
+		 * robotId is passed then it returns the robotId of the robot directly connected, else if no direct
+		 * connection is available it returns robotId as empty. 
+		 * <p>
+		 * 
+		 * @param robotId 				the serial number of the robot
+		 * @param callbackSuccess 		success callback for the API
+		 * @param callbackError 		error callback for the API
+		 */
+		isRobotPeerConnected: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.isRobotPeerConnected(robotId, callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API sends intend to drive command to the robot.
+		 * The robot can be offline when the user needs to drive. This commands lets the robot know that the user intends 
+		 * to drive it and so to keep the wifi connection on.
+		 * <p>
+		 * 
+		 * @param robotId 				the serial number of the robot
+		 * @param callbackSuccess 		success callback for the API
+		 * @param callbackError 		error callback for the API
+		 */
+		intendToDrive: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.intendToDrive(robotId, callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API cancels the intend to robot drive.
+		 * <p>
+		 * 
+		 * @param robotId 				the serial number of the robot
+		 * @param callbackSuccess 		success callback for the API
+		 * @param callbackError 		error callback for the API
+		 */
+		cancelIntendToDrive: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.cancelIntendToDrive(robotId, callbackSuccess, callbackError);
+		},
+
+		/**
+		 * This API stops the robot drive.
+		 * Once this command is sent, unless peer connection is eastablished again.
+		 * <p>
+		 * 
+		 * @param robotId 				the serial number of the robot
+		 * @param callbackSuccess 		success callback for the API
+		 * @param callbackError 		error callback for the API
+		 */
+		stopRobotDrive: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.stopRobotDrive(robotId, callbackSuccess, callbackError);
 		}
 	}
 }());

@@ -116,8 +116,41 @@ function WorkflowNotification(parent) {
     //TODO: add check for robotId 
     this.successNotifyPushMessage = function(result) {
         console.log("successNotifyPushMessage " + JSON.stringify(result))
+        var tempRobots = parent.communicationWrapper.getDataValue("robotList");
+        var curRobot = parent.communicationWrapper.getDataValue("selectedRobot");
+        var robotName = "";
+        
+        if(curRobot().robotId && curRobot().robotId() == result.robotId) {
+            robotName = curRobot().robotName();
+            console.log("current selected robot: " + robotName);
+            that.showPushMessage(robotName,result, true);
+        } else if(tempRobots().length > 0) {
+            // search in robot list for robotId
+            $.each(tempRobots(), function(index, item) {
+                if(item.robotId() == result.robotId) {
+                    robotName = item.robotName();
+                    console.log("found in robot list: " + robotName);
+                    return false;
+                }
+            });
+        }
+        
+        // robot wasn't found in list nor is the current one
+        if(robotName == ""){
+            // get robot details
+            console.log("robot list not loaded yet, request robot details")
+            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotDetail, [result.robotId], { type: notificationType.NONE, message: ""}, true);
+            tDeffer.done(function(subresult) {
+                that.showPushMessage(subresult.robotName, result);
+            });
+        } else {
+            that.showPushMessage(robotName,result, false);
+        }
+    }
+    
+    this.showPushMessage = function(robotName, result, isCurRobot) {
         var translatedTitle = $.i18n.t("messages." + result.notificationId + ".title") || "";
-        var translatedText = $.i18n.t("messages." + result.notificationId + ".message") || "";
+        var translatedText = $.i18n.t("messages." + result.notificationId + ".message", {robotName:robotName}) || "";
         
         switch(result.notificationId) {
             case NOTIFICATION_ROBOT_STUCK:
@@ -128,16 +161,21 @@ function WorkflowNotification(parent) {
             break;
             case NOTIFICATION_CLEANING_DONE:
                 console.log("NOTIFICATION_CLEANING_DONE")
-                if(statusListener[NOTIFICATION_CLEANING_DONE] && statusListener[NOTIFICATION_CLEANING_DONE].length > 0) {
-                    statusListener[NOTIFICATION_CLEANING_DONE][0](translatedText);
-                } else  {
-                    that.showLoadingArea(true,notificationType.HINT,translatedText)
+                if(isCurRobot) {
+                    if(statusListener[NOTIFICATION_CLEANING_DONE] && statusListener[NOTIFICATION_CLEANING_DONE].length > 0) {
+                        statusListener[NOTIFICATION_CLEANING_DONE][0](translatedText);
+                    } else  {
+                        that.showLoadingArea(true,notificationType.HINT,translatedText)
+                    }
+                } else {
+                    that.showDialog(dialogType.INFO, translatedTitle, translatedText);
                 }
             break;
             default:
                 that.showDialog(dialogType.WARNING, "unhandled message", JSON.stringify(result));
         }
     }
+    
     
     this.errorNotifyPushMessage = function(error) {
         console.log("errorNotifyPushMessage " + JSON.stringify(error));
