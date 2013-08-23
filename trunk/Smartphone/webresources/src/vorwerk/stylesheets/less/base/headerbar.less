@@ -10,6 +10,7 @@
     box-sizing: border-box;
     .vertical-gradient(@header_bg_gradient_start,@header_bg_gradient_end);
     margin-top: @headerbar_border_top;
+    
     &:before {
         content: "";
         position: absolute;
@@ -57,7 +58,7 @@
     height:@headerbar_height - @headerbar_border_top + 1;//1px is a jqueryfix for ui-header-fixed
     
     .ui-title {
-        margin:4px (@headerbar_button_width + @headerbar_button_height/2 + 10) 0;
+        margin:0px (@headerbar_button_width + @headerbar_button_height/2 + 10) 0;
         
         .screenTitle {
             .font_big;
@@ -90,97 +91,5 @@
 }
 
 
-#menuPopup-popup.ui-popup-container.ui-popup-active {
-
-  box-shadow: 0 0 8px 2px rgba(0,0,0,0.4);
-  background-color: transparent;
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
-
-  left: 15px!important;
-  right: 15px!important;
-  max-width: 280px!important;
-  max-height: 160px!important;
-  min-width: 170px!important;
-  margin: auto;
-  
-  #menuPopup {
-
-    border: 1px solid #535353;
-    border-radius: 10px;
-    box-shadow: 0 0 1px 1px #2E2E2E inset;
-
-    background: #393838;
-    background: -moz-linear-gradient(top,  #393838 0%, #111111 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#393838), color-stop(100%,#111111));
-    background: -webkit-linear-gradient(top,  #393838 0%,#111111 100%);
-    background: linear-gradient(to bottom,  #393838 0%,#111111 100%);
-    
-    padding: 0 10px;
-
-    .menuPopupTitle{
-      margin: 10px 0 5px;
-      font-size: 16pt;
-      font-weight: normal;
-    }
-    
-    a {
-      display: block;
-      float: left;
-      width: 85px;
-      height: 95px;
-      margin: 10px 1.5px 10px 0;
-      
-      background-image: url('../../img/categoryimg_303x303.png'),url('../../img/menu_active_bg.png');
-      background-size: 202px 404px,85px 95px;
-      background-repeat: no-repeat,no-repeat;
-      
-      text-decoration: none;
-
-      &.settings{
-        background-position: -12px -215px, -500px -500px;
-        margin: 10px 0 10px 0;
-        &.active{
-          background-position: -12px -215px, 0 0;
-        }
-      }
-      
-      &.schedule{
-        background-position: -2px -315px, -500px -500px;
-        &.active{
-          background-position: -2px -315px, 0 0;
-        }
-      }
-      
-      &.cleaning{
-        background-position: 2px -17px, -500px -500px;
-        &.active{
-          background-position: 2px  -17px, 0 0;
-        }
-      }
-        
-      h3 {
-        position: relative;
-        top: 52px;
-        text-align: center;
-        color: white;
-        text-shadow: none;
-        font-weight: normal;
-        font-size: 16px;
-      }
-    }
-
-    .menuPopupTitleLine{
-        height: 3px;
-        background: #009a3d;
-        background: -moz-linear-gradient(top,  #009a3d 0%, #00bf4c 100%);
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#009a3d), color-stop(100%,#00bf4c));
-        background: -webkit-linear-gradient(top,  #009a3d 0%,#00bf4c 100%);
-        background: linear-gradient(to bottom,  #009a3d 0%,#00bf4c 100%);
-    }
-    
-  }
-
-}
 
 

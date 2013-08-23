@@ -27,6 +27,20 @@ Application.prototype.loadWorkflow = function() {
                 }]
             },
             {
+                targetScreenId : "input",
+                conditions : [{
+                    "key" : "inputView",
+                    "value" : true
+                }]
+            },
+            {
+                targetScreenId : "form",
+                conditions : [{
+                    "key" : "form",
+                    "value" : true
+                }]
+            },
+            {
                 targetScreenId : "listview",
                 conditions : [{
                     "key" : "listview",
@@ -49,6 +63,12 @@ Application.prototype.loadWorkflow = function() {
             navrules : []
         },
         "daypicker" : {
+            navrules : []
+        },
+        "input": {
+            navrules : []
+        },
+        "form": {
             navrules : []
         },
         "listview" : {

@@ -14,25 +14,31 @@
                 <span data-bind="text: robot().robotName">[robot name]</span>
             </div>
         </h1>
-        <div class="ui-btn-right">
-            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" 
-                data-i18n="common.delete"
-                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: deleteRobot">[delete]</a>
-        </div>
     </div>
 
     <div data-role="content">
         
-        <fieldset class="editWithButton">
+        <ul data-role="listview" data-theme="a" data-inset="true" class="single">
+            <li>
+                <a href="javascript:void(0);" data-bind="click: changeRobot">
+                    <h3 data-i18n="robotManagement.page.robot_change" 
+                        data-bind="translate: language">[change]</h3>
+                </a>
+            </li>
+        </ul>
+        
+        <fieldset>
             <h2 data-i18n="robotManagement.page.robot_name"
                 data-bind="translate: language">[robot_name]</h2>
             
-            <p data-bind="text: robot().robotName" class="label"></p>
-            
-            <div class="ui-button-block">
-                <a href="#" data-role="button" data-theme="b" data-mini="false" 
-                    data-i18n="common.change"
-                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: changeName">[change]</a>
+            <div class="line">
+                <p data-bind="text: robot().robotName" class="label"></p>
+                
+                <div class="right-block">
+                    <a href="#" data-role="button" data-theme="b" data-mini="false" 
+                        data-i18n="common.change"
+                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: changeName">[change]</a>
+                </div>
             </div>
             
         </fieldset>
@@ -49,19 +55,26 @@
             <p class="label"> Neato Premium</p>
         </fieldset>
         
-        <fieldset class="editWithButton">
+        <fieldset>
             <h2 data-i18n="robotManagement.page.cleaning_options.title"
                 data-bind="translate: language">[cleaning title]</h2>
             
-            <div data-role="fieldcontain">
+            <div class="line">
                 <p class="label" style="padding-right:15px;" data-i18n="robotManagement.page.cleaning_options.schedule" 
                         data-bind="translate: language">[scheduled]</p>
-                
-                <select name="flip-1" id="flip-1" data-role="slider">
-                        <option value="off">Off</option>
-                        <option value="on">On</option>
-                    </select> 
+                <div class="right-block">
+                    <select name="flip-1" id="flip-1" data-role="slider" data-bind="value: useSchedule, jqmFlipValue:useSchedule">
+                        <option value="off">No</option>
+                        <option value="on">Yes</option>
+                    </select>
+                </div>
             </div>
+        </fieldset>
+        
+        <fieldset>
+            <a href="#" data-role="button" data-theme="c" data-mini="false"
+                data-i18n="common.delete"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: deleteRobot">[delete]</a>
         </fieldset>
         
     </div>

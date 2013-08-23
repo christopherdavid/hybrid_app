@@ -1,9 +1,20 @@
 resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(parent) {
     console.log('instance created for: robotActivationName_ViewModel');
-    var that = this;
+    var that = this, tempRobot;
     this.conditions = {};
     this.robotName = ko.observable('');
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
+    
+    this.init = function() {
+        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotDetail, [that.bundle.robot.robotId]);
+        tDeffer.done(that.robotDetailSuccess);
+    }
+    
+    this.robotDetailSuccess = function(result) {
+        // temporary store robot details
+        tempRobot = result;//{robotId:"robotId", robotName:"robotName"}
+        that.robotName(tempRobot.robotName);
+    }
 
     this.back = function() {
         that.conditions['back'] = true;
@@ -15,15 +26,25 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
     }, this);
 
     this.next = function() {
-        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.setRobotName2, [that.bundle.robot.robotId, that.robotName()]);
-        tDeffer.done(that.robotNameSuccess);
-        tDeffer.fail(that.robotNameError);
+        // check if name needs to be changed on server
+        if((tempRobot != null && tempRobot.robotName != that.robotName()) || tempRobot == null) {
+            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.setRobotName2, [that.bundle.robot.robotId, that.robotName()]);
+            tDeffer.done(that.robotSetNameSuccess);
+            tDeffer.fail(that.robotSetNameError);
+        } else {
+            console.log("robot name don't need to be changed");
+            that.setRobotGoNext(tempRobot.robotName);
+        }
     };
 
-    this.robotNameSuccess = function(result) {
-        console.log("robotNameSuccess " + JSON.stringify(result));
+    this.robotSetNameSuccess = function(result) {
+        console.log("robotSetNameSuccess " + JSON.stringify(result));
+        that.setRobotGoNext(result.robotName);
+    }
+    
+    this.setRobotGoNext = function(robotName) {
         that.conditions['robotNameValid'] = true;
-        that.bundle.robot.robotName = that.robotName();
+        that.bundle.robot.robotName = robotName;
         var unknownState = $.i18n.t("robotStateCodes." + ROBOT_STATE_UNKNOWN);
         that.bundle.robot.stateCode = ROBOT_STATE_UNKNOWN;
         that.bundle.robot.stateString = unknownState;
@@ -31,12 +52,11 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
         // separate API call because the user could navigate in the meantime 
         // to another screen
         parent.communicationWrapper.getRobotState(that.bundle.robot.robotId);
-        
         that.robot(ko.mapping.fromJS(that.bundle.robot), null, that.robot);
         parent.flowNavigator.next();
     }
 
-    this.robotNameError = function(error) {
+    this.robotSetNameError = function(error) {
         console.log("robotName can't be set:" + error);
     }
 

@@ -2,15 +2,15 @@
     "messages": {
         "101": {
             "title": "I'm stuck",
-            "message": "Please clear my path. Help me so I can continue cleaning."
+            "message": "<span class='font_bold'>__robotName__</span>: Please clear my path. Help me so I can continue cleaning."
         },
         "102": {
             "title": "I'm scruffy",
-            "message": "Please empty my Dirt Bin and Filter if needed."
+            "message": "<span class='font_bold'>__robotName__</span>: Please empty my Dirt Bin and Filter if needed."
         },
         "103": {
             "title": "Return to base",
-            "message": "I'm finished and returning to my base!"
+            "message": "<span class='font_bold'>__robotName__</span>: I'm finished and returning to my base!"
         }
     },
     "dialogs": {
@@ -181,10 +181,14 @@
         },
         "page": {
             "robot_management": "Robot Management",
+            "robot_management_desc": "Edit this robot or switch to another.",
             "user_settings": "User Settings",
+            "user_settings_desc": "Change your password.",
             "general_settings": "General Settings",
+            "general_settings_desc": "Manage your robot's notifications.",
             "terms": "Terms of use",
-            "about": "About"
+            "about": "About",
+            "about_desc": "Show version information."
         }
     },
     "robotManagement": {
@@ -192,6 +196,7 @@
             "title": "Robot Management"
         },
         "page": {
+            "robot_change":"Add / switch robot",
             "robot_name": "Robot Name",
             "robot_id": "Robot ID",
             "robot_type": "Type",
@@ -254,7 +259,7 @@
         },
         "page": {
             "cleaning_event": "Cleaning Event",
-            "cleaning_mode": "Cleaning Mode",
+            "cleaning_mode": "Clean in ECO Mode",
             "quiet_time": "Quiet Time",
             "starting_time": "Starting time",
             "clean_every": "Clean every...",

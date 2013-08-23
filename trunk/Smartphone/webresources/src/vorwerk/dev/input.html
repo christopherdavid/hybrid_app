@@ -1,0 +1,36 @@
+<div data-role="page" id="start">
+    <div data-role="header" class="headerbar" data-theme="b" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+        </div>
+        <h1>
+            <div class="screenTitle">
+                <span>Inputfield &amp; flip switch</span>
+            </div>
+        </h1>
+    </div>
+    <div data-role="content">
+         <fieldset>
+             <legend>placeholder:</legend>
+             <input type="text" placeholder="placeholder" />
+             <input type="text" placeholder="placeholder invalid" data-bind="jqmInputCSS: {invalid: true}" />
+         </fieldset>
+         <fieldset>
+             <legend>text:</legend>
+             <input type="text" placeholder="placeholder" value="text" />
+             <input type="text" placeholder="placeholder invalid" value="text invalid" data-bind="jqmInputCSS: {invalid: true}" />
+         </fieldset>
+         <fieldset>
+             <legend>flip switch:</legend>
+             <div data-role="fieldcontain">
+                <label for="flip-3">label for flip switch:</label>
+                <select name="flip-3" id="flip-3" data-role="slider">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+                </select>
+            </div>
+        </fieldset>
+    </div><!-- /content -->
+</div><!-- /page -->

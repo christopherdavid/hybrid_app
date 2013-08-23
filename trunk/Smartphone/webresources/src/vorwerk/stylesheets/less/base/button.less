@@ -9,19 +9,35 @@
     .border-radius(5px);
     border: @button_border solid @button_border_color;
     font-weight:normal;
-    .box-shadow(0px, (@button_inner_shadow+@button_inner_border), 0px, 0px, fade(#FFFFFF,10), inset)!important;
+    .box-shadow-inner(0px, (@button_inner_shadow+@button_inner_border), 0px, 0px, fade(#FFFFFF,10))!important;
     min-width:@button_min_width;
     min-height:@button_min_height;
+    text-decoration:none;
     
     .ui-btn-inner {
         .border-radius(0);
+        line-height:@button_min_height;
         border: 0px none;
         color: #ffffff;
         text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
+        padding:0px 20px;
+        //padding:4px 20px;
+        
         
         .ui-btn-text {
             .font_normal;
         }
+    }
+    
+    &:before {
+        border: @button_inner_border solid @button_inner_border_color;
+        content: "";
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        .border-radius(5px);
     }
     
     &.ui-disabled { 
@@ -31,7 +47,7 @@
             color: fade(#ffffff, 25%);
         }
         
-        &.btn-with-image span{
+        &.btn-with-image span {
             opacity:0.25;
         }
     }
@@ -39,10 +55,23 @@
     // Transparent Button
     &.ui-btn-up-transparent, &.ui-btn-hover-transparent  {
         background: transparent;
+        border:0px none;
+        .box-shadow-none()!important;
         
         .ui-btn-text {
             color: #FFF;
             text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
+        }
+        
+        &:before {
+            border: 0px none;
+            content: "";
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            .border-radius(0px);
         }
     }
     
@@ -74,24 +103,12 @@
         }
         
         &[data-image='add'] .ui-btn-inner {
-          background-image: url(../../img/icons/add_80x50.png);
+            background-image: url(../../img/icons/add_80x50.png);
         }
         
         &[data-image='menu'] .ui-btn-inner {
-          background-image: url(../../img/icons/menu_80x50.png);
+            background-image: url(../../img/icons/menu_80x50.png);
         }
-        
-    }
-    
-    &:before {
-        border: @button_inner_border solid @button_inner_border_color;
-        content: "";
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        right: 0px;
-        bottom: 0px;
-        .border-radius(5px);
     }
 }
 
