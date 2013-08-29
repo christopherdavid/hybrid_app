@@ -6,7 +6,7 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
     var radius = 147;
     var centerX = null;
     var centerY = null;
-    var scaleFactor = 0.5;
+    var scaleFactor = deviceSize.getResolution() == "high" ? 1.0 : 0.5;
     var BTN_RADIUS = 147;
     this.isRemoteDisabled = ko.observable(true);
     this.eventMouseDown = false;

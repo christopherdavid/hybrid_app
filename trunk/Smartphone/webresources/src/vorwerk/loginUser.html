@@ -7,7 +7,7 @@
                 data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
         </div>
         <h1>
-            <div class="screenTitle">
+            <div class="screenTitle noRobot">
                 <span data-i18n="loginUser.navi.title" data-bind="translate: language">[navi title]</span>
             </div>
         </h1>
@@ -19,39 +19,49 @@
     </div>
 
     <div data-role="content">
-        <h2 data-i18n="loginUser.page.title" data-bind="translate: language">[welcome]</h2>
         <fieldset>
-            <input type="text" data-i18n="loginUser.page.email" 
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'onblur', jqmInputCSS: {invalid: !isEmailValid()}"/>
-            <input type="password" data-i18n="loginUser.page.password" 
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'afterkeydown', jqmInputVisible:!showPassword()"/>
-            <input type="text" data-i18n="loginUser.page.password" 
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'afterkeydown', jqmInputVisible: showPassword()"/>
-            <input type="checkbox" name="togglePassword" id="togglePassword" class="custom" data-bind="checked: showPassword" data-theme="b" />
-            <label for="togglePassword" data-i18n="loginUser.page.password_show" 
-                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[show pwd]</label>
+            <p data-i18n="loginUser.page.title" data-bind="translate: language">[welcome]</p>
+            <div class="line">
+                <input type="text" data-i18n="loginUser.page.email" 
+                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'onblur', jqmInputCSS: {invalid: !isEmailValid()}"/>
+            </div>
+            <div class="line">
+                <input type="password" data-i18n="loginUser.page.password" 
+                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'afterkeydown', jqmInputVisible:!showPassword()"/>
+                <input type="text" data-i18n="loginUser.page.password" 
+                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'afterkeydown', jqmInputVisible: showPassword()"/>
+            </div>
+            <div class="line ">
+                <input type="checkbox" name="togglePassword" id="togglePassword" class="custom" data-bind="checked: showPassword" data-theme="b" />
+                <label for="togglePassword" data-inline="true" data-i18n="loginUser.page.password_show" 
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[show pwd]</label>
+            </div>
         </fieldset>
         <!-- password lost -->
         <div style="display:block; text-align: right; margin-top:20px;" 
             data-i18n="loginUser.page.password_lost" 
             data-bind="translate: language"></div>
-        <div class="companyColoredTxt" style="display:block; text-align: right;" 
+        <div class="companyColoredTxt highlightedText" style="display:block; text-align: right;" 
             data-i18n="loginUser.page.tap_here" 
             data-bind="translate: language, click: passwordLost"></div>
     </div>
     
-    <div id="passwordLostPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport">
+    <div id="passwordLostPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport dialogType_1">
         <div data-role="header" data-theme="b">
             <h1 class="ui-title" role="heading" aria-level="1" data-i18n="loginUser.page.password_reset" data-bind="translate: language">[edit]</h1>
         </div>
+        <div class="popupHeaderLine"></div>
         <div data-role="content">
-
-            <p data-i18n="loginUser.page.description"
-                data-bind="translate: language">[desription]</p>
-            <input type="text" data-i18n="loginUser.page.email"
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'afterkeydown'"/>
             
-            <div class="ui-bar-buttons buttons_2">
+            <fieldset>
+                <p data-i18n="loginUser.page.description" data-bind="translate: language">[desription]</p>
+                <div class="line">
+                    <input type="text" data-i18n="loginUser.page.email"
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'afterkeydown'"/>
+                </div>
+            </fieldset>
+            
+            <div data-role="controlgroup" data-type="horizontal" class="center">
                     <a class="first-button" href="#" data-role="button" data-theme="b" data-mini="false" 
                         data-i18n="common.ok" 
                         data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: (email()!= '') && isEmailValid(), click: commitReset, jqmInputCSS: {invalid: !isEmailValid()}">[ok]</a>

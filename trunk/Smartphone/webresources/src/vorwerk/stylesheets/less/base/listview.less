@@ -27,8 +27,8 @@
         
         .ui-btn-text {
             .ui-link-inherit {
-                padding-top:@listview_space;
-                padding-bottom:@listview_space;
+                padding-top:@listview_space_top;
+                padding-bottom:@listview_space_bottom;
             }
             h3 {
                 color:@listview_text_color;
@@ -94,3 +94,18 @@
     }
 }
 
+#startlist {
+  position:absolute;
+  top:@headerbar_height;
+  left:@content_space;
+  right:@content_space;
+  bottom:0;
+  
+  ul {
+    position:absolute;
+    top: 33%;
+    margin-top: -(@listview_item_line_height + @listview_description_line_height + @listview_space_top + @listview_space_bottom);
+    width:100%;    
+  }
+  
+}

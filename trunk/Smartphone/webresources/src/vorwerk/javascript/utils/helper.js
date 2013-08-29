@@ -58,7 +58,7 @@ function localizeTime(time) {
     var hour = time.split(":")[0];
     var min = time.split(":")[1]
     if (timeFormat == "hhiiA") {
-        amPmMarker = hour <= 12 ? ' am' : ' pm';
+        amPmMarker = hour < 12 ? ' am' : ' pm';
         
         if(hour > 12) {
             hour = hour - 12;

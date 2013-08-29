@@ -21,11 +21,11 @@
         </div>
     </div>
     
-    <div data-role="content">
-        <div data-role="fieldcontain">
-            <label for="timePicker"
+    <div data-role="content" class="max-size">
+        <fieldset>
+            <h2 for="timePicker"
                 data-i18n="basicSchedulerDate.page.clean_every"
-                data-bind="translate: language">[Clean every...]</label>
+                data-bind="translate: language">[Clean every...]</h2>
 
             <ul class="dayPicker" data-bind="foreach: cleaningDays">
                 <li data-bind="css:{'disabled': $parent.blockedDays.indexOf($data.id) != -1,
@@ -34,17 +34,19 @@
                     <div class="icon"></div>
                 </li>
             </ul>
-        </div>
+        </fieldset>
 
-        <div data-role="fieldcontain">
-            <label for="timePicker"
-                data-i18n="basicSchedulerDate.page.starting_time"
-                data-bind="translate: language">[Starting time]</label>
-            <div id="cleaningTime" class="timePicker"></div>
-        </div>
-        
         <fieldset>
+            <h2 for="timePicker"
+                data-i18n="basicSchedulerDate.page.starting_time"
+                data-bind="translate: language">[Starting time]</h2>
+            <div id="cleaningTime" class="timePicker"></div>
+        </fieldset>
+        
+        <fieldset class="indent">
             <div class="line">
+                <h2 data-i18n="basicSchedulerDate.page.cleaning_mode_title"
+                    data-bind="translate: language">[cleaning options]</h2>
                 <p class="label" 
                     data-i18n="basicSchedulerDate.page.cleaning_mode"
                     data-bind="translate: language">[Mode]</p>
@@ -56,17 +58,15 @@
                     </select>
                 </div>
              </div>
+             <div class="emptyline"></div>
          </fieldset>
-        
         
         <fieldset>
             <a href="#" data-role="button" data-theme="c" data-mini="false"  
                     data-i18n="common.delete"
                     data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: del, visible:hasDelete()">[delete]</a>
         </fieldset>
-        
 
     </div>
-
 
 </div>

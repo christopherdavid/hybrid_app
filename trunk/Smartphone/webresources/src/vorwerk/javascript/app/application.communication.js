@@ -49,53 +49,66 @@ function WorkflowCommunication(parent) {
      */
      this.exec = function(command, args, notificationOptions, bStatic) {
         var oDeferred = $.Deferred();
-        var notifyOptions = notificationOptions;
-        var callGuid = guid();
-        bStatic = typeof bStatic != "undefined" ? bStatic : false;
+        var networkState = navigator.network.connection.type;
         
-        if (!notificationOptions || !notificationOptions.type){
-            notifyOptions = { type: notificationType.SPINNER, message: "" , bHide: true };
-        }
-        if(notifyOptions.type != notificationType.NONE) { 
-            parent.notification.showLoadingArea(true, notifyOptions.type, notifyOptions.message, callGuid);
-        }
-        
-        // store defferd object for callbacks and notification options (using guid) to avoid references to cordova plugin 
-        if(!bStatic) {
-            that.callbacks[callGuid] = {oDeferred:oDeferred, notifyOptions:notifyOptions};
-        } else {
-            that.staticCallbacks[callGuid] = {oDeferred:oDeferred, notifyOptions:notifyOptions};
-        }
-        
-        //console.log("call guid: " + callGuid);
-        switch(args.length) {
-            case 0:
-                command(function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-            break;
-            case 1:
-                command(args[0], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-            break;
-            case 2:
-                command(args[0],args[1], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-            break;
-            case 3:
-                command(args[0],args[1],args[2], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-            break;
-            case 4:
-                command(args[0],args[1],args[2],args[3], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-            break;
-            case 5:
-                command(args[0],args[1],args[2],args[3],args[4], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-            break;
-            case 6:
-                command(args[0],args[1],args[2],args[3],args[4],args[5], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-            break;
-            case 7:
-                command(args[0],args[1],args[2],args[3],args[4],args[5],args[6], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-            break;
+        if(networkState != Connection.UNKNOWN && networkState != Connection.NONE) {
+            var notifyOptions = notificationOptions;
+            var callGuid = guid();
+            bStatic = typeof bStatic != "undefined" ? bStatic : false;
             
-            default:
-            alert("The communcation layer doesn't support this number of arguments: " + args.length);
+            if (!notificationOptions || !notificationOptions.type){
+                notifyOptions = { type: notificationType.SPINNER, message: "" , bHide: true };
+            }
+            if(notifyOptions.type != notificationType.NONE) { 
+                parent.notification.showLoadingArea(true, notifyOptions.type, notifyOptions.message, callGuid);
+            }
+            
+            // store defferd object for callbacks and notification options (using guid) to avoid references to cordova plugin 
+            if(!bStatic) {
+                that.callbacks[callGuid] = {oDeferred:oDeferred, notifyOptions:notifyOptions};
+            } else {
+                that.staticCallbacks[callGuid] = {oDeferred:oDeferred, notifyOptions:notifyOptions};
+            }
+            
+            //console.log("call guid: " + callGuid);
+            switch(args.length) {
+                case 0:
+                    command(function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                break;
+                case 1:
+                    command(args[0], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                break;
+                case 2:
+                    command(args[0],args[1], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                break;
+                case 3:
+                    command(args[0],args[1],args[2], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                break;
+                case 4:
+                    command(args[0],args[1],args[2],args[3], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                break;
+                case 5:
+                    command(args[0],args[1],args[2],args[3],args[4], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                break;
+                case 6:
+                    command(args[0],args[1],args[2],args[3],args[4],args[5], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                break;
+                case 7:
+                    command(args[0],args[1],args[2],args[3],args[4],args[5],args[6], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+                break;
+                
+                default:
+                alert("The communcation layer doesn't support this number of arguments: " + args.length);
+            }
+        } else {
+            var noConnectionHeader =  $.i18n.t("messages.no_connection.title");
+            var noConnectionText =  $.i18n.t("messages.no_connection.message");
+            parent.notification.showDialog(dialogType.ERROR, noConnectionHeader, noConnectionText, 
+                [{"label":"OK", "callback":function(e){
+                    parent.notification.closeDialog();
+                    oDeferred.reject({log:"connection error"});
+                }}]);
+            
         }
         return oDeferred.promise();
     };

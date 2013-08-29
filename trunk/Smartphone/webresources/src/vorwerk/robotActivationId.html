@@ -18,9 +18,12 @@
     </div>
     
     <div data-role="content">
-        <h2 data-i18n="robotActivationId.page.wifisetup" data-bind="translate: language">Wifi Setup/Register...</h2>
         <fieldset>
-            <input type="text" data-i18n="robotActivationId.page.robotId" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: robotId, valueUpdate: 'afterkeydown'" autofocus="autofocus"/>
+            <p data-i18n="robotActivationId.page.wifisetup" data-bind="translate: language">Wifi Setup/Register...</p>
+            
+            <div class="line">
+                <input type="text" data-i18n="robotActivationId.page.robotId" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: robotId, valueUpdate: 'afterkeydown'"/>
+            </div>
         </fieldset>
     </div>
 </div>

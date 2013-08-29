@@ -19,21 +19,30 @@
     </div>
     
     <div data-role="content">
-        <h2 data-i18n="createAccount.page.title" data-bind="translate: language">welcome</h2>
         <fieldset>
-            <input type="text" data-i18n="createAccount.page.email" 
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'onblur', jqmInputCSS: {invalid: mailValid}"/>
-            <input type="password" data-i18n="createAccount.page.password" 
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'afterkeydown', jqmInputVisible:!showPassword()"/>
-            <input type="password" data-i18n="createAccount.page.password_verify" 
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', jqmInputCSS: {invalid: passwordValid},  jqmInputVisible:!showPassword()"/>
-            <input type="text" data-i18n="createAccount.page.password" 
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'onblur',  jqmInputVisible:showPassword()"/>
-            <input type="text" data-i18n="createAccount.page.password_verify" 
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', jqmInputCSS: {invalid: passwordValid},  jqmInputVisible:showPassword()"/>
-            <input type="checkbox" name="togglePassword" id="togglePassword" class="custom" data-bind="checked: showPassword" data-theme="b" />
-            <label for="togglePassword" data-i18n="loginUser.page.password_show" 
-                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[show pwd]</label>
+            <p data-i18n="createAccount.page.title" data-bind="translate: language">welcome</p>
+            <div class="line">
+                <input type="text" data-i18n="createAccount.page.email" 
+                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'onblur', jqmInputCSS: {invalid: mailValid}"/>
+            </div>
+            <div class="line">
+                <input type="password" data-i18n="createAccount.page.password" 
+                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'afterkeydown', jqmInputVisible:!showPassword()"/>
+                <input type="text" data-i18n="createAccount.page.password" 
+                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'onblur',  jqmInputVisible:showPassword()"/>
+            </div>
+            <div class="line">
+                <input type="password" data-i18n="createAccount.page.password_verify" 
+                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', jqmInputCSS: {invalid: passwordValid},  jqmInputVisible:!showPassword()"/>
+                
+                <input type="text" data-i18n="createAccount.page.password_verify" 
+                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', jqmInputCSS: {invalid: passwordValid},  jqmInputVisible:showPassword()"/>
+            </div>
+            <div class="line">
+                <input type="checkbox" name="togglePassword" id="togglePassword" class="custom" data-bind="checked: showPassword" data-theme="b" />
+                <label for="togglePassword" data-inline="true" data-i18n="loginUser.page.password_show" 
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[show pwd]</label>
+            </div>
         </fieldset>
     </div><!-- /content -->
 </div>

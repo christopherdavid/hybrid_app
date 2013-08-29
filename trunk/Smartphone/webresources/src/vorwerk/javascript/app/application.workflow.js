@@ -63,22 +63,12 @@ Application.prototype.loadWorkflow = function() {
         },
         "robotActivationName" : {
             navrules : [{
-                targetScreenId : "robotActivationDone",
+                targetScreenId : "cleaning",
                 conditions : [{
                     "key" : "robotNameValid",
                     "value" : true
                 }]
             }]
-        },
-        "robotActivationDone" : {
-            navrules : [{
-                targetScreenId : "cleaning",
-                conditions : [{
-                    "key" : "homeScreen",
-                    "value" : true
-                }]
-            }],
-            clearHistory : true
         },
         "loginUser" : {
             navrules : [{

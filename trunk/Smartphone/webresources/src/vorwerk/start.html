@@ -3,29 +3,31 @@
         <div class="logo"></div>
     </div>
     <div data-role="content">
-        <ul data-role="listview" data-theme="a" data-inset="true">
-            <li>
-                <a href="javascript:void(0);" data-bind="click: login">
-                    <h3 data-i18n="start.login" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
-                        login
-                    </h3>
-                    <span class="ui-li-desc" data-i18n="start.login_question" data-bind="translate:{obs:language()}">
-                        already have an account?
-                    </span>
-                    
-                </a>
-            </li>
-            <li>
-                <a href="javascript:void(0);" data-bind="click: register">
-                    <h3 data-i18n="start.register" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
-                        register
-                    </h3>
-                    <span class="ui-li-desc" data-i18n="start.register_question" data-bind="translate:{obs:language()}">
-                        no account so far?
-                    </span>
-                    
-                </a>
-            </li>
-        </ul>
+        <div id="startlist"> 
+            <ul data-role="listview" data-theme="a" data-inset="true">
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: login">
+                        <h3 data-i18n="start.login" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                            login
+                        </h3>
+                        <span class="ui-li-desc" data-i18n="start.login_question" data-bind="translate:{obs:language()}">
+                            already have an account?
+                        </span>
+                        
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: register">
+                        <h3 data-i18n="start.register" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                            register
+                        </h3>
+                        <span class="ui-li-desc" data-i18n="start.register_question" data-bind="translate:{obs:language()}">
+                            no account so far?
+                        </span>
+                        
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div><!-- /content -->
 </div><!-- /page -->

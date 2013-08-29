@@ -1,5 +1,13 @@
 {
     "messages": {
+         "no_connection": {
+            "title": "Verbindungsprobleme",
+            "message": "Sie benötigen eine Onlineverbindung um diese Anwendung benutzen zu können. Bitte schalten Sie das mobile newetzek oder Wi-Fi in den Einstellungen an."
+        },
+        "no_wifi": {
+            "title": "I'm stuck",
+            "message": "<span class='font_bold'>__robotName__</span>: Please clear my path. Help me so I can continue cleaning."
+        },
         "101": {
             "title": "I'm stuck",
             "message": "<span class='font_bold'>__robotName__</span>: Please clear my path. Help me so I can continue cleaning."
@@ -26,6 +34,11 @@
             "message": "",
             "button_1": "Löschen",
             "button_2": "Nein"
+        },
+        "ROBOT_ADDED": {
+            "title":"Registrierung abgeschlossen!",
+            "message": "Hurra! Ihr Roboter wurde registriert.</br>Viel Spaß beim sauber machen :)",
+            "button_1": "OK"
         }
     },
     "robotStateCodes": {
@@ -98,9 +111,9 @@
             "send_to_base": "Zur Basis schicken",
             "spot_size_title": "Spot size: ",
             "cleaningType": {
-                "1": "Manuell",
-                "2": "Alles",
-                "3": "Spot"
+                "1": "MANUELL",
+                "2": "ALLES",
+                "3": "BEREICH"
             }
         }
     },
@@ -122,7 +135,7 @@
             "password_verify": "Passwort verifizieren",
             "password_show": "Passwort anzeigen",
             "registration_done_title": "Registrierung abgeschlossen",
-            "registration_done_message": "Eine Bestätigungs-E-Mail wurde an Ihre E-Mail-Adresse gesendet. Bitte bestätigen sie Ihren Account innerhalb von 48 Stunden.<br /><br />Nach der Bestätigung können Sie sich einloggen und zu Ihrem Roboter verbinden."
+            "registration_done_message": "<div class=\"mailAnimation\"></div>Eine Bestätigungs-E-Mail wurde an Ihre E-Mail-Adresse gesendet. Bitte bestätigen sie Ihren Account innerhalb von 48 Stunden.<br /><br />Nach der Bestätigung können Sie sich einloggen und zu Ihrem Roboter verbinden."
         }
     },
     "robotSelection": {
@@ -131,10 +144,10 @@
             "logout": "Abmelden"
         },
         "page": {
-            "register": "Registrierung abgeschlossen.<br>Willkommen %s!",
+            "register": "Registrierung abgeschlossen.<br>Willkommen <span class=\"highlightedText boldText\">%s!</span>",
             "login": "Willkommen %s!",
             "logged_in": "Hallo %s.",
-            "no_robot": "Sie haben noch keinen Roboter registriert.<br>Bitte fügen Sie einen neuen Roboter hinzu.",
+            "no_robot": "Sie haben noch keinen Roboter registriert.<br/><br/>Bitte fügen Sie einen neuen Roboter hinzu.",
             "select_robot": "Bitte wählen sie einen Roboter aus:"
         }
     },
@@ -143,7 +156,7 @@
             "title": "Roboter aktivieren"
         },
         "page": {
-            "wifisetup": "Bitte geben sie die Roboter ID ein.</br>Sie finden sie unter:</br><span class=\"companyColoredTxt\">Wifi Einstellungen / Registrierung</span> im Anzeige Menü des Roboters, oder auf der Rückseite Ihres Gerätes.",
+            "wifisetup": "Bitte geben sie die Roboter ID ein.</br>Sie finden sie unter:</br><span class=\"boldText highlightedText\">Wifi Einstellungen / Registrierung</span> im Anzeige Menü des Roboters, oder auf der Rückseite Ihres Gerätes.",
             "robotId": "Roboter ID"
         }
     },
@@ -151,11 +164,6 @@
         "page": {
             "id_accepted": "Ihre Roboter ID wurde akzeptiert.</br></br>Sie können nun bei Bedarf den Namen Ihres Roboters personalisieren.",
             "robot_name": "Roboter Name"
-        }
-    },
-    "robotActivationDone": {
-        "page": {
-            "reg_complete": "Yay! Robot Registration is complete.</br></br>Thank you for choosing this product. Happy Cleaning!"
         }
     },
     "loginUser": {
@@ -259,6 +267,7 @@
         },
         "page": {
             "cleaning_event": "Reinigungsevent",
+            "cleaning_mode_title": "Reinigungsoptionen",
             "cleaning_mode": "Im ECO Modus reinigen",
             "quiet_time": "Ruhezeit",
             "starting_time": "Startzeit",

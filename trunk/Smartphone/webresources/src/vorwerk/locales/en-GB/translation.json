@@ -1,5 +1,13 @@
 {
     "messages": {
+        "no_connection": {
+            "title": "Connectivity Problems",
+            "message": "You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings."
+        },
+        "no_wifi": {
+            "title": "I'm stuck",
+            "message": "<span class='font_bold'>__robotName__</span>: Please clear my path. Help me so I can continue cleaning."
+        },
         "101": {
             "title": "I'm stuck",
             "message": "<span class='font_bold'>__robotName__</span>: Please clear my path. Help me so I can continue cleaning."
@@ -26,6 +34,11 @@
             "message": "",
             "button_1": "Delete",
             "button_2": "No"
+        },
+        "ROBOT_ADDED": {
+            "title":"Registration completed!",
+            "message": "Yay! Robot Registration is complete.</br></br>Thank you for choosing this product. Happy Cleaning!",
+            "button_1": "OK"
         }
     },
     "robotStateCodes": {
@@ -98,9 +111,9 @@
             "send_to_base": "Send to base",
             "spot_size_title": "Spot size: ",
             "cleaningType": {
-                "1": "Manual",
-                "2": "All",
-                "3": "Spot"
+                "1": "MANUAL",
+                "2": "ALL",
+                "3": "SPOT"
             }
         }
     },
@@ -122,7 +135,7 @@
             "password_verify": "Password verification",
             "password_show": "Show password",
             "registration_done_title": "Account created",
-            "registration_done_message": "A confirmation mail was sent to your eMail address. Please confirm your account within 48 hours.<br /><br />After confirmation you can login and connect to your robot."
+            "registration_done_message": "<div class=\"mailAnimation\"></div>A confirmation mail was sent to your eMail address. Please confirm your account within 48 hours.<br /><br />After confirmation you can login and connect to your robot."
         }
     },
     "robotSelection": {
@@ -131,7 +144,7 @@
             "logout": "logout"
         },
         "page": {
-            "register": "Registration completed.<br>Welcome %s!",
+            "register": "Registration completed.<br>Welcome <span class=\"highlightedText boldText\">%s!</span>",
             "login": "Welcome %s!",
             "logged_in": "Hello %s.",
             "no_robot": "You have no robots registered yet.<br>Please add your new robot.",
@@ -143,7 +156,7 @@
             "title": "Robot activation"
         },
         "page": {
-            "wifisetup": "Now, please enter the Robot ID.</br>You will find it under:</br><span class=\"companyColoredTxt\">Wifi Setup / Register</span> in the robot display menu or on the back of your device.",
+            "wifisetup": "Now, please enter the Robot ID.</br>You will find it under:</br><span class=\"boldText highlightedText\">Wifi Setup / Register</span> in the robot display menu or on the back of your device.",
             "robotId": "Robot ID"
         }
     },
@@ -151,11 +164,6 @@
         "page": {
             "id_accepted": "Your ID was accepted.</br></br>If you want, you can now personalize your robot's name.",
             "robot_name": "Robot name"
-        }
-    },
-    "robotActivationDone": {
-        "page": {
-            "reg_complete": "Yay! Robot Registration is complete.</br></br>Thank you for choosing this product. Happy Cleaning!"
         }
     },
     "loginUser": {
@@ -259,6 +267,7 @@
         },
         "page": {
             "cleaning_event": "Cleaning Event",
+            "cleaning_mode_title": "Cleaning Options",
             "cleaning_mode": "Clean in ECO Mode",
             "quiet_time": "Quiet Time",
             "starting_time": "Starting time",

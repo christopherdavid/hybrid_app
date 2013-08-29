@@ -124,21 +124,36 @@ function Scheduler($root, scheduleType) {
      */
     this.updateLayout = function() {
         scroller.refresh();
+        var wrapperWidth = $scrollWrapper.width();
+        var timeColumnWidth = $timeColumn.width();
+        
+        var contentWidth = wrapperWidth - timeColumnWidth;
+        var colwidth = Math.floor(contentWidth / 7) + "px";
+        $('.day').width(colwidth);
+        $('.dayLabel').width(Math.floor(contentWidth / 7) + "px");
+        
+        /*
         var width = $scrollWrapper.width();
+        console.log("$scrollWrapper.width() " + $scrollWrapper.width())
 
         // delta == margin left + right
         var delta = $content.outerWidth(true) - $content.innerWidth();
-
+        console.log("$content.outerWidth() " + $content.outerWidth(true) + " $content.innerWidth() " + $content.innerWidth())
+        console.log("delta " + delta);
         $content.width((parseInt(width) - delta) + "px");
+        
 
         // $('.dayRow').width((parseInt(width) - delta) + "px");
 
         // android Bugfix
-        var contentWidth = (parseInt($content.css('width')) - delta);
+        //var contentWidth = (parseInt($content.css('width')) - delta);
+        var contentWidth = parseInt($content.css('width'));
+        console.log("parseInt($content.css('width') " + parseInt($content.css('width')));
         var colwidth = Math.floor(contentWidth / 7) + "px";
         $('.day').width(colwidth);
         $('.dayLabel').width(Math.floor(contentWidth / 7) + "px");
         //console.log("updateLayout")
+        */
     }
     
     this.addEvents = function(eventArray) {
