@@ -26,29 +26,36 @@
         </div>
     </div>
     
-    <div id="menuPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport">
-	    
-	    <h3 class="menuPopupTitle" data-i18n="common.menu" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
-	            [menu]
-        </h3> 
-	    <div class="menuPopupTitleLine"></div>
-
-	    <a href="javascript:void(0);" data-bind="click: cleaning" class="cleaning">
-	        <h3 class="menuPopupBtn cleaning" data-i18n="cleaning.page.cleaning" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
-	            [cleaning]
-	        </h3>
-	    </a>
-	    <a href="javascript:void(0);" data-bind="click: schedule" class="active schedule">
-	        <h3 class="menuPopupBtn" data-i18n="cleaning.page.schedule" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
-	            [schedule]
-	        </h3>
-	    </a>
-	    <a href="javascript:void(0);" data-bind="click: settings" class="settings">
-	        <h3 class="menuPopupBtn" data-i18n="cleaning.page.settings" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
-	            [settings]
-	        </h3>
-	    </a>
-	    
+    <div id="menuPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport dialogType_1">
+        <div data-role="header" data-theme="b" class="ui-header ui-bar-b">
+            <div class="logo"></div>
+        </div>
+        <div class="popupHeaderLine"></div>
+        <div data-role="content" class="ui-content"> 
+            <ul data-role="listview" data-theme="b" data-inset="true" data-icon=""> 
+                <li class="cleaning"> 
+                    <a href="javascript:void(0);" data-bind="click: cleaning" class="active cleaning">
+                        <h3 class="menuPopupBtn cleaning" data-i18n="cleaning.page.cleaning" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                            [cleaning]
+                        </h3>
+                    </a>
+                </li>
+                <li class="active schedule">
+                    <a href="javascript:void(0);" data-bind="click: schedule" class="schedule">
+                        <h3 class="menuPopupBtn" data-i18n="cleaning.page.schedule" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                            [schedule]
+                        </h3>
+                    </a>
+                </li>
+                <li class="settings">
+                    <a href="javascript:void(0);" data-bind="click: settings" class="settings">
+                        <h3 class="menuPopupBtn" data-i18n="cleaning.page.settings" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                            [settings]
+                        </h3>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 
 </div>

@@ -3,10 +3,10 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     var that = this, $spotPopup, 
         $leftSpotContainer,$rightSpotContainer,
         spotGridSize = {
-            cellWidth:25,
-            cellHeight:50,
-            maxWidth:125,
-            maxHeight:250,
+            cellWidth:deviceSize.getResolution() == "high" ? 52 : 26,
+            cellHeight:deviceSize.getResolution() == "high" ? 104 : 52,
+            maxWidth:deviceSize.getResolution() == "high" ? 261 : 130,
+            maxHeight:deviceSize.getResolution() == "high" ? 522 : 260,
         },
         spotFactor = parseInt($.i18n.t("pattern.spotFactor"),10),
         spotUnit = $.i18n.t("pattern.spotUnit"),
@@ -16,6 +16,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.startAreaControl = null;
     // set reference to helper class
     this.robotStateMachine = robotStateMachine;
+    // icon for robot status 
+    this.robotIconStatus = ko.observable("awake");
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     this.cleaningType = ko.observableArray([{
             id : "2",
@@ -167,15 +169,15 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.startBtnClick = function() {
         var tDeffer = null;
         // React on start states of the robot and react accordingly
-        if (that.robotStateMachine.is("inactive")){
+        if (that.robotStateMachine.is("inactive")) {
             // start cleaning
             // robotId, cleaningCategoryId, cleaningModeId, cleaningModifier
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [that.robot().robotId(),
             that.selectedType(), that.selectedMode(), that.selectedFrequency()]);
-        } else  if (that.robotStateMachine.is("paused")){
+        } else  if (that.robotStateMachine.is("paused")) {
             // resume cleaning
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.resumeCleaning, [that.robot().robotId()]);
-        } else if (that.robotStateMachine.is("active")){
+        } else if (that.robotStateMachine.is("active")) {
             // pause cleaning
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.pauseCleaning, [that.robot().robotId()]);
         }
@@ -206,8 +208,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     }
 
     this.startStopRobotError = function(error) {
-        alert.log("error" + error);
-        // TODO: update the state according to the error
+        console.log("error" + error);
     }
     
     // navigation menu actions
@@ -320,6 +321,16 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             //console.log("callback " + from + " to "  + to)
             that.startAreaControl.onStateChanged(to);
             that.robotState(to);
+            
+            if(to == "active") {
+                that.robotIconStatus("cleaning");
+            } else if(to == "inactive") {
+                that.robotIconStatus("sleeping");
+            } else if(to == "paused") {
+                that.robotIconStatus("paused");
+            } else if(to == "waiting") {
+                that.robotIconStatus("idle");
+            }
         };
         // get lasst state, this triggers callback
         that.robotStateMachine.triggerCallback();
@@ -329,6 +340,19 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         
         // pressed event listener for remote buttons
         $('#remote').on('remotePressed', that.remotePressed);
+        
+        $(window).on("resize.cleaning", function() {
+            that.updateLayout();
+        });
+
+        $(document).one("pageshow", function(event) {
+            that.updateLayout();
+        });
+    }
+    
+    this.updateLayout = function() {
+        console.log("update Layout")
+        $("#statusLine").css("bottom", $(".control-line").height());
     }
     
     this.successGetSpotDefinition = function(result) {
@@ -389,6 +413,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         that.startAreaControl = null;
         $('#startBtn').off("startClick");
         $('#remote').off('remotePressed');
+        $(window).off(".cleaning");
         $rightSpotContainer.off('resize');
         that.robotStateMachine.callback = null;
     }

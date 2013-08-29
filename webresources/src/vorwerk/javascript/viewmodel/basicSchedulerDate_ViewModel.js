@@ -36,7 +36,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
             display : 'inline',
             showLabel: false,
             timeWheels : langFormat,
-            mode : 'clickpick',
+            mode : 'scroller',
             stepMinute : 15
         });
         

@@ -9,11 +9,11 @@
                 data-bind="translate:{obs:language(),target: textTarget.jqLinkButton},visible:isBackVisible, click:back">back</a>
         </div>
         <h1>
+            <div class="screenTitle " data-bind="css:{noRobot:!isRobotVisible()}">
+                <span data-i18n="robotSelection.navi.title" data-bind="translate: language">[navi title]</span>
+            </div>
             <div data-bind="visible: isRobotVisible()" class="robotName">
                 <span data-bind="text: robot().robotName">[robot name]</span>  
-            </div>
-            <div class="screenTitle">
-                <span data-i18n="robotSelection.navi.title" data-bind="translate: language">[navi title]</span>
             </div>
         </h1>
         <div class="ui-btn-right">
@@ -23,7 +23,7 @@
     
     <div data-role="content">
         <fieldset class="textWithButton" data-bind="css:{textWithButton:isBackVisible()}">
-            <h2 class="textBlock"><span data-bind="html: title">[welcome]</span></h2>
+            <p class="textBlock"><span data-bind="html: title">[welcome]</span></p>
             
             <div class="buttonBlock" data-bind="visible:isBackVisible()">
                 <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" 

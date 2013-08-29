@@ -22,6 +22,7 @@
 
     .dayRow {
         -webkit-transform:translateZ(0);
+        white-space:nowrap;
         min-width: 7*@scheduler_day_min_column_width + @scheduler_time_column_width;
         box-sizing: border-box; 
         z-index: 1000;
@@ -89,12 +90,14 @@
     .schedulerContent {
         height: 2000px;
         min-width: 7*@scheduler_day_min_column_width + @scheduler_time_column_width; 
-        margin-left: @scheduler_time_column_width;
-        margin-top:@scheduler_day_row_height;
+        border-left:@scheduler_time_column_width solid @color_page_background;
+        border-top:@scheduler_day_row_height solid @color_page_background;
         box-sizing: border-box; 
-        background-image: url('../../img/bg_scheduler_6x96.png');
-        background-position-y: @scheduler_event_height/2 - @scheduler_grid_line_height/2;
-        background-size:@scheduler_grid_size;
+        background-image: url('../../img/bg_scheduler_6x96.png'), url('../../img/bg_scheduler_noon_6x4.png');
+        background-position-y: @scheduler_event_height/2 - @scheduler_grid_line_height/2, 12*@hourHeight - @scheduler_noon_line_height/2 + @scheduler_event_height/2 - @scheduler_grid_line_height/2;
+        background-size:@scheduler_grid_size, @scheduler_noon_line_size;
+        background-repeat:repeat, repeat-x;
+        
       
         .day {
             display : inline-block;

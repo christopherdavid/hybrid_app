@@ -16,16 +16,15 @@
         </h1>
     </div>
 
-    <div data-role="content">
+    <div data-role="content" class="max-size">
         
-        <fieldset>
+        <fieldset class="indent">
             <h2 data-i18n="userSettings.page.email_adress"
                 data-bind="translate: language">[robot_id]</h2>
             <p class="label" data-bind="text: user().email">asd</p>
         </fieldset>
                 
-        <fieldset>
-        
+        <fieldset class="indent">
             <h2 data-i18n="userSettings.page.password"
                 data-bind="translate: language">[password]</h2>
             
@@ -37,50 +36,59 @@
                         data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: changePassword">[change]</a> 
                 </div>
             </div>
+            
+            <div class="emptyline"></div>
         </fieldset>
+        
         <fieldset>
-            <a href="#" data-role="button" data-theme="b" data-mini="false"  
+            <a href="#" data-role="button" data-theme="c" data-mini="false"  
                     data-i18n="common.logout"
                     data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: logout">[logout]</a>
         </fieldset>
         
     </div>
     
-	<div id="changePasswordPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport">
-		<div data-role="header" data-theme="b">
-			<h1 class="ui-title" role="heading" aria-level="1" data-i18n="common.edit" data-bind="translate: language">[edit]</h1>
-		</div>
-		<div data-role="content">
+    <div id="changePasswordPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport dialogType_1">
+        <div data-role="header" data-theme="b">
+            <h1 class="ui-title" role="heading" aria-level="1" data-i18n="common.edit" data-bind="translate: language">[edit]</h1>
+        </div>
+        <div class="popupHeaderLine"></div>
 
-            <h2 data-i18n="userSettings.page.password"
-                data-bind="translate: language">[password]</h2>
-            
-            <input type="password"
-            	data-i18n="userSettings.page.old_password" 
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'afterkeydown', jqmInputVisible: !showPassword()"/>
-            <input type="text"
-            	data-i18n="userSettings.page.old_password" 
-                data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'afterkeydown', jqmInputVisible: showPassword()"/>
-            
-            <input type="password"
-            	data-i18n="userSettings.page.new_password" 
-            	data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'afterkeydown', jqmInputVisible: !showPassword()"/>
-            <input type="text"
-            	data-i18n="userSettings.page.new_password" 
-            	data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'afterkeydown', jqmInputVisible: showPassword()"/>
-            
-            <input type="password"
-            	data-i18n="userSettings.page.new_password_verify" 
-            	data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', jqmInputVisible: !showPassword(), jqmInputCSS: {invalid: passwordValid}"/>
-            <input type="text"
-            	data-i18n="userSettings.page.new_password_verify" 
-            	data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', jqmInputVisible: showPassword(), jqmInputCSS: {invalid: passwordValid}"/>
-
-            <input type="checkbox" name="togglePassword" id="togglePassword" data-theme="b" class="custom" data-bind="checked: showPassword" />
-            <label for="togglePassword" data-i18n="loginUser.page.password_show" 
-            	data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[show pwd]</label>
-
-            <div class="ui-bar-buttons buttons_2">
+        <div data-role="content">
+            <fieldset>
+                <p data-i18n="userSettings.page.password"
+                    data-bind="translate: language">[password]</p>
+                <div class="line">
+                    <input type="password"
+                        data-i18n="userSettings.page.old_password" 
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'afterkeydown', jqmInputVisible: !showPassword()"/>
+                    <input type="text"
+                        data-i18n="userSettings.page.old_password" 
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'afterkeydown', jqmInputVisible: showPassword()"/>
+                </div>
+                <div class="line">
+                    <input type="password"
+                        data-i18n="userSettings.page.new_password" 
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'afterkeydown', jqmInputVisible: !showPassword()"/>
+                    <input type="text"
+                        data-i18n="userSettings.page.new_password" 
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'afterkeydown', jqmInputVisible: showPassword()"/>
+                </div>
+                <div class="line">
+                    <input type="password"
+                        data-i18n="userSettings.page.new_password_verify" 
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', jqmInputVisible: !showPassword(), jqmInputCSS: {invalid: passwordValid}"/>
+                    <input type="text"
+                        data-i18n="userSettings.page.new_password_verify" 
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', jqmInputVisible: showPassword(), jqmInputCSS: {invalid: passwordValid}"/>
+                </div>
+                <div class="line">
+                    <input type="checkbox" name="togglePassword" id="togglePassword" data-theme="b" class="custom" data-bind="checked: showPassword" />
+                    <label for="togglePassword" data-i18n="loginUser.page.password_show" data-inline="true"
+                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[show pwd]</label>
+                </div>
+            </fieldset>
+            <div data-role="controlgroup" data-type="horizontal" class="center">
                     <a class="first-button" href="#" data-role="button" data-theme="b" data-mini="false" 
 	                    data-i18n="common.ok" 
 	                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: okEnabled(), click: commitEdit">[ok]</a>

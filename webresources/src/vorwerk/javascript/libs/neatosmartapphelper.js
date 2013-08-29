@@ -3,6 +3,22 @@
  * It is used for demo purposes only and WON'T be used when the application is running on a device.
  *
  */
+var Connection = {
+    UNKNOWN:1,
+    ETHERNET:2,
+    WIFI:3,
+    CELL_2G:4,
+    CELL_3G:5,
+    CELL_4G:6,
+    NONE:7
+}
+function switchConnection(newType) {
+    navigator.network.connection.type = newType;
+}
+navigator.network = {};
+navigator.network.connection = {
+    type:Connection.ETHERNET
+}
 
 var NOTIFICATION_DISCOVERY_STARTED = 1;
 var NOTIFICATION_DISCOVERY_RESULT = 2;
@@ -398,7 +414,16 @@ var UserPluginManager = ( function() {
                     callbackSuccess("OK");
                 }, 1000);
             },
-
+            createUser2: function(email, password, name, alternateEmail, callbackSuccess, callbackError) {
+                //window.plugins.neatoPluginLayer.userMgr.createUser(email, password, name, callbackSuccess, callbackError);
+                window.setTimeout(function() {
+                    callbackSuccess({
+                        "email" : "homer@uid.com",
+                        "username" : "Homer",
+                        "userId" : "82"
+                    });
+                }, 1000);
+            },
             createUser : function(email, password, name, callbackSuccess, callbackError) {
                 //window.plugins.neatoPluginLayer.userMgr.createUser(email, password, name, callbackSuccess, callbackError);
                 window.setTimeout(function() {

@@ -13,13 +13,7 @@
     background-position: 0% 100%;
     background-size:@page_logo_size
 }
-/*
-h2 {
-    font-size: 24px;
-    font-weight: 100;
-    color: @color_text_light_grey;
-}
-*/ 
+
 label {
     color: @color_text_light_grey;
     font-weight: 100;
@@ -35,10 +29,22 @@ label {
     color: #FFFFFF;
     text-shadow: 0px -1px 0px #000000;
     padding: @content_space;
+    
+    &.max-size {
+        max-width:@page_content_max_width;
+        margin:auto;
+    }
 }
 
 .ui-page-header-fullscreen .ui-content, .ui-page-footer-fullscreen .ui-content{
     padding-top: 39px;/* fix for fixed toolbar mode */
+}
+
+.highlightedText{
+  color: @color_green_text_highlight;
+}
+.boldText{
+  font-weight:bold;
 }
 
 
@@ -120,10 +126,6 @@ label {
             li {
                 width:auto;
                 margin:0;
-                
-                &+ li {
-                  margin-left:25px;
-                }
                 
                 .ui-btn {
                     

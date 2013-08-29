@@ -53,7 +53,13 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
         // to another screen
         parent.communicationWrapper.getRobotState(that.bundle.robot.robotId);
         that.robot(ko.mapping.fromJS(that.bundle.robot), null, that.robot);
-        parent.flowNavigator.next();
+        
+        var msgTitle = $.i18n.t("dialogs.ROBOT_ADDED.title");
+        var msgText = $.i18n.t("dialogs.ROBOT_ADDED.message");
+        var msgButton = $.i18n.t("dialogs.ROBOT_ADDED.button_1");
+        parent.notification.showDialog(dialogType.INFO, msgTitle, msgText, [{"label":msgButton, "callback":function(e){
+            parent.flowNavigator.next();
+        }}]);
     }
 
     this.robotSetNameError = function(error) {

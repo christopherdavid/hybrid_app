@@ -11,7 +11,7 @@
     
     .first-line {
         position:absolute;
-        top:0;
+        top:@headerbar_border_shadow/2;
         left:0;
         right:0;
         bottom:@cleaning_last_line_height;
@@ -19,11 +19,80 @@
         .border-radius-bottom(@cleaning_control_button_size/2 + @cleaning_control_button_space);
         .box-shadow(0px, 0px, @cleaning_box_shadow_distance, @cleaning_box_shadow_size, @cleaning_box_shadow_color);
         
-        .status-line {
+        #statusLine {
             position:absolute;
             top:0;
-            left:0;
-            right:0;
+            left:@cleaning_status_line_space;
+            right:@content_space;
+            
+            .valign {
+                position:absolute;
+                top:50%;
+                width:100%;
+                min-height:@cleaning_status_icon_height;
+                margin-top:-@cleaning_status_icon_height/2;
+            }
+            
+            #statusIcon {
+                height:@cleaning_status_icon_height;
+                width:@cleaning_status_icon_width;
+                background-image:url(../../img/icons/robot_status_90x720.png);
+                background-repeat:no-repeat;
+                background-size:@cleaning_status_icon_image_size;
+                
+                &[data-status='awake'] {
+                    background-position-y:0;
+                }
+                &[data-status='cleaning'] {
+                    background-position-y:-@cleaning_status_icon_height;
+                }
+                &[data-status='error'] {
+                    background-position-y:-2*@cleaning_status_icon_height;
+                }
+                &[data-status='idle'] {
+                    background-position-y:-3*@cleaning_status_icon_height;
+                }
+                &[data-status='inbase'] {
+                    background-position-y:-4*@cleaning_status_icon_height;
+                }
+                &[data-status='paused'] {
+                    background-position-y:-5*@cleaning_status_icon_height;
+                }
+                &[data-status='sleeping'] {
+                    background-position-y:-6*@cleaning_status_icon_height;
+                }
+                &[data-status='stopped'] {
+                    background-position-y:-7*@cleaning_status_icon_height;
+                }
+            }
+            #statusText {
+                position:absolute;
+                left:@cleaning_status_icon_width;
+                top:(@cleaning_status_icon_height - @cleaning_status_text_min_height - @cleaning_status_text_padding_top - @cleaning_status_text_padding_bottom)/2;
+                right:0;
+                color:@cleaning_status_text_color;
+                font-size: 18px;
+                font-weight:normal;
+                background-color:@cleaning_status_text_bg;
+                border-radius:@cleaning_status_border_radius;
+                padding:@cleaning_status_text_padding;
+                .font_reg;
+                .font_normal;
+                min-height:@cleaning_status_text_min_height;
+                margin-left:@cleaning_status_bubble_icon_width;
+                
+                &:before {
+                    content:"";
+                    position:absolute;
+                    left:-@cleaning_status_bubble_icon_width;
+                    top:@cleaning_status_bubble_icon_top;
+                    background-image:url(../../img/status_text_bubble_22x22.png);
+                    background-repeat:no-repeat;
+                    background-size:@cleaning_status_bubble_icon_size;
+                    width:@cleaning_status_bubble_icon_width;
+                    height:@cleaning_status_bubble_icon_height;
+                }
+            }
         }
         
         .control-line {
@@ -31,6 +100,11 @@
             bottom: 0;
             left: 0;
             right: 0;
+            
+            .halign {
+                margin:auto;
+                width:@cleaning_startContainer_width/2;
+            }
             
             .control-button-bar {
                 position: relative;
@@ -107,17 +181,6 @@
     }
 }
 
-
-#statusTxt {
-    color:@color_robot_status;
-    font-size: 18px;
-    font-weight:normal;
-    padding-left:30px;
-    background-image:url(../../img/icons/robot_status_52x60.png);
-    background-repeat:no-repeat;
-    background-size:26px 30px;
-}
-
 #spotSize-popup {
     left: 20px!important;
     right: 20px!important;
@@ -133,15 +196,15 @@
 
 // remote
 #startContainer {
-    width:550px;
-    height:274px;
+    width:@cleaning_startContainer_width;
+    height:@cleaning_startContainer_height;
     position:relative;
     overflow:hidden;
     
     #startArea {
         width: 550px;
         height: 548px;
-        .transform-scale(0.5);
+        .transform-scale(@cleaning_startArea_scale);
         .transform-origin(0,0,0);
         background-image: url(../../img/bg_startbtn.png);
         background-repeat: no-repeat;
@@ -270,8 +333,8 @@
 
 // spot size grid
 #spotContainer {
-    width:@spot_container_width + @spot_grid_icon_size;
-    height:@spot_container_height + @spot_robot_icon_height/2;
+    width:@spot_grid_icon_width;
+    height:@spot_grid_icon_height + @spot_robot_icon_height/2;
     position:relative;
     margin:auto;
     
@@ -289,25 +352,25 @@
     }
     #spotGridContainer {
         position: relative;
-        width:@spot_container_width + @spot_grid_icon_size;
-        height:@spot_container_height + @spot_grid_icon_size;
-        background-image:url(../../img/bg_spot_grid.png);
+        width:@spot_grid_icon_width;
+        height:@spot_grid_icon_height;
+        background-image:url(../../img/bg_spot_grid_530x530.png);
+        background-size:@spot_grid_icon_width @spot_grid_icon_height;
         background-repeat:repeat;
         
         #spotSizeContainer {
             position: relative;
-            width:@spot_container_width - @spot_grid_icon_size/2;
-            height:@spot_container_height - @spot_grid_icon_size/2;
-            border:2px solid @cleaning_spotsize_border;
-            left:@spot_grid_icon_size/2;
-            top:@spot_grid_icon_size/2;
-            background-color:fade(@cleaning_bg_spotsize, 50%);
+            width:@spot_container_width;
+            height:@spot_container_height;
+            left:@spot_grid_space;
+            top:@spot_grid_space;
+            
             // we need an extra element for the border to avoid calculation issues with jquery UI and border of an element
             .border {
-                border-top:1px solid @cleaning_spotsize_selection_border;
-                border-bottom:1px solid @cleaning_spotsize_selection_border;
+                border-top:@spot_selection_border solid @cleaning_spotsize_selection_border;
+                border-bottom:@spot_selection_border solid @cleaning_spotsize_selection_border;
                 position:absolute;
-                top:0;
+                top:@spot_border_correction_top;
                 bottom:0;
                 left:0;
                 right:0;
@@ -315,38 +378,38 @@
             
             #leftSpotContainer {
                 position:absolute;
-                bottom:-@spot_border;
-                left:75px;
-                margin-left:-@spot_border;
-                width:50px;
-                height:50px;
+                bottom:0;
+                left:@spot_container_width/2 - @spot_grid_cell_width/2; 
+                width:@spot_grid_cell_width/2;
+                height:@spot_grid_cell_height;
                 background-color:@cleaning_spotsize_selection_bg;
                 z-index:801;
                 .border {
-                    border-left:1px solid @cleaning_spotsize_selection_border;
+                    border-left:@spot_selection_border solid @cleaning_spotsize_selection_border;
+                    left:@spot_border_correction;
                 }
             }
             
             #rightSpotContainer {
                 position:absolute;
-                bottom:-@spot_border;
-                width:50px;
-                height:50px;
-                left:125px;
-                margin-left:-@spot_border;
+                bottom:0;
+                width:@spot_grid_cell_width/2;
+                height:@spot_grid_cell_height;
+                left:@spot_container_width/2;
                 background-color:@cleaning_spotsize_selection_bg;
                 z-index:801;
                 .border {
-                    border-right:1px solid @cleaning_spotsize_selection_border;
+                    border-right:@spot_selection_border solid @cleaning_spotsize_selection_border;
+                    right:@spot_border_correction;
                 }
                 .ui-resizable-ne {
-                    right:-25px;
-                    top:-25px;
+                    right:-@spot_resize_icon_width/2;
+                    top:-@spot_resize_icon_height/2;
                     z-index:802;
-                    background-image: url("../../img/icons/spotselection_100x100.png");
-                    background-size:50px 50px;
-                    width: 50px;
-                    height: 50px;
+                    background-image: url("../../img/icons/spot_arrow_40x40.png");
+                    background-size:@spot_resize_icon_width @spot_resize_icon_height;
+                    width: @spot_resize_icon_width;
+                    height: @spot_resize_icon_height;
                     background-repeat: no-repeat;
                 }
                 .ui-resizable-se {
@@ -366,78 +429,6 @@
                 }
             }
         }
-    }
-}
-
-// popup buttons
-.ui-popup-double-button {
-    position: relative;
-    margin:10px auto;
-    width: @pop_buton_width + 2;
-    height:54px;
-    
-    .ui-btn-left,.ui-btn-right {
-        top:0; 
-        height:54px;
-        position:absolute;
-        
-        .ui-btn {
-            margin:0;
-            top:6px;
-            height:@pop_button_height;
-            border-radius:@pop_button_height/2;
-            width:@pop_buton_width;
-            float:left;
-            
-            .ui-btn-inner {
-                display: table-cell;
-                height: @pop_button_height;
-                width:@pop_buton_width - @pop_button_height/2;
-                white-space: normal;
-                vertical-align: middle;
-                text-align: center;
-                padding: 0 @pop_button_height/4 0 @pop_button_height/4;
-                max-width: @pop_buton_width - @pop_button_height/2;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-            }
-        }
-        &.two-buttons {
-            .ui-btn.first-button {
-                width:(@pop_buton_width)/2 - 1; // minus border-width
-                border-radius:@pop_button_height/2 0 0 @pop_button_height/2;
-        
-                .ui-btn-inner {
-                    padding: 0 @pop_button_height/4 0 @pop_button_height/8; // small buttons cut in half the padding
-                    width:(@pop_buton_width)/2 - 1 - @pop_button_height/4; // minus border-width - (padding-left + padding-right)
-                    max-width:(@pop_buton_width)/2 - 1 - @pop_button_height/4;
-                }
-            }
-            .ui-btn.second-button {
-                width:@pop_buton_width/2 - 2; // minus border-width - margin-left
-                margin-left:1px;
-                border-radius:0 @pop_button_height/2 @pop_button_height/2 0;
-                
-                .ui-btn-inner {
-                    padding: 0 0 0 @pop_button_height/8 - 2; // small buttons cut in half the padding
-                    width:(@pop_buton_width)/2 - 2 - @pop_button_height/4; // minus border-width - margin-left - (padding-left + padding-right)
-                    max-width:(@pop_buton_width)/2 - 2 - @pop_button_height/4;
-                            
-                .ui-btn-text {
-                        padding-right:5px;
-                    }
-                }
-            }
-        }
-    }
-    
-    .ui-btn-left {
-        left:0;
-    }
-    
-    .ui-btn-right {
-        right:0;
     }
 }
 

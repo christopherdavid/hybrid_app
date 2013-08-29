@@ -18,9 +18,11 @@
     </div>
     
     <div data-role="content">
-        <h2 data-i18n="robotActivationName.page.id_accepted" data-bind="translate: language">Your ID was accepted...</h2>
         <fieldset>
-            <input type="text" data-i18n="robotActivationName.page.robot_name" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: robotName, valueUpdate: 'afterkeydown'" autofocus="autofocus"/>
+            <p data-i18n="robotActivationName.page.id_accepted" data-bind="translate: language">Your ID was accepted...</p>
+            <div class="line">
+                <input type="text" data-i18n="robotActivationName.page.robot_name" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: robotName, valueUpdate: 'afterkeydown'"/>
+            </div>
         </fieldset>
     </div>
 </div>
