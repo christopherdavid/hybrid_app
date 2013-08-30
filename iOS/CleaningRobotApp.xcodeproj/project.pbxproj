@@ -531,8 +531,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Vorwerk International Mittelsten Scheid & Co.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Vorwerk International Mittelsten Scheid & Co.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Monty Boyer (3RXYE83VYJ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Monty Boyer (3RXYE83VYJ)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -552,8 +552,8 @@
 					"\"/Users/uid/Library/Developer/Xcode/DerivedData/CleaningRobotApp-fjjopscayftduodhuhxpfnpddrra/Build/Products/Debug-iphoneos\"",
 				);
 				PRODUCT_NAME = CleaningRobotApp;
-				PROVISIONING_PROFILE = "AD7A69AB-4F8F-453F-935E-B7FF7C17B611";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "AD7A69AB-4F8F-453F-935E-B7FF7C17B611";
+				PROVISIONING_PROFILE = "6D53D700-8A3C-426C-B5BB-7DB0191367AD";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6D53D700-8A3C-426C-B5BB-7DB0191367AD";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -562,8 +562,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Vorwerk International Mittelsten Scheid & Co.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Vorwerk International Mittelsten Scheid & Co.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Monty Boyer (3RXYE83VYJ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Monty Boyer (3RXYE83VYJ)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CleaningRobotApp/CleaningRobotApp-Prefix.pch";
@@ -581,8 +581,8 @@
 					"\"/Users/uid/Library/Developer/Xcode/DerivedData/CleaningRobotApp-fjjopscayftduodhuhxpfnpddrra/Build/Products/Debug-iphoneos\"",
 				);
 				PRODUCT_NAME = CleaningRobotApp;
-				PROVISIONING_PROFILE = "AD7A69AB-4F8F-453F-935E-B7FF7C17B611";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "AD7A69AB-4F8F-453F-935E-B7FF7C17B611";
+				PROVISIONING_PROFILE = "6D53D700-8A3C-426C-B5BB-7DB0191367AD";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6D53D700-8A3C-426C-B5BB-7DB0191367AD";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
