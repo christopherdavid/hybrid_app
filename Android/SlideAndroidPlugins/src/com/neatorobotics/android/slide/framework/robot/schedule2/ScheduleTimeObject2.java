@@ -1,8 +1,12 @@
 package com.neatorobotics.android.slide.framework.robot.schedule2;
 
+import com.neatorobotics.android.slide.framework.logger.LogHelper;
+
 
 public class ScheduleTimeObject2 {
 
+	private static final String TAG = ScheduleTimeObject2.class.getSimpleName();
+	
 	private int mHrs;
 	private int mMins;
 	public ScheduleTimeObject2(int hrs, int min) {
@@ -43,8 +47,15 @@ public class ScheduleTimeObject2 {
 	}
 
 	private static int convertStringToInt(String value) {
-
-		int valueInt = Integer.parseInt(value);
+		
+		int valueInt = 0;
+		try {
+			double valueDouble = Double.parseDouble(value);
+			valueInt = (int) valueDouble;
+		}
+		catch (NumberFormatException e) {
+			LogHelper.log(TAG, "NumberFormatException: " + e);
+		}
 		return valueInt;
 	}
 
