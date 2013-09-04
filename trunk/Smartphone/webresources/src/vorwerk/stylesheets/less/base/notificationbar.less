@@ -22,12 +22,15 @@
         box-shadow: inset 0px -35px 20px -40px #000;
         padding-left: 8px;
         padding-right: 8px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
         
         .ui-notificationbar_text{
           color: @notificationbar-textcolor;
-          float:left;
           text-shadow:none;
           line-height: 40px;
+          white-space:nowrap;
         }
         
         #ui-notificationbar_icon {

@@ -46,16 +46,17 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
             if (that.bundle.blockedDays && that.bundle.blockedDays.length > 0) {
                 that.blockedDays(that.bundle.blockedDays);
             }
-            if (that.bundle.newEvent) {
+            if (that.bundle.type == "add" && that.bundle.newEvent) {
                 var startTime = $.scroller.parseDate('HH:ii', that.bundle.newEvent.startTime);
                 // set event time to date picker
                 $cleaningTimePicker.scroller('setDate', startTime, true);
                 
                 // clear cleaning days and set the new ones from bundle
                 that.selectedCleaningDays.removeAll();
-                that.selectedCleaningDays.push(that.cleaningDays()[that.bundle.newEvent.day]);
+                var dayIndex = jQuery.inArray((that.bundle.newEvent.day), weekIndex);
+                that.selectedCleaningDays.push(that.cleaningDays()[dayIndex]);
                 
-            } else {
+            } else if(that.bundle.type == "edit") {
                 //show delete Button
                 that.hasDelete(true);
             }

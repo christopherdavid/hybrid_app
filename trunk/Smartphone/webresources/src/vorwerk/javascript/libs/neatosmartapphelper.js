@@ -460,13 +460,16 @@ var UserPluginManager = ( function() {
 
             getUserDetail : function(email, callbackSuccess, callbackError) {
                 //window.plugins.neatoPluginLayer.userMgr.getUserDetail(email, callbackSuccess, callbackError);
-                    window.setTimeout(function() {
+                // window.setTimeout(function() {
+                    // callbackError({"status":-1,"message":"Method call failed the User Authentication"});
+                // }, 1);                window.setTimeout(function() {
                     callbackSuccess({
                         "email" : "homer@uid.com",
                         "username" : "Homer",
                         "userId" : "82"
                     });
                 }, 1000);
+
             },
 
             getAssociatedRobots : function(email, callbackSuccess, callbackError) {
@@ -996,15 +999,15 @@ var RobotPluginManager = ( function() {
             
             // New Schedule APIs being added:
             getScheduleEvents: function(robotId, scheduleType, callbackSuccess, callbackError) {
-                /*
                 window.setTimeout(function() {
                     callbackError(
-                        {   'errorMessage':'No schedule exists for the given robot.',
-                            'errorCode': 1003
+                        {
+                            "errorMessage":"No schedule data found for this robot",
+                            "errorCode":-159
                         }
                     );
                 }, 500);
-                */  
+                /*
                 window.setTimeout(function() {
                     callbackSuccess(
                         {   'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
@@ -1019,6 +1022,7 @@ var RobotPluginManager = ( function() {
                         }
                     );
                 }, 1000);
+                */
             },
             // updateScheduleEvent('955fe88b-061f-4cc0-9f2b-c4baa73b156a', '76d784e0-78a2-45e0-a67a-3f404eecafc8', {'startTime':'12:30','day':2}, callbackSuccess, callbackError)
             updateScheduleEvent: function(scheduleId, scheduleEventId, scheduleEventData, callbackSuccess, callbackError) {

@@ -17,17 +17,18 @@
     .dialog.ui-popup {
       border: 0 none;
       box-shadow: 0 0 8px 2px rgba(0,0,0,0.4);
+      -webkit-transform:translateZ(0);
     }
 }
 
 #menuPopup-popup{
-  width: 250px;
-  height: 400px;
+  width: @menuPopup_container_width;
+  height: @menuPopup_container_height;
   top: 50%!important;
   left: 0!important;
   right: 0;
   bottom: 0;
-  margin: -150px auto 0 auto;
+  margin: -@menuPopup_container_height/2 auto 0 auto;
   display:none;
   
   &.ui-popup-active{
@@ -38,7 +39,8 @@
 
 #menuPopup {
   
-  height: 300px;
+  height: @menuPopup_height;
+  overflow:hidden;
   
   .ui-content{
     padding:0;

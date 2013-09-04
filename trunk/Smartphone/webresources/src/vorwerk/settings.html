@@ -42,7 +42,7 @@
             </li>
             <li>
                 <a href="javascript:void(0);" data-bind="click:about">
-                    <h3 class="bigListItem" data-i18n="settings.page.about" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                    <h3 data-i18n="settings.page.about" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
                         about
                     </h3>
                     <span class="ui-li-desc" data-i18n="settings.page.about_desc" data-bind="translate:{obs:language()}">[description]</span>
@@ -51,13 +51,24 @@
             <!--
             <li>
                 <a href="javascript:void(0);" data-bind="click:terms">
-                    <h3 class="bigListItem" data-i18n="settings.page.terms" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                    <h3 data-i18n="settings.page.terms" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
                         terms of use
                     </h3>
                     <span class="ui-li-desc" >[description]</span>
                 </a>
             </li>
             -->
+        </ul>
+        
+        <ul data-role="listview" data-theme="a" data-inset="true">
+            <li data-icon="weblink" data-bind="click:weblink">
+                <a href="javascript:void(0);">
+                    <h3 data-i18n="settings.page.link" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                        www
+                    </h3>
+                    <span class="ui-li-desc" data-i18n="settings.page.link_desc" data-bind="translate:{obs:language()}">[description]</span>
+                </a>
+            </li>
         </ul>
     </div><!-- /content -->
     

@@ -918,6 +918,18 @@ label {
 .ui-listview .ui-btn.ui-selected .ui-btn-text .ui-li-desc {
   color: #000000;
 }
+.ui-listview .ui-icon-weblink {
+  -moz-box-shadow: none;
+  -o-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent url(../../img/icons/weblink_48x48.png) center center no-repeat !important;
+  background-size: 24px 24px !important;
+  width: 24px;
+  height: 30px;
+  margin-top: -12px !important;
+  right: 15px;
+}
 .ui-listview .ui-icon-arrow-r {
   -moz-box-shadow: none;
   -o-box-shadow: none;
@@ -1342,6 +1354,7 @@ label {
 .ui-popup-container.ui-popup-active .dialog.ui-popup {
   border: 0 none;
   box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.4);
+  -webkit-transform: translateZ(0);
 }
 #menuPopup-popup {
   width: 250px;
@@ -1350,7 +1363,7 @@ label {
   left: 0!important;
   right: 0;
   bottom: 0;
-  margin: -150px auto 0 auto;
+  margin: -200px auto 0 auto;
   display: none;
 }
 #menuPopup-popup.ui-popup-active {
@@ -1358,6 +1371,7 @@ label {
 }
 #menuPopup {
   height: 300px;
+  overflow: hidden;
 }
 #menuPopup .ui-content {
   padding: 0;
@@ -1825,12 +1839,15 @@ label {
   box-shadow: inset 0px -35px 20px -40px #000000;
   padding-left: 8px;
   padding-right: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .ui-notificationbar .contentWrapper .ui-notificationbar_text {
   color: #000000;
-  float: left;
   text-shadow: none;
   line-height: 40px;
+  white-space: nowrap;
 }
 .ui-notificationbar .contentWrapper #ui-notificationbar_icon {
   position: relative;

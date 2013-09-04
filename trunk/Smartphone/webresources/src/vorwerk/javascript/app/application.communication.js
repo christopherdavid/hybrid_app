@@ -22,16 +22,33 @@ function WorkflowCommunication(parent) {
             if (success){
                 that.callbacks[guid].oDeferred.resolve(result, that.callbacks[guid].notifyOptions);
             } else {
-                parent.notification.showError(result);
-                that.callbacks[guid].oDeferred.reject(result, that.callbacks[guid].notifyOptions);
+                // call reject on all listeners
+                var errorHandled = $.Deferred();
+                var errorHandledDone = errorHandled.promise();
+                // add function to call reject on promise as last failCallback in the chain
+                that.callbacks[guid].oDeferred.fail(function(error, notificationOptions, errorHandled) {
+                    // if the state of the deferred already has been set nothing happens, the state doesn't change
+                    errorHandled.reject();
+                });
+                // call reject which calls every failCallback in the chain and gives them the possibility to handle the error
+                // if the error has been handled in failCallback the deferred must be notified using errorHandled.resolve()
+                // this avoids the callback of fail and therefore doesn't shows the default error message 
+                that.callbacks[guid].oDeferred.reject(result, that.callbacks[guid].notifyOptions, errorHandled);
+                
+                // handle promise object
+                errorHandledDone.fail(function(error){
+                    console.log("error not handled, show default error message");
+                    // show error message
+                    parent.notification.showError(result);
+                });
             }
         // check if there was a static callback
         } else if(that.staticCallbacks[guid]) {
             if (success){
                 that.staticCallbacks[guid].oDeferred.resolve(result, that.staticCallbacks[guid].notifyOptions);
             } else {
-                parent.notification.showError(result);
                 that.staticCallbacks[guid].oDeferred.reject(result, that.staticCallbacks[guid].notifyOptions);
+                parent.notification.showError(result);
             }
         }
     };
