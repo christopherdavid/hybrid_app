@@ -196,7 +196,10 @@
             "general_settings_desc": "Manage your robot's notifications.",
             "terms": "Terms of use",
             "about": "About",
-            "about_desc": "Show version information."
+            "about_desc": "Show version information.",
+            "link": "Vorwerk",
+            "link_desc": "Visit Vorwerk website.",
+            "link_url":"http://www.kobold-worldwide.com/"
         }
     },
     "robotManagement": {
@@ -219,7 +222,7 @@
             "title": "User Settings"
         },
         "page": {
-            "email_adress": "eMail Adress",
+            "email_adress": "Email Address",
             "password": "Password",
             "old_password": "Old password",
             "new_password": "New password",

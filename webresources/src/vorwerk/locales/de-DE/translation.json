@@ -196,7 +196,10 @@
             "general_settings_desc": "Verwalten Sie die Benachrichtigung des Roboters.",
             "terms": "Nutzungsbedingungen",
             "about": "Über",
-            "about_desc": "Zeige Versions Informationen."
+            "about_desc": "Zeige Versions Informationen.",
+            "link": "Vorwerk",
+            "link_desc": "Besuchen Sie die Vorwerk Webseite.",
+            "link_url":"http://kobold.vorwerk.de/de/home/"
         }
     },
     "robotManagement": {

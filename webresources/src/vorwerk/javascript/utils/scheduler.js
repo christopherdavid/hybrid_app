@@ -513,8 +513,19 @@ function Scheduler($root, scheduleType) {
             $day.data('dayIndex',weekIndex[i]);
             $day.on("vclick.scheduler", function(event, i) {
                 var dayIndex = $(this).data('dayIndex');
+                /*
+                console.log("pageY  :\t" + event.pageY
+                        + "\nscreenY:\t" + event.screenY
+                        + "\nclientY:\t" + event.clientY
+                        + "\noffsetY:\t" + event.offsetY
+                        + "\n$day.offset().top:" + $day.offset().top
+                        + "\ncontainerScrollY:" + containerScrollY
+                 );
+                 */
+                 
                 // minus day margin-top and minus background-position-y
-                var newY = event.offsetY + parseInt($day.css('margin-top')) - parseInt($content.css('background-position-y'));
+                var offsetY = (event.pageY - $day.offset().top);
+                var newY = offsetY + parseInt($day.css('margin-top')) - parseInt($content.css('background-position-y'));
                 
                 var newHour = Math.floor(newY/HOUR_IN_PX);
                 var newMin  = newY%HOUR_IN_PX;

@@ -6,6 +6,7 @@
     </group>
     <group name="utils">
         <js>/../../javascript/utils/helper.js</js>
+        <js>/../../javascript/utils/ios/specific.js</js>
         <js>/../../javascript/app/enums.js</js>
         <js>/../../javascript/utils/resourceHandler.js</js>
         <js>/../../javascript/utils/ko.bindingHandler.js</js>

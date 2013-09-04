@@ -17,12 +17,11 @@ function Application() {
     this.config = {
         firstScreen : "start",
         pageTransition : "none",
-        version:"0.5.5.14",
+        version:"0.5.5.24",
         pluginVersion:"0.5.3.05",
         fallbackLanguage:"en-GB",
         viewPath:"",
-        emailRegEx: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/
-        //emailRegEx : /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+        emailRegEx: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
     };
     this.scheduler;
     
@@ -87,7 +86,8 @@ function Application() {
                     });
                     
                     // in case of an error navigate to first screen
-                    tDeffer2.fail(function(error){
+                    tDeffer2.fail(function(error, notificationOptions, errorHandled){
+                        errorHandled.resolve();
                         that.flowNavigator.loadScreen(that.config.firstScreen, null);
                     });
                     
@@ -98,7 +98,8 @@ function Application() {
             });
             
             // in case of an error navigate to first screen
-            tDeffer.fail(function(error) {
+            tDeffer.fail(function(error, notificationOptions, errorHandled) {
+                errorHandled.resolve();
                 that.communicationWrapper.saveToLocalStorage('username', null); 
                 that.flowNavigator.loadScreen(that.config.firstScreen, null);
             });

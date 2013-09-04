@@ -36,6 +36,12 @@ resourceHandler.registerFunction('settings_ViewModel.js', function(parent) {
         that.conditions['about'] = true;
         parent.flowNavigator.next();
     }
+    
+    this.weblink = function() {
+        // open language specific link in new window
+        var url = $.i18n.t("settings.page.link_url");
+        openExternalLink(url);
+    }
 
     this.reload = function() {
         // remove conditions

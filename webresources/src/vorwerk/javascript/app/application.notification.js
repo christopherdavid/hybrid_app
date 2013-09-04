@@ -219,7 +219,7 @@ function WorkflowNotification(parent) {
                      maxWidth = Math.max(maxWidth, $(this).width());
                               
                      if(typeof buttons[index].callback != "undefined") {
-                         $(this).on("vclick.dialog", function() {
+                         $(this).on("click.dialog", function() {
                             // disable button to prevent multiple clicks
                             $(this).addClass("ui-disabled");
                             buttons[index].callback(event);
@@ -227,7 +227,7 @@ function WorkflowNotification(parent) {
                             event.stopPropagation();
                          });
                     } else {
-                         $(this).on("vclick.dialog", function() {
+                         $(this).on("click.dialog", function() {
                             that.closeDialog(dialogType);
                             event.preventDefault();
                             event.stopPropagation();
@@ -248,7 +248,7 @@ function WorkflowNotification(parent) {
             $("#dialogPopup .ui-bar-buttons").addClass("buttons_1");
             $("#dialogPopup .first-button").addClass("ui-last-child");
             $("#dialogPopup .first-button .ui-btn-text").text("Ok"); 
-            $("#dialogPopup .first-button").on("vclick.dialog", function() {
+            $("#dialogPopup .first-button").on("click.dialog", function() {
                 that.closeDialog(dialogType);
             });
         }

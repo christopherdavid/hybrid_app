@@ -1,10 +1,13 @@
 resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent) {
     console.log('instance created for: basicScheduler_ViewModel');
     var that = this, schedulerModified = false;
+    var weekIndex = $.map($.i18n.t("pattern.week").split(","), function(value){
+        return +value;
+        });
+    
     this.conditions = {};
     this.backConditions = {};
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
-    
     this.scheduler = 'undefined';
     this.blockedDays = [];
 
@@ -16,19 +19,6 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         
         console.log("getScheduleEvents for robot with id: " + that.robot().robotId());
         that.loadScheduler();
-        
-        that.scheduler.selectedEvents.subscribe(function(array) {
-            if (that.scheduler.selectedEvents().length > 0) {
-                $('#editButton').removeClass("ui-disabled");
-                $('#deleteButton').show();
-                $('#addButton').hide();
-            } else {
-                $('#editButton').addClass("ui-disabled");
-                $('#deleteButton').hide();
-                $('#addButton').show();
-            }
-        });
-
     }
 
     this.reload = function() {
@@ -59,7 +49,9 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             tDeffer.done(that.createScheduleEventsSuccess);
             tDeffer.fail(that.createScheduleEventsError);
         } else {
-            $('#addButton').removeClass("ui-disabled");
+            if (result.scheduleEventLists.length >= 0 && result.scheduleEventLists.length < weekIndex.length) {
+                $('#addButton').removeClass("ui-disabled");
+            }
             
             if(result.scheduleEventLists.length > 0) {
                 var aDeffer = [];
@@ -81,9 +73,10 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             }
         }
     }
-    this.getScheduleEventsError = function(error) {
+    this.getScheduleEventsError = function(error, notificationOptions, errorHandled) {
         // Server Error create an empty scheduler
         if(error && error.errorCode == ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT) {
+            errorHandled.resolve();
             var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.createSchedule, [that.robot().robotId(), 0]);
             tDeffer.done(that.createScheduleEventsSuccess);
             tDeffer.fail(that.createScheduleEventsError);
@@ -145,10 +138,6 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
 
     this.del = function() {
         var events = that.scheduler.selectedEvents();
-        var weekIndex = $.map($.i18n.t("pattern.week").split(","), function(value){
-            return +value;
-            });
-            jQuery.inArray((2), weekIndex);
         var contextBuffer = {};
         var contextBufferAsString = "";
         
