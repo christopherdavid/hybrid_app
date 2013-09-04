@@ -25,6 +25,7 @@
 	<key>ExternalHosts</key>
 	<array>
 		<string>uid.com*</string>
+		<string>*</string>
 		<string>http://neatodev.rajatogo.com/*</string>
 		<string>http://neatostaging.rajatogo.com/api/rest/json/*</string>
 		<string>http://neato.rajatogo.com/api/rest/json/*</string>
