@@ -28,7 +28,9 @@
         
         .ui-notificationbar_text{
           color: @notificationbar-textcolor;
-          text-shadow:none;
+          .font_reg;
+          .font_normal;
+          text-shadow:rgb(0, 0, 0) 0px -1px;
           line-height: 40px;
           white-space:nowrap;
         }
@@ -54,7 +56,7 @@
         &.spinner #loadingSpinnerSmall {
             display:block;
         }
-        
+        /*
         &.getready #ui-notificationbar_icon {
             background-image:url(../../img/icons/robot_animation_360x120.png);
             background-position:0 0;
@@ -72,48 +74,8 @@
             .animation(sixFrames, 1s, steps(1, end), 0.5s, infinite);
             .animation-play-state(running);
         }
+        */
         
     }
 }
 
-
-// define keyframe for sixFrames
-.sixFrames-frames() {
-    0%   {
-        background-position-x:0;
-    }
-    16%   {
-        background-position-x:-40px;
-    }
-    33%   {
-        background-position-x:-80px;
-    }
-    49%  {
-        background-position-x:-120px;
-    }
-    66%  {
-        background-position-x:-160px;
-    }
-    83%  {
-        background-position-x:-200px;
-    }
-    100%  {
-        background-position-x:-240px;
-    }
-}
-
-@-moz-keyframes sixFrames {
-    .sixFrames-frames();
-}
-@-webkit-keyframes sixFrames {
-    .sixFrames-frames();
-}
-@-ms-keyframes sixFrames {
-    .sixFrames-frames();
-}
-@-o-keyframes sixFrames {
-    .sixFrames-frames();
-}
-@keyframes sixFrames {
-    .sixFrames-frames();
-}

@@ -3,12 +3,12 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
     var startBtnDown = false;
     this.remoteButtonDown = null;
     var posY = null;
-    var radius = 147;
+    var radius = 146;
     var centerX = null;
     var centerY = null;
     var scaleFactor = deviceSize.getResolution() == "high" ? 1.0 : 0.5;
-    var BTN_RADIUS = 147;
-    this.isRemoteDisabled = ko.observable(true);
+    var BTN_RADIUS = 146;
+    this.isRemoteEnabled = ko.observable(true);
     this.eventMouseDown = false;
     that = this;
     this.pressedIntervall = 250;
@@ -135,7 +135,7 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
                     event.stopImmediatePropagation();
 
                     that.updateBtnState(startBtn, true);
-                } else if(!that.isRemoteDisabled()) {
+                } else if(that.isRemoteEnabled()) {
                     // Check which remote button has been pressed and update the state
                     for (var i = remoteCells.length - 1; i >= 0; i--) {
 
@@ -163,7 +163,7 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
                 that.eventMouseDown = false;
 
                 // Check which remote button has been pressed and update the state
-                if(!that.isRemoteDisabled()) {
+                if(that.isRemoteEnabled()) {
                     for (var i = remoteCells.length - 1; i >= 0; i--) {
                         that.updateRemoteBtnState(remoteCells[i], false);
                     }
@@ -207,7 +207,7 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
             if (!event.isDefaultPrevented()) {
                 // console.log("vmousemove px " + event.pageX + " py " + event.pageY);
                 // console.log(that.remoteButtonDown)
-                if(!that.isRemoteDisabled()) {
+                if(that.isRemoteEnabled()) {
                     if(that.remoteButtonDown) {
                         // check if button is still pressed
                         if (!rectContainsPoint(event.pageX, event.pageY, that.remoteButtonDown)) {
@@ -259,54 +259,29 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
         var buttonName = element.attr('id');
         
         if(isMouseDown) {
-            element.addClass(buttonName+"-down");
-            element.removeClass(buttonName+"-up");
+            element.addClass("ui-down");
+            element.removeClass("ui-up");
             if(that.remotButtonDown != element) {
                 that.remoteButtonDown = element;
                 that.pressing();
             }
         } else {
-            element.addClass(buttonName+"-up");
-            element.removeClass(buttonName+"-down");
+            element.addClass("ui-up");
+            element.removeClass("ui-down");
         }
     }
 
     this.updateBtnState = function(divElement, isMouseDown) {
         // First remove all styling classes
         divElement.removeClass();
-
-        var className = "img-startstopbtn";
-
+        var className = "";
         var state = divElement.attr("data-state");
-
-        // If the state is set...
-        if (state != undefined) {
-            switch(state) {
-                case "disabled":
-                    that.startBtnDown = false;
-                    className += " startbtn_inactive-disabled";
-                    break;
-                case "inactive":
-                    className += " startbtn_inactive";
-                    break;
-                case "active":
-                    className += " startbtn_active";
-                    break;
-                case "paused":
-                    className += " startbtn_paused";
-                    break;
-                case "waiting":
-                    that.startBtnDown = false;
-                    className += " startbtn_waiting";
-                    break;
-            }
-
-            if (state != "disabled" && state != "waiting") {
-                className += isMouseDown ? "-down" : "-up";
-                that.startBtnDown = isMouseDown;
-            }
-            divElement[0].className = className;
+        
+        if (state != "disabled" && state != "waiting") {
+            className = isMouseDown ? "startBtn-down" : "startBtn-up";
+            that.startBtnDown = isMouseDown;
         }
+        divElement[0].className = className;
     }
 }
 

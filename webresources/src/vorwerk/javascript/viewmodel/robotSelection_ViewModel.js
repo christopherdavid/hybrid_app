@@ -11,6 +11,8 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         return (typeof(that.robot().robotName) != 'undefined');
     },this);
     
+    this.isLogoutVisible = ko.observable(false);
+    
     this.selectedRobot = ko.observable();
     
     var userName = parent.communicationWrapper.getFromLocalStorage('username');
@@ -20,10 +22,14 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         if (that.bundle && that.bundle == robotScreenCaller.DELETE) {
             var sDelete = $.i18n.t('communication.delete_robot_done', {robotName:that.robot().robotName()});
             parent.notification.showLoadingArea(true, notificationType.HINT, sDelete);
+            // un-ubscripbe from robot 
+            robotUiStateHandler.disposeFromRobot();
             // clear history
             parent.history.clear();
             // remove robot from local data
             that.robots.remove(that.robot());
+            // set up an empty robot
+            //that.communicationWrapper.mapDataValue("selectedRobot", ko.observable({}));
             that.robot({});
         }
         
@@ -32,6 +38,7 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         
         // When we are in the register flow, simply show the screen without querying the robots
         if (that.bundle && that.bundle == robotScreenCaller.REGISTER) {
+            that.isLogoutVisible(true);
             that.updateScreenTitle();
         } else if (that.robots().length == 0){
             that.getRobotList();
@@ -80,16 +87,13 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
     this.robotSelected = function(data, event) {
         that.conditions['robotSelected'] = true;
         that.robot(data);
-        // update state machine
-        parent.communicationWrapper.updateRobotStateWithCode(data, data.stateCode());
-        
-        //parent.communicationWrapper.setDataValue("sel", ko.toJS(data));
+        // subscribe to robot
+        robotUiStateHandler.subscribeToRobot(parent.communicationWrapper.getDataValue("selectedRobot"));
+        parent.communicationWrapper.updateRobotStateWithCode(that.robot(), data.robotNewVirtualState());
         
         if (that.bundle == robotScreenCaller.CHANGE) {
             parent.flowNavigator.previous();
         } else {
-            // store the selected robot within the communication model
-            // data needs to converted back to plain JavaScript object using toJS
             parent.flowNavigator.next();
         }
     };
@@ -121,7 +125,7 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         }
         var generatedTitle = "";
 
-        generatedTitle += $.i18n.t(translationKey, {postProcess:'sprintf', sprintf: [userName]}) + "<br>";
+        generatedTitle += $.i18n.t(translationKey, {email:userName}) + "<br>";
         generatedTitle += $.i18n.t(that.getHintText());
         
         that.title(generatedTitle);
@@ -156,18 +160,22 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
     };
 
     this.successGetAssociatedRobots = function(result) {
-        var unknownState = $.i18n.t("robotStateCodes." + ROBOT_STATE_UNKNOWN);
+        var robotList = [];
         // loop over all robots and add the state property
         $.each(result, function(index, item){
-           // initially set state to unknown 
-           item.stateCode = ROBOT_STATE_UNKNOWN;
-           item.stateString = unknownState;
+           // create a robot object based on the robot structure
+           var tempRobot = getRobotStruct();
+           // fill properties
+           tempRobot.robotId = item.robotId;
+           tempRobot.robotName = item.robotName;
+           robotList.push(tempRobot);
+           
            // request state from server due some delay we need to use a 
            // separate API call because the user could navigate in the meantime 
            // to another screen
             parent.communicationWrapper.getRobotState(item.robotId);
         });
-        that.robots(ko.mapping.fromJS(result)());
+        that.robots(ko.mapping.fromJS(robotList)());
 
         that.updateScreenTitle();
         that.updateButtons(true);

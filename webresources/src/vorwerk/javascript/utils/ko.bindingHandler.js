@@ -109,6 +109,16 @@ ko.bindingHandlers.jqRadioChecked = {
     }
 };
 
+ko.bindingHandlers.jqRadioEnable = {
+    update : function(element, valueAccessor, allBindingsAccessor, context) {
+        var value = valueAccessor();
+        var valueUnwrapped = ko.utils.unwrapObservable(value);
+        ko.bindingHandlers.enable.update(element, valueAccessor);
+        //console.log("jqRadioEnable " + valueUnwrapped);
+        $(element).checkboxradio( valueUnwrapped ? "enable" : "disable");
+    }
+}
+
 /**
  * binding to class attribute of rendered jquery mobile button of a select element
  * example: <select id="[!IMPORTANT!]" data-bind="jqmButtonClass:'first-button'">

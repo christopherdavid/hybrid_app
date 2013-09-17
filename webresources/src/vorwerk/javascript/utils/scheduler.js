@@ -11,7 +11,7 @@ function Scheduler($root, scheduleType) {
 
     var STANDARD_EVENT_DURATION = 60;
     var HOUR = 60;
-    var HOUR_IN_PX = deviceSize.getResolution() == "high" ? 96 : 48;
+    var HOUR_IN_PX = deviceSize.getResolution() == "high" ? 72 : 48;
     var MIN_IN_PX = HOUR_IN_PX / 60;
     var DEFAULT_START_TIME = "8:00";
     var scroller;
@@ -23,6 +23,7 @@ function Scheduler($root, scheduleType) {
     var weekIndex = $.map($.i18n.t("pattern.week").split(","), function(value){
         return +value;
         });
+    var dayNameLength = parseInt($.i18n.t("pattern.dayNameLength"),10);
     var labelEco = $.i18n.t("common.cleaningMode.1");
     
     var columns = new Array(7);
@@ -362,7 +363,7 @@ function Scheduler($root, scheduleType) {
     }
     
     this.checkScrolling = function(posY) {
-        console.log("border.top:" + autoScroll.border.top + " border.bottom:" + autoScroll.border.bottom + " posY " + posY);
+        //console.log("border.top:" + autoScroll.border.top + " border.bottom:" + autoScroll.border.bottom + " posY " + posY);
         
         if(posY < autoScroll.border.top && (containerScrollY + autoScroll.step) < 0 ) {
             console.log("hit top border")
@@ -582,7 +583,7 @@ function Scheduler($root, scheduleType) {
 
             var $label = $('<div/>', {
                 'class' : 'dayLabel',
-                text : $.i18n.t("common.day." + weekIndex[i]).substr(0, 3)
+                text : $.i18n.t("common.day." + weekIndex[i]).substr(0, dayNameLength)
             }).appendTo($dayRow);
         }
     }

@@ -2,7 +2,7 @@
     
     <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
         <div class="ui-btn-left">
-            <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image" data-image="menu" data-inline="true" href="#menuPopup" data-rel="popup">&nbsp;</a>
+            <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image" data-image="menu" data-inline="true" href="#menuPopup" data-rel="popup"></a>
         </div>
         <h1>
             <div class="screenTitle">
@@ -40,6 +40,9 @@
                     <span class="ui-li-desc" data-i18n="settings.page.general_settings_desc" data-bind="translate:{obs:language()}">[description]</span>
                 </a>
             </li>
+        </ul>
+        
+        <ul data-role="listview" data-theme="a" data-inset="true">
             <li>
                 <a href="javascript:void(0);" data-bind="click:about">
                     <h3 data-i18n="settings.page.about" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
@@ -48,19 +51,6 @@
                     <span class="ui-li-desc" data-i18n="settings.page.about_desc" data-bind="translate:{obs:language()}">[description]</span>
                 </a>
             </li>
-            <!--
-            <li>
-                <a href="javascript:void(0);" data-bind="click:terms">
-                    <h3 data-i18n="settings.page.terms" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
-                        terms of use
-                    </h3>
-                    <span class="ui-li-desc" >[description]</span>
-                </a>
-            </li>
-            -->
-        </ul>
-        
-        <ul data-role="listview" data-theme="a" data-inset="true">
             <li data-icon="weblink" data-bind="click:weblink">
                 <a href="javascript:void(0);">
                     <h3 data-i18n="settings.page.link" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
@@ -72,9 +62,9 @@
         </ul>
     </div><!-- /content -->
     
-    <div id="menuPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport dialogType_1">
+    <div id="menuPopup" data-history="false" data-role="popup" data-dismissible="true" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport dialogType_1">
         <div data-role="header" data-theme="b" class="ui-header ui-bar-b">
-            <div class="logo"></div>
+            <div id="menuPopupLogo" class="logo"></div>
         </div>
         <div class="popupHeaderLine"></div>
         <div data-role="content" class="ui-content"> 

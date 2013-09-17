@@ -17,7 +17,6 @@
       <js>/../../../../bin/copymin/i18next-1.6.0.min.js</js>
       <js>/../../../../bin/copymin/knockout-2.2.1.min.js</js>
       <js>/../../../../bin/copymin/knockout.mapping.min.js</js>
-      <js>/../../../../bin/copymin/state-machine.min.js</js>
       <js>/../../../../bin/copymin/jquery-ui-1.9.2.custom.min.js</js>
       <js>/../../../../bin/copymin/jquery.ui.touch-punch.min.js</js>
       <js>/../../../../bin/copymin/jquery.ui.plugins.js</js>

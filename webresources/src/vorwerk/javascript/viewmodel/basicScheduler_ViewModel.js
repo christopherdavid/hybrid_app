@@ -12,6 +12,13 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     this.blockedDays = [];
 
     this.init = function() {
+        // check if country is italy. if so change product logo
+        var user = parent.communicationWrapper.getDataValue("user");
+        var country = parent.communicationWrapper.getFromLocalStorage(user.email + "_country");
+        if(country && country == "italy") {
+            $("#menuPopupLogo").addClass("folletto");
+        }
+        
         that.scheduler = new Scheduler($('#schedulerTarget'), 0);
         $('#schedulerTarget').on('updatedEvent', that.updateEvent);
         $('#schedulerTarget').on('newEvent', that.newEvent);

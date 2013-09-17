@@ -1,0 +1,42 @@
+<div data-role="page" id="start">
+    <div data-role="header" class="headerbar" data-theme="b" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+        </div>
+        <h1>
+            <div class="screenTitle">
+                <span>Animation</span>
+            </div>
+        </h1>
+    </div>
+    <div data-role="content">
+         <fieldset>
+             <legend>mail animation</legend>
+             <div class='mailAnimation'></div>
+         </fieldset>
+         <fieldset>
+             <legend>add icon</legend>
+             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-image="add" class="btn-with-image animate"></a>
+         </fieldset>
+         <fieldset>
+             <legend>robot status icon</legend>
+             <div class="line-grid-container" style="position: relative; top: 0; background: none;">
+                <div class="first-line" style="position: relative; background: none; border-radius: 0; box-shadow: none;">
+                    <div id="statusLine" style="position: relative;">
+                        <div id="statusIcon" data-bind="attr: {'data-status':statusIcon()}"></div>
+                    </div>
+                </div>
+             </div>
+             <div data-role="controlgroup" data-type="horizontal">
+                 <a href="#" data-role="button" data-theme="b" data-mini="false" data-bind="click:changeStatus.bind($data, 'idle')">idle</a>
+                 <a href="#" data-role="button" data-theme="b" data-mini="false" data-bind="click:changeStatus.bind($data, 'cleaning')">cleaning</a>
+                 <a href="#" data-role="button" data-theme="b" data-mini="false" data-bind="click:changeStatus.bind($data, 'error')">error</a>
+                 <a href="#" data-role="button" data-theme="b" data-mini="false" data-bind="click:changeStatus.bind($data, 'wakeup')">wakeup</a>
+                 <a href="#" data-role="button" data-theme="b" data-mini="false" data-bind="click:changeStatus.bind($data, 'sleeping')">sleeping</a>
+             </div>
+         </fieldset>
+                 
+    </div><!-- /content -->
+</div><!-- /page -->

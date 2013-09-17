@@ -2,9 +2,10 @@
     
     <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
         <div class="ui-btn-left">
-            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
-                data-i18n="common.cancel"
-                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-image="back" class="btn-with-image"
+                data-bind="click:back, visible:!hasDelete()"></a>
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-image="cancel" class="btn-with-image"
+                data-bind="click:back, visible:hasDelete()"></a>
         </div>
         <h1>
             <div class="screenTitle">
@@ -15,9 +16,8 @@
             </div>
         </h1>
         <div class="ui-btn-right">
-            <a href="#" id="editButton" class="first-button ui-disabled" data-role="button" data-theme="b" data-mini="false" data-inline="true"
-                data-i18n="common.ok"
-                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:next, jqLinkButtonEnable: isNextEnabled">[ok]</a>
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-image="ok" class="btn-with-image ui-disabled"
+                data-bind="click:next, jqLinkButtonEnable: isNextEnabled"></a>
         </div>
     </div>
     

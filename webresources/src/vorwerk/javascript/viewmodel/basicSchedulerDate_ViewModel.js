@@ -5,6 +5,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     var weekIndex = $.map($.i18n.t("pattern.week").split(","), function(value){
         return +value;
         });
+    var dayNameLength = parseInt($.i18n.t("pattern.dayNameLength"),10);
     this.conditions = {};
 
     this.cleaningDays = ko.observableArray([]);
@@ -24,7 +25,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
         if (that.cleaningDays().length == 0) {
             for (var i = 0; i < weekIndex.length; i++) {
                 that.cleaningDays.push({
-                    "dayName" : $.i18n.t("common.day." + weekIndex[i]).substr(0, 3),
+                    "dayName" : $.i18n.t("common.day." + weekIndex[i]).substr(0, dayNameLength),
                     "id" : weekIndex[i]
                 });
             }

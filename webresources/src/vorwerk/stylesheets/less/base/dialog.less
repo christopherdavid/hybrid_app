@@ -10,7 +10,7 @@
     }
 }
 
-.ui-popup-container.ui-popup-active{
+.ui-popup-container.ui-popup-active {
     min-width: 285px;
     max-width: 500px;
 
@@ -21,20 +21,19 @@
     }
 }
 
-#menuPopup-popup{
-  width: @menuPopup_container_width;
-  height: @menuPopup_container_height;
-  top: 50%!important;
-  left: 0!important;
-  right: 0;
-  bottom: 0;
-  margin: -@menuPopup_container_height/2 auto 0 auto;
-  display:none;
-  
-  &.ui-popup-active{
-    display:block;
-  }
-  
+#menuPopup-popup {
+    width: @menuPopup_container_width;
+    height: @menuPopup_container_height;
+    top: 50%!important;
+    left: 0!important;
+    right: 0;
+    bottom: 0;
+    margin: -@menuPopup_container_height/2 auto 0 auto;
+    display:none;
+    
+    &.ui-popup-active {
+        display:block;
+    }
 }
 
 #menuPopup {
@@ -45,43 +44,52 @@
   .ui-content{
     padding:0;
     
-    ul{
+    ul {
       border-radius: 0;
       background-color: transparent;
       .box-shadow-none();
     }
     
-    li{
-      
-      background: transparent url(../../img/icons/icons_menu.png);
-      background-size: @menu_icon_height @menu_icon_height*3;
-      background-repeat: no-repeat;
-      
+    li {
       border: 0;
-      
       height: @menu_icon_height;
       margin: 0 0 10px 0;
-
-      &.active{
+      background:transparent;
+      
+      .ui-btn-inner:before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: @content_space;
+          width: @menu_icon_width;
+          height: @menu_icon_height;
+          display: block;
+          background-size:@menu_icon_size;
+          background-repeat: no-repeat;
+          background-position: 0 0;
+          background-image: url(../../img/icons/icons_menu.png);
+      }
+      
+      &.active {
         background-color:@listview_bg_down_color;
       }
       
-      &.cleaning{
-        background-position: @menu_icon_offset 0;
+      &.cleaning .ui-btn-inner:before {
+        background-position-y: 0;
       }
-      &.schedule{
-        background-position: @menu_icon_offset @menu_icon_schedule_offset;
+      &.schedule .ui-btn-inner:before {
+        background-position-y: -@menu_icon_height*1;
       }
-      &.settings{
-        background-position: @menu_icon_offset @menu_icon_settings_offset;
+      &.settings .ui-btn-inner:before {
+        background-position-y: -@menu_icon_height*2;
       }
-      .ui-btn-text{
+      .ui-btn-text {
           .ui-link-inherit {
             padding-top:5px; 
             padding-bottom:5px;
           }
-         h3{
-          padding-left:@menu_icon_height;
+         h3 {
+          padding-left:@menu_icon_height + @menu_icon_text_space;
         }
       }
     }
@@ -118,8 +126,8 @@
                 position: relative;
                 height:@dialog_icon_height;
                 display: inline-block;
-                top: 1px;
-                right: 5px;
+                top: 0px;
+                right: @dialog_icon_right;
             }
         }
     }
@@ -135,6 +143,7 @@
     
     .dialogPopupContent {
         min-height: 100px;
+        .font_normal;
     }
     
     &.dialogType_1 {
@@ -142,7 +151,7 @@
         
         .popupHeaderLine {
             background-color:@dialog_info_color;
-            position: fixed;
+            position: absolute;
         }
         
         .ui-header h1:before { 
@@ -155,7 +164,7 @@
         
         .popupHeaderLine{
             background-color:@dialog_warning_color;
-            position: fixed;
+            position: absolute;
         }
         
         .ui-header h1:before { 
@@ -168,7 +177,7 @@
         
         .popupHeaderLine{
             background-color:@dialog_error_color;
-            position: fixed;
+            position: absolute;
         }
         .ui-header h1:before { 
             background-position-y:-2*@dialog_icon_height;
@@ -197,12 +206,3 @@
     }
 }
 
-.mailAnimation{
-  width: @mailAnimationWidth + 20px;
-  height: @mailAnimationHeight + 20px;
-  background-image: url(../../img/MailAnimation_255x170.png);
-  margin: 0 auto 10px auto;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: @mailAnimationWidth @mailAnimationHeight;
-}

@@ -513,12 +513,11 @@ var UserPluginManager = ( function() {
                         "robotId" : "NR_JAN_1"
                     }]);
                 }, 1000);
-                
                 //no robots callback
                 /*
                 window.setTimeout(function() {
                     callbackSuccess([]);
-                }, 5000);
+                }, 2000);
                 */
             },
 
@@ -604,7 +603,10 @@ var RobotPluginManager = ( function() {
             
             setRobotName2 : function(robotId, robotName, callbackSuccess, callbackError) {
                 window.setTimeout(function() {
-                     callbackSuccess("OK");
+                     callbackSuccess({
+                        "robotName" : robotName,
+                        "robotId" : robotId
+                    });
                  }, 1000);
             },
             
@@ -697,9 +699,9 @@ var RobotPluginManager = ( function() {
         startCleaning: function(robotId, cleaningCategoryId, cleaningModeId, cleaningModifier,
                     callbackSuccess, callbackError) {
              window.setTimeout(function() {
-                //callbackSuccess("OK");
+                callbackSuccess("OK");
                 // timed mode
-                callbackSuccess({"expectedTimeToExecute":12});
+                //callbackSuccess({"expectedTimeToExecute":12});
             }, 1000);
         },
         
@@ -762,6 +764,36 @@ var RobotPluginManager = ( function() {
                 });
             }, delay);
             
+        },
+        
+        
+        getRobotCleaningState: function(robotId, callbackSuccess, callbackError) {
+            var stateCode = ROBOT_STATE_ON_BASE;
+            var delay = 1000;
+            switch(robotId) {
+                case "mapdemo123": // Map Demo
+                    stateCode = ROBOT_STATE_CLEANING
+                    delay = 3000;
+                    break;
+                case "rr1234": // Nexus One
+                    stateCode = ROBOT_STATE_PAUSED
+                    delay = 10000;
+                    break;
+                case "testo":
+                    stateCode = ROBOT_STATE_PAUSED
+                    delay = 4000;
+                    break;
+            }
+            
+            
+            
+             window.setTimeout(function() {
+                callbackSuccess({
+                    "robotCurrentState":stateCode,
+                    "robotNewVirtualState":stateCode,
+                    "robotId": robotId
+                });
+            }, delay);
         },
         
         /*
@@ -853,6 +885,22 @@ var RobotPluginManager = ( function() {
                 window.setTimeout(function() {
                     callbackSuccess(true);
                 }, 1000);
+            },
+            
+            intendToDrive: function(robotId, callbackSuccess, callbackError) {
+                window.setTimeout(function() {
+                    callbackSuccess(true);
+                }, 1000);
+            },
+            cancelIntendToDrive: function(robotId, callbackSuccess, callbackError) {
+                window.setTimeout(function() {
+                    callbackSuccess(true);
+                }, 300);
+            },
+            stopRobotDrive: function(robotId, callbackSuccess, callbackError) {
+                window.setTimeout(function() {
+                    callbackSuccess(true);
+                }, 300);
             },
 
             setMapOverlayData : function(robotId, mapId, mapOverlayInfo, callbackSuccess, callbackError) {
@@ -999,6 +1047,7 @@ var RobotPluginManager = ( function() {
             
             // New Schedule APIs being added:
             getScheduleEvents: function(robotId, scheduleType, callbackSuccess, callbackError) {
+                /*
                 window.setTimeout(function() {
                     callbackError(
                         {
@@ -1007,7 +1056,7 @@ var RobotPluginManager = ( function() {
                         }
                     );
                 }, 500);
-                /*
+                */
                 window.setTimeout(function() {
                     callbackSuccess(
                         {   'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
@@ -1022,7 +1071,6 @@ var RobotPluginManager = ( function() {
                         }
                     );
                 }, 1000);
-                */
             },
             // updateScheduleEvent('955fe88b-061f-4cc0-9f2b-c4baa73b156a', '76d784e0-78a2-45e0-a67a-3f404eecafc8', {'startTime':'12:30','day':2}, callbackSuccess, callbackError)
             updateScheduleEvent: function(scheduleId, scheduleEventId, scheduleEventData, callbackSuccess, callbackError) {
