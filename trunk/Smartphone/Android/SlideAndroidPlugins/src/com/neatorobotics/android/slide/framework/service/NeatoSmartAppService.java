@@ -34,6 +34,7 @@ import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCom
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotRequests;
 import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
+import com.neatorobotics.android.slide.framework.robotlinking.RobotLinkingManager;
 import com.neatorobotics.android.slide.framework.tcp.RobotPeerConnection;
 import com.neatorobotics.android.slide.framework.tcp.RobotPeerDataListener;
 import com.neatorobotics.android.slide.framework.timedmode.RobotCommandTimerHelper;
@@ -108,6 +109,10 @@ public class NeatoSmartAppService extends Service {
 				RequestPacket request = packet.getRobotCommands().getCommand(0);
 				if (isDataChangedCommand(request)) {
 					processDataChangedRequest(from, request);
+					return;
+				}
+				if (isLinkingCommand(request)) {
+					processLinkingData(from, request);
 					return;
 				}
 			}
@@ -229,6 +234,13 @@ public class NeatoSmartAppService extends Service {
 		return (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_PROFILE_DATA_CHANGED);
 	}
 	
+	private boolean isLinkingCommand(RequestPacket request) {
+		int commandId = request.getCommand();
+		return ((commandId == RobotCommandPacketConstants.COMMAND_ROBOT_LINKING_SUCCESS)
+				|| (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_LINKING_REJECTED)
+				|| (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_NEW_LINK_FORMED));
+	}
+	
 	private void processDataChangedRequest(String from, RequestPacket request) {
 		LogHelper.log(TAG, "Data changed on server for robot");
 		String robotId = request.getCommandParam(RobotCommandPacketConstants.KEY_ROBOT_ID);
@@ -255,6 +267,12 @@ public class NeatoSmartAppService extends Service {
 		}
 		
 		RobotDataManager.getServerData(getApplicationContext(), robotId);
+	}
+	
+	private void processLinkingData(String from, RequestPacket request) {
+
+		LogHelper.log(TAG, "Process LinkingData for robot");
+		RobotLinkingManager.notifyLinkingData(getApplicationContext(), request);
 	}
 	
 	private void sendNotification(RobotCommandPacket robotPacket) {		

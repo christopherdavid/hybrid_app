@@ -67,17 +67,6 @@ public class RobotProfileConstants {
 		ROBOT_VALUE_NOT_CHANGED, ROBOT_VALUE_DELETED, ROBOT_VALUE_CHANGED
 	}
 	
-	//Key Codes for profile data changes.
-	public static final int ROBOT_CURRENT_STATE_CHANGED 	= 4001;
-	public static final int ROBOT_STATE_CHANGED 			= 4002;
-	public static final int ROBOT_STATE_UPDATE 				= 4003;
-	public static final int ROBOT_NAME_UPDATE  				= 4004;
-	public static final int ROBOT_SCHEDULE_STATE_CHANGED 	= 4005;
-	public static final int ROBOT_IS_SCHEDULE_UPDATED 		= 4006;
-	public static final int ROBOT_IS_CONNECTED		 		= 4007;
-	public static final int ROBOT_IS_DISCONNECTED		 	= 4008;
-	public static final int ROBOT_ERROR_IN_CONNECTING		= 4009;
-	
 	public static String getScheduleKey(int scheduleType) {
 		String scheduleTypeInStr = null;
 		if (scheduleType == SchedulerConstants2.SERVER_SCHEDULE_TYPE_BASIC) {
