@@ -24,6 +24,10 @@ var DAY_SATURDAY = 6;
 var SCHEDULE_TYPE_BASIC = 0;
 var SCHEDULE_TYPE_ADVANCED = 1;
 
+// Motor types
+var MOTOR_TYPE_VACUUM = 101;
+var MOTOR_TYPE_BRUSH  = 102;
+
 //robotNotifications2 keyCodes
 
 // The current state of the robot
@@ -52,6 +56,9 @@ var ROBOT_STATE_STUCK 		= 10006;
 var ROBOT_STATE_PAUSED 		= 10007;
 var ROBOT_STATE_RESUMED		= 10008;
 var ROBOT_STATE_ON_BASE		= 10009;
+// Manual Cleaning State Codes
+var ROBOT_STATE_MANUAL_CLEANING		= 10010;
+var ROBOT_STATE_MANUAL_PLAY_MODE	= 10011;
 
 
 var PLUGIN_JSON_KEYS  =  (function() {
