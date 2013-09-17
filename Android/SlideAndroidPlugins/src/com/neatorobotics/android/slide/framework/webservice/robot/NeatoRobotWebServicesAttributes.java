@@ -72,5 +72,14 @@ public class NeatoRobotWebServicesAttributes {
 			public static final String SERIAL_NUMBER = "serial_number";			
 		}
 	}
+	
+	public static class InitiateLinkToRobot {
+		public static final String METHOD_NAME = "robot.initiate_link_to_robot"; 
+
+		public static class Attribute {
+			public static final String EMAIL = "email";
+			public static final String LINKING_CODE = "linking_code";
+		}
+	}
 
 }

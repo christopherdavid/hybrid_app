@@ -9,6 +9,7 @@ import android.content.Context;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
+import com.neatorobotics.android.slide.framework.pluginhelper.RobotNotificationConstants;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotNotificationUtil;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
@@ -145,13 +146,13 @@ public class RobotDriveHelper {
 				@Override
 				public void onRobotDisconnected(String robotId) {
 					HashMap<String, String> data = new HashMap<String, String>();
-					RobotNotificationUtil.notifyDataChanged(mContext, robotId, RobotProfileConstants.ROBOT_IS_DISCONNECTED, data);			
+					RobotNotificationUtil.notifyDataChanged(mContext, robotId, RobotNotificationConstants.ROBOT_IS_DISCONNECTED, data);			
 				}
 				
 				@Override
 				public void onRobotConnected(String robotId) {
 					HashMap<String, String> data = new HashMap<String, String>();
-					RobotNotificationUtil.notifyDataChanged(mContext, robotId, RobotProfileConstants.ROBOT_IS_CONNECTED, data);
+					RobotNotificationUtil.notifyDataChanged(mContext, robotId, RobotNotificationConstants.ROBOT_IS_CONNECTED, data);
 				}
 				
 				@Override
@@ -235,7 +236,7 @@ public class RobotDriveHelper {
 	private void notifyCannotDriveRobot (String robotId, int errorResponseCode) {
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put(JsonMapKeys.ERROR_DRIVE_RESPONSE_CODE, String.valueOf(errorResponseCode));
-		RobotNotificationUtil.notifyDataChanged(mContext, robotId, RobotProfileConstants.ROBOT_ERROR_IN_CONNECTING, data);
+		RobotNotificationUtil.notifyDataChanged(mContext, robotId, RobotNotificationConstants.ROBOT_ERROR_IN_CONNECTING, data);
 	}
 	
 	private static class ConnectionAllowedStatus {

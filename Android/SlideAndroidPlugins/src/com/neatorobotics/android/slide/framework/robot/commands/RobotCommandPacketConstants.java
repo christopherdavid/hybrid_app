@@ -30,6 +30,11 @@ public class RobotCommandPacketConstants {
 	public static final int COMMAND_ROBOT_CONNECTION_PING = 5003;
 	public static final int COMMAND_ROBOT_CONNECTION_BREAK = 9999;
 	
+	public static final int COMMAND_ROBOT_LINKING_INITIATED = 10001;
+	public static final int COMMAND_ROBOT_LINKING_SUCCESS = 10002;
+	public static final int COMMAND_ROBOT_LINKING_REJECTED = 10003;
+	public static final int COMMAND_ROBOT_NEW_LINK_FORMED = 10004;
+	
 	
 	// Notification Ids
 	public static final String NOTIFICATIONS_ID_GLOBAL	 		= "global";
@@ -58,7 +63,9 @@ public class RobotCommandPacketConstants {
 	public static final String KEY_USER_ID 									= "userId";
 	public static final String KEY_CHAT_ID 									= "chatId";
 	public static final String KEY_CAUSE_AGENT_ID							= "causeAgentId";
-
+	public static final String KEY_EMAIL_ID									= "emailId";
+	public static final String KEY_LINK_CODE								= "linkCode";
+	
 	//Robot states
 	public static final int ROBOT_STATE_UNKNOWN 							= 10001;
 	public static final int ROBOT_STATE_CLEANING 							= 10002;
