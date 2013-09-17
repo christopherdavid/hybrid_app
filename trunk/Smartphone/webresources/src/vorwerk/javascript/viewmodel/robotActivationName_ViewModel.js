@@ -4,6 +4,7 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
     this.conditions = {};
     this.robotName = ko.observable('');
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
+    this.robots = parent.communicationWrapper.getDataValue("robotList");
     
     this.init = function() {
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotDetail, [that.bundle.robot.robotId]);
@@ -45,14 +46,16 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
     this.setRobotGoNext = function(robotName) {
         that.conditions['robotNameValid'] = true;
         that.bundle.robot.robotName = robotName;
-        var unknownState = $.i18n.t("robotStateCodes." + ROBOT_STATE_UNKNOWN);
-        that.bundle.robot.stateCode = ROBOT_STATE_UNKNOWN;
-        that.bundle.robot.stateString = unknownState;
         // request state from server due some delay we need to use a 
         // separate API call because the user could navigate in the meantime 
         // to another screen
+        //TODO: need to add the new robot to the selection list
+        var tempRobot = ko.mapping.fromJS(that.bundle.robot);
+        that.robots.push(tempRobot);
+        that.robot(tempRobot);
+        robotUiStateHandler.subscribeToRobot(parent.communicationWrapper.getDataValue("selectedRobot"));
+        parent.communicationWrapper.updateRobotStateWithCode(that.robot(), that.robot().robotNewVirtualState());
         parent.communicationWrapper.getRobotState(that.bundle.robot.robotId);
-        that.robot(ko.mapping.fromJS(that.bundle.robot), null, that.robot);
         
         var msgTitle = $.i18n.t("dialogs.ROBOT_ADDED.title");
         var msgText = $.i18n.t("dialogs.ROBOT_ADDED.message");

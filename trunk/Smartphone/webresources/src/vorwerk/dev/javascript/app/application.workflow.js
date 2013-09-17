@@ -53,6 +53,27 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "dialogview",
                     "value" : true
                 }]
+            },
+            {
+                targetScreenId : "country",
+                conditions : [{
+                    "key" : "countryview",
+                    "value" : true
+                }]
+            },
+            {
+                targetScreenId : "legal",
+                conditions : [{
+                    "key" : "legalview",
+                    "value" : true
+                }]
+            },
+            {
+                targetScreenId : "animation",
+                conditions : [{
+                    "key" : "animationview",
+                    "value" : true
+                }]
             }
             ]
         },
@@ -75,6 +96,15 @@ Application.prototype.loadWorkflow = function() {
             navrules : []
         },
         "dialog" : {
+            navrules : []
+        },
+        "country" : {
+            navrules : []
+        },
+        "legal" : {
+            navrules : []
+        },
+        "animation" : {
             navrules : []
         }
     };

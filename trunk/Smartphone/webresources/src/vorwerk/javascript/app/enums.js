@@ -12,21 +12,6 @@ var textTarget = {
     SLIDER_LABEL_B : "6"
 };
 
-var ICON = ["cat-bath", "cat-baby", "cat-children","cat-cat", "cat-garage", "cat-dog"];
-// icon position in image starting from top with 0
-var ICONPOS = {"cat-bath":0,"cat-baby":1,"cat-children":2, "cat-cat":3, "cat-garage":4,"cat-dog":5};
-
-var COLORTABLE = ["#000000", "#f1e60d", "#f39129", "#e72832", "#6ac6d9", "#65b32e", "#b3b4b3", "#63318a", "#0470b8"];
-
-var STATE = {
-    INACTIVE : "inactive",
-    ACTIVE : "active",
-    PAUSED : "paused",
-    STOPPED : "stopped",
-    BLOCKED : "blocked", // Robot is blocked, as the robot is used by another user
-    UNAVAILABLE : "disabled" // Robot is out of reach, or couldn't be found (no network connection)
-}
-
 /**
  * Enumeration defining the caller of the robot selection screen 
  */
@@ -55,3 +40,33 @@ var dialogType = {
     WARNING : "2",
     ERROR : "3"
 }
+
+var ROBOT_UI_STATE_ERROR    = 20001;
+var ROBOT_UI_STATE_WAIT     = 20002;
+var ROBOT_UI_STATE_WAKEUP   = 20003;
+var ROBOT_UI_STATE_GETREADY = 20004;
+var ROBOT_UI_STATE_AWAKE    = 20005;
+var ROBOT_UI_STATE_DISABLED = 20006;
+var ROBOT_UI_STATE_CONNECTING = 20007;
+
+var visualState = {};
+// robot states from API
+visualState[ROBOT_STATE_UNKNOWN] = "unknown";
+visualState[ROBOT_STATE_CLEANING] = "cleaning";
+visualState[ROBOT_STATE_IDLE] = "idle";
+visualState[ROBOT_STATE_CHARGING] = "charging";
+visualState[ROBOT_STATE_STOPPED] = "stopped";
+visualState[ROBOT_STATE_STUCK] = "stucked";
+visualState[ROBOT_STATE_PAUSED] = "paused";
+visualState[ROBOT_STATE_RESUMED] = "resumed";
+visualState[ROBOT_STATE_ON_BASE] = "inbase";
+visualState[ROBOT_STATE_MANUAL_CLEANING] = "manual";
+visualState[ROBOT_STATE_MANUAL_PLAY_MODE] = "play";
+// UI states
+visualState[ROBOT_UI_STATE_ERROR] = "error";
+visualState[ROBOT_UI_STATE_WAIT] = "waiting";
+visualState[ROBOT_UI_STATE_WAKEUP] = "wakeup";
+visualState[ROBOT_UI_STATE_GETREADY] = "getready";
+visualState[ROBOT_UI_STATE_AWAKE] = "awake";
+visualState[ROBOT_UI_STATE_DISABLED] = "disabled"; 
+visualState[ROBOT_UI_STATE_CONNECTING] = "connecting";

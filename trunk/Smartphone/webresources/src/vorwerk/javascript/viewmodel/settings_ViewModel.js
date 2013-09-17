@@ -6,6 +6,12 @@ resourceHandler.registerFunction('settings_ViewModel.js', function(parent) {
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     
     this.init = function() {
+        // check if country is italy. if so change product logo
+        var user = parent.communicationWrapper.getDataValue("user");
+        var country = parent.communicationWrapper.getFromLocalStorage(user.email + "_country");
+        if(country && country == "italy") {
+            $("#menuPopupLogo").addClass("folletto");
+        }
     };
     
     this.back = function() {

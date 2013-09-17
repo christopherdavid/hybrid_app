@@ -5,74 +5,48 @@
 
 // jQuery Mobile Theme modified
 .jqm {
+    .dwwc, .dwrc {
+        background: none;
+        
+        table td {
+            padding-left:10px;
+            background: none;
+            
+            &:first-child {
+                padding-left:0px
+            }
+        }
+    }
+    
+    
     .dwwl {
          .border-radius(5px);
-         border: @button_border solid @button_border_color;
-         .box-shadow-inner(0px, (@button_inner_shadow+@button_inner_border), 0px, 0px, fade(#FFFFFF,10))!important;
-         .vertical-gradient(@button_bg_gradient_start,@button_bg_gradient_end);
-         color: #ffffff;
-         .font_big;
+         border: @button_border solid @timepicker_border_color;
+         background:@timepicker_bg_color;
+         color: @timepicker_not_active_color;
+         .font_picker;
+         .font_reg;
         
         &.dwa {
             .dw-li.dw-v {
                 visibility:visible;
             }
         }
-        .dwwb {
-            color:transparent;
-            text-decoration:none!important;
-            
-            &:after {
-                content:"";
-                background-image:url('../../img/icons/arrow_34x56.png');
-                background-repeat:no-repeat;
-                background-size:@timepicker_icon_image_width @timepicker_icon_image_height;
-                height:@timepicker_icon_height;
-                width:@timepicker_icon_width;
-                vertical-align:middle;
-                display:inline-block;
-            }
-            
-            span {
-                display:none!important;
-            }
-            
-            // plus
-            &.dwwbp:after {
-                background-position-y:0px;
-            } 
-            
-            //minus
-            &.dwwbm:after {
-                background-position-y:-@timepicker_icon_width;
-            }
-            // pressed state zoom factor 1.5
-            &.dwb-a {
-                &:after {
-                    background-size:@timepicker_icon_image_width*1.5 @timepicker_icon_image_height*1.5;
-                    height:@timepicker_icon_height*1.5;
-                    width:@timepicker_icon_width*1.5;
-                }
-                
-                &.dwwbm {
-                    &:after {
-                        background-position-y:-@timepicker_icon_width*1.5;
-                    }
-                }
-            }
+        .dww, .dwwo {
+            background:none transparent;
         }
     }
+    .dwwol {
+        border:0px none;
+    }
     .dw-li {
+        color: @timepicker_not_active_color;
+        
         &.dw-hl {
             background:none transparent;
         }
-        
-        &.dw-v {
-            visibility:hidden;
-            
-            &.dw-sel {
-                visibility:visible;
-            }
+        &.dw-sel {
+            color: @timepicker_color;
         }
     }
     

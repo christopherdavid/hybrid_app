@@ -1,9 +1,8 @@
 <div data-role="page" id="robotActivationId">
     <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
         <div class="ui-btn-left">
-            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
-                data-i18n="common.back"
-                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">[back]</a>
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-image="back" class="btn-with-image"
+                data-bind="click:back"></a>
         </div>
         <h1>
             <div class="screenTitle">
@@ -11,9 +10,8 @@
             </div>
         </h1>
         <div class="ui-btn-right">
-            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
-                data-i18n="common.next" 
-                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, jqLinkButtonEnable: isFilledOut(), click:next">[next]</a>
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-image="next" class="btn-with-image" 
+                data-bind="jqLinkButtonEnable: isFilledOut(), click:next"></a>
         </div>
     </div>
     

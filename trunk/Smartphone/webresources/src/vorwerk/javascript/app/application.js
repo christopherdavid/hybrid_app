@@ -17,13 +17,17 @@ function Application() {
     this.config = {
         firstScreen : "start",
         pageTransition : "none",
-        version:"0.5.5.24",
-        pluginVersion:"0.5.3.05",
+        version:"0.5.6.0",
+        pluginVersion:"0.5.3.06",
         fallbackLanguage:"en-GB",
         viewPath:"",
         emailRegEx: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
     };
     this.scheduler;
+    this.orientation = {
+        landscape: true,
+        portrait: true
+    };
     
     
     /**
@@ -46,6 +50,10 @@ function Application() {
         
         that.communicationWrapper.setDataValue("robotList", ko.observableArray([]));
         that.communicationWrapper.setDataValue("selectedRobot", ko.observable({}));
+        robotUiStateHandler.current = ko.observable("");
+        robotUiStateHandler.current(ko.mapping.fromJS(statusInformation), null, robotUiStateHandler.current)
+        
+        //that.communicationWrapper.mapDataValue("selectedRobot", getRobotStruct());
         
         
         // that.changeLanguage('de-de', function() { loadFirstPage(); });

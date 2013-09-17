@@ -5,8 +5,12 @@
             "message": "Sie benötigen eine Onlineverbindung um diese Anwendung benutzen zu können. Bitte schalten Sie das mobile newetzek oder Wi-Fi in den Einstellungen an."
         },
         "no_wifi": {
-            "title": "I'm stuck",
-            "message": "<span class='font_bold'>__robotName__</span>: Please clear my path. Help me so I can continue cleaning."
+            "title": "Verbindungsprobleme",
+            "message": "Sie benötigen eine Wi-Fi Verbindung um diese Funktion benutzen zu können. Bitte schalten Sie das Wi-Fi in den Einstellungen an."
+        },
+        "not_same_network": {
+            "title": "Verbindungsprobleme",
+            "message": "Sie müssen in Sichtweite des Roboters sein."
         },
         "101": {
             "title": "I'm stuck",
@@ -26,20 +30,48 @@
             "title": "Möchten Sie wirklich den Event löschen ?",
             "title_plural": "Möchten Sie wirklich die Events löschen ?",
             "message": "",
-            "button_1": "Löschen",
+            "button_1": "Ja",
             "button_2": "Nein"
         },
         "ROBOT_DELETE": {
             "title": "Möchten Sie wirklich __robotName__ löschen?",
             "message": "",
-            "button_1": "Löschen",
+            "button_1": "Ja",
             "button_2": "Nein"
         },
         "ROBOT_ADDED": {
-            "title":"Registrierung abgeschlossen!",
-            "message": "Hurra! Ihr Roboter wurde registriert.</br>Viel Spaß beim sauber machen :)",
+            "title":"Hurra!",
+            "message": "Ihr Roboter wurde registriert.</br>Viel Spaß beim sauber machen :-)",
             "button_1": "OK"
+        },
+        "CANCEL_CLEANING" : {
+            "title":"Reinigung abbrechen?",
+            "message": "Wollen Sie wirklich den Reinigunsvorgang abbrechen ?",
+            "button_1": "Ja",
+            "button_2": "Nein"
         }
+    },
+    "visualState" : {
+        "unknown": "Ich suche meine Serververbindung.",
+        "cleaning": "Ich mache sauber.",
+        "idle": "Ich bin bereit, loszulegen.",
+        "charging": "Ich lade gerade.",
+        "stopped": "Ich habe mit Saubermachen aufgehört.",
+        "stucked": "Hilf mir! Ich stecke fest.",
+        "paused": "Ich mache eine Pause.",
+        "resumed": "Ich mache jetzt weiter sauber.",
+        "inbase": "Ich bin zum Laden in meiner Basis.",
+        "manual": "Du kannst mich mit der App fernsteuern!",
+        "play": "Ich habe angefangen sauber zu machen.",
+        "error": "Ich glaube, ich habe ein Problem.",
+        "waiting": "Ich werde in etwa __wakeUp__ Sekunden aufwachen.",
+        "waiting_unknown": "Ich werde in ein paar Sekunden aufwachen.",
+        "wakeup": "Ich werde in etwa __wakeUp__ Sekunden aufwachen.",
+        "wakeup_unknown": "Ich werde in ein paar Sekunden aufwachen.",
+        "getready": "Ich bin bereit loszulegen.",
+        "awake": "Ich bin bereit loszulegen.",
+        "connecting": "Ich suche meine Serververbindung.",
+        "done": "Ich bin fertig!"
     },
     "robotStateCodes": {
         "10001": "State Unknown",
@@ -55,9 +87,11 @@
     "pattern": {
         "week": "1,2,3,4,5,6,0",
         "time": "HHii",
+        "dayNameLength":"2",
         "spotUnit": "m",
         "spotFactor": "1",
-        "spotConverter": "100"
+        "spotConverter": "100",
+        "countryOrder": "germany,switzerland,greatbritain,france,italy"
     },
     "common": {
         "back": "zurück",
@@ -69,8 +103,8 @@
         "delete": "löschen",
         "change": "ändern",
         "logout": "Abmelden",
-        "on": "On",
-        "off": "Off",
+        "on": "an",
+        "off": "aus",
         "menu": "Menu",
         "cleaningMode": {
             "1": "ECO",
@@ -84,18 +118,32 @@
             "4": "Donnerstag",
             "5": "Freitag",
             "6": "Samstag"
+        },
+        "countries": {
+            "germany":"Deutschland",
+            "switzerland":"Schweiz",
+            "greatbritain":"Großbritanien",
+            "france":"Frankreich",
+            "italy":"Italien"
         }
     },
     "communication": {
-        "fetch_robots": "Roboterliste wird abgerufen...",
-        "fetch_map": "Kartendaten werden abgerufen...",
-        "update_scheduler": "Kalender wird snychronisiert...",
-        "reset_password": "Passwort wird zurückgesetzt...",
-        "reset_password_done": "Passwort wurde erfolgreich zurückgesetzt",
-        "delete_robot_done": "Roboter __robotName__ wurde gelöscht.",
-        "stop_robot": "Roboter hört auf zu saugen",
-        "send_to_base": "Roboter wird zurück zur Basis geschickt",
-        "robot_added": "Roboter __robotName__ wurde hinzugefügt."
+        "fetch_robots": "Roboter Liste wird geladen ...",
+        "fetch_map": "Karten werden geladen ...",
+        "update_scheduler": "Kalender wird synchronisiert ...",
+        "reset_password": "Passwort wird zurückgesetzt ...",
+        "reset_password_done": "Dein Passwort wurde zurückgesetzt.",
+        "delete_robot_done": "__robotName__ wurde gelöscht.",
+        "stop_robot": "__robotName__ wird gestoppt ...",
+        "send_to_base": "__robotName__ wird zurück zur Basis geschickt ...",
+        "robot_added": "__robotName__ wird hinzugefügt ...",
+        "stop_drive": "__robotName__ wird gestoppt ...",
+        "intend_drive": "Bitte warten...",
+        "wait_robot":"Roboter wird in etwa __wakeUp__ Sekunden aufwachen.",
+        "wakeup_robot":"Roboter wird in etwa __wakeUp__ Sekunden aufwachen.",
+        "wakeup_unknown_robot":"Roboter wird in ein paar Sekunden aufwachen.",
+        "getready_robot":"Roboter ist bereit loszulegen.",
+        "toggle_eco":"ECO Modus ist __ecoMode__"
     },
     "cleaning": {
         "navi": {
@@ -110,7 +158,7 @@
             "change_robot": "Roboter wechseln",
             "send_to_base": "Zur Basis schicken",
             "spot_size_title": "Spot size: ",
-            "cleaningType": {
+            "cleaningCategory": {
                 "1": "MANUELL",
                 "2": "ALLES",
                 "3": "BEREICH"
@@ -123,6 +171,28 @@
         "register": "Jetzt Registrieren.",
         "register_question": "Haben Sie bisher noch keinen Account?"
     },
+    "selectCountry": {
+        "navi": {
+            "title": "Registrierung"
+        },
+        "page": {
+            "title": "Bitte wählen Sie ihr Land:"
+        }
+    },
+    "legalInformation": {
+        "navi": {
+            "title": "Registrierung"
+        },
+        "page": {
+            "title": "Bitte teilen Sie uns mit ob sie über Neuigkeiten und Updates für ihren VR-200 informiert werden möchten.",
+            "information_header":"LEGAL INFORMATION",
+            "information": "As a customer, we wish to keep you informed about new updates, product related issues and new products.<br/>We  strive to keep your privacy safe. You agree that Vorwerk International Mittelsten Scheid & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br/>To opt-out of our email list, unsubscribe instructions are included at the bottom of each issue.",
+            "subscribe":"Anmelden",
+            "no_subscribe":"Nicht anmelden",
+            "registration_done_title": "Registrierung abgeschlossen",
+            "registration_done_message": "<div class='mailAnimation'></div>Eine Bestätigungs-E-Mail wurde an<br/><span class='highlightedText'>__email__</span><br/>gesendet.<br/><br/>Bitte bestätigen sie Ihren Account innerhalb von 48 Stunden.<br />Nach der Bestätigung können Sie sich einloggen und zu Ihrem Roboter verbinden."
+        }
+    },
     "createAccount": {
         "navi": {
             "title": "Benutzer Account erstellen"
@@ -133,9 +203,7 @@
             "email": "Email Addresse",
             "password": "Passwort",
             "password_verify": "Passwort verifizieren",
-            "password_show": "Passwort anzeigen",
-            "registration_done_title": "Registrierung abgeschlossen",
-            "registration_done_message": "<div class=\"mailAnimation\"></div>Eine Bestätigungs-E-Mail wurde an Ihre E-Mail-Adresse gesendet. Bitte bestätigen sie Ihren Account innerhalb von 48 Stunden.<br /><br />Nach der Bestätigung können Sie sich einloggen und zu Ihrem Roboter verbinden."
+            "password_show": "Passwort anzeigen"
         }
     },
     "robotSelection": {
@@ -144,10 +212,10 @@
             "logout": "Abmelden"
         },
         "page": {
-            "register": "Registrierung abgeschlossen.<br>Willkommen <span class=\"highlightedText boldText\">%s!</span>",
-            "login": "Willkommen %s!",
-            "logged_in": "Hallo %s.",
-            "no_robot": "Sie haben noch keinen Roboter registriert.<br/><br/>Bitte fügen Sie einen neuen Roboter hinzu.",
+            "register": "Registrierung abgeschlossen.<br>Willkommen <span class='highlightedText font_bold'>__email__</span>",
+            "login": "Willkommen <span class='highlightedText font_bold'>__email__</span>!",
+            "logged_in": "Hallo <span class='highlightedText font_bold'>__email__</span>.",
+            "no_robot": "Sie haben noch keinen Roboter registriert.<br/><br/>Bitte fügen Sie einen neuen Roboter hinzu indem Sie auf <span class='font_bold'>+</span> drücken.",
             "select_robot": "Bitte wählen sie einen Roboter aus:"
         }
     },
@@ -156,13 +224,13 @@
             "title": "Roboter aktivieren"
         },
         "page": {
-            "wifisetup": "Bitte geben sie die Roboter ID ein.</br>Sie finden sie unter:</br><span class=\"boldText highlightedText\">Wifi Einstellungen / Registrierung</span> im Anzeige Menü des Roboters, oder auf der Rückseite Ihres Gerätes.",
+            "wifisetup": "Bitte geben sie die Registration ID ein.</br>Sie finden sie unter:</br><span class=\"font_bold highlightedText\">Wifi Einstellungen / Registrierung</span> im Anzeige Menü des Roboters.",
             "robotId": "Roboter ID"
         }
     },
     "robotActivationName": {
         "page": {
-            "id_accepted": "Ihre Roboter ID wurde akzeptiert.</br></br>Sie können nun bei Bedarf den Namen Ihres Roboters personalisieren.",
+            "id_accepted": "Ihre Registration ID wurde akzeptiert!</br></br>Sie können nun den Namen Ihres Roboters personalisieren. Sie können jederzeit den Roboter Namen im Einstellungsmenü ändern. ",
             "robot_name": "Roboter Name"
         }
     },
@@ -211,6 +279,7 @@
             "robot_name": "Roboter Name",
             "robot_id": "Roboter ID",
             "robot_type": "Type",
+            "robot_delete":"Roboter entfernen",
             "cleaning_options": {
                 "title": "Reinigungs Einstellungen",
                 "schedule": "Zeitplan zum Reinigen benutzen"
@@ -242,7 +311,7 @@
         "page": {
             "notify_with": "Benachrichtige mich mit...",
             "notify_when": "Benachrichtige mich, wenn...",
-            "push_on_phone": "Push-Benachrichtigung auf meinem Handy",
+            "push_on_phone": "via Push-Benachrichtigung",
             "robot_need_cleaning": "Roboter muss gereinigt werden",
             "cleaning_done": "Reinigung abgeschlossen",
             "robot_stuck": "Roboter sitzt fest"

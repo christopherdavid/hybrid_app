@@ -2,7 +2,7 @@
 
     <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
         <div class="ui-btn-left">
-            <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image" data-image="menu" data-inline="true" href="#menuPopup" data-rel="popup">&nbsp;</a>
+            <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image" data-image="menu" data-inline="true" href="#menuPopup" data-rel="popup"></a>
         </div>
         <h1>
             <div class="screenTitle">
@@ -12,6 +12,11 @@
                 <span data-bind="text: robot().robotName">[robot name]</span>
             </div>
         </h1>
+        <!--TODO: remove test data
+        <div class="ui-btn-right">
+            <a data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#testPopup" data-rel="popup">Test</a>
+        </div>
+        -->
     </div>
     
     <div data-role="content">
@@ -20,8 +25,8 @@
                 
                 <div id="statusLine">
                     <div class="valign">
-                        <div id="statusIcon" data-bind="attr: {'data-status':robotIconStatus}"></div>
-                        <div id="statusText" data-bind="text:robot().stateString"></div>
+                        <div id="statusIcon" data-bind="attr: {'data-status':currentUiState().messageIcon}"></div>
+                        <div id="statusText" data-bind="text:currentUiState().messageText"></div>
                     </div>
                 </div>
                 
@@ -29,16 +34,16 @@
                     <div class="halign">
                         <div id="startContainer">
                             <div id="startArea">
-                                <div id="remote" data-bind="visible: isRemoteSelected()">
-                                    <div id="remoteUp" class="img-remote_vertical" data-bind="css: {'remoteUp-disabled':isRemoteDisabled()}"></div>
-                                    <div id="remoteDown" class="img-remote_vertical" data-bind="css: {'remoteDown-disabled':isRemoteDisabled()}"></div>
-                                    <div id="remoteLeft" class="img-remote_horizontal" data-bind="css: {'remoteLeft-disabled':isRemoteDisabled()}"></div>
-                                    <div id="remoteRight" class="img-remote_horizontal" data-bind="css: {'remoteRight-disabled':isRemoteDisabled()}"></div>
-                                    <div id="remoteDiagLeft" class="img-remote_diagonal" data-bind="css: {'remoteDiagLeft-disabled':isRemoteDisabled()}"></div>
-                                    <div id="remoteDiagRight" class="img-remote_diagonal" data-bind="css: {'remoteDiagRight-disabled':isRemoteDisabled()}"></div>
+                                <div id="remote" data-bind="visible: robot().cleaningCategory() == CLEANING_CATEGORY_MANUAL">
+                                    <div id="remoteUp" class="img-remote" data-bind="css: {'disabled':!isRemoteEnabled()}"></div>
+                                    <div id="remoteDown" class="img-remote" data-bind="css: {'disabled':!isRemoteEnabled()}"></div>
+                                    <div id="remoteLeft" class="img-remote" data-bind="css: {'disabled':!isRemoteEnabled()}"></div>
+                                    <div id="remoteRight" class="img-remote" data-bind="css: {'disabled':!isRemoteEnabled()}"></div>
+                                    <div id="remoteDiagLeft" class="img-remote-diagonal" data-bind="css: {'disabled':!isRemoteEnabled()}"></div>
+                                    <div id="remoteDiagRight" class="img-remote-diagonal" data-bind="css: {'disabled':!isRemoteEnabled()}"></div>
                                 </div>
                                 
-                                <div id="startBtn" class="img-startstopbtn startbtn-up" data-state="inactive">
+                                <div id="startBtn" class="img-startstopbtn startbtn-up" data-bind="attr: {'data-state':currentUiState().startButton}">
                                     <div id="loadingSpinnerButton">
                                         <div class="f_circleG" id="frotateG_01"></div>
                                         <div class="f_circleG" id="frotateG_02"></div>
@@ -58,13 +63,13 @@
                     </div>
                     <div class="control-button-bar">
                         <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image ui-btn-left" data-image="eco" data-inline="true"
-                            data-bind="click:toggleEcoMode, css:{'ui-btn-active':ecoMode()}">&nbsp;</a>
+                            data-bind="click:toggleEcoMode, css:{'ui-btn-active':ecoMode()}, jqLinkButtonEnable: isEcoEnabled()"></a>
                         
                         <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image ui-btn-right" data-image="stop" data-inline="true"
-                            data-bind="click:stopRobot, visible:isStopVisible, jqLinkButtonEnable: !waitingForRobot()">&nbsp;</a>
+                            data-bind="click:stopRobot, visible:!isSendToBaseVisible(), jqLinkButtonEnable: isStopEnabled"></a>
                             
                         <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image ui-btn-right" data-image="base" data-inline="true"
-                            data-bind="click:sendToBase, visible:!isStopVisible(), jqLinkButtonEnable: !waitingForRobot()">&nbsp;</a>
+                            data-bind="click:sendToBase, visible:isSendToBaseVisible, jqLinkButtonEnable: isSendToBaseEnabled()"></a>
                     </div>
                     
                 </div>
@@ -72,11 +77,19 @@
             </div>
         
             <div class="last-line">
-                <div data-role="none" class="mode-switch" id="cleaningType">
-                    <ul data-bind="foreach:{ data: cleaningType, afterRender: renderedCleaningType }">
-                        <li><a href="#" data-bind="click:$parent.changeType, text: text" data-theme="transparent">[text]</a></li>
-                    </ul>
-                </div>
+                <fieldset data-role="controlgroup" data-type="horizontal" class="mode-switch">
+                    <input type="radio" name="category-choice" id="category-choice-1" value="2" data-bind="checked: visualSelectedCategory, jqRadioChecked: visualSelectedCategory, jqRadioEnable: !waitingForRobot(), click:changeCategory.bind($data, CLEANING_CATEGORY_ALL)" data-theme="transparent" />
+                    <label for="category-choice-1" data-i18n="cleaning.page.cleaningCategory.2"
+                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[ALL]</label>
+                    
+                    <input type="radio" name="radio-choice" id="category-choice-2" value="3" data-bind="checked: visualSelectedCategory, jqRadioChecked: visualSelectedCategory, jqRadioEnable: !waitingForRobot(), click:changeCategory.bind($data, CLEANING_CATEGORY_SPOT)" data-theme="transparent" />
+                    <label for="category-choice-2" data-i18n="cleaning.page.cleaningCategory.3"
+                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[SPOT]</label>
+                    
+                    <input type="radio" name="radio-choice" id="category-choice-3" value="1" data-bind="checked: visualSelectedCategory, jqRadioChecked: visualSelectedCategory, jqRadioEnable: !waitingForRobot(), click:changeCategory.bind($data, CLEANING_CATEGORY_MANUAL)" data-theme="transparent" />
+                    <label for="category-choice-3" data-i18n="cleaning.page.cleaningCategory.1"
+                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[MANUAL]</label>
+                </fieldset>
             </div>
             
         </div><!-- /line-grid-container -->
@@ -108,8 +121,8 @@
     	            <div class="line">
                         <div class="left-block repeat-twice">
                             <select name="flip-3" id="flip-3" data-role="slider" data-bind="value: selectedFrequency, jqmFlipValue:selectedFrequency">
-                                <option value="1"></option>
-                                <option value="2"></option>
+                                <option value="1">1x</option>
+                                <option value="2">2x</option>
                             </select>
                         </div>
                         
@@ -127,9 +140,9 @@
         </div>
     </div>
       
-    <div id="menuPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport dialogType_1">
+    <div id="menuPopup" data-history="false" data-role="popup" data-dismissible="true" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport dialogType_1">
         <div data-role="header" data-theme="b" class="ui-header ui-bar-b">
-            <div class="logo"></div>
+            <div id="menuPopupLogo" class="logo"></div>
         </div>
         <div class="popupHeaderLine"></div>
         <div data-role="content" class="ui-content"> 
@@ -158,5 +171,109 @@
             </ul>
         </div>
     </div>
+    <!-- TODO: remove testdata
+    <div id="testPopup" data-history="false" data-role="popup" data-dismissible="true" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport dialogType_1">
+        <div data-role="header" data-theme="b" class="ui-header ui-bar-b">
+             <h1 class="ui-title dialogPopupTitle" role="heading" aria-level="1">State tests</h1>
+        </div>
+        <div class="popupHeaderLine"></div>
+        <div data-role="content" class="ui-content"> 
+            <ul data-role="listview" data-theme="a" data-inset="true" class="single"> 
+                <li data-role="list-divider">robot states from API</li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_UNKNOWN)">
+                        <h3>ROBOT_STATE_UNKNOWN</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_CLEANING)">
+                        <h3>ROBOT_STATE_CLEANING</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_IDLE)">
+                        <h3>ROBOT_STATE_IDLE</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_CHARGING)">
+                        <h3>ROBOT_STATE_CHARGING</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_STOPPED)">
+                        <h3>ROBOT_STATE_STOPPED</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_STUCK)">
+                        <h3>ROBOT_STATE_STUCK</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_PAUSED)">
+                        <h3>ROBOT_STATE_PAUSED</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_RESUMED)">
+                        <h3>ROBOT_STATE_RESUMED</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_ON_BASE)">
+                        <h3>ROBOT_STATE_ON_BASE</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_MANUAL_CLEANING)">
+                        <h3>ROBOT_STATE_MANUAL_CLEANING</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_MANUAL_PLAY_MODE)">
+                        <h3>ROBOT_STATE_MANUAL_PLAY_MODE</h3>
+                    </a>
+                </li>
+                <li data-role="list-divider">UI states</li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_ERROR)">
+                        <h3>ROBOT_UI_STATE_ERROR</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_WAIT)">
+                        <h3>ROBOT_UI_STATE_WAIT</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_WAKEUP)">
+                        <h3>ROBOT_UI_STATE_WAKEUP</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_GETREADY)">
+                        <h3>ROBOT_UI_STATE_GETREADY</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_AWAKE)">
+                        <h3>ROBOT_UI_STATE_AWAKE</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_DISABLED)">
+                        <h3>ROBOT_UI_STATE_DISABLED</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_CONNECTING)">
+                        <h3>ROBOT_UI_STATE_CONNECTING</h3>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    -->
 
 </div><!-- /page -->

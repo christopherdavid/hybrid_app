@@ -2,7 +2,7 @@ Application.prototype.loadWorkflow = function() {
     return {
         "start" : {
             navrules : [{
-                targetScreenId : "createAccount",
+                targetScreenId : "selectCountry",
                 conditions : [{
                     "key" : "register",
                     "value" : true
@@ -16,9 +16,27 @@ Application.prototype.loadWorkflow = function() {
             }],
             clearHistory : true
         },
+        "selectCountry" : {
+            navrules : [{
+                targetScreenId : "createAccount",
+                conditions : [{
+                    "key" : "valid",
+                    "value" : true
+                }]
+            }]
+        },
         "createAccount" : {
             navrules : [{
-                targetScreenId : "loginUser",
+                targetScreenId : "legalInformation",
+                conditions : [{
+                    "key" : "valid",
+                    "value" : true
+                }]
+            }]
+        },
+        "legalInformation" : {
+            navrules : [{
+                targetScreenId : "start",
                 conditions : [{
                     "key" : "valid",
                     "value" : true
@@ -267,6 +285,9 @@ Application.prototype.loadWorkflow = function() {
                     "value" : true
                 }]
             }]
+        },
+        "test" : {
+            navrules : []
         }
 
     };

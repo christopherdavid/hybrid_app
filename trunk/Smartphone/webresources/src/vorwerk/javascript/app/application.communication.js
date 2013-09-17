@@ -64,73 +64,116 @@ function WorkflowCommunication(parent) {
      * @param {string} [bStatic] optional flag to handle callbacks after viewmodel changed
      * @return {object} returns the promise of the deferred object
      */
-     this.exec = function(command, args, notificationOptions, bStatic) {
+     this.exec = function(command, args, notificationOptions, bStatic, wifiCheck) {
         var oDeferred = $.Deferred();
-        var networkState = navigator.network.connection.type;
+        wifiCheck = typeof wifiCheck != "undefined" ? wifiCheck : false;
+        var connectionChecked = $.Deferred();
+        var connectionCheckedDone = connectionChecked.promise();
         
-        if(networkState != Connection.UNKNOWN && networkState != Connection.NONE) {
-            var notifyOptions = notificationOptions;
-            var callGuid = guid();
-            bStatic = typeof bStatic != "undefined" ? bStatic : false;
-            
-            if (!notificationOptions || !notificationOptions.type){
-                notifyOptions = { type: notificationType.SPINNER, message: "" , bHide: true };
-            }
-            if(notifyOptions.type != notificationType.NONE) { 
-                parent.notification.showLoadingArea(true, notifyOptions.type, notifyOptions.message, callGuid);
-            }
-            
-            // store defferd object for callbacks and notification options (using guid) to avoid references to cordova plugin 
-            if(!bStatic) {
-                that.callbacks[callGuid] = {oDeferred:oDeferred, notifyOptions:notifyOptions};
-            } else {
-                that.staticCallbacks[callGuid] = {oDeferred:oDeferred, notifyOptions:notifyOptions};
-            }
-            
-            //console.log("call guid: " + callGuid);
-            switch(args.length) {
-                case 0:
-                    command(function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-                break;
-                case 1:
-                    command(args[0], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-                break;
-                case 2:
-                    command(args[0],args[1], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-                break;
-                case 3:
-                    command(args[0],args[1],args[2], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-                break;
-                case 4:
-                    command(args[0],args[1],args[2],args[3], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-                break;
-                case 5:
-                    command(args[0],args[1],args[2],args[3],args[4], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-                break;
-                case 6:
-                    command(args[0],args[1],args[2],args[3],args[4],args[5], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-                break;
-                case 7:
-                    command(args[0],args[1],args[2],args[3],args[4],args[5],args[6], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
-                break;
-                
-                default:
-                alert("The communcation layer doesn't support this number of arguments: " + args.length);
-            }
-        } else {
-            var noConnectionHeader =  $.i18n.t("messages.no_connection.title");
-            var noConnectionText =  $.i18n.t("messages.no_connection.message");
-            parent.notification.showDialog(dialogType.ERROR, noConnectionHeader, noConnectionText, 
-                [{"label":"OK", "callback":function(e){
-                    parent.notification.closeDialog();
-                    oDeferred.reject({log:"connection error"});
-                }}]);
-            
-        }
+        that.connectionCheck(wifiCheck, connectionChecked)
+        // connected
+        connectionCheckedDone.done(function(result) {
+            that.conectedExecute(oDeferred, command, args, notificationOptions, bStatic);
+        });
+        connectionCheckedDone.fail(function(error) {
+            oDeferred.reject(error);
+        });
         return oDeferred.promise();
     };
     
+    this.connectionCheck = function(wifiCheck, conDeffer) {
+        var networkState = navigator.network.connection.type;
+        var dialogHeader = "";
+        var dialogText = "";
+        var hasCancel = wifiCheck ? true : false;
+        
+        if(networkState == Connection.UNKNOWN || networkState == Connection.NONE) {
+            dialogHeader =  $.i18n.t("messages.no_connection.title");
+            dialogText =  $.i18n.t("messages.no_connection.message");
+            
+        } else if(wifiCheck && networkState != Connection.WIFI) {
+            dialogHeader =  $.i18n.t("messages.no_wifi.title");
+            dialogText =  $.i18n.t("messages.no_wifi.message");
+        }
+        // show dialog
+        if(dialogHeader != "" && !hasCancel) {
+            parent.notification.showDialog(dialogType.ERROR, dialogHeader, dialogText, 
+                [{"label":"OK", "callback":function(e){
+                        parent.notification.closeDialog();
+                        that.connectionCheck(wifiCheck, conDeffer);
+                        }
+                }]);
+        } else if(dialogHeader != "" && hasCancel) {
+            parent.notification.showDialog(dialogType.ERROR, dialogHeader, dialogText, 
+                [{"label":"OK", "callback":function(e){
+                    parent.notification.closeDialog();
+                    that.connectionCheck(wifiCheck, conDeffer);
+                 }},
+                 {"label":"Cancel", "callback":function(e){
+                    parent.notification.closeDialog();
+                    conDeffer.reject({"networkState":networkState, "state":"rejected"});
+                 }}]);
+        } else {
+            conDeffer.resolve({"networkState":networkState, "state":"connected"});
+        }
+    }
+    
+    this.conectedExecute = function(oDeferred, command, args, notificationOptions, bStatic) {
+        var notifyOptions = notificationOptions;
+        var callGuid = guid();
+        bStatic = typeof bStatic != "undefined" ? bStatic : false;
+        
+        if (!notificationOptions || !notificationOptions.type){
+            notifyOptions = { type: notificationType.SPINNER, message: "" , bHide: true };
+        }
+        if(notifyOptions.type != notificationType.NONE) { 
+            parent.notification.showLoadingArea(true, notifyOptions.type, notifyOptions.message, callGuid);
+        }
+        
+        // store defferd object for callbacks and notification options (using guid) to avoid references to cordova plugin 
+        if(!bStatic) {
+            that.callbacks[callGuid] = {oDeferred:oDeferred, notifyOptions:notifyOptions};
+        } else {
+            that.staticCallbacks[callGuid] = {oDeferred:oDeferred, notifyOptions:notifyOptions};
+        }
+        
+        //console.log("call guid: " + callGuid);
+        switch(args.length) {
+            case 0:
+                command(function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+            break;
+            case 1:
+                command(args[0], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+            break;
+            case 2:
+                command(args[0],args[1], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+            break;
+            case 3:
+                command(args[0],args[1],args[2], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+            break;
+            case 4:
+                command(args[0],args[1],args[2],args[3], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+            break;
+            case 5:
+                command(args[0],args[1],args[2],args[3],args[4], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+            break;
+            case 6:
+                command(args[0],args[1],args[2],args[3],args[4],args[5], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+            break;
+            case 7:
+                command(args[0],args[1],args[2],args[3],args[4],args[5],args[6], function(result) { that.onCallbackReturn(callGuid, true, result);}, function(result) { that.onCallbackReturn(callGuid, false, result);});
+            break;
+            
+            default:
+            alert("The communcation layer doesn't support this number of arguments: " + args.length);
+        }
+    }
+    
+    
     //TODO: add comments
+    this.mapDataValue = function(key, dataValue) {
+        that.dataValues[key](ko.mapping.fromJS(dataValue), null, that.dataValues[key]);
+    }
     
     this.clearDataValues = function(){
       that.getDataValue("robotList")([]);
@@ -173,54 +216,59 @@ function WorkflowCommunication(parent) {
     }
     // this requests the robot state for each roboter 
     this.getRobotState = function(robotId) {
-        // Send command that the robot should return to base
-        var tDeffer = that.exec(RobotPluginManager.sendCommandToRobot2, [robotId, COMMAND_GET_ROBOT_STATE, {}], { type: notificationType.NONE }, true);
+        // request cleaning state
+        var tDeffer = that.exec(RobotPluginManager.getRobotCleaningState, [robotId], { type: notificationType.NONE }, true);
         tDeffer.done(that.successGetRobotState);
     };
     
     this.successGetRobotState = function(result) {
-        if(result.stateCode && result.robotId) {
+        if(result.robotCurrentState && result.robotId && result.robotNewVirtualState) {
             var tempRobots = that.getDataValue("robotList");
             // find robote with robotId in global binding object
-            var state = $.i18n.t("robotStateCodes." + result.stateCode);
-            // loop over all robots and add the state property
             $.each(tempRobots(), function(index, item){
                 if(item.robotId() == result.robotId) {
                     // update state
-                    that.updateRobotStateWithCode(item, result.stateCode);
+                    that.updateRobotStateWithCode(item, result.robotNewVirtualState, result.robotCurrentState);
                     return false;
                 }
             });
         }
     }
     
-    this.updateRobotStateWithCode = function(robot, curState) {
-        // make sure curState is an integer
-        curState = parseInt(curState, 10);
-        //update state, make sure it's an valid state code
-        if(curState >= 10001 && curState <= 10009 && robot.stateCode) {
+    this.updateRobotStateWithCode = function(robot, virtualState, currentState) {
+        // make sure virtualState is an integer
+        virtualState = parseInt(virtualState, 10);
+        // update state, make sure it's an valid state code
+        if(virtualState >= 10001 && virtualState <= 10011 && robot.robotNewVirtualState) {
             var curRobot = that.getDataValue("selectedRobot");
-            var state = $.i18n.t("robotStateCodes." + curState);
-            console.log("updateRobotStateWithCode: "  + curState + " text: " + state + " for robot: " + robot.robotId())
+            var state = $.i18n.t("robotStateCodes." + virtualState);
+            var stateChanged = robot.robotNewVirtualState() != virtualState;
+            console.log("updateRobotStateWithCode: "  + virtualState + " text: " + state + " for robot: " + robot.robotId())
             // update robot object
-            robot.stateCode(curState);
+            robot.robotNewVirtualState(virtualState);
             robot.stateString(state);
-            
-            // check if robot is the current robot and update state machine
-            if(curRobot().robotId && robot.robotId() == curRobot().robotId()) {
-                // update state machine
-                switch(curState) {
-                    case ROBOT_STATE_CLEANING:
-                    case ROBOT_STATE_RESUMED:
-                        robotStateMachine.clean();
-                        break;
-                    case ROBOT_STATE_PAUSED:
-                        robotStateMachine.pause();
-                        break;
-                    default:
-                        robotStateMachine.deactivate();
+            if(typeof currentState != "undefined") {
+                // make sure currentState is an integer
+                currentState = parseInt(currentState, 10);
+                // make sure it's an valid state code
+                if(currentState >= 10001 && currentState <= 10011) {
+                    robot.robotCurrentState(currentState);
                 }
             }
+            
+            if(virtualState == ROBOT_STATE_MANUAL_CLEANING) {
+                robot.cleaningCategory(CLEANING_CATEGORY_MANUAL);
+            }
+            
+            // check if robot is the current robot 
+            if(curRobot().robotId && robot.robotId() == curRobot().robotId()) {
+                // update state handler
+                if(!stateChanged) {
+                    robotUiStateHandler.updateStates(virtualState);
+                }
+                
+            }
+            
         }
     }
 }

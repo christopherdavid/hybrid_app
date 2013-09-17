@@ -47,6 +47,21 @@ resourceHandler.registerFunction('start_ViewModel.js', function(parent) {
         parent.flowNavigator.next();
     }
     
+    this.countryView = function() {
+        that.conditions['countryview'] = true;
+        parent.flowNavigator.next();
+    }
+    
+    this.legalView = function() {
+        that.conditions['legalview'] = true;
+        parent.flowNavigator.next();
+    }
+    
+    this.animationView = function() {
+        that.conditions['animationview'] = true;
+        parent.flowNavigator.next();
+    }
+    
     
 })
 console.log('loaded file: start_ViewModel.js');

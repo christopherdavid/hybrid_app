@@ -26,11 +26,9 @@ resourceHandler.registerFunction('robotActivationId_ViewModel.js', function(pare
         // Pass the server robot and the caller to the next view
         var robotBundle = {
             callerContext : that.bundle,
-            robot : {
-                robotId : that.robotId(),
-                robotName : ""
-            }
+            robot:getRobotStruct()
         };
+        robotBundle.robot.robotId = that.robotId();
         parent.flowNavigator.next(robotBundle);
     }
 

@@ -55,6 +55,7 @@
     <plugin name="GlobalizationCommand" value="com.phonegap.plugins.globalization.GlobalizationCommand"/>
     <plugin name="UserManagement" value="com.neatorobotics.android.slide.framework.plugins.UserManagerPlugin" />
     <plugin name="RobotManagement" value="com.neatorobotics.android.slide.framework.plugins.RobotManagerPlugin" />
+    <plugin name="ScreenOrientation" value="com.tsukurusha.phonegap.plugins.ScreenOrientation" />
 </plugins>
 </cordova>
 

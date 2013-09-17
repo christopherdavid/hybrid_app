@@ -97,17 +97,33 @@
     
     &.btn-with-image {
         .ui-btn-inner {
+          width:@button_icon_width;
+          height:@button_icon_height;
+          display:inline-block;
+          padding:0;
+          top:2px;
           background-size: @button_icon_size;
           background-repeat: no-repeat;
-          background-position: center center;
+          background-position:0 0;
+          background-image: url(../../img/icons/header_icons_80x300.png);
         }
-        
-        &[data-image='add'] .ui-btn-inner {
-            background-image: url(../../img/icons/add_80x50.png);
-        }
-        
         &[data-image='menu'] .ui-btn-inner {
-            background-image: url(../../img/icons/menu_80x50.png);
+            background-position-y:0;
+        }
+        &[data-image='add'] .ui-btn-inner {
+            background-position-y:-@button_icon_height;
+        }
+        &[data-image='cancel'] .ui-btn-inner {
+            background-position-y:-@button_icon_height*2;
+        }
+        &[data-image='ok'] .ui-btn-inner {
+            background-position-y:-@button_icon_height*3;
+        }
+        &[data-image='back'] .ui-btn-inner {
+            background-position-y:-@button_icon_height*4;
+        }
+        &[data-image='next'] .ui-btn-inner {
+            background-position-y:-@button_icon_height*5;
         }
     }
 }

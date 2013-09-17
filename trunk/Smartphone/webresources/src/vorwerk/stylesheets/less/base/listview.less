@@ -4,7 +4,7 @@
 
 .ui-listview {
     background-color:@listview_bg_color;
-    border-radius: 10px;
+    border-radius: @listview_border_radius;
     
     .ui-btn {
         border:0px none;
@@ -103,12 +103,130 @@
         }
     }
 }
+// radio group
+.radioGroup {
+    .ui-controlgroup-controls {
+        border-radius:@listview_border_radius;
+        overflow:hidden;
+    }
+    
+    .ui-radio {
+        background-color:@listview_bg_color;
+        border-radius:0;
+        
+        input {
+            visibility:hidden;
+        }
+        
+        .ui-btn {
+            border:0px none;
+            border-radius: 0px;
+            background: transparent;
+            border-top:1px solid @listview_separator_color;
+            .box-shadow-none()!important;
+            &:first-child {
+              border-top:0px none;
+              .border-radius-top(inherit)!important;
+            }
+            &:last-child {
+              .border-radius-bottom(inherit)!important;
+            }
+            .ui-btn-inner {
+                line-height:normal;
+                padding-left: @content_space;
+                padding-right: @radiogroup_item_space_right;
+            
+                .ui-icon {
+                    background-color: transparent;
+                    background-position: 0 0;
+                    background-image: url("../../img/icons/radiobutton_88x44.png");
+                    background-size:@radiogroup_check_icon_size;
+                    width:@radiogroup_check_icon_width;
+                    height:@radiogroup_check_icon_height;
+                    .box-shadow-none;
+                    margin-top:-9px;
+                    left:auto;
+                    right:@radiogroup_check_icon_space_right;
+                    
+                    &.ui-icon-radio-on {
+                        background-position-x:-@radiogroup_check_icon_width;
+                    }
+                }
+                
+                .ui-btn-text {
+                    color:@listview_text_color;
+                    font-weight:normal;
+                    .font_big;
+                    margin:0;
+                    line-height:@radiogroup_item_line_height;
+                }
+            }
+            &:before {
+                display:none;
+            }
+            
+            &.ui-first-child {
+                .border-radius-top(initial);
+            }
+            &.ui-last-child {
+                .border-radius-bottom(initial);
+            }
+            
+            &.ui-btn-down-a, &.ui-selected {
+                background: @listview_bg_down_color;
+                
+                .ui-btn-text {
+                  
+                    .ui-li-desc {
+                        color:@listview_description_selected_color;
+                    }
+                }
+            }
+        
+            &.with-image {
+                .ui-btn-inner {
+                    padding-left: @radiogroup_item_space_left;
+                }
+                
+                .ui-btn-inner:before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: @radiogroup_icon_width;
+                    height: @radiogroup_icon_height;
+                    display: block;
+                    background-size:@radiogroup_icon_size;
+                    background-repeat: no-repeat;
+                    background-position: 0 0;
+                    background-image: url(../../img/icons/country_80x400.png);
+                }
+                &[data-country='germany'] .ui-btn-inner:before {
+                    background-position-y:0;
+                }
+                &[data-country='switzerland'] .ui-btn-inner:before {
+                    background-position-y:-@radiogroup_icon_height*1;
+                }
+                &[data-country='greatbritain'] .ui-btn-inner:before {
+                    background-position-y:-@radiogroup_icon_height*2;
+                }
+                &[data-country='france'] .ui-btn-inner:before {
+                    background-position-y:-@radiogroup_icon_height*3;
+                }
+                &[data-country='italy'] .ui-btn-inner:before {
+                    background-position-y:-@radiogroup_icon_height*4;
+                }
+            }
+        
+        }
+    }
+}
 
 #startlist {
   position:absolute;
   top:@headerbar_height;
-  left:@content_space;
-  right:@content_space;
+  left:@content_list_space;
+  right:@content_list_space;
   bottom:0;
   
   ul {

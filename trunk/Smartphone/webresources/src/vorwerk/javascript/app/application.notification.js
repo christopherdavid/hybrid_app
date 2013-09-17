@@ -29,6 +29,7 @@ function WorkflowNotification(parent) {
                 })
                 
                 $("#dialogPopup").removeClass("dialogType_1 dialogType_2 dialogType_3");
+                $(".headerbar").removeClass("dialogType_1 dialogType_2 dialogType_3");
                 //$("#dialogPopup .ui-bar-buttons").attr("class", "ui-bar-buttons");
                 $("#dialogPopup .ui-bar-buttons").removeClass("buttons_1 buttons_2 buttons_3");
                 // remove disabled style
@@ -66,8 +67,27 @@ function WorkflowNotification(parent) {
                         case ROBOT_NAME_UPDATE:
                             //update name
                             if(result.robotData.robotName) {
-                                curRobot().robotName(result.robotData.robotName)
+                                curRobot().robotName(result.robotData.robotName);
                             }
+                            break;
+                        case ROBOT_CONNECTED:
+                        case ROBOT_DISCONNECTED:
+                            var curState = result.robotData.errorDriveResponseCode;
+                            curRobot().connectionState(result.robotDataKeyId);
+                            parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
+                            break;
+                        case ROBOT_NOT_CONNECTED:
+                            var curState = result.robotData.errorDriveResponseCode;
+                            curRobot().connectionState(result.robotDataKeyId);
+                            var dialogHeader =  $.i18n.t("messages.not_same_network.title");
+                            var dialogText   =  $.i18n.t("messages.not_same_network.message");
+                            that.showDialog(dialogType.ERROR, dialogHeader, dialogText, 
+                                [{"label":"OK", "callback":function(e){
+                                        that.closeDialog();
+                                        parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
+                                    }
+                                }]);
+                            
                             break;
                     }
             // loop over robots and update state
@@ -87,6 +107,13 @@ function WorkflowNotification(parent) {
                                 if(result.robotData.robotName) {
                                     item.robotName(result.robotData.robotName);
                                 }
+                                break;
+                            case ROBOT_CONNECTED:
+                            case ROBOT_DISCONNECTED:
+                            case ROBOT_NOT_CONNECTED:
+                                var curState = result.robotData.errorDriveResponseCode;
+                                parent.communicationWrapper.updateRobotStateWithCode(item, curState);
+                                item.connectionState(result.robotDataKeyId);
                                 break;
                         }
                         // rest is not relevant for not selected robot
@@ -228,7 +255,7 @@ function WorkflowNotification(parent) {
                          });
                     } else {
                          $(this).on("click.dialog", function() {
-                            that.closeDialog(dialogType);
+                            that.closeDialog();
                             event.preventDefault();
                             event.stopPropagation();
                         });
@@ -249,7 +276,7 @@ function WorkflowNotification(parent) {
             $("#dialogPopup .first-button").addClass("ui-last-child");
             $("#dialogPopup .first-button .ui-btn-text").text("Ok"); 
             $("#dialogPopup .first-button").on("click.dialog", function() {
-                that.closeDialog(dialogType);
+                that.closeDialog();
             });
         }
         $("#dialogPopup").popup("open");
@@ -257,7 +284,6 @@ function WorkflowNotification(parent) {
     
     this.closeDialog = function(dialogType) {
         $("#dialogPopup").popup("close");
-        $(".headerbar").removeClass("dialogType_" + dialogType);
     }
     
     

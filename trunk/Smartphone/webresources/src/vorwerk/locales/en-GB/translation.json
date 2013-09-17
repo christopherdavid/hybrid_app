@@ -5,8 +5,12 @@
             "message": "You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings."
         },
         "no_wifi": {
-            "title": "I'm stuck",
-            "message": "<span class='font_bold'>__robotName__</span>: Please clear my path. Help me so I can continue cleaning."
+            "title": "Connectivity Problems",
+            "message": "You need a WiFi connection to use this feature. Please turn on Wi-Fi in Settings."
+        },
+        "not_same_network": {
+            "title": "Connectivity Problems",
+            "message": "We have to be in the same location to make me drive."
         },
         "101": {
             "title": "I'm stuck",
@@ -26,20 +30,48 @@
             "title": "Do you really want to delete the event?",
             "title_plural": "Do you really want to delete the events?",
             "message": "",
-            "button_1": "Delete",
+            "button_1": "Yes",
             "button_2": "No"
         },
         "ROBOT_DELETE": {
             "title": "Do you really want to delete __robotName__?",
             "message": "",
-            "button_1": "Delete",
+            "button_1": "Yes",
             "button_2": "No"
         },
         "ROBOT_ADDED": {
-            "title":"Registration completed!",
-            "message": "Yay! Robot Registration is complete.</br></br>Thank you for choosing this product. Happy Cleaning!",
+            "title":"Yay!",
+            "message": "Robot Registration is complete.</br></br>Thank you for choosing this product. Happy Cleaning :-)",
             "button_1": "OK"
+        },
+        "CANCEL_CLEANING" : {
+            "title":"Cancel cleaning?",
+            "message": "Are you sure you want to cancel the current cleaning ?",
+            "button_1": "Yes",
+            "button_2": "No"
         }
+    },
+    "visualState" : {
+        "unknown": "I'm looking for my server.",
+        "cleaning": "I'm cleaning.",
+        "idle": "I'm ready to start.",
+        "charging": "I'm charging.",
+        "stopped": "I've stopped cleaning.",
+        "stucked": "Help me! I'm stuck.",
+        "paused": "I’ve paused cleaning.",
+        "resumed": "I’ve resumed cleaning.",
+        "inbase": "I’m having a rest in my base.",
+        "manual": "Make me drive with your app remote!",
+        "play": "I've started cleaning.",
+        "error": "I guess I have a problem.",
+        "waiting": "I'll wake up in about __wakeUp__ seconds.",
+        "waiting_unknown": "I'll wake up in some seconds.",
+        "wakeup": "I'm getting ready.",
+        "wakeup_unknown": "I'll wake up in some seconds.",
+        "getready": "I'm getting ready.",
+        "awake": "I'm ready to start.",
+        "connecting": "I'm looking for my server.",
+        "done": "I'm done with cleaning."
     },
     "robotStateCodes": {
         "10001": "State Unknown",
@@ -55,9 +87,11 @@
     "pattern": {
         "week": "0,1,2,3,4,5,6",
         "time": "hhiiA",
+        "dayNameLength":"3",
         "spotUnit": "ft",
         "spotFactor": "3",
-        "spotConverter": "91"
+        "spotConverter": "91",
+        "countryOrder": "germany,switzerland,greatbritain,france,italy"
     },
     "common": {
         "back": "back",
@@ -69,8 +103,8 @@
         "delete": "delete",
         "change": "change",
         "logout": "Logout",
-        "on": "On",
-        "off": "Off",
+        "on": "on",
+        "off": "off",
         "menu": "Menu",
         "cleaningMode": {
             "1": "ECO",
@@ -84,18 +118,32 @@
             "4": "Thursday",
             "5": "Friday",
             "6": "Saturday"
+        },
+        "countries": {
+            "germany":"Germany",
+            "switzerland":"Switzerland",
+            "greatbritain":"Great Britain",
+            "france":"France",
+            "italy":"Italy"
         }
     },
     "communication": {
-        "fetch_robots": "Robot list is being fetched...",
-        "fetch_map": "Maps are being fetched...",
-        "update_scheduler": "Scheduler is being synchronized...",
-        "reset_password": "Password is being reseted...",
-        "reset_password_done": "Password successfully reseted",
-        "delete_robot_done": "Robot __robotName__ was deleted.",
-        "stop_robot": "Robot is stopping to clean",
-        "send_to_base": "Robot is being send back to base",
-        "robot_added": "Robot __robotName__ has been added."
+        "fetch_robots": "Accessing your robot list ...",
+        "fetch_map": "Accessing the robot’s maps ...",
+        "update_scheduler": "Synchronizing your scheduler ...",
+        "reset_password": "Resetting your password ...",
+        "reset_password_done": "Your password has been reset.",
+        "delete_robot_done": "Robot __robotName__ has been deleted.",
+        "stop_robot": "Stopping __robotName__ ...",
+        "send_to_base": "Sending __robotName__ to the base ...",
+        "robot_added": "Adding __robotName__ ...",
+        "stop_drive": "Stopping __robotName__ ...",
+        "intend_drive": "Please wait...",
+        "wait_robot":"Robot wakes up in about __wakeUp__ seconds.",
+        "wakeup_robot":"Robot wakes up in about __wakeUp__ seconds.",
+        "wakeup_unknown_robot":"Robot wakes up in some seconds.",
+        "getready_robot":"Robot is getting ready.",
+        "toggle_eco":"ECO mode is __ecoMode__"
     },
     "cleaning": {
         "navi": {
@@ -110,7 +158,7 @@
             "change_robot": "Change",
             "send_to_base": "Send to base",
             "spot_size_title": "Spot size: ",
-            "cleaningType": {
+            "cleaningCategory": {
                 "1": "MANUAL",
                 "2": "ALL",
                 "3": "SPOT"
@@ -123,6 +171,28 @@
         "register": "Register now.",
         "register_question": "You don't have an account so far?"
     },
+    "selectCountry": {
+        "navi": {
+            "title": "Registration"
+        },
+        "page": {
+            "title": "Please confirm your country:"
+        }
+    },
+    "legalInformation": {
+        "navi": {
+            "title": "Registration"
+        },
+        "page": {
+            "title": "Please tell us, if you would like to subscribe for news and updates regarding your VR-200.",
+            "information_header":"LEGAL INFORMATION",
+            "information": "As a customer, we wish to keep you informed about new updates, product related issues and new products.<br/>We  strive to keep your privacy safe. You agree that Vorwerk International Mittelsten Scheid & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br/>To opt-out of our email list, unsubscribe instructions are included at the bottom of each issue.",
+            "subscribe":"Subscribe",
+            "no_subscribe":"Don't subscribe",
+            "registration_done_title": "Account created",
+            "registration_done_message": "<div class=\"mailAnimation\"></div>A confirmation mail was sent to<br/><span class='highlightedText'>__email__</span><br/><br/>Please confirm your account within 48 hours.<br />After confirmation you can login and connect to your robot."
+        }
+    },
     "createAccount": {
         "navi": {
             "title": "Create User Account"
@@ -133,9 +203,7 @@
             "email": "Email Address",
             "password": "Password",
             "password_verify": "Password verification",
-            "password_show": "Show password",
-            "registration_done_title": "Account created",
-            "registration_done_message": "<div class=\"mailAnimation\"></div>A confirmation mail was sent to your eMail address. Please confirm your account within 48 hours.<br /><br />After confirmation you can login and connect to your robot."
+            "password_show": "Show password"
         }
     },
     "robotSelection": {
@@ -144,10 +212,10 @@
             "logout": "logout"
         },
         "page": {
-            "register": "Registration completed.<br>Welcome <span class=\"highlightedText boldText\">%s!</span>",
-            "login": "Welcome %s!",
-            "logged_in": "Hello %s.",
-            "no_robot": "You have no robots registered yet.<br>Please add your new robot.",
+            "register": "Registration completed.<br>Welcome <span class='highlightedText font_bold'>__email__</span>",
+            "login": "Welcome <span class='highlightedText font_bold'>__email__</span>!",
+            "logged_in": "Hello <span class='highlightedText font_bold'>__email__</span>.",
+            "no_robot": "You have no robots registered yet.<br>Please add your new robot by tapping on <span class='font_bold'>+</span>.",
             "select_robot": "Please choose your robot:"
         }
     },
@@ -156,13 +224,13 @@
             "title": "Robot activation"
         },
         "page": {
-            "wifisetup": "Now, please enter the Robot ID.</br>You will find it under:</br><span class=\"boldText highlightedText\">Wifi Setup / Register</span> in the robot display menu or on the back of your device.",
+            "wifisetup": "Please enter the Registration ID.</br>You will find it on the robot display accessing: <span class='font_bold highlightedText'>Wifi Setup / Register</span>",
             "robotId": "Robot ID"
         }
     },
     "robotActivationName": {
         "page": {
-            "id_accepted": "Your ID was accepted.</br></br>If you want, you can now personalize your robot's name.",
+            "id_accepted": "Your Registration ID was accepted!</br></br>If you want, you can now personalize your robot's name. You can always rename your robot's name in the settings menu.",
             "robot_name": "Robot name"
         }
     },
@@ -211,6 +279,7 @@
             "robot_name": "Robot Name",
             "robot_id": "Robot ID",
             "robot_type": "Type",
+            "robot_delete":"Remove robot",
             "cleaning_options": {
                 "title": "Cleaning Options",
                 "schedule": "Use Scheduled Cleaning"
@@ -242,7 +311,7 @@
         "page": {
             "notify_with": "Notify me with...",
             "notify_when": "Notify me when...",
-            "push_on_phone": "Push Notification on my Phone",
+            "push_on_phone": "via Push Notification",
             "robot_need_cleaning": "Robot needs to be cleaned",
             "cleaning_done": "Cleaning is done",
             "robot_stuck": "Robot is stuck"

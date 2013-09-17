@@ -36,33 +36,24 @@
             #statusIcon {
                 height:@cleaning_status_icon_height;
                 width:@cleaning_status_icon_width;
-                background-image:url(../../img/icons/robot_status_90x720.png);
+                background-image:url(../../img/icons/robot_status_3240x450.png);
                 background-repeat:no-repeat;
                 background-size:@cleaning_status_icon_image_size;
                 
                 &[data-status='awake'] {
                     background-position-y:0;
                 }
-                &[data-status='cleaning'] {
+                &[data-status='cleaning'], &[data-status='resumed'] {
                     background-position-y:-@cleaning_status_icon_height;
                 }
                 &[data-status='error'] {
-                    background-position-y:-2*@cleaning_status_icon_height;
+                    background-position-y:-@cleaning_status_icon_height*2;
                 }
-                &[data-status='idle'] {
-                    background-position-y:-3*@cleaning_status_icon_height;
+                &[data-status='wakeup'] {
+                    background-position-y:-@cleaning_status_icon_height*3;
                 }
-                &[data-status='inbase'] {
-                    background-position-y:-4*@cleaning_status_icon_height;
-                }
-                &[data-status='paused'] {
-                    background-position-y:-5*@cleaning_status_icon_height;
-                }
-                &[data-status='sleeping'] {
-                    background-position-y:-6*@cleaning_status_icon_height;
-                }
-                &[data-status='stopped'] {
-                    background-position-y:-7*@cleaning_status_icon_height;
+                &[data-status='inbase'], &[data-status='sleeping'] {
+                    background-position-y:-@cleaning_status_icon_height*4;
                 }
             }
             #statusText {
@@ -71,8 +62,6 @@
                 top:(@cleaning_status_icon_height - @cleaning_status_text_min_height - @cleaning_status_text_padding_top - @cleaning_status_text_padding_bottom)/2;
                 right:0;
                 color:@cleaning_status_text_color;
-                font-size: 18px;
-                font-weight:normal;
                 background-color:@cleaning_status_text_bg;
                 border-radius:@cleaning_status_border_radius;
                 padding:@cleaning_status_text_padding;
@@ -108,7 +97,7 @@
             
             .control-button-bar {
                 position: relative;
-                margin-top:10px;
+                margin-top:-10px;
                 
                 .ui-btn {
                     .border-radius(@cleaning_control_button_size/2);
@@ -133,23 +122,26 @@
                     &:before {
                         .border-radius(@cleaning_control_button_size/2);
                     }
-                    
+                    //btn-with-image  ui-btn ui-shadow ui-btn-corner-all ui-fullsize ui-btn-inline ui-btn-active ui-btn-up-b ui-disabled
                     &.btn-with-image {
                         .ui-btn-inner {
                           background-size: @cleaning_control_button_icon_size;
+                          background-image: url(../../img/icons/support_icons_220x330.png);
                           background-position:0 0;
+                          top:0;
+                          height:@cleaning_control_button_size;
+                          width:@cleaning_control_button_size;
                         }
                         
                         &[data-image='eco'] .ui-btn-inner {
-                            background-image: url(../../img/icons/eco_200x100.png);
+                            background-position-y:0;
                             background-position-x:-@cleaning_control_button_size;
                         }
-                        
                         &[data-image='base'] .ui-btn-inner {
-                            background-image: url(../../img/icons/base_200x100.png);
+                            background-position-y:-@cleaning_control_button_size*1;
                         }
                         &[data-image='stop'] .ui-btn-inner {
-                            background-image: url(../../img/icons/stop_200x100.png);
+                            background-position-y:-@cleaning_control_button_size*2;
                         }
                         
                         &.ui-btn-active {
@@ -159,6 +151,16 @@
                         } 
                         
                         &.ui-disabled { 
+                            &[data-image='eco'] {
+                                background:none;
+                                .box-shadow-none()!important;
+                                border-color: transparent;
+                                
+                                &:before {
+                                    border-color: transparent;
+                                }
+                            }
+                            
                             span {
                                 opacity:1;
                             }
@@ -178,6 +180,43 @@
         left:0;
         right:0;
         height:@cleaning_last_line_height;
+        
+        fieldset.ui-controlgroup.mode-switch {
+            
+            .ui-controlgroup-controls {
+                display:table;
+                width:auto;
+                min-width:none;
+                margin:auto;
+                
+                
+                .ui-radio {
+                    width:auto;
+                    margin:0;
+                    input {
+                      visibility:hidden;
+                    }
+                    
+                    .ui-btn {
+                        
+                        &.ui-btn-active {
+                            .ui-btn-inner .ui-btn-text {
+                                .font_bold;
+                                color:@cleaning_navbar_item_selected_color;
+                            }
+                        }
+                      
+                        .ui-btn-inner {
+                            padding:0px 20px;
+                            
+                            .ui-btn-text {
+                                color:@cleaning_navbar_item_color;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -222,85 +261,119 @@
             left:0;
             right:0;
             
-            #remoteUp {
+            .img-remote {
+                background-image: url(../../img/icons/remote_icons_300x400.png);
+                background-repeat: no-repeat;
+                background-position:0 0;
                 position:absolute;
+                width:@cleaning_remote_button_width;
+                height:@cleaning_remote_button_height;
+                
+                &.disabled {
+                    background-position-x:0!important;
+                }
+                &.ui-down {
+                    background-position-x:-@cleaning_remote_button_width*2;
+                }
+                &.ui-up {
+                    background-position-x:-@cleaning_remote_button_width;
+                }
+            }
+            .img-remote-diagonal {
+                background-image: url(../../img/icons/remote_diag_icons_200x200.png);
+                background-repeat: no-repeat;
+                background-position:0 0;
+                position:absolute;
+                width:@cleaning_remote_button_width;
+                height:@cleaning_remote_button_height;
+                
+                &.disabled {
+                    background-position:0 0!important;
+                }
+                &.ui-up {
+                    background-position:-@cleaning_remote_button_width 0;
+                }
+            }
+            #remoteUp {
                 top:0;
                 left:50%;
-                margin-left:-40px;
-                width:80px;
-                height:60px;
-                
-                &.remoteUp-down {
-                    margin-left:-75px;
-                    width:150px;
-                    height:88px;
-                }
+                margin-left:-@cleaning_remote_button_width/2;
+                background-position-y:-@cleaning_remote_button_height*3;
             }
             
             #remoteDown {
-                position:absolute;
                 bottom:0;
                 left:50%;
-                margin-left:-40px;
-                width:80px;
-                height:60px;
-                
-                &.remoteDown-down {
-                    margin-left:-75px;
-                    width:150px;
-                    height:88px;
-                }
+                margin-left:-@cleaning_remote_button_width/2;
+                background-position-y:-@cleaning_remote_button_height;
             }
             
             #remoteLeft {
-                position:absolute;
                 left:0;
                 top:50%;
-                margin-top:-40px;
-                width:60px;
-                height:80px;
-                
-                &.remoteLeft-down {
-                    margin-top:-75px;
-                    width:88px;
-                    height:150px;
-                }
+                margin-top:-@cleaning_remote_button_height/2;
+                background-position-y:0;
             }
             
             #remoteRight {
-                position:absolute;
                 right:0;
                 top:50%;
-                margin-top:-40px;
-                width: 60px;
-                height: 80px;
-                
-                &.remoteRight-down {
-                    margin-top:-75px;
-                    width:88px;
-                    height:150px;
-                }
+                margin-top:-@cleaning_remote_button_height/2;
+                background-position-y:-@cleaning_remote_button_height*2;
             }
             
             #remoteDiagLeft {
-                position:absolute;
-                left:73px;
-                top:67px;
-                width: 60px;
-                height: 60px;
+                left:56px;
+                top:48px;
+                
+                &.ui-down {
+                    background-position:0 -@cleaning_remote_button_height;
+                }
             }
             
             #remoteDiagRight {
-                position:absolute;
-                right:73px;
-                top:67px;
-                width: 60px;
-                height: 60px;
+                right:56px;
+                top:48px;
+                
+                &.ui-down {
+                    background-position:-@cleaning_remote_button_height -@cleaning_remote_button_width;
+                }
             }
         }
         
         #startBtn {
             margin:auto;
+            background-image:url(../../img/icons/startstopbtn_390x390.png);
+            background-repeat: no-repeat;
+            background-position:0 0;
+            width:390px;
+            height:390px;
+            
+            &.startBtn-up {
+                background-position-x:0;
+            }
+            &.startBtn-down {
+                background-position-x:-390px;
+            }
+            &[data-state='paused'] {
+                background-position-y:-390px;
+            }
+            &[data-state='cleaning'] {
+                background-position-y:-780px;
+            }
+            &[data-state='stopped'] {
+                background-position-y:0;
+            }
+            &[data-state='disabled'] {
+                background-position:-780px 0;
+            }
+            &[data-state='waiting'] {
+                background-position:-1170px 0;
+                
+                #loadingSpinnerButton {
+                    display:block;
+                }
+            }
             
             #loadingSpinnerButton {
                 position:absolute;
@@ -313,9 +386,6 @@
                 width:128px;
                 height:128px;
                 .transform-scale(1.3);
-            }
-            &.startbtn_waiting #loadingSpinnerButton {
-                display:block;
             }
         }
         

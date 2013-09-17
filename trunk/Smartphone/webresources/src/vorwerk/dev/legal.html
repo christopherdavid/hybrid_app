@@ -1,0 +1,40 @@
+<div data-role="page" id="start">
+    <div data-role="header" class="headerbar" data-theme="b" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true"
+                data-i18n="common.back"
+                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click:back">back</a>
+        </div>
+        <h1>
+            <div class="screenTitle">
+                <span>Listview</span>
+            </div>
+        </h1>
+    </div>
+    <div data-role="content">
+        <div id="topLine">
+            <fieldset>
+                <p data-i18n="legalInformation.page.title" data-bind="translate: language">welcome</p>
+            </fieldset>
+        </div>
+        
+        <div id="legalWrapper">
+            <div id="legalScroller">
+                <fieldset>
+                    <span class="font_bold" data-i18n="legalInformation.page.information_header" data-bind="translate: language">[information_header]</span>
+                    <p data-i18n="legalInformation.page.information" data-bind="translate: language">[information]</p>
+                 </fieldset>
+             </div>
+         </div>
+         
+         <div class="fixed-bottom">
+             <fieldset data-role="controlgroup" class="radioGroup">
+                <input type="radio" name="radio-country" id="radio-mini-1" value="choice-1" checked="checked" data-theme="a" />
+                <label for="radio-mini-1">[country]</label>
+                <input type="radio" name="radio-country" id="radio-mini-2" value="choice-2" data-theme="a" />
+                <label for="radio-mini-2">[country]</label>
+            </fieldset>
+        </div>
+        
+    </div><!-- /content -->
+</div><!-- /page -->

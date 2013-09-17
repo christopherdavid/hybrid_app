@@ -43,14 +43,20 @@
         .vertical-gradient(@page_gradient_start, @page_gradient_end);
     }
     .logo {
-        background-image:url('../../img/product_logo_146x100.png');
+        background-image:url('../../img/product_logo_150x200.png');
         background-repeat:no-repeat;
-        background-size:@headerbar_logo_width @headerbar_logo_height;
+        background-size:@headerbar_logo_size;
+        background-position:0 0;
+        position:relative;
         height:@headerbar_logo_height;
         width:@headerbar_logo_width;
-        position:relative;
         left:@content_space;
+        
+        &.folletto {
+            background-position-y:-@headerbar_logo_height;
+        }
     }
+    
     .ui-title {
         text-shadow: 0 -1px 0 #4c596a !important;
     }

@@ -1,12 +1,8 @@
 <div data-role="page" id="robotSelection">
     <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
         <div class="ui-btn-left">
-            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" 
-                data-i18n="robotSelection.navi.logout" 
-                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, visible:!isBackVisible() , click:logout">logout</a>
-            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" 
-                data-i18n="common.back" 
-                data-bind="translate:{obs:language(),target: textTarget.jqLinkButton},visible:isBackVisible, click:back">back</a>
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-image="back" class="btn-with-image"
+                data-bind="visible:isBackVisible, click:back"></a>
         </div>
         <h1>
             <div class="screenTitle " data-bind="css:{noRobot:!isRobotVisible()}">
@@ -17,15 +13,16 @@
             </div>
         </h1>
         <div class="ui-btn-right">
-            <a href="#" id="addButton" class="btn-with-image" data-image="add" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-bind="click: addRobot">&nbsp;</a>
+            <a href="#" id="addButton" class="btn-with-image" data-image="add" data-role="button" data-theme="b" data-mini="false" data-inline="true" 
+                data-bind="click: addRobot, css:{'animate':robots().length == 0}"></a>
         </div>
     </div>
     
     <div data-role="content">
-        <fieldset class="textWithButton" data-bind="css:{textWithButton:isBackVisible()}">
+        <fieldset class="textWithButton" data-bind="css:{textWithButton:isLogoutVisible()}">
             <p class="textBlock"><span data-bind="html: title">[welcome]</span></p>
             
-            <div class="buttonBlock" data-bind="visible:isBackVisible()">
+            <div class="buttonBlock" data-bind="visible:isLogoutVisible()">
                 <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" 
                     data-i18n="common.logout"
                     data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: logout">[logout]</a>

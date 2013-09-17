@@ -6,3 +6,13 @@
 var openExternalLink = function (url) {
     window.open(url, "_blank");
 };
+
+
+/**
+ * Forces the desired orientation. 
+ * @param {int} the orientation in degrees (0, 90 or "auto") 
+ */
+var forceRotation = function (orientation) {
+    console.log("Orientation forced: " + orientation);
+};
+
