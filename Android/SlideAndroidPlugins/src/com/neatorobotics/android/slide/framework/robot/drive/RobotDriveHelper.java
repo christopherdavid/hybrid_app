@@ -1,6 +1,7 @@
 package com.neatorobotics.android.slide.framework.robot.drive;
 
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +16,6 @@ import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
 import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
-import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeValueKeys;
@@ -27,7 +27,7 @@ public class RobotDriveHelper {
 	
 	private static final int DEFAULT_ROBOT_DRIVE_WIFI_ON_TIME = 2 * 60 * 1000; // 2 minutes
 	
-	private HashMap<String, Boolean> mPendingIntendDriveRequests;	
+	private TreeMap<String, Boolean> mPendingIntendDriveRequests;	
 	
 	private Context mContext;
 	
@@ -36,7 +36,7 @@ public class RobotDriveHelper {
 	
 	private RobotDriveHelper (Context context) {
 		mContext = context.getApplicationContext();
-		mPendingIntendDriveRequests = new HashMap<String, Boolean>();
+		mPendingIntendDriveRequests = new TreeMap<String, Boolean>(String.CASE_INSENSITIVE_ORDER);
 	}
 	
 	public static RobotDriveHelper getInstance (Context context) {
