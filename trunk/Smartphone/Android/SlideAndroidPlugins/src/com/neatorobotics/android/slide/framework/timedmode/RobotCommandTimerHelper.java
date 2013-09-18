@@ -1,8 +1,9 @@
 package com.neatorobotics.android.slide.framework.timedmode;
 
-import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
+
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
 import android.content.Context;
@@ -14,7 +15,7 @@ public class RobotCommandTimerHelper {
 	private static final long DEFAULT_COMMAND_EXPIRY_TIMEOUT = 3 * 60 * 1000;
 	
 	private static final Object INSTANCE_LOCK = new Object();
-	private HashMap<String, CommandTimer> mTimerMap;
+	private TreeMap<String, CommandTimer> mTimerMap;
 	private Context mContext;
 	
 
@@ -23,7 +24,7 @@ public class RobotCommandTimerHelper {
 	private RobotCommandTimerHelper(Context context)
 	{
 		mContext = context.getApplicationContext();
-		mTimerMap = new HashMap<String, RobotCommandTimerHelper.CommandTimer>();
+		mTimerMap = new TreeMap<String, RobotCommandTimerHelper.CommandTimer>(String.CASE_INSENSITIVE_ORDER);
 	}
 
 	public static RobotCommandTimerHelper getInstance(Context context)
