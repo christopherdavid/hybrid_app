@@ -3,7 +3,9 @@ package com.neatorobotics.android.slide.framework.pluginhelper;
 
 //JSON data keys which will be used by javasacript to send the data in json array object.
 public class JsonMapKeys {
-	
+
+
+	public static final String KEY_SUCCESS = "success";
 	public static final String KEY_MESSAGE = "message";
 	
 	// Used by user plugin

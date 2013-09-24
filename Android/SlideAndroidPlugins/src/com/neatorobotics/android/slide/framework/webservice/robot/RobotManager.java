@@ -190,4 +190,25 @@ public class RobotManager {
 		
 		TaskUtils.scheduleTask(task, 0);
 	}
+	
+	public void clearRobotData(final String email, final String robotId, final WebServiceBaseRequestListener listener) {
+		Runnable task = new Runnable() {
+			public void run() {		
+				try {
+					RobotClearDataResult result = NeatoRobotWebservicesHelper.clearRobotDataRequest(mContext, email, robotId);
+					listener.onReceived(result);										
+				}
+				catch (UserUnauthorizedException ex) {
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
+				}
+				catch (NeatoServerException ex) {
+					listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
+				}
+				catch (IOException ex) {
+					listener.onNetworkError(ex.getMessage());
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
 }

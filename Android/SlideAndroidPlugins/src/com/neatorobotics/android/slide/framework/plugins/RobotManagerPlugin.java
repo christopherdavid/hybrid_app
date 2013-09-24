@@ -16,6 +16,7 @@ import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
+import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotClearDataRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetSpotDefinationRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.PauseCleaningRequest;
@@ -87,6 +88,7 @@ public class RobotManagerPlugin extends Plugin {
 	private RobotManagerRequest mRobotDriveRequest = new RobotDriveRequest();
 	private RobotManagerRequest mStopRobotDriveRequest = new StopRobotDriveRequest();
 	private RobotManagerRequest mTurnMotorOnOffRequest = new TurnMotorOnOffRequest();
+	private RobotManagerRequest mRobotClearDataRequest = new RobotClearDataRequest();	
 	
 	// Schedule
 	private RobotManagerRequest mRobotScheduleRequest = new RobotScheduleRequest();
@@ -134,6 +136,7 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_COMMAND_MAP.put(ActionTypes.DELETE_ROBOT_SCHEDULE_EVENT, mRobotScheduleRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.UPDATE_SCHEDULE, mRobotScheduleRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.CREATE_SCHEDULE, mRobotScheduleRequest);
+			ACTION_COMMAND_MAP.put(ActionTypes.CLEAR_ROBOT_DATA, mRobotClearDataRequest);
 			
 			Set<String> keys = ACTION_COMMAND_MAP.keySet();
 			for (String key : keys) {
@@ -282,6 +285,7 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String STOP_ROBOT_DRIVE = "stopRobotDrive";
 			public static final String CANCEL_INTEND_TO_DRIVE = "cancelIntendToDrive";
 			public static final String IS_ROBOT_PEER_CONNECTED = "isRobotPeerConnected";
+			public static final String CLEAR_ROBOT_DATA = "clearRobotData";
 		}
 		
 		private class RobotNotificationsPluginListener implements RobotNotificationsListener {
