@@ -469,6 +469,24 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(result);
 		},		
 		
+		clearRobotData: function() {
+			
+			var email = localStorage.getItem('email');
+			var robotId = localStorage.getItem('robotId');
+			neatoSmartApp.showProgressBar();
+			RobotPluginManager.clearRobotData(email, robotId, neatoSmartApp.clearRobotDataSuccess, neatoSmartApp.clearRobotDataError);
+		},
+		
+		clearRobotDataSuccess: function(result) {
+			neatoSmartApp.hideProgressBar();
+			neatoSmartApp.setResponseText(result);
+		},
+		
+		clearRobotDataError: function(result) {
+			neatoSmartApp.hideProgressBar();
+			neatoSmartApp.setResponseText(result);
+		},
+		
 		disassociateAllRobots: function() {
 			var email = localStorage.getItem('email');
 			neatoSmartApp.showProgressBar();
@@ -2602,7 +2620,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#associateRobot').setAttribute('aria-hidden', 'false');
 			document.querySelector('#btnAssociateRobot').addEventListener('click', neatoSmartApp.associateRobot , true);
 			document.querySelector('#btnDisassociateRobot').addEventListener('click', neatoSmartApp.disassociateRobot , true);
-			document.querySelector('#btnDisassociateAllRobot').addEventListener('click', neatoSmartApp.disassociateAllRobots , true);
+			document.querySelector('#btnClearRobotData').addEventListener('click', neatoSmartApp.clearRobotData , true);
 			document.querySelector('#btnGetAssociatedRobots').addEventListener('click', neatoSmartApp.getAssociatedRobots , true);
 			document.querySelector('#btnSetRobotName').addEventListener('click', neatoSmartApp.setRobotName , true);
 			document.querySelector('#btnSetRobotName2').addEventListener('click', neatoSmartApp.setRobotName2 , true);
@@ -2613,7 +2631,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#associateRobot').setAttribute('aria-hidden', 'true');
 			document.querySelector('#btnAssociateRobot').removeEventListener('click', neatoSmartApp.associateRobot , true);
 			document.querySelector('#btnDisassociateRobot').removeEventListener('click', neatoSmartApp.disassociateRobot , true);
-			document.querySelector('#btnDisassociateAllRobot').removeEventListener('click', neatoSmartApp.disassociateAllRobots , true);
+			document.querySelector('#btnClearRobotData').removeEventListener('click', neatoSmartApp.clearRobotData , true);
 			document.querySelector('#btnGetAssociatedRobots').removeEventListener('click', neatoSmartApp.getAssociatedRobots , true);
 			document.querySelector('#btnSetRobotName').removeEventListener('click', neatoSmartApp.setRobotName , true);
 			document.querySelector('#btnSetRobotName2').removeEventListener('click', neatoSmartApp.setRobotName2 , true);			
@@ -2624,7 +2642,7 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(null);
 			CURRENT_PAGE = DEBUG_OPTIONS_PAGE;
 			document.querySelector('#debugOptions').setAttribute('aria-hidden', 'false');
-			document.querySelector('#btnDisassociateAllRobot').addEventListener('click', neatoSmartApp.disassociateAllRobots , true);
+			document.querySelector('#btnClearRobotData').addEventListener('click', neatoSmartApp.clearRobotData , true);
 			document.querySelector('#btnTestDissociateRobot').addEventListener('click', neatoSmartApp.disassociateRobot , true);
 			document.querySelector('#btnTestAllAssociatedRobots').addEventListener('click', neatoSmartApp.getAssociatedRobots , true);
 			document.querySelector('#btnTestRobotDetail').addEventListener('click', neatoSmartApp.getAssociatedRobotDetail , true);
@@ -2662,7 +2680,7 @@ var neatoSmartApp = (function() {
 		hideDebugOptionsPage: function() {
 			neatoSmartApp.setResponseText(null);			
 			document.querySelector('#debugOptions').setAttribute('aria-hidden', 'true');			
-			document.querySelector('#btnDisassociateAllRobot').removeEventListener('click', neatoSmartApp.disassociateAllRobots , true);
+			document.querySelector('#btnClearRobotData').removeEventListener('click', neatoSmartApp.clearRobotData , true);
 			
 			document.querySelector('#btnTestDissociateRobot').removeEventListener('click', neatoSmartApp.disassociateRobot , true);
 			document.querySelector('#btnTestAllAssociatedRobots').removeEventListener('click', neatoSmartApp.getAssociatedRobots , true);

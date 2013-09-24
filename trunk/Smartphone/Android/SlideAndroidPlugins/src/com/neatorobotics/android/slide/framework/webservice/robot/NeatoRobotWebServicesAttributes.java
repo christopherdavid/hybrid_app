@@ -47,6 +47,16 @@ public class NeatoRobotWebServicesAttributes {
 		}
 	}
 	
+	public static class ClearRobotData {
+		public static final String METHOD_NAME = "robot.clear_robot_association"; 
+
+		public static class Attribute {
+			public static final String EMAIL = "email";
+			public static final String SERIAL_NUMBER = "serial_number";
+			public static final String IS_DELETE = "is_delete";
+		}
+	}
+	
 	public static class DissociateAllNeatoRobotsFromUser {
 		public static final String METHOD_NAME = "user.disassociate_robot"; 
 
