@@ -77,7 +77,10 @@ resourceHandler.registerFunction('robotManagement_ViewModel.js', function(parent
     this.commitDelete = function() {
         parent.notification.closeDialog();
         var userEmail = parent.communicationWrapper.getDataValue("user").email;
-        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.disassociateRobot, [userEmail, that.robot().robotId()]);
+        //********* To fix issue #116 ********************
+        // Modified : 09/01/13 by Neato Development
+        //var tDeffer = parent.communicationWrapper.exec(UserPluginManager.disassociateRobot, [userEmail, that.robot().robotId()]);
+        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.clearRobotData, [userEmail, that.robot().robotId()]);
         tDeffer.done(that.successRemoveRobot);
         tDeffer.fail(that.errorRemoveRobot);
     }

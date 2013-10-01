@@ -17,8 +17,8 @@ function Application() {
     this.config = {
         firstScreen : "start",
         pageTransition : "none",
-        version:"0.5.6.0",
-        pluginVersion:"0.5.3.06",
+        version:"0.5.7.0",
+        pluginVersion:"0.5.4.01",
         fallbackLanguage:"en-GB",
         viewPath:"",
         emailRegEx: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
