@@ -17,6 +17,7 @@ public class JsonMapKeys {
 	public static final String KEY_NEW_PASSWORD = "newPassword";
 	public static final String KEY_IS_VALIDATED_USER = "isValidated";
 	public static final String KEY_ALTERNATE_EMAIL = "alternate_email";
+	public static final String KEY_EXTRA_PARAMS = "extra_param";
 	public static final String KEY_VALIDATION_STATUS = "validation_status";	
 	// Used by robot plugin
 	public static final String KEY_COMMAND_ID = "commandId";

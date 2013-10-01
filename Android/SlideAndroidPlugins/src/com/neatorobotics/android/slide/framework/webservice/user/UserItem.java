@@ -17,6 +17,12 @@ public class UserItem {
 	
 	public String alternate_email;
 	public int validation_status;
+	public UserParam extra_param;
+	
+	public class UserParam {
+		public String countryCode;
+		public String optIn;
+	}
 	
 	public void addAssociatedRobot(RobotItem robot)	{
 		robots.add(robot);
