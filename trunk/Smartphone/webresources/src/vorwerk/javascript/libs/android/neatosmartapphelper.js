@@ -88,6 +88,7 @@ var ACTION_TYPE_GET_USER_DETAILS 				= "getUserDetails";
 var ACTION_TYPE_ASSOCIATE_ROBOT					= "associateRobot";
 var ACTION_TYPE_GET_ASSOCIATED_ROBOTS 			= "getAssociatedRobots";
 var ACTION_TYPE_DISASSOCIATE_ROBOT 				= "disassociateRobot";
+var ACTION_TYPE_CLEAR_ROBOT_DATA		 		= "clearRobotData";
 var ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS 		= "disassociateAllRobots";
 var ACTION_TYPE_FORGET_PASSWORD					= "forgetPassword";
 var ACTION_TYPE_CHANGE_PASSWORD					= "changePassword";
@@ -1898,6 +1899,30 @@ RobotMgr.prototype.getRobotCleaningState = function(robotId, callbackSuccess, ca
 			ACTION_TYPE_GET_ROBOT_CLEANING_STATE, [params]);
 };
 
+/**
+ * This API clears the data on the specified robot associated with the specified user
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode 
+ * 
+ * @param email 			the email address of the user
+ * @param robotId 			the serial number of the robot
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					a JSON Object on error
+ */
+RobotMgr.prototype.clearRobotData = function(email, robotId, callbackSuccess, callbackError) {
+	var params = {'email':email, 'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_CLEAR_ROBOT_DATA, [params]);
+};
+
 var UserPluginManager = (function() {
 	return {
 		/**
@@ -3264,6 +3289,28 @@ var RobotPluginManager = (function() {
 		 */
 		stopRobotDrive: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.stopRobotDrive(robotId, callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API clears the data on the specified robot associated with the specified user
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode 
+		 * 
+		 * @param email 			the email address of the user
+		 * @param robotId 			the serial number of the robot
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					a JSON Object on error
+		 */
+		clearRobotData: function(email, robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.clearRobotData(email, robotId, callbackSuccess, callbackError);
 		}
 	}
 }());
@@ -3291,7 +3338,7 @@ var PluginManagerHelper =  (function() {
 		 *  - startTime
 		 *  - cleaningMode
 		 *  Returns: Basic Schedule JSON object
-		 *  {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
+		 *  {'day':day, 'startTime': startTime, â€˜cleaningModeâ€™:cleaningMode}
 		 */
 		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {
