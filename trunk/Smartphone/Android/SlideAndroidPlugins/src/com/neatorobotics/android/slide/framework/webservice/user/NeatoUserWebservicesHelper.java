@@ -20,6 +20,7 @@ import com.neatorobotics.android.slide.framework.webservice.robot.RobotLinkIniti
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.ChangePassword;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.CreateNeatoUser;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.CreateNeatoUser2;
+import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.CreateNeatoUser3;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.ForgetPassword;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.GetNeatoUserDetails;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.GetUserAssociatedRobots;
@@ -100,6 +101,25 @@ public class NeatoUserWebservicesHelper {
 		return AppUtils.checkResponseResult(response, CreateNeatoUserResult.class);
 	}
 	
+	public static CreateNeatoUserResult createNeatoUser3RequestNative(Context context, String name, String email, String alternateEmail,
+			String password, String userParams) throws UserUnauthorizedException, NeatoServerException, IOException {
+		
+		Map<String, String> createUser3ReqParams = new HashMap<String, String>();
+		createUser3ReqParams.put(CreateNeatoUser3.Attribute.ACCOUNT_TYPE, NeatoUserWebServicesAttributes.ACCOUNT_TYPE_NATIVE);
+		createUser3ReqParams.put(CreateNeatoUser3.Attribute.NAME, name);
+		createUser3ReqParams.put(CreateNeatoUser3.Attribute.EMAIL, email);
+		createUser3ReqParams.put(CreateNeatoUser3.Attribute.PASSWORD, password);
+		if (!TextUtils.isEmpty(alternateEmail)) {
+			createUser3ReqParams.put(CreateNeatoUser3.Attribute.ALTERNATE_EMAIL, alternateEmail);
+		}
+		if (!TextUtils.isEmpty(userParams)) {
+			createUser3ReqParams.put(CreateNeatoUser3.Attribute.EXTRA_PARAM, userParams);
+		}
+		
+		String response = MobileWebServiceClient.executeHttpPost(context, CreateNeatoUser3.METHOD_NAME, createUser3ReqParams);
+		return AppUtils.checkResponseResult(response, CreateNeatoUserResult.class);
+	}
+ 	
 	public static IsUserValidatedResult isUserValidatedRequest(Context context, String email) 
 			throws UserUnauthorizedException, NeatoServerException, IOException {
 		

@@ -36,8 +36,9 @@ public class UserManagerPlugin extends Plugin {
 	private boolean mIsInitialized = false;
 	
 	private UserManagerRequest mLoginUserRequest = new LoginUserRequest();
-	private UserManagerRequest mCreateUserRequest = new CreateUserRequest();
-	private UserManagerRequest mCreateUserRequestOld = new CreateUserRequest(false);
+	private UserManagerRequest mCreateUserRequest = new CreateUserRequest(CreateUserRequest.CREATE_USER_WITH_AUTH_EXTRA_PARAM);
+	private UserManagerRequest mCreateUserRequestWithAuth = new CreateUserRequest(CreateUserRequest.CREATE_USER_WITH_AUTH);
+	private UserManagerRequest mCreateUserRequestWithoutAuth = new CreateUserRequest(CreateUserRequest.CREATE_USER_WITHOUT_AUTH);
 	private UserManagerRequest mIsUserValidatedRequest = new IsUserValidatedRequest();
 	private UserManagerRequest mResendValidationMailRequest = new ResendValidationMailRequest();
 	private UserManagerRequest mLogoutUserRequest = new LogoutUserRequest();
@@ -61,8 +62,9 @@ public class UserManagerPlugin extends Plugin {
 		// If we add more action type, please ensure to add it into the ACTION_MAP
 		if (!mIsInitialized) {
 			ACTION_COMMAND_MAP.put(ActionTypes.LOGIN, mLoginUserRequest);
-			ACTION_COMMAND_MAP.put(ActionTypes.CREATE_USER2, mCreateUserRequest);
-			ACTION_COMMAND_MAP.put(ActionTypes.CREATE_USER, mCreateUserRequestOld);
+			ACTION_COMMAND_MAP.put(ActionTypes.CREATE_USER, mCreateUserRequestWithoutAuth);
+			ACTION_COMMAND_MAP.put(ActionTypes.CREATE_USER2, mCreateUserRequestWithAuth);
+			ACTION_COMMAND_MAP.put(ActionTypes.CREATE_USER3, mCreateUserRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.IS_USER_VALIDATED, mIsUserValidatedRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.RESEND_VALIDATION_MAIL, mResendValidationMailRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.LOGOUT, mLogoutUserRequest);
@@ -119,6 +121,7 @@ public class UserManagerPlugin extends Plugin {
 		public static final String LOGIN = "login";
 		public static final String CREATE_USER = "createUser";
 		public static final String CREATE_USER2 = "createUser2";
+		public static final String CREATE_USER3 = "createUser3";
 		public static final String RESEND_VALIDATION_MAIL = "resendValidationMail";
 		public static final String IS_USER_VALIDATED = "isUserValidated";
 		public static final String LOGOUT = "logout";

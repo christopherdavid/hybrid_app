@@ -29,6 +29,19 @@ public class NeatoUserWebServicesAttributes {
 			public static final String EXTERNAL_SOCIAL_ID = "external_social_id";
 		}
 	}
+	
+	public static class CreateNeatoUser3 {
+		public static final String METHOD_NAME = "user.create3";
+		public static class Attribute {
+			public static final String ACCOUNT_TYPE = "account_type";
+			public static final String NAME = "name";
+			public static final String EMAIL = "email";
+			public static final String PASSWORD = "password";
+			public static final String ALTERNATE_EMAIL = "alternate_email";
+			public static final String EXTERNAL_SOCIAL_ID = "external_social_id";
+			public static final String EXTRA_PARAM = "extra_param";
+		}
+	}
 
 	public static class LoginNeatoUser {
 		public static final String METHOD_NAME = "auth.get_user_auth_token"; 

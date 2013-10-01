@@ -221,6 +221,24 @@ var neatoSmartApp = (function() {
 			var passwordConfirm = document.querySelector('#regpasskeyconfirm').value;
 			UserPluginManager.createUser2(email, password, name, "", neatoSmartApp.successRegister, neatoSmartApp.errorRegister);
 		},
+		
+		registerExtraParams: function() {
+			var email = document.querySelector('#regmailid').value;
+			var password = document.querySelector('#regpasskey').value;
+			var name = document.querySelector('#regname').value;
+			var optIn = document.querySelector('#optin');
+			var countryCode = document.querySelector('#countrycodes');
+			
+			var option = countryCode.options[countryCode.selectedIndex].value;
+			
+			localStorage.setItem('email', email);
+			neatoSmartApp.showProgressBar();
+			
+			var passwordConfirm = document.querySelector('#regpasskeyconfirm').value;
+			var jsonParams = "{\"countryCode\":\""+option+"\", \"optIn\":\""+optIn.checked+"\"}";
+			neatoSmartApp.hideProgressBar();
+			UserPluginManager.createUser3(email, password, name, "", jsonParams, neatoSmartApp.successRegister, neatoSmartApp.errorRegister);
+		},
 
 		successRegister: function(result) {
 			neatoSmartApp.setResponseText(result);
@@ -2274,6 +2292,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#registerUserPage').setAttribute('aria-hidden', 'false');
 			document.querySelector('#registerUserButton').addEventListener('click', neatoSmartApp.register , true);
 			document.querySelector('#registerUserEmailValidationButton').addEventListener('click', neatoSmartApp.registerEmailValidation, true);
+			document.querySelector('#registerUserExtraParamsButton').addEventListener('click', neatoSmartApp.registerExtraParams, true);
 			document.querySelector('#resendValidationMailButton').addEventListener('click', neatoSmartApp.resendValidationMail, true);
 		},
 
@@ -2282,6 +2301,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#registerUserPage').setAttribute('aria-hidden', 'true');
 			document.querySelector('#registerUserButton').removeEventListener('click', neatoSmartApp.register, true);
 			document.querySelector('#registerUserEmailValidationButton').removeEventListener('click', neatoSmartApp.registerEmailValidation, true);
+			document.querySelector('#registerUserExtraParamsButton').removeEventListener('click', neatoSmartApp.registerExtraParams, true);
 			document.querySelector('#resendValidationMailButton').removeEventListener('click', neatoSmartApp.resendValidationMail, true);
 		},
 		

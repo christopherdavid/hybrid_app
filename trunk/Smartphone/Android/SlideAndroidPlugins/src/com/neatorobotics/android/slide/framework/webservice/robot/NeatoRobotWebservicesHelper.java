@@ -13,7 +13,6 @@ import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebS
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotDetails;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotOnlineStatus;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotVirtualOnlineStatus;
-import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.InitiateLinkToRobot;
 
 
 public class NeatoRobotWebservicesHelper {

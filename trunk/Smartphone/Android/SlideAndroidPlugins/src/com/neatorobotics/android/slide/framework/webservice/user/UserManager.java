@@ -200,6 +200,33 @@ public class UserManager extends Observable {
 		TaskUtils.scheduleTask(task, 0);
 	}
 	
+	public void createUser3(final String username, final String email, final String alternateEmail, final String password,
+			final String userParams, final WebServiceBaseRequestListener listener) {
+		Runnable task = new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					CreateNeatoUserResult createUserResult = NeatoUserWebservicesHelper.createNeatoUser3RequestNative(mContext, username, email, alternateEmail, password, userParams);
+					LogHelper.logD(TAG, "user validation status is " + createUserResult.result.validation_status);
+					GetNeatoUserDetailsResult userDetailsResult = NeatoUserWebservicesHelper.getNeatoUserDetails(mContext, email, createUserResult.result.user_handle);
+					UserHelper.saveLoggedInUserDetails(mContext, userDetailsResult.result, createUserResult.result.user_handle);
+					setUserAttributesOnServer(createUserResult.result.user_handle, DeviceUtils.getUserAttributes(mContext));
+					listener.onReceived(userDetailsResult);
+					setChanged();
+					notifyObservers();
+				} catch (UserUnauthorizedException e) {
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
+				} catch (NeatoServerException e) {
+					listener.onServerError(e.getStatusCode(), e.getErrorMessage());
+				} catch (IOException e) {
+					listener.onNetworkError(e.getMessage());
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
 	public void associateRobot(final String robotId, final String emailId, final WebServiceBaseRequestListener listener) {		
 		Runnable task = new Runnable() {
 			public void run() {
