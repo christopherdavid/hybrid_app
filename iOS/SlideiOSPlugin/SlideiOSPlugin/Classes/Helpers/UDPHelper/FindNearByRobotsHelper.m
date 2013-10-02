@@ -153,8 +153,7 @@ withFilterContext:(id)filterContext
         [[UDPSocket getSharedUDPSocket] closeSocket];
         return;
     }
-    
-    NSLog(@"self.receivedCommands count = %d", [self.receivedCommands count]);
+
     for (NSString *xmlCommand in self.receivedCommands) {
         if ([[[CommandsHelper alloc] init] isResponseToFindRobots:xmlCommand])
         {

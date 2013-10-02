@@ -61,8 +61,20 @@
 	<br>
 	<input type="password" id="regpasskeyconfirm" placeholder="Re-Enter Password" class="defaultInputText"></input>
 	<br>
+	
+	<select id="countrycodes" class="defaultInputText">
+		<option value="GB">United Kingdom</option>
+		<option value="US">United States</option>
+		<option value="CH">Switzerland</option>
+		<option value="DE">Germany</option>
+		<option value="FR">France</option>
+	</select>
+	<br>
+	<input type="checkbox" id="optin" name="optin" value="optin" class="defaultInputText">Opt In<br>
+	
 	<input type="button" id="registerUserButton" value="Register" class="gradientButton"></input> 
 	<input type="button" id="registerUserEmailValidationButton" value="Register (Valid Email)" class="gradientButton"></input>
+	<input type="button" id="registerUserExtraParamsButton" value="Register (Extra Params)" class="gradientButton"></input>
 	<input type="button" id="resendValidationMailButton" value="Resend Mail" class="gradientButton"></input>
 	</section>
 	
@@ -134,7 +146,7 @@
 	<section id="debugOptions"  aria-hidden=true>
 		<div class="defaultSectionHeader">Test APIs</div>
 		
-		<br><input type="button" id="btnDisassociateAllRobot" value="Dissociate all Robots" class="gradientButton"></input>
+		<br><input type="button" id="btnClearRobotData" value="Clear Robot Data" class="gradientButton"></input>
 		<br><input type="button" id="btnOpenClosePeerConn2" value="Open Connection (New)" class="gradientButton"></input>
 		<br><input type="button" id="btnEnableSchedule" value="Enable Schedule (New)" class="gradientButton"></input>
 		<br><input type="button" id="btnIsScheduleEnabled" value="Is Schedule Enabled (New)" class="gradientButton"></input>
@@ -145,7 +157,6 @@
 		<br><input type="button" id="btnTestUserDetail" value="User Detail" class="gradientButton"></input>	
 		<br><input type="button" id="btnRefreshUI" value="Refresh UI" class="gradientButton" ></input>
 		<br><input type="button" id="btnValidateUser" value="Is User Validated" class="gradientButton" ></input>						
-		<br><input type="button" id="btnTurnVacuumOnOff" value="Turn Robot Vacuum ON" class="gradientButton" ></input>
 		<br><input type="button" id="btnManageRobotWiFi" value="Manage Robot WiFi" class="gradientButton" ></input>
 		<br><input type="button" id="btnUnregisterPushMessage" value="Unregister Push Msg" class="gradientButton" ></input>
 		<br><input type="button" id="btnIsRobotOnlineVirtual" value="Is Robot Online Virtual" class="gradientButton" ></input>
@@ -203,7 +214,8 @@
 			<br><input type="button" id="btnDriveRobot" value="Drive" class="gradientButton"></input>
 			<br><input type="button" id="btnStopRobotDrive" value="Stop Robot Drive" class="gradientButton"></input>
 			<br><input type="button" id="btnIsPeerConnected" value="Validate Peer Connection" class="gradientButton"></input>
-			
+			<br><input type="button" id="btnTurnMotorOnOff" value="Turn Robot Vacuum ON" class="gradientButton" ></input>
+			<br><input type="button" id="btnTurnBrushOnOff" value="Turn Robot Brush ON" class="gradientButton" ></input>
 		
 	</section>
 	
@@ -238,7 +250,7 @@
 		<div class="defaultSectionHeader">Robot Settings</div>		 		
 		<br><br><input type="button" id="btnGoToSetRobotName" value="Set Name" class="gradientButton"></input>
 		<br><input type="button" id="btnGetRobotDetail" value="Robot Detail" class="gradientButton"></input>
-		<input type="button" id="btnEnableNotifications" value="Notifications ON" class="gradientButton" aria-hidden = true></input>	
+		<br><input type="button" id="btnEnableNotifications" value="Notifications ON" class="gradientButton"></input>	
 		<br><input type="button" id="btnNotificationSettings" value="Notifications" class="gradientButton"></input>			
 		<br><input type="button" id="btnGoToAtlas" value="Atlas" class="gradientButton" aria-hidden=true></input>					
 	</section>
@@ -294,6 +306,7 @@
 		<div class="defaultSectionHeader">Add Robot</div>
 		<br><br><input type="button" id="btnDiscoverRobots" value="Discover Robots" class="gradientButton"></input>		
 		<br><input type="button" id="btnAssociateRobotDirect" value="Associate Manually" class="gradientButton"></input>
+		<br><input type="button" id="btnGotoLinkRobot" value="Initiate Link Robot" class="gradientButton"></input>
 		<br><input type="button" id="btnGetAllAssociated" value="All Associated" class="gradientButton"></input>
 		
 		<div id="robotoverlay" aria-hidden=true></div>
@@ -305,6 +318,12 @@
 		<div class="defaultSectionHeader">Associate Manually</div>
 		<br><br><input type="text" id="robotId" placeholder="Robot serial number" class="defaultInputText"></input> 		
 		<br><input type="button" id="btnAssociateDirect" value="Associate" class="gradientButton"></input>
+	</section>
+	
+	<section id="linkRobot"  aria-hidden=true>
+		<div class="defaultSectionHeader">Link Robot</div>
+		<br><br><input type="text" id="linkCode" placeholder="Linking Code" class="defaultInputText"></input> 		
+		<br><input type="button" id="btnLinkRobot" value="Initiate Link" class="gradientButton"></input>
 	</section>
 	
 	<section id="userSettings"  aria-hidden=true>

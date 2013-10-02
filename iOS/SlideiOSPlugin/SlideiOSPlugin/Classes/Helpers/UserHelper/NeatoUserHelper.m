@@ -36,7 +36,6 @@
 }
 
 + (void)saveDevicePushAuthToken:(NSString *)authToken {
-    NSLog(@"saveDevicePushAuthToken CALLED");
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setValue:authToken forKey:KEY_DEVICE_PUSH_AUTH_TOKEN];
     [userDefaults synchronize];
