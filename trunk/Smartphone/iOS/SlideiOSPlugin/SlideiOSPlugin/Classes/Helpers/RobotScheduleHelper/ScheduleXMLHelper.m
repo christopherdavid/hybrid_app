@@ -162,10 +162,7 @@
 }
 
 + (NSString *)getXmlDataFromSchedule:(Schedule *)schedule {
-    NSMutableString *scheduleString = [[NSMutableString alloc] init];
-    scheduleString = [NSString stringWithFormat:XML_NEW_SCHEDULE_GROUP, schedule.scheduleId, [ScheduleXMLHelper geScheduleEventsXMLFromSchedule:schedule]];
-    
-    return scheduleString;
+    return [NSString stringWithFormat:XML_NEW_SCHEDULE_GROUP, schedule.scheduleId, [ScheduleXMLHelper geScheduleEventsXMLFromSchedule:schedule]];
 }
 
 + (NSString *)geScheduleEventsXMLFromSchedule:(Schedule *)schedule {

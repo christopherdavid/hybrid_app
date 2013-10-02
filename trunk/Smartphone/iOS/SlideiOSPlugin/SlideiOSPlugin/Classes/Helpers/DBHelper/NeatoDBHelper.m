@@ -144,7 +144,7 @@ static NeatoDBHelper *sharedInstance  = nil;
         DWORD dwRet = sqlite3_exec(mNeatoDatabase, sql_stmt, NULL, NULL, &errMsg);
         if (dwRet != SQLITE_OK)
         {
-            NSLog(@"ERROR:Creating MODAL_EVENTS_TABLE  error message = [%s]", errMsg);
+            debugLog(@"ERROR:Creating MODAL_EVENTS_TABLE  error message = [%s]", errMsg);
         }
         return dwRet;
     }
@@ -160,7 +160,7 @@ static NeatoDBHelper *sharedInstance  = nil;
         DWORD dwRet = sqlite3_exec(mNeatoDatabase, sql_stmt, NULL, NULL, &errMsg);
         if (dwRet != SQLITE_OK)
         {
-            NSLog(@"ERROR:Creating NEATO_ROBOT_TABLE  error message = [%s]", errMsg);
+            debugLog(@"ERROR:Creating NEATO_ROBOT_TABLE  error message = [%s]", errMsg);
         }
         return dwRet;
     }
@@ -176,7 +176,7 @@ static NeatoDBHelper *sharedInstance  = nil;
         DWORD dwRet = sqlite3_exec(mNeatoDatabase, sql_stmt, NULL, NULL, &errMsg);
         if (dwRet != SQLITE_OK)
         {
-            NSLog(@"ERROR:Creating NEATO_SOCIAL_NETWORKS_TABLE  error message = [%s]", errMsg);
+            debugLog(@"ERROR:Creating NEATO_SOCIAL_NETWORKS_TABLE  error message = [%s]", errMsg);
         }
         return dwRet;
     }
@@ -186,7 +186,7 @@ static NeatoDBHelper *sharedInstance  = nil;
 {
     debugLog(@"");
   
-        // NSLog(@"createDatabaseIfNeeded called");
+        // debugLog(@"createDatabaseIfNeeded called");
         
         @synchronized(self) {
             
@@ -199,7 +199,7 @@ static NeatoDBHelper *sharedInstance  = nil;
             
             if (dwRet != SQLITE_OK)
             {
-                NSLog(@"Error - The database [%s] could not be opened. Error code = [%lu]", dbpath, dwRet);
+                debugLog(@"Error - The database [%s] could not be opened. Error code = [%lu]", dbpath, dwRet);
                 return dwRet;
             }
             
@@ -208,24 +208,24 @@ static NeatoDBHelper *sharedInstance  = nil;
                 dwRet = [self createNeatoUserTable];
                 if (dwRet != SQLITE_OK)
                 {
-                    NSLog(@"Error - Failed to create user events table. Error code = [%lu]", dwRet);
+                    debugLog(@"Error - Failed to create user events table. Error code = [%lu]", dwRet);
                     return dwRet;
                 }
                 dwRet = [self createNeatoRobotTable];
                 if (dwRet != SQLITE_OK)
                 {
-                    NSLog(@"Error - Failed to create robot table. Error code = [%lu]", dwRet);
+                    debugLog(@"Error - Failed to create robot table. Error code = [%lu]", dwRet);
                     return dwRet;
                 }
                 dwRet = [self createSocialNetworksTable];
                 if (dwRet != SQLITE_OK)
                 {
-                    NSLog(@"Error - Failed to create social networs table. Error code = [%lu]", dwRet);
+                    debugLog(@"Error - Failed to create social networs table. Error code = [%lu]", dwRet);
                     return dwRet;
                 }
             }
             @catch (NSException *exception) {
-                NSLog(@"createDatabaseIfNeeded: Exception Caught %@: %@", [exception name], [exception reason]);
+                debugLog(@"createDatabaseIfNeeded: Exception Caught %@: %@", [exception name], [exception reason]);
             }
             @finally {
             }
@@ -252,12 +252,12 @@ static NeatoDBHelper *sharedInstance  = nil;
     
     int nRet = sqlite3_prepare_v2(mNeatoDatabase, sql, -1, &deleteStmt, NULL);
     if (nRet != SQLITE_OK) {
-        NSLog(@"Error: deleteNeatoUser failed to prepare delete query. error code = [%d]", nRet);
+        debugLog(@"Error: deleteNeatoUser failed to prepare delete query. error code = [%d]", nRet);
         return;
     }
     
     if (SQLITE_DONE != sqlite3_step(deleteStmt)) {
-        NSLog(@"Error: deleteNeatoUser   failed with error code = [%d]", nRet);
+        debugLog(@"Error: deleteNeatoUser   failed with error code = [%d]", nRet);
         return;
     }
     
@@ -277,12 +277,12 @@ static NeatoDBHelper *sharedInstance  = nil;
     
     int nRet = sqlite3_prepare_v2(mNeatoDatabase, sql, -1, &deleteStmt, NULL);
     if (nRet != SQLITE_OK) {
-        NSLog(@"Error: deleteAllRobots failed to prepare delete query. error code = [%d]", nRet);
+        debugLog(@"Error: deleteAllRobots failed to prepare delete query. error code = [%d]", nRet);
         return;
     }
     
     if (SQLITE_DONE != sqlite3_step(deleteStmt)) {
-        NSLog(@"Error: deleteAllRobots   failed with error code = [%d]", nRet);
+        debugLog(@"Error: deleteAllRobots   failed with error code = [%d]", nRet);
         return;
     }
     
@@ -302,12 +302,12 @@ static NeatoDBHelper *sharedInstance  = nil;
     
     int nRet = sqlite3_prepare_v2(mNeatoDatabase, sql, -1, &deleteStmt, NULL);
     if (nRet != SQLITE_OK) {
-        NSLog(@"Error: deleteAllNetworks failed to prepare delete query. error code = [%d]", nRet);
+        debugLog(@"Error: deleteAllNetworks failed to prepare delete query. error code = [%d]", nRet);
         return;
     }
     
     if (SQLITE_DONE != sqlite3_step(deleteStmt)) {
-        NSLog(@"Error: deleteAllNetworks   failed with error code = [%d]", nRet);
+        debugLog(@"Error: deleteAllNetworks   failed with error code = [%d]", nRet);
         return;
     }
     
@@ -330,7 +330,7 @@ static NeatoDBHelper *sharedInstance  = nil;
             int nRet = sqlite3_prepare_v2(mNeatoDatabase, sql, -1, &insertStmt, NULL);
             
             if (nRet != SQLITE_OK) {
-                NSLog(@"Error: saveNeatoUser failed to prepare insert query. error code = [%d]", nRet);
+                debugLog(@"Error: saveNeatoUser failed to prepare insert query. error code = [%d]", nRet);
                 //[self close];
                 return;
             }
@@ -348,7 +348,7 @@ static NeatoDBHelper *sharedInstance  = nil;
             nRet = sqlite3_step(insertStmt);
             
             if (nRet != SQLITE_DONE) {
-                NSLog(@"Error: saveNeatoUser: Insert failed for user = [%@]. error code = [%d]",[neatoUser name], nRet);
+                debugLog(@"Error: saveNeatoUser: Insert failed for user = [%@]. error code = [%d]",[neatoUser name], nRet);
                 //[self close];
                 return;
             }
@@ -387,7 +387,7 @@ static NeatoDBHelper *sharedInstance  = nil;
             int nRet = sqlite3_prepare_v2(mNeatoDatabase, sql, -1, &insertStmt, NULL);
             
             if (nRet != SQLITE_OK) {
-                NSLog(@"Error: saveSocialNetwork failed to prepare insert query. error code = [%d]", nRet);
+                debugLog(@"Error: saveSocialNetwork failed to prepare insert query. error code = [%d]", nRet);
                 //[self close];
                 return;
             }
@@ -400,7 +400,7 @@ static NeatoDBHelper *sharedInstance  = nil;
             nRet = sqlite3_step(insertStmt);
             
             if (nRet != SQLITE_DONE) {
-                NSLog(@"Error: saveSocialNetwork: Insert failed for network = [%@]. error code = [%d]",[network provider], nRet);
+                debugLog(@"Error: saveSocialNetwork: Insert failed for network = [%@]. error code = [%d]",[network provider], nRet);
                 //[self close];
                 return;
             }
@@ -442,12 +442,12 @@ static NeatoDBHelper *sharedInstance  = nil;
         
         int nRet = sqlite3_prepare_v2(mNeatoDatabase, sql, -1, &deleteStmt, NULL);
         if (nRet != SQLITE_OK) {
-            NSLog(@"Error: deleteRobotWithSerialNumber failed to prepare delete query. error code = [%d]", nRet);
+            debugLog(@"Error: deleteRobotWithSerialNumber failed to prepare delete query. error code = [%d]", nRet);
             return;
         }
         
         if (SQLITE_DONE != sqlite3_step(deleteStmt)) {
-            NSLog(@"Error: deleteRobotWithSerialNumber   failed with error code = [%d]", nRet);
+            debugLog(@"Error: deleteRobotWithSerialNumber   failed with error code = [%d]", nRet);
             return;
         }
         
@@ -473,7 +473,7 @@ static NeatoDBHelper *sharedInstance  = nil;
             int nRet = sqlite3_prepare_v2(mNeatoDatabase, sql, -1, &insertStmt, NULL);
             
             if (nRet != SQLITE_OK) {
-                NSLog(@"Error: saveNeatoRobot failed to prepare insert query. error code = [%d]", nRet);
+                debugLog(@"Error: saveNeatoRobot failed to prepare insert query. error code = [%d]", nRet);
                 return;
             }
             
@@ -490,7 +490,7 @@ static NeatoDBHelper *sharedInstance  = nil;
             nRet = sqlite3_step(insertStmt);
             
             if (nRet != SQLITE_DONE) {
-                NSLog(@"Error: saveNeatoRobot: Insert failed for robot = [%@]. error code = [%d]",[robot name], nRet);
+                debugLog(@"Error: saveNeatoRobot: Insert failed for robot = [%@]. error code = [%d]",[robot name], nRet);
                 //[self close];
                 return;
             }
@@ -523,7 +523,7 @@ static NeatoDBHelper *sharedInstance  = nil;
             
             int nRet =  sqlite3_prepare_v2(mNeatoDatabase, sql, -1, &selectStmt, NULL);
             if (nRet != SQLITE_OK) {
-                NSLog(@"Error: getNeatoUser failed to prepare select query. error code = [%d]", nRet);
+                debugLog(@"Error: getNeatoUser failed to prepare select query. error code = [%d]", nRet);
             }
             else {
                 while (sqlite3_step(selectStmt) == SQLITE_ROW) {
@@ -579,7 +579,7 @@ static NeatoDBHelper *sharedInstance  = nil;
             
             int nRet =  sqlite3_prepare_v2(mNeatoDatabase, sql, -1, &selectStmt, NULL);
             if (nRet != SQLITE_OK) {
-                NSLog(@"Error: getAllRobotsForUser failed to prepare select query. error code = [%d]", nRet);
+                debugLog(@"Error: getAllRobotsForUser failed to prepare select query. error code = [%d]", nRet);
             }
             else {
                  while (sqlite3_step(selectStmt) == SQLITE_ROW) {
@@ -627,7 +627,7 @@ static NeatoDBHelper *sharedInstance  = nil;
             
             int nRet =  sqlite3_prepare_v2(mNeatoDatabase, sql, -1, &selectStmt, NULL);
             if (nRet != SQLITE_OK) {
-                NSLog(@"Error: getAllSocialNetworksForUser failed to prepare select query. error code = [%d]", nRet);
+                debugLog(@"Error: getAllSocialNetworksForUser failed to prepare select query. error code = [%d]", nRet);
             }
             else {
                 while (sqlite3_step(selectStmt) == SQLITE_ROW) {
@@ -671,7 +671,7 @@ static NeatoDBHelper *sharedInstance  = nil;
         
         int nRet =  sqlite3_prepare_v2(mNeatoDatabase, sql, -1, &selectStmt, NULL);
         if (nRet != SQLITE_OK) {
-            NSLog(@"Error: getRobotForId failed to prepare select query. error code = [%d]", nRet);
+            debugLog(@"Error: getRobotForId failed to prepare select query. error code = [%d]", nRet);
         }
         else {
             while (sqlite3_step(selectStmt) == SQLITE_ROW) {

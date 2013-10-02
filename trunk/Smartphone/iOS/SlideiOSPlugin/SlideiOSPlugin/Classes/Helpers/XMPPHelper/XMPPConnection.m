@@ -151,7 +151,7 @@ static XMPPConnection *sharedInstance;
     // Authenticate the user
 	if (![[self xmppStream] authenticateWithPassword:self.password error:&error])
 	{
-        NSLog(@"Error authenticating: %@", error);
+        debugLog(@"Error authenticating: %@", error);
 	}
 }
 

@@ -24,6 +24,10 @@ var DAY_SATURDAY = 6;
 var SCHEDULE_TYPE_BASIC = 0;
 var SCHEDULE_TYPE_ADVANCED = 1;
 
+// Motor types
+var MOTOR_TYPE_VACUUM = 101;
+var MOTOR_TYPE_BRUSH  = 102;
+
 //robotNotifications2 keyCodes
 
 // The current state of the robot
@@ -42,6 +46,16 @@ var ROBOT_CONNECTED 				= 4007;
 var ROBOT_DISCONNECTED 				= 4008;
 var ROBOT_NOT_CONNECTED 			= 4009;
 
+// The keyCode to denote about linking success
+var ROBOT_LINKING_SUCCESS			= 4010
+// The keyCode to denote about linking failure
+var ROBOT_LINKING_FAILURE			= 4011
+
+// The keyCode to denote that robot is linked to some other user.
+// Whenever new user is linked to the robot
+// then all associate users with that robot gets the notification
+var ROBOT_NEW_LINKING_FORMED		= 4012
+
 // Robot state codes
 var ROBOT_STATE_UNKNOWN 	= 10001;
 var ROBOT_STATE_CLEANING 	= 10002;
@@ -52,6 +66,9 @@ var ROBOT_STATE_STUCK 		= 10006;
 var ROBOT_STATE_PAUSED 		= 10007;
 var ROBOT_STATE_RESUMED		= 10008;
 var ROBOT_STATE_ON_BASE		= 10009;
+// Manual Cleaning State Codes
+var ROBOT_STATE_MANUAL_CLEANING		= 10010;
+var ROBOT_STATE_MANUAL_PLAY_MODE	= 10011;
 
 
 var PLUGIN_JSON_KEYS  =  (function() {
@@ -75,12 +92,15 @@ var ACTION_TYPE_LOGOUT 							= "logout";
 var ACTION_TYPE_ISLOGGEDIN 						= "isLoggedIn";
 var ACTION_TYPE_CREATE_USER 					= "createUser";
 var ACTION_TYPE_CREATE_USER2					= "createUser2";
+var ACTION_TYPE_CREATE_USER3					= "createUser3";
 var ACTION_TYPE_RESEND_VALIDATION_MAIL			= "resendValidationMail";
 var ACTION_TYPE_IS_USER_VALIDATED				= "isUserValidated";
 var ACTION_TYPE_GET_USER_DETAILS 				= "getUserDetails";
 var ACTION_TYPE_ASSOCIATE_ROBOT					= "associateRobot";
+var ACTION_TYPE_INITIATE_LINK_ROBOT				= "tryLinkingToRobot";
 var ACTION_TYPE_GET_ASSOCIATED_ROBOTS 			= "getAssociatedRobots";
 var ACTION_TYPE_DISASSOCIATE_ROBOT 				= "disassociateRobot";
+var ACTION_TYPE_CLEAR_ROBOT_DATA		 		= "clearRobotData";
 var ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS 		= "disassociateAllRobots";
 var ACTION_TYPE_FORGET_PASSWORD					= "forgetPassword";
 var ACTION_TYPE_CHANGE_PASSWORD					= "changePassword";
@@ -114,7 +134,8 @@ var ACTION_TYPE_SET_SPOT_DEFINITION				= "setSpotDefinition";
 var ACTION_TYPE_GET_SPOT_DEFINITION				= "getSpotDefinition";
 var ACTION_TYPE_DRIVE_ROBOT						= "driveRobot";
 var ACTION_TYPE_IS_ROBOT_PEER_CONNECTED			= "isRobotPeerConnected";
-var ACTION_TYPE_TURN_VACUUM_ON_OFF				= "turnVacuumOnOff";
+var ACTION_TYPE_TURN_MOTOR_ON_OFF				= "turnMotorOnOff";
+var ACTION_TYPE_TURN_MOTOR_ON_OFF2				= "turnMotorOnOff2";
 var ACTION_TYPE_TURN_WIFI_ON_OFF				= "turnWiFiOnOff";
 var ACTION_TYPE_TURN_NOTIFICATION_ON_OFF		= "turnNotificationOnOff";
 var ACTION_TYPE_IS_NOTIFICATION_ENABLED			= "isNotificationEnabled";
@@ -531,6 +552,49 @@ UserMgr.prototype.createUser2 = function(email, password, name, alternateEmail, 
 };
 
 /**
+ * This API creates a new user by triggering email validation. Use 
+ * this API to create new users.
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{email:"emailAddress", alternate_email:"alternateEmailAddress", userName:"userName", userId:"userId", validation_status:"validationStatus", extraParams:"jsonParams" }
+ * <br>where emailAddress is the email Address of the user
+ * <br>alternateEmailAddress is the alternate email Address of the user
+ * <br>userName is the name of the user
+ * <br>userId is the user id of the user 
+ * <br>extraParams is the json text containing extra params for the user
+ * <br>validation status could be among the following values
+ * <br>USER_STATUS_VALIDATED - user is validated and logged into the app
+ * <br>USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD - user is not validated but can log in for a brief amount of time into the app
+ * <br>USER_STATUS_NOT_VALIDATED - user is not validated and cannot log into the app
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode
+ * 
+ * @param email				the email address of the user
+ * @param password			the password of the user
+ * @param name				name of the user
+ * @param alternateEmail	the alternate email id of the user (optional parameter)
+ * @param extraInfo			extra infomation of the user in JSON format (optional parameter). 
+ * We are using JSON format for the extensibility purpose. For country code and optIn following
+ * will be the JSON
+ * {"countryCode":"US", "optIn":"true"} 
+ * @param callbackSuccess 	the success callback for this API
+ * @param callbackError 	the error callback for this API
+ * @returns					returns a json object
+ */
+UserMgr.prototype.createUser3 = function(email, password, name, alternateEmail, extraInfo, callbackSuccess, callbackError) {
+	var registerArray = {'email':email, 'password':password, 'userName':name, 'alternate_email':alternateEmail, 'extra_param':extraInfo };
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_CREATE_USER3, [registerArray]);
+};
+
+/**
  * Resend the validation email to the user email id.
  * <p>
  * on success this API returns a JSON Object {message:"We have resent validation mail"}
@@ -683,6 +747,33 @@ UserMgr.prototype.associateRobotCommand = function(email, robotId, callbackSucce
 	var associateArray = {'email':email, 'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_ASSOCIATE_ROBOT, [associateArray]);
+};
+
+/**
+ * This API initiates the process of linking a robot with a user
+ * <p>
+ * This API returns on success a JSON Object 
+ * <br>{linkCodeExpiryTime:<linkCodeExpiryTime>}
+ * <br>where linkCodeExpiryTime is expiry time of the link code in milliseconds 
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode
+ * 
+ * @param email				the email address of the user
+ * @param linkCode			the link code generated by the robot
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ * @returns					JSON Object on error
+ */
+UserMgr.prototype.linkRobot = function(email, linkCode, callbackSuccess, callbackError) {
+	var linkArray = {'email':email, 'linkCode':linkCode};
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_INITIATE_LINK_ROBOT, [linkArray]);
 };
 
 /**
@@ -1672,17 +1763,32 @@ RobotMgr.prototype.stopRobotDrive = function(robotId, callbackSuccess, callbackE
 
 
 /**
- * This API turns the vacuum of the robot on or off. This API calls Neato Smart App Service
+ * This API turns the motor of the robot on or off. This API calls Neato Smart App Service
  * 
  * @param robotId 			the serial number of the robot
  * @param on 				Integer value. Must be FLAG_ON or FLAG_OFF
  * @param callbackSuccess 	success callback for this API
  * @param callbackError 	error callback for this API
  */
-RobotMgr.prototype.turnVaccumOnOff = function(robotId, on, callbackSuccess, callbackError) {
+RobotMgr.prototype.turnMotorOnOff = function(robotId, on, callbackSuccess, callbackError) {
 	var commandParams = {'robotId':robotId, 'on':on};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
-			ACTION_TYPE_TURN_VACUUM_ON_OFF, [commandParams]);
+			ACTION_TYPE_TURN_MOTOR_ON_OFF, [commandParams]);
+};
+
+/**
+ * This API turns the motor of the robot on or off. This API calls Neato Smart App Service
+ * 
+ * @param robotId 			the serial number of the robot
+ * @param motorType			Integer value to denote the type of motor being controlled. Must be: MOTOR_TYPE_VACUUM, MOTOR_TYPE_BRUSH.
+ * @param on 				Integer value. Must be FLAG_ON or FLAG_OFF
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ */
+RobotMgr.prototype.turnMotorOnOff2 = function(robotId, motorType, on, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId, 'motorType': motorType, 'on':on};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_TURN_MOTOR_ON_OFF2, [commandParams]);
 };
 
 /**
@@ -1885,6 +1991,30 @@ RobotMgr.prototype.getRobotCleaningState = function(robotId, callbackSuccess, ca
 			ACTION_TYPE_GET_ROBOT_CLEANING_STATE, [params]);
 };
 
+/**
+ * This API clears the data on the specified robot associated with the specified user
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode 
+ * 
+ * @param email 			the email address of the user
+ * @param robotId 			the serial number of the robot
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					a JSON Object on error
+ */
+RobotMgr.prototype.clearRobotData = function(email, robotId, callbackSuccess, callbackError) {
+	var params = {'email':email, 'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_CLEAR_ROBOT_DATA, [params]);
+};
+
 var UserPluginManager = (function() {
 	return {
 		/**
@@ -2004,6 +2134,48 @@ var UserPluginManager = (function() {
 		},
 		
 		/**
+		 * This API creates a new user by triggering email validation. Use 
+		 * this API to create new users.
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{email:"emailAddress", alternate_email:"alternateEmailAddress", userName:"userName", userId:"userId", "extraParams": jsonParams, validation_status:"validationStatus"}
+		 * <br>where emailAddress is the email Address of the user
+		 * <br>alternateEmailAddress is the alternate email Address of the user
+		 * <br>userName is the name of the user
+		 * <br>userId is the user id of the user 
+		 * <br>extraParams are the extra parameters provided by the user
+		 * <br>validation status could be among the following values
+		 * <br>USER_STATUS_VALIDATED - user is validated and logged into the app
+		 * <br>USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD - user is not validated but can log in for a brief amount of time into the app
+		 * <br>USER_STATUS_NOT_VALIDATED - user is not validated and cannot log into the app
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode
+		 * 
+		 * @param email				the email address of the user
+		 * @param password			the password of the user
+		 * @param name				name of the user
+		 * @param alternateEmail	the alternate email id of the user (optional parameter)
+		 * @param extraInfo			extra infomation of the user in JSON format (optional parameter). 
+		 * We are using JSON format for the extensibility purpose. For country code and optIn following
+		 * will be the JSON
+		 * {"countryCode":"US", "optIn":"true"} 
+
+		 * @param callbackSuccess 	the success callback for this API
+		 * @param callbackError 	the error callback for this API
+		 * @returns					returns a json object
+		 */		
+		createUser3: function(email, password, name, alternateEmail, extraInfo, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.createUser3(email, password, name, alternateEmail, extraInfo, callbackSuccess, callbackError);
+		},
+		
+		/**
 		 * Resend the validation email to the user email id.
 		 * <p>
 		 * on success this API returns a JSON Object {message:"We have resent validation mail"}
@@ -2085,6 +2257,28 @@ var UserPluginManager = (function() {
 		 */		
 		associateRobot: function(email, robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.associateRobotCommand(email, robotId, callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API initiates the process of linking a robot with a user
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode
+		 * 
+		 * @param email				the email address of the user
+		 * @param linkCode			the link code generated by the robot
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 * @returns					JSON Object on error
+		 */
+		linkRobot: function(email, linkCode, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.linkRobot(email, linkCode, callbackSuccess, callbackError);
 		},
 		
 		/**
@@ -2550,15 +2744,28 @@ var RobotPluginManager = (function() {
 		},
 
 		/**
-		 * This API turns the vacuum of the robot on or off. This API calls Neato Smart App Service
+		 * This API turns the motor of the robot on or off. This API calls Neato Smart App Service
 		 * 
 		 * @param robotId 			the serial number of the robot
 		 * @param on 				Integer value. Must be FLAG_ON or FLAG_OFF
 		 * @param callbackSuccess 	success callback for this API
 		 * @param callbackError 	error callback for this API
 		 */
-		turnVaccumOnOff: function(robotId, flag, callbackSuccess, callbackError) {
-			window.plugins.neatoPluginLayer.robotMgr.turnVaccumOnOff(robotId, flag, callbackSuccess, callbackError);
+		turnMotorOnOff: function(robotId, flag, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.turnMotorOnOff(robotId, flag, callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API turns the motor of the robot on or off depending on the motortype. This API calls Neato Smart App Service
+		 * 
+		 * @param robotId 			the serial number of the robot
+		 * @param motorType			Integer value to denote the type of motor being controlled. Must be: MOTOR_TYPE_VACUUM, MOTOR_TYPE_BRUSH.
+		 * @param on 				Integer value. Must be FLAG_ON or FLAG_OFF
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 */
+		turnMotorOnOff2: function(robotId, motorType, flag, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.turnMotorOnOff2(robotId, motorType, flag, callbackSuccess, callbackError);
 		},
 
 		/**
@@ -3244,6 +3451,28 @@ var RobotPluginManager = (function() {
 		 */
 		stopRobotDrive: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.stopRobotDrive(robotId, callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API clears the data on the specified robot associated with the specified user
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode 
+		 * 
+		 * @param email 			the email address of the user
+		 * @param robotId 			the serial number of the robot
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					a JSON Object on error
+		 */
+		clearRobotData: function(email, robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.clearRobotData(email, robotId, callbackSuccess, callbackError);
 		}
 	}
 }());
@@ -3271,7 +3500,7 @@ var PluginManagerHelper =  (function() {
 		 *  - startTime
 		 *  - cleaningMode
 		 *  Returns: Basic Schedule JSON object
-		 *  {'day':day, 'startTime': startTime, cleaningMode:cleaningMode}
+		 *  {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
 		 */
 		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {
