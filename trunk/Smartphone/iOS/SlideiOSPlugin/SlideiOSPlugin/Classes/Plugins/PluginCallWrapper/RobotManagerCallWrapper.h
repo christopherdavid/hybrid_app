@@ -110,4 +110,5 @@
 - (void)cancelIntendToDriveForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
 - (void)stopRobotDriveForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
 - (id)isConnectedOverTCPWithRobotId:(NSString *)robotId callbackId:(NSString *)callbackId;
+- (void)sendCommandOverTCPToRobotWithId:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params callbackId:(NSString *)callbackId;
 @end

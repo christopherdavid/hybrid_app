@@ -14,17 +14,6 @@
 #import "NeatoCommandExpiryHelper.h"
 #import "ProfileDetail.h"
 
-#define START_ROBOT_COMMAND_TAG                 1001
-#define STOP_ROBOT_COMMAND_TAG                  1002
-#define SET_TIME_ROBOT_COMMAND_TAG              1003
-#define PAUSE_ROBOT_COMMAND_TAG                 1004
-#define ENABLE_DISABLE_SCHEDULE_COMMAND_TAG     1005
-#define SEND_TO_BASE_COMMAND_TAG                1006
-#define TURN_VACUUM_ONOFF_COMMAND_TAG           1016
-#define RESUME_ROBOT_COMMAND_TAG                1007
-#define TURN_WIFI_ONOFF_COMMAND_TAG             1008
-#define TURN_ROBOT_DRIVE_COMMAND_TAG            1009
-
 @interface RobotCommandHelper()
 
 @property(nonatomic, weak) id delegate;
@@ -51,7 +40,6 @@
         case COMMAND_PAUSE_CLEANING:
         case COMMAND_SEND_TO_BASE:
         case COMMAND_RESUME_CLEANING:
-        case COMMAND_TURN_VACUUM_ONOFF:
         case COMMAND_TURN_WIFI_ONOFF:
             return YES;
         default:
@@ -79,8 +67,6 @@
         case COMMAND_RESUME_CLEANING:
         case COMMAND_SEND_TO_BASE:
             return KEY_ROBOT_CLEANING_COMMAND;
-        case COMMAND_TURN_VACUUM_ONOFF:
-            return KEY_TURN_VACUUM_ONOFF;
         case COMMAND_TURN_WIFI_ONOFF:
             return KEY_TURN_WIFI_ONOFF;
         default:
@@ -259,19 +245,6 @@
 
 - (void)sendCommandOverTCPXMPPToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate overTCP:(BOOL)overTCP {
     switch ([commandId intValue]) {
-        case COMMAND_START_ROBOT: {
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:START_ROBOT_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
-            break;
-        }
-        case COMMAND_STOP_ROBOT:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:STOP_ROBOT_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
-            break;
-        case COMMAND_PAUSE_CLEANING:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:PAUSE_ROBOT_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
-            break;
-        case COMMAND_SET_ROBOT_TIME:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:SET_TIME_ROBOT_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
-            break;
         case COMMAND_ENABLE_DISABLE_SCHEDULE: {
             NSMutableDictionary *updatedParams = [params mutableCopy];
             if([updatedParams objectForKey:@"enableSchedule"]) {
@@ -283,23 +256,19 @@
                     [updatedParams setObject:@"false" forKey:@"enableSchedule"];
                 }
             }
-            [self sendCommandWithId:[commandId intValue]toRobot2:robotId withCommandTag:ENABLE_DISABLE_SCHEDULE_COMMAND_TAG withParams:updatedParams delegate:delegate overTCP:overTCP];
+            [self sendCommandWithId:[commandId intValue]toRobot2:robotId withCommandTag:[commandId longLongValue] withParams:updatedParams delegate:delegate overTCP:overTCP];
             break;
         }
+        case COMMAND_START_ROBOT:
+        case COMMAND_STOP_ROBOT:
+        case COMMAND_PAUSE_CLEANING:
+        case COMMAND_SET_ROBOT_TIME:
         case COMMAND_SEND_TO_BASE:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:SEND_TO_BASE_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
-            break;
-        case COMMAND_TURN_VACUUM_ONOFF:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:TURN_VACUUM_ONOFF_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
-            break;
         case COMMAND_RESUME_CLEANING:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:RESUME_ROBOT_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
-            break;
         case COMMAND_TURN_WIFI_ONOFF:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:TURN_WIFI_ONOFF_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
-            break;
         case COMMAND_DRIVE_ROBOT:
-            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:TURN_ROBOT_DRIVE_COMMAND_TAG withParams:params delegate:delegate overTCP:overTCP];
+        case COMMAND_TURN_MOTOR_ONOFF:
+            [self sendCommandWithId:[commandId intValue] toRobot2:robotId withCommandTag:[commandId longLongValue] withParams:params delegate:delegate overTCP:overTCP];
             break;
         default:
             [self failedToSendCommandOverTCPWithError:[AppHelper nserrorWithDescription:[NSString stringWithFormat:@"Command ID %d not supported!", [commandId intValue]] code:200]];

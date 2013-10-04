@@ -931,4 +931,12 @@
     return [driveManager isConnectedOverTCPWithRobotId:robotId];
 }
 
+- (void)sendCommandOverTCPToRobotWithId:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    RobotCommandHelper *commandHelper = [[RobotCommandHelper alloc] init];
+    [commandHelper sendCommandOverTCPToRobotWithId:robotId commandId:commandId params:params delegate:self];
+}
+
 @end

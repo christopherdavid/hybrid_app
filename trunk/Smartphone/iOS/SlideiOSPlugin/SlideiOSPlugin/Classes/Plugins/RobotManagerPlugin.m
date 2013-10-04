@@ -15,7 +15,7 @@
 #import "XMPPRobotDataChangeManager.h"
 #import "XMPPRobotCleaningStateHelper.h"
 
-//PluginResult Classes
+// PluginResult Classes
 #import "CreateSchedulePluginResult.h"
 #import "CreateScheduleEventPluginResult.h"
 #import "GetScheduleEventDataPluginResult.h"
@@ -28,8 +28,7 @@
 @implementation RobotManagerPlugin
 
 
-- (void) discoverNearByRobots:(CDVInvokedUrlCommand *)command
-{
+- (void) discoverNearByRobots:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
     NSString *callbackId = command.callbackId;
     
@@ -38,8 +37,7 @@
     [call findRobotsNearBy:callbackId];
 }
 
--(void) foundRobotsNearby:(NSArray *) nearbyRobots callbackId:(NSString *) callbackId
-{
+- (void)foundRobotsNearby:(NSArray *)nearbyRobots callbackId:(NSString *)callbackId {
     debugLog(@"Fount robots = %d", [nearbyRobots count]);
     NSMutableArray *robotArray = [[NSMutableArray alloc] init];
     for(int i = 0;i < [nearbyRobots count];i++)
@@ -55,8 +53,7 @@
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
-- (void) sendCommandToRobot:(CDVInvokedUrlCommand *)command
-{
+- (void) sendCommandToRobot:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
     
     NSString *callbackId = command.callbackId; //use this to get command.callbackId
@@ -71,8 +68,7 @@
     [call sendCommandToRobot:robotId commandId:commandId callbackId:callbackId];
 }
 
-- (void) tryDirectConnection:(CDVInvokedUrlCommand *)command
-{
+- (void) tryDirectConnection:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
     NSString *callbackId = command.callbackId;
     
@@ -84,35 +80,29 @@
     [call tryDirectConnection:[parameters valueForKey:KEY_ROBOT_ID] callbackId:callbackId];
 }
 
-- (void) robotSetSchedule:(CDVInvokedUrlCommand *)command
-{
+- (void) robotSetSchedule:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
 }
 
 
-- (void) getSchedule:(CDVInvokedUrlCommand *)command
-{
+- (void) getSchedule:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
 }
-- (void) getRobotMap:(CDVInvokedUrlCommand *)command
-{
-    debugLog(@"");
-}
-
-- (void) setMapOverlayData:(CDVInvokedUrlCommand *)command
-{
+- (void) getRobotMap:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
 }
 
--(void) failedToSendCommandOverXMPP:(NSString *) callbackId
-{
+- (void) setMapOverlayData:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+}
+
+- (void)failedToSendCommandOverXMPP:(NSString *)callbackId {
     debugLog(@"");
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:COMMAND_SENT_FAILURE];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
-- (void) disconnectDirectConnection:(CDVInvokedUrlCommand *)command
-{
+- (void) disconnectDirectConnection:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
     NSString *callbackId = command.callbackId;
     
@@ -128,8 +118,7 @@
     
 }
 
--(void) getRobotAtlasMetadata:(CDVInvokedUrlCommand *)command
-{
+- (void)getRobotAtlasMetadata:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
     NSString *callbackId = command.callbackId;
     
@@ -141,8 +130,7 @@
     [call getRobotAtlasMetadataForRobotId:[parameters valueForKey:KEY_ROBOT_ID] callbackId:callbackId];
 }
 
--(void) getAtlasDataFailed:(NSError *) error callbackId:(NSString *) callbackId
-{
+- (void)getAtlasDataFailed:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
@@ -152,8 +140,7 @@
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
 }
 
--(void) gotAtlasData:(NeatoRobotAtlas *) robotAtlas  callbackId:(NSString *) callbackId
-{
+- (void)gotAtlasData:(NeatoRobotAtlas *)robotAtlas  callbackId:(NSString *)callbackId {
     debugLog(@"Atlas Id = %@, Atlas metadata = %@", robotAtlas.atlasId, robotAtlas.atlasMetadata);
     // TODO: We have to decide upon the return values for all API's
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
@@ -163,8 +150,7 @@
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
-- (void) getAtlasGridData:(CDVInvokedUrlCommand *)command
-{
+- (void) getAtlasGridData:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
     NSString *callbackId = command.callbackId;
     
@@ -175,8 +161,7 @@
     [call getAtlasGridMetadata:[parameters valueForKey:KEY_ROBOT_ID] gridId:[parameters valueForKey:KEY_ATLAS_GRID_ID]  callbackId:callbackId];
 }
 
--(void) gotAtlasGridMetadata:(AtlasGridMetadata *) atlasGridMetadata callbackId:(NSString *) callbackId
-{
+- (void)gotAtlasGridMetadata:(AtlasGridMetadata *)atlasGridMetadata callbackId:(NSString *)callbackId {
     debugLog(@"callbackId = %@", callbackId);
     NSMutableArray *array = [[NSMutableArray alloc] init];
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
@@ -189,8 +174,7 @@
 }
 
 
--(void) getAtlasGridMetadataFailed:(NSError *) error callbackId:(NSString *) callbackId
-{
+- (void)getAtlasGridMetadataFailed:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
@@ -200,8 +184,7 @@
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
 }
 
-- (void) updateRobotAtlasMetadata:(CDVInvokedUrlCommand *)command
-{
+- (void) updateRobotAtlasMetadata:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
     NSString *callbackId = command.callbackId;
     
@@ -217,8 +200,7 @@
     [call updateRobotAtlasData:robotAtlas callbackId:callbackId];
 }
 
--(void) atlasMetadataUpdated:(NeatoRobotAtlas *) robotAtlas callbackId:(NSString *) callbackId
-{
+- (void)atlasMetadataUpdated:(NeatoRobotAtlas *)robotAtlas callbackId:(NSString *)callbackId {
     debugLog(@"Atlas Id = %@. Xml version = %@", robotAtlas.atlasId, robotAtlas.version);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     // TODO: Do we need to get the robot_atlas_id?
@@ -229,8 +211,7 @@
 }
 
 
--(void) failedToUpdateAtlasMetadataWithError:(NSError *) error callbackId:(NSString *) callbackId
-{
+- (void)failedToUpdateAtlasMetadataWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
@@ -240,67 +221,57 @@
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
 }
 
--(void) gotRemoteRobotIP:(NeatoRobot *) neatoRobot callbackId:(NSString *) callbackId
-{
+- (void)gotRemoteRobotIP:(NeatoRobot *)neatoRobot callbackId:(NSString *)callbackId {
     debugLog(@"");
     debugLog(@"Robot chat Id : %@", neatoRobot.chatId);
     
 }
 
 
--(void) connectedOverTCP:(NSString*) host callbackId:(NSString *) callbackId
-{
+- (void)connectedOverTCP:(NSString *)host callbackId:(NSString *)callbackId {
     debugLog(@"");
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:TCP_CONNECTION_STATUS_CONNECTED];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
 
--(void) tcpConnectionDisconnected:(NSError *) error callbackId:(NSString *) callbackId
-{
+- (void)tcpConnectionDisconnected:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:TCP_CONNECTION_STATUS_NOT_CONNECTED];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
--(void) failedToSendCommandOverTCP:(NSString *)callbackId
-{
+- (void)failedToSendCommandOverTCP:(NSString *)callbackId {
     debugLog(@"");
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:COMMAND_SENT_FAILURE];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
--(void) commandSentOverTCP :(NSString *) callbackId
-{
+- (void)commandSentOverTCP:(NSString *)callbackId {
     debugLog(@"");
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:COMMAND_SENT_SUCCESS];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
--(void) didConnectOverXMPP :(NSString *) callbackId
-{
+- (void)didConnectOverXMPP :(NSString *)callbackId {
     debugLog(@"");
 }
 
--(void) didDisConnectFromXMPP:(NSString *) callbackId
-{
+- (void)didDisConnectFromXMPP:(NSString *)callbackId {
     debugLog(@"");
 }
 
--(void) commandSentOverXMPP:(NSString *) callbackId
-{
+- (void)commandSentOverXMPP:(NSString *)callbackId {
     debugLog(@"");
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:COMMAND_SENT_SUCCESS];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
--(void) commandReceivedOverXMPP:(XMPPMessage *)message sender:(XMPPStream *) sender callbackId:(NSString *) callbackId
-{
+- (void)commandReceivedOverXMPP:(XMPPMessage *)message sender:(XMPPStream *)sender callbackId:(NSString *)callbackId {
     debugLog(@"");
 }
 
--(void) receivedDataOverTCP:(NSData *)data callbackId:(NSString *) callbackId
-{
+- (void)receivedDataOverTCP:(NSData *)data callbackId:(NSString *)callbackId {
     debugLog(@"");
 }
 
@@ -444,8 +415,7 @@
 
 - (void)failedToSendCommandOverTCPWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:COMMAND_SENT_FAILURE];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    [self sendError:error forCallbackId:callbackId];
 }
 
 - (void)failedToSendCommandOverXMPP2:(NSString *)callbackId {
@@ -727,23 +697,6 @@
     debugLog(@"resultData = %@", resultData);
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultData];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
-}
-
-- (void)turnVacuumOnOff:(CDVInvokedUrlCommand *)command {
-    debugLog(@"");
-    NSString *callbackId = command.callbackId;
-    NSDictionary *parameters = [command.arguments objectAtIndex:0];
-    debugLog(@"received parameters : %@",parameters);
-    NSString *commandId = [NSString stringWithFormat:@"%d", COMMAND_VACUUM_ONOFF];
-    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
-    NSString *email = [NeatoUserHelper getLoggedInUserEmail];
-    int on = [[parameters objectForKey:KEY_ON] intValue];
-    
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    [params setValue:[[NSNumber numberWithInt:on] stringValue] forKey:KEY_FLAG_ON_OFF];
-    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
-    call.delegate = self;
-    [call turnVacuumOnOff:on forRobotWithId:robotId withUserEmail:email withParams:params commandId:commandId callbackId:callbackId];
 }
 
 - (void)startCleaning:(CDVInvokedUrlCommand *)command {
@@ -1080,6 +1033,7 @@
 }
 
 - (void)intentToDriveRequestSuccededWithResult:(NSDictionary *)resultData callbackId:(NSString *)callbackId {
+    debugLog(@"");
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
     [data setValue:[resultData valueForKeyPath:NEATO_RESPONSE_EXPECTED_TIME] forKey:NEATO_RESPONSE_EXPECTED_TIME];
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
@@ -1166,6 +1120,25 @@
         CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:(NSDictionary *)data];
         [self writeJavascript:[result toSuccessCallbackString:callbackId]];
     }
+}
+
+- (void)turnMotorOnOff2:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@",parameters);
+    NSString *commandId = [NSString stringWithFormat:@"%d", COMMAND_TURN_MOTOR_ONOFF];
+    NSString *onOff = [[parameters objectForKey:KEY_ON] stringValue];
+    NSString *motorType = [parameters objectForKey:KEY_MOTOR_TYPE];
+    
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:2];
+    [params setValue:onOff forKey:KEY_FLAG_ON_OFF];
+    [params setValue:motorType forKey:KEY_MOTOR_TYPE];
+    
+    RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    // As we can connect to only one robot over TCP, robotId can be anything. Command is sent to connected robot.
+    [callWrapper sendCommandOverTCPToRobotWithId:@"" commandId:commandId params:params callbackId:callbackId];
 }
 
 @end

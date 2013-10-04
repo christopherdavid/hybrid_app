@@ -88,11 +88,10 @@
 #define COMMAND_SET_ROBOT_TIME              110
 #define COMMAND_ENABLE_DISABLE_SCHEDULE     108
 #define COMMAND_SEND_TO_BASE                104
-#define COMMAND_TURN_VACUUM_ONOFF           116
 #define COMMAND_RESUME_CLEANING             114
-#define COMMAND_VACUUM_ONOFF                116
 #define COMMAND_TURN_WIFI_ONOFF             117
 #define COMMAND_DRIVE_ROBOT                 115
+#define COMMAND_TURN_MOTOR_ONOFF            116
 
 // Cleaning API params
 #define KEY_CLEANING_CATEGORY @"cleaningCategory"
