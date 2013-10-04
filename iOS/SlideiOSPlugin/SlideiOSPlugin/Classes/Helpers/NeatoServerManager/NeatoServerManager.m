@@ -904,4 +904,16 @@
     }
 }
 
+- (void)createUser3:(NeatoUser *)neatoUser {
+    debugLog(@"");
+    self.retained_self = self;
+    CreateUserListener2 *createUserListener2 = [[CreateUserListener2 alloc] initWithDelegate:self];
+    createUserListener2 .user = neatoUser;
+    // There is no differencce in the data handling for createUser2 and createUser3, so using CreateUserListener2 with
+    // override for new url. This saves code copy-paste.
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    serverHelper.delegate = createUserListener2;
+    [serverHelper createUser3:neatoUser];
+}
+
 @end

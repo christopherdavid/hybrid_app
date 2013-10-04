@@ -27,4 +27,5 @@
 - (void)turnNotificationOnOff:(CDVInvokedUrlCommand *)command;
 - (void)getNotificationSettings:(CDVInvokedUrlCommand *)command;
 - (void)tryLinkingToRobot:(CDVInvokedUrlCommand *)command;
+- (void)createUser3:(CDVInvokedUrlCommand *)command;
 @end

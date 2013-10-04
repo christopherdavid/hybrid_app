@@ -194,7 +194,7 @@
     NeatoRobotAtlas *robotAtlas = [[NeatoRobotAtlas alloc] init];
     robotAtlas.robotId = [parameters valueForKey:KEY_ROBOT_ID];
     NSMutableDictionary *dict = [parameters valueForKey:KEY_ATLAS_METADATA];
-    robotAtlas.atlasMetadata = [AppHelper jsonStringFromObject:dict];
+    robotAtlas.atlasMetadata = [AppHelper jsonStringFromNSDictionary:dict];
     RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
     call.delegate = self;
     [call updateRobotAtlasData:robotAtlas callbackId:callbackId];

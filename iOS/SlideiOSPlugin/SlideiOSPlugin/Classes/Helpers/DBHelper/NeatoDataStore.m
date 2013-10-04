@@ -367,6 +367,8 @@ static NeatoDataStore *sharedInstance;
         user.external_social_id = userEntity.external_social_id;
         user.validationStatus = userEntity.validationStatus;
         user.alternateEmail = userEntity.alternateEmail;
+        user.userCountryCode = userEntity.userCountryCode;
+        user.optIn = [userEntity.optIn boolValue];
         
         NSArray *robots = [userEntity.hasRobots allObjects];
         user.robots = [[NSMutableArray alloc] init];
@@ -740,6 +742,8 @@ static NeatoDataStore *sharedInstance;
             userEntity.external_social_id = user.external_social_id;
             userEntity.alternateEmail = user.alternateEmail;
             userEntity.validationStatus = user.validationStatus;
+            userEntity.userCountryCode = user.userCountryCode;
+            userEntity.optIn = [NSNumber numberWithBool:user.optIn];
             
             for(int i = 0; i<[user.robots count]; i++) {
                 [userEntity addHasRobotsObject:[self insertOrUpdateRobot:[user.robots objectAtIndex:i]]];

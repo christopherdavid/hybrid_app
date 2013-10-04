@@ -117,4 +117,5 @@
 - (void)deleteProfileDetailKey:(NSString *)key forRobotWithId:(NSString *)robotId notfify:(NSInteger)notify;
 - (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode;
 - (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email;
+- (void)createUser3:(NeatoUser *)neatoUser;
 @end

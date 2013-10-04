@@ -26,20 +26,6 @@
     return data;
 }
 
-+ (NSString *)jsonStringFromObject:(id)object {
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:object
-                                                       options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
-                                                         error:&error];
-    
-    if (! jsonData) {
-        debugLog(@"Got an error: %@", error);
-        return nil;
-    } else {
-      return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    }
-}
-
 + (NSString *)sha1:(NSString *)decodedString {
     NSData *data = [decodedString dataUsingEncoding:NSUTF8StringEncoding];
     uint8_t digest[CC_SHA1_DIGEST_LENGTH];
@@ -194,7 +180,7 @@
 }
 
 + (BOOL)boolValueFromString:(NSString *)string {
-    if ([string isEqualToString:STRING_TRUE]) {
+    if (string && [string isKindOfClass:[NSString class]] && [string isEqualToString:STRING_TRUE]) {
         return YES;
     }
     else {

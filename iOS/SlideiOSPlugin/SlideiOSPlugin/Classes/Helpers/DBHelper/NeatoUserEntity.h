@@ -15,12 +15,19 @@
 @property (nonatomic, retain) NSString * password;
 @property (nonatomic, retain) NSString * userId;
 @property (nonatomic, retain) NSString * validationStatus;
+@property (nonatomic, retain) NSString * userCountryCode;
+@property (nonatomic, retain) NSNumber * optIn;
+@property (nonatomic, retain) NSSet *hasNotificationOptions;
 @property (nonatomic, retain) NSSet *hasRobots;
 @property (nonatomic, retain) NSSet *hasSocialNetowrks;
-@property (nonatomic, retain) NSSet *hasNotificationOptions;
 @end
 
 @interface NeatoUserEntity (CoreDataGeneratedAccessors)
+
+- (void)addHasNotificationOptionsObject:(NeatoNotificationEntity *)value;
+- (void)removeHasNotificationOptionsObject:(NeatoNotificationEntity *)value;
+- (void)addHasNotificationOptions:(NSSet *)values;
+- (void)removeHasNotificationOptions:(NSSet *)values;
 
 - (void)addHasRobotsObject:(NeatoRobotEntity *)value;
 - (void)removeHasRobotsObject:(NeatoRobotEntity *)value;
@@ -31,10 +38,5 @@
 - (void)removeHasSocialNetowrksObject:(NeatoSocialNetworksEntity *)value;
 - (void)addHasSocialNetowrks:(NSSet *)values;
 - (void)removeHasSocialNetowrks:(NSSet *)values;
-
-- (void)addHasNotificationOptionsObject:(NeatoNotificationEntity *)value;
-- (void)removeHasNotificationOptionsObject:(NeatoNotificationEntity *)value;
-- (void)addHasNotificationOptions:(NSSet *)values;
-- (void)removeHasNotificationOptions:(NSSet *)values;
 
 @end

@@ -229,6 +229,11 @@
     [data setValue:neatoUser.name forKey:KEY_USER_NAME];
     [data setValue:neatoUser.userId forKey:KEY_USER_ID];
     [data setValue:neatoUser.email forKey:KEY_EMAIL];
+
+    NSMutableDictionary *extraParams = [[NSMutableDictionary alloc] init];
+    [extraParams setObject:neatoUser.userCountryCode ? neatoUser.userCountryCode : @"" forKey:KEY_COUNTRY_CODE];
+    [extraParams setObject:[AppHelper stringFromBool:neatoUser.optIn] forKey:KEY_OPT_IN];
+    [data setValue:extraParams forKey:KEY_EXTRA_PARAM];
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:data];
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
@@ -511,6 +516,30 @@
 - (void)robotLinkingFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
     [self sendError:error forCallbackId:callbackId];
+}
+
+- (void)createUser3:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@",parameters);
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    NeatoUser *neatoUser = [[NeatoUser alloc] init];
+    neatoUser.email = [parameters objectForKey:KEY_EMAIL];
+    neatoUser.password = [parameters objectForKey:KEY_PASSWORD];
+    neatoUser.name = [parameters objectForKey:KEY_USER_NAME];
+    neatoUser.account_type = ACCOUNT_TYPE_NATIVE;
+    neatoUser.alternateEmail = [parameters objectForKey:KEY_ALTERNATE_EMAIL];
+    NSString *extraParams = [parameters objectForKey:KEY_EXTRA_PARAM];
+    
+    NSDictionary *extraParamsDict = [AppHelper parseJSON:[extraParams dataUsingEncoding:NSUTF8StringEncoding]];
+    debugLog(@"extra params received = %@", extraParamsDict);
+    
+    neatoUser.userCountryCode = [extraParamsDict objectForKey:KEY_COUNTRY_CODE] ? [extraParamsDict objectForKey:KEY_COUNTRY_CODE] : nil;
+    neatoUser.optIn = [AppHelper boolValueFromString:[extraParamsDict objectForKey:KEY_OPT_IN]];
+    
+    [callWrapper createUser3:neatoUser callbackID:callbackId];
 }
 
 @end
