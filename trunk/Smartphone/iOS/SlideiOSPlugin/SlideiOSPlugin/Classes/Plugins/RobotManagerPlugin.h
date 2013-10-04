@@ -58,4 +58,5 @@
 - (void)stopRobotDrive:(CDVInvokedUrlCommand *)command;
 - (void)isRobotPeerConnected:(CDVInvokedUrlCommand *)command;
 - (void)turnMotorOnOff2:(CDVInvokedUrlCommand *)command;
+- (void)clearRobotData:(CDVInvokedUrlCommand *)command;
 @end

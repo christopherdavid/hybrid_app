@@ -851,4 +851,57 @@
     [self notifyRequestFailed:@selector(failedToDeleteProfileDetailKeyWithError:) withError:error];
 }
 
+- (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode {
+    debugLog(@"");
+    self.retained_self = self;
+    
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self;
+    [helper linkEmail:email toLinkCode:linkCode];
+}
+
+- (void)linkingToRobotoSucceededWithMessage:(NSString *)message {
+    if ([self.delegate respondsToSelector:@selector(linkingToRobotoSucceededWithMessage:)]) {
+        [self.delegate performSelector:@selector(linkingToRobotoSucceededWithMessage:) withObject:message];
+        self.delegate = nil;
+        self.retained_self = nil;
+    }
+}
+
+- (void)robotLinkingFailedWithError:(NSError *)error {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(robotLinkingFailedWithError:)]) {
+        [self.delegate performSelector:@selector(robotLinkingFailedWithError:) withObject:error];
+        self.delegate = nil;
+        self.retained_self = nil;
+    }
+}
+
+- (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email {
+    debugLog(@"");
+    self.retained_self = self;
+    
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self;
+    [helper clearDataForRobotId:robotId email:email];
+}
+
+- (void)clearRobotDataSucceededWithMessage:(NSString *)message {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(clearRobotDataSucceededWithMessage:)]) {
+        [self.delegate performSelector:@selector(clearRobotDataSucceededWithMessage:) withObject:message];
+        self.delegate = nil;
+        self.retained_self = nil;
+    }
+}
+
+- (void)failedToClearRobotDataWithError:(NSError *)error {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(failedToClearRobotDataWithError:)]) {
+        [self.delegate performSelector:@selector(failedToClearRobotDataWithError:) withObject:error];
+        self.delegate = nil;
+        self.retained_self = nil;
+    }
+}
+
 @end

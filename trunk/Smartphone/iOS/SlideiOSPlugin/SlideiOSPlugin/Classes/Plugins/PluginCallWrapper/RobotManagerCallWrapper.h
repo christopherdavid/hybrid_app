@@ -66,6 +66,8 @@
 - (void)cancelIntendToDriveFailedWithError:(NSError *)error callbackId:(NSString *)callbackId;
 - (void)stopRobotDriveSuccededForCallbackId:(NSString *)callbackId;
 - (void)stopRobotDriveFailedWithError:(NSError *)error callbackId:(NSString *)callbackId;
+- (void)clearRobotDataSucceededWithMessage:(NSString *)message callbackId:(NSString *)callbackId;
+- (void)failedToClearRobotDataWithError:(NSError *)error callbackId:(NSString *)callbackId;
 @end
 
 @interface RobotManagerCallWrapper : NSObject
@@ -111,4 +113,5 @@
 - (void)stopRobotDriveForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId;
 - (id)isConnectedOverTCPWithRobotId:(NSString *)robotId callbackId:(NSString *)callbackId;
 - (void)sendCommandOverTCPToRobotWithId:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params callbackId:(NSString *)callbackId;
+- (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email callbackId:(NSString *)callbackId;
 @end

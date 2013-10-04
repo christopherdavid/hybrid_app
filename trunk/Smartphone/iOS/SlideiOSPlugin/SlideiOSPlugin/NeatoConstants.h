@@ -305,3 +305,6 @@
 #define NEATO_DELETE_SCHEDULE_DATA @"method=robotschedule.delete_data"
 #define NEATO_GET_SCHEDULE_BASED_ON_TYPE @"method=robotschedule.get_schedule_based_on_type"
 #define NEATO_SET_USER_ATTRIBUTES @"method=user.set_attributes"
+
+#define NEATO_LINK_ROBOT_URL @"method=robot.initiate_link_to_robot"
+#define NEATO_CLEAR_ROBOT_DATA_URL @"method=robot.clear_robot_association"
