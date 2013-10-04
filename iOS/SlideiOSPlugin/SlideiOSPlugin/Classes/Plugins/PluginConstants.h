@@ -98,3 +98,4 @@
 #define KEY_ON @"on"
 
 #define KEY_FLAG_ON_OFF @"flagOnOff"
+#define KEY_MOTOR_TYPE  @"motorType"

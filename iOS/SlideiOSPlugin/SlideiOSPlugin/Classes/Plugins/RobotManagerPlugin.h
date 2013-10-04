@@ -42,7 +42,6 @@
 - (void)pauseCleaning:(CDVInvokedUrlCommand *)command;
 - (void)resumeCleaning:(CDVInvokedUrlCommand *)command;
 - (void)turnWiFiOnOff:(CDVInvokedUrlCommand *)command;
-- (void)turnVacuumOnOff:(CDVInvokedUrlCommand *)command;
 - (void)setSpotDefinition:(CDVInvokedUrlCommand *)command;
 - (void)getSpotDefinition:(CDVInvokedUrlCommand *)command;
 - (void)registerForRobotMessges:(CDVInvokedUrlCommand *)command;
@@ -58,4 +57,5 @@
 - (void)cancelIntendToDrive:(CDVInvokedUrlCommand *)command;
 - (void)stopRobotDrive:(CDVInvokedUrlCommand *)command;
 - (void)isRobotPeerConnected:(CDVInvokedUrlCommand *)command;
+- (void)turnMotorOnOff2:(CDVInvokedUrlCommand *)command;
 @end
