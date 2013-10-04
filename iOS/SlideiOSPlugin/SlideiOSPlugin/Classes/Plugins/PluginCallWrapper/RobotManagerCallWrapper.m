@@ -939,4 +939,32 @@
     [commandHelper sendCommandOverTCPToRobotWithId:robotId commandId:commandId params:params delegate:self];
 }
 
+- (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager clearDataForRobotId:robotId email:email];
+}
+
+- (void)clearRobotDataSucceededWithMessage:(NSString *)message  {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(clearRobotDataSucceededWithMessage:callbackId:)]) {
+        [self.delegate clearRobotDataSucceededWithMessage:message callbackId:self.callbackId];
+        self.delegate = nil;
+        self.retained_self = nil;
+    }
+}
+
+- (void)failedToClearRobotDataWithError:(NSError *)error {
+    debugLog(@"");
+    if ([self.delegate respondsToSelector:@selector(failedToClearRobotDataWithError:callbackId:)]) {
+        [self.delegate failedToClearRobotDataWithError:error callbackId:self.callbackId];
+    }
+    self.retained_self = nil;
+    self.delegate = nil;
+}
+
 @end

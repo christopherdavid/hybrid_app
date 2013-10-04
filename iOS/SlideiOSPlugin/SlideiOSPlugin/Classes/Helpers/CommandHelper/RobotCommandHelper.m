@@ -130,7 +130,16 @@
         if ([helper isConnected]) {
             NSData *command = [[[TCPCommandHelper alloc] init] getRobotCommand2WithId:commandId withParams:params andRequestId:requestId];
             [helper sendCommandToRobot2:[self formattedTCPCommandFromCommand:command] withTag:commandTag requestId:requestId delegate:self];
-        }     
+        }
+        else {
+            debugLog(@"Device not connected over TCP.");
+            if ([self.delegate respondsToSelector:@selector(failedToSendCommandOverTCPWithError:)]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate performSelector:@selector(failedToSendCommandOverTCPWithError:) withObject:[AppHelper nserrorWithDescription:@"Device not connected over TCP" code:200]];
+                    self.delegate = nil;
+                });
+            }
+        }
     }
     else {
         NeatoRobot *robot = [NeatoRobotHelper getRobotForId:robotId];

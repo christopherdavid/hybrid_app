@@ -99,3 +99,6 @@
 
 #define KEY_FLAG_ON_OFF @"flagOnOff"
 #define KEY_MOTOR_TYPE  @"motorType"
+
+#define KEY_LINK_CODE @"linkCode"
+

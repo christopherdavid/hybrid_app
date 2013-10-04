@@ -785,6 +785,7 @@
 }
 
 - (void)sendError:(NSError *)error forCallbackId:(NSString *)callbackId {
+    debugLog(@"Error description = %@, userInfo = %@", [error localizedDescription], [error userInfo]);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
     [dictionary setValue:[NSNumber numberWithInt:error.code] forKey:KEY_ERROR_CODE];
@@ -1139,6 +1140,29 @@
     callWrapper.delegate = self;
     // As we can connect to only one robot over TCP, robotId can be anything. Command is sent to connected robot.
     [callWrapper sendCommandOverTCPToRobotWithId:@"" commandId:commandId params:params callbackId:callbackId];
+}
+
+- (void)clearRobotData:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSString *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"parameters received : %@",parameters);
+    RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
+    call.delegate = self;
+    [call clearDataForRobotId:[parameters valueForKey:KEY_ROBOT_ID] email:[parameters valueForKey:KEY_EMAIL] callbackId:callbackId];
+}
+
+- (void)clearRobotDataSucceededWithMessage:(NSString *)message callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *messageInfo = [[NSMutableDictionary alloc] init];
+    [messageInfo setValue:message forKey:KEY_MESSAGE];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:messageInfo];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)failedToClearRobotDataWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    [self sendError:error forCallbackId:callbackId];
 }
 
 @end

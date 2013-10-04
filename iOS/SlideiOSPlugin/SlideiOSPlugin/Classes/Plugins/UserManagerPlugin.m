@@ -479,11 +479,38 @@
 }
 
 - (void)sendError:(NSError *)error forCallbackId:(NSString *)callbackId {
+    debugLog(@"Error description = %@, userInfo = %@", [error localizedDescription], [error userInfo]);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
     [dictionary setValue:[NSNumber numberWithInt:error.code] forKey:KEY_ERROR_CODE];
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
     [self writeJavascript:[result toErrorCallbackString:callbackId]];
+}
+
+- (void)tryLinkingToRobot:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    
+    NSString *email = [parameters valueForKey:KEY_EMAIL];
+    NSString *linkCode = [parameters valueForKey:KEY_LINK_CODE];
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+    [callWrapper linkEmail:email toLinkCode:linkCode callbackID:callbackId];
+}
+
+- (void)linkingToRobotoSucceededWithMessage:(NSString *)message callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableDictionary *messageInfo = [[NSMutableDictionary alloc] init];
+    [messageInfo setValue:message forKey:KEY_MESSAGE];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:messageInfo];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+- (void)robotLinkingFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    [self sendError:error forCallbackId:callbackId];
 }
 
 @end

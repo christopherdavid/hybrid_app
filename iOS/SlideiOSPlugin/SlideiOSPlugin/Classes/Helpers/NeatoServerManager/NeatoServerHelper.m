@@ -44,6 +44,8 @@
 #define SET_USER_ATTRIBUTES_HANDLER @"setUserAttributesHandler:"
 #define SET_PROFILE_DETAILS_HANDLER @"notifyScheduleUpdatedHandler:"
 #define DELETE_PROFILE_DETAIL_KEY_HANDLER @"deleteProfileDetailKeyHandler:connection:"
+#define LINK_ROBOT_HANDLER @"linkRobotResponseHandler:"
+#define CLEAR_ROBOT_DATA_HANDLER @"clearRobotDataHandler:"
 
 #define GET_IS_USER_VALIDATED_POST_STRING @"api_key=%@&email=%@"
 #define GET_AUTH_TOKEN_NATIVE_POST_STRING @"api_key=%@&account_type=%@&email=%@&password=%@"
@@ -77,6 +79,8 @@
 #define GET_ROBOT_PROFILE_DETAILS_2_POST_STRING @"api_key=%@&serial_number=%@&key=%@"
 #define SET_USER_ATTRIBUTES_POST_STRING @"api_key=%@&auth_token=%@&profile[operating_system]=%@&profile[version]=%@&profile[name]=%@"
 #define DELETE_PROFILE_DETAIL_KEY_POST_STRING @"api_key=%@&serial_number=%@&key=%@&cause_agent_id=%@&source_serial_number=%@&source_smartapp_id=%@&notification_flag=%@"
+#define LINK_ROBOT_POST_STRING @"api_key=%@&email=%@&linking_code=%@"
+#define CLEAR_ROBOT_DATA_POST_STRING @"api_key=%@&serial_number=%@&email=%@&is_delete=%@"
 
 @interface NeatoServerHelper()
 
@@ -1893,6 +1897,119 @@
         NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
         [self notifyRequestFailed:@selector(failedToDeleteProfileDetailKeyWithError:) withError:error];
     }
+}
+
+- (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode {
+    debugLog(@"");
+    self.retained_self = self;
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_LINK_ROBOT_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:LINK_ROBOT_POST_STRING, NEATO_API_KEY, email, linkCode] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [request setValue:LINK_ROBOT_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    
+    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper getDataForRequest:request];
+
+}
+
+- (void)linkRobotResponseHandler:(id)value {
+    debugLog(@"");
+    if (!value) {
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
+        
+        NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+        debugLog(@"linking to robot request failed!");
+        [self notifyRequestFailed:@selector(robotLinkingFailedWithError:) withError:error];
+        return;
+    }
+    
+    if ([value isKindOfClass:[NSError class]]) {
+        debugLog(@"linking to robot request failed!");
+        [self notifyRequestFailed:@selector(robotLinkingFailedWithError:) withError:value];
+        return;
+    }
+    
+    NSDictionary *jsonData = [AppHelper parseJSON:value];
+    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    
+    debugLog(@"status = %d", [status intValue]);
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
+        NSDictionary *result = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
+        NSString *message = [result valueForKey:NEATO_RESPONSE_MESSAGE];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(linkingToRobotoSucceededWithMessage:)]) {
+                [self.delegate performSelector:@selector(linkingToRobotoSucceededWithMessage:) withObject:message];
+            }
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+    else {
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
+        
+        NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+        [self notifyRequestFailed:@selector(robotLinkingFailedWithError:) withError:error];
+    }
+}
+
+- (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email {
+    self.retained_self = self;
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_CLEAR_ROBOT_DATA_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:CLEAR_ROBOT_DATA_POST_STRING, NEATO_API_KEY, robotId, email, [NSNumber numberWithBool:NO]] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [request setValue:CLEAR_ROBOT_DATA_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    
+    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper getDataForRequest:request];
+
+}
+
+- (void)clearRobotDataHandler:(id)value {
+    if (!value) {
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
+        
+        NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+        debugLog(@"clear robot data request failed!");
+        [self notifyRequestFailed:@selector(failedToClearRobotDataWithError:) withError:error];
+        return;
+    }
+    
+    if ([value isKindOfClass:[NSError class]]) {
+        debugLog(@"clear robot data request failed!");
+        [self notifyRequestFailed:@selector(failedToClearRobotDataWithError:) withError:value];
+        return;
+    }
+    
+    NSDictionary *jsonData = [AppHelper parseJSON:value];
+    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    
+    debugLog(@"status = %d", [status intValue]);
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
+        NSDictionary *result = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
+        NSString *message = [result valueForKey:NEATO_RESPONSE_MESSAGE];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(clearRobotDataSucceededWithMessage:)]) {
+                [self.delegate performSelector:@selector(clearRobotDataSucceededWithMessage:) withObject:message];
+            }
+            self.delegate = nil;
+            self.retained_self = nil;
+        });
+    }
+    else {
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
+        
+        NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
+        [self notifyRequestFailed:@selector(failedToClearRobotDataWithError:) withError:error];
+    }
+
 }
 
 @end

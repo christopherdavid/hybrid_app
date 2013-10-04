@@ -54,6 +54,10 @@
 - (void)failedtoSendCommandWithError:(NSError *)error;
 - (void)deleteProfileDetailKeySuccededforRobotId:(NSString *)robotId;
 - (void)failedToDeleteProfileDetailKeyWithError:(NSError *)error;
+- (void)linkingToRobotoSucceededWithMessage:(NSString *)message;
+- (void)robotLinkingFailedWithError:(NSError *)error;
+- (void)clearRobotDataSucceededWithMessage:(NSString *)message;
+- (void)failedToClearRobotDataWithError:(NSError *)error;
 
 @end
 
@@ -91,4 +95,6 @@
 - (void)profileDetails2ForRobotWithId:(NSString *)robotId;
 - (void)sendCommand:(NeatoRobotCommand *)command;
 - (void)deleteProfileDetailKey:(NSString *)key forRobotWithId:(NSString *)robotId notfify:(BOOL)notify;
+- (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode;
+- (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email;
 @end
