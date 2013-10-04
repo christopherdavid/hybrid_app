@@ -34,6 +34,8 @@
 #define NEATO_RESPONSE_EXPECTED_TIME @"expected_time"
 #define NEATO_SCHEDULE_ADVANCE_INT 1
 #define NEATO_SCHEDULE_BASIC_INT 0
+#define NEATO_RESPONSE_EXTRA_PARAM @"extra_param"
+#define NEATO_RESPONSE_EXPIRY_TIME @"expiry_time"
 
 #define FIND_NEARBY_ROBOTS_BIND_PORT 48001
 #define GET_IP_OF_SELECTED_ROBOT_FIND_PORT 48002
@@ -305,6 +307,6 @@
 #define NEATO_DELETE_SCHEDULE_DATA @"method=robotschedule.delete_data"
 #define NEATO_GET_SCHEDULE_BASED_ON_TYPE @"method=robotschedule.get_schedule_based_on_type"
 #define NEATO_SET_USER_ATTRIBUTES @"method=user.set_attributes"
-
 #define NEATO_LINK_ROBOT_URL @"method=robot.initiate_link_to_robot"
 #define NEATO_CLEAR_ROBOT_DATA_URL @"method=robot.clear_robot_association"
+#define NEATO_CREATE_USER3_URL @"method=user.create3"

@@ -81,6 +81,7 @@
 #define DELETE_PROFILE_DETAIL_KEY_POST_STRING @"api_key=%@&serial_number=%@&key=%@&cause_agent_id=%@&source_serial_number=%@&source_smartapp_id=%@&notification_flag=%@"
 #define LINK_ROBOT_POST_STRING @"api_key=%@&email=%@&linking_code=%@"
 #define CLEAR_ROBOT_DATA_POST_STRING @"api_key=%@&serial_number=%@&email=%@&is_delete=%@"
+#define CREATE_USER3_POST_STRING @"api_key=%@&name=%@&email=%@&alternate_email=%@&password=%@&account_type=%@&extra_param=%@"
 
 @interface NeatoServerHelper()
 
@@ -101,14 +102,12 @@
 
 
 
--(void) logoutUserEmail:(NSString *)email authToken:(NSString *)auth_token
-{
+- (void)logoutUserEmail:(NSString *)email authToken:(NSString *)auth_token {
     debugLog(@"logout user called");
     self.retained_self = self;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_LOGOUT_USER_URL]];
     [request setHTTPMethod:@"POST"];
-    if (email == nil)
-    {
+    if (email == nil) {
         email = @"";
     }
     [request setHTTPBody:[[NSString stringWithFormat:GET_USER_LOGOUT_POST_STRING, NEATO_API_KEY, email, auth_token] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -119,7 +118,7 @@
     [helper getDataForRequest:request];
 }
 
--(void)connectionDidFinishLoading:(NSURLConnection *)connection responseData:(NSData *) responseData {
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection responseData:(NSData *)responseData {
     debugLog(@"");
     id serverResponse = responseData;
     if ([AppHelper hasServerRequestFailedForResponse:[AppHelper parseJSON:responseData]]) {
@@ -168,11 +167,9 @@
     }
 }
 
--(void) getUserLogoutResponseHandler:(id)value
-{
+- (void)getUserLogoutResponseHandler:(id)value {
     debugLog(@"");
-    if (value == nil)
-    {
+    if (value == nil) {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
         
@@ -182,8 +179,7 @@
         return;
     }
     
-    if ([value isKindOfClass:[NSError class]])
-    {
+    if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Logout request failed!");
         [self notifyRequestFailed:@selector(logoutRequestFailedWithEror:) withError:value];
         return;
@@ -192,8 +188,7 @@
     NSDictionary *jsonData = [AppHelper parseJSON:value];
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
-    if ([status intValue] == NEATO_STATUS_SUCCESS)
-    {
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
         
         NSDictionary *data = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
         NSString *message = [data valueForKey:NEATO_RESPONSE_MESSAGE];
@@ -207,8 +202,7 @@
             self.retained_self = nil;
         });
     }
-    else
-    {
+    else {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
         
@@ -217,8 +211,7 @@
     }
 }
 
--(void) setRobotUserEmail:(NSString *)email serialNumber:(NSString *)serial_number
-{
+- (void)setRobotUserEmail:(NSString *)email serialNumber:(NSString *)serial_number {
     debugLog(@"");
     self.retained_self = self;
     self.robotId = serial_number;
@@ -232,10 +225,8 @@
     [helper getDataForRequest:request];
 }
 
--(void)setRobotUserResponseHandler:(id)value
-{
-    if (value == nil)
-    {
+- (void)setRobotUserResponseHandler:(id)value {
+    if (value == nil) {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
         
@@ -245,8 +236,7 @@
         return;
     }
     
-    if ([value isKindOfClass:[NSError class]])
-    {
+    if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Robot association failed!");
         [self notifyRequestFailed:@selector(robotAssociationFailedWithError:) withError:value];
         return;
@@ -255,8 +245,7 @@
     NSDictionary *jsonData = [AppHelper parseJSON:value];
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
-    if ([status intValue] == NEATO_STATUS_SUCCESS)
-    {
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
         NSDictionary *data = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
         NSString *message = [data valueForKey:NEATO_RESPONSE_MESSAGE];
         
@@ -271,8 +260,7 @@
         
         
     }
-    else
-    {
+    else {
         debugLog(@"set robot user  unsuccessful");
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
@@ -284,8 +272,7 @@
     
 }
 
--(void) createRobot:(NeatoRobot *)neatoRobot
-{
+- (void)createRobot:(NeatoRobot *)neatoRobot {
     debugLog(@"create robot called");
     self.retained_self = self;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_CREATE_ROBOT_URL]];
@@ -299,10 +286,8 @@
     
 }
 
--(void) createRobothandler:(id)value
-{
-    if (value == nil)
-    {
+- (void)createRobothandler:(id)value {
+    if (value == nil) {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
         
@@ -312,8 +297,7 @@
         return;
     }
     
-    if ([value isKindOfClass:[NSError class]])
-    {
+    if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Robot creation failed!");
         [self notifyRequestFailed:@selector(robotCreationFailedWithError:) withError:value];
         return;
@@ -322,8 +306,7 @@
     NSDictionary *jsonData = [AppHelper parseJSON:value];
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
-    if ([status intValue] == NEATO_STATUS_SUCCESS)
-    {
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
         debugLog(@"robot creation successful");
         NSDictionary *data = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
         NSString *message = [data valueForKey:NEATO_RESPONSE_MESSAGE];
@@ -337,8 +320,7 @@
             self.retained_self = nil;
         });
     }
-    else
-    {
+    else {
         debugLog(@"robot creation unsuccessful");
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
@@ -350,8 +332,7 @@
     
 }
 
--(void) createUser:(NeatoUser *)neatoUser
-{
+- (void)createUser:(NeatoUser *)neatoUser {
     debugLog(@"createUser called with the Email=%@ and password=%@ and name=%@ and account_type=%@",neatoUser.email,neatoUser.password,neatoUser.name,neatoUser.account_type);
     self.retained_self = self;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_CREATE_USER_URL]];
@@ -365,10 +346,8 @@
     
 }
 
--(void) createUserHandler:(id) value
-{
-    if (value == nil)
-    {
+- (void)createUserHandler:(id)value {
+    if (value == nil) {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
         
@@ -378,8 +357,7 @@
         return;
     }
     
-    if ([value isKindOfClass:[NSError class]])
-    {
+    if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"User creation failed!");
         [self notifyRequestFailed:@selector(failedToGetCreateUserHandle:) withError:value];
         return;
@@ -388,8 +366,7 @@
     NSDictionary *jsonData = [AppHelper parseJSON:value];
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
-    if ([status intValue] == NEATO_STATUS_SUCCESS)
-    {
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
         debugLog(@"user creation successful");
         NSDictionary *data = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
         NSString *authToken = [data valueForKey:USER_HANDLE];
@@ -402,8 +379,7 @@
             self.retained_self = nil;
         });
     }
-    else
-    {
+    else {
         debugLog(@"user creation unsuccessful");
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
@@ -414,8 +390,7 @@
     
 }
 
--(void) loginNativeUser:(NSString *) email password:(NSString *)password
-{
+- (void)loginNativeUser:(NSString *)email password:(NSString *)password {
     debugLog(@"loginNativeUser called. Email = %@, Password = %@", email, password);
     self.retained_self = self;
     
@@ -470,8 +445,7 @@
             self.retained_self = nil;
         });
     }
-    else
-    {
+    else {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
         
@@ -482,8 +456,7 @@
 }
 
 
--(void) getRobotDetails:(NSString *)serialNumber
-{
+- (void)getRobotDetails:(NSString *)serialNumber {
     debugLog(@"getRobotDetails called with serial number %@",serialNumber);
     self.retained_self = self;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ROBOT_DETAILS_URL]];
@@ -497,10 +470,8 @@
     
 }
 
--(void)getRobotDetailsHandler:(id)value
-{
-    if (value == nil)
-    {
+- (void)getRobotDetailsHandler:(id)value {
+    if (value == nil) {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
         
@@ -510,8 +481,7 @@
         return;
     }
     
-    if ([value isKindOfClass:[NSError class]])
-    {
+    if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Failed to get robot details!");
         [self notifyRequestFailed:@selector(failedToGetRobotDetailsWihError:) withError:value];
         return;
@@ -520,8 +490,7 @@
     NSDictionary *jsonData = [AppHelper parseJSON:value];
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
-    if ([status intValue] == NEATO_STATUS_SUCCESS)
-    {
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
         
         NSDictionary *robotData = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
         NeatoRobot *robot = [[NeatoRobot alloc] initWithDictionary:robotData];
@@ -534,8 +503,7 @@
             self.retained_self = nil;
         });
     }
-    else
-    {
+    else {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
         
@@ -544,8 +512,7 @@
     }
 }
 
--(void) getUserAccountDetails:(NSString *) authToken email:(NSString *) email
-{
+- (void)getUserAccountDetails:(NSString *)authToken email:(NSString *)email {
     debugLog(@"authToken = %@, email = %@", authToken, email);
     self.retained_self = self;
     
@@ -563,10 +530,8 @@
     
 }
 
--(void) getUserDetailsHandler:(id) value
-{
-    if (value == nil)
-    {
+- (void)getUserDetailsHandler:(id)value {
+    if (value == nil) {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
         
@@ -576,8 +541,7 @@
         return;
     }
     
-    if ([value isKindOfClass:[NSError class]])
-    {
+    if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Failed to get user details");
         [self notifyRequestFailed:@selector(failedToGetUserDetailsWithError:) withError:value];
         return;
@@ -586,9 +550,10 @@
     NSDictionary *jsonData = [AppHelper parseJSON:value];
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
-    if ([status intValue] == NEATO_STATUS_SUCCESS)
-    {
-        NSDictionary *userData = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
+        NSMutableDictionary *userData = [[jsonData valueForKey:NEATO_RESPONSE_RESULT] mutableCopy];
+        NSDictionary *extraParam = [userData objectForKey:NEATO_RESPONSE_EXTRA_PARAM];
+        [userData setObject:extraParam forKey:NEATO_RESPONSE_EXTRA_PARAM];
         NeatoUser *user = [[NeatoUser alloc] initWithDictionary:userData];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.delegate respondsToSelector:@selector(gotUserDetails:)])
@@ -599,8 +564,7 @@
             self.retained_self = nil;
         });
     }
-    else
-    {
+    else {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
         
@@ -611,16 +575,13 @@
 
 
 // TODO: Needs implmentation
--(void) loginFacebookUser:(NSString *) externalSocialId
-{
+- (void)loginFacebookUser:(NSString *)externalSocialId {
     
 }
 
--(void) associatedRobotsForUserWithEmail:(NSString *)email authToken:(NSString *)authToken;
-{
+- (void)associatedRobotsForUserWithEmail:(NSString *)email authToken:(NSString *)authToken {
     debugLog(@"");
-    if (authToken == nil || email == nil)
-    {
+    if (authToken == nil || email == nil) {
         debugLog(@"authToken or email is NIL. Will not fetch associated robots.");
         [self notifyRequestFailed:@selector(failedToGetAssociatedRobotsWithError:) withError:[AppHelper nserrorWithDescription:@"authToken or Email is NIL. Will not fetch associated robots." code:200]];
         return;
@@ -637,10 +598,8 @@
     [helper getDataForRequest:request];
 }
 
--(void) getAssociatedRobotsHandler:(id) value
-{
-    if (value == nil)
-    {
+- (void)getAssociatedRobotsHandler:(id)value {
+    if (value == nil) {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
         
@@ -650,8 +609,7 @@
         return;
     }
     
-    if ([value isKindOfClass:[NSError class]])
-    {
+    if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Failed to get associated robots!");
         [self notifyRequestFailed:@selector(failedToGetAssociatedRobotsWithError:) withError:value];
         return;
@@ -662,16 +620,13 @@
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     NSMutableArray *neatoRobotsArr = [[NSMutableArray alloc] init];
     debugLog(@"status = %d", [status intValue]);
-    if ([status intValue] == NEATO_STATUS_SUCCESS)
-    {
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
         // We should now update the DB with latest data from server
         NSArray *robotsDictArr = [jsonData objectForKey:NEATO_RESPONSE_RESULT];
-        if ([robotsDictArr count] == 0)
-        {
+        if ([robotsDictArr count] == 0) {
             debugLog(@"No associated found at the server!!");
             dispatch_async(dispatch_get_main_queue(), ^{
-                if ([self.delegate respondsToSelector:@selector(gotUserAssociatedRobots:)])
-                {
+                if ([self.delegate respondsToSelector:@selector(gotUserAssociatedRobots:)]) {
                     [self.delegate performSelector:@selector(gotUserAssociatedRobots:) withObject:neatoRobotsArr];
                 }
                 self.delegate = nil;
@@ -679,8 +634,7 @@
             });
             return;
         }
-        else
-        {
+        else {
             // We have some robots at the server
             for (NSDictionary *robotsDict in robotsDictArr) {
                 NeatoRobot *robot = [[NeatoRobot alloc] initWithDictionary:robotsDict];
@@ -690,8 +644,7 @@
             
             // Notify caller on main thread
             dispatch_async(dispatch_get_main_queue(), ^{
-                if ([self.delegate respondsToSelector:@selector(gotUserAssociatedRobots:)])
-                {
+                if ([self.delegate respondsToSelector:@selector(gotUserAssociatedRobots:)]) {
                     [self.delegate performSelector:@selector(gotUserAssociatedRobots:) withObject:neatoRobotsArr];
                 }
                 self.delegate = nil;
@@ -700,8 +653,7 @@
             
         }
     }
-    else
-    {
+    else {
         debugLog(@"Failed to get associated robots. We would not have latest robots in the local storage!!");
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
@@ -712,11 +664,9 @@
     self.retained_self = nil;
 }
 
--(void) updateUserAuthToken:(NSString *)authToken
-{
+- (void)updateUserAuthToken:(NSString *)authToken {
     debugLog(@"");
-    if (authToken == nil)
-    {
+    if (authToken == nil) {
         debugLog(@"authToken is NIL. Will not update user auth token.");
         return;
     }
@@ -732,10 +682,8 @@
     [helper getDataForRequest:request];
 }
 
--(void) updateAuthTokenHandler:(id) value
-{
-    if (!value || [value isKindOfClass:[NSError class]])
-    {
+- (void)updateAuthTokenHandler:(id)value {
+    if (!value || [value isKindOfClass:[NSError class]]) {
         debugLog(@"Failed to update users auth token with error = %@", value);
         return;
     }
@@ -744,24 +692,20 @@
     NSDictionary *jsonData = [AppHelper parseJSON:value];
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
-    if ([status intValue] == NEATO_STATUS_SUCCESS)
-    {
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
         debugLog(@"Users auth token expiry extended.");
     }
-    else
-    {
+    else {
         debugLog(@"Failed to extend user auth toekn expiry!!");
         // TODO: We may want to notify the caller about the falure
     }
     self.retained_self = nil;
 }
 
--(void) notifyRequestFailed:(SEL) selector withError:(NSError *) error
-{
+- (void)notifyRequestFailed:(SEL) selector withError:(NSError *)error {
     debugLog(@"");
     dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.delegate respondsToSelector:selector])
-        {
+        if ([self.delegate respondsToSelector:selector]) {
             [self.delegate performSelector:selector withObject:error];
         }
         self.delegate = nil;
@@ -831,8 +775,7 @@
 }
 
 - (void)onlineStatusForRobotWithId:(NSString *)robotId {
-    if (robotId == nil)
-    {
+    if (robotId == nil) {
         return;
     }
     self.retained_self = self;
@@ -847,10 +790,9 @@
     [helper getDataForRequest:request];
 }
 
--(void)getRobotOnlineStatusHandler:(id)value {
+- (void)getRobotOnlineStatusHandler:(id)value {
     debugLog(@"");
-    if (value == nil)
-    {
+    if (value == nil) {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
         
@@ -860,8 +802,7 @@
         return;
     }
     
-    if ([value isKindOfClass:[NSError class]])
-    {
+    if ([value isKindOfClass:[NSError class]]) {
         debugLog(@"Failed to get robot online status!");
         [self notifyRequestFailed:@selector(failedToGetRobotOnlineStatusWithError:) withError:value];
         return;
@@ -869,8 +810,7 @@
     NSDictionary *jsonData = [AppHelper parseJSON:value];
     NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
-    if ([status intValue] == NEATO_STATUS_SUCCESS)
-    {
+    if ([status intValue] == NEATO_STATUS_SUCCESS) {
         NSString *onlineStatus = [[jsonData valueForKey:NEATO_RESPONSE_RESULT] valueForKey:NEATO_ROBOT_ONLINE_STATUS];
         // Notify caller on main thread
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -883,8 +823,7 @@
         });
         
     }
-    else
-    {
+    else {
         debugLog(@"Failed to get robot online status.");
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
@@ -896,9 +835,8 @@
     
 }
 
--(void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)email handler:(NSString *)handler {
-    if (email == nil)
-    {
+- (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)email handler:(NSString *)handler {
+    if (email == nil) {
         debugLog(@"email is NIL. Will not update robot name.");
         SEL selector = NSSelectorFromString(handler);
         [self performSelector:selector withObject:[AppHelper nserrorWithDescription:@"email is NIL. Will not update robot name." code:200]];
@@ -907,7 +845,7 @@
     self.retained_self = self;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_DISSOCIATE_ALL_ROBOTS_URL]];
     [request setHTTPMethod:@"POST"];
-    if (!robotId) {
+    if (!robotId){
         robotId = @"";
     }
     [request setHTTPBody:[[NSString stringWithFormat:DISSOCIATE_ALL_ROBOTS_POST_STRING,NEATO_API_KEY, email, robotId] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -1091,8 +1029,7 @@
     
 }
 
--(void) pushNotificationUnregistrationHandler:(id) value
-{
+- (void)pushNotificationUnregistrationHandler:(id)value {
     if (value == nil) {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:@"Server did not respond with any data!" forKey:NSLocalizedDescriptionKey];
@@ -1123,8 +1060,7 @@
             self.retained_self = nil;
         });
     }
-    else
-    {
+    else {
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] forKey:NSLocalizedDescriptionKey];
         
@@ -1542,7 +1478,7 @@
     [helper getDataForRequest:request];
 }
 
--(void)getRobotVirtualOnlineStatusHandler:(id)value {
+- (void)getRobotVirtualOnlineStatusHandler:(id)value {
     debugLog(@"");
     if (value == nil) {
         NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:UI_ERROR_TYPE_UNKNOWN];
@@ -1938,10 +1874,10 @@
     debugLog(@"status = %d", [status intValue]);
     if ([status intValue] == NEATO_STATUS_SUCCESS) {
         NSDictionary *result = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
-        NSString *message = [result valueForKey:NEATO_RESPONSE_MESSAGE];
+        NSNumber *linkCodeExpiryTime = [result valueForKey:NEATO_RESPONSE_EXPIRY_TIME];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.delegate respondsToSelector:@selector(linkingToRobotoSucceededWithMessage:)]) {
-                [self.delegate performSelector:@selector(linkingToRobotoSucceededWithMessage:) withObject:message];
+                [self.delegate performSelector:@selector(linkingToRobotoSucceededWithMessage:) withObject:[linkCodeExpiryTime stringValue]];
             }
             self.delegate = nil;
             self.retained_self = nil;
@@ -2010,6 +1946,17 @@
         [self notifyRequestFailed:@selector(failedToClearRobotDataWithError:) withError:error];
     }
 
+}
+
+- (void)createUser3:(NeatoUser *)neatoUser {
+    self.retained_self = self;
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_CREATE_USER3_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:CREATE_USER3_POST_STRING, NEATO_API_KEY, neatoUser.name, neatoUser.email, neatoUser.alternateEmail, neatoUser.password, neatoUser.account_type, [neatoUser extraParam]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:CREATE_USER2_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper getDataForRequest:request];
 }
 
 @end

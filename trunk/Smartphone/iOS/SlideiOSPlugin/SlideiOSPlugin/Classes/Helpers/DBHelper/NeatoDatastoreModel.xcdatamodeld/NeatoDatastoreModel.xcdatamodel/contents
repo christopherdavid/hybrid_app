@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="11G63b" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3396" systemVersion="12F37" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="BasicScheduleEventEntity" representedClassName="BasicScheduleEventEntity" syncable="YES">
         <attribute name="parameterStr" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="scheduleEventId" optional="YES" attributeType="String" syncable="YES"/>
@@ -49,7 +49,9 @@
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="external_social_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="optIn" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userCountryCode" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="validationStatus" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="hasNotificationOptions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NeatoNotificationEntity" inverseName="ofUser" inverseEntity="NeatoNotificationEntity" syncable="YES"/>
@@ -77,16 +79,16 @@
         <attribute name="callbackId" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BasicScheduleEventEntity" positionX="-261" positionY="81" width="128" height="90"/>
-        <element name="CleaningAreaEntity" positionX="160" positionY="192" width="128" height="90"/>
-        <element name="CommandTrackerEntity" positionX="-999" positionY="-49" width="128" height="103"/>
-        <element name="NeatoNotificationEntity" positionX="160" positionY="192" width="128" height="90"/>
-        <element name="NeatoRobotEntity" positionX="-1008" positionY="180" width="128" height="225"/>
-        <element name="NeatoSocialNetworksEntity" positionX="-929" positionY="491" width="128" height="103"/>
-        <element name="NeatoUserEntity" positionX="-1233" positionY="216" width="128" height="240"/>
-        <element name="ProfileDetailEntity" positionX="160" positionY="192" width="128" height="90"/>
-        <element name="ScheduleEntity" positionX="-747" positionY="216" width="128" height="135"/>
-        <element name="ScheduleEventsEntity" positionX="-477" positionY="243" width="128" height="73"/>
-        <element name="XMPPCallbackEntity" positionX="160" positionY="192" width="128" height="60"/>
+        <element name="BasicScheduleEventEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="CleaningAreaEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="CommandTrackerEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="NeatoNotificationEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="NeatoRobotEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="NeatoSocialNetworksEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="NeatoUserEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="ProfileDetailEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="ScheduleEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="ScheduleEventsEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="XMPPCallbackEntity" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

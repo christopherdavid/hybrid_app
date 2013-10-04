@@ -2,6 +2,7 @@
 #import "LogHelper.h"
 #import "NeatoSocialNetworks.h"
 #import "NeatoRobot.h"
+#import "AppHelper.h"
 
 // User validation status code on server.
 #define USER_VALIDATION_STATUS_VALIDATED 0
@@ -16,12 +17,10 @@
 #define VALIDATION_STATUS_NOT_VALIDATED -2
 
 @implementation NeatoUser
-@synthesize chatId = _chatId,chatPassword = _chatPassword,email = _email,name = _name,socialNetworks = _socialNetworks,userId = _userId,robots = _robots, account_type = _account_type, external_social_id = _external_social_id, password = _password, alternateEmail = _alternateEmail, validationStatus = _validationStatus;
 
--(id) initWithDictionary:(NSDictionary *) dictionary
-{
-    if ((self = [super init]))
-    {
+- (id)initWithDictionary:(NSDictionary *)dictionary {
+    debugLog(@"User dictionary from server = %@", dictionary);
+    if ((self = [super init])) {
         self.chatId = [dictionary valueForKey:@"chat_id"];
         self.chatPassword = [dictionary valueForKey:@"chat_pwd"];
         self.email = [dictionary valueForKey:@"email"];
@@ -32,14 +31,18 @@
         self.validationStatus = [NSString stringWithFormat:@"%d", validationStatus];
         NSArray *robots = [dictionary valueForKey:@"robots"];
         NSArray *socialNetworks = [dictionary valueForKey:@"social_networks"];
-
+        NSDictionary *extraParam = [dictionary objectForKey:@"extra_param"];
+        if (extraParam) {
+            self.optIn = [AppHelper boolValueFromString:[extraParam objectForKey:@"opt_in"]];
+            self.userCountryCode = [extraParam objectForKey:@"country_code"];
+        }
+        
         debugLog(@"robots count = %d", [robots count]);
         debugLog(@"socialNetworks count = %d", [socialNetworks count]);
         
         for (NSDictionary *robotData in robots) {
             NeatoRobot *robot = [[NeatoRobot alloc] initWithDictionary:robotData];
-            if (!self.robots)
-            {
+            if (!self.robots) {
                 self.robots = [[NSMutableArray alloc] init];
             }
             [self.robots addObject:robot];
@@ -47,8 +50,7 @@
         
         for (NSDictionary *sociaNetwork in socialNetworks) {
             NeatoSocialNetworks *network = [[NeatoSocialNetworks alloc] initWithDictionary:sociaNetwork];
-            if (!self.socialNetworks)
-            {
+            if (!self.socialNetworks) {
                 self.socialNetworks = [[NSMutableArray alloc] init];
             }
             [self.socialNetworks addObject:network];
@@ -79,5 +81,12 @@
     return [NSNumber numberWithInteger:validationStatusCode];
 }
 
+// For now supports only, country code and value of optIn
+- (NSString *)extraParam {
+    NSMutableDictionary *extraParams = [[NSMutableDictionary alloc] init];
+    [extraParams setValue:(self.userCountryCode ? self.userCountryCode : @"") forKey:@"country_code"];
+    [extraParams setValue:[AppHelper stringFromBool:self.optIn] forKey:@"opt_in"];
+    return [AppHelper jsonStringFromNSDictionary:extraParams];
+}
 
 @end

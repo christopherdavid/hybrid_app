@@ -101,4 +101,8 @@
 #define KEY_MOTOR_TYPE  @"motorType"
 
 #define KEY_LINK_CODE @"linkCode"
+#define KEY_EXTRA_PARAM @"extra_param"
+#define KEY_EXPIRY_TIME @"linkCodeExpiryTime"
+#define KEY_COUNTRY_CODE @"countryCode"
+#define KEY_OPT_IN @"optIn"
 

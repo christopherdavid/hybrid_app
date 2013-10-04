@@ -570,4 +570,12 @@
     self.retained_self = nil;
 }
 
+- (void)createUser3:(NeatoUser *)neatoUser callbackID:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager createUser3:neatoUser];
+}
 @end
