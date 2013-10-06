@@ -1,23 +1,23 @@
-package com.neatorobotics.android.slide.framework.webservice.robot;
+package com.neatorobotics.android.slide.framework.webservice.user;
 
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 
-public class RobotLinkInitiationResult extends NeatoWebserviceResult {
+public class RobotLinkResult extends NeatoWebserviceResult {
 
 	
-	public RobotLinkInitiationResult(NeatoHttpResponse response) {
+	public RobotLinkResult(NeatoHttpResponse response) {
 		super(response);
 	}
 	
-	public RobotLinkInitiationResult(int response, int responseStatusCode, String msg) {
+	public RobotLinkResult(int response, int responseStatusCode, String msg) {
 		super(response, responseStatusCode);
 		message = msg;
 	}
 	
 	public Result result;
 
-	public RobotLinkInitiationResult() {
+	public RobotLinkResult() {
 		super();
 	}
 	
@@ -29,7 +29,6 @@ public class RobotLinkInitiationResult extends NeatoWebserviceResult {
 	public static class Result {
 		public boolean success;
 		public String message;
-		public long expiry_time;
 		public String serial_number;
 	}
 

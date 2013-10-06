@@ -245,6 +245,7 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.hideRegisterShowHomePage();
 			neatoSmartApp.registerForRobotMessages();
+			neatoSmartApp.registerRobotNotification2();
 		},
 
 
@@ -453,8 +454,8 @@ var neatoSmartApp = (function() {
 		},
 
 		initiateLinkRobotSuccess: function(result) {
-			var expiryTime = result.linkCodeExpiryTime/1000;
-			alert("Please confirm the linking request on your robot within : " + expiryTime);
+			var robotId = result['robotId'];
+			localStorage.setItem('robotId', robotId);
 			neatoSmartApp.setResponseText(result);
 			neatoSmartApp.hideProgressBar();
 		},

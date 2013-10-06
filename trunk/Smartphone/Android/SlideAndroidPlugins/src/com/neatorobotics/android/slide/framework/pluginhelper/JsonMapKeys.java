@@ -106,6 +106,5 @@ public class JsonMapKeys {
 	public static final String ERROR_DRIVE_RESPONSE_CODE = "errorDriveResponseCode";
 	
 	// Linking robot
-	public static final String KEY_LINK_CODE_EXPIRY_TIME = "linkCodeExpiryTime";
 	public static final String KEY_LINKING_CODE = "linkCode";
 }
