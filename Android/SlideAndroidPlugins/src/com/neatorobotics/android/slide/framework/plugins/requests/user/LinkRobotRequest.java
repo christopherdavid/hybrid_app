@@ -13,9 +13,11 @@ import com.neatorobotics.android.slide.framework.pluginhelper.UserJsonData;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robotlinking.RobotLinkingManager;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
-import com.neatorobotics.android.slide.framework.webservice.robot.RobotLinkInitiationResult;
+import com.neatorobotics.android.slide.framework.webservice.user.RobotLinkResult;
+import com.neatorobotics.android.slide.framework.webservice.user.RobotLinkResult.Result;
 
-public class InitiateLinkRobotRequest extends UserManagerRequest {
+
+public class LinkRobotRequest extends UserManagerRequest {
 
 	@Override
 	public void execute(JSONArray data, String callbackId) {
@@ -39,18 +41,27 @@ public class InitiateLinkRobotRequest extends UserManagerRequest {
 		LogHelper.logD(TAG, "JSON String: " + jsonData);		
 		LogHelper.logD(TAG, "tryLinkingToRobot initiated in Robot plugin for robot Id: " + robotId + " and email id: " + email);
 
-		RobotLinkingManager.initiateLinkRobot(context, linkCode, email, new UserRequestListenerWrapper(callbackId) {
+		RobotLinkingManager.linkRobot(context, linkCode, email, new UserRequestListenerWrapper(callbackId) {
 			@Override
 			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {	
-				JSONObject initiateResult = new JSONObject();
-				if (responseResult instanceof RobotLinkInitiationResult) {
-					RobotLinkInitiationResult initiationResponse = (RobotLinkInitiationResult) responseResult;
-					long expiryTime = initiationResponse.result.expiry_time * 1000;
-					initiateResult.put(JsonMapKeys.KEY_LINK_CODE_EXPIRY_TIME, expiryTime);
-				}
-				return initiateResult;
+				JSONObject robotDetail = getInitiateLinkRobotResultJsonObject(responseResult);
+				return robotDetail;
 			}
 		});
 	}
 
+	private JSONObject getInitiateLinkRobotResultJsonObject(NeatoWebserviceResult responseResult) throws JSONException {
+		JSONObject robotJsonObj = null;					
+		if ((responseResult != null) && (responseResult instanceof RobotLinkResult)) {
+			Result  result = ((RobotLinkResult)responseResult).result;
+			if (result != null) {
+				robotJsonObj = new JSONObject();
+				robotJsonObj.put(JsonMapKeys.KEY_SUCCESS, result.success);
+				robotJsonObj.put(JsonMapKeys.KEY_MESSAGE, result.message);	
+				robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, result.serial_number);
+			}
+		}
+		
+		return robotJsonObj;
+	}
 }

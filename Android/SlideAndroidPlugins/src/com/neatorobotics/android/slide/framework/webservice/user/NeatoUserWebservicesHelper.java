@@ -16,7 +16,6 @@ import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebS
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.DissociateAllNeatoRobotsFromUser;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.InitiateLinkToRobot;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotAssociationDisassociationResult;
-import com.neatorobotics.android.slide.framework.webservice.robot.RobotLinkInitiationResult;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.ChangePassword;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.CreateNeatoUser;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.CreateNeatoUser2;
@@ -257,13 +256,13 @@ public class NeatoUserWebservicesHelper {
 		return profile;
 	}
 	
-	public static RobotLinkInitiationResult initiateLinkToRobot(Context context, String emailId, String linkCode)
+	public static RobotLinkResult initiateLinkToRobot(Context context, String emailId, String linkCode)
 			throws UserUnauthorizedException, NeatoServerException, IOException {
 		
 		Map<String, String> initiateLinkParams = new HashMap<String, String>();
 		initiateLinkParams.put(InitiateLinkToRobot.Attribute.EMAIL, emailId);
 		initiateLinkParams.put(InitiateLinkToRobot.Attribute.LINKING_CODE, linkCode);
 		String response =  MobileWebServiceClient.executeHttpPost(context, InitiateLinkToRobot.METHOD_NAME, initiateLinkParams);
-		return AppUtils.checkResponseResult(response, RobotLinkInitiationResult.class);		
+		return AppUtils.checkResponseResult(response, RobotLinkResult.class);		
 	}
 }

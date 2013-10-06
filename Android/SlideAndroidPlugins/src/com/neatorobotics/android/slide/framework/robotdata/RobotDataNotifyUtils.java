@@ -16,6 +16,7 @@ import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper;
 import com.neatorobotics.android.slide.framework.robot.schedule2.SchedulerConstants2;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants.RobotProfileValueChangedStatus;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
+import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeysEnum;
 
@@ -34,8 +35,19 @@ public class RobotDataNotifyUtils {
 		}
 	}
 	
+	private static RobotItem fetchRobotInformationIfRequired(Context context, String robotId) {
+		
+		RobotItem robotItem = RobotHelper.getRobotItem(context, robotId);
+		if (robotItem == null) {
+			robotItem = RobotManager.getInstance(context).getRobotDetailAndSave(robotId);
+		}
+		
+		return robotItem;
+		
+	}
 	private static void notifyProfileKeyDataChanged(Context context, String robotId, GetRobotProfileDetailsResult2 details, ProfileAttributeKeysEnum key, RobotProfileValueChangedStatus changedStatus) {
-
+		// Ensure we have the robot information in our database for which change event is fired
+		fetchRobotInformationIfRequired(context, robotId);
 		switch(key) {
 			case ROBOT_CURRENT_STATE:
 			case ROBOT_CLEANING_COMMAND:
@@ -115,12 +127,12 @@ public class RobotDataNotifyUtils {
 			return;
 		}
 		
-		RobotItem robotItem = RobotHelper.getRobotItem(context, robotId);
-		String currentRobotName = "";
-		if (robotItem != null) {
-			currentRobotName = robotItem.name;
+		RobotItem robotItem = fetchRobotInformationIfRequired(context, robotId);
+		if (robotItem == null) {
+			return;
 		}
-		
+		String currentRobotName = "";
+		currentRobotName = robotItem.name;
 		if (robotName.equalsIgnoreCase(currentRobotName)) {
 			LogHelper.logD(TAG, "Robot name is not changed");
 			return;

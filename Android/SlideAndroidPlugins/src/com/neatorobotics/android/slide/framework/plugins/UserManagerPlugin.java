@@ -18,7 +18,7 @@ import com.neatorobotics.android.slide.framework.plugins.requests.user.ForgotPas
 import com.neatorobotics.android.slide.framework.plugins.requests.user.GetAssociatedRobotsRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.user.GetNotificationSettingsRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.user.GetUserDetailsRequest;
-import com.neatorobotics.android.slide.framework.plugins.requests.user.InitiateLinkRobotRequest;
+import com.neatorobotics.android.slide.framework.plugins.requests.user.LinkRobotRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.user.IsNotificationEnabledRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.user.IsUserLoggedInRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.user.IsUserValidatedRequest;
@@ -44,7 +44,7 @@ public class UserManagerPlugin extends Plugin {
 	private UserManagerRequest mLogoutUserRequest = new LogoutUserRequest();
 	private UserManagerRequest mGetUserDetailsRequest = new GetUserDetailsRequest();
 	private UserManagerRequest mAssociateRobotRequest = new AssociateRobotRequest();
-	private UserManagerRequest mInitiateLinkRobotRequest = new InitiateLinkRobotRequest();
+	private UserManagerRequest mLinkRobotRequest = new LinkRobotRequest();
 	private UserManagerRequest mDisassociateRobotRequest = new DisassociateRobotRequest();
 	private UserManagerRequest mIsUserLoggedInRequest = new IsUserLoggedInRequest();
 	private UserManagerRequest mGetAssociatedRobotsRequest = new GetAssociatedRobotsRequest();
@@ -70,7 +70,7 @@ public class UserManagerPlugin extends Plugin {
 			ACTION_COMMAND_MAP.put(ActionTypes.LOGOUT, mLogoutUserRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.GET_USER_DETAILS, mGetUserDetailsRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.ASSOCIATE_ROBOT, mAssociateRobotRequest);
-			ACTION_COMMAND_MAP.put(ActionTypes.INITIATE_LINK_ROBOT, mInitiateLinkRobotRequest);
+			ACTION_COMMAND_MAP.put(ActionTypes.INITIATE_LINK_ROBOT, mLinkRobotRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.DISASSOCIATE_ROBOT, mDisassociateRobotRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.IS_USER_LOGGEDIN, mIsUserLoggedInRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.GET_ASSOCIATED_ROBOTS, mGetAssociatedRobotsRequest);

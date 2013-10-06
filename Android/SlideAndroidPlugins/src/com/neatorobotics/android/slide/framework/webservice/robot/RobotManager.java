@@ -82,6 +82,28 @@ public class RobotManager {
 		
 		return robotItem;
 	}
+	
+	public RobotItem getRobotDetailAndSave(final String serialId)	{
+		RobotItem robotItem = null;
+		try {		
+			RobotDetailResult result = NeatoRobotWebservicesHelper.getRobotDetail(mContext, serialId);
+			robotItem = result.result;
+			RobotHelper.saveRobotDetails(mContext, robotItem);	
+			RobotHelper.setRobotToManage(mContext, robotItem);
+			LogHelper.log(TAG, "Saving robot information");
+		}
+		catch (UserUnauthorizedException ex) {
+			LogHelper.log(TAG, "UserUnauthorizedException in getRobotDetailAndSave - " + ex.getErrorMessage());
+		}
+		catch (NeatoServerException ex) {
+			LogHelper.log(TAG, "NeatoServerException in getRobotDetailAndSave - " + ex.getErrorMessage());
+		}
+		catch (IOException ex) {
+			LogHelper.log(TAG, "IOException in getRobotDetailAndSave - " + ex);
+		}	
+		
+		return robotItem;
+	}
 
 	public void setRobotName(final String robotId, final String robotName, final WebServiceBaseRequestListener listener) {
 		LogHelper.logD(TAG, "setRobotName called");

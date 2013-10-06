@@ -109,10 +109,27 @@ public class ErrorTypes {
 	 public static final int ERROR_INVALID_SCHEDULE_TYPE = -133;
 	 
 	 /**
+	 * Invalid linking code.
+	 * - This will occur if the user enters an invalid linking code.
+	 */
+	 public static final int ERROR_INVALID_LINKING_CODE = -154;
+	 
+	/**
+	 * Linking code expired.
+	 * - This happens if the user hasn't entered the linking code before the timeout. 
+	 */
+	 public static final int ERROR_LINKING_CODE_EXPIRED = -155;
+		
+	 /**
 	  * No schedule exists for given robot.
 	  * - This will occur if there is no schedule for the robot. The user/application should create a new schedule.
 	  */
 	 public static final int ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT = -159;
 	
+	 /**
+	  * Linking code already in use.
+	  * - This results if the linking code is already used for association.
+	  */
+	 public static final int ERROR_LINKING_CODE_IN_USE = -180;
 	
 }
