@@ -224,8 +224,8 @@
             "title": "Robot activation"
         },
         "page": {
-            "wifisetup": "Please enter the Registration ID.</br>You will find it on the robot display accessing: <span class='font_bold highlightedText'>Wifi Setup / Register</span>",
-            "robotId": "Robot ID"
+            "wifisetup": "Please enter the Robot Link Code.</br>You will find it on the robot display accessing: <span class='font_bold highlightedText'>Wifi Setup / Register</span>",
+            "robotId": "Robot Link Code"
         }
     },
     "robotActivationName": {
