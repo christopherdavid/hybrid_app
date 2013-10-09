@@ -53,7 +53,7 @@ static XMPPConnection *sharedInstance;
 		self.xmppStream.enableBackgroundingOnSocket = YES;
 	}
     #endif
-	
+	self.xmppStream.keepAliveInterval =  MIN_KEEPALIVE_INTERVAL;
 	// Add ourself as a delegate to anything we may be interested in
 	[self.xmppStream addDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
 }
@@ -158,6 +158,9 @@ static XMPPConnection *sharedInstance;
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {
     debugLog(@"xmppStreamDidAuthenticate called");
+    XMPPPresence *presence = [XMPPPresence presence];
+    // Set the status as 'online'.
+    [[self xmppStream] sendElement:presence];
     [self.delegate xmppStreamDidAuthenticate:sender];
 }
 
