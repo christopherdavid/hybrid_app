@@ -246,6 +246,7 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.hideRegisterShowHomePage();
 			neatoSmartApp.registerForRobotMessages();
+			neatoSmartApp.registerRobotNotification2();
 		},
 
 
@@ -454,8 +455,8 @@ var neatoSmartApp = (function() {
 		},
 
 		initiateLinkRobotSuccess: function(result) {
-            var robotId = result['robotId'];
-            localStorage.setItem('robotId', robotId);
+			var robotId = result['robotId'];
+			localStorage.setItem('robotId', robotId);
 			neatoSmartApp.setResponseText(result);
 			neatoSmartApp.hideProgressBar();
 		},
@@ -2076,6 +2077,21 @@ var neatoSmartApp = (function() {
 			RobotPluginManager.registerNotifications2(neatoSmartApp.notificationStatusSuccess2, neatoSmartApp.notificationStatusError2);
 		},
 		
+		updateRobotStateInformation : function(currentState, state) {
+			
+			var updateState = localStorage.getItem('robotStateUpdate');
+			if(state == ROBOT_STATE_STOPPED) {
+				document.querySelector('#btnSendStartStopCleanCommand3').value = "Start Cleaning";
+			}
+			if(state == ROBOT_STATE_CLEANING) {
+				document.querySelector('#btnSendStartStopCleanCommand3').value = "Stop Cleaning";
+			}
+			
+			document.querySelector('#currentRobotState').innerHTML ="Actual State: " + neatoSmartApp.getStateFromCode(currentState);
+			document.querySelector('#robotState').innerHTML ="State: " + neatoSmartApp.getStateFromCode(state);
+
+		},
+		
 		notificationStatusSuccess2: function(result) {		
 			neatoSmartApp.hideProgressBar();			
 			var dataKeyCode =  (result['robotDataKeyId']);
@@ -2087,16 +2103,28 @@ var neatoSmartApp = (function() {
 			if (dataKeyCode == ROBOT_CURRENT_STATE_CHANGED) {
 				
 				if (currentRobotId.toUpperCase() == robotId.toUpperCase()) {
-				    var state = data['robotCurrentState'];
-				    localStorage.setItem('robotCurrentState', state);
+					var currentState = data['robotCurrentState'];
+					localStorage.setItem('robotCurrentState', currentState);
+					document.querySelector('#currentRobotState').innerHTML ="Actual State: " + neatoSmartApp.getStateFromCode(currentState);
+					var state = localStorage.getItem('robotStateUpdate');
+					neatoSmartApp.updateRobotStateInformation(currentState, state);
 				}
 				message = "Robot Current State Changed";
-			
 			}
+			
 			if (dataKeyCode == ROBOT_STATE_UPDATE) {
 				if (currentRobotId.toUpperCase() == robotId.toUpperCase()) {
-				   var state = data['robotStateUpdate'];
-				   localStorage.setItem('robotStateUpdate', state);
+					var state = data['robotStateUpdate'];
+					localStorage.setItem('robotStateUpdate', state);
+					var currentState = localStorage.getItem('robotCurrentState');
+					if(state == ROBOT_STATE_STOPPED) {
+						localStorage.setItem('isRobotStarted', "false");
+						neatoSmartApp.updateRobotStateInformation(currentState, state);
+					}
+					if(state == ROBOT_STATE_CLEANING) {
+						localStorage.setItem('isRobotStarted', "true");
+						neatoSmartApp.updateRobotStateInformation(currentState, state);
+					}
 				}
 				message = "Robot State Updated";
 			}

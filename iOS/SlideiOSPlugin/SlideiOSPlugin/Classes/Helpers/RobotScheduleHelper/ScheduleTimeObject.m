@@ -35,16 +35,13 @@
     return self;
 }
 
--(void) extractTimeFromString:(NSString *)time
-{
-    @try
-    {
+- (void) extractTimeFromString:(NSString *)time {
+    @try {
         NSRange range = [time rangeOfString:@":"];
         self.hrs = [NSString stringWithString:[time substringToIndex:range.location]];
-        self.mins = [NSString stringWithString:[time substringFromIndex:(range.location+1)]];
+        self.mins = [NSString stringWithFormat:@"%d", [[NSString stringWithString:[time substringFromIndex:(range.location+1)]] integerValue]];
     }
-    @catch (NSException *exception)
-    {
+    @catch (NSException *exception) {
         debugLog(@"there is an exception while extracting time from string %@",[NSException description]);
     }
 }
