@@ -129,12 +129,12 @@
 }
 
 + (NSString *)getCurrentServer {
-    #ifdef NEATO_ROBOT_SERVER_PROD
-        return NEATO_PROD_SERVER;
+    #ifdef ROBOT_SERVER_PROD
+        return PROD_SERVER;
     #elif SWITCH_TO_DEV_SERVER
-        return NEATO_DEV_SERVER;
+        return DEV_SERVER;
     #else
-        return NEATO_STAGING_SERVER;
+        return STAGING_SERVER;
     #endif
 }
 

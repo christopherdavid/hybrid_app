@@ -5,6 +5,8 @@
 #import "NeatoServerHelper.h"
 #import "NeatoNotification.h"
 
+typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *error);
+
 @class NeatoRobotCommand;
 
 @protocol NeatoServerManagerProtocol <NSObject>
@@ -54,8 +56,6 @@
 - (void)failedtoSendCommandWithError:(NSError *)error;
 - (void)deleteProfileDetailKeySuccededforRobotId:(NSString *)robotId;
 - (void)failedToDeleteProfileDetailKeyWithError:(NSError *)error;
-- (void)linkingToRobotoSucceededWithMessage:(NSString *)message;
-- (void)robotLinkingFailedWithError:(NSError *)error;
 - (void)clearRobotDataSucceededWithMessage:(NSString *)message;
 - (void)failedToClearRobotDataWithError:(NSError *)error;
 
@@ -95,7 +95,7 @@
 - (void)profileDetails2ForRobotWithId:(NSString *)robotId;
 - (void)sendCommand:(NeatoRobotCommand *)command;
 - (void)deleteProfileDetailKey:(NSString *)key forRobotWithId:(NSString *)robotId notfify:(BOOL)notify;
-- (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode;
+- (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode completion:(RequestCompletionBlockDictionary)completion;
 - (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email;
 - (void)createUser3:(NeatoUser *)neatoUser;
 @end

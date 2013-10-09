@@ -541,34 +541,6 @@
     [self notifyCallback:@selector(failedToGetUserPushNotificationSettingsWithError:callbackId:) object:error];
 }
 
-- (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode callbackID:(NSString *)callbackId {
-    debugLog(@"");
-    self.retained_self = self;
-    self.callbackId = callbackId;
-    
-    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
-    manager.delegate = self;
-    [manager linkEmail:email toLinkCode:linkCode];
-}
-
-- (void)linkingToRobotoSucceededWithMessage:(NSString *)message {
-    debugLog(@"");
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.delegate respondsToSelector:@selector(linkingToRobotoSucceededWithMessage:callbackId:)]) {
-            [self.delegate performSelector:@selector(linkingToRobotoSucceededWithMessage:callbackId:) withObject:message withObject:self.callbackId];
-        }
-        self.delegate = nil;
-        self.retained_self = nil;
-    });
-}
-
-- (void)robotLinkingFailedWithError:(NSError *)error {
-    if ([self.delegate respondsToSelector:@selector(robotLinkingFailedWithError:callbackId:)]) {
-        [self.delegate performSelector:@selector(robotLinkingFailedWithError:callbackId:) withObject:error withObject:self.callbackId];
-    }
-    self.delegate = nil;
-    self.retained_self = nil;
-}
 
 - (void)createUser3:(NeatoUser *)neatoUser callbackID:(NSString *)callbackId {
     debugLog(@"");

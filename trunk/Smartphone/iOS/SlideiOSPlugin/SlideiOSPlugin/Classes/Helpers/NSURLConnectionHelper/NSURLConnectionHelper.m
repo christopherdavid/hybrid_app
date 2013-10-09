@@ -7,21 +7,20 @@
 #define INVALID_RETRY_COUNT -10
 
 @interface NSURLConnectionHelper()
-{
-    
-}
 
-@property(nonatomic, retain) NSNumber *expectedSize;
-@property(nonatomic, retain) NSNumber *downloadedSize;
+@property (nonatomic, retain) NSNumber *expectedSize;
+@property (nonatomic, retain) NSNumber *downloadedSize;
 
-@property(nonatomic, readwrite) int responseCode;
-@property(nonatomic, retain) NSURLConnectionHelper *retained_self;
-@property(nonatomic, retain) NSMutableData *responseData;
-@property(nonatomic, retain) NSURLConnection *connection;
-@property(readwrite) bool connectionFinished;
-@property(nonatomic, retain) NSURL *destinationPath;
-@property(nonatomic, retain) NSURLRequest *originalRequest;
-@property(nonatomic) NSInteger currentRetryCount;
+@property (nonatomic, readwrite) int responseCode;
+@property (nonatomic, retain) NSURLConnectionHelper *retained_self;
+@property (nonatomic, retain) NSMutableData *responseData;
+@property (nonatomic, retain) NSURLConnection *connection;
+@property (readwrite) bool connectionFinished;
+@property (nonatomic, retain) NSURL *destinationPath;
+@property (nonatomic, retain) NSURLRequest *originalRequest;
+@property (nonatomic) NSInteger currentRetryCount;
+@property (nonatomic, strong) ConnectionCompletionBlock connectionCompletionBlock;
+@property (nonatomic, strong) DownloadCompletionBlock downloadCompletionBlock;
 
 - (void) writeToFileHelper:(NSString *) fileNameWithPath data:(NSData*) dataToWrite;
 @end
@@ -84,6 +83,16 @@
     return [self getDataForRequest:request];
 }
 
+- (NSURLConnection *)getDataForRequest:(NSURLRequest *)request completionBlock:(ConnectionCompletionBlock)completionBlock {
+    self.connectionCompletionBlock = completionBlock;
+    return [self getDataForRequest:request];
+}
+
+- (NSURLConnection *)downloadDataForRequest:(NSURLRequest *)request andSaveAtPath:(NSURL *)path completionBlock:(DownloadCompletionBlock)completionBlock {
+    self.downloadCompletionBlock = completionBlock;
+    return [self downloadDataForRequest:request andSaveAtPath:path completionBlock:completionBlock];
+}
+
 - (void)notifyRequestFailed:(NSError *)error {
     debugLog(@"");
     
@@ -103,6 +112,16 @@
         [self getDataForRequest:self.originalRequest];  
     }
     else {
+        if ([[self.destinationPath absoluteString] length] != 0 && self.downloadCompletionBlock) {
+            self.downloadCompletionBlock(nil, error);
+            self.retained_self = nil;
+            return;
+        }
+        else if (self.connectionCompletionBlock) {
+            self.connectionCompletionBlock(nil, error);
+            self.retained_self = nil;
+            return;
+        }
         if ([self.delegate respondsToSelector:@selector(requestFailedForConnection:error:)]) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.delegate performSelector:@selector(requestFailedForConnection:error:) withObject:self.connection withObject:error];
@@ -209,6 +228,11 @@
     {
         if (!self.destinationPath)
         {
+            if (self.connectionCompletionBlock) {
+                self.connectionCompletionBlock(self.responseData, nil);
+                self.retained_self = nil;
+                return;
+            }
             if ([self.delegate respondsToSelector:@selector(connectionDidFinishLoading:responseData:)])
             {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -225,6 +249,11 @@
             if ([self.expectedSize longLongValue] == [self.downloadedSize longLongValue])
             {
                 debugLog(@"File download SUCCESS!");
+                if (self.downloadCompletionBlock) {
+                    self.downloadCompletionBlock([self.destinationPath absoluteString], nil);
+                    self.retained_self = nil;
+                    return;
+                }
                 if ([self.delegate respondsToSelector:@selector(connectionDidFinishLoading:filePath:)])
                 {
                     dispatch_async(dispatch_get_main_queue(), ^{

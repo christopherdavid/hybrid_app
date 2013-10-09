@@ -69,7 +69,7 @@
      
         debugLog(@"User not connected over XMPP. Will first connect over XMPP and then try to send the command");
         
-        [self connectJID:user.chatId password:user.chatPassword host:NEATO_XMPP_SERVER_ADDRESS];
+        [self connectJID:user.chatId password:user.chatPassword host:XMPP_SERVER_ADDRESS];
     }
 }
 

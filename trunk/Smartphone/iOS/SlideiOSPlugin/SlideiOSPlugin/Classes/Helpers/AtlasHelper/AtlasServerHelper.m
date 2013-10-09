@@ -46,7 +46,7 @@
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_ROBOT_ATLAS_DATA_URL]];
     [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:[[NSString stringWithFormat:GET_ATLAS_DATA_FOR_ROBOT_POST_STRING, NEATO_API_KEY, robotId] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_ATLAS_DATA_FOR_ROBOT_POST_STRING, API_KEY, robotId] dataUsingEncoding:NSUTF8StringEncoding]];
     
     [request setValue:GET_ATLAS_DATA_FOR_ROBOT_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     
@@ -154,7 +154,7 @@
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_GET_ATLAS_GRID_METADATA_URL]];
     [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:[[NSString stringWithFormat:GET_ATLAS_GRID_METADATA_POST_STRING, NEATO_API_KEY, atlasId] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_ATLAS_GRID_METADATA_POST_STRING, API_KEY, atlasId] dataUsingEncoding:NSUTF8StringEncoding]];
     
     [request setValue:GET_ATLAS_GRID_METADATA_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     
@@ -225,7 +225,7 @@
     
     robotAtlas = [self sanitizeRobotAtlas:robotAtlas];
     
-    [request setHTTPBody:[[NSString stringWithFormat:UPDATE_ATLAS_METADATA_POST_STRING, NEATO_API_KEY, @"", robotAtlas.atlasId, /*grid deletion is no */ @"0", robotAtlas.version, robotAtlas.atlasMetadata] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setHTTPBody:[[NSString stringWithFormat:UPDATE_ATLAS_METADATA_POST_STRING, API_KEY, @"", robotAtlas.atlasId, /*grid deletion is no */ @"0", robotAtlas.version, robotAtlas.atlasMetadata] dataUsingEncoding:NSUTF8StringEncoding]];
     
     [request setValue:UPDATE_ATLAS_METADATA_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     
@@ -332,7 +332,7 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:NEATO_UPDATE_ATLAS_METADATA_URL]];
     [request setHTTPMethod:@"POST"];
 
-    [request setHTTPBody:[[NSString stringWithFormat:UPDATE_ATLAS_METADATA_POST_STRING, NEATO_API_KEY, @"", atalsId, /*grid deletion is yes */ @"1", @"", @""] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setHTTPBody:[[NSString stringWithFormat:UPDATE_ATLAS_METADATA_POST_STRING, API_KEY, @"", atalsId, /*grid deletion is yes */ @"1", @"", @""] dataUsingEncoding:NSUTF8StringEncoding]];
     
     [request setValue:DELETE_ATLAS_GRIDS_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     

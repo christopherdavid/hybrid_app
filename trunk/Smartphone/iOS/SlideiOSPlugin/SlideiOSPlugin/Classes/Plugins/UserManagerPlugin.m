@@ -13,6 +13,13 @@
 #import "PluginConstants.h"
 #import "NeatoRobotHelper.h"
 #import "NeatoNotification.h"
+#import "NeatoServerManager.h"
+
+@interface UserManagerPlugin ()
+
+@property (nonatomic, strong) NeatoServerManager *serverManager;
+
+@end
 
 @implementation UserManagerPlugin
 
@@ -485,11 +492,14 @@
 
 - (void)sendError:(NSError *)error forCallbackId:(NSString *)callbackId {
     debugLog(@"Error description = %@, userInfo = %@", [error localizedDescription], [error userInfo]);
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInt:error.code] forKey:KEY_ERROR_CODE];
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    __weak UserManagerPlugin *weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+        [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
+        [dictionary setValue:[NSNumber numberWithInt:error.code] forKey:KEY_ERROR_CODE];
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
+        [weakSelf writeJavascript:[result toErrorCallbackString:callbackId]];
+    });
 }
 
 - (void)tryLinkingToRobot:(CDVInvokedUrlCommand *)command {
@@ -502,20 +512,32 @@
     NSString *linkCode = [parameters valueForKey:KEY_LINK_CODE];
     UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
     callWrapper.delegate = self;
-    [callWrapper linkEmail:email toLinkCode:linkCode callbackID:callbackId];
+    
+    __weak UserManagerPlugin *weakSelf = self;
+    [self.serverManager linkEmail:email
+                       toLinkCode:linkCode
+                       completion:^(NSDictionary *result, NSError *error) {
+                           if (error) {
+                               debugLog(@"Robot linking failed with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                               [weakSelf sendError:error forCallbackId:callbackId];
+                               return;
+                           }
+                           dispatch_async(dispatch_get_main_queue(), ^{
+                               NSMutableDictionary *messageInfo = [[NSMutableDictionary alloc] init];
+                               [messageInfo setValue:[result objectForKey:NEATO_RESPONSE_MESSAGE] forKey:KEY_MESSAGE];
+                               [messageInfo setValue:[result objectForKey:NEATO_RESPONSE_SERIAL_NUMBER] forKey:KEY_ROBOT_ID];
+                               [messageInfo setValue:[result objectForKey:NEATO_RESPONSE_SUCCESS] forKey:KEY_SUCCESS];
+                               CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:messageInfo];
+                               [weakSelf writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
+                           });
+                       }];
 }
 
-- (void)linkingToRobotoSucceededWithMessage:(NSString *)message callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    NSMutableDictionary *messageInfo = [[NSMutableDictionary alloc] init];
-    [messageInfo setValue:message forKey:KEY_MESSAGE];
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:messageInfo];
-    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
-}
-
-- (void)robotLinkingFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    [self sendError:error forCallbackId:callbackId];
+- (NeatoServerManager *)serverManager {
+    if (!_serverManager) {
+        _serverManager = [[NeatoServerManager alloc] init];
+    }
+    return _serverManager;
 }
 
 - (void)createUser3:(CDVInvokedUrlCommand *)command {
