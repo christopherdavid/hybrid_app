@@ -17,19 +17,22 @@
 #import "AppHelper.h"
 #import "ProfileDetail.h"
 #import "LoginListener2.h"
+#import "GetRobotDetailsHelper.h"
+#import "LinkRobotHelper.h"
 
 @interface NeatoServerManager()
 
-@property(nonatomic, retain) NeatoServerManager *retained_self;
-@property(nonatomic, retain) LoginListener *loginListener;
-@property(nonatomic, retain) CreateUserListener *createUserListener;
-@property(nonatomic, strong) CreateUserListener2 *createUserListener2;
-@property(nonatomic, retain) RobotAssociationListener *associationListener;
-@property(nonatomic, strong) ChangePasswordListener *changePasswordListener;
-@property(nonatomic, strong) SetUserPushNotificationOptionsListener *setPushNotificationsListener;
-@property(nonatomic, strong) GetUserPushNotificationsListener *getPushNotificationsListener;
-@property(nonatomic, retain) LoginListener2 *loginListener2;
-@property(nonatomic, retain) NSString *userEmail;
+@property (nonatomic, retain) NeatoServerManager *retained_self;
+@property (nonatomic, retain) LoginListener *loginListener;
+@property (nonatomic, retain) CreateUserListener *createUserListener;
+@property (nonatomic, strong) CreateUserListener2 *createUserListener2;
+@property (nonatomic, retain) RobotAssociationListener *associationListener;
+@property (nonatomic, strong) ChangePasswordListener *changePasswordListener;
+@property (nonatomic, strong) SetUserPushNotificationOptionsListener *setPushNotificationsListener;
+@property (nonatomic, strong) GetUserPushNotificationsListener *getPushNotificationsListener;
+@property (nonatomic, retain) LoginListener2 *loginListener2;
+@property (nonatomic, retain) NSString *userEmail;
+@property (nonatomic, strong) NeatoServerHelper *serverHelper;
 
 -(void) notifyRequestFailed:(SEL) selector withError:(NSError *) error;
 @end
@@ -213,8 +216,7 @@
     
 }
 
-- (void)getRobotDetails:(NSString *)serialNumber
-{
+- (void)getRobotDetails:(NSString *)serialNumber {
     debugLog(@"");
     self.retained_self = self;
     
@@ -851,30 +853,41 @@
     [self notifyRequestFailed:@selector(failedToDeleteProfileDetailKeyWithError:) withError:error];
 }
 
-- (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode {
-    debugLog(@"");
-    self.retained_self = self;
-    
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper linkEmail:email toLinkCode:linkCode];
+- (NeatoServerHelper *)serverHelper {
+    if (!_serverHelper) {
+        _serverHelper = [[NeatoServerHelper alloc] init];
+    }
+    return _serverHelper;
 }
 
-- (void)linkingToRobotoSucceededWithMessage:(NSString *)message {
-    if ([self.delegate respondsToSelector:@selector(linkingToRobotoSucceededWithMessage:)]) {
-        [self.delegate performSelector:@selector(linkingToRobotoSucceededWithMessage:) withObject:message];
-        self.delegate = nil;
-        self.retained_self = nil;
-    }
-}
 
-- (void)robotLinkingFailedWithError:(NSError *)error {
+- (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode completion:(RequestCompletionBlockDictionary)completion {
     debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(robotLinkingFailedWithError:)]) {
-        [self.delegate performSelector:@selector(robotLinkingFailedWithError:) withObject:error];
-        self.delegate = nil;
-        self.retained_self = nil;
-    }
+    LinkRobotHelper *linkHelper = [[LinkRobotHelper alloc] initWithEmail:email linkCode:linkCode];
+    [self.serverHelper dataForRequest:[linkHelper request]
+           completionBlock:^(id response, NSError *error) {
+               if (error) {
+                   // Failure
+                   debugLog(@"Failed to link robot with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                   completion ? completion(nil, error) : nil;
+                   return;
+               }
+               NSString *robotId = [response objectForKey:NEATO_RESPONSE_SERIAL_NUMBER];
+               // Get robot  details
+               GetRobotDetailsHelper *getRobotDetailsHelper = [[GetRobotDetailsHelper alloc] initWithRobotId:robotId];
+               [self.serverHelper dataForRequest:[getRobotDetailsHelper request]
+                      completionBlock:^(id robotDetailsResponse, NSError *robotDetailsError) {
+                          if (error) {
+                              // Failure
+                              debugLog(@"Failed to get robot details with error = %@, info = %@", [robotDetailsError localizedDescription], [robotDetailsError userInfo]);
+                              completion ? completion(nil, robotDetailsError) : nil;
+                              return;
+                          }
+                          NeatoRobot *robot = [[NeatoRobot alloc] initWithDictionary:robotDetailsResponse];
+                          [NeatoRobotHelper saveNeatoRobot:robot];
+                          completion ? completion(response, nil) : nil;
+                      }];
+           }];
 }
 
 - (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email {

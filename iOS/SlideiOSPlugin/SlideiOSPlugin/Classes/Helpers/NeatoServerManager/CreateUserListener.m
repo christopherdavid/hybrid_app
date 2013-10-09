@@ -37,7 +37,7 @@
     // XMPP login.
     XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
     helper.delegate = self;
-    [helper connectJID:neatoUser.chatId password:neatoUser.chatPassword host:NEATO_XMPP_SERVER_ADDRESS];
+    [helper connectJID:neatoUser.chatId password:neatoUser.chatPassword host:XMPP_SERVER_ADDRESS];
 }
 
 - (void)didConnectOverXMPP {

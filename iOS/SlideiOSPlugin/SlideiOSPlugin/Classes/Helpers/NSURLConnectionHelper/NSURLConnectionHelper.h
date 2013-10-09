@@ -1,7 +1,9 @@
 #import <Foundation/Foundation.h>
 
-@protocol NSURLConnectionHelperProtocol <NSObject>
+typedef void (^ConnectionCompletionBlock)(id response, NSError *error);
+typedef void (^DownloadCompletionBlock)(NSString *filePath, NSError *error);
 
+@protocol NSURLConnectionHelperProtocol <NSObject>
 
 // Gets called when the download completes successfully. The responseData object will
 // contain the entire data downloaded from the target URL.
@@ -31,8 +33,10 @@
 @property(nonatomic, weak) id delegate;
 @property(nonatomic) NSInteger retryCount;
 
--(NSURLConnection *) getDataForRequest:(NSURLRequest *) request;
--(NSURLConnection *) downloadDataForRequest:(NSURLRequest *) request andSaveAtPath:(NSURL *) path;
+- (NSURLConnection *)getDataForRequest:(NSURLRequest *)request;
+- (NSURLConnection *)downloadDataForRequest:(NSURLRequest *)request andSaveAtPath:(NSURL *)path;
 
+- (NSURLConnection *)getDataForRequest:(NSURLRequest *)request completionBlock:(ConnectionCompletionBlock)completionBlock;
+- (NSURLConnection *)downloadDataForRequest:(NSURLRequest *)request andSaveAtPath:(NSURL *)path completionBlock:(DownloadCompletionBlock)completionBlock;
 
 @end

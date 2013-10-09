@@ -333,7 +333,21 @@ static NeatoDataStore *sharedInstance;
         debugLog(@"NeatoUser object is nil won't insert");
         return;
     }
+    // Remove all entities existing entities for Neato user
+    [self removeNeatoUser];
     [self insertOrUpdateNeatoUser:neatoUser];
+}
+
+- (void)removeNeatoUser {
+    if (self.managedObjectContext) {
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
+        NSError *error = nil;
+        NSArray *userEntityArray = [self.managedObjectContext executeFetchRequest:request error:&error];
+        for (NSManagedObject *neatoUser in userEntityArray) {
+            [self.managedObjectContext deleteObject:neatoUser];
+        }
+        [self.managedObjectContext save:&error];
+    }
 }
 
 - (NeatoUser *)getNeatoUser {

@@ -47,8 +47,7 @@
 - (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error callbackId:(NSString *)callbackId;
 - (void)userNotificationSettingsData:(NSDictionary *)notificationJson callbackId:(NSString *)callbackId;
 - (void)failedToGetUserPushNotificationSettingsWithError:(NSError *)error callbackId:(NSString *)callbackId;
-- (void)linkingToRobotoSucceededWithMessage:(NSString *)message callbackId:(NSString *)callbackId;
-- (void)robotLinkingFailedWithError:(NSError *)error callbackId:(NSString *)callbackId;
+
 @end
 
 @interface UserManagerCallWrapper : CDVPlugin 
@@ -76,6 +75,5 @@
 - (void)createUser2:(NeatoUser *)neatoUser callbackID:(NSString *)callbackId;
 - (void)notificationSettingsForUserWithEmail:(NSString *)email callbackID:(NSString *)callbackId;
 - (void)turnNotification:(NeatoNotification *)notification onOffForUserWithEmail:(NSString *)email callbackID:(NSString *)callbackId;
-- (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode callbackID:(NSString *)callbackId;
 - (void)createUser3:(NeatoUser *)neatoUser callbackID:(NSString *)callbackId;
 @end

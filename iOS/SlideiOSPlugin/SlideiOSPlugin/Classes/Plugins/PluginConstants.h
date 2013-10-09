@@ -105,4 +105,5 @@
 #define KEY_EXPIRY_TIME @"linkCodeExpiryTime"
 #define KEY_COUNTRY_CODE @"countryCode"
 #define KEY_OPT_IN @"optIn"
+#define KEY_SUCCESS @"success"
 

@@ -3,6 +3,8 @@
 #import "NeatoRobot.h"
 #import "NSURLConnectionHelper.h"
 
+typedef void (^ServerHelperCompletionBlock)(id response, NSError *error);
+
 @class NeatoRobotCommand;
 @class NeatoUserAttributes;
 
@@ -43,7 +45,6 @@
 - (void)setUserAttributesSucceeded;
 - (void)notifyScheduleUpdatedSucceededWithResult:(NSDictionary *)result;
 - (void)deleteProfileDetailKeySuccededforRobotId:(NSString *)robotId;
-- (void)linkingToRobotoSucceededWithMessage:(NSString *)message;
 - (void)clearRobotDataSucceededWithMessage:(NSString *)message;
 
 // Failure cases
@@ -75,7 +76,6 @@
 - (void)failedToSetUserAttributesWithError:(NSError *)error;
 - (void)failedToNotifyScheduleUpdatedWithError:(NSError *)error;
 - (void)failedToDeleteProfileDetailKeyWithError:(NSError *)error;
-- (void)robotLinkingFailedWithError:(NSError *)error;
 - (void)failedToClearRobotDataWithError:(NSError *)error;
 
 @end
@@ -115,7 +115,7 @@
 - (void)setUserAttributes:(NeatoUserAttributes *)attributes forAuthToken:(NSString *)authToken;
 - (void)notifyScheduleUpdatedForProfileDetails:(NeatoRobotCommand *)profileDetails forUserWithEmail:(NSString *)email;
 - (void)deleteProfileDetailKey:(NSString *)key forRobotWithId:(NSString *)robotId notfify:(NSInteger)notify;
-- (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode;
 - (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email;
 - (void)createUser3:(NeatoUser *)neatoUser;
+- (void)dataForRequest:(NSURLRequest *)request completionBlock:(ServerHelperCompletionBlock)completionBlock;
 @end

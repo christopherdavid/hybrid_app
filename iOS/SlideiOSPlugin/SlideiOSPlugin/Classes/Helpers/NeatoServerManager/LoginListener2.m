@@ -59,7 +59,7 @@
     
     XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
     helper.delegate = self;
-    [helper connectJID:user.chatId password:user.chatPassword host:NEATO_XMPP_SERVER_ADDRESS];
+    [helper connectJID:user.chatId password:user.chatPassword host:XMPP_SERVER_ADDRESS];
 }
 
 - (void)failedToGetUserDetailsWithError:(NSError *)error {

@@ -7,8 +7,6 @@
 #define DEMO_USER_EMAIL  @"demo1@demo.com"
 #define DEMO_USER_PASSWORD  @"demo123"
 
-#define NEATO_XMPP_SERVER_ADDRESS @"rajatogo.com"
-
 #define UDP_SMART_APPS_BROADCAST_PORT 12346
 #define TIME_BEFORE_SOCKET_CLOSES 5
 
@@ -36,6 +34,7 @@
 #define NEATO_SCHEDULE_BASIC_INT 0
 #define NEATO_RESPONSE_EXTRA_PARAM @"extra_param"
 #define NEATO_RESPONSE_EXPIRY_TIME @"expiry_time"
+#define NEATO_RESPONSE_SERIAL_NUMBER @"serial_number"
 
 #define FIND_NEARBY_ROBOTS_BIND_PORT 48001
 #define GET_IP_OF_SELECTED_ROBOT_FIND_PORT 48002
@@ -54,10 +53,6 @@
 #define NEATO_STATUS_ERROR  -1
 #define KEY_NEATO_SERVER_ERROR @"error"
 #define KEY_NEATO_SERVER_ERROR_CODE @"code"
-
-#define NEATO_STAGING_SERVER @"Staging"
-#define NEATO_PROD_SERVER @"Production"
-#define NEATO_DEV_SERVER @"Development"
 
 #define NEATO_KEY_APP_VERSION @"appVersion"
 #define NEATO_KEY_LIB_VERSION @"libVersion"
@@ -195,16 +190,61 @@
 
 #define KEY_FORCED_DISCONNECTED @"forcedDisconnected"
 
+// To switch to Vorwerk's server, comment SERVER_TYPE_NEATO variable
+#define SERVER_TYPE_NEATO 1
+
+#ifdef SERVER_TYPE_NEATO
+    #define STAGING_SERVER @"Staging (Neato)"
+    #define PROD_SERVER @"Production (Neato)"
+    #define DEV_SERVER @"Development (Neato)"
+    #define XMPP_SERVER_ADDRESS @"rajatogo.com"
+
+    #ifdef ROBOT_SERVER_PROD
+        // Will use API's at http://neato.rajatogo.com/wstest/
+        #define BASE_URL @"http://neato.rajatogo.com/api/rest/json"
+        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+
+    #elif SWITCH_TO_DEV_SERVER
+        // Will use API's at http://neatodev.rajatogo.com/wstest/
+        #define BASE_URL @"http://neatodev.rajatogo.com/api/rest/json"
+        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+
+    #else
+        // Will use API's at http://neatostaging.rajatogo.com/wstest/
+        #define BASE_URL @"http://neatostaging.rajatogo.com/api/rest/json"
+        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+    #endif
+
+#else
+    #define STAGING_SERVER @"Staging (Vorwerk)"
+    #define PROD_SERVER @"Production (Vorwerk)"
+    #define DEV_SERVER @"Development (Vorwerk)"
+    #define XMPP_SERVER_ADDRESS @"rajatogo.com"
+
+    #ifdef ROBOT_SERVER_PROD
+        // Will use API's at http://neato.rajatogo.com/wstest/
+        #define BASE_URL @"http://neato.rajatogo.com/api/rest/json"
+        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+
+    #elif SWITCH_TO_DEV_SERVER
+        // Will use API's at http://neatodev.rajatogo.com/wstest/
+        #define BASE_URL @"http://neatodev.rajatogo.com/api/rest/json"
+        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+
+    #else
+        // Will use API's at http://neatostaging.rajatogo.com/wstest/
+        #define BASE_URL @"http://neatostaging.rajatogo.com/api/rest/json"
+        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+    #endif
+#endif
+
 
 #define NETWORK_CONNECTION_FAILURE_MSG @"Request failed!Please check your network settings."
 // To switch to prod server, uncomment SWITCH_TO_PROD_SERVER variable
-//#define SWITCH_TO_PROD_SERVER 1
-
+// #define SWITCH_TO_PROD_SERVER 1
 #ifdef SWITCH_TO_PROD_SERVER
-
-    #define NEATO_API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917" 
     // Switch for create user\robot related API's
-    #define NEATO_ROBOT_SERVER_PROD     1
+    #define ROBOT_SERVER_PROD     1
     // Switch for robot's maps related API's
     #define ROBOT_MAPS_SERVER_PROD      1
     // Switch for robot's schedule related API's
@@ -215,7 +255,6 @@
     #define NOTIFICATION_SERVER_TYPE  @"PROD"
 
 #else
-    #define NEATO_API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917" 
     // Logging would be 'ON' only in DEV mode.
     #define LOGGING_ENABLED             1
     #define ENABLE_DB_CREATION_IN_DOCUMENTS_DIR 1
@@ -228,22 +267,6 @@
     // #define SWITCH_TO_DEV_SERVER 1
 
 #endif
-
-
-#ifdef NEATO_ROBOT_SERVER_PROD
-    // Will use API's at http://neato.rajatogo.com/wstest/
-    #define NEATO_BASE_URL @"http://neato.rajatogo.com/api/rest/json"
-
-#elif SWITCH_TO_DEV_SERVER
-    // Will use API's at http://neatodev.rajatogo.com/wstest/
-    #define NEATO_BASE_URL @"http://neatodev.rajatogo.com/api/rest/json"
-    
-#else
-    // Will use API's at http://neatostaging.rajatogo.com/wstest/
-    #define NEATO_BASE_URL @"http://neatostaging.rajatogo.com/api/rest/json"
-   
-#endif
-
 
 #ifdef ROBOT_ATLAS_SERVER_PROD
     #define NEATO_GET_ROBOT_ATLAS_DATA_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.get_atlas_data"
@@ -307,6 +330,6 @@
 #define NEATO_DELETE_SCHEDULE_DATA @"method=robotschedule.delete_data"
 #define NEATO_GET_SCHEDULE_BASED_ON_TYPE @"method=robotschedule.get_schedule_based_on_type"
 #define NEATO_SET_USER_ATTRIBUTES @"method=user.set_attributes"
-#define NEATO_LINK_ROBOT_URL @"method=robot.initiate_link_to_robot"
+#define NEATO_LINK_ROBOT_URL @"method=robot.link_to_robot"
 #define NEATO_CLEAR_ROBOT_DATA_URL @"method=robot.clear_robot_association"
 #define NEATO_CREATE_USER3_URL @"method=user.create3"

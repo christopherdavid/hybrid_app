@@ -39,7 +39,7 @@
     /*            NeatoUser *user = [NeatoUserHelper getNeatoUser];
      if (user)
      {
-     [connectectionHelper connectJID:user.chatId password:user.chatPassword host:NEATO_XMPP_SERVER_ADDRESS];
+     [connectectionHelper connectJID:user.chatId password:user.chatPassword host:XMPP_SERVER_ADDRESS];
      NeatoRobot *robot = [NeatoRobotHelper getRobotForId:roboId];
      if (robot == nil)
      {
@@ -87,7 +87,7 @@
          NeatoUser *user = [NeatoUserHelper getNeatoUser];
          if (user)
          {
-         [connectectionHelper connectJID:user.chatId password:user.chatPassword host:NEATO_XMPP_SERVER_ADDRESS];
+         [connectectionHelper connectJID:user.chatId password:user.chatPassword host:XMPP_SERVER_ADDRESS];
          NeatoRobot *robot = [NeatoRobotHelper getRobotForId:roboId];
          if (robot == nil)
          {

@@ -14,7 +14,7 @@ static AppSettings *sharedInstance = nil;
 }
 
 - (NSURL *)urlWithBasePathForMethod:(NSString *)method {
-    NSString *urlString = [[NEATO_BASE_URL stringByAppendingString:@"?"] stringByAppendingString:method];
+    NSString *urlString = [[BASE_URL stringByAppendingString:@"?"] stringByAppendingString:method];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
