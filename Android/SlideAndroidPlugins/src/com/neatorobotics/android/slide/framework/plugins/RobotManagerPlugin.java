@@ -44,6 +44,7 @@ import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.RobotGetVirtualOnlineStatusRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.SetRobotNameRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.schedule.RobotScheduleRequest;
+import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiver;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotNotificationsListener;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 
@@ -234,8 +235,11 @@ public class RobotManagerPlugin extends Plugin {
 			String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 			
 			if (mRobotNotificationsPluginListener == null) {
-				mRobotNotificationsPluginListener  = new RobotNotificationsPluginListener();			
-				ApplicationConfig.getInstance(context).getRobotResultReceiver().addRobotNotificationsListener(mRobotNotificationsPluginListener);
+				mRobotNotificationsPluginListener  = new RobotNotificationsPluginListener();	
+				NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
+				if (receiver != null) {
+					receiver.addRobotNotificationsListener(mRobotNotificationsPluginListener);
+				}
 			}			
 			mRobotNotificationsPluginListener.addUnregisterCallbackId(robotId, callbackId);			
 			

@@ -11,6 +11,7 @@ import android.os.Bundle;
 
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiver;
 import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiverConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDataListener;
 import com.neatorobotics.android.slide.framework.service.NeatoSmartAppsEventConstants;
@@ -21,14 +22,16 @@ public class RobotNotificationUtil {
 	private static final String TAG = RobotNotificationUtil.class.getSimpleName();
 	
 	public static void addRobotDataChangedListener(Context context, RobotDataListener listener) {
-		if (ApplicationConfig.getInstance(context) != null) {
-			ApplicationConfig.getInstance(context).getRobotResultReceiver().addRobotDataListener(listener);
+		NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
+		if (receiver != null) {
+			receiver.addRobotDataListener(listener);
 		}
 	}
 	
 	public static void removeRobotDataChangedListener(Context context) {
-		if (ApplicationConfig.getInstance(context) != null) {
-			ApplicationConfig.getInstance(context).getRobotResultReceiver().addRobotDataListener(null);
+		NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
+		if (receiver != null) {
+			receiver.addRobotDataListener(null);
 		}
 	}
 	
@@ -38,7 +41,10 @@ public class RobotNotificationUtil {
 		dataChanged.putString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID, robotId);
 		dataChanged.putInt(NeatoRobotResultReceiverConstants.ROBOT_DATA_KEY_CODE, keyCode);
 		dataChanged.putSerializable(NeatoRobotResultReceiverConstants.ROBOT_DATA_KEY, data);
-		ApplicationConfig.getInstance(context).getRobotResultReceiver().send(resultCode, dataChanged);
+		NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
+		if (receiver != null) {
+			receiver.send(resultCode, dataChanged);
+		}
 	}
 	
 	public static JSONObject getNotificationObject(String robotId, int dataCode, Map<String, String> data) {
