@@ -7,6 +7,7 @@ import android.os.RemoteException;
 
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiver;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDiscoveryListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotNotificationsListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
@@ -59,7 +60,10 @@ public class RobotCommandServiceManager {
 	public static void discoverRobot(Context context, RobotDiscoveryListener listener) {
 		LogHelper.logD(TAG, "Discovery action initiated internal");
 		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-		ApplicationConfig.getInstance(context).getRobotResultReceiver().addDiscoveryListener(listener);
+		NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
+		if (receiver != null) {
+			receiver.addDiscoveryListener(listener);
+		}
 		if (neatoService != null) {
 			try {
 				
@@ -77,7 +81,10 @@ public class RobotCommandServiceManager {
 	public static void tryDirectConnection(Context context, String robotId, RobotPeerConnectionListener listener) {
 		LogHelper.logD(TAG, "tryDirectConnection called");
 		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-		ApplicationConfig.getInstance(context).getRobotResultReceiver().addPeerConnectionListener(listener);
+		NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
+		if (receiver != null) {
+			receiver.addPeerConnectionListener(listener);
+		}
 		if (neatoService != null) {
 			try {
 
@@ -96,7 +103,10 @@ public class RobotCommandServiceManager {
 	public static void tryDirectConnectionWithIp(Context context, String robotId, String ip, RobotPeerConnectionListener listener) {
 		LogHelper.logD(TAG, "tryDirectConnectionWithIp called with ip to connect: " + ip);
 		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-		ApplicationConfig.getInstance(context).getRobotResultReceiver().addPeerConnectionListener(listener);
+		NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
+		if (receiver != null) {
+			receiver.addPeerConnectionListener(listener);
+		}
 		if (neatoService != null) {
 			try {
 
@@ -121,7 +131,12 @@ public class RobotCommandServiceManager {
 			RobotPeerConnectionListener listener) {
 		LogHelper.logD(TAG, "disconnect peer connection action initiated");
 		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-		ApplicationConfig.getInstance(context).getRobotResultReceiver().addPeerConnectionListener(listener);
+		NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
+		
+		if (receiver != null) {
+			receiver.addPeerConnectionListener(listener);
+		}
+		
 		if (neatoService != null) {
 			try {
 				LogHelper.logD(TAG, "Service exists. close peer connection: " + robotId);
@@ -201,12 +216,18 @@ public class RobotCommandServiceManager {
 	
 	public static void registerRobotStateNotificationListener(Context context, RobotStateListener listener) {
 		LogHelper.logD(TAG, "registerRobotStateNotificationListener called");		
-		ApplicationConfig.getInstance(context).getRobotResultReceiver().addRobotStateNotificationListener(listener);
+		NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
+		if (receiver != null) {
+			receiver.addRobotStateNotificationListener(listener);
+		}
 	}
 	
 	public static void registerRobotNotificationsListener(Context context, String robotId, RobotNotificationsListener listener) {
 		LogHelper.logD(TAG, "registerRobotNotificationsListener called");		
-		ApplicationConfig.getInstance(context).getRobotResultReceiver().addRobotNotificationsListener(listener);		
+		NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
+		if (receiver != null) {
+			receiver.addRobotNotificationsListener(listener);		
+		}
 		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
 		if (neatoService != null) {
 			try {
