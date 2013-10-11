@@ -27,21 +27,20 @@
     },
     "dialogs": {
         "EVENT_DELETE": {
-            "title": "Möchten Sie wirklich den Event löschen ?",
-            "title_plural": "Möchten Sie wirklich die Events löschen ?",
-            "message": "",
+            "title": "Event löschen ?",
+            "message": "Möchten Sie wirklich den Event löschen ?",
             "button_1": "Ja",
             "button_2": "Nein"
         },
         "ROBOT_DELETE": {
-            "title": "Möchten Sie wirklich __robotName__ löschen?",
-            "message": "",
+            "title": "Roboter entfernen?",
+            "message": "Möchten Sie wirklich __robotName__ entfernen?",
             "button_1": "Ja",
             "button_2": "Nein"
         },
         "ROBOT_ADDED": {
             "title":"Hurra!",
-            "message": "Ihr Roboter wurde registriert.</br>Viel Spaß beim sauber machen :-)",
+            "message": "Ihr Roboter wurde registriert.<br />Viel Spaß beim sauber machen :-)",
             "button_1": "OK"
         },
         "CANCEL_CLEANING" : {
@@ -82,7 +81,8 @@
         "10006": "Stucked",
         "10007": "Paused Cleaning",
         "10008": "Resumed Cleaning",
-        "10009": "On Base"
+        "10009": "On Base",
+        "10010": "Manual cleaning"
     },
     "pattern": {
         "week": "1,2,3,4,5,6,0",
@@ -94,18 +94,14 @@
         "countryOrder": "germany,switzerland,greatbritain,france,italy"
     },
     "common": {
-        "back": "zurück",
-        "next": "weiter",
-        "stop": "Stop",
+        "logout": "Abmelden",
+        "edit": "bearbeiten",
+        "change": "ändern",
         "ok": "OK",
         "cancel": "Abbrechen",
-        "edit": "bearbeiten",
         "delete": "löschen",
-        "change": "ändern",
-        "logout": "Abmelden",
         "on": "an",
         "off": "aus",
-        "menu": "Menu",
         "cleaningMode": {
             "1": "ECO",
             "2": "Normal"
@@ -119,6 +115,11 @@
             "5": "Freitag",
             "6": "Samstag"
         },
+        "menu": {
+            "cleaning": "Reinigung",
+            "schedule": "Wochenplan",
+            "settings": "Einstellungen"
+        },
         "countries": {
             "germany":"Deutschland",
             "switzerland":"Schweiz",
@@ -129,7 +130,6 @@
     },
     "communication": {
         "fetch_robots": "Roboter Liste wird geladen ...",
-        "fetch_map": "Karten werden geladen ...",
         "update_scheduler": "Kalender wird synchronisiert ...",
         "reset_password": "Passwort wird zurückgesetzt ...",
         "reset_password_done": "Dein Passwort wurde zurückgesetzt.",
@@ -150,13 +150,6 @@
             "title": "Reinigung"
         },
         "page": {
-            "cleaning": "Reinigung",
-            "remote": "Fernbedienung",
-            "schedule": "Wochenplan",
-            "settings": "Einstellungen",
-            "logout": "Abmelden",
-            "change_robot": "Roboter wechseln",
-            "send_to_base": "Zur Basis schicken",
             "spot_size_title": "Spot size: ",
             "cleaningCategory": {
                 "1": "MANUELL",
@@ -186,11 +179,11 @@
         "page": {
             "title": "Bitte teilen Sie uns mit ob sie über Neuigkeiten und Updates für ihren VR-200 informiert werden möchten.",
             "information_header":"LEGAL INFORMATION",
-            "information": "As a customer, we wish to keep you informed about new updates, product related issues and new products.<br/>We  strive to keep your privacy safe. You agree that Vorwerk International Mittelsten Scheid & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br/>To opt-out of our email list, unsubscribe instructions are included at the bottom of each issue.",
+            "information": "As a customer, we wish to keep you informed about new updates, product related issues and new products.<br />We  strive to keep your privacy safe. You agree that Vorwerk International Mittelsten Scheid & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br />To opt-out of our email list, unsubscribe instructions are included at the bottom of each issue.",
             "subscribe":"Anmelden",
             "no_subscribe":"Nicht anmelden",
             "registration_done_title": "Registrierung abgeschlossen",
-            "registration_done_message": "<div class='mailAnimation'></div>Eine Bestätigungs-E-Mail wurde an<br/><span class='highlightedText'>__email__</span><br/>gesendet.<br/><br/>Bitte bestätigen sie Ihren Account innerhalb von 48 Stunden.<br />Nach der Bestätigung können Sie sich einloggen und zu Ihrem Roboter verbinden."
+            "registration_done_message": "<div class='mailAnimation'></div>Eine Bestätigungs-E-Mail wurde an<br /><span class='highlightedText'>__email__</span><br />gesendet.<br /><br />Bitte bestätigen sie Ihren Account innerhalb von 48 Stunden.<br />Nach der Bestätigung können Sie sich einloggen und zu Ihrem Roboter verbinden."
         }
     },
     "createAccount": {
@@ -198,8 +191,7 @@
             "title": "Benutzer Account erstellen"
         },
         "page": {
-            "title": "Willkommen bei der Registrierung.<br/>Zum weiterkommen werden noch ein paar Informationen benötigt.",
-            "name": "Benutzername",
+            "title": "Willkommen bei der Registrierung.<br />Zum weiterkommen werden noch ein paar Informationen benötigt.",
             "email": "Email Addresse",
             "password": "Passwort",
             "password_verify": "Passwort verifizieren",
@@ -208,14 +200,13 @@
     },
     "robotSelection": {
         "navi": {
-            "title": "Auswahl eines Saugroboters",
-            "logout": "Abmelden"
+            "title": "Auswahl eines Saugroboters"
         },
         "page": {
             "register": "Registrierung abgeschlossen.<br>Willkommen <span class='highlightedText font_bold'>__email__</span>",
             "login": "Willkommen <span class='highlightedText font_bold'>__email__</span>!",
             "logged_in": "Hallo <span class='highlightedText font_bold'>__email__</span>.",
-            "no_robot": "Sie haben noch keinen Roboter registriert.<br/><br/>Bitte fügen Sie einen neuen Roboter hinzu indem Sie auf <span class='font_bold'>+</span> drücken.",
+            "no_robot": "Sie haben noch keinen Roboter registriert.<br /><br />Bitte fügen Sie einen neuen Roboter hinzu indem Sie auf <span class='font_bold'>+</span> drücken.",
             "select_robot": "Bitte wählen sie einen Roboter aus:"
         }
     },
@@ -224,21 +215,22 @@
             "title": "Roboter aktivieren"
         },
         "page": {
-            "wifisetup": "Bitte geben sie die Registration ID ein.</br>Sie finden sie unter:</br><span class=\"font_bold highlightedText\">Wifi Einstellungen / Registrierung</span> im Anzeige Menü des Roboters.",
-            "robotId": "Roboter ID"
+            "wifisetup": "Bitte geben sie den Robot Link Code ein.<br />Sie finden sie unter:<br /><span class=\"font_bold highlightedText\">Wifi Einstellungen / Registrierung</span> im Anzeige Menü des Roboters.",
+            "robotId": "Robot Link Code"
         }
     },
     "robotActivationName": {
+        "navi": {
+            "title": "Roboter aktivieren"
+        },
         "page": {
-            "id_accepted": "Ihre Registration ID wurde akzeptiert!</br></br>Sie können nun den Namen Ihres Roboters personalisieren. Sie können jederzeit den Roboter Namen im Einstellungsmenü ändern. ",
+            "id_accepted": "Ihre Registration ID wurde akzeptiert!<br /><br />Sie können nun den Namen Ihres Roboters personalisieren. Sie können jederzeit den Roboter Namen im Einstellungsmenü ändern. ",
             "robot_name": "Roboter Name"
         }
     },
     "loginUser": {
         "navi": {
-            "back": "zurück",
-            "title": "Benutzer anmelden",
-            "next": "anmelden"
+            "title": "Benutzer anmelden"
         },
         "page": {
             "title": "Bitte geben Sie Name und Passwort Ihres Vorwerk Benutzerkontos ein.",
@@ -262,7 +254,6 @@
             "user_settings_desc": "Ändern Sie ihr Passwort.",
             "general_settings": "Allgemeine Einstellungen",
             "general_settings_desc": "Verwalten Sie die Benachrichtigung des Roboters.",
-            "terms": "Nutzungsbedingungen",
             "about": "Über",
             "about_desc": "Zeige Versions Informationen.",
             "link": "Vorwerk",
@@ -279,11 +270,7 @@
             "robot_name": "Roboter Name",
             "robot_id": "Roboter ID",
             "robot_type": "Type",
-            "robot_delete":"Roboter entfernen",
-            "cleaning_options": {
-                "title": "Reinigungs Einstellungen",
-                "schedule": "Zeitplan zum Reinigen benutzen"
-            }
+            "robot_delete":"Roboter entfernen"
         }
     },
     "userSettings": {
@@ -293,15 +280,10 @@
         "page": {
             "email_adress": "E-Mail Addresse",
             "password": "Passwort",
+            "password_show": "Passwort anzeigen",
             "old_password": "Altes Passwort",
             "new_password": "Neues Passwort",
-            "new_password_verify": "Neues Passwort verifizieren",
-            "password_is_being_changed": "Passwort wird geändert",
-            "password_was_not_changed": "Passwort wurde nicht geändert"
-        },
-        "message": {
-            "title": "Passwort konnte nicht geändert werden",
-            "no_server": "Der Server ist nicht erreichbar, Ihr Passwort konnte nicht geändert werden."
+            "new_password_verify": "Neues Passwort verifizieren"
         }
     },
     "generalSettings": {
@@ -317,20 +299,15 @@
             "robot_stuck": "Roboter sitzt fest"
         }
     },
-    "terms": {
-        "navi": {
-            "title": "Nutzungsbedingungen"
-        },
-        "page": {
-            "paragraph": "TODO: fehlenden Text von Vorwerk/neato hinzufügen"
-        }
-    },
     "basicScheduler": {
         "navi": {
-            "back": "zurück",
-            "title": "Wochenplan",
-            "add": "hinzufügen",
-            "edit": "bearbeiten"
+            "title": "Wochenplan"
+        },
+        "page": {
+            "cleaning_options": {
+                "title": "Die Programmierte Reinigungszeit ist deaktiviert",
+                "schedule": "Benutzen Sie den Schieberegler oben links um sie wieder zu aktivieren"
+            }
         }
     },
     "basicSchedulerDate": {
@@ -338,30 +315,13 @@
             "title": "Wochenplan"
         },
         "page": {
-            "cleaning_event": "Reinigungsevent",
             "cleaning_mode_title": "Reinigungsoptionen",
             "cleaning_mode": "Im ECO Modus reinigen",
-            "quiet_time": "Ruhezeit",
             "starting_time": "Startzeit",
-            "clean_every": "Sauge jeden...",
-            "ending_time": "Endzeit",
-            "dnd_on": "Nicht stören am ..."
-        }
-    },
-    "remote": {
-        "navi": {
-            "title": "Remote"
+            "clean_every": "Sauge jeden..."
         }
     },
     "confirm": {
         "close_app": "Wollen Sie das Programm wirklich beenden ?"
-    },
-    "startup": {
-        "message": {
-            "nowifi": "<h1>Please make sure that your mobile device is connected to your WiFi.<h1>"
-        }
-    },
-    "app": {
-        "name": "CleaningRobotApp"
     }
 }

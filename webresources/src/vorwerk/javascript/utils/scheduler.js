@@ -8,12 +8,12 @@
 function Scheduler($root, scheduleType) {
 
     that = this;
-
-    var STANDARD_EVENT_DURATION = 60;
     var HOUR = 60;
     var HOUR_IN_PX = deviceSize.getResolution() == "high" ? 72 : 48;
     var MIN_IN_PX = HOUR_IN_PX / 60;
-    var DEFAULT_START_TIME = "8:00";
+    var EVENT_HEIGHT = deviceSize.getResolution() == "high" ? 72 : 48;
+    var DEFAULT_START_TIME_PORTRAIT = "8:00";
+    var DEFAULT_START_TIME_LANDSCAPE = "6:00";
     var scroller;
     var $content;
     var $scrollWrapper;
@@ -64,9 +64,10 @@ function Scheduler($root, scheduleType) {
         UP:0,
         DOWN:1
     }
-    
+    this.tasks = [];
     this.selectedEvents = ko.observableArray([]);
     this.updatedEvents = ko.observableArray([]);
+    var draggedElement = null;
     
     /**
      * Builds the control and all of its functionality
@@ -104,7 +105,6 @@ function Scheduler($root, scheduleType) {
         // listener after all divs got a size
         $(document).one("pageshow.scheduler", function(e) {
             initLayout();
-            scrollToTime(DEFAULT_START_TIME);
         });
     }
     /**
@@ -124,37 +124,51 @@ function Scheduler($root, scheduleType) {
      * updates the width of layout to take resize/orientation changes
      */
     this.updateLayout = function() {
-        scroller.refresh();
+        console.log("updateLayout draggedElement? " + draggedElement)
+        // if element is already dragged trigger mouseup to stop it
+        if(draggedElement != null) {
+            var oEvent = draggedElement.data('reference');
+            var $column = columns[jQuery.inArray((oEvent.scheduleEventData.day), weekIndex)];
+            draggedElement.trigger( 'mouseup' );
+            $column.toggleClass("dragging",false);
+        }
+        
+        HOUR_IN_PX = deviceSize.getResolution() == "high" ? 72 : 48;
+        EVENT_HEIGHT = deviceSize.getResolution() == "high" ? 72 : 48;
+        // check orientation
+        if(deviceSize.getOrientation() == deviceSize.ORIENTATION.landscape) {
+            HOUR_IN_PX = HOUR_IN_PX/3;
+            $timeColumn.addClass("landscape");
+            $content.addClass("landscape");
+        } else {
+            $timeColumn.removeClass("landscape");
+            $content.removeClass("landscape");
+        }
+        autoScroll.step = HOUR_IN_PX/4;
+        MIN_IN_PX = HOUR_IN_PX / 60;
+        
+        // loop through events and update position
+        $.each(that.tasks, function(index, element) {
+            var oEvent = element.data('reference');
+            var parsedStartTime = $.scroller.parseDate('HH:ii', oEvent.scheduleEventData.startTime);
+            var startTimeInMin = parsedStartTime.getHours() * 60 + parsedStartTime.getMinutes();
+            element.draggable("option", "grid", [HOUR_IN_PX/4, HOUR_IN_PX/4]);
+            element.css('top', MIN_IN_PX * startTimeInMin);
+        });
+        
         var wrapperWidth = $scrollWrapper.width();
         var timeColumnWidth = $timeColumn.width();
+        scroller.refresh();
         
         var contentWidth = wrapperWidth - timeColumnWidth;
         var colwidth = Math.floor(contentWidth / 7) + "px";
         $('.day').width(colwidth);
         $('.dayLabel').width(Math.floor(contentWidth / 7) + "px");
-        
-        /*
-        var width = $scrollWrapper.width();
-        console.log("$scrollWrapper.width() " + $scrollWrapper.width())
-
-        // delta == margin left + right
-        var delta = $content.outerWidth(true) - $content.innerWidth();
-        console.log("$content.outerWidth() " + $content.outerWidth(true) + " $content.innerWidth() " + $content.innerWidth())
-        console.log("delta " + delta);
-        $content.width((parseInt(width) - delta) + "px");
-        
-
-        // $('.dayRow').width((parseInt(width) - delta) + "px");
-
-        // android Bugfix
-        //var contentWidth = (parseInt($content.css('width')) - delta);
-        var contentWidth = parseInt($content.css('width'));
-        console.log("parseInt($content.css('width') " + parseInt($content.css('width')));
-        var colwidth = Math.floor(contentWidth / 7) + "px";
-        $('.day').width(colwidth);
-        $('.dayLabel').width(Math.floor(contentWidth / 7) + "px");
-        //console.log("updateLayout")
-        */
+        if(deviceSize.getOrientation() == deviceSize.ORIENTATION.landscape) {
+            scrollToTime(DEFAULT_START_TIME_LANDSCAPE);
+        } else {
+            scrollToTime(DEFAULT_START_TIME_PORTRAIT);
+        }
     }
     
     this.addEvents = function(eventArray) {
@@ -162,11 +176,11 @@ function Scheduler($root, scheduleType) {
             that.addEvent(eventArray[i]);
         }
     }
-
     this.addEvent = function(oEvent) {
         var parsedStartTime = $.scroller.parseDate('HH:ii', oEvent.scheduleEventData.startTime);
         var startTimeInMin = parsedStartTime.getHours() * 60 + parsedStartTime.getMinutes();
         //console.log("addEvent:\n" + JSON.stringify(event) + "\nweekIndex:\n" + weekIndex);
+        //console.log("parsedStartTime " + parsedStartTime);
         
         // basic scheduler
         if (scheduleType == 0) {
@@ -224,6 +238,12 @@ function Scheduler($root, scheduleType) {
             var oEvent = $(event.target.parentElement).data('reference');
             var $column = columns[jQuery.inArray((oEvent.scheduleEventData.day), weekIndex)];
             $column.toggleClass("dragging",true);
+            draggedElement = $(event.target.parentElement);
+        });
+        $taskInner.on("vmouseup.scheduler", function(event) {
+            var oEvent = $(event.target.parentElement).data('reference');
+            var $column = columns[jQuery.inArray((oEvent.scheduleEventData.day), weekIndex)];
+            $column.toggleClass("dragging",false);
         });
         
         $column.append($task);
@@ -244,8 +264,9 @@ function Scheduler($root, scheduleType) {
                 
                 // disable iScroll, to drag the selection area
                 autoScroll.border.top = -containerScrollY + autoScroll.step;
-                autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - HOUR_IN_PX - autoScroll.step;
+                autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - EVENT_HEIGHT - autoScroll.step;
                 scroller.disable();
+                draggedElement = $(event.target);
             },
             drag:function(event, ui) {
                 var i = $(this).data("draggable"), o = i.options, scrolled = false;
@@ -277,14 +298,14 @@ function Scheduler($root, scheduleType) {
                         if(autoScroll.direction == autoScroll.DOWN && autoScroll.element.scrollStart.y < ui.position.top) {
                             console.log("CHANGED DIRECTION: dragging downwards");
                             autoScroll.border.top = -containerScrollY + autoScroll.step;
-                            autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - HOUR_IN_PX - autoScroll.step;
+                            autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - EVENT_HEIGHT - autoScroll.step;
                             autoScroll.element.position.y -= autoScroll.step;
                             window.clearTimeout(autoScroll.timer);
                             autoScroll.isScrolling = false;
                         } else if(autoScroll.direction == autoScroll.UP && autoScroll.element.scrollStart.y > ui.position.top) {
                             console.log("CHANGED DIRECTION: dragging upwards");
                             autoScroll.border.top = -containerScrollY + autoScroll.step;
-                            autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - HOUR_IN_PX - autoScroll.step;
+                            autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - EVENT_HEIGHT - autoScroll.step;
                             autoScroll.element.position.y += autoScroll.step;
                             window.clearTimeout(autoScroll.timer);
                             autoScroll.isScrolling = false;
@@ -293,7 +314,7 @@ function Scheduler($root, scheduleType) {
                         var tempDelta = ui.position.top - autoScroll.element.initialValue.y;
                         
                         // check if border has been reached and correct delta
-                        // because in handleAutoScroll the event was set to top or bottom border and of this is now more in sync with the pressed event
+                        // because in handleAutoScroll the event was set to top or bottom border and of this is no more in sync with the pressed event
                         if(!autoScroll.element.synced && autoScroll.element.scrollStart.y != ui.position.top) {
                             if(autoScroll.direction == autoScroll.DOWN && autoScroll.element.position.y == 0
                                 && ui.position.top >= 0) {
@@ -358,8 +379,11 @@ function Scheduler($root, scheduleType) {
                     console.log("stop" + ui.position.top);
                     that.movedEvent($(event.target), ui.position.top);
                 }
+                draggedElement = null;
             }
         });
+        // store event in data
+        that.tasks.push($task);
     }
     
     this.checkScrolling = function(posY) {
@@ -400,18 +424,18 @@ function Scheduler($root, scheduleType) {
                 autoScroll.element.position.y = 0;
                 autoScroll.isScrolling = false;
                 autoScroll.border.top = -containerScrollY + autoScroll.step;
-                autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - HOUR_IN_PX - autoScroll.step;
+                autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - EVENT_HEIGHT - autoScroll.step;
             }
         } else {
             // check if container needs to be scrolled
-            if(-containerScrollY + autoScroll.step < $content.height() - $scrollWrapper.height()) {
+            if(-containerScrollY + autoScroll.step < $content.height() - $scrollWrapper.height() + $dayRow.height()) {
                 containerScrollY -= autoScroll.step;
             } else {
-                containerScrollY = -($content.height() - $scrollWrapper.height());
+                containerScrollY = -($content.height() - $scrollWrapper.height() + $dayRow.height());
             }
             
              // check if event has reached bottom
-            if(autoScroll.element.position.y + autoScroll.step < $('.day').height() - HOUR_IN_PX) {
+            if(autoScroll.element.position.y + autoScroll.step < $('.day').height() - EVENT_HEIGHT) {
                 // move event one step upwards 
                 autoScroll.element.position.y += autoScroll.step;
                 autoScroll.element.ui.helper[0].style.top = autoScroll.element.position.y + "px";
@@ -419,10 +443,10 @@ function Scheduler($root, scheduleType) {
                 // restart timer till bottom is reached
                 autoScroll.timer = window.setTimeout(function(){ that.handleAutoScroll() }, autoScroll.interval);
             } else {
-                autoScroll.element.position.y = $('.day').height() - HOUR_IN_PX;
+                autoScroll.element.position.y = $('.day').height() - EVENT_HEIGHT;
                 autoScroll.isScrolling = false;
                 autoScroll.border.top = -containerScrollY + autoScroll.step;
-                autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - HOUR_IN_PX - autoScroll.step;
+                autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - EVENT_HEIGHT - autoScroll.step;
             }
         }
         // update UI
@@ -453,7 +477,26 @@ function Scheduler($root, scheduleType) {
     this.movedEvent = function(element, newPos) {
         var oEvent = element.data('reference');
         var newHour = Math.floor(newPos/HOUR_IN_PX);
-        var newMin  = newPos%HOUR_IN_PX;
+        var newMin  = parseInt(newPos%HOUR_IN_PX,10);
+        // ensure minute is always 0,15,30 or 45
+        if(newMin < 8) {
+            // round to 0
+            newMin = 0;
+        } else if(newMin > 7 && newMin < 23) {
+            //round to 15
+            newMin = 15;
+        } else if(newMin > 22 && newMin < 38) {
+            //round to 30
+            newMin = 30;
+        } else if(newMin > 37 && newMin < 53) {
+            //round to 45
+            newMin = 45;
+        } else {
+            //round to next hour
+            newHour++;
+            newMin = 0;
+        }
+        
         newMin = newMin/HOUR_IN_PX * 60;
         var newTime = newHour + ":" + (newMin < 10 ? "0" + newMin : newMin);
         console.log("newTime " + newTime);
@@ -488,8 +531,13 @@ function Scheduler($root, scheduleType) {
         var timeFormat = $.i18n.t("pattern.time");
         for (var i = 0; i < 24; i++) {
             var localTime = localizeTime(i+":00");
+            var timeClass = "time";
+            // add marker for landscape for every 3 hour
+            if(i%3 != 0) {
+                timeClass += " hideInLandscape";
+            } 
             var $time = $('<div/>', {
-                'class' : 'time',
+                'class' : timeClass,
                 'text' : localTime.time
             });
             if(localTime.marker != "") {
@@ -498,6 +546,7 @@ function Scheduler($root, scheduleType) {
                     'text' : localTime.marker
                 }));
             }
+            
             $timeColumn.append($time)
         }
     }
@@ -589,20 +638,17 @@ function Scheduler($root, scheduleType) {
     }
 
     function initLayout() {
-
         scroller.refresh();
-        // content should be touchable everywhere
-        $content.height($('.timeColumn').height());
-
         that.updateLayout();
     }
     function scrollToTime(time) {
         var parsedStartTime = $.scroller.parseDate('HH:ii', time);
         var startTimeInMin = parsedStartTime.getHours() * 60 + parsedStartTime.getMinutes();
         // scroll to new time but to max of visible area
-        containerScrollY = -Math.min( (MIN_IN_PX * startTimeInMin),($content.height() - $scrollWrapper.height()) );
+        var maxHeight = ($content.height() - $scrollWrapper.height()) < 0 ? 0 : ($content.height() - $scrollWrapper.height());
+        containerScrollY = -Math.min( (MIN_IN_PX * startTimeInMin),maxHeight );
         autoScroll.border.top = -containerScrollY + autoScroll.step;
-        autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - HOUR_IN_PX - autoScroll.step; 
+        autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - EVENT_HEIGHT - autoScroll.step;
         $content.css('-webkit-transform', 'translate(0px, ' + containerScrollY + 'px)');
         $('.timeColumn').css('-webkit-transform', 'translate(0px, ' + containerScrollY + 'px)');
     }
@@ -611,7 +657,7 @@ function Scheduler($root, scheduleType) {
         containerScrollY = y;
         containerScrollX = x;
         autoScroll.border.top = -containerScrollY + autoScroll.step;
-        autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - HOUR_IN_PX - autoScroll.step;
+        autoScroll.border.bottom = -containerScrollY + $scrollWrapper.height() - EVENT_HEIGHT - autoScroll.step;
         $('.dayRow').css('-webkit-transform', 'translate(' + containerScrollX + 'px, 0px)');
         $('.timeColumn').css('-webkit-transform', 'translate(0px, ' + containerScrollY + 'px)');
     }
@@ -627,25 +673,13 @@ function Scheduler($root, scheduleType) {
          */
 
         $root.addClass('scheduler');
-        $timeColumn = $('<div/>', {
-            'class' : 'timeColumn',
-        })
-
-        $dayRow = $('<div/>', {
-            'class' : 'dayRow',
-        })
-
-        $scrollWrapper = $('<div/>', {
-            'id' : 'scrollWrapper',
-        });
+        $timeColumn = $('.timeColumn');
+        $dayRow = $('.dayRow');
+        $scrollWrapper = $('#scrollWrapper');
         $content = $('<div/>', {
             'class' : 'schedulerContent',
         });
         $scrollWrapper.append($content);
-
-        $root.append($timeColumn);
-        $root.append($dayRow);
-        $root.append($scrollWrapper);
     }
 
 

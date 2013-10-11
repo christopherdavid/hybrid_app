@@ -6,7 +6,7 @@
         </div>
         <h1>
             <div class="screenTitle">
-                <span data-i18n="basicSchedulerDate.navi.title" data-bind="translate: language">[navi title]</span>
+                <span data-i18n="basicScheduler.navi.title" data-bind="translate: language">[navi title]</span>
             </div>
             <div class="robotName">
                 <span data-bind="text: robot().robotName">[robot name]</span>
@@ -14,15 +14,30 @@
         </h1>
         <div class="ui-btn-right">
             <a href="#" id="addButton" class="ui-disabled btn-with-image" data-image="add" data-role="button" data-theme="b" data-mini="false" data-inline="true"
-                data-bind="click:add"></a>
+                data-bind="click:add, jqLinkButtonEnable:addEnabled()"></a>
             
         </div>
     </div>
     
     <div data-role="content">
         <div id="schedulerTarget">
-            
-            <div class="schedulerLeftCorner"></div>
+            <div class="schedulerLeftCorner">
+                <select name="flip-1" id="flip-1" data-role="slider" data-bind="value: useSchedule, jqmFlipValue:useSchedule">
+                    <option value="off"></option>
+                    <option value="on"></option>
+                </select>
+            </div>
+            <div class="timeColumn" data-bind="visible:isScheduleEnabled"></div>
+            <div class="dayRow" data-bind="visible:isScheduleEnabled"></div>
+            <div id="scrollWrapper" data-bind="visible:isScheduleEnabled"></div>
+            <div class="disabledScheduler" data-bind="visible:!isScheduleEnabled()">
+                <fieldset>
+                    <h2 data-i18n="basicScheduler.page.cleaning_options.title" 
+                        data-bind="translate: language">[title]</h2>
+                    <p data-i18n="basicScheduler.page.cleaning_options.schedule" 
+                        data-bind="translate: language">[schedule]</p>
+                </fieldset>
+            </div>
         </div>
     </div>
     
@@ -35,21 +50,21 @@
             <ul data-role="listview" data-theme="b" data-inset="true" data-icon=""> 
                 <li class="cleaning"> 
                     <a href="javascript:void(0);" data-bind="click: cleaning" class="active cleaning">
-                        <h3 class="menuPopupBtn cleaning" data-i18n="cleaning.page.cleaning" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                        <h3 class="menuPopupBtn cleaning" data-i18n="common.menu.cleaning" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
                             [cleaning]
                         </h3>
                     </a>
                 </li>
                 <li class="active schedule">
                     <a href="javascript:void(0);" data-bind="click: schedule" class="schedule">
-                        <h3 class="menuPopupBtn" data-i18n="cleaning.page.schedule" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                        <h3 class="menuPopupBtn" data-i18n="common.menu.schedule" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
                             [schedule]
                         </h3>
                     </a>
                 </li>
                 <li class="settings">
                     <a href="javascript:void(0);" data-bind="click: settings" class="settings">
-                        <h3 class="menuPopupBtn" data-i18n="cleaning.page.settings" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
+                        <h3 class="menuPopupBtn" data-i18n="common.menu.settings" data-bind="translate:{obs:language(), target: textTarget.FIRSTCHILD}">
                             [settings]
                         </h3>
                     </a>

@@ -17,8 +17,8 @@ function Application() {
     this.config = {
         firstScreen : "start",
         pageTransition : "none",
-        version:"0.6.0.0",
-        pluginVersion:"0.6.0.05",
+        version:"0.6.0.1",
+        pluginVersion:"0.6.0.08",
         fallbackLanguage:"en-GB",
         viewPath:"",
         emailRegEx: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
@@ -157,7 +157,7 @@ function Application() {
     }
     
     this.loadViewModelFromHistory = function(tempViewModel, bundle, fncCallback) {
-        console.log('loadViewModelFromHistory ' + JSON.stringify(tempViewModel));
+        console.log('loadViewModelFromHistory ');
         that.viewModel = tempViewModel;
         fncCallback();
         if ( typeof that.viewModel.reload != "undefined") {

@@ -6,7 +6,7 @@
                 data-bind="click:back"></a>
         </div>
         <h1>
-            <div class="screenTitle">
+            <div class="screenTitle noRobot">
                 <span data-i18n="createAccount.navi.title" data-bind="translate: language">[navi title]</span>
             </div>
         </h1>
@@ -38,7 +38,7 @@
             </div>
             <div class="line">
                 <input type="checkbox" name="togglePassword" id="togglePassword" class="custom" data-bind="checked: showPassword" data-theme="b" />
-                <label for="togglePassword" data-inline="true" data-i18n="loginUser.page.password_show" 
+                <label for="togglePassword" data-inline="true" data-i18n="createAccount.page.password_show" 
                     data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[show pwd]</label>
             </div>
         </fieldset>

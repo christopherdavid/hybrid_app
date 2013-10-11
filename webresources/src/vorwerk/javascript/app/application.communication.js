@@ -95,21 +95,22 @@ function WorkflowCommunication(parent) {
             dialogHeader =  $.i18n.t("messages.no_wifi.title");
             dialogText =  $.i18n.t("messages.no_wifi.message");
         }
+        
         // show dialog
         if(dialogHeader != "" && !hasCancel) {
             parent.notification.showDialog(dialogType.ERROR, dialogHeader, dialogText, 
-                [{"label":"OK", "callback":function(e){
+                [{"label":$.i18n.t("common.ok"), "callback":function(e){
                         parent.notification.closeDialog();
                         that.connectionCheck(wifiCheck, conDeffer);
                         }
                 }]);
         } else if(dialogHeader != "" && hasCancel) {
             parent.notification.showDialog(dialogType.ERROR, dialogHeader, dialogText, 
-                [{"label":"OK", "callback":function(e){
+                [{"label":$.i18n.t("common.ok"), "callback":function(e){
                     parent.notification.closeDialog();
                     that.connectionCheck(wifiCheck, conDeffer);
                  }},
-                 {"label":"Cancel", "callback":function(e){
+                 {"label":$.i18n.t("common.cancel"), "callback":function(e){
                     parent.notification.closeDialog();
                     conDeffer.reject({"networkState":networkState, "state":"rejected"});
                  }}]);

@@ -10,6 +10,14 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     this.scheduler = 'undefined';
     this.blockedDays = [];
+    this.useSchedule = ko.observable();
+    this.isScheduleEnabled = ko.observable("true");
+    var initScheduleCheckDone = false;
+    this.eventsAddable = ko.observable("false");
+    
+    this.addEnabled = ko.computed(function() {
+        return that.isScheduleEnabled() && that.eventsAddable();
+    }, this);
 
     this.init = function() {
         // check if country is italy. if so change product logo
@@ -18,6 +26,10 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         if(country && country == "italy") {
             $("#menuPopupLogo").addClass("folletto");
         }
+        
+        // check if scheduler is enabled
+        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.isScheduleEnabled, [that.robot().robotId(), SCHEDULE_TYPE_BASIC]);
+        tDeffer.done(that.isScheduleEnabledSuccess);
         
         that.scheduler = new Scheduler($('#schedulerTarget'), 0);
         $('#schedulerTarget').on('updatedEvent', that.updateEvent);
@@ -38,6 +50,23 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         $('#schedulerTarget').off('updatedEvent');
         that.scheduler.destroy();
     }
+    
+    this.isScheduleEnabledSuccess = function(result) {
+        console.log("isScheduleEnabledSuccess\n" +JSON.stringify(result));
+        that.useSchedule(result.isScheduleEnabled == true ? 'on' : 'off');
+        that.isScheduleEnabled(result.isScheduleEnabled);
+        initScheduleCheckDone = true;
+    };
+    
+    this.useSchedule.subscribe(function(newValue) {
+        if(initScheduleCheckDone) {
+            var onoff = newValue == 'on' ? true : false;
+            console.log("useSchedule=" + onoff);
+            that.isScheduleEnabled(onoff);
+            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.enableSchedule, [that.robot().robotId(), SCHEDULE_TYPE_BASIC, onoff]);
+        }
+    });
+    
    
     this.loadScheduler = function() {
         //RobotPluginManager.getScheduleEvents(robotId, scheduleType, callbackSuccess, callbackError)
@@ -57,7 +86,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             tDeffer.fail(that.createScheduleEventsError);
         } else {
             if (result.scheduleEventLists.length >= 0 && result.scheduleEventLists.length < weekIndex.length) {
-                $('#addButton').removeClass("ui-disabled");
+                that.eventsAddable(true);
             }
             
             if(result.scheduleEventLists.length > 0) {
@@ -166,7 +195,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             contextBufferAsString += item;
         });
         // show delete warning message 
-        parent.notification.showDialog(dialogType.WARNING,'Delete event', $.i18n.t('dialogs.EVENT_DELETE.title',{count:events.length}) +"</br>"+ contextBufferAsString, 
+        parent.notification.showDialog(dialogType.WARNING,$.i18n.t('dialogs.EVENT_DELETE.title'), $.i18n.t('dialogs.EVENT_DELETE.message') +"</br>"+ contextBufferAsString, 
             [{label:$.i18n.t('dialogs.EVENT_DELETE.button_1'), callback:that.commitDel}, {label:$.i18n.t('dialogs.EVENT_DELETE.button_2')}]); 
     }
     this.commitDel = function() {

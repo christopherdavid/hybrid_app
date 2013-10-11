@@ -1,30 +1,13 @@
 resourceHandler.registerFunction('robotManagement_ViewModel.js', function(parent) {
     console.log('instance created for: robotManagement_ViewModel');
     var that = this;
-    var initDone = false;
     this.conditions = {};
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     this.newRobotName = ko.observable("");
-    this.useSchedule = ko.observable();
     
     this.init = function() {
-        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.isScheduleEnabled, [that.robot().robotId(), SCHEDULE_TYPE_BASIC]);
-        tDeffer.done(that.isScheduleEnabledSuccess);
+        
     };
-    
-    this.isScheduleEnabledSuccess = function(result) {
-        console.log("isScheduleEnabledSuccess\n" +JSON.stringify(result));
-        that.useSchedule(result.isScheduleEnabled == true ? 'on' : 'off');
-        initDone = true;
-    };
-    
-    this.useSchedule.subscribe(function(newValue) {
-        if(initDone) {
-            var onoff = newValue == 'on' ? true : false;
-            console.log("useSchedule=" + onoff);
-            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.enableSchedule, [that.robot().robotId(), SCHEDULE_TYPE_BASIC, onoff]);
-        }
-    });
     
     this.changeRobot = function() {
         // Switch to robot selection dialog
@@ -70,7 +53,7 @@ resourceHandler.registerFunction('robotManagement_ViewModel.js', function(parent
     
     this.deleteRobot = function() {
         // show delete warning message 
-        parent.notification.showDialog(dialogType.WARNING,'Delete robot', $.i18n.t('dialogs.ROBOT_DELETE.title',{robotName:that.robot().robotName()}), 
+        parent.notification.showDialog(dialogType.WARNING,$.i18n.t('dialogs.ROBOT_DELETE.title'), $.i18n.t('dialogs.ROBOT_DELETE.message',{robotName:that.robot().robotName()}), 
             [{label:$.i18n.t('dialogs.ROBOT_DELETE.button_1'), callback:that.commitDelete}, {label:$.i18n.t('dialogs.ROBOT_DELETE.button_2')}]);
     };
     

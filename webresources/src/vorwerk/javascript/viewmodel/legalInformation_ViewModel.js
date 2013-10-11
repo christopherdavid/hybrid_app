@@ -60,7 +60,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         parent.communicationWrapper.saveToLocalStorage(that.bundle.email + "_country", that.bundle.country);
         var translatedTitle = $.i18n.t("legalInformation.page.registration_done_title");
         var translatedText = $.i18n.t("legalInformation.page.registration_done_message", {email:that.bundle.email});
-        parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":"Ok", "callback":function(e){ parent.notification.closeDialog(); parent.flowNavigator.next(robotScreenCaller.REGISTER);}}]);
+        parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); parent.flowNavigator.next(robotScreenCaller.REGISTER);}}]);
     }
 
     this.errorRegister = function(error) {

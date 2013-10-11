@@ -28,12 +28,44 @@ var guid = function () {
 };
 
 var deviceSize =  (function() {
-    var size, res;
+    var size, res, orientation;
+    $(window).on("resize.deviceSize", function() {
+        //that.updateLayout();
+        console.log("deviceSize resize event")
+        // update size
+        size = {
+            width: $(window).width(),
+            height: $(window).height()
+        }
+        if(size.width > size.height) {
+            orientation = deviceSize.ORIENTATION.landscape;
+        } else {
+            orientation = deviceSize.ORIENTATION.portrait;
+        }
+        console.log("size " + JSON.stringify(size) + " orientation " + orientation);
+    });
     return {
+        ORIENTATION: {
+            "landscape":0,
+            "portrait":1
+        },
+        getOrientation: function() {
+            if(orientation == null) {
+                if(this.getSize().width > this.getSize().height) {
+                    orientation = deviceSize.ORIENTATION.landscape;
+                } else {
+                    orientation = deviceSize.ORIENTATION.portrait;
+                }
+            }
+            this.getOrientation = function() {
+                return orientation;
+            }
+            return orientation;
+        },
         getSize: function() {
             size = {
-                width: $('[data-role="page"]').first().width(),
-                height: $('[data-role="page"]').first().height()
+                width: $(window).width(),
+                height: $(window).height()
             }
             console.log("deviceSize " + JSON.stringify(size));
             this.getSize = function() {
@@ -207,17 +239,6 @@ var robotUiStateHandler = {
             this.current().startButton(visualState[ROBOT_STATE_STOPPED]);
         }
     }
-    
-    // triggerCallback:function() {
-        // this.changestate(this.lastState, this.current);
-    // },
-    // changestate: function(from, to) {
-        // this.lastState = from;
-        // this.current = to;
-        // if(this.callback != null && typeof this.callback == "function") {
-            // this.callback(from, to);
-        // }
-    // }
 };
 function createWaitMessageLoop(delayWakeUp, delayGetReady, robotId, lastGuid) {
     console.log("createWaitMessageLoop delayWakeUp: "+ delayWakeUp + " robotId: " + robotId)
