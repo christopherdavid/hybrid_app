@@ -9,15 +9,20 @@
     background-color: @color_page_background;
     
     .schedulerLeftCorner {
-      position:absolute;
-      top:0;
-      left:0;
-      width:@scheduler_time_column_width;
-      height:@scheduler_day_row_height;
-      -webkit-transform:translateZ(0);
-      .both-gradient-3-offset(@color_page_background, 0%, @page_gradient_start, 50%, @page_gradient_end, 100%,
-                              @color_page_background, 0%, @page_gradient_start, 66%, @page_gradient_end, 100%);
-      z-index:1001;
+        position:absolute;
+        top:0;
+        left:0;
+        width:@scheduler_time_column_width;
+        height:@scheduler_day_row_height;
+        -webkit-transform:translateZ(0);
+        .both-gradient-3-offset(@color_page_background, 0%, @page_gradient_start, 50%, @page_gradient_end, 100%,
+                                @color_page_background, 0%, @page_gradient_start, 66%, @page_gradient_end, 100%);
+        z-index:1001;
+        
+        .ui-slider {
+            margin:0;
+            width:@scheduler_time_column_width!important;
+        }
     }
 
     .dayRow {
@@ -59,6 +64,12 @@
         margin-top:@scheduler_day_row_height;
         .horizontal-gradient-3-offset(@color_page_background, 0%, @page_gradient_start, 66%, @page_gradient_end, 100%);
         
+        &.landscape {
+            .time.hideInLandscape {
+                display:none;
+            }
+        }
+        
         .time {
             height: @scheduler_hour_height;
             text-align: right;
@@ -97,13 +108,23 @@
         background-position-y: @scheduler_event_height/2 - @scheduler_grid_line_height/2, 12*@scheduler_hour_height - @scheduler_noon_line_height/2 + @scheduler_event_height/2 - @scheduler_grid_line_height/2;
         background-size:@scheduler_grid_size, @scheduler_noon_line_size;
         background-repeat:repeat, repeat-x;
+        height: 25*@scheduler_hour_height - @scheduler_hour_height/4; // same height as day
         
-      
+        &.landscape {
+            height: 9*@scheduler_hour_height - @scheduler_hour_height/3/4; // same height as day
+            background-image: url('../../img/bg_scheduler_land_6x96.png'), url('../../img/bg_scheduler_noon_6x4.png');
+            background-position-y: @scheduler_event_height/2 - @scheduler_grid_line_height/2, 4*@scheduler_hour_height - @scheduler_noon_line_height/2 + @scheduler_event_height/2 - @scheduler_grid_line_height/2 + 1; // plus one for round up fix
+            
+            .day {
+                height: 9*@scheduler_hour_height - @scheduler_hour_height/3/4; // divide through 3 to get compressed size, divide through 4 to get one step which is equivalent to 15min
+            }
+        }
+        
         .day {
             display : inline-block;
             width: floor(100%/ 7);
             min-width: @scheduler_day_min_column_width;
-            height: 24*@scheduler_hour_height + @scheduler_hour_height*(3/4); 
+            height: 25*@scheduler_hour_height - @scheduler_hour_height/4; //divide through 4 to get one step which is equivalent to 15min 
             position: relative;
             margin-top: -(@scheduler_hour_height - @scheduler_event_height)/2; // remove space from icon to task area
             
@@ -234,6 +255,28 @@
                   border-radius:25px;
                   border:1px solid #f0f;
                 }
+            }
+        }
+    }
+    
+    .disabledScheduler {
+        position:relative;
+        top:100px;
+        
+        fieldset {
+            width:250px;
+            margin:auto;
+            text-align: center;
+            
+            h2 {
+                .font_bold;
+                .font_picker;
+            }
+            
+            p {
+                .font_reg;
+                .font_big;
+                color: @color_green_text_highlight;
             }
         }
     }

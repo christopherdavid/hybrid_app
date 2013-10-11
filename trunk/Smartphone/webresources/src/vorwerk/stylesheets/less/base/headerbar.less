@@ -64,6 +64,11 @@
         border: 0px solid #000;
         border-bottom:@headerbar_border_bottom solid @header_border_bottom_bg;
         .vertical-gradient(@header_bg_gradient_start,@header_bg_gradient_end);
+        
+      &.notitle {
+        background: transparent;
+      }
+        
     }
     &.ui-bar-transparent {
         background: transparent;
@@ -75,7 +80,7 @@
     height:@headerbar_height - @headerbar_border_top + 1;//1px is a jqueryfix for ui-header-fixed
     
     .ui-title {
-        margin:0px (@headerbar_button_width + @headerbar_button_height/2 + 10) 0;
+        margin:0px (@headerbar_button_width + @headerbar_button_height/2 - 10) 0;
         
         .screenTitle {
             .font_big;

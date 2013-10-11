@@ -82,7 +82,7 @@ function WorkflowNotification(parent) {
                             var dialogHeader =  $.i18n.t("messages.not_same_network.title");
                             var dialogText   =  $.i18n.t("messages.not_same_network.message");
                             that.showDialog(dialogType.ERROR, dialogHeader, dialogText, 
-                                [{"label":"OK", "callback":function(e){
+                                [{"label":$.i18n.t("common.ok"), "callback":function(e){
                                         that.closeDialog();
                                         parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
                                     }
@@ -274,7 +274,7 @@ function WorkflowNotification(parent) {
         } else {
             $("#dialogPopup .ui-bar-buttons").addClass("buttons_1");
             $("#dialogPopup .first-button").addClass("ui-last-child");
-            $("#dialogPopup .first-button .ui-btn-text").text("Ok"); 
+            $("#dialogPopup .first-button .ui-btn-text").text($.i18n.t("common.ok")); 
             $("#dialogPopup .first-button").on("click.dialog", function() {
                 that.closeDialog();
             });

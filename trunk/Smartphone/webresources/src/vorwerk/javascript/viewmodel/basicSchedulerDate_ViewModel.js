@@ -267,7 +267,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
             sContext += $.i18n.t("common.cleaningMode." + item.scheduleEventData.cleaningMode);
             
             // show delete warning message 
-            parent.notification.showDialog(dialogType.WARNING,'Delete event', $.i18n.t('dialogs.EVENT_DELETE.title', 1) +"</br>"+ sContext, 
+            parent.notification.showDialog(dialogType.WARNING,$.i18n.t('dialogs.EVENT_DELETE.title'), $.i18n.t('dialogs.EVENT_DELETE.message') +"</br>"+ sContext, 
                 [{label:$.i18n.t('dialogs.EVENT_DELETE.button_1'), callback:that.commitDel}, {label:$.i18n.t('dialogs.EVENT_DELETE.button_2')}]);
         } 
     }

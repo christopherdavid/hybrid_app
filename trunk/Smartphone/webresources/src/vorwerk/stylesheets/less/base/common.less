@@ -4,6 +4,10 @@
 
 // Substitute page and viewport background with gradient
 
+ *:not(input):not(textarea) {
+    -webkit-user-select: none; /* disable selection/Copy of UIWebView */
+    -webkit-touch-callout: none; /* disable the IOS popup when long-press on a link */
+}
 .ui-page, .ui-mobile-viewport, .dialog.ui-mobile-viewport {
     background:@color_page_background; 
 }
@@ -124,11 +128,36 @@ label {
 #countryWrapper {
     position:absolute;
     z-index:1;
-    top:@headerbar_height + @form_line_height +  @content_space + @content_list_space;
-    bottom:@content_list_space;
+    top:@headerbar_height + @form_line_height +  @content_space + @content_list_space - @headerbar_border_shadow;
+    bottom:@content_list_space + @headerbar_border_shadow;
     left:@content_list_space;
     right:@content_list_space;
     overflow:auto;
+    max-width: 600px;
+    padding-top:@headerbar_border_shadow;
+    padding-bottom:@headerbar_border_shadow;
+    
+    &:before {
+        content: "";
+        position: absolute;
+        left:0;
+        right:0;
+        height:@headerbar_border_shadow;
+        top:0;
+        .vertical-gradient(@page_gradient_start, @page_gradient_end);
+        z-index:5
+    }
+    &:after {
+        content: "";
+        position: absolute;
+        left:0;
+        right:0;
+        height:@headerbar_border_shadow;
+        bottom:0;
+        .vertical-gradient(@page_gradient_end, @page_gradient_start);
+        z-index:5
+    }
+    
     
     #countryScroller {
         position:absolute; z-index:1;
@@ -145,11 +174,35 @@ label {
 #legalWrapper {
     position:absolute;
     z-index:1;
-    top:@headerbar_height + @form_line_height*2 +  @content_space;
-    bottom:@radiogroup_item_line_height*2 + @button_border*2 + @content_list_space;
+    top:@headerbar_height + @form_line_height*2 +  @content_space - @headerbar_border_shadow;
+    bottom:@radiogroup_item_line_height*2 + @button_border*2 + @content_list_space + @headerbar_border_shadow;
     left:@content_space;
     right:@content_space;
     overflow:auto;
+    padding-top:@headerbar_border_shadow;
+    padding-bottom:@headerbar_border_shadow;
+    
+    &:before {
+        content: "";
+        position: absolute;
+        left:0;
+        right:0;
+        height:@headerbar_border_shadow;
+        top:0;
+        .vertical-gradient(@page_gradient_start, @page_gradient_end);
+        z-index:5
+    }
+    &:after {
+        content: "";
+        position: absolute;
+        left:0;
+        right:0;
+        height:@headerbar_border_shadow;
+        bottom:0;
+        .vertical-gradient(@page_gradient_end, @page_gradient_start);
+        z-index:5
+    }
+    
     
     #legalScroller {
         position:absolute; z-index:1;
@@ -169,17 +222,6 @@ label {
     left:@content_list_space;
     right:@content_list_space;
     height:@radiogroup_item_line_height*2 + @button_border*2;
-    
-    &:after {
-        content: "";
-        position: absolute;
-        left:0;
-        right:0;
-        height:@headerbar_border_shadow;
-        bottom:@radiogroup_item_line_height*2 + @button_border*2;
-        .vertical-gradient(@page_gradient_end, @page_gradient_start);
-        z-index:5
-    }
     
     .ui-controlgroup {
         margin:0;

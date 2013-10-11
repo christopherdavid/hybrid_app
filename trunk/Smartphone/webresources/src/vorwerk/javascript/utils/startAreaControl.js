@@ -6,7 +6,7 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
     var radius = 146;
     var centerX = null;
     var centerY = null;
-    var scaleFactor = deviceSize.getResolution() == "high" ? 1.0 : 0.5;
+    var scaleFactor = deviceSize.getResolution() == "high" ? 0.75 : 0.5;
     var BTN_RADIUS = 146;
     this.isRemoteEnabled = ko.observable(true);
     this.eventMouseDown = false;
@@ -51,11 +51,17 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
     };
 
     this.updatePosition = function() {
+        
+        radius = BTN_RADIUS * scaleFactor;
+        
         centerX = (startArea.width() * scaleFactor) / 2;
         centerY = (startArea.height() * scaleFactor) / 2;
-        radius = BTN_RADIUS * scaleFactor;
+        
         posX = startArea.offset().left;
         posY = startArea.offset().top;
+        
+        // console.log("x: " + (centerX + posX));
+        // console.log("y: " + (centerY + posY)) ;
     };
 
     this.scaleStartArea = function() {

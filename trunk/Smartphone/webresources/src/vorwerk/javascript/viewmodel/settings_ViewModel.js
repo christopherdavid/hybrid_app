@@ -33,11 +33,6 @@ resourceHandler.registerFunction('settings_ViewModel.js', function(parent) {
         parent.flowNavigator.next();
     };
     
-    this.terms = function() {
-        that.conditions['terms'] = true;
-        parent.flowNavigator.next();
-    }
-    
     this.about = function() {
         that.conditions['about'] = true;
         parent.flowNavigator.next();
