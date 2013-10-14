@@ -232,4 +232,20 @@
   return NOTIFICATION_SERVER_TYPE;
 }
 
++ (NSString *)appInfo {
+    NSDictionary *appInfo = @{ @"locale" : [[NSLocale currentLocale] localeIdentifier],
+                               @"device_name" : [AppHelper deviceModelName],
+                               @"os_name" : [AppHelper deviceSystemName],
+                               @"os_version" : [AppHelper deviceSystemVersion],
+                               @"current_time_zone" :  [AppHelper rawTimeZoneOffset],
+                               @"application_version" : [self getMainAppVersion]
+                              };
+    return [AppHelper jsonStringFromNSDictionary:appInfo];
+}
+
++ (NSString *)rawTimeZoneOffset {
+    NSInteger seconds = ([[NSTimeZone localTimeZone] secondsFromGMT] / (60 * 60));
+    return [[NSNumber numberWithInteger:seconds] stringValue];
+}
+
 @end

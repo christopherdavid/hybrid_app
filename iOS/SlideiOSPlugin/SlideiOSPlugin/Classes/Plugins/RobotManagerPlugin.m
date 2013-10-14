@@ -710,6 +710,11 @@
     NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
     NSDictionary *commandParams = [parameters objectForKey:KEY_COMMAND_PARAMETERS];
     NSMutableDictionary *params = [commandParams objectForKey:KEY_PARAMS];
+    if ([params objectForKey:KEY_CLEANING_CATEGORY] && [[params objectForKey:KEY_CLEANING_CATEGORY] integerValue] == CLEANING_CATEGORY_MANUAL) {
+        NSError *error = [AppHelper nserrorWithDescription:@"This API does not support manual cleaning!" code:UI_ERROR_NOT_SUPPORTED];
+        [self sendError:error forCallbackId:command.callbackId];
+        return;
+    }
     debugLog(@"params = %@",params);
     RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
     call.delegate = self;
@@ -1163,6 +1168,12 @@
 - (void)failedToClearRobotDataWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
     [self sendError:error forCallbackId:callbackId];
+}
+
+- (void)turnMotorOnOff:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSError *error = [AppHelper nserrorWithDescription:@" API 'turnMotorOnOff' is deprecated, use 'turnMotorOnOff2' instead." code:UI_ERROR_NOT_SUPPORTED];
+    [self sendError:error forCallbackId:command.callbackId];
 }
 
 @end
