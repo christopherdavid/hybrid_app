@@ -28,4 +28,5 @@
 + (BOOL)hasServerRequestFailedForResponse:(NSDictionary *)serverResponse;
 + (NSString *)getApplicationId;
 + (NSString *)getNotificationServerType;
++ (NSString *)appInfo;
 @end

@@ -1,6 +1,7 @@
 #import "NSURLConnectionHelper.h"
 #import "LogHelper.h"
 #import "AppHelper.h"
+#import "NeatoUserHelper.h"
 
 #define SMART_APP_ERROR_DOMAIN @"NeatoSmartApp"
 
@@ -23,6 +24,7 @@
 @property (nonatomic, strong) DownloadCompletionBlock downloadCompletionBlock;
 
 - (void) writeToFileHelper:(NSString *) fileNameWithPath data:(NSData*) dataToWrite;
+- (NSURLRequest *)requestWithNeatoHeaders:(NSURLRequest *)request;
 @end
 
 @implementation NSURLConnectionHelper
@@ -51,6 +53,9 @@
   
     // Trace app info
     [AppHelper traceAppInfo];
+    
+    // Add Neato headers to each server request.
+    request = [self requestWithNeatoHeaders:request];
     
     self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
     
@@ -297,6 +302,17 @@
     self.currentRetryCount = INVALID_RETRY_COUNT;
   }
   return self;
+}
+
+- (NSURLRequest *)requestWithNeatoHeaders:(NSURLRequest *)request {
+    NSMutableURLRequest *requestWithHeaders = [request mutableCopy];
+    [requestWithHeaders addValue:[NeatoUserHelper uniqueDeviceIdForUser] forHTTPHeaderField:@"X-NEATO-UUID"];
+    NSString *authToken = [NeatoUserHelper getUsersAuthToken];
+    if ([authToken length] != 0) {
+      [requestWithHeaders addValue:[NeatoUserHelper getUsersAuthToken] forHTTPHeaderField:@"X-NEATO-SESSION-ID"];  
+    }
+    [requestWithHeaders addValue:[AppHelper appInfo] forHTTPHeaderField:@"X-NEATO-APPINFO"];
+    return requestWithHeaders;
 }
 
 @end

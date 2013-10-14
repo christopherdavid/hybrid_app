@@ -53,6 +53,7 @@
     [userDefaults setBool:NO forKey:KEY_USER_LOOGED_IN];
     [userDefaults synchronize];
     [[NeatoDataStore sharedNeatoDataStore] deleteUserDetails];
+    [NeatoUserHelper resetUserDefaults];
 }
 
 // TODO: should work on BG thread
@@ -134,6 +135,15 @@
     debugLog(@"");
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults removeObjectForKey:KEY_UNIQUE_DEVICE_ID_FOR_USER];
+    [userDefaults synchronize];
+}
+
++ (void)resetUserDefaults {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *dict = [userDefaults dictionaryRepresentation];
+    for (id key in dict) {
+        [userDefaults removeObjectForKey:key];
+    }
     [userDefaults synchronize];
 }
 
