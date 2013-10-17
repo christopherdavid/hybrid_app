@@ -46,6 +46,16 @@ var ROBOT_CONNECTED 				= 4007;
 var ROBOT_DISCONNECTED 				= 4008;
 var ROBOT_NOT_CONNECTED 			= 4009;
 
+// The keyCode to denote about linking success
+var ROBOT_LINKING_SUCCESS			= 4010
+// The keyCode to denote about linking failure
+var ROBOT_LINKING_FAILURE			= 4011
+
+// The keyCode to denote that robot is linked to some other user.
+// Whenever new user is linked to the robot
+// then all associate users with that robot gets the notification
+var ROBOT_NEW_LINKING_FORMED		= 4012
+
 // Robot state codes
 var ROBOT_STATE_UNKNOWN 	= 10001;
 var ROBOT_STATE_CLEANING 	= 10002;
@@ -82,6 +92,7 @@ var ACTION_TYPE_LOGOUT 							= "logout";
 var ACTION_TYPE_ISLOGGEDIN 						= "isLoggedIn";
 var ACTION_TYPE_CREATE_USER 					= "createUser";
 var ACTION_TYPE_CREATE_USER2					= "createUser2";
+var ACTION_TYPE_CREATE_USER3					= "createUser3";
 var ACTION_TYPE_RESEND_VALIDATION_MAIL			= "resendValidationMail";
 var ACTION_TYPE_IS_USER_VALIDATED				= "isUserValidated";
 var ACTION_TYPE_GET_USER_DETAILS 				= "getUserDetails";
@@ -538,6 +549,49 @@ UserMgr.prototype.createUser2 = function(email, password, name, alternateEmail, 
 };
 
 /**
+ * This API creates a new user by triggering email validation. Use 
+ * this API to create new users.
+ * <p>
+ * on success this API returns a JSON Object
+ * <br>{email:"emailAddress", alternate_email:"alternateEmailAddress", userName:"userName", userId:"userId", validation_status:"validationStatus", extraParams:"jsonParams" }
+ * <br>where emailAddress is the email Address of the user
+ * <br>alternateEmailAddress is the alternate email Address of the user
+ * <br>userName is the name of the user
+ * <br>userId is the user id of the user 
+ * <br>extraParams is the json text containing extra params for the user
+ * <br>validation status could be among the following values
+ * <br>USER_STATUS_VALIDATED - user is validated and logged into the app
+ * <br>USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD - user is not validated but can log in for a brief amount of time into the app
+ * <br>USER_STATUS_NOT_VALIDATED - user is not validated and cannot log into the app
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode
+ * 
+ * @param email				the email address of the user
+ * @param password			the password of the user
+ * @param name				name of the user
+ * @param alternateEmail	the alternate email id of the user (optional parameter)
+ * @param extraInfo			extra infomation of the user in JSON format (optional parameter). 
+ * We are using JSON format for the extensibility purpose. For country code and optIn following
+ * will be the JSON
+ * {"countryCode":"US", "optIn":"true"} 
+ * @param callbackSuccess 	the success callback for this API
+ * @param callbackError 	the error callback for this API
+ * @returns					returns a json object
+ */
+UserMgr.prototype.createUser3 = function(email, password, name, alternateEmail, extraInfo, callbackSuccess, callbackError) {
+	var registerArray = {'email':email, 'password':password, 'userName':name, 'alternate_email':alternateEmail, 'extra_param':extraInfo };
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_CREATE_USER3, [registerArray]);
+};
+
+/**
  * Resend the validation email to the user email id.
  * <p>
  * on success this API returns a JSON Object {message:"We have resent validation mail"}
@@ -696,8 +750,7 @@ UserMgr.prototype.associateRobotCommand = function(email, robotId, callbackSucce
  * This API initiates the process of linking a robot with a user
  * <p>
  * This API returns on success a JSON Object 
- * <br>{linkCodeExpiryTime:<linkCodeExpiryTime>}
- * <br>where linkCodeExpiryTime is expiry time of the link code in milliseconds 
+ * <br>{"success":<true/false>, "robotId":<robotId>, "message":<message>}
  * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
  * <br>where errorCode is the error type and it's values are
  * <br>1001 - Unknown error
@@ -2070,6 +2123,48 @@ var UserPluginManager = (function() {
 		},
 		
 		/**
+		 * This API creates a new user by triggering email validation. Use 
+		 * this API to create new users.
+		 * <p>
+		 * on success this API returns a JSON Object
+		 * <br>{email:"emailAddress", alternate_email:"alternateEmailAddress", userName:"userName", userId:"userId", "extraParams": jsonParams, validation_status:"validationStatus"}
+		 * <br>where emailAddress is the email Address of the user
+		 * <br>alternateEmailAddress is the alternate email Address of the user
+		 * <br>userName is the name of the user
+		 * <br>userId is the user id of the user 
+		 * <br>extraParams are the extra parameters provided by the user
+		 * <br>validation status could be among the following values
+		 * <br>USER_STATUS_VALIDATED - user is validated and logged into the app
+		 * <br>USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD - user is not validated but can log in for a brief amount of time into the app
+		 * <br>USER_STATUS_NOT_VALIDATED - user is not validated and cannot log into the app
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode
+		 * 
+		 * @param email				the email address of the user
+		 * @param password			the password of the user
+		 * @param name				name of the user
+		 * @param alternateEmail	the alternate email id of the user (optional parameter)
+		 * @param extraInfo			extra infomation of the user in JSON format (optional parameter). 
+		 * We are using JSON format for the extensibility purpose. For country code and optIn following
+		 * will be the JSON
+		 * {"countryCode":"US", "optIn":"true"} 
+
+		 * @param callbackSuccess 	the success callback for this API
+		 * @param callbackError 	the error callback for this API
+		 * @returns					returns a json object
+		 */		
+		createUser3: function(email, password, name, alternateEmail, extraInfo, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.createUser3(email, password, name, alternateEmail, extraInfo, callbackSuccess, callbackError);
+		},
+		
+		/**
 		 * Resend the validation email to the user email id.
 		 * <p>
 		 * on success this API returns a JSON Object {message:"We have resent validation mail"}
@@ -3388,7 +3483,7 @@ var PluginManagerHelper =  (function() {
 		 *  - startTime
 		 *  - cleaningMode
 		 *  Returns: Basic Schedule JSON object
-		 *  {'day':day, 'startTime': startTime, â€˜cleaningModeâ€™:cleaningMode}
+		 *  {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
 		 */
 		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {

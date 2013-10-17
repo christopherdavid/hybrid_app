@@ -124,6 +124,7 @@
             background: transparent;
             border-top:1px solid @listview_separator_color;
             .box-shadow-none()!important;
+            /*
             &:first-child {
               border-top:0px none;
               .border-radius-top(inherit)!important;
@@ -131,6 +132,7 @@
             &:last-child {
               .border-radius-bottom(inherit)!important;
             }
+            */
             .ui-btn-inner {
                 line-height:normal;
                 padding-left: @content_space;
@@ -171,12 +173,21 @@
             &.ui-last-child {
                 .border-radius-bottom(initial);
             }
-            
+            /*
             &.ui-btn-down-a, &.ui-selected {
                 background: @listview_bg_down_color;
                 
                 .ui-btn-text {
-                  
+                    .ui-li-desc {
+                        color:@listview_description_selected_color;
+                    }
+                }
+            }
+            */
+            &.ui-radio-on {
+                background: @listview_bg_down_color!important;
+                
+                .ui-btn-text {
                     .ui-li-desc {
                         color:@listview_description_selected_color;
                     }
@@ -201,19 +212,19 @@
                     background-position: 0 0;
                     background-image: url(../../img/icons/country_80x400.png);
                 }
-                &[data-country='germany'] .ui-btn-inner:before {
+                &[data-country='DE'] .ui-btn-inner:before {
                     background-position-y:0;
                 }
-                &[data-country='switzerland'] .ui-btn-inner:before {
+                &[data-country='CH'] .ui-btn-inner:before {
                     background-position-y:-@radiogroup_icon_height*1;
                 }
-                &[data-country='greatbritain'] .ui-btn-inner:before {
+                &[data-country='GB'] .ui-btn-inner:before {
                     background-position-y:-@radiogroup_icon_height*2;
                 }
-                &[data-country='france'] .ui-btn-inner:before {
+                &[data-country='FR'] .ui-btn-inner:before {
                     background-position-y:-@radiogroup_icon_height*3;
                 }
-                &[data-country='italy'] .ui-btn-inner:before {
+                &[data-country='IT'] .ui-btn-inner:before {
                     background-position-y:-@radiogroup_icon_height*4;
                 }
             }

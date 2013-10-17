@@ -2593,23 +2593,28 @@ label {
   -o-box-shadow: none !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
-}
-.radioGroup .ui-radio .ui-btn:first-child {
-  border-top: 0px none;
-  -webkit-border-top-left-radius: inherit !important;
-  -webkit-border-top-right-radius: inherit !important;
-  -moz-border-radius-topleft: inherit !important;
-  -moz-border-radius-topright: inherit !important;
-  border-top-left-radius: inherit !important;
-  border-top-right-radius: inherit !important;
-}
-.radioGroup .ui-radio .ui-btn:last-child {
-  -webkit-border-bottom-right-radius: inherit !important;
-  -webkit-border-bottom-left-radius: inherit !important;
-  -moz-border-radius-bottomright: inherit !important;
-  -moz-border-radius-bottomleft: inherit !important;
-  border-bottom-right-radius: inherit !important;
-  border-bottom-left-radius: inherit !important;
+  /*
+            &:first-child {
+              border-top:0px none;
+              .border-radius-top(inherit)!important;
+            }
+            &:last-child {
+              .border-radius-bottom(inherit)!important;
+            }
+            */
+
+  /*
+            &.ui-btn-down-a, &.ui-selected {
+                background: @listview_bg_down_color;
+                
+                .ui-btn-text {
+                    .ui-li-desc {
+                        color:@listview_description_selected_color;
+                    }
+                }
+            }
+            */
+
 }
 .radioGroup .ui-radio .ui-btn .ui-btn-inner {
   line-height: normal;
@@ -2660,12 +2665,10 @@ label {
   border-bottom-right-radius: initial;
   border-bottom-left-radius: initial;
 }
-.radioGroup .ui-radio .ui-btn.ui-btn-down-a,
-.radioGroup .ui-radio .ui-btn.ui-selected {
-  background: #0e7f3a;
+.radioGroup .ui-radio .ui-btn.ui-radio-on {
+  background: #0e7f3a !important;
 }
-.radioGroup .ui-radio .ui-btn.ui-btn-down-a .ui-btn-text .ui-li-desc,
-.radioGroup .ui-radio .ui-btn.ui-selected .ui-btn-text .ui-li-desc {
+.radioGroup .ui-radio .ui-btn.ui-radio-on .ui-btn-text .ui-li-desc {
   color: #000000;
 }
 .radioGroup .ui-radio .ui-btn.with-image .ui-btn-inner {
@@ -2684,19 +2687,19 @@ label {
   background-position: 0 0;
   background-image: url(../../img/icons/country_80x400.png);
 }
-.radioGroup .ui-radio .ui-btn.with-image[data-country='germany'] .ui-btn-inner:before {
+.radioGroup .ui-radio .ui-btn.with-image[data-country='DE'] .ui-btn-inner:before {
   background-position-y: 0;
 }
-.radioGroup .ui-radio .ui-btn.with-image[data-country='switzerland'] .ui-btn-inner:before {
+.radioGroup .ui-radio .ui-btn.with-image[data-country='CH'] .ui-btn-inner:before {
   background-position-y: -40px;
 }
-.radioGroup .ui-radio .ui-btn.with-image[data-country='greatbritain'] .ui-btn-inner:before {
+.radioGroup .ui-radio .ui-btn.with-image[data-country='GB'] .ui-btn-inner:before {
   background-position-y: -80px;
 }
-.radioGroup .ui-radio .ui-btn.with-image[data-country='france'] .ui-btn-inner:before {
+.radioGroup .ui-radio .ui-btn.with-image[data-country='FR'] .ui-btn-inner:before {
   background-position-y: -120px;
 }
-.radioGroup .ui-radio .ui-btn.with-image[data-country='italy'] .ui-btn-inner:before {
+.radioGroup .ui-radio .ui-btn.with-image[data-country='IT'] .ui-btn-inner:before {
   background-position-y: -160px;
 }
 #startlist {
@@ -3090,6 +3093,7 @@ label {
  */
 .ui-popup-container {
   -webkit-transform: translateZ(0);
+  min-width: 285px;
 }
 .ui-popup-container .ui-header .ui-title {
   margin-right: 3%;
@@ -4371,27 +4375,6 @@ div.ui-slider-switch .ui-slider-inneroffset .ui-btn.ui-slider-handle .ui-btn-inn
 }
 .ui-checkbox .ui-btn .ui-icon.ui-icon-checkbox-on {
   background-position-x: -21px;
-}
-.textWithButton {
-  position: relative;
-  width: 100%;
-}
-.textWithButton .textBlock {
-  margin-right: 110px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.textWithButton .buttonBlock {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-}
-.textWithButton .buttonBlock .ui-btn {
-  width: 105px;
-  margin: 0;
-}
-.textWithButton .buttonBlock .ui-btn .ui-btn-inner {
-  padding-left: 10px;
 }
 .ui-popup-screen.in {
   /*opacity: 0.7;

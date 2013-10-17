@@ -91,7 +91,7 @@
         "spotUnit": "m",
         "spotFactor": "1",
         "spotConverter": "100",
-        "countryOrder": "germany,switzerland,greatbritain,france,italy"
+        "countryOrder": "DE,CH,GB,FR,IT"
     },
     "common": {
         "logout": "Abmelden",
@@ -121,11 +121,11 @@
             "settings": "Einstellungen"
         },
         "countries": {
-            "germany":"Deutschland",
-            "switzerland":"Schweiz",
-            "greatbritain":"Großbritanien",
-            "france":"Frankreich",
-            "italy":"Italien"
+            "CH":"Schweiz",
+            "DE":"Deutschland",
+            "FR":"Frankreich",
+            "GB":"Großbritanien",
+            "IT":"Italien"
         }
     },
     "communication": {

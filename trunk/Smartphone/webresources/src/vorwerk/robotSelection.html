@@ -19,16 +19,16 @@
     </div>
     
     <div data-role="content">
-        <fieldset class="textWithButton" data-bind="css:{textWithButton:isLogoutVisible()}">
-            <p class="textBlock"><span data-bind="html: title">[welcome]</span></p>
-            
-            <div class="buttonBlock" data-bind="visible:isLogoutVisible()">
-                <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" 
+        <fieldset>
+            <h3 data-bind="html: title">welcome</h3>
+            <div class="line" data-bind="visible:isLogoutVisible()">
+                 <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" 
                     data-i18n="common.logout"
                     data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: logout">[logout]</a>
             </div>
+            <h3 data-bind="html: message">[message]</h3>
         </fieldset>
-
+        
         <ul data-role="listview" data-theme="a" data-inset="true" data-bind="foreach: robots">
 
             <li data-bind="css:{'ui-selected': $parent.selectedRobot() === $data}">

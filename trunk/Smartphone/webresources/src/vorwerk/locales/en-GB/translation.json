@@ -91,7 +91,7 @@
         "spotUnit": "ft",
         "spotFactor": "3",
         "spotConverter": "91",
-        "countryOrder": "germany,switzerland,greatbritain,france,italy"
+        "countryOrder": "DE,CH,GB,FR,IT"
     },
     "common": {
         "logout": "Logout",
@@ -120,12 +120,12 @@
             "schedule": "Schedule",
             "settings": "Settings"
         },
-        "countries": {
-            "germany":"Germany",
-            "switzerland":"Switzerland",
-            "greatbritain":"Great Britain",
-            "france":"France",
-            "italy":"Italy"
+       "countries": {
+            "CH":"Switzerland",
+            "DE":"Germany",
+            "FR":"France",
+            "GB":"Great Britain",
+            "IT":"Italy"
         }
     },
     "communication": {

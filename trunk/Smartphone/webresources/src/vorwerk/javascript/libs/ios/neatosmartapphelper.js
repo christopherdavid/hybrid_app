@@ -753,7 +753,8 @@ UserMgr.prototype.associateRobotCommand = function(email, robotId, callbackSucce
  * This API initiates the process of linking a robot with a user
  * <p>
  * This API returns on success a JSON Object 
- * <br>{"success":<true/false>, "robotId":<robotId>, "message":<message>}
+ * <br>{linkCodeExpiryTime:<linkCodeExpiryTime>}
+ * <br>where linkCodeExpiryTime is expiry time of the link code in milliseconds 
  * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
  * <br>where errorCode is the error type and it's values are
  * <br>1001 - Unknown error

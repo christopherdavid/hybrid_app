@@ -12,6 +12,7 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
         return value;
         });
     this.countries = ko.observableArray([]);
+    var countriesRendered = false;
     
     this.init = function() {
         // init scroll container
@@ -35,17 +36,31 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
                 "value" : countryOrder[i]
             });
         }
-        // get app language
-        if(parent.language().indexOf("de") != -1) {
-            that.selectedCountry("germany");
-        } else if (parent.language().indexOf("fr") != -1) {
-            that.selectedCountry("france");
-        } else if (parent.language().indexOf("it") != -1) {
-            that.selectedCountry("italy");
+        // get country code of language string e.g. 'de-DE' -> 'DE,'en-GB' -> 'GB'
+        var appCountry = parent.language().split("-")[1];
+        // check if appCountry is a selectable country otherwise select other
+        if($.inArray(appCountry, countryOrder) != -1) {
+            that.selectedCountry(appCountry);
         } else {
-            that.selectedCountry("greatbritain");
+            // TODO: nee to be defined how 'other' could be stored on server
+            console.log("select other country select GB as temporary fallback")
+            that.selectedCountry("GB");
         }
-    } 
+    }
+    
+    this.renderedCountries = function(element, data) {
+        console.log("renderedCountries")
+        if(!countriesRendered) {
+            // check if selected country is complete and control could be initialized
+            if($(element).parent().children().length == that.countries().length) {
+                $("#countrySelectionList").controlgroup();
+                $("#countrySelectionList").attr("data-role", "controlgroup");
+                $("input[type='radio']",element.parent).checkboxradio();
+                $("#countrySelectionListContainer").data( "init", true );
+                countriesRendered = true;
+            }
+        }
+    }
 
     this.next = function() {
         that.conditions['valid'] = true;
