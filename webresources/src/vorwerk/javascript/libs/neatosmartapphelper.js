@@ -414,6 +414,18 @@ var UserPluginManager = ( function() {
                     callbackSuccess("OK");
                 }, 1000);
             },
+            createUser3: function(email, password, name, alternateEmail, optional, callbackSuccess, callbackError) {
+                //window.plugins.neatoPluginLayer.userMgr.createUser(email, password, name, callbackSuccess, callbackError);
+                window.setTimeout(function() {
+                    callbackSuccess({
+                        "email" : "homer@uid.com",
+                        "username" : "Homer",
+                        "userId" : "82",
+                        "countryCode": optional.countryCode,
+                        "optIn":optional.optIn
+                    });
+                }, 1000);
+            },
             createUser2: function(email, password, name, alternateEmail, callbackSuccess, callbackError) {
                 //window.plugins.neatoPluginLayer.userMgr.createUser(email, password, name, callbackSuccess, callbackError);
                 window.setTimeout(function() {

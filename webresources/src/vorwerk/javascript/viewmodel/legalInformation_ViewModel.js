@@ -47,8 +47,8 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
     };
 
     this.next = function() {
-        //TODO remove username from create user methode
-        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.createUser2, [that.bundle.email, that.bundle.pw, 'default', ''], {});
+        //TODO clarify what username should be set instead of 'default'
+        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.createUser3, [that.bundle.email, that.bundle.pw, 'default', '', {"countryCode":that.bundle.country, "optIn":that.selectedSubscribe()} ], {});
         tDeffer.done(that.successRegister);
         tDeffer.fail(that.errorRegister);
     };

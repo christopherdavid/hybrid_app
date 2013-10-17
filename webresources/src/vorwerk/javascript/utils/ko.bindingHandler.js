@@ -52,6 +52,19 @@ ko.bindingHandlers.translate = {
         }
     }
 }
+ko.bindingHandlers.jqText =  {
+    update : function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        //var value = ko.utils.unwrapObservable(valueAccessor());
+        var value = valueAccessor(), allBindings = allBindingsAccessor();
+        if(value.node && value.node == "last") {
+            element.replaceChild(document.createTextNode(value.text), element.lastChild);
+        } else {
+            element.replaceChild(document.createTextNode(value.text), element.firstChild);
+        }
+        // $('label').contents()
+        // $(element).text(value);
+    }
+}
 
 ko.bindingHandlers.jqLinkButtonEnable = {
     update : function(element, valueAccessor) {
@@ -92,6 +105,19 @@ ko.bindingHandlers.jqmOptions = {
     }
 };
 
+ko.bindingHandlers.jqRadioGroup = {
+    update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        var value = valueAccessor();
+        var currValue = ko.utils.unwrapObservable(value);
+        var initialized = $(element).data( "init");
+        if(initialized){
+            $("input[type='radio']",element).prop( "checked", false )
+                    .checkboxradio( "refresh" );
+            $("input[type='radio'][value='"+currValue+"']",element)
+                    .prop( "checked", true ).checkboxradio( "refresh" );
+        }
+    }
+};
 
 /**
  * binding to checked property for jquery mobile radio button 

@@ -17,7 +17,7 @@ function Application() {
     this.config = {
         firstScreen : "start",
         pageTransition : "none",
-        version:"0.6.0.1",
+        version:"0.6.1.0",
         pluginVersion:"0.6.0.08",
         fallbackLanguage:"en-GB",
         viewPath:"",
@@ -90,7 +90,7 @@ function Application() {
                         
                         // register for notifications from robot if app is running
                         that.notification.registerForRobotNotifications();
-                        that.flowNavigator.loadScreen("robotSelection", null);
+                        that.flowNavigator.loadScreen("robotSelection", robotScreenCaller.LOGIN);
                     });
                     
                     // in case of an error navigate to first screen

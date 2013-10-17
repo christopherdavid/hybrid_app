@@ -2,6 +2,7 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
     console.log('instance created for: robotSelection_ViewModel');
     var that = this;
     this.title = ko.observable();
+    this.message = ko.observable();
     this.conditions = {};
     this.backConditions = {};
     this.robots = parent.communicationWrapper.getDataValue("robotList");
@@ -36,11 +37,10 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         // Update the back button depending on the screen that opened this view
         that.updateButtons();
         
-        // When we are in the register flow, simply show the screen without querying the robots
-        if (that.bundle && that.bundle == robotScreenCaller.REGISTER) {
+        if(that.bundle && (that.bundle == robotScreenCaller.REGISTER || that.bundle == robotScreenCaller.LOGIN)) {
             that.isLogoutVisible(true);
-            that.updateScreenTitle();
-        } else if (that.robots().length == 0){
+        }
+        if (that.robots().length == 0){
             that.getRobotList();
         } else {
             that.updateScreenTitle();
@@ -98,11 +98,12 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         }
     };
 
-    this.getHintText = function() {
+    this.updateMessage = function() {
+        var translationKey = "robotSelection.page.no_robot"
         if (that.robots().length > 0) {
-            return "robotSelection.page.select_robot";
+            translationKey = "robotSelection.page.select_robot";
         }
-        return "robotSelection.page.no_robot";
+        that.message($.i18n.t(translationKey));
     }
 
     this.updateScreenTitle = function() {
@@ -123,12 +124,9 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         } else {
             translationKey = "robotSelection.page.logged_in";
         }
-        var generatedTitle = "";
-
-        generatedTitle += $.i18n.t(translationKey, {email:userName}) + "<br>";
-        generatedTitle += $.i18n.t(that.getHintText());
-        
+        var generatedTitle = $.i18n.t(translationKey, {email:userName});
         that.title(generatedTitle);
+        that.updateMessage();
     };
 
     this.updateButtons = function(isRefresh) {
