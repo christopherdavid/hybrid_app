@@ -3,11 +3,10 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
     var startBtnDown = false;
     this.remoteButtonDown = null;
     var posY = null;
-    var radius = 146;
+    var radius = deviceSize.getResolution() == "high" ?  109 : 73;
     var centerX = null;
     var centerY = null;
-    var scaleFactor = deviceSize.getResolution() == "high" ? 0.75 : 0.5;
-    var BTN_RADIUS = 146;
+    
     this.isRemoteEnabled = ko.observable(true);
     this.eventMouseDown = false;
     that = this;
@@ -15,21 +14,13 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
     this.pressedTimer;
     
 
-    var centerInParentContainer = function(element) {
-        element.css({
-            position : 'absolute',
-            left : (element.parent().width() - element.outerWidth()) / 2,
-            top : (element.parent().height() - element.outerHeight()) / 2,
-            margin : 0
-        });
-    };
-
+    
     // Checks if a specific dom element contains a point x,y
     var rectContainsPoint = function(x, y, element) {
         var leftEdge = element.offset().left;
-        var rightEdge = leftEdge + element.outerWidth()*scaleFactor;
+        var rightEdge = leftEdge + element.outerWidth();
         var topEdge = element.offset().top;
-        var bottomEdge = topEdge + element.outerHeight()*scaleFactor;
+        var bottomEdge = topEdge + element.outerHeight();
         /*
         console.log("rectContainsPoint x:" + x + " y " + y 
             + "\nleftEdge " + leftEdge + " rightEdge " + rightEdge
@@ -51,11 +42,10 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
     };
 
     this.updatePosition = function() {
+        //console.log("update position")
         
-        radius = BTN_RADIUS * scaleFactor;
-        
-        centerX = (startArea.width() * scaleFactor) / 2;
-        centerY = (startArea.height() * scaleFactor) / 2;
+        centerX = startArea.width() / 2;
+        centerY = startArea.height()/ 2;
         
         posX = startArea.offset().left;
         posY = startArea.offset().top;
@@ -64,48 +54,8 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
         // console.log("y: " + (centerY + posY)) ;
     };
 
-    this.scaleStartArea = function() {
-        var content = $("#startContent");
-
-        // Scale the container
-        /*
-        if (categoryTable.width() > content.width()) {
-
-            scaleFactor = content.width() / categoryTable.width();
-
-            var scaling = "scale(" + scaleFactor + ")";
-
-            categoryTable.css({
-                'transform-origin' : '0px 0px',
-                '-moz-transform' : scaling,
-                '-webkit-transform' : scaling,
-                '-o-transform' : scaling,
-                'transform' : scaling,
-            });
-
-        } else if (scaleFactor < 1.0) {
-
-            categoryTable.css({
-                'transform-origin' : '0px 0px',
-                '-moz-transform' : 'scale(1.0, 1.0)',
-                '-webkit-transform' : 'scale(1.0, 1.0)',
-                '-o-transform' : 'scale(1.0, 1.0)',
-                'transform' : 'scale(1.0, 1.0)'
-            });
-
-            scaleFactor = 1.0;
-        }
-        */
-
-        // Scale the surrounding category area to prevent scrolling
-        startContainer.css({
-            'height' : (startArea.height() * scaleFactor)
-        });
-    }
 
     this.updateLayout = function() {
-        //that.scaleStartArea();
-        //centerInParentContainer(startBtn);
         that.updatePosition();
     };
 

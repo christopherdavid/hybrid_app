@@ -92,7 +92,7 @@
             
             .halign {
                 margin:auto;
-                width:@cleaning_startContainer_width/2;
+                width:@cleaning_startContainer_width;
             }
             
             .control-button-bar {
@@ -241,15 +241,11 @@
     overflow:hidden;
     
     #startArea {
-        width: 550px;
-        height: 548px;
-        .transform-scale(@cleaning_startArea_scale);
-        .transform-origin(0,0,0);
+        width:@cleaning_startContainer_width;
+        height:@cleaning_startContainer_height;
         background-image: url(../../img/bg_startbtn.png);
         background-repeat: no-repeat;
-        /*
-        background-position: -467px -186px;
-        */
+        background-size:@cleaning_startContainer_width @cleaning_startContainer_height;
         overflow: visible;
         display: table-cell;
         vertical-align: middle;
@@ -263,6 +259,7 @@
             
             .img-remote {
                 background-image: url(../../img/icons/remote_icons_300x400.png);
+                background-size:@cleaning_remote_button_width*3 @cleaning_remote_button_height*4;
                 background-repeat: no-repeat;
                 background-position:0 0;
                 position:absolute;
@@ -281,6 +278,7 @@
             }
             .img-remote-diagonal {
                 background-image: url(../../img/icons/remote_diag_icons_200x200.png);
+                background-size:@cleaning_remote_button_width*2 @cleaning_remote_button_height*2;
                 background-repeat: no-repeat;
                 background-position:0 0;
                 position:absolute;
@@ -323,8 +321,8 @@
             }
             
             #remoteDiagLeft {
-                left:56px;
-                top:48px;
+                left:@cleaning_remote_button_diag_left;
+                top:@cleaning_remote_button_diag_top;
                 
                 &.ui-down {
                     background-position:0 -@cleaning_remote_button_height;
@@ -332,8 +330,8 @@
             }
             
             #remoteDiagRight {
-                right:56px;
-                top:48px;
+                right:@cleaning_remote_button_diag_left;
+                top:@cleaning_remote_button_diag_top;
                 
                 &.ui-down {
                     background-position:-@cleaning_remote_button_height -@cleaning_remote_button_width;
@@ -346,29 +344,30 @@
             background-image:url(../../img/icons/startstopbtn_390x390.png);
             background-repeat: no-repeat;
             background-position:0 0;
-            width:390px;
-            height:390px;
+            background-size:@cleaning_start_button_width*4 @cleaning_start_button_height*3;
+            width:@cleaning_start_button_width;
+            height:@cleaning_start_button_height;
             
             &.startBtn-up {
                 background-position-x:0;
             }
             &.startBtn-down {
-                background-position-x:-390px;
+                background-position-x:-@cleaning_start_button_width;
             }
             &[data-state='paused'] {
-                background-position-y:-390px;
+                background-position-y:-@cleaning_start_button_height;
             }
             &[data-state='cleaning'] {
-                background-position-y:-780px;
+                background-position-y:-@cleaning_start_button_height*2;
             }
             &[data-state='stopped'] {
                 background-position-y:0;
             }
             &[data-state='disabled'] {
-                background-position:-780px 0;
+                background-position:-@cleaning_start_button_width*2 0;
             }
             &[data-state='waiting'] {
-                background-position:-1170px 0;
+                background-position:-@cleaning_start_button_width*3 0;
                 
                 #loadingSpinnerButton {
                     display:block;
@@ -391,8 +390,8 @@
         
         #eventArea {
             position:absolute;
-            width: 550px;
-            height: 548px;
+            width:@cleaning_startContainer_width;
+            height:@cleaning_startContainer_height;
             top:0;
             left:0;
             -webkit-user-drag: none;
