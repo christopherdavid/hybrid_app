@@ -53,8 +53,8 @@
                 
                 <div class="right-block">
                     <select name="flip-3" id="flip-3" data-role="slider" data-bind="value: cleaningMode, jqmFlipValue:cleaningMode">
-                        <option value="2">No</option>
-                        <option value="1">Yes</option>
+                        <option value="2" data-i18n="common.no" data-bind="translate:{obs:language(), target: textTarget.SLIDER_LABEL_B}">[No]</option>
+                        <option value="1" data-i18n="common.yes" data-bind="translate:{obs:language(), target: textTarget.SLIDER_LABEL_A}">[Yes]</option>
                     </select>
                 </div>
              </div>

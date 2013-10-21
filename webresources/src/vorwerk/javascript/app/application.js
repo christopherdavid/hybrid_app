@@ -17,7 +17,7 @@ function Application() {
     this.config = {
         firstScreen : "start",
         pageTransition : "none",
-        version:"0.6.1.0",
+        version:"0.6.1.3",
         pluginVersion:"0.6.0.08",
         fallbackLanguage:"en-GB",
         viewPath:"",

@@ -3768,7 +3768,7 @@ label {
 }
 .line-grid-container .first-line .control-line .halign {
   margin: auto;
-  width: 412.5px;
+  width: 412px;
 }
 .line-grid-container .first-line .control-line .control-button-bar {
   position: relative;
@@ -3881,30 +3881,17 @@ label {
   color: #009a3d;
 }
 #startContainer {
-  width: 825px;
+  width: 412px;
   height: 411px;
   position: relative;
   overflow: hidden;
 }
 #startContainer #startArea {
-  width: 550px;
-  height: 548px;
-  -moz-transform: scale(0.75);
-  -webkit-transform: scale(0.75);
-  -ms-transform: scale(0.75);
-  -o-transform: scale(0.75);
-  transform: scale(0.75);
-  -moz-transform-origin: 0 0 0;
-  -webkit-transform-origin: 0 0 0;
-  -ms-transform-origin: 0 0 0;
-  -o-transform-origin: 0 0 0;
-  transform-origin: 0 0 0;
+  width: 412px;
+  height: 411px;
   background-image: url(../../img/bg_startbtn.png);
   background-repeat: no-repeat;
-  /*
-        background-position: -467px -186px;
-        */
-
+  background-size: 412px 411px;
   overflow: visible;
   display: table-cell;
   vertical-align: middle;
@@ -3918,101 +3905,104 @@ label {
 }
 #startContainer #startArea #remote .img-remote {
   background-image: url(../../img/icons/remote_icons_300x400.png);
+  background-size: 225px 300px;
   background-repeat: no-repeat;
   background-position: 0 0;
   position: absolute;
-  width: 100px;
-  height: 100px;
+  width: 75px;
+  height: 75px;
 }
 #startContainer #startArea #remote .img-remote.disabled {
   background-position-x: 0!important;
 }
 #startContainer #startArea #remote .img-remote.ui-down {
-  background-position-x: -200px;
+  background-position-x: -150px;
 }
 #startContainer #startArea #remote .img-remote.ui-up {
-  background-position-x: -100px;
+  background-position-x: -75px;
 }
 #startContainer #startArea #remote .img-remote-diagonal {
   background-image: url(../../img/icons/remote_diag_icons_200x200.png);
+  background-size: 150px 150px;
   background-repeat: no-repeat;
   background-position: 0 0;
   position: absolute;
-  width: 100px;
-  height: 100px;
+  width: 75px;
+  height: 75px;
 }
 #startContainer #startArea #remote .img-remote-diagonal.disabled {
   background-position: 0 0!important;
 }
 #startContainer #startArea #remote .img-remote-diagonal.ui-up {
-  background-position: -100px 0;
+  background-position: -75px 0;
 }
 #startContainer #startArea #remote #remoteUp {
   top: 0;
   left: 50%;
-  margin-left: -50px;
-  background-position-y: -300px;
+  margin-left: -37.5px;
+  background-position-y: -225px;
 }
 #startContainer #startArea #remote #remoteDown {
   bottom: 0;
   left: 50%;
-  margin-left: -50px;
-  background-position-y: -100px;
+  margin-left: -37.5px;
+  background-position-y: -75px;
 }
 #startContainer #startArea #remote #remoteLeft {
   left: 0;
   top: 50%;
-  margin-top: -50px;
+  margin-top: -37.5px;
   background-position-y: 0;
 }
 #startContainer #startArea #remote #remoteRight {
   right: 0;
   top: 50%;
-  margin-top: -50px;
-  background-position-y: -200px;
+  margin-top: -37.5px;
+  background-position-y: -150px;
 }
 #startContainer #startArea #remote #remoteDiagLeft {
-  left: 56px;
-  top: 48px;
+  left: 42px;
+  top: 36px;
 }
 #startContainer #startArea #remote #remoteDiagLeft.ui-down {
-  background-position: 0 -100px;
+  background-position: 0 -75px;
 }
 #startContainer #startArea #remote #remoteDiagRight {
-  right: 56px;
-  top: 48px;
+  right: 42px;
+  top: 36px;
 }
 #startContainer #startArea #remote #remoteDiagRight.ui-down {
-  background-position: -100px -100px;
+  background-position: -75px -75px;
 }
 #startContainer #startArea #startBtn {
   margin: auto;
   background-image: url(../../img/icons/startstopbtn_390x390.png);
   background-repeat: no-repeat;
   background-position: 0 0;
-  width: 390px;
-  height: 390px;
+  background-size: 1168px 876px;
+  width: 292px;
+  height: 292px;
 }
 #startContainer #startArea #startBtn.startBtn-up {
   background-position-x: 0;
 }
 #startContainer #startArea #startBtn.startBtn-down {
-  background-position-x: -390px;
+  background-position-x: -292px;
 }
 #startContainer #startArea #startBtn[data-state='paused'] {
-  background-position-y: -390px;
+  background-position-y: -292px;
 }
 #startContainer #startArea #startBtn[data-state='cleaning'] {
-  background-position-y: -780px;
+  background-position-y: -584px;
 }
 #startContainer #startArea #startBtn[data-state='stopped'] {
   background-position-y: 0;
 }
 #startContainer #startArea #startBtn[data-state='disabled'] {
-  background-position: -780px 0;
+  background-position: -584px 0;
 }
 #startContainer #startArea #startBtn[data-state='waiting'] {
-  background-position: -1170px 0;
+  background-position: -876px 0;
 }
 #startContainer #startArea #startBtn[data-state='waiting'] #loadingSpinnerButton {
   display: block;
@@ -4035,8 +4025,8 @@ label {
 }
 #startContainer #startArea #eventArea {
   position: absolute;
-  width: 550px;
-  height: 548px;
+  width: 412px;
+  height: 411px;
   top: 0;
   left: 0;
   -webkit-user-drag: none;

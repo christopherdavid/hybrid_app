@@ -38,13 +38,17 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
         }
         // get country code of language string e.g. 'de-DE' -> 'DE,'en-GB' -> 'GB'
         var appCountry = parent.language().split("-")[1];
-        // check if appCountry is a selectable country otherwise select other
-        if($.inArray(appCountry, countryOrder) != -1) {
-            that.selectedCountry(appCountry);
-        } else {
-            // TODO: nee to be defined how 'other' could be stored on server
-            console.log("select other country select GB as temporary fallback")
-            that.selectedCountry("GB");
+        
+        // check if country has already been selected (back button in workflow was pressed)
+        if(typeof that.selectedCountry() == 'undefined') {
+            // check if appCountry is a selectable country otherwise select other
+            if($.inArray(appCountry, countryOrder) != -1) {
+                that.selectedCountry(appCountry);
+            } else {
+                // TODO: nee to be defined how 'other' could be stored on server
+                console.log("select other country select GB as temporary fallback")
+                that.selectedCountry("GB");
+            }
         }
     }
     
@@ -69,6 +73,8 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
     
     this.deinit = function() {
         myScroll.destroy();
+        that.countries([]);
+        countriesRendered = false;
     }
 
 })
