@@ -54,12 +54,9 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     
     this.commitEdit = function() {
         console.log("change password of user with email: " + that.user().email() + " to " + that.newPassword());
-        
+        $("#changePasswordPopup").popup("close");
         var tDeffer = parent.communicationWrapper.exec(UserPluginManager.changePassword, [that.user().email(), that.oldPassword(), that.newPassword()]);
         tDeffer.done(that.successChangePassword);
-        tDeffer.fail(that.errorChangePassword);
-
-        $("#changePasswordPopup").popup("close");
     }
     
     this.successChangePassword = function(result) {
@@ -68,9 +65,6 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
         that.newPassword = ko.observable("");
         that.newPasswordRepeat = ko.observable("");
         that.oldPassword = ko.observable("");
-    }
-    this.errorChangePassword = function(error) {
-        console.log("error" + JSON.stringify(error));
     }
     
     this.logout = function() {

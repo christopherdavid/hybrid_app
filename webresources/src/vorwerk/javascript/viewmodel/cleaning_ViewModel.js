@@ -323,7 +323,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         });
         
         $spotPopup.popup("open");
-        resizePopupButtons("#spotSize .ui-bar-buttons");
+        resizePopupButtons("#spotSize .ui-bar-buttons", ($("#spotSize .spotWrap").width() - $("#spotSize .spotWrap .left-block").width() - 10));
     }
     this.popupOk = function() {
         $spotPopup.popup("close");
