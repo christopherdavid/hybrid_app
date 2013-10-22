@@ -152,13 +152,18 @@ function convertToBase(value, spotConverter) {
  *  This function ensures that each button in the specified buttonGroup 
  *  have all the same width  
  */
-function resizePopupButtons(buttonGroup) {
+function resizePopupButtons(buttonGroup, maxContainer) {
     var maxWidth = 0;
     
     //save the max width of the biggest button
     $(buttonGroup + " .ui-btn").each(function(index){
          maxWidth = Math.max(maxWidth, $(this).width());
     });
+    
+    // check if there is a max container width 
+    if(typeof maxContainer != "undefined") {
+        maxWidth = Math.min(maxWidth, parseInt(maxContainer/2));
+    }
     
     //make all buttons the same width
     $(buttonGroup + " .ui-btn").each(function(index){
