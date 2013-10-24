@@ -17,6 +17,19 @@
 
     <div data-role="content" class="max-size">
         
+        <fieldset>
+            <h2 data-i18n="userSettings.page.country"
+                data-bind="translate: language">[robot_name]</h2>
+            <ul data-role="listview" data-theme="a" data-inset="true" class="with-image">
+                <li data-bind="attr:{'data-country':selectedCountryCode}" class="ui-disabled">
+                    <a href="javascript:void(0);" data-bind="click: changeCountry">
+                        <h3 data-bind="text:selectedCountryLabel">[country]</h3>
+                    </a>
+                </li>
+            </ul>
+        </fieldset>
+        
+        
         <fieldset class="indent">
             <h2 data-i18n="userSettings.page.email_adress"
                 data-bind="translate: language">[robot_id]</h2>
@@ -38,6 +51,8 @@
             
             <div class="emptyline"></div>
         </fieldset>
+        
+        
         
         <fieldset>
             <a href="#" data-role="button" data-theme="c" data-mini="false"  

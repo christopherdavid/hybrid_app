@@ -17,7 +17,7 @@ function Application() {
     this.config = {
         firstScreen : "start",
         pageTransition : "none",
-        version:"0.6.1.5",
+        version:"0.6.2.0",
         pluginVersion:"0.6.0.08",
         fallbackLanguage:"en-GB",
         viewPath:"",
@@ -65,7 +65,7 @@ function Application() {
                 loadFirstPage();
             });
         }, function() {
-            console.log('language couldn\'t be detected. Load fallback en-US');
+            console.log('language couldn\'t be detected. Load fallback');
             that.changeLanguage(that.config.fallbackLanguage, function() {
                 loadFirstPage();
             });

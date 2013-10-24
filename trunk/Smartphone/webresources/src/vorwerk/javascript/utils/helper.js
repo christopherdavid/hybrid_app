@@ -217,7 +217,7 @@ var robotUiStateHandler = {
             this.current().messageText($.i18n.t("visualState." + visualState[state]));
         }
         // set start button state
-        this.setStarButtonState(state);
+        this.setStartButtonState(state);
     },
     updateMessage: function(strText) {
         this.current().messageText(strText);
@@ -225,7 +225,7 @@ var robotUiStateHandler = {
     updateIcon: function(state) {
         this.current().messageIcon(visualState[state]);
     },
-    setStarButtonState:function(state) {
+    setStartButtonState:function(state) {
         // start button only has 4 state:
         // - cleaning
         // - paused

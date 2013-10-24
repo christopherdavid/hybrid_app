@@ -397,18 +397,39 @@ function WorkflowNotification(parent) {
      * Whenever there's an error (i.e. "Wifi lost", "User name not valid") there will be an error Popup
      * in the middle of the screen with an "OK" button to be dismissed by the user. The other content on the screen is blocked.
      */
-    //TODO: add error codes switch
     this.showError = function(error) {
-        if (error && error.errorMessage) {
-            that.showDialog(dialogType.ERROR, "Communication Error", error.errorMessage);
-            if (error.errorCode) {
-                console.log("error: " + error.errorCode + " msg: " + error.errorMessage);
-            } else {
-                console.log("error msg: " + error.errorMessage + "\n error object: " + JSON.stringify(error));
+        var errorTitle = $.i18n.t("error.-501.title");
+        var errorMessage = $.i18n.t("error.-501.message");
+        var bShowDialog = true;
+        if (error && error.errorCode) {
+            console.log("errorCode: " + error.errorCode);
+            var curRobot = parent.communicationWrapper.getDataValue("selectedRobot");
+            var testTitle =  $.i18n.t("error." + error.errorCode +".title");
+            
+            // check if translation has been found for errorCode
+            if(testTitle.indexOf(error.errorCode) == -1) {
+                // replace it with default text
+                errorTitle = testTitle;
+                errorMessage =  $.i18n.t("error." + error.errorCode + ".message", {robotName:curRobot().robotName()});
             }
+            
+            
+            switch(error.errorCode) {
+                case ERROR_ROBOT_NOT_PEER_CONNECTED:
+                    parent.communicationWrapper.updateRobotStateWithCode(curRobot(), ROBOT_STATE_STOPPED);
+                    break;
+                case ROBOT_ALREADY_CONNECTED:
+                    curRobot().robotNewVirtualState(ROBOT_STATE_MANUAL_CLEANING);
+                    break;
+            }
+        } else if (error && error.errorMessage) {
+            console.log("errorMessage: " + error.errorMessage);
+            errorMessage = error.errorMessage;
         } else {
-            that.showDialog(dialogType.ERROR, "Communication Error", "An Error occurred while contacting the server!");
-            console.log("error object: " + JSON.stringify(error));
+            console.log("unhandled error");
+        }
+        if(bShowDialog) {
+            that.showDialog(dialogType.ERROR, errorTitle, errorMessage);
         }
     }
 }
