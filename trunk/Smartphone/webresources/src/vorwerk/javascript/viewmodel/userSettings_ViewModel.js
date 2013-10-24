@@ -46,11 +46,14 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     }
     
     this.init = function() {
-        that.user(ko.mapping.fromJS(parent.communicationWrapper.getDataValue("user")), null, that.user);
-        if(that.user().extra_param.countryCode() != "null" && $.inArray(that.user().extra_param.countryCode(), countryOrder) != -1) {
-                that.selectedCountryCode(that.user().extra_param.countryCode());
+        var user = parent.communicationWrapper.getDataValue("user");
+        var uCountryCode = (user.extra_param && user.extra_param.countryCode) ? user.extra_param.countryCode : null;
+        that.user(ko.mapping.fromJS(user), null, that.user);
+        
+        if(uCountryCode && uCountryCode != "null" && $.inArray(uCountryCode, countryOrder) != -1) {
+                that.selectedCountryCode(uCountryCode);
         } else {
-            // TODO: nee to be defined how 'other' could be stored on server
+            // TODO: need to be defined how 'other' could be stored on server
             console.log("select other country select GB as temporary fallback")
             that.selectedCountryCode("GB");
         }
