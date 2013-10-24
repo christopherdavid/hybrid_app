@@ -162,16 +162,18 @@
         },
         "navi": {"title": "Robot activation"}
     },
-    "basicScheduler": {"navi": {"title": "Scheduling"}},
+    "basicScheduler": {
+        "page": {"cleaning_options": {
+            "schedule": "Use the toggle slider on the top left to reactivate it",
+            "title": "Scheduling is inactive"
+        }},
+        "navi": {"title": "Scheduling"}
+    },
     "generalSettings": {
         "page": {
             "robot_need_cleaning": "Robot needs to be cleaned",
             "notify_when": "Notify me when...",
             "robot_stuck": "Robot is stuck",
-            "cleaning_options": {
-                "schedule": "Use the toggle slider on the top left to reactivate it",
-                "title": "Scheduling is inactive"
-            },
             "notify_with": "Notify me with...",
             "push_on_phone": "via Push Notification",
             "cleaning_done": "Cleaning is done"

@@ -162,16 +162,18 @@
         },
         "navi": {"title": "Activation du Robot"}
     },
-    "basicScheduler": {"navi": {"title": "Programmation"}},
+    "basicScheduler": {
+        "page": {"cleaning_options": {
+            "schedule": "Use the toggle slider on the top left to reactivate it",
+            "title": "Scheduling is inactive"
+        }},
+        "navi": {"title": "Programmation"}
+    },
     "generalSettings": {
         "page": {
             "robot_need_cleaning": "Le Robot doit être nettoyé",
             "notify_when": "Informez-moi quand \u2026",
             "robot_stuck": "Le Robot est coincé",
-            "cleaning_options": {
-                "schedule": "Use the toggle slider on the top left to reactivate it",
-                "title": "Scheduling is inactive"
-            },
             "notify_with": "Informez-moi avec \u2026",
             "push_on_phone": "par une notification Push",
             "cleaning_done": "Le nettoyage est terminé"
