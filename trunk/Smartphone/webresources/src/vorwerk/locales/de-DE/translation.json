@@ -162,16 +162,18 @@
         },
         "navi": {"title": "Aktivierung des Roboters."}
     },
-    "basicScheduler": {"navi": {"title": "Timer Funktion"}},
+    "basicScheduler": {
+        "page": {"cleaning_options": {
+            "schedule": "Use the toggle slider on the top left to reactivate it",
+            "title": "Scheduling is inactive"
+        }},
+        "navi": {"title": "Timer Funktion"}
+    },
     "generalSettings": {
         "page": {
             "robot_need_cleaning": "Roboter möchte gereinigt werden.",
             "notify_when": "Informieren mich, wenn\u2026",
             "robot_stuck": "Roboter hat sich verklemmt.",
-            "cleaning_options": {
-                "schedule": "Use the toggle slider on the top left to reactivate it",
-                "title": "Scheduling is inactive"
-            },
             "notify_with": "Informieren mich per",
             "push_on_phone": "per Push Benachrichtigung",
             "cleaning_done": "Reinigung wurde beendet."

@@ -162,16 +162,18 @@
         },
         "navi": {"title": "Aktivace robota"}
     },
-    "basicScheduler": {"navi": {"title": "Funkce plánování"}},
+    "basicScheduler": {
+        "page": {"cleaning_options": {
+            "schedule": "Use the toggle slider on the top left to reactivate it",
+            "title": "Scheduling is inactive"
+        }},
+        "navi": {"title": "Funkce plánování"}
+    },
     "generalSettings": {
         "page": {
             "robot_need_cleaning": "Robota je třeba vyčistit.",
             "notify_when": "Informuj mě, když",
             "robot_stuck": "Robot se zaseknul",
-            "cleaning_options": {
-                "schedule": "Use the toggle slider on the top left to reactivate it",
-                "title": "Scheduling is inactive"
-            },
             "notify_with": "Informujte mě",
             "push_on_phone": "Označením Stisknout",
             "cleaning_done": "Úklid je dokončen."

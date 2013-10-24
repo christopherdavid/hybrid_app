@@ -162,16 +162,18 @@
         },
         "navi": {"title": "机器人激活"}
     },
-    "basicScheduler": {"navi": {"title": "规划中"}},
+    "basicScheduler": {
+        "page": {"cleaning_options": {
+            "schedule": "Use the toggle slider on the top left to reactivate it",
+            "title": "Scheduling is inactive"
+        }},
+        "navi": {"title": "规划中"}
+    },
     "generalSettings": {
         "page": {
             "robot_need_cleaning": "需要清洁机器人",
             "notify_when": "通知我的状况\u2026",
             "robot_stuck": "机器人被卡住",
-            "cleaning_options": {
-                "schedule": "Use the toggle slider on the top left to reactivate it",
-                "title": "Scheduling is inactive"
-            },
             "notify_with": "通知我的方式\u2026",
             "push_on_phone": "通过推送信息通知",
             "cleaning_done": "清扫已完成"
