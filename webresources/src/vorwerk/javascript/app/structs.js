@@ -26,7 +26,7 @@ function getRobotStruct() {
         spotCleaningAreaHeight:"",
         // no initial value available 
         cleaningCategory:CLEANING_CATEGORY_ALL,
-        cleaningMode:"",
+        cleaningMode:"1",
         cleaningModifier:"1",
         stateString:$.i18n.t("robotStateCodes." + defaultState),
         connectionState:""

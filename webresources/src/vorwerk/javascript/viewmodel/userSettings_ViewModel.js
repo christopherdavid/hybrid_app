@@ -11,7 +11,12 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     this.oldPassword = ko.observable("");
     
     this.user = ko.observable();
-
+    this.selectedCountryCode = ko.observable('');
+    this.selectedCountryLabel = ko.observable('');
+    
+    var countryOrder = $.map($.i18n.t("pattern.countryOrder").split(","), function(value){
+        return value;
+        });
     
     var PASSWORD_LENGTH = 6;
 
@@ -42,8 +47,19 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     
     this.init = function() {
         that.user(ko.mapping.fromJS(parent.communicationWrapper.getDataValue("user")), null, that.user);
+        if(that.user().extra_param.countryCode() != "null" && $.inArray(that.user().extra_param.countryCode(), countryOrder) != -1) {
+                that.selectedCountryCode(that.user().extra_param.countryCode());
+        } else {
+            // TODO: nee to be defined how 'other' could be stored on server
+            console.log("select other country select GB as temporary fallback")
+            that.selectedCountryCode("GB");
+        }
+        that.selectedCountryLabel($.i18n.t("common.countries." + that.selectedCountryCode()));
+        
     };
-    
+    this.changeCountry = function() {
+        //TODO: will be added if API to update the country code is available
+    }
     this.changePassword = function() {
         $("#changePasswordPopup").popup("open");
     };

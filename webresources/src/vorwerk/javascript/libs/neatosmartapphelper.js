@@ -19,6 +19,10 @@ navigator.network = {};
 navigator.network.connection = {
     type:Connection.ETHERNET
 }
+navigator.notification = {};
+navigator.notification.vibrate = function(time) {
+    console.log("vibrate for " + time + "ms")
+}
 
 var NOTIFICATION_DISCOVERY_STARTED = 1;
 var NOTIFICATION_DISCOVERY_RESULT = 2;
@@ -397,7 +401,8 @@ var UserPluginManager = ( function() {
                     callbackSuccess({
                         "email" : "demo1@demo.com",
                         "username" : "demo",
-                        "userId" : "48"
+                        "userId" : "48",
+                        "extra_param":{"countryCode":"null","optIn":"null"}
                     });
                 }, 1000);
                 /*
@@ -478,7 +483,8 @@ var UserPluginManager = ( function() {
                     callbackSuccess({
                         "email" : "homer@uid.com",
                         "username" : "Homer",
-                        "userId" : "82"
+                        "userId" : "82",
+                        "extra_param":{"countryCode":"null","optIn":"null"}
                     });
                 }, 1000);
 

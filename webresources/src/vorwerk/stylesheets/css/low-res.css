@@ -2573,6 +2573,70 @@ label {
 .ui-listview.single .ui-btn .ui-btn-text h3 {
   font-size: 18px;
 }
+.ui-listview.with-image .ui-btn {
+  overflow: hidden;
+}
+.ui-listview.with-image .ui-btn .ui-btn-inner {
+  padding-left: 55px;
+}
+.ui-listview.with-image .ui-btn .ui-btn-inner .ui-btn-text .ui-link-inherit {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.ui-listview.with-image .ui-btn .ui-btn-inner .ui-btn-text h3 {
+  line-height: 40px;
+  color: #ffffff;
+  font-weight: normal;
+  font-size: 23px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.ui-listview.with-image .ui-btn .ui-btn-inner:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  display: block;
+  background-size: 40px 440px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-image: url(../../img/icons/country_80x880.png);
+}
+.ui-listview.with-image .ui-btn[data-country='DE'] .ui-btn-inner:before {
+  background-position-y: 0;
+}
+.ui-listview.with-image .ui-btn[data-country='IT'] .ui-btn-inner:before {
+  background-position-y: -40px;
+}
+.ui-listview.with-image .ui-btn[data-country='FR'] .ui-btn-inner:before {
+  background-position-y: -80px;
+}
+.ui-listview.with-image .ui-btn[data-country='ES'] .ui-btn-inner:before {
+  background-position-y: -120px;
+}
+.ui-listview.with-image .ui-btn[data-country='AT'] .ui-btn-inner:before {
+  background-position-y: -160px;
+}
+.ui-listview.with-image .ui-btn[data-country='CH'] .ui-btn-inner:before {
+  background-position-y: -200px;
+}
+.ui-listview.with-image .ui-btn[data-country='CZ'] .ui-btn-inner:before {
+  background-position-y: -240px;
+}
+.ui-listview.with-image .ui-btn[data-country='CN'] .ui-btn-inner:before {
+  background-position-y: -280px;
+}
+.ui-listview.with-image .ui-btn[data-country='JP'] .ui-btn-inner:before {
+  background-position-y: -320px;
+}
+.ui-listview.with-image .ui-btn[data-country='GB'] .ui-btn-inner:before {
+  background-position-y: -360px;
+}
+.ui-listview.with-image .ui-btn[data-country='ZZ'] .ui-btn-inner:before {
+  background-position-y: -400px;
+}
 .radioGroup .ui-controlgroup-controls {
   border-radius: 10px;
   overflow: hidden;
@@ -2682,7 +2746,7 @@ label {
   width: 40px;
   height: 40px;
   display: block;
-  background-size: 40px 200px;
+  background-size: 40px 440px;
   background-repeat: no-repeat;
   background-position: 0 0;
   background-image: url(../../img/icons/country_80x880.png);
@@ -4035,7 +4099,7 @@ label {
   top: 50%;
   margin-left: -64px;
   margin-top: -64px;
-  z-index: 3000;
+  z-index: 900;
   width: 128px;
   height: 128px;
   -moz-transform: scale(0.65);
