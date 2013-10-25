@@ -25,6 +25,7 @@ import com.neatorobotics.android.slide.framework.plugins.requests.user.IsUserVal
 import com.neatorobotics.android.slide.framework.plugins.requests.user.LoginUserRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.user.LogoutUserRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.user.ResendValidationMailRequest;
+import com.neatorobotics.android.slide.framework.plugins.requests.user.SetUserAccountDetailsRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.user.TurnNotificationOnOffRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.user.UserManagerRequest;
 
@@ -54,7 +55,7 @@ public class UserManagerPlugin extends Plugin {
 	private UserManagerRequest mTurnNotificationOnOffRequest = new TurnNotificationOnOffRequest();
 	private UserManagerRequest mIsNotificationEnabledRequest = new IsNotificationEnabledRequest();
 	private UserManagerRequest mGetNotificationSettingsRequest = new GetNotificationSettingsRequest();
-	
+	private UserManagerRequest mSetUserAccountDetailsRequest = new SetUserAccountDetailsRequest();
 	
 	private final HashMap<String, UserManagerRequest> ACTION_COMMAND_MAP = new HashMap<String, UserManagerRequest>();
 	
@@ -80,6 +81,7 @@ public class UserManagerPlugin extends Plugin {
 			ACTION_COMMAND_MAP.put(ActionTypes.TURN_NOTIFICATION_ON_OFF, mTurnNotificationOnOffRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.IS_NOTIFICATION_ENABLED, mIsNotificationEnabledRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.GET_NOTIFICATION_SETTINGS, mGetNotificationSettingsRequest);
+			ACTION_COMMAND_MAP.put(ActionTypes.SET_USERACCOUNT_DETAILS, mSetUserAccountDetailsRequest);
 			Set<String> keys = ACTION_COMMAND_MAP.keySet();
 			for (String key : keys) {
 				UserManagerRequest userCommand = ACTION_COMMAND_MAP.get(key);
@@ -137,5 +139,6 @@ public class UserManagerPlugin extends Plugin {
 		public static final String TURN_NOTIFICATION_ON_OFF	= "turnNotificationOnOff";
 		public static final String IS_NOTIFICATION_ENABLED	= "isNotificationEnabled";
 		public static final String GET_NOTIFICATION_SETTINGS = "getNotificationSettings";
+		public static final String SET_USERACCOUNT_DETAILS = "setUserAccountDetails";
 	}
 }

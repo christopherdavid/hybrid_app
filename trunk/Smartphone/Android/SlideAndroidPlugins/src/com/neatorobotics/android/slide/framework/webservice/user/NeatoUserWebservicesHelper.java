@@ -28,6 +28,7 @@ import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebSer
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.RegisterPushNotifications;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.ResendValidationMail;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.SendMessageToRobot;
+import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.SetUserAccountDetails;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.SetUserAttributes;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.UnregisterPushNotifications;
 public class NeatoUserWebservicesHelper {
@@ -190,6 +191,16 @@ public class NeatoUserWebservicesHelper {
 		userSetAttributesParams.putAll(addProfilePrefix(profileDetailsParams));
 		String associatedRobotsResponse = MobileWebServiceClient.executeHttpPost(context, SetUserAttributes.METHOD_NAME, userSetAttributesParams);
 		return AppUtils.checkResponseResult(associatedRobotsResponse, SetUserAttributesResult.class);
+	}
+	
+	public static SetUserAccountDetailsResult setUserAccountDetailsRequest(Context context, String email, String authToken, HashMap<String, String> profileDetailsParams) 
+			throws UserUnauthorizedException, NeatoServerException, IOException {		
+		Map<String, String> userSetAccountDetailsParams = new HashMap<String, String>();
+		userSetAccountDetailsParams.put(SetUserAccountDetails.Attribute.EMAIL, email);
+		userSetAccountDetailsParams.put(SetUserAccountDetails.Attribute.AUTHENTICATION_TOKEN, authToken);
+		userSetAccountDetailsParams.putAll(addProfilePrefix(profileDetailsParams));
+		String response = MobileWebServiceClient.executeHttpPost(context, SetUserAccountDetails.METHOD_NAME, userSetAccountDetailsParams);
+		return AppUtils.checkResponseResult(response, SetUserAccountDetailsResult.class);
 	}
 	
 	public static SendMessageToRobotResult sendMessageToRobotRequest(Context context, String userId, String robotId, String message)

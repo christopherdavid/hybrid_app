@@ -20,8 +20,8 @@ public class UserItem {
 	public UserParam extra_param;
 	
 	public class UserParam {
-		public String countryCode;
-		public String optIn;
+		public String country_code;
+		public String opt_in;
 	}
 	
 	public void addAssociatedRobot(RobotItem robot)	{

@@ -19,6 +19,8 @@ public class JsonMapKeys {
 	public static final String KEY_ALTERNATE_EMAIL = "alternate_email";
 	public static final String KEY_EXTRA_PARAMS = "extra_param";
 	public static final String KEY_VALIDATION_STATUS = "validation_status";	
+	public static final String KEY_COUNTRYCODE = "country_code";
+	public static final String KEY_OPTIN = "opt_in";
 	// Used by robot plugin
 	public static final String KEY_COMMAND_ID = "commandId";
 	public static final String KEY_COMMAND_PARAMETERS = "commandParams";

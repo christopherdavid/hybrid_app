@@ -69,7 +69,7 @@ public class CreateUserRequest extends UserManagerRequest {
 					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);
 					int validationCode = UserValidationHelper.getUserValidationStatus(userItem.validation_status);
 					userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
-					String extraParam = "{\"countryCode\":\""+userItem.extra_param.countryCode+"\", \"optIn\":\""+userItem.extra_param.optIn+"\"}";
+					String extraParam = "{\"countryCode\":\""+userItem.extra_param.country_code+"\", \"optIn\":\""+userItem.extra_param.opt_in+"\"}";
 					JSONObject jsonParam = new JSONObject(extraParam);
 					userDetails.put(JsonMapKeys.KEY_EXTRA_PARAMS, jsonParam);	
 					
