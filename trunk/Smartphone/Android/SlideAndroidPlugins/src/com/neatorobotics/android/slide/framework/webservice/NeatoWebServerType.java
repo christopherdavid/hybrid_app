@@ -9,6 +9,9 @@ public class NeatoWebServerType extends WebServerType {
 	private static final String SERVER_STAGING = "Staging (Neato)";
 	private static final String SERVER_DEVELOPMENT = "Development (Neato)";
 	private static final String SERVER_PRODUCTION = "Production (Neato)";
+	private static final String SERVER_WP = "WP (Neato)";
+	private static final String SERVER_NEATO_SECURE = "Secure Server (Neato)";
+	
 	final String PROD_BASE_JSON_URL = "http://neato.rajatogo.com/api/rest/json";
 	final String PROD_API_KEY = "1e26686d806d82144a71ea9a99d1b3169adaad917";
 	final String PROD_XMPP_SERVER_DOMAIN = "rajatogo.com";
@@ -29,6 +32,17 @@ public class NeatoWebServerType extends WebServerType {
 	final String DEMO2_API_KEY = "1e26686d806d82144a71ea9a99d1b3169adaad917";
 	final String DEMO2_XMPP_SERVER_DOMAIN = "neatodemo2.rajatogo.com";
 	final String DEMO2_SERVER_URL = "http://neatodemo2.rajatogo.com";
+	
+	final String WP_BASE_JSON_URL = "http://neatowp.rajatogo.com/api/rest/json";
+	final String WP_API_KEY = "1e26686d806d82144a71ea9a99d1b3169adaad917";
+	final String WP_XMPP_SERVER_DOMAIN = "neatowp.rajatogo.com";
+	final String WP_SERVER_URL = "http://neatowp.rajatogo.com";
+
+	final String NEATO_SECURE_BASE_JSON_URL = "https://neatosecure.rajatogo.com/api/rest/json";
+	final String NEATO_SECURE_API_KEY = "1e26686d806d82144a71ea9a99d1b3169adaad917";
+	final String NEATO_SECURE_XMPP_SERVER_DOMAIN = "rajatogo.com";
+	final String NEATO_SECURE_SERVER_URL = "https://neatosecure.rajatogo.com";
+	
 
 	@Override
 	public String getBaseJsonUrl() {
@@ -44,6 +58,10 @@ public class NeatoWebServerType extends WebServerType {
 			return DEMO_BASE_JSON_URL;
 		case NeatoWebConstants.DEMO2_SERVER_ID:
 			return DEMO2_BASE_JSON_URL;
+		case NeatoWebConstants.WP_SERVER_ID:
+			return WP_BASE_JSON_URL;
+		case NeatoWebConstants.NEATO_SECURE_SERVER_ID:
+			return NEATO_SECURE_BASE_JSON_URL;			
 		}
 		return PROD_BASE_JSON_URL;
 	}
@@ -68,6 +86,12 @@ public class NeatoWebServerType extends WebServerType {
 				break;
 			case NeatoWebConstants.DEMO2_SERVER_ID:
 				serverName = SERVER_DEMO2;
+				break;
+			case NeatoWebConstants.WP_SERVER_ID:
+				serverName = SERVER_WP;
+				break;
+			case NeatoWebConstants.NEATO_SECURE_SERVER_ID:
+				serverName = SERVER_NEATO_SECURE;			
 				break;
 		}
 		
@@ -95,6 +119,12 @@ public class NeatoWebServerType extends WebServerType {
 			case NeatoWebConstants.DEMO2_SERVER_ID:
 				serverUrl = DEMO2_SERVER_URL;
 				break;
+			case NeatoWebConstants.WP_SERVER_ID:
+				serverUrl = WP_SERVER_URL;
+				break;
+			case NeatoWebConstants.NEATO_SECURE_SERVER_ID:
+				serverUrl = NEATO_SECURE_SERVER_URL;	
+				break;
 		}
 		
 		return serverUrl;
@@ -114,6 +144,10 @@ public class NeatoWebServerType extends WebServerType {
 			return DEMO_API_KEY;
 		case NeatoWebConstants.DEMO2_SERVER_ID:
 			return DEMO2_API_KEY;
+		case NeatoWebConstants.WP_SERVER_ID:
+			return WP_API_KEY;
+		case NeatoWebConstants.NEATO_SECURE_SERVER_ID:
+			return NEATO_SECURE_API_KEY;			
 		}
 		return PROD_API_KEY;
 	}
@@ -132,6 +166,10 @@ public class NeatoWebServerType extends WebServerType {
 			return DEMO_XMPP_SERVER_DOMAIN;
 		case NeatoWebConstants.DEMO2_SERVER_ID:
 			return DEMO2_XMPP_SERVER_DOMAIN;
+		case NeatoWebConstants.WP_SERVER_ID:
+			return WP_XMPP_SERVER_DOMAIN;
+		case NeatoWebConstants.NEATO_SECURE_SERVER_ID:
+			return NEATO_SECURE_XMPP_SERVER_DOMAIN;			
 		}
 		return PROD_XMPP_SERVER_DOMAIN;
 	}

@@ -3,8 +3,6 @@ package com.neatorobotics.android.slide.framework.robotlinking;
 import java.io.IOException;
 import java.util.HashMap;
 import android.content.Context;
-
-import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotNotificationConstants;
@@ -14,7 +12,6 @@ import com.neatorobotics.android.slide.framework.robot.commands.request.RequestP
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
-import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebservicesHelper;
 import com.neatorobotics.android.slide.framework.webservice.user.RobotLinkResult;
