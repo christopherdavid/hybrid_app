@@ -416,6 +416,30 @@ public class UserManager extends Observable {
 		TaskUtils.scheduleTask(task, 0);
 	}
 	
+	public void setUserAccountDetails(final String email, final String authToken, final String countryCode, final String optIn, final WebServiceBaseRequestListener listener) {
+		Runnable task = new Runnable() {
+			public void run() {				
+				try {
+					HashMap<String, String> attributes = new HashMap<String, String>();
+					attributes.put(NeatoUserWebServicesAttributes.SetUserAccountDetails.Attribute.ATTRIBUTE_COUNTRYCODE, countryCode);
+					attributes.put(NeatoUserWebServicesAttributes.SetUserAccountDetails.Attribute.ATTRIBUTE_OPTIN, optIn);
+					SetUserAccountDetailsResult result = NeatoUserWebservicesHelper.setUserAccountDetailsRequest(mContext, email, authToken, attributes);
+					listener.onReceived(result);
+				}
+				catch (UserUnauthorizedException ex) {
+					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
+				}
+				catch (NeatoServerException ex) {
+					listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
+				}
+				catch (IOException ex) {
+					listener.onNetworkError(ex.getMessage());
+				}
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
+	
 	public void logoutUser() {
 		UserHelper.logout(mContext);
 		setChanged();

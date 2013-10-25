@@ -82,6 +82,17 @@ public class NeatoUserWebServicesAttributes {
 			public static final String ATTRIBUTE_VERSION = "version";
 		}
 	}
+	// Added on 10-24-13 by Neato to enhance the user settings
+	
+	public static class SetUserAccountDetails {
+		public static final String METHOD_NAME = "user.set_account_details";
+		public static class Attribute {
+			public static final String EMAIL = "email";
+			public static final String AUTHENTICATION_TOKEN = "auth_token";
+			public static final String ATTRIBUTE_COUNTRYCODE = "country_code";
+			public static final String ATTRIBUTE_OPTIN = "opt_in";
+		}
+	}
 	
 	public static class IsUserValidated {
 		public static final String METHOD_NAME = "user.IsUserValidated";

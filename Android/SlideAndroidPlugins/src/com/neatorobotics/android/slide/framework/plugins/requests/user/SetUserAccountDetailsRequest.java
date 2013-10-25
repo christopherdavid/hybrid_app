@@ -9,50 +9,43 @@ import android.content.Context;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.UserJsonData;
+import com.neatorobotics.android.slide.framework.plugins.requests.user.UserManagerRequest.UserRequestListenerWrapper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
 import com.neatorobotics.android.slide.framework.webservice.user.UserValidationHelper;
 
-public class GetUserDetailsRequest extends UserManagerRequest {
-
+public class SetUserAccountDetailsRequest extends UserManagerRequest{
+	
 	@Override
 	public void execute(JSONArray data, String callbackId) {
 		UserJsonData jsonData = new UserJsonData(data);
-		getUserDetails(mContext, jsonData, callbackId);
+		setUserAccountDetails(mContext, jsonData, callbackId);
 	}
 	
-	private void getUserDetails(final Context context, UserJsonData jsonData, final String callbackId) {
-		LogHelper.logD(TAG, "getUserDetails Called");
+	private void setUserAccountDetails(final Context context, UserJsonData jsonData, final String callbackId) {
+		LogHelper.logD(TAG, "setUserDetails Called");
 		LogHelper.logD(TAG, "JSON String: " + jsonData);
 
 		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
+		final String CountryCode = jsonData.getString(JsonMapKeys.KEY_COUNTRYCODE);
+		final String optin = jsonData.getString(JsonMapKeys.KEY_OPTIN);
 		String authKey = NeatoPrefs.getNeatoUserAuthToken(context);
 		LogHelper.logD(TAG, "Email:" + email + " authKey: " + authKey);		
 
-		UserManager.getInstance(context).getUserDetails(email, authKey,  new UserRequestListenerWrapper(callbackId) {
+		UserManager.getInstance(context).setUserAccountDetails(email, authKey, CountryCode, optin, new UserRequestListenerWrapper(callbackId) {
 			@Override
 			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
-				UserItem userItem = getUserItemFromResponse(responseResult);
 					
-				JSONObject userDetails = null;
-				if (userItem != null) {
-					userDetails = new JSONObject();
-					userDetails.put(JsonMapKeys.KEY_EMAIL, userItem.email);
-					userDetails.put(JsonMapKeys.KEY_ALTERNATE_EMAIL, userItem.alternate_email);
-					userDetails.put(JsonMapKeys.KEY_USER_NAME, userItem.name);
-					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);
-					int validationCode = UserValidationHelper.getUserValidationStatus(userItem.validation_status);
-					userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
-					String extraParam = "{\"countryCode\":\""+userItem.extra_param.country_code+"\", \"optIn\":\""+userItem.extra_param.opt_in+"\"}";
-					JSONObject jsonParam = new JSONObject(extraParam);
-					userDetails.put(JsonMapKeys.KEY_EXTRA_PARAMS, jsonParam);	
-				}	
+					JSONObject userAccountDetails = new JSONObject();
+					userAccountDetails.put(JsonMapKeys.KEY_COUNTRYCODE, CountryCode);
+					userAccountDetails.put(JsonMapKeys.KEY_OPTIN, optin);
 				
-				return userDetails;
+				return userAccountDetails;
 			}
 		});
 	}
+
 
 }
