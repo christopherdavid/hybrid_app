@@ -71,7 +71,7 @@ public class RobotHelper {
 		
 		// If it is managed robot serialId then clear it 
 		String managedSerialId = NeatoPrefs.getManagedRobotSerialId(context);
-		if (managedSerialId.equals(serialId)) {
+		if (managedSerialId.equalsIgnoreCase(serialId)) {
 			NeatoPrefs.clearManagedRobotSerialId(context);
 		}
 		

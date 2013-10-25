@@ -440,12 +440,11 @@ public class RobotPeerConnection {
 	private RobotConnectionInfo getRobotConnectionInfo(String robotId) {
 		LogHelper.log(TAG, "getRobotConnectionInfo called");
 		LogHelper.log(TAG, "mRobotConnectionInfo = " + mRobotConnectionInfo);
-		if ((mRobotConnectionInfo != null) && (mRobotConnectionInfo.getRobotId().equals(robotId))) {
-			return mRobotConnectionInfo;
-		} else {
+		if (mRobotConnectionInfo == null) {
 			LogHelper.log(TAG, "RobotConnectionInfo does not exist for robotId:" + robotId);
 			return null;
 		}
+		return mRobotConnectionInfo.getRobotId().equalsIgnoreCase(robotId) ? mRobotConnectionInfo:null;
 	}
 
 	private void deleteConnectionInfo() {
