@@ -17,6 +17,8 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     var countryOrder = $.map($.i18n.t("pattern.countryOrder").split(","), function(value){
         return value;
         });
+    this.countries = ko.observableArray([]);
+    var countriesRendered = false;
     
     var PASSWORD_LENGTH = 6;
 
@@ -58,11 +60,38 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
             that.selectedCountryCode("GB");
         }
         that.selectedCountryLabel($.i18n.t("common.countries." + that.selectedCountryCode()));
-        
+        this.initCountry(that.selectedCountryCode());
     };
     this.changeCountry = function() {
-        //TODO: will be added if API to update the country code is available
+    	$("#changeCountryPopup").popup("open");
     }
+    
+     this.cancelCountryEdit = function() {
+        var user = parent.communicationWrapper.getDataValue("user");
+        var uCountryCode = (user.extra_param && user.extra_param.countryCode) ? user.extra_param.countryCode : null;
+        that.selectedCountryCode(uCountryCode);
+        that.selectedCountryLabel($.i18n.t("common.countries." + that.selectedCountryCode()));
+        $("#changeCountryPopup").popup("close");
+    }
+    
+    this.commitCountryEdit = function() {
+     //TODO: will be added if API to update the country code is available
+     	var user = parent.communicationWrapper.getDataValue("user");
+        var uoptIn = (user.extra_param && user.extra_param.optIn) ? user.extra_param.optIn : false;
+        console.log("Commit new Country :" + that.selectedCountryCode() + " OPT IN Value :"+ uoptIn);
+        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.setUserAccountDetails, [that.user().email(), that.selectedCountryCode(), uoptIn]);
+        tDeffer.done(that.successUserAccountDetails);
+    }
+    
+    this.successUserAccountDetails = function(result) {
+        console.log("result" + JSON.stringify(result));
+        that.selectedCountryLabel($.i18n.t("common.countries." + that.selectedCountryCode()));
+        var user = parent.communicationWrapper.getDataValue("user");
+        user.extra_param.countryCode = that.selectedCountryCode();
+        parent.communicationWrapper.setDataValue("user", user);
+        $("#changeCountryPopup").popup("close");
+    }
+    
     this.changePassword = function() {
         $("#changePasswordPopup").popup("open");
     };
@@ -110,6 +139,46 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     
     this.reload = function() {
         this.conditions = {};
+    }
+    
+    this.initCountry = function(appCountry) {
+        
+       
+        // fill country list
+        for (var i = 0; i < countryOrder.length; i++) {
+            that.countries.push({
+                "label" : $.i18n.t("common.countries." + countryOrder[i]),
+                "value" : countryOrder[i]
+            });
+        }
+        // get country code of language string e.g. 'de-DE' -> 'DE,'en-GB' -> 'GB'
+       // var appCountry = that.user().countryCode();
+        
+        // check if country has already been selected (back button in workflow was pressed)
+        if(typeof that.selectedCountryCode() == 'undefined') {
+            // check if appCountry is a selectable country otherwise select other
+            if($.inArray(appCountry, countryOrder) != -1) {
+                that.selectedCountryCode(appCountry);
+            } else {
+                // TODO: nee to be defined how 'other' could be stored on server
+                console.log("select other country select GB as temporary fallback")
+                that.selectedCountryCode("GB");
+            }
+        }
+    }
+    
+     this.renderedCountries = function(element, data) {
+        console.log("renderedCountries")
+        if(!countriesRendered) {
+            // check if selected country is complete and control could be initialized
+            if($(element).parent().children().length == that.countries().length) {
+                $("#countrySelectionList").controlgroup();
+                $("#countrySelectionList").attr("data-role", "controlgroup");
+                $("input[type='radio']",element.parent).checkboxradio();
+                $("#countrySelectionListContainer").data( "init", true );
+                countriesRendered = true;
+            }
+        }
     }
     
 })
