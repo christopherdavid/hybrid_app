@@ -96,6 +96,7 @@ var ACTION_TYPE_CREATE_USER3					= "createUser3";
 var ACTION_TYPE_RESEND_VALIDATION_MAIL			= "resendValidationMail";
 var ACTION_TYPE_IS_USER_VALIDATED				= "isUserValidated";
 var ACTION_TYPE_GET_USER_DETAILS 				= "getUserDetails";
+var ACTION_TYPE_SET_USERACCOUNT_DETAILS			= "setUserAccountDetails";
 var ACTION_TYPE_ASSOCIATE_ROBOT					= "associateRobot";
 var ACTION_TYPE_INITIATE_LINK_ROBOT				= "tryLinkingToRobot";
 var ACTION_TYPE_GET_ASSOCIATED_ROBOTS 			= "getAssociatedRobots";
@@ -726,6 +727,35 @@ UserMgr.prototype.getUserDetail = function(email, callbackSuccess, callbackError
 };
 
 /**
+ * This API returns a JSON Object containing user details.
+ * <p>
+ * result is {CountryCode:"Country_code", optIn:"optin"}
+ * <br>where CountryCode is user selected country
+ * <br>optIn is the email Subscription
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * <br>where errorCode is the error type and it's values are
+ * <br>1001 - Unknown error
+ * <br>1002 - Network error
+ * <br>1003 - Server error
+ * <br>1004 - JSON Parsing error
+ * <br>1014 - Unauthorized User error
+ * <br>and errMessage is the message corresponding to the errorCode
+ * 
+ * @param email				the email address of the user
+ * @param countryCode		the CountryCode of the user
+ * @param optIn				the email subscription of the user
+ * @param callbackSuccess 	success callback for the API
+ * @param callbackError 	error callback for the API
+ * @returns					JSON Object
+ */
+UserMgr.prototype.setUserAccountDetails = function(email, countryCode, optIn, callbackSuccess, callbackError) {
+	var setUserAccountDetailsArray = {'email': email, 'country_code': countryCode, 'opt_in': optIn};
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_SET_USERACCOUNT_DETAILS, [setUserAccountDetailsArray]);
+};
+
+/**
  * This API associates a robot with a user
  * <p>
  * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
@@ -753,8 +783,7 @@ UserMgr.prototype.associateRobotCommand = function(email, robotId, callbackSucce
  * This API initiates the process of linking a robot with a user
  * <p>
  * This API returns on success a JSON Object 
- * <br>{linkCodeExpiryTime:<linkCodeExpiryTime>}
- * <br>where linkCodeExpiryTime is expiry time of the link code in milliseconds 
+ * <br>{"success":<true/false>, "robotId":<robotId>, "message":<message>}
  * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
  * <br>where errorCode is the error type and it's values are
  * <br>1001 - Unknown error
@@ -2308,6 +2337,33 @@ var UserPluginManager = (function() {
 		},
 		
 		/**
+		 * This API returns a JSON Object containing user details.
+		 * <p>
+		 * result is {CountryCode:"Country_code", optIn:"optin"}
+		 * <br>where CountryCode is user selected country
+		 * <br>optIn is the email Subscription
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * <br>where errorCode is the error type and it's values are
+		 * <br>1001 - Unknown error
+		 * <br>1002 - Network error
+		 * <br>1003 - Server error
+		 * <br>1004 - JSON Parsing error
+		 * <br>1014 - Unauthorized User error
+		 * <br>and errMessage is the message corresponding to the errorCode
+		 * 
+		 * @param email				the email address of the user
+		 * @param countryCode		the CountryCode of the user
+		 * @param optIn				the email subscription of the user
+		 * @param callbackSuccess 	success callback for the API
+		 * @param callbackError 	error callback for the API
+		 * @returns					JSON Object
+		 */
+		setUserAccountDetails: function(email, countryCode, optIn, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.userMgr.setUserAccountDetails(email, countryCode, optIn, callbackSuccess, callbackError);
+		},
+		
+		/**
 		 * This API gets a list of associated robots for a user in JSON
 		 * <p>
 		 * This API returns on success a JSON Array of which each element is like
@@ -3500,7 +3556,7 @@ var PluginManagerHelper =  (function() {
 		 *  - startTime
 		 *  - cleaningMode
 		 *  Returns: Basic Schedule JSON object
-		 *  {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
+		 *  {'day':day, 'startTime': startTime, ï¿½cleaningModeï¿½:cleaningMode}
 		 */
 		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {
