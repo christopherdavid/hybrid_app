@@ -135,6 +135,8 @@
             "subscribe": "Subscribe",
             "registration_done_message": "<div class='mailAnimation'><\/div>A confirmation mail was sent to<br/><span class='highlightedText'>__email__<\/span><br /><br />Please confirm your account within 48 hours.<br />After confirmation you can login and connect to your robot.",
             "registration_done_title": "Account created",
+            "edit_done_message": "The user account has been modified successfully",
+            "edit_done_title": "Account Modified",
             "no_subscribe": "Don't subscribe"
         },
         "navi": {"title": "Registration"}
@@ -246,7 +248,8 @@
             "email": "Email Address",
             "password_show": "Show password",
             "password_verify": "Password verification",
-            "password": "Password"
+            "password": "Password",
+            "country" : "Select Country"
         },
         "navi": {"title": "Create User Account"}
     },
@@ -341,7 +344,9 @@
             "new_password": "New password",
             "password": "Password",
             "email_adress": "Email Address",
-            "country": "Change country"
+            "country": "Change country",
+            "subscription": "News Subscription",
+            "changesubscription": "Change Subscription"
         },
         "navi": {"title": "User Settings"}
     }

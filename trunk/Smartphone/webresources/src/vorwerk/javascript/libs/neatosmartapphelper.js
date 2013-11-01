@@ -402,7 +402,7 @@ var UserPluginManager = ( function() {
                         "email" : "demo1@demo.com",
                         "username" : "demo",
                         "userId" : "48",
-                        "extra_param":{"countryCode":"null","optIn":"null"}
+                        "extra_param":{"countryCode":"IT","optIn":"null"}
                     });
                 }, 1000);
                 /*
@@ -490,6 +490,14 @@ var UserPluginManager = ( function() {
 
             },
 
+			setUserAccountDetails : function(email, countryCode, optIn, callbackSuccess, callbackError) {
+				window.setTimeout(function() {
+			                    callbackSuccess({
+			                        "countryCode":"GB",
+			                        "optIn":"true"
+			                    });
+			                }, 1000);
+			},
             getAssociatedRobots : function(email, callbackSuccess, callbackError) {
                 //window.plugins.neatoPluginLayer.userMgr.getAssociatedRobots(email, callbackSuccess, callbackError);
                 window.setTimeout(function() {

@@ -1,7 +1,11 @@
 resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) {
     console.log('instance created for: selectCountry_ViewModel');
     var that = this, myScroll;
+    var user = parent.communicationWrapper.getDataValue("user");
+    
     this.conditions = {};
+    this.isCountryEdit = ko.observable(false);
+    this.countryScreenTitle = ko.observable($.i18n.t("createAccount.page.country"));
     
     this.back = function() {
         that.conditions['back'] = true;
@@ -11,12 +15,14 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
     var countryOrder = $.map($.i18n.t("pattern.countryOrder").split(","), function(value){
         return value;
         });
+    
+    
     this.countries = ko.observableArray([]);
     var countriesRendered = false;
     
     this.init = function() {
         // init scroll container
-        myScroll = new iScroll('countryWrapper',{
+    	myScroll = new iScroll('countryWrapper',{
             hScrollbar : false,
             vScrollbar : false,
             bounce : true,
@@ -37,7 +43,17 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
             });
         }
         // get country code of language string e.g. 'de-DE' -> 'DE,'en-GB' -> 'GB'
-        var appCountry = parent.language().split("-")[1];
+        var appCountry = null;
+        if(user == null){
+        	appCountry = parent.language().split("-")[1];
+        	}
+        else if(user.extra_param.countryCode){
+       	  this.countryScreenTitle($.i18n.t("userSettings.page.country"));
+       	  $('.ui-btn-left .btn-with-image').attr("data-image","cancel");
+       	  appCountry = user.extra_param.countryCode;
+       	  that.isCountryEdit(true);
+       	 }
+                 
         
         // check if country has already been selected (back button in workflow was pressed)
         if(typeof that.selectedCountry() == 'undefined') {
@@ -67,8 +83,15 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
     }
 
     this.next = function() {
-        that.conditions['valid'] = true;
-        parent.flowNavigator.next({"country":that.selectedCountry()});
+    	if(that.isCountryEdit())
+    	{
+    		that.conditions['changeSubscription'] = true;
+        	parent.flowNavigator.next({"country":that.selectedCountry()});
+    	}
+    	else{
+        	that.conditions['valid'] = true;
+        	parent.flowNavigator.next({"country":that.selectedCountry()});
+        }
     };
     
     this.deinit = function() {
@@ -76,6 +99,8 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
         that.countries([]);
         countriesRendered = false;
     }
+    
+    
 
 })
 console.log('loaded file: selectCountry_ViewModel.js');
