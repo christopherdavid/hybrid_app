@@ -956,6 +956,26 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 		},
 		
+		getRobotCleaningCategory : function(){
+		var robotId = localStorage.getItem('robotId');
+			if ((robotId == null) || (robotId.length == 0)) {
+				alert("Please associate a Robot");
+				return;
+			}
+			RobotPluginManager.getRobotCleaningCategory(robotId, neatoSmartApp.getcleaningCategorySuccess, 
+					neatoSmartApp.getcleaningCategoryError);
+		},
+		
+		getcleaningCategorySuccess: function(result) {
+			neatoSmartApp.setResponseText(result);
+			neatoSmartApp.hideProgressBar();
+		},
+		
+		getcleaningCategoryError: function(error) {
+			neatoSmartApp.setResponseText(error);
+			neatoSmartApp.hideProgressBar();
+		},
+		
 		enableSchedule: function() {
 			var robotId = localStorage.getItem('robotId');
 			if ((robotId == null) || (robotId.length == 0)) {
@@ -2823,6 +2843,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnPauseResumeCleaningCommand3').removeEventListener('click', neatoSmartApp.pauseResumeCleaning3, true);
 			document.querySelector('#btnGoToSpotDefinitionAPIPage').removeEventListener('click', neatoSmartApp.goToSpotDefinitionPage , true);
 			document.querySelector('#btnNavigateRobot').removeEventListener('click', neatoSmartApp.navigateRobot, true);
+			document.querySelector('#btnCleaningCategoryAPIPage').addEventListener('click', neatoSmartApp.getRobotCleaningCategory, true);
 
 			// remove click handlers for the radio buttons
 			var radioCtrlCleaningModifier1x = document.querySelector('input[type="radio"][id="radioCleaningModifier1x"]');
