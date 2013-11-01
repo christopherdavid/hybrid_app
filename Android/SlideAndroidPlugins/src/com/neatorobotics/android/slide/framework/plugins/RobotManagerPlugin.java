@@ -18,6 +18,7 @@ import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotClearDataRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
+import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetRobotCleaningCategoryRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetSpotDefinationRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.PauseCleaningRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.ResumeCleaningRequest;
@@ -81,6 +82,7 @@ public class RobotManagerPlugin extends Plugin {
 	private RobotManagerRequest mSendRobotCommandRequest = new SendRobotCommandRequest();	
 	private RobotManagerRequest mSetSpotDefinationRequest = new SetSpotDefinationRequest();
 	private RobotManagerRequest mGetSpotDefinationRequest = new GetSpotDefinationRequest();
+	private RobotManagerRequest mGetRobotCleaningCategoryRequest = new GetRobotCleaningCategoryRequest();
 	
 	// Manual Commands
 	private RobotManagerRequest mCancelIntendToDriveRequest = new CancelIntendToDriveRequest();
@@ -106,6 +108,7 @@ public class RobotManagerPlugin extends Plugin {
 			ACTION_COMMAND_MAP.put(ActionTypes.SET_SPOT_DEFINITION, mSetSpotDefinationRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.GET_SPOT_DEFINITION, mGetSpotDefinationRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_CLEANING_STATE, mGetRobotCleaningStateRequest);
+			ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_CLEANING_CATEGORY, mGetRobotCleaningCategoryRequest);
 			
 			ACTION_COMMAND_MAP.put(ActionTypes.REGISTER_FOR_ROBOT_MESSAGES, mRegisterForPushMessagesRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.UNREGISTER_FOR_ROBOT_MESSAGES, mUnRegisterForPushMessagesRequest);
@@ -285,6 +288,7 @@ public class RobotManagerPlugin extends Plugin {
 			public static final String REGISTER_ROBOT_NOTIFICATIONS2 = "registerRobotNotifications2";
 			public static final String UNREGISTER_ROBOT_NOTIFICATIONS2 = "unregisterRobotNotifications2";
 			public static final String GET_ROBOT_CLEANING_STATE = "getRobotCleaningState";
+			public static final String GET_ROBOT_CLEANING_CATEGORY = "getRobotCleaningCategory";
 			public static final String INTEND_TO_DRIVE = "intendToDrive";
 			public static final String STOP_ROBOT_DRIVE = "stopRobotDrive";
 			public static final String CANCEL_INTEND_TO_DRIVE = "cancelIntendToDrive";

@@ -573,7 +573,7 @@ public class DBHelper {
 
 		cleaningSettings.setSpotAreaLength(cursor.getInt(cursor.getColumnIndex(CleaningSettingsColumns.COL_NAME_SPOT_AREA_LENGTH)));
 		cleaningSettings.setSpotAreaHeight(cursor.getInt(cursor.getColumnIndex(CleaningSettingsColumns.COL_NAME_SPOT_AREA_HEIGHT)));
-
+		cleaningSettings.setCleaningCategory(cursor.getInt(cursor.getColumnIndex(CleaningSettingsColumns.COL_NAME_CLEANING_CATEGORY)));
 		return cleaningSettings;
 	}
 
@@ -582,7 +582,8 @@ public class DBHelper {
 
 		values.put(CleaningSettingsColumns.COL_NAME_SPOT_AREA_LENGTH, cleaningSettings.getSpotAreaLength());
 		values.put(CleaningSettingsColumns.COL_NAME_SPOT_AREA_HEIGHT, cleaningSettings.getSpotAreaHeight());
-
+		values.put(CleaningSettingsColumns.COL_NAME_CLEANING_CATEGORY, cleaningSettings.getCleaningCategory());
+		
 		return values;
 	}
 

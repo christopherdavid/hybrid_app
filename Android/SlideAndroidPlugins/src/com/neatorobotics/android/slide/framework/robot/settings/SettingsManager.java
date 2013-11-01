@@ -74,6 +74,32 @@ public class SettingsManager {
 		};
 		TaskUtils.scheduleTask(task, 0);
 	}
+	
+	public void updateCleaningCategory(final String robotId, final int cleaningCategory, final CleaningSettingsListener listener) 
+	{
+		LogHelper.logD(TAG, "updateSpotDefinition called");
+		LogHelper.logD(TAG, "Robot Id = " + robotId + ", CleaningCategory = " + cleaningCategory );
+		Runnable task = new Runnable() {
+			public void run() {
+				CleaningSettings cleaningSettings = RobotHelper.getCleaningSettings(mContext, robotId);
+				if (cleaningSettings == null) {
+					cleaningSettings =  new CleaningSettings();
+				}
+				// update values
+				cleaningSettings.setCleaningCategory(cleaningCategory);
+				
+				boolean updated = RobotHelper.updateCleaningSettings(mContext, robotId, cleaningSettings);	
+				if (updated) {
+					listener.onSuccess(cleaningSettings);
+				}
+				else {
+					listener.onError();
+				}
+				
+			}
+		};
+		TaskUtils.scheduleTask(task, 0);
+	}
 
 	public void getCleaningSettings(final String robotId, final CleaningSettingsListener listener) 
 	{

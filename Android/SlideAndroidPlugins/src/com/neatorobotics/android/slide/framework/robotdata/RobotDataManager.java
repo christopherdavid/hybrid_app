@@ -9,9 +9,11 @@ import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
+import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacketUtils;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper;
+import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
 import com.neatorobotics.android.slide.framework.timedmode.RobotCommandTimerHelper;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
@@ -34,8 +36,18 @@ public class RobotDataManager {
 		String robotPacketInXmlFormat =  RobotCommandPacketUtils.getRobotCommandPacketXml(context, commandId, commandParams, RobotPacketConstants.DISTRIBUTION_MODE_TYPE_TIME_MODE_SERVER);
 		String keyType = RobotProfileConstants.getProfileKeyTypeForCommand(commandId);
 		setRobotProfileParam(context, robotId, keyType, robotPacketInXmlFormat, listener);
+		if(commandParams.get(JsonMapKeys.KEY_CLEANING_CATEGORY) != null){
+			LogHelper.log(TAG, "Call before setRobotCleaningCategory, the category value is :" + commandParams.get(JsonMapKeys.KEY_CLEANING_CATEGORY));
+			setRobotCleaningCategory(context, robotId, commandParams.get(JsonMapKeys.KEY_CLEANING_CATEGORY));
+		}
 	}
-		
+
+	public static void setRobotCleaningCategory(final Context context, final String robotId, final String cleaningCategory){
+	    CleaningSettings cleaningSetting = RobotHelper.getCleaningSettings(context, robotId);
+		cleaningSetting.setCleaningCategory(Integer.valueOf(cleaningCategory));
+		RobotHelper.updateCleaningSettings(context, robotId, cleaningSetting);
+	}
+	
 	// Public static helper method to set the schedule status to updated
 	public static void sendRobotScheduleUpdated(Context context, String robotId, WebServiceBaseRequestListener listener) {
 		LogHelper.logD(TAG, "Send command action initiated sendRobotScheduleUpdated - RobotSerialId = " + robotId);

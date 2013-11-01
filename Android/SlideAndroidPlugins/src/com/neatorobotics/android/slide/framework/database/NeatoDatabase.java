@@ -49,6 +49,7 @@ public class NeatoDatabase extends SQLiteOpenHelper {
 		public static final String COL_NAME_ROBOT_ID 			= "robotId";
 		public static final String COL_NAME_SPOT_AREA_LENGTH 	= "spotAreaLength";
 		public static final String COL_NAME_SPOT_AREA_HEIGHT 	= "spotAreaHeight";
+		public static final String COL_NAME_CLEANING_CATEGORY   =  "cleaningCategory";
 	}
 	
 	// notification_settings table column names
@@ -173,7 +174,8 @@ public class NeatoDatabase extends SQLiteOpenHelper {
 				+ "("
 				+ CleaningSettingsColumns.COL_NAME_ROBOT_ID			+ " TEXT PRIMARY KEY, "
 				+ CleaningSettingsColumns.COL_NAME_SPOT_AREA_LENGTH	+ " INTEGER, "
-				+ CleaningSettingsColumns.COL_NAME_SPOT_AREA_HEIGHT	+ " INTEGER )");			
+				+ CleaningSettingsColumns.COL_NAME_SPOT_AREA_HEIGHT	+ " INTEGER, "
+				+ CleaningSettingsColumns.COL_NAME_CLEANING_CATEGORY + " INTEGER )");			
 
 			db.execSQL("CREATE TABLE IF NOT EXISTS " +
 					Tables.TABLE_NAME_NOTIFICATION_SETTINGS
