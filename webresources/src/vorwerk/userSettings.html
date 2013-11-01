@@ -29,6 +29,18 @@
             </ul>
         </fieldset>
         
+         <fieldset>
+            <h2 data-i18n="userSettings.page.subscription"
+                data-bind="translate: language">[robot_name]</h2>
+            <ul data-role="listview" data-theme="a" data-inset="true" class="single">
+            <li>
+                <a href="javascript:void(0);" data-bind="click: changeSubscription">
+                    <h3 data-i18n="userSettings.page.changesubscription" 
+                        data-bind="translate: language">[change]</h3>
+                </a>
+            </li>
+        </ul>
+        </fieldset>
         
         <fieldset class="indent">
             <h2 data-i18n="userSettings.page.email_adress"
@@ -114,32 +126,5 @@
 		</div>
 	</div>
 
-    <div id="changeCountryPopup" data-history="false" data-role="popup" data-dismissible="false" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport dialogType_1">
-        <div data-role="header" data-theme="b">
-            <h1 class="ui-title" role="heading" aria-level="1" data-i18n="common.edit" data-bind="translate: language">[edit]</h1>
-        </div>
-        <div class="popupHeaderLine"></div>
-
-        <div data-role="content">
-            <div id="countrySelectionListContainer" data-bind="jqRadioGroup:selectedCountryCode">
-                        <fieldset id="countrySelectionList" class="radioGroup" data-bind="foreach:{ data: countries, afterRender: renderedCountries }">
-                            <label class="with-image"
-                                    data-bind="jqText:{node:'last', text:label}, attr:{'data-country':value}">
-                                <input type="radio" name='selectCountry3' data-theme="a" data-role="none"
-                                     data-bind="attr:{'value':value}, checked: $parent.selectedCountryCode" />[country]</label>
-                        </fieldset>
-            </div>
-            <div data-role="controlgroup" data-type="horizontal" class="center">
-                    <a class="first-button" href="#" data-role="button" data-theme="b" data-mini="false" 
-	                    data-i18n="common.ok" 
-	                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton},  click: commitCountryEdit">[ok]</a>
-                    <a class="second-button" href="#" data-role="button" data-theme="b" data-mini="false" 
-                        data-i18n="common.cancel"
-                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}, click: cancelCountryEdit">[cancel]</a>
-            </div>
-            
-		</div>
-	</div>
-
-    
+        
 </div>

@@ -20,6 +20,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     this.countries = ko.observableArray([]);
     var countriesRendered = false;
     
+    
     var PASSWORD_LENGTH = 6;
 
     
@@ -63,35 +64,17 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
         this.initCountry(that.selectedCountryCode());
     };
     this.changeCountry = function() {
-    	$("#changeCountryPopup").popup("open");
+    	that.conditions['changeCountry'] = true;
+        parent.flowNavigator.next();
+    	
     }
     
-     this.cancelCountryEdit = function() {
-        var user = parent.communicationWrapper.getDataValue("user");
-        var uCountryCode = (user.extra_param && user.extra_param.countryCode) ? user.extra_param.countryCode : null;
-        that.selectedCountryCode(uCountryCode);
-        that.selectedCountryLabel($.i18n.t("common.countries." + that.selectedCountryCode()));
-        $("#changeCountryPopup").popup("close");
+     this.changeSubscription  = function() {
+        that.conditions['changeSubscription'] = true;
+        parent.flowNavigator.next({"country":that.selectedCountryCode()});
     }
     
-    this.commitCountryEdit = function() {
-     //TODO: will be added if API to update the country code is available
-     	var user = parent.communicationWrapper.getDataValue("user");
-        var uoptIn = (user.extra_param && user.extra_param.optIn) ? user.extra_param.optIn : false;
-        console.log("Commit new Country :" + that.selectedCountryCode() + " OPT IN Value :"+ uoptIn);
-        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.setUserAccountDetails, [that.user().email(), that.selectedCountryCode(), uoptIn]);
-        tDeffer.done(that.successUserAccountDetails);
-    }
-    
-    this.successUserAccountDetails = function(result) {
-        console.log("result" + JSON.stringify(result));
-        that.selectedCountryLabel($.i18n.t("common.countries." + that.selectedCountryCode()));
-        var user = parent.communicationWrapper.getDataValue("user");
-        user.extra_param.countryCode = that.selectedCountryCode();
-        parent.communicationWrapper.setDataValue("user", user);
-        $("#changeCountryPopup").popup("close");
-    }
-    
+       
     this.changePassword = function() {
         $("#changePasswordPopup").popup("open");
     };

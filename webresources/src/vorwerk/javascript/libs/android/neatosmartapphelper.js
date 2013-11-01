@@ -162,8 +162,9 @@ var ACTION_TYPE_GET_SCHEDULE_EVENTS 			= "getScheduleEvents";
 var ACTION_TYPE_GET_SCHEDULE_DATA 				= "getScheduleData";
 var ACTION_TYPE_CREATE_SCHEDULE 				= "createSchedule";
 var ACTION_TYPE_IS_SCHEDULE_ENABLED 			= "isScheduleEnabled";
-var ACTION_TYPE_ENABLE_SCHEDULE				= "enableSchedule";
-var ACTION_TYPE_GET_ROBOT_CLEANING_STATE					= "getRobotCleaningState";
+var ACTION_TYPE_ENABLE_SCHEDULE				    = "enableSchedule";
+var ACTION_TYPE_GET_ROBOT_CLEANING_STATE		= "getRobotCleaningState";
+var ACTION_TYPE_GET_ROBOT_CLEANING_CATEGORY	    = "getRobotCleaningCategory";
 
 //List of keys to send data:
 
@@ -2011,6 +2012,27 @@ RobotMgr.prototype.getRobotCleaningState = function(robotId, callbackSuccess, ca
 };
 
 /**
+ * This API gets the current state of the robot
+ *  on success this API returns a JSON Object
+ * <br>{cleaningCatageory: <1-Maual,2-All,3-Spot>,robotId:"robotId"}
+ * <br>robotCurrentState is an integer value of the current actual state of the robot
+ * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
+ * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
+ * <br>robotId is the serial number of the robot
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * @param robotId 			the serial number of the robot
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ */
+RobotMgr.prototype.getRobotCleaningCategory = function(robotId, callbackSuccess, callbackError) {
+	var params = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ROBOT_CLEANING_CATEGORY, [params]);
+};
+
+
+/**
  * This API clears the data on the specified robot associated with the specified user
  * <p>
  * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
@@ -3433,6 +3455,25 @@ var RobotPluginManager = (function() {
 		
 		getRobotCleaningState: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getRobotCleaningState(robotId, callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API gets the current state of the robot
+		 *  on success this API returns a JSON Object
+		 * <br>{cleaningCatageory: <1-Maual,2-All,3-Spot>,robotId:"robotId"}
+		 * <br>robotCurrentState is an integer value of the current actual state of the robot
+		 * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
+		 * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
+		 * <br>robotId is the serial number of the robot
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * @param robotId 			the serial number of the robot
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 */
+		
+		getRobotCleaningCategory: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotCleaningCategory(robotId, callbackSuccess, callbackError);
 		},
 		
 		/**
