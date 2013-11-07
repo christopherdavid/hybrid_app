@@ -116,8 +116,8 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     }
     
     this.back = function() {
-        that.conditions['back'] = true;
-        parent.flowNavigator.previous();
+      that.conditions['settings'] = true;
+      parent.flowNavigator.next();
     };
     
     this.reload = function() {

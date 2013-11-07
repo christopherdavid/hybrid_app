@@ -48,7 +48,7 @@ Application.prototype.loadWorkflow = function() {
                     "value" : true
                 }]
             },{
-                targetScreenId : "settings",
+                targetScreenId : "userSettings",
                 conditions : [{
                     "key" : "userSettings",
                     "value" : true
@@ -206,6 +206,12 @@ Application.prototype.loadWorkflow = function() {
                     "value" : true
                 }]
             } ,{
+                targetScreenId : "settings",
+                conditions : [{
+                    "key" : "settings",
+                    "value" : true
+                }]
+            },{
                 targetScreenId : "cleaning",
                 backConditions : [{
                     "key" : "home",

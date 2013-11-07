@@ -180,6 +180,7 @@ function WorkflowCommunication(parent) {
       that.getDataValue("robotList")([]);
       that.getDataValue("selectedRobot")({});
       that.dataValues["scheduleId"] = null;
+      that.dataValues["user"] = null;
       that.saveToLocalStorage('username', null); 
     };
     
