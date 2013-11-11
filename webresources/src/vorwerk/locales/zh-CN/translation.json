@@ -12,48 +12,48 @@
     },
     "error": {
         "-502": {
-            "message": "You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings.",
-            "title": "Connectivity Problems"
+            "message": "您需要互联网连接来使用本软件。请在设置中开启移动互联网或Wi-Fi。",
+            "title": "连接问题"
         },
         "-501": {
-            "message": "Unknown error has occurred. Please try again.",
-            "title": "Unknown Error"
+            "message": "发生未知错误。请再次尝试。",
+            "title": "未知错误"
         },
         "-105": {
-            "message": "Please check your email address.",
-            "title": "Type Error"
+            "message": "请检查您的email地址",
+            "title": "输入错误"
         },
         "-511": {
-            "message": "__robotName__ is no longer connected.",
-            "title": "Connection Error"
+            "message": "__robotName__ 无法被连接。",
+            "title": "连接错误"
         },
         "-108": {
-            "message": "Failed to create a user account. Please try again.",
-            "title": "Server Error"
+            "message": "用户创建失败。请再次尝试",
+            "title": "输入错误"
         },
         "-504": {
-            "message": "Your schedule could not be sychronized.",
-            "title": "Connection Error"
+            "message": "您的定时规划无法被同步。",
+            "title": "连接错误"
         },
         "-111": {
-            "message": "You need to add a robot name.",
-            "title": "Type Error"
+            "message": "您需要添加机器人名称",
+            "title": "输入错误"
         },
         "-112": {
-            "message": "Your email address isn't registered.",
-            "title": "Type Error"
+            "message": "您的email地址未被注册过。",
+            "title": "输入错误"
         },
         "-114": {
-            "message": "This robot id isn't registered.",
-            "title": "Type Error"
+            "message": "该机器人ID未被注册过。",
+            "title": "输入错误"
         },
         "-110": {
-            "message": "The old password does not match.",
-            "title": "Type Error"
+            "message": "旧密码不吻合",
+            "title": "输入错误"
         },
         "-101": {
-            "message": "Entered user name or password is incorrect.",
-            "title": "Type Error"
+            "message": "输入的用户名或密码有错误",
+            "title": "输入错误"
         }
     },
     "robotActivationId": {
@@ -82,7 +82,7 @@
             "CZ": "捷克",
             "AT": "奥地利",
             "FR": "法国",
-            "ZZ": "其它",
+            "0": "其它",
             "CH": "瑞士",
             "ES": "四班呀",
             "GB": "英国",
@@ -129,12 +129,14 @@
     },
     "legalInformation": {
         "page": {
-            "information": "As a customer, we wish to keep you informed about new updates, product related issues and new products.<br />We  strive to keep your privacy safe. You agree that Vorwerk International Mittelsten Scheid & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br />To opt-out of our email list, unsubscribe instructions are included at the bottom of each issue.",
+            "information": "We wish to keep you informed about new updates, product related issues and new products.<br />We  strive to keep your privacy safe. You agree that Vorwerk International Strecker & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br />To unsubscribe, please see bottom of email.",
             "title": "请告诉我们，你是否愿意订阅关于VR200的新闻及升级信息。",
             "information_header": "法律信息",
             "subscribe": "订阅",
             "registration_done_message": "<div class='mailAnimation'><\/div>一封确认邮件已发送至<br/><span class='highlightedText'>__email__<\/span><br/><br/>请在48小时内确认你的注册账号。<br />确认后你即可连接你的机器人。",
             "registration_done_title": "账号已开设",
+            "edit_done_title": "Account Modified",
+            "edit_done_message": "The user account has been modified successfully",
             "no_subscribe": "不要订阅"
         },
         "navi": {"title": "注册"}
@@ -164,8 +166,8 @@
     },
     "basicScheduler": {
         "page": {"cleaning_options": {
-            "schedule": "Use the toggle slider on the top left to reactivate it",
-            "title": "Scheduling is inactive"
+            "schedule": "请拨动左上方的滑块来开启",
+            "title": "定时清扫已关闭"
         }},
         "navi": {"title": "规划中"}
     },
@@ -201,15 +203,15 @@
         },
         "103": {
             "message": "<span class='font_bold'>__robotName__<\/span>:  我已完成任务，返回基座",
-            "title": "Return to base"
+            "title": "返回基座"
         },
         "102": {
             "message": "<span class='font_bold'>__robotName__<\/span>: 请清空我的尘盒及滤网",
-            "title": "I'm scruffy"
+            "title": "尘盒已满"
         },
         "101": {
             "message": "<span class='font_bold'>__robotName__<\/span>: 请移除障碍物让我继续清扫",
-            "title": "I'm stuck"
+            "title": "我被困住了"
         },
         "no_connection": {
             "message": "需要网络连接来使用本程序。请在设置内开启移动网络及WIFI。",
@@ -218,7 +220,7 @@
     },
     "pattern": {
         "time": "HHii",
-        "countryOrder": "DE,IT,FR,ES,AT,CH,CZ,CN,JP,GB,ZZ",
+        "countryOrder": "DE,IT,FR,ES,AT,CH,CZ,CN,JP,GB,0",
         "spotUnit": "m",
         "dayNameLength": "2.0",
         "spotFactor": "1.0",
@@ -246,7 +248,8 @@
             "email": "Email地址",
             "password_show": "显示密码",
             "password_verify": "密码确认",
-            "password": "密码"
+            "password": "密码",
+            "country": "Select Country"
         },
         "navi": {"title": "创建用户账号"}
     },
@@ -285,7 +288,7 @@
     "robotStateCodes": {
         "10001": "未知状态",
         "10002": "开始清扫",
-        "10010": "Manual Cleaning",
+        "10010": "手动清扫",
         "10005": "停止清扫",
         "10006": "被卡住",
         "10003": "待机",
@@ -336,12 +339,14 @@
     "userSettings": {
         "page": {
             "old_password": "旧密码",
+            "subscription": "News Subscription",
+            "changesubscription": "Change Subscription",
             "new_password_verify": "新密码确认",
             "password_show": "显示密码",
             "new_password": "新密码",
             "password": "密码",
             "email_adress": "Email地址",
-            "country": "Change country"
+            "country": "更改国家"
         },
         "navi": {"title": "用户设置"}
     }

@@ -17,7 +17,8 @@ function Application() {
     this.config = {
         firstScreen : "start",
         pageTransition : "none",
-        version:"0.6.2.3",
+        pageReverseDirection: false,
+        version:"0.6.2.5",
         pluginVersion:"0.6.0.10",
         fallbackLanguage:"en-GB",
         viewPath:"",
@@ -40,6 +41,7 @@ function Application() {
      * </ul>
      */
     this.init = function() {
+        initDeviceConfig();
         workflow = that.loadWorkflow();
 
         that.history = new WorkflowHistory(that);
@@ -126,8 +128,11 @@ function Application() {
     this.loadView = function(screenId) {
         console.log('loadView ' + screenId);
         $.mobile.changePage((that.config.viewPath + screenId + ".html"), {
-            transition : that.config.pageTransition
+            transition : that.config.pageTransition,
+            reverse : that.config.pageReverseDirection
         });
+        // disable reverse animation
+        that.config.pageReverseDirection = false;
     }
     
     /**

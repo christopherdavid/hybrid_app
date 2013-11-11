@@ -50,6 +50,7 @@ Globalization.prototype.getLocaleName = function(successCB, failureCB)
     }
     //cordova.exec(successCB, failureCB, "GlobalizationCommand","getLocaleName", []);
     console.log("getLocaleName")
+    //successCB({value:'zh-CN'});
     successCB({value:'en-US'});
     //successCB({value:'de-DE'});
 };

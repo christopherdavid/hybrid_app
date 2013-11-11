@@ -7,6 +7,9 @@ var openExternalLink = function (url) {
     navigator.app.loadUrl(url, { openExternal:true });
 };
 
+function initDeviceConfig() {
+    
+}
 
 var screenOrientation = function() {}
 

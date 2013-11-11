@@ -61,9 +61,7 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
             if($.inArray(appCountry, countryOrder) != -1) {
                 that.selectedCountry(appCountry);
             } else {
-                // TODO: nee to be defined how 'other' could be stored on server
-                console.log("select other country select GB as temporary fallback")
-                that.selectedCountry("GB");
+                that.selectedCountry("0");
             }
         }
     }

@@ -56,9 +56,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
         if(uCountryCode && uCountryCode != "null" && $.inArray(uCountryCode, countryOrder) != -1) {
                 that.selectedCountryCode(uCountryCode);
         } else {
-            // TODO: need to be defined how 'other' could be stored on server
-            console.log("select other country select GB as temporary fallback")
-            that.selectedCountryCode("GB");
+            that.selectedCountryCode("0");
         }
         that.selectedCountryLabel($.i18n.t("common.countries." + that.selectedCountryCode()));
         this.initCountry(that.selectedCountryCode());
@@ -143,9 +141,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
             if($.inArray(appCountry, countryOrder) != -1) {
                 that.selectedCountryCode(appCountry);
             } else {
-                // TODO: nee to be defined how 'other' could be stored on server
-                console.log("select other country select GB as temporary fallback")
-                that.selectedCountryCode("GB");
+                that.selectedCountryCode("0");
             }
         }
     }

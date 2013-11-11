@@ -77,6 +77,8 @@ function WorkflowNavigator(parent, workflow) {
      */
     this.previous = function() {
         console.log('WorkflowNavigator.previous()');
+        // enable reverse animation
+        parent.config.pageReverseDirection = true;
         
         // check if loading indicators and hide them is necessary
         hideLoadingIndicators();
@@ -111,6 +113,8 @@ function WorkflowNavigator(parent, workflow) {
             // navigate
             that.loadScreenFromHistory(historyIndex, typeof bundle != "undefined" ? bundle : null);
         } else {
+            // disable reverse animation
+            parent.config.pageReverseDirection = false;
             that.exit();
         }
     }

@@ -2,79 +2,79 @@
     "cleaning": {
         "page": {
             "cleaningCategory": {
-                "3": "Místo",
-                "2": "Vše",
-                "1": "Manuální"
+                "3": "SPOT úklid",
+                "2": "Úklid bytu",
+                "1": "Manuální úklid"
             },
-            "spot_size_title": "Velikost místa:"
+            "spot_size_title": "Velikost prostoru:"
         },
-        "navi": {"title": "Čištění"}
+        "navi": {"title": "Úklid"}
     },
     "error": {
         "-502": {
-            "message": "You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings.",
-            "title": "Connectivity Problems"
+            "message": "Pro použití aplikace potřebujete internetové připojení. Zapněte si prosím mobilní internet nebo Wi-Fi.",
+            "title": "Potíže s připojením"
         },
         "-501": {
-            "message": "Unknown error has occurred. Please try again.",
-            "title": "Unknown Error"
+            "message": "Došlo k neznámé chybě. Zkuste to prosím znovu.",
+            "title": "Neznámá chyba"
         },
         "-105": {
-            "message": "Please check your email address.",
-            "title": "Type Error"
+            "message": "Zkontrolujte prosím Váš e-mail.",
+            "title": "Chyba"
         },
         "-511": {
-            "message": "__robotName__ is no longer connected.",
-            "title": "Connection Error"
+            "message": "__robotName__ již není připojen.",
+            "title": "Chyba připojení"
         },
         "-108": {
-            "message": "Failed to create a user account. Please try again.",
-            "title": "Server Error"
+            "message": "Nepodařilo se vytvořit uživatelský účet. Zkuste to prosím znovu.",
+            "title": "Chyba serveru"
         },
         "-504": {
-            "message": "Your schedule could not be sychronized.",
-            "title": "Connection Error"
+            "message": "Váš plán úklidu nemůže být synchronizován.",
+            "title": "Chyba připojení"
         },
         "-111": {
-            "message": "You need to add a robot name.",
-            "title": "Type Error"
+            "message": "Je nutné přidat jméno robota",
+            "title": "Chyba"
         },
         "-112": {
-            "message": "Your email address isn't registered.",
-            "title": "Type Error"
+            "message": "Váš e-mail není registrován.",
+            "title": "Chyba"
         },
         "-114": {
-            "message": "This robot id isn't registered.",
-            "title": "Type Error"
+            "message": "Tento robot není registrován.",
+            "title": "Chyba"
         },
         "-110": {
-            "message": "The old password does not match.",
-            "title": "Type Error"
+            "message": "Vaše staré heslo neodpovídá.",
+            "title": "Chyba"
         },
         "-101": {
-            "message": "Entered user name or password is incorrect.",
-            "title": "Type Error"
+            "message": "Vložené jméno uživatele nebo heslo je chybné.",
+            "title": "Chyba"
         }
     },
     "robotActivationId": {
         "page": {
             "robotId": "Registrační číslo",
-            "wifisetup": "Zadejte prosím registrační číslo.<\/br> Naleznete je v menu robota: <span class='font_bold highlightedText'>Wifi Setup / Register<\/span>"
+            "wifisetup": "Zadejte prosím registrační číslo.<\/br> Naleznete je v menu robota: <span class='font_bold highlightedText'>Nastavení Wi-Fi / Registrace<\/span>"
         },
         "navi": {"title": "Aktivace robota"}
     },
     "common": {
         "change": "Změnit",
-        "no": "no",
+        "no": "Ne",
         "menu": {
             "schedule": "Plánovací kalendář",
-            "cleaning": "Čištění",
+            "cleaning": "Úklid",
             "settings": "Nastavení"
         },
         "edit": "Upravit",
-        "cancel": "smazat",
+        "cancel": "Zrušit",
         "cleaningMode": {
-            "2": "Normální",
+            "2": "Běžný",
             "1": "EKO"
         },
         "countries": {
@@ -82,7 +82,7 @@
             "CZ": "Česká republika",
             "AT": "Rakousko",
             "FR": "Francie",
-            "ZZ": "jiné",
+            "0": "jiné",
             "CH": "Švýcarsko",
             "ES": "Španělsko",
             "GB": "Anglie",
@@ -90,12 +90,12 @@
             "IT": "Itálie",
             "CN": "Čína"
         },
-        "yes": "yes",
-        "logout": "Odnlásit",
+        "yes": "Ano",
+        "logout": "Odhlásit",
         "off": "Vypnout",
         "delete": "Smazat",
         "on": "Zapnout",
-        "ok": "Dokončit",
+        "ok": "OK",
         "day": {
             "3": "Středa",
             "2": "Úterý",
@@ -107,21 +107,21 @@
         }
     },
     "communication": {
-        "wait_robot": "Robot se probudí za __wakeup__ vteřin",
-        "wakeup_unknown_robot": "Robot se probudí za několik vteřin",
-        "wakeup_robot": "Robot se probudí za __wakeUp__ vteřin",
+        "wait_robot": "Robot bude připraven za __wakeUp__ vteřin",
+        "wakeup_unknown_robot": "Robot bude připraven za několik vteřin",
+        "wakeup_robot": "Robot bude připraven za __wakeUp__ vteřin",
         "getready_robot": "Robot bude hned připraven.",
-        "robot_added": "__robotName__ byl přidán",
-        "intend_drive": "Čekejte prosím",
-        "fetch_robots": "Otevírám nabídku Robota",
-        "delete_robot_done": "Robot __robotName__ bude odstraněn.",
-        "stop_robot": "Robot __robotName__ zastavil úklid",
-        "toggle_eco": "EKO režim byl změněn __ecoMode__",
-        "reset_password": "Heslo bylo opět nastaveno",
-        "send_to_base": "__robotName__ byl poslán zpět do dobíjecí základny",
-        "update_scheduler": "Plánovací kalendář byl sinchronizován",
-        "reset_password_done": "Heslo bylo opět nastaveno",
-        "stop_drive": "__robotName__ byl zastaven"
+        "robot_added": "Přidávám robota __robotName__\u2026",
+        "intend_drive": "Čekej prosím\u2026",
+        "fetch_robots": "Otevírám nabídku robotů\u2026",
+        "delete_robot_done": "Robot __robotName__ byl odstraněn.",
+        "stop_robot": "Zastavuji __robotName__",
+        "toggle_eco": "EKO režim je __ecoMode__",
+        "reset_password": "Měním tvé heslo.",
+        "send_to_base": "Posílám __robotName__ zpět do dobíjecí základny.",
+        "update_scheduler": "Plánovací kalendář byl synchronizován.",
+        "reset_password_done": "Tvé heslo bylo změněno.",
+        "stop_drive": "Zastavuji __robotName__ \u2026"
     },
     "selectCountry": {
         "page": {"title": "Potvrďte prosím výběr země: "},
@@ -129,74 +129,76 @@
     },
     "legalInformation": {
         "page": {
-            "information": "As a customer, we wish to keep you informed about new updates, product related issues and new products.<br />We  strive to keep your privacy safe. You agree that Vorwerk International Mittelsten Scheid & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br />To opt-out of our email list, unsubscribe instructions are included at the bottom of each issue.",
-            "title": "Přejete si dostáva informace o vylepšeních a novinách VR200?",
+            "information": "Rádi bychom Vás informovali o nových aktualizacích, tématech souvisejících s výrobkem a nových výrobcích. <br />Dbáme na zachování Vašeho soukromí. Souhlasíte, že společnost Vorwerk International Streckker & Co. může uložit Vaše soukromé údaje v souladu se zásadami ochrany osobních údajů EU. Vaše data nebudou poskytnuta třetím stranám mimo skupinu Vorwerk. <br />Chcete-li se odhlásit, viz spodní část tohoto e-mailu.",
+            "title": "Přejete si dostáva informace o vylepšeních a novinách svého VR200?",
             "information_header": "Právní podmínky",
             "subscribe": "Přihlásit",
-            "registration_done_message": "Potvrzení bylo odesláno na vaši e-mailovou adresu. Zaregistrujte se do 48 hodin kliknutím na zaslaný odkaz. Po dokončení registrace se bude mci připojit k vašemu robotovi.",
-            "registration_done_title": "Účet byl zřízen.",
+            "registration_done_message": "<div class='mailAnimation'><\/div>Potvrzení bylo odesláno na <br/><span class='highlightedText'>__email__<\/span><br /><br />Vaši registraci potvrďte do 48 hodin kliknutím na zaslaný odkaz.<br />Po dokončení registrace se budete moci připojit k vašemu robotovi.",
+            "registration_done_title": "Účet založen.",
+            "edit_done_title": "Account Modified",
+            "edit_done_message": "The user account has been modified successfully",
             "no_subscribe": "Nepřihlašovat"
         },
         "navi": {"title": "Registrace"}
     },
     "settings": {
         "page": {
-            "about_desc": "Zobrazit verzi",
+            "about_desc": "Informace o verzi",
             "user_settings_desc": "Změnit heslo",
             "user_settings": "Uživatelské nastavení",
             "robot_management": "Správa nastavení robota",
             "link": "Vorwerk",
             "link_url": "http://kobold.vorwerk.cz",
             "about": "Tiráž",
-            "link_desc": "Navštivte stránky Vorwerk",
+            "link_desc": "Navštívit stránky Vorwerk",
             "general_settings": "Obecné nastavení",
             "general_settings_desc": "Správa oznámení robota",
-            "robot_management_desc": "Zobrazit robota, nebo přepnout na jiného"
+            "robot_management_desc": "Editovat nastavení robota nebo přepnout na jiného"
         },
         "navi": {"title": "Nastavení"}
     },
     "robotActivationName": {
         "page": {
             "robot_name": "Jméno robota",
-            "id_accepted": "Vaše registrační číslo bylo přijato.<\/br><\/br>Pokud chcete, můžete nyní dát jméno vašemu robotovi. Robota můžete také přejmenovat v menu nastavení."
+            "id_accepted": "Vaše registrační číslo bylo přijato.<\/br><\/br>Pokud chcete, můžete dát Vašemu robotovi jméno. Robota můžete kdykoliv přejmenovat v nastavení."
         },
         "navi": {"title": "Aktivace robota"}
     },
     "basicScheduler": {
         "page": {"cleaning_options": {
-            "schedule": "Use the toggle slider on the top left to reactivate it",
-            "title": "Scheduling is inactive"
+            "schedule": "Pro aktivaci použijte přepínač v levé horní části.",
+            "title": "Plánovač je vypnutý."
         }},
-        "navi": {"title": "Funkce plánování"}
+        "navi": {"title": "Plánovací kalendář"}
     },
     "generalSettings": {
         "page": {
             "robot_need_cleaning": "Robota je třeba vyčistit.",
-            "notify_when": "Informuj mě, když",
-            "robot_stuck": "Robot se zaseknul",
-            "notify_with": "Informujte mě",
-            "push_on_phone": "Označením Stisknout",
+            "notify_when": "Informuj mě, když\u2026",
+            "robot_stuck": "Robot se zasekl.",
+            "notify_with": "Informuj mě\u2026",
+            "push_on_phone": "Push notifikace",
             "cleaning_done": "Úklid je dokončen."
         },
         "navi": {"title": "Obecné nastavení"}
     },
     "robotManagement": {
         "page": {
-            "robot_change": "Robota přidat / změnit",
+            "robot_change": "Přidat / změnit robota",
             "robot_delete": "Odebrat robota",
             "robot_name": "Jméno robota",
-            "robot_id": "Číslo robota",
+            "robot_id": "ID robota",
             "robot_type": "Typ"
         },
         "navi": {"title": "Ovládání robota"}
     },
     "messages": {
         "not_same_network": {
-            "message": "Pro manuální řízení musíme být připojení na stejnou síť Wi-Fi",
+            "message": "Musíme být připojení ke stejné síti Wi-Fi.",
             "title": "Chyba spojení"
         },
         "no_wifi": {
-            "message": "Pro použití této funkce potřebuji Wi-Fi připojení. Zapněte prosím v nastavení Wi-Fi připojení.",
+            "message": "Pro použití této funkce potřebuji Wi-Fi připojení. Zapněte prosím v nastavení Wi-Fi.",
             "title": "Chyba spojení"
         },
         "103": {
@@ -204,21 +206,21 @@
             "title": "Vracím se zpět do dobíjecí základny."
         },
         "102": {
-            "message": "<span class='font_bold'>__robotName__<\/span>: Vysypte nadobu na prach a pokud je to nutné vyčistěte také filtr.",
+            "message": "<span class='font_bold'>__robotName__<\/span>: Vysypte nádobu na prach a je-li to nutné, vyčistěte také filtr.",
             "title": "Nádoba na prach je plná."
         },
         "101": {
-            "message": "<span class='font_bold'>__robotName__<\/span>: Uvolněte mi prosím cestu,abych mohl pokračovat v úklidu.",
+            "message": "<span class='font_bold'>__robotName__<\/span>: Uvolněte mi prosím cestu, abych mohl pokračovat v úklidu.",
             "title": "Uvízl jsem."
         },
         "no_connection": {
-            "message": "Pro použití této aplikace potřebujete Wi-Fi připojení. Zapněte prosím Wi-Fi připojení ve svém mobilním zařízení.",
+            "message": "Pro použití této aplikace potřebujete být připojeni k síti. Zapněte prosím v nastavení mobilní nebo Wi-Fi síť.",
             "title": "Chyba spojení."
         }
     },
     "pattern": {
         "time": "HHii",
-        "countryOrder": "DE,IT,FR,ES,AT,CH,CZ,CN,JP,GB,ZZ",
+        "countryOrder": "GB,DE,IT,FR,ES,AT,CH,CZ,CN,JP,0",
         "spotUnit": "m",
         "dayNameLength": "2.0",
         "spotFactor": "1.0",
@@ -228,84 +230,85 @@
     "start": {
         "login_desc": "Máte již zřízený účet?",
         "register": "Registrovat nyní",
-        "register_desc": "Dosud nemáte zřízený účet?",
+        "register_desc": "Nemáte dosud zřízený účet?",
         "login": "Přihlašte se prosím!"
     },
     "basicSchedulerDate": {
         "page": {
             "starting_time": "Začátek",
             "cleaning_mode_title": "Nastavení úklidu",
-            "clean_every": "Uklízej vždy v ...",
+            "clean_every": "Uklízej vždy v\u2026",
             "cleaning_mode": "Uklízej v EKO režimu"
         },
         "navi": {"title": "Funkce plánování"}
     },
     "createAccount": {
         "page": {
-            "title": "Vítáme Vás v registraci.<br/>Pro pokračování vyplňte několich základních údajů.",
-            "email": "E-mailová adresa",
+            "title": "Vítejte v registraci.<br/>Pro pokračování vyplňte několich základních údajů.",
+            "email": "E-mail",
             "password_show": "Ukázat heslo",
             "password_verify": "Ověření hesla",
-            "password": "Heslo"
+            "password": "Heslo",
+            "country": "Select Country"
         },
         "navi": {"title": "Vytvořit uživatelský účet"}
     },
     "robotSelection": {
         "page": {
-            "register": "Registrace proběhla úspěšně. Vítáme Vás <span class='highlightedText font_bold'>__email__<\/span>",
+            "register": "Registrace proběhla úspěšně. <br />Vítejte <span class='highlightedText font_bold'>__email__<\/span>",
             "select_robot": "Vyberte prosím svého robota:",
-            "logged_in": "Dobrý den <span class='highlightedText font_bold'>__email__<\/span>.",
-            "login": "Vítáme Vás <span class='highlightedText font_bold'>__email__<\/span>!",
-            "no_robot": "Nemáte dosud registrovaného žádného robota.<br>Přidejte robota klepnutím na <span class='font_bold'>+<\/span>."
+            "logged_in": "Ahoj <span class='highlightedText font_bold'>__email__<\/span>.",
+            "login": "Vítejte <span class='highlightedText font_bold'>__email__<\/span>!",
+            "no_robot": "Zatím nemáte registrovaného žádného robota.<br>Přidejte robota klepnutím na <span class='font_bold'>+<\/span>."
         },
         "navi": {"title": "Výběr robota"}
     },
     "visualState": {
         "inbase": "Odpočívám v dobíjecí základně.",
-        "connecting": "Připojuji se do aplikace",
+        "connecting": "Připojuji se k serveru\u2026",
         "cleaning": "Uklízím",
-        "wakeup_unknown": "Probudím se během několika vteřin.",
+        "wakeup_unknown": "Za pár vteřin budu připraven\u2026",
         "error": "Mám problém.",
-        "waiting": "Probudím se asi za __wakeUp__ vteřin",
+        "waiting": "Budu připraven asi za __wakeUp__ vteřin",
         "done": "Ukončil jsem úklid.",
         "charging": "Nabíjím se.",
         "paused": "Přerušil jsem úklid.",
         "play": "Zahájil jsem úklid.",
         "awake": "Jsem připraven.",
-        "unknown": "Připojuji se do aplikace",
-        "stucked": "Uvízl jsem.",
-        "waiting_unknown": "Probudím se asi za několik vteřin",
-        "manual": "Dejte mi pokyn pomocí dálkového ovládání",
+        "unknown": "Připojuji se k serveru.",
+        "stucked": "Pomoc! Uvízl jsem.",
+        "waiting_unknown": "Za pár vteřin budu připraven.",
+        "manual": "Řiď mne pomocí dálkového ovládání",
         "idle": "Jsem připraven začít.",
-        "getready": "Budu hned připraven.",
+        "getready": "Pracuji\u2026",
         "stopped": "Zastavil jsem úklid.",
-        "wakeup": "Budu hned připraven.",
+        "wakeup": "Pracuji\u2026",
         "resumed": "Pokračuji v úklidu."
     },
     "robotStateCodes": {
         "10001": "Neznámý stav",
         "10002": "Úklid začal",
-        "10010": "Manual Cleaning",
+        "10010": "Manuální úklid",
         "10005": "Úklid skončil",
         "10006": "Uvízlý",
-        "10003": "v klidu",
+        "10003": "V klidu",
         "10004": "Nabíjení",
         "10009": "V dobíjecí základně",
         "10007": "Úklid přerušen",
         "10008": "Pokračování úklidu"
     },
-    "confirm": {"close_app": "Chceta tuto applikaci skutečně ukončit?"},
+    "confirm": {"close_app": "Chcet applikaci skutečně ukončit?"},
     "dialogs": {
         "EVENT_DELETE": {
-            "message": "Chcete opravdu odstranit tuto položku?",
-            "title": "Odstranit položku?",
+            "message": "Opravdu chcete zrušit naplánovaný úklid?",
+            "title": "Zrušit úklid",
             "button_1": "Ano",
             "button_2": "Ne"
         },
         "ROBOT_ADDED": {
-            "message": "Registrae je úspěšně dokončena. Nyní je možné začít s úklidem.",
+            "message": "Děkuji, registrace je úspěšně dokončena. <br /><\/br />Nyní mohu začít uklízet.",
             "title": "Hotovo!",
-            "button_1": "Dokončit"
+            "button_1": "OK"
         },
         "CANCEL_CLEANING": {
             "message": "Opravdu mám ukončit probíhající úklid?",
@@ -315,18 +318,18 @@
         },
         "ROBOT_DELETE": {
             "message": "Chcete opravdu odebrat __robotName__?",
-            "title": "Robota odebrat?",
+            "title": "Odebrat robota?",
             "button_1": "Ano",
             "button_2": "Ne"
         }
     },
     "loginUser": {
         "page": {
-            "title": "Vložte prosím jméno a heslo uživatele účtu Vorwerk",
+            "title": "Vložte prosím jméno a heslo Vašeho účtu Vorwerk",
             "password_lost": "Zapomenuté heslo?",
             "tap_here": "Klikněte zde.",
-            "email": "E-mailová adresa",
-            "description": "Chcete-li získat nové heslo, zadejte prosím níže svoji registrovanou e-mailovou adresu.<br>Nové heslo vám bude neprodleně odesláno.",
+            "email": "E-mail",
+            "description": "Chcete-li získat nové heslo, zadejte prosím níže svoji registrovanou e-mailovou adresu.<br />Nové heslo Vám bude odesláno neprodleně.",
             "password_show": "Zobrazit heslo",
             "password_reset": "Obnovit heslo",
             "password": "Heslo"
@@ -336,13 +339,15 @@
     "userSettings": {
         "page": {
             "old_password": "Staré heslo",
+            "subscription": "News Subscription",
+            "changesubscription": "Change Subscription",
             "new_password_verify": "Ověření nového hesla",
             "password_show": "Zobrazit heslo",
             "new_password": "Nové heslo",
             "password": "Heslo",
-            "email_adress": "E-mailová adresa",
-            "country": "Change country"
+            "email_adress": "E-mail",
+            "country": "Změnit zemi"
         },
-        "navi": {"title": "Nastavení uživatele"}
+        "navi": {"title": "Uživatelské nastavení"}
     }
 }
