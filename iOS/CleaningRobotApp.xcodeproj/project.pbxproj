@@ -95,7 +95,7 @@
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		1D6058910D05DD3D006BFB54 /* CleaningRobotApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CleaningRobotApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* Kobold VR200.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kobold VR200.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1F766FDD13BBADB100FB74C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		1F766FE013BBADB100FB74C0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
@@ -191,7 +191,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* CleaningRobotApp.app */,
+				1D6058910D05DD3D006BFB54 /* Kobold VR200.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -355,7 +355,7 @@
 			);
 			name = CleaningRobotApp;
 			productName = CrossplatformTemplate;
-			productReference = 1D6058910D05DD3D006BFB54 /* CleaningRobotApp.app */;
+			productReference = 1D6058910D05DD3D006BFB54 /* Kobold VR200.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -551,9 +551,9 @@
 					"$(inherited)",
 					"\"/Users/uid/Library/Developer/Xcode/DerivedData/CleaningRobotApp-fjjopscayftduodhuhxpfnpddrra/Build/Products/Debug-iphoneos\"",
 				);
-				PRODUCT_NAME = CleaningRobotApp;
-				PROVISIONING_PROFILE = "6D53D700-8A3C-426C-B5BB-7DB0191367AD";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6D53D700-8A3C-426C-B5BB-7DB0191367AD";
+				PRODUCT_NAME = "Kobold VR200";
+				PROVISIONING_PROFILE = "E10240A2-F8DB-4504-821C-839FEC17B75B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E10240A2-F8DB-4504-821C-839FEC17B75B";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -580,9 +580,9 @@
 					"$(inherited)",
 					"\"/Users/uid/Library/Developer/Xcode/DerivedData/CleaningRobotApp-fjjopscayftduodhuhxpfnpddrra/Build/Products/Debug-iphoneos\"",
 				);
-				PRODUCT_NAME = CleaningRobotApp;
-				PROVISIONING_PROFILE = "6D53D700-8A3C-426C-B5BB-7DB0191367AD";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6D53D700-8A3C-426C-B5BB-7DB0191367AD";
+				PRODUCT_NAME = "Kobold VR200";
+				PROVISIONING_PROFILE = "E10240A2-F8DB-4504-821C-839FEC17B75B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E10240A2-F8DB-4504-821C-839FEC17B75B";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -592,7 +592,8 @@
 			baseConfigurationReference = 307D28A1123043350040C0FA /* CordovaBuildSettings.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Monty Boyer (3RXYE83VYJ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Monty Boyer (3RXYE83VYJ)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -616,6 +617,8 @@
 					"-all_load",
 					"-Obj-C",
 				);
+				PROVISIONING_PROFILE = "E10240A2-F8DB-4504-821C-839FEC17B75B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E10240A2-F8DB-4504-821C-839FEC17B75B";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				USER_HEADER_SEARCH_PATHS = "";
@@ -627,7 +630,8 @@
 			baseConfigurationReference = 307D28A1123043350040C0FA /* CordovaBuildSettings.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Monty Boyer (3RXYE83VYJ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Monty Boyer (3RXYE83VYJ)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -651,7 +655,8 @@
 					"-all_load",
 					"-Obj-C",
 				);
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "E10240A2-F8DB-4504-821C-839FEC17B75B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E10240A2-F8DB-4504-821C-839FEC17B75B";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				USER_HEADER_SEARCH_PATHS = "";
