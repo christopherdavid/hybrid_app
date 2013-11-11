@@ -3,63 +3,63 @@
         "page": {
             "cleaningCategory": {
                 "3": "SPOT",
-                "2": "Tutto",
+                "2": "COMPLETA",
                 "1": "MANUALE"
             },
-            "spot_size_title": "Dimensioni Spot"
+            "spot_size_title": "Area Spot"
         },
         "navi": {"title": "Pulizia"}
     },
     "error": {
         "-502": {
-            "message": "You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings.",
-            "title": "Connectivity Problems"
+            "message": "Avete bisogno di una connessione di rete per utilizzare questa applicazione. Perfavore attiva una rete mobile o Wi-Fi in impostazioni.",
+            "title": "Problemi di connessione."
         },
         "-501": {
-            "message": "Unknown error has occurred. Please try again.",
-            "title": "Unknown Error"
+            "message": "Si è verificato un errore sconosciuto. Per favore prova ancora.",
+            "title": "Errore sconosciuto"
         },
         "-105": {
-            "message": "Please check your email address.",
-            "title": "Type Error"
+            "message": "Per favore controlla il tuo indirizzo email.",
+            "title": "Errore"
         },
         "-511": {
-            "message": "__robotName__ is no longer connected.",
-            "title": "Connection Error"
+            "message": "__robotName__ non è più connesso.",
+            "title": "Errore di connessione"
         },
         "-108": {
-            "message": "Failed to create a user account. Please try again.",
-            "title": "Server Error"
+            "message": "Creazione Account non riuscita. Per favore prova ancora.",
+            "title": "Errore Server"
         },
         "-504": {
-            "message": "Your schedule could not be sychronized.",
-            "title": "Connection Error"
+            "message": "La tua programmazione potrebbe non essere sincronizzata.",
+            "title": "Errore di connessione."
         },
         "-111": {
-            "message": "You need to add a robot name.",
-            "title": "Type Error"
+            "message": "Devi inserire il nome del Robot.",
+            "title": "Errore"
         },
         "-112": {
-            "message": "Your email address isn't registered.",
-            "title": "Type Error"
+            "message": "Il tuo indirizzo email non è registrato.",
+            "title": "Errore"
         },
         "-114": {
-            "message": "This robot id isn't registered.",
-            "title": "Type Error"
+            "message": "Questo robot non è registrato.",
+            "title": "Errore"
         },
         "-110": {
-            "message": "The old password does not match.",
-            "title": "Type Error"
+            "message": "La vecchia password non corrisponde.",
+            "title": "Errore"
         },
         "-101": {
-            "message": "Entered user name or password is incorrect.",
-            "title": "Type Error"
+            "message": "Username e password inseriti non sono corretti.",
+            "title": "Errore"
         }
     },
     "robotActivationId": {
         "page": {
             "robotId": "Registrazione ID",
-            "wifisetup": "Inserire l'ID di registrazione.<\/br>You will find it on the robot display accessing: <span class='font_bold highlightedText'>Wifi Setup / Register<\/span>"
+            "wifisetup": "Inserisci l'ID di registrazione.<\/br>Lo troverai sul display del robot accedendo a: <span class='font_bold highlightedText'>Impostazioni Wifi / Registrati<\/span>"
         },
         "navi": {"title": "Attivazione Robot"}
     },
@@ -67,7 +67,7 @@
         "change": "Cambia",
         "no": "no",
         "menu": {
-            "schedule": "Programma",
+            "schedule": "Programmazione",
             "cleaning": "Pulizia",
             "settings": "Impostazioni"
         },
@@ -82,7 +82,7 @@
             "CZ": "Repubblica Ceca",
             "AT": "Austria",
             "FR": "Francia",
-            "ZZ": "Altri",
+            "0": "Altri",
             "CH": "Svizzera",
             "ES": "Spagna",
             "GB": "Gran Bretagna",
@@ -107,34 +107,36 @@
         }
     },
     "communication": {
-        "wait_robot": "Il Robot si attiva in __wakeUp__ secondi",
-        "wakeup_unknown_robot": "Il Robot si attiva in pochi secondi",
-        "wakeup_robot": "Il Robot si attiva in circa  __wakeUp__ secondi",
-        "getready_robot": "Il Robot si sta preparando",
+        "wait_robot": "Il Robot si attiva in __wakeUp__ secondi.",
+        "wakeup_unknown_robot": "Il Robot si attiva in pochi secondi.",
+        "wakeup_robot": "Il Robot si attiva in circa  __wakeUp__ secondi.",
+        "getready_robot": "Il Robot si sta preparando.",
         "robot_added": "Aggiungi __robotName__",
-        "intend_drive": "Attendi perfavore",
-        "fetch_robots": "Accedendo alla lista del Robot\u2026",
-        "delete_robot_done": "Il Robot __robotName__ è stato cancellato",
+        "intend_drive": "Attendi per favore.",
+        "fetch_robots": "Accedendo alla lista Robot\u2026",
+        "delete_robot_done": "Il Robot __robotName__ è stato cancellato.",
         "stop_robot": "Interrompi __robotName__",
         "toggle_eco": "La modalità ECO è __ecoMode__",
-        "reset_password": "Reimpostare la password",
-        "send_to_base": "Invio__robotName__ alla base",
+        "reset_password": "Reimpostare la password.",
+        "send_to_base": "Invio__robotName__ alla base.",
         "update_scheduler": "Sincronizzando la tua programmazione\u2026",
-        "reset_password_done": "La tua password è stata rimossa",
+        "reset_password_done": "La tua password è stata reimpostata.",
         "stop_drive": "Interrompi __robotName__"
     },
     "selectCountry": {
-        "page": {"title": "Perfavore conferma il tuo paese:"},
+        "page": {"title": "Per favore conferma il tuo paese:"},
         "navi": {"title": "Registrazione "}
     },
     "legalInformation": {
         "page": {
-            "information": "As a customer, we wish to keep you informed about new updates, product related issues and new products.<br />We  strive to keep your privacy safe. You agree that Vorwerk International Mittelsten Scheid & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br />To opt-out of our email list, unsubscribe instructions are included at the bottom of each issue.",
+            "information": "We wish to keep you informed about new updates, product related issues and new products.<br />We  strive to keep your privacy safe. You agree that Vorwerk International Strecker & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br />To unsubscribe, please see bottom of email.",
             "title": "Desideri ricevere notizie e informazioni sugli aggiornamenti di VR200?",
             "information_header": "Note legali",
             "subscribe": "Registrati",
-            "registration_done_message": "La conferma è stata inivata al tuo indirizzo email. Si prega di registrarsi attraverso il link entro 48 ore. Dopo la conferma puoi effettuare il log-in e connetterti al tuo robot. ",
+            "registration_done_message": "<div class='mailAnimation'><\/div>La conferma è stata inviata a<br/><span class='highlightedText'>__email__<\/span><br /><br />Si prega di registrarsi attraverso il link entro 48 ore.<br/>Dopo la conferma puoi effettuare il log-in e connetterti al tuo robot. ",
             "registration_done_title": "Account creato ",
+            "edit_done_title": "Account Modified",
+            "edit_done_message": "The user account has been modified successfully",
             "no_subscribe": "Non effettuare l'accesso"
         },
         "navi": {"title": "Registrazione"}
@@ -143,15 +145,15 @@
         "page": {
             "about_desc": "Mostra le informazioni sulla versione ",
             "user_settings_desc": "Cambia la password",
-            "user_settings": "Impostazioni utente",
+            "user_settings": "Impostazioni Utente",
             "robot_management": "Gestione Robot",
             "link": "Folletto",
             "link_url": "http://www.folletto.it",
             "about": "Informazioni ",
-            "link_desc": "Visista il Sito Folletto",
-            "general_settings": "Impostazioni generali",
+            "link_desc": "Visita il sito Folletto",
+            "general_settings": "Impostazioni Generali",
             "general_settings_desc": "Gestisci le notifiche del robot",
-            "robot_management_desc": "Modifica questo robot o passa a un altro"
+            "robot_management_desc": "Modifica questo robot o passa ad un altro"
         },
         "navi": {"title": "Impostazioni"}
     },
@@ -164,21 +166,21 @@
     },
     "basicScheduler": {
         "page": {"cleaning_options": {
-            "schedule": "Use the toggle slider on the top left to reactivate it",
-            "title": "Scheduling is inactive"
+            "schedule": "Utilizza l'icona in alto a sinistra per riattivarla.",
+            "title": "La programmazione non è attiva."
         }},
-        "navi": {"title": "Programma"}
+        "navi": {"title": "Programmazione"}
     },
     "generalSettings": {
         "page": {
-            "robot_need_cleaning": "Il Robot ha bisogno di essere pulito",
+            "robot_need_cleaning": "Il Robot ha bisogno di essere pulito.",
             "notify_when": "Invia una notifica quando\u2026",
-            "robot_stuck": "Il Robot è bloccato",
+            "robot_stuck": "Il Robot è bloccato.",
             "notify_with": "Avvisami con\u2026",
-            "push_on_phone": "Tramite notifica push",
-            "cleaning_done": "La pulizia è finita"
+            "push_on_phone": "Tramite notifica push.",
+            "cleaning_done": "La pulizia è finita."
         },
-        "navi": {"title": "Impostazioni generali"}
+        "navi": {"title": "Impostazioni Generali"}
     },
     "robotManagement": {
         "page": {
@@ -186,39 +188,39 @@
             "robot_delete": "Rimuovi robot",
             "robot_name": "Nome Robot",
             "robot_id": "Robot ID",
-            "robot_type": "Tipo/modello"
+            "robot_type": "Modello"
         },
         "navi": {"title": "Gestione Robot"}
     },
     "messages": {
         "not_same_network": {
-            "message": "Dobbiamo essere nella stessa rete Wi-Fi per la guida manuale",
-            "title": "Problemi di connessione"
+            "message": "Dobbiamo essere nella stessa rete Wi-Fi per un corretto funzionamento.",
+            "title": "Problemi di connessione."
         },
         "no_wifi": {
-            "message": "Hai bisogno di una connessione Wi-Fi per utilizzare questa funzione. Si prega di attivare il Wi-Fi nelle impostazioni",
-            "title": "Problemi di connessione"
+            "message": "Hai bisogno di una connessione Wi-Fi per utilizzare questa funzione. Per favore attiva il Wi-Fi nelle impostazioni.",
+            "title": "Problemi di connessione."
         },
         "103": {
             "message": "<span class='font_bold'>__robotName__<\/span>: Ho finito e sto tornando alla base!",
             "title": "Sto tornando alla base di ricarica"
         },
         "102": {
-            "message": "<span class='font_bold'>__robotName__<\/span>: Perfavore svuota il mio contenitore della polvere e pulisci il filtro se necessario",
-            "title": "Il mio contenitore della polvere è pieno"
+            "message": "<span class='font_bold'>__robotName__<\/span>: Per favore svuota il mio contenitore della polvere e pulisci il filtro se necessario.",
+            "title": "Il mio contenitore della polvere è pieno."
         },
         "101": {
-            "message": "<span class='font_bold'>__robotName__<\/span>: Perfavore libera il mio percorso, aiutami così posso continuare a pulire",
-            "title": "Sono bloccato"
+            "message": "<span class='font_bold'>__robotName__<\/span>: Per favore libera il mio percorso, così posso continuare a pulire.",
+            "title": "Sono bloccato."
         },
         "no_connection": {
-            "message": "Hai bisogno di una connessione Wi-Fi per utilizzare questa funzione. Si prega di attivare il Wi-Fi nelle impostazioni",
+            "message": "Hai bisogno di una connessione Wi-Fi per utilizzare questa funzione. Per favore attiva il Wi-Fi nelle impostazioni",
             "title": "Problemi di connessione."
         }
     },
     "pattern": {
         "time": "HHii",
-        "countryOrder": "DE,IT,FR,ES,AT,CH,CZ,CN,JP,GB,ZZ",
+        "countryOrder": "DE,IT,FR,ES,AT,CH,CZ,CN,JP,GB,0",
         "spotUnit": "m",
         "dayNameLength": "3.0",
         "spotFactor": "1.0",
@@ -226,66 +228,67 @@
         "week": "1,2,3,4,5,6,7 "
     },
     "start": {
-        "login_desc": "Hai già un account? Ti sei già registrato?",
+        "login_desc": "Hai già un account?",
         "register": "Registrati adesso",
-        "register_desc": "Non hai un account",
-        "login": "Effettua il login"
+        "register_desc": "Non hai ancora un account?",
+        "login": "Effettua il login!"
     },
     "basicSchedulerDate": {
         "page": {
             "starting_time": "Ora di inizio",
-            "cleaning_mode_title": "Opzioni di pulizia/modalità",
+            "cleaning_mode_title": "Opzioni di pulizia",
             "clean_every": "Pulisci ogni\u2026",
-            "cleaning_mode": "Pulisci con modalità ECO"
+            "cleaning_mode": "Pulisci in modalità ECO"
         },
-        "navi": {"title": "Porgramma"}
+        "navi": {"title": "Programmazione"}
     },
     "createAccount": {
         "page": {
-            "title": "Benvenuto nella Registrazione.<br/>Inserisci alcune informazioni per continuare",
+            "title": "Benvenuto nella Registrazione.<br/>Inserisci alcune informazioni per continuare.",
             "email": "Indirizzo Email",
             "password_show": "Mostra password",
             "password_verify": "Verifica password",
-            "password": "Password"
+            "password": "Password",
+            "country": "Select Country"
         },
-        "navi": {"title": "Crea il tuo account"}
+        "navi": {"title": "Crea il Tuo Account"}
     },
     "robotSelection": {
         "page": {
-            "register": "Registrazione completata...<br>Benvenuto <span class='highlightedText font_bold'>__email__<\/span>",
-            "select_robot": "Perfavore scegli il tuo robot",
+            "register": "Registrazione completata<br>Benvenuto <span class='highlightedText font_bold'>__email__<\/span>",
+            "select_robot": "Per favore scegli il tuo robot:",
             "logged_in": "Ciao <span class='highlightedText font_bold'>__email__<\/span>.",
             "login": "Benvenuto <span class='highlightedText font_bold'>__email__<\/span>!",
-            "no_robot": "Non hai robot registrati.<br>Aggiungi un Robot toccando <span class='font_bold'>+<\/span>."
+            "no_robot": "Non hai robot registrati.<br>Aggiungi un Robot selezionando <span class='font_bold'>+<\/span>."
         },
         "navi": {"title": "Selezione Robot"}
     },
     "visualState": {
-        "inbase": "Rimango alla base",
-        "connecting": "Sto cercando il mio server",
-        "cleaning": "Sto pulendo",
+        "inbase": "Rimango alla base.",
+        "connecting": "Sto cercando il mio server.",
+        "cleaning": "Sto pulendo.",
         "wakeup_unknown": "Mi attiverò in pochi secondi. ",
-        "error": "Ho un problema",
-        "waiting": "Mi attivo in circa  __wakeUp__ secondi",
-        "done": "Ho finito la pulizia",
-        "charging": "Mi sto ricaricando",
-        "paused": "Ho messo in pausa la pulizia",
-        "play": "Ho iniziato la pulizia",
-        "awake": "Sono pronto a cominciare",
-        "unknown": "Sto cercando il mio server",
+        "error": "Ho un problema.",
+        "waiting": "Mi attivo in circa  __wakeUp__ secondi.",
+        "done": "Ho finito la pulizia.",
+        "charging": "Mi sto ricaricando.",
+        "paused": "Ho messo in pausa la pulizia.",
+        "play": "Ho iniziato la pulizia.",
+        "awake": "Sono pronto a cominciare.",
+        "unknown": "Sto cercando il mio server.",
         "stucked": "Aiutami sono bloccato!",
         "waiting_unknown": "Mi attiverò in pochi secondi. ",
         "manual": "Guidami con la tua app!",
-        "idle": "Sono pronto ad iniziare",
-        "getready": "Mi sto preparando",
-        "stopped": "Ho interrotto la pulizia",
-        "wakeup": "Mi sto preparando",
-        "resumed": "Ho ripreso la pulizia"
+        "idle": "Sono pronto ad iniziare.",
+        "getready": "Mi sto preparando.",
+        "stopped": "Ho interrotto la pulizia.",
+        "wakeup": "Mi sto preparando.",
+        "resumed": "Ho ripreso la pulizia."
     },
     "robotStateCodes": {
         "10001": "Stato sconosciuto",
         "10002": "Pulizia attivata",
-        "10010": "Manual Cleaning",
+        "10010": "Pulizia Manuale",
         "10005": "Pulizia interrotta",
         "10006": "Bloccato",
         "10003": "Inattivo",
@@ -297,13 +300,13 @@
     "confirm": {"close_app": "Sei sicuro di voler chiudere l'applicazione?"},
     "dialogs": {
         "EVENT_DELETE": {
-            "message": "Confermi di voler cancellare  l'impostazione ?",
+            "message": "Confermi di voler cancellare l'impostazione?",
             "title": "Cancellare l'impostazione?",
             "button_1": "Sì",
             "button_2": "No"
         },
         "ROBOT_ADDED": {
-            "message": "La registrazione del Robot è completata. Grazie per aver scelto questo prodotto. Buona pulizia",
+            "message": "La registrazione del Robot è completata. Grazie per aver scelto questo prodotto. Buona pulizia!",
             "title": "Pronto ",
             "button_1": "OK"
         },
@@ -322,11 +325,11 @@
     },
     "loginUser": {
         "page": {
-            "title": "Inserisci nome e password del tuo Account Folletto",
+            "title": "Inserisci nome e password del tuo Account Folletto.",
             "password_lost": "Password dimenticata?",
             "tap_here": "Tocca qui",
             "email": "Indirizzo email",
-            "description": "Per inserire una nuova password perfavore inserisci il tuo indirizzo email.<br>Riceverai subito una email con una nuova password.",
+            "description": "Per inserire una nuova password per favore inserisci il tuo indirizzo email.<br />Riceverai subito una email con una nuova password.",
             "password_show": "Mostra password",
             "password_reset": "Reimposta Password",
             "password": "Password"
@@ -336,13 +339,15 @@
     "userSettings": {
         "page": {
             "old_password": "Vecchia password",
+            "subscription": "News Subscription",
+            "changesubscription": "Change Subscription",
             "new_password_verify": "Verifica nuova password",
             "password_show": "Mostra password",
             "new_password": "Nuova passord",
             "password": "Password",
             "email_adress": "Indirizzo Email",
-            "country": "Change country"
+            "country": "Cambia Paese"
         },
-        "navi": {"title": "Impostazioni utente"}
+        "navi": {"title": "Impostazioni Utente"}
     }
 }

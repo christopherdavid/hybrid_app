@@ -12,48 +12,48 @@
     },
     "error": {
         "-502": {
-            "message": "You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings.",
-            "title": "Connectivity Problems"
+            "message": "Vous avez besoin d'une connexion",
+            "title": "Problème de connexion"
         },
         "-501": {
-            "message": "Unknown error has occurred. Please try again.",
-            "title": "Unknown Error"
+            "message": "Une erreur inconnue est survenue, merci de réessayer.",
+            "title": "Erreur inconnue"
         },
         "-105": {
-            "message": "Please check your email address.",
-            "title": "Type Error"
+            "message": "Merci de vérifier votre adresse e-mail",
+            "title": "Type d'erreur"
         },
         "-511": {
-            "message": "__robotName__ is no longer connected.",
-            "title": "Connection Error"
+            "message": "__robotName__ n'est plus connecté",
+            "title": "Erreur de connexion"
         },
         "-108": {
-            "message": "Failed to create a user account. Please try again.",
-            "title": "Server Error"
+            "message": "La création de votre compte utilisateur a échoué. Merci de réessayer.",
+            "title": "Erreur serveur"
         },
         "-504": {
-            "message": "Your schedule could not be sychronized.",
-            "title": "Connection Error"
+            "message": "Votre agenda ne peut pas être synchronisé",
+            "title": "Erreur de connexion"
         },
         "-111": {
-            "message": "You need to add a robot name.",
-            "title": "Type Error"
+            "message": "Vous devez ajouter un nom à votre robot",
+            "title": "Type d'erreur"
         },
         "-112": {
-            "message": "Your email address isn't registered.",
-            "title": "Type Error"
+            "message": "Votre adresse e-mail n'est pas enregistrée",
+            "title": "Type d'erreur"
         },
         "-114": {
-            "message": "This robot id isn't registered.",
-            "title": "Type Error"
+            "message": "L'identifiant du robot n'est pas enregistré",
+            "title": "Type d'erreur"
         },
         "-110": {
-            "message": "The old password does not match.",
-            "title": "Type Error"
+            "message": "L'ancien mot de passe ne fonctionne plus",
+            "title": "Type d'erreur"
         },
         "-101": {
-            "message": "Entered user name or password is incorrect.",
-            "title": "Type Error"
+            "message": "Votre identifiant ou mot de passe est incorrect",
+            "title": "Type d'erreur"
         }
     },
     "robotActivationId": {
@@ -82,7 +82,7 @@
             "CZ": "République Tchèque",
             "AT": "Autriche",
             "FR": "France",
-            "ZZ": "Autres\u2026",
+            "0": "Autres\u2026",
             "CH": "Suisse",
             "ES": "Espagne",
             "GB": "Grande-Bretagne",
@@ -129,12 +129,14 @@
     },
     "legalInformation": {
         "page": {
-            "information": "En tant que client, nous souhaitons vous tenir informé de toutes les mises à jour, les questions concernant nos produits ainsi que de nos nouveaux produits.<br/>Nous mettons tout en œuvre pour respecter votre confidentialité. Vous agréez que Vorwerk International Mittelsten Scheid & Co peut conserver vos données personnelles en accord avec la politique de données personnes de l'UE. Nous ne partagerons pas vos données personnelles avec des sociétés à l'extérieur du Groupe Vorwerk.<br/> Pour ne plus recevoir nos emails, des instructions pour se désinscrire figurent en bas de chaque publication.",
+            "information": "En tant que client, nous souhaitons vous tenir informé de toutes les mises à jour, les questions concernant nos produits ainsi que de nos nouveaux produits.<br/>Nous mettons tout en œuvre pour respecter votre confidentialité. Vous agréez que Vorwerk International Strecker & Co peut conserver vos données personnelles en accord avec la politique de données personnes de l'UE. Nous ne partagerons pas vos données personnelles avec des sociétés à l'extérieur du Groupe Vorwerk.<br/> Pour ne plus recevoir nos emails, des instructions pour se désinscrire figurent en bas de chaque publication.",
             "title": "Veuillez nous informer si vous souhaitez vous inscrire pour recevoir des informations et mises à jour concernant votre VR-200",
             "information_header": "INFORMATIONS LEGALES",
             "subscribe": "S'abonner",
-            "registration_done_message": "<> Un mail de confirmation a été envoyé à <> Veuillez confirmer votre compte dans les 48 heures <> Après confirmation vous pouvez ouvrir une session et connecter votre robot.",
+            "registration_done_message": "<div class='mailAnimation'><\/div>Un mail de confirmation a été envoyé à <br/><span class='highlightedText'>__email__<\/span><br /><br />Veuillez confirmer votre compte dans les 48 heures <br />. Après confirmation vous pouvez ouvrir une session et connecter votre robot.",
             "registration_done_title": "Compte créé",
+            "edit_done_title": "Account Modified",
+            "edit_done_message": "The user account has been modified successfully",
             "no_subscribe": "Ne pas s'abonner"
         },
         "navi": {"title": "Enregistrer"}
@@ -164,8 +166,8 @@
     },
     "basicScheduler": {
         "page": {"cleaning_options": {
-            "schedule": "Use the toggle slider on the top left to reactivate it",
-            "title": "Scheduling is inactive"
+            "schedule": "Utilisez le curseur en haut à gauche pour la réactiver",
+            "title": "La programmation est inactive"
         }},
         "navi": {"title": "Programmation"}
     },
@@ -218,7 +220,7 @@
     },
     "pattern": {
         "time": "HHii",
-        "countryOrder": "DE,IT,FR,ES,AT,CH,CZ,CN,JP,GB,ZZ",
+        "countryOrder": "DE,IT,FR,ES,AT,CH,CZ,CN,JP,GB,0",
         "spotUnit": "m",
         "dayNameLength": "3.0",
         "spotFactor": "1.0",
@@ -246,7 +248,8 @@
             "email": "Adresse Email",
             "password_show": "Montrer le mot de passe",
             "password_verify": "Vérification du mot de passe",
-            "password": "Mot de passe"
+            "password": "Mot de passe",
+            "country": "Select Country"
         },
         "navi": {"title": "Créer le compte utilisateur"}
     },
@@ -285,7 +288,7 @@
     "robotStateCodes": {
         "10001": "Etat inconnu",
         "10002": "Commencer nettoyage",
-        "10010": "Manual Cleaning",
+        "10010": "Nettoyage manuel",
         "10005": "Arrêter nettoyage",
         "10006": "Coincé",
         "10003": "A l'arrêt",
@@ -326,7 +329,7 @@
             "password_lost": "Vous avez perdu votre mot de passe ?",
             "tap_here": "Touchez ici",
             "email": "Adresse Email",
-            "description": "Pour obtenir un nouveau mot de passe, veuillez.<br>Vous recevrez immédiatement un email contenant votre nouveau mot de passe",
+            "description": "Pour obtenir un nouveau mot de passe, veuillez.<br />Vous recevrez immédiatement un email contenant votre nouveau mot de passe",
             "password_show": "Montrer le mot de passe",
             "password_reset": "Réinitialisation du mot de passe",
             "password": "Mot de passe"
@@ -336,12 +339,14 @@
     "userSettings": {
         "page": {
             "old_password": "Ancien mot de passe",
+            "subscription": "News Subscription",
+            "changesubscription": "Change Subscription",
             "new_password_verify": "Vérification du nouveau mot de passe",
             "password_show": "Montrer le mot de passe",
             "new_password": "Nouveau mot de passe",
             "password": "Mot de passe",
             "email_adress": "Adresse Email",
-            "country": "Change country"
+            "country": "Modifiez le pays"
         },
         "navi": {"title": "Paramètres d'utilisateur"}
     }

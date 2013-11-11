@@ -12,15 +12,15 @@
     },
     "error": {
         "-502": {
-            "message": "Sie benötigen eine Onlineverbindung um diese Anwendung benutzen zu können. Bitte schalten Sie das mobile newetzek oder Wi-Fi in den Einstellungen an.",
+            "message": "Du benötigst eine Onlineverbindung um diese Anwendung benutzen zu können. Bitte schalte das mobile Netzwerk oder Wi-Fi in den Einstellungen an.",
             "title": "Verbindungsprobleme"
         },
         "-501": {
-            "message": "Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+            "message": "Ein unbekannter Fehler ist aufgetreten. Bitte erneut versuchen.",
             "title": "Unbekannter Fehler"
         },
         "-105": {
-            "message": "Bitte überprüfen Sie Ihre E-Mail-Adresse.",
+            "message": "Bitte E-Mail-Adresse überprüfen.",
             "title": "Eingabefehler"
         },
         "-511": {
@@ -28,19 +28,19 @@
             "title": "Verbindungsfehler"
         },
         "-108": {
-            "message": "Beim Erstellen des Nutzerkontos ist ein Fehler aufgetreten. Bitte wiederholen Sie den Vorgang.",
+            "message": "Beim Erstellen des Nutzerkontos ist ein Fehler aufgetreten. Bitte Vorgang wiederholen.",
             "title": "Serverfehler"
         },
         "-504": {
-            "message": "Ihr Wochenplan konnte nicht synchronisiert werden.",
+            "message": "Der Wochenplan konnte nicht synchronisiert werden.",
             "title": "Verbindungsfehler"
         },
         "-111": {
-            "message": "Sie müssen einen Roboter Namen einfügen.",
+            "message": "Bitte einen Roboter Namen einfügen.",
             "title": "Eingabefehler"
         },
         "-112": {
-            "message": "Ihre E-Mail-Adresse ist nicht registriert.",
+            "message": "E-Mail-Adresse ist nicht registriert.",
             "title": "Eingabefehler"
         },
         "-114": {
@@ -48,7 +48,7 @@
             "title": "Eingabefehler"
         },
         "-110": {
-            "message": "Ihr altes Passwort ist nicht korrekt.",
+            "message": "Dein altes Passwort ist nicht korrekt.",
             "title": "Eingabefehler"
         },
         "-101": {
@@ -82,7 +82,7 @@
             "CZ": "Tschech. Repubik",
             "AT": "Österreich",
             "FR": "Frankreich",
-            "ZZ": "Sonstiges",
+            "0": "Sonstiges",
             "CH": "Schweiz",
             "ES": "Spanien",
             "GB": "Großbritannien",
@@ -129,12 +129,14 @@
     },
     "legalInformation": {
         "page": {
-            "information": "As a customer, we wish to keep you informed about new updates, product related issues and new products.<br/>We  strive to keep your privacy safe. You agree that Vorwerk International Mittelsten Scheid & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br/>To opt-out of our email list, unsubscribe instructions are included at the bottom of each issue.",
+            "information": "We wish to keep you informed about new updates, product related issues and new products.<br />We  strive to keep your privacy safe. You agree that Vorwerk International Strecker & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br />To unsubscribe, please see bottom of email.",
             "title": "Möchtest du Informationen über Updates und Neuigkeiten zum VR200 erhalten?",
             "information_header": "Rechtliche Hinweise",
             "subscribe": "Anmelden",
-            "registration_done_message": "Die Bestätigung wurde an deine Email-Adresse gesendet. Bitte bestätige deinen Account (Konto) mit dem zusendeten Link innerhalb von 48 Stunden. Danach kannst du dich mit deinem Roboter verbinden.",
+            "registration_done_message": "<div class='mailAnimation'><\/div>Die Bestätigung wurde an <br/><span class='highlightedText'>__email__<\/span><br /><br /> gesendet. Bitte bestätige deinen Account (Konto) mit dem zusendeten Link innerhalb von 48 Stunden.<br /> Danach kannst du dich mit deinem Roboter verbinden.",
             "registration_done_title": "Konto wurde erstellt.",
+            "edit_done_title": "Account Modified",
+            "edit_done_message": "The user account has been modified successfully",
             "no_subscribe": "Nicht anmelden."
         },
         "navi": {"title": "Registrierung"}
@@ -164,15 +166,15 @@
     },
     "basicScheduler": {
         "page": {"cleaning_options": {
-            "schedule": "Use the toggle slider on the top left to reactivate it",
-            "title": "Scheduling is inactive"
+            "schedule": "Zum Reaktivieren bitte den Schalter oben links verschieben.",
+            "title": "Timer Funktion ist inaktiv."
         }},
         "navi": {"title": "Timer Funktion"}
     },
     "generalSettings": {
         "page": {
             "robot_need_cleaning": "Roboter möchte gereinigt werden.",
-            "notify_when": "Informieren mich, wenn\u2026",
+            "notify_when": "Informiere mich, wenn\u2026",
             "robot_stuck": "Roboter hat sich verklemmt.",
             "notify_with": "Informieren mich per",
             "push_on_phone": "per Push Benachrichtigung",
@@ -218,7 +220,7 @@
     },
     "pattern": {
         "time": "HHii",
-        "countryOrder": "DE,IT,FR,ES,AT,CH,CZ,CN,JP,GB,ZZ",
+        "countryOrder": "DE,IT,FR,ES,AT,CH,CZ,CN,JP,GB,0",
         "spotUnit": "m",
         "dayNameLength": "2.0",
         "spotFactor": "1.0",
@@ -246,7 +248,8 @@
             "email": "Email Adresse.",
             "password_show": "Passwort anzeigen",
             "password_verify": "Passwort verfizieren",
-            "password": "Passwort"
+            "password": "Passwort",
+            "country": "Select Country"
         },
         "navi": {"title": "Benutzerkonto erstellen"}
     },
@@ -267,7 +270,7 @@
         "wakeup_unknown": "Ich wache in ein paar Sekunden auf. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
         "error": "Ich habe ein Problem.",
         "waiting": "Ich werde in __wakeUp__ Sekunden aufwachen. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
-        "done": "Ich bin fertig mit reinigen.",
+        "done": "Ich bin fertig mit Reinigen.",
         "charging": "Ich lade meinen Akku auf.",
         "paused": "Ich habe die Reinigung unterbrochen.",
         "play": "Ich habe die Reinigung gestartet.",
@@ -278,14 +281,14 @@
         "manual": "Steuere mich per App Fernbedienung!",
         "idle": "Ich bin bereit.",
         "getready": "Ich bin gleich bereit.",
-        "stopped": "Ich habe die Reinigung gestoppt-",
+        "stopped": "Ich habe die Reinigung gestoppt.",
         "wakeup": "Ich bin gleich bereit.",
         "resumed": "Ich habe die Reinigung fortgesetzt"
     },
     "robotStateCodes": {
         "10001": "Status unbekannt.",
         "10002": "Reingung gestartet.",
-        "10010": "Manual Cleaning",
+        "10010": "Manuelle Reinigung",
         "10005": "Reinigung gestoppt.",
         "10006": "Festgefahren.",
         "10003": "Ruhend.",
@@ -326,7 +329,7 @@
             "password_lost": "Passwort vergessen?",
             "tap_here": "Hier drücken.",
             "email": "Email Adresse",
-            "description": "Um ein neues Passwort zu erhalten, bitte die registrierte Email Adresse eingeben.<br>Ein neues Passwort wird umgehende dorthin gesendet.",
+            "description": "Um ein neues Passwort zu erhalten, bitte die registrierte Email Adresse eingeben.<br />Ein neues Passwort wird umgehend dorthin gesendet.",
             "password_show": "Zeige Passwort",
             "password_reset": "Passwort zurückgesetzt",
             "password": "Passwort"
@@ -336,6 +339,8 @@
     "userSettings": {
         "page": {
             "old_password": "Altes Passwort",
+            "subscription": "News Subscription",
+            "changesubscription": "Change Subscription",
             "new_password_verify": "Verfizierung neues Passwort",
             "password_show": "Zeige Passwort",
             "new_password": "Neues Passwort",

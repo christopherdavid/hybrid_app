@@ -12,48 +12,48 @@
     },
     "error": {
         "-502": {
-            "message": "You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings.",
-            "title": "Connectivity Problems"
+            "message": "Necesita una conexión para utilizar esta aplicación. Por favor, active la conexión de su móvil o el WIFI en Ajustes.",
+            "title": "Problemas de conectividad."
         },
         "-501": {
-            "message": "Unknown error has occurred. Please try again.",
-            "title": "Unknown Error"
+            "message": "Se ha detectado un error desconocido. Inténtelo de nuevo.",
+            "title": "Error desconocido"
         },
         "-105": {
-            "message": "Please check your email address.",
-            "title": "Type Error"
+            "message": "Por favor revise su e-mail.",
+            "title": "Error"
         },
         "-511": {
-            "message": "__robotName__ is no longer connected.",
-            "title": "Connection Error"
+            "message": "__robotName__ ya no está conectado.",
+            "title": "Error de conexión"
         },
         "-108": {
-            "message": "Failed to create a user account. Please try again.",
-            "title": "Server Error"
+            "message": "Ha sido imposible crear una cuenta. Por favor inténtenlo de nuevo.",
+            "title": "Error del servidor"
         },
         "-504": {
-            "message": "Your schedule could not be sychronized.",
-            "title": "Connection Error"
+            "message": "Su programación no pudo ser sincronizada.",
+            "title": "Error de conexión"
         },
         "-111": {
-            "message": "You need to add a robot name.",
-            "title": "Type Error"
+            "message": "Necesita añadir un nombre de robot.",
+            "title": "Error"
         },
         "-112": {
-            "message": "Your email address isn't registered.",
-            "title": "Type Error"
+            "message": "Su e-mail no está registrado.",
+            "title": "Error"
         },
         "-114": {
-            "message": "This robot id isn't registered.",
-            "title": "Type Error"
+            "message": "Este robot no está registrado.",
+            "title": "Error"
         },
         "-110": {
-            "message": "The old password does not match.",
-            "title": "Type Error"
+            "message": "La antigua contraseña no coincide.",
+            "title": "Error"
         },
         "-101": {
-            "message": "Entered user name or password is incorrect.",
-            "title": "Type Error"
+            "message": "El usario o contraseña es incorrecto.",
+            "title": "Error"
         }
     },
     "robotActivationId": {
@@ -82,7 +82,7 @@
             "CZ": "República Checa",
             "AT": "Austria",
             "FR": "Francia",
-            "ZZ": "Otro",
+            "0": "Otro",
             "CH": "Suiza",
             "ES": "España",
             "GB": "Gran Bretaña",
@@ -129,12 +129,14 @@
     },
     "legalInformation": {
         "page": {
-            "information": "Como cliente, deseamos mantenerle informado de las actualizaciones de producto. La seguridad de sus datos es fundamental para nosotros.<br/>Usted afirma estar de acuerdo con que Vorwerk España M.S.L. almacene sus datos de acuerdo a la política de privacidad de la UE. No compartiremos sus datos con empresas ajenas al grupo Vorwerk.<br/>Si desea cancelar sus datos, encontrará la opción al final de cada Newsletter.",
+            "information": "Como cliente, deseamos mantenerle informado de las actualizaciones de producto. La seguridad de sus datos es fundamental para nosotros.<br/>Usted afirma estar de acuerdo con que Vorwerk International Strecker & Co. almacene sus datos de acuerdo a la política de privacidad de la UE. No compartiremos sus datos con empresas ajenas al grupo Vorwerk.<br/>Si desea cancelar sus datos, encontrará la opción al final de cada Newsletter.",
             "title": "Por favor, indíquenos si desea recibir información y actualizaciones de su VR200.",
             "information_header": "Información legal",
             "subscribe": "Suscribirse",
-            "registration_done_message": "Se le ha enviado una confirmación por email a __email__. Por favor confime su cuenta en las siguientes 48h. Después, usted podrá entrar y conectarse a su robot.",
+            "registration_done_message": "<div class='mailAnimation'><\/div>Un email de confirmación ha sido enviado a <br/><span class='highlightedText'>__email__<\/span><br /><br />Por favor confime su cuenta en las próximas 48h. Después de confirmar podrá entrar y conectarse a su robot.",
             "registration_done_title": "Cuenta creada.",
+            "edit_done_title": "Account Modified",
+            "edit_done_message": "The user account has been modified successfully",
             "no_subscribe": "No deseo suscribirme."
         },
         "navi": {"title": "Registro."}
@@ -164,8 +166,8 @@
     },
     "basicScheduler": {
         "page": {"cleaning_options": {
-            "schedule": "Use the toggle slider on the top left to reactivate it",
-            "title": "Scheduling is inactive"
+            "schedule": "Utilice el interruptor situado en la parte superior para activarla",
+            "title": "La programación está desactivada"
         }},
         "navi": {"title": "Programando."}
     },
@@ -218,7 +220,7 @@
     },
     "pattern": {
         "time": "HHii",
-        "countryOrder": "DE,IT,FR,ES,AT,CH,CZ,CN,JP,GB,ZZ",
+        "countryOrder": "DE,IT,FR,ES,AT,CH,CZ,CN,JP,GB,0",
         "spotUnit": "m",
         "dayNameLength": "2.0",
         "spotFactor": "1.0",
@@ -246,7 +248,8 @@
             "email": "Dirección de e-mail.",
             "password_show": "Mostrar contraseña.",
             "password_verify": "Verificación de la contraseña.",
-            "password": "Contraseña."
+            "password": "Contraseña.",
+            "country": "Select Country"
         },
         "navi": {"title": "Crear una cuenta de usuario."}
     },
@@ -285,7 +288,7 @@
     "robotStateCodes": {
         "10001": "Estado desconocido.",
         "10002": "Limpieza iniciada.",
-        "10010": "Manual Cleaning",
+        "10010": "Limpieza manual",
         "10005": "Limpieza detenida.",
         "10006": "Atascado.",
         "10003": "Inactivo.",
@@ -326,7 +329,7 @@
             "password_lost": "¿Ha perdido su contraseña?",
             "tap_here": "Pulse aquí.",
             "email": "Dirección de e-mail.",
-            "description": "Para conseguir una nueva contraseña introduzca por favor su e-mail registrado.<br>Recibirá de inmediato un e-mail con su nueva contraseña.",
+            "description": "Para conseguir una nueva contraseña introduzca por favor su e-mail registrado.<br />Recibirá de inmediato un e-mail con su nueva contraseña.",
             "password_show": "Mostrar contraseña.",
             "password_reset": "Resetear contraseña.",
             "password": "Contraseña."
@@ -336,12 +339,14 @@
     "userSettings": {
         "page": {
             "old_password": "Contraseña antigua.",
+            "subscription": "News Subscription",
+            "changesubscription": "Change Subscription",
             "new_password_verify": "Verificación de la nueva contraseña.",
             "password_show": "Mostrar contraseña.",
             "new_password": "Nueva contraseña.",
             "password": "Contraseña.",
             "email_adress": "Dirección de e-mail.",
-            "country": "Change country"
+            "country": "Cambiar país"
         },
         "navi": {"title": "Ajustes de usuario."}
     }

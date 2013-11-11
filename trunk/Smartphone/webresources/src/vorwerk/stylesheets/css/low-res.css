@@ -2634,7 +2634,7 @@ label {
 .ui-listview.with-image .ui-btn[data-country='GB'] .ui-btn-inner:before {
   background-position-y: -360px;
 }
-.ui-listview.with-image .ui-btn[data-country='ZZ'] .ui-btn-inner:before {
+.ui-listview.with-image .ui-btn[data-country='0'] .ui-btn-inner:before {
   background-position-y: -400px;
 }
 .radioGroup .ui-controlgroup-controls {
@@ -2781,7 +2781,7 @@ label {
 .radioGroup .ui-radio .ui-btn.with-image[data-country='GB'] .ui-btn-inner:before {
   background-position-y: -360px;
 }
-.radioGroup .ui-radio .ui-btn.with-image[data-country='ZZ'] .ui-btn-inner:before {
+.radioGroup .ui-radio .ui-btn.with-image[data-country='0'] .ui-btn-inner:before {
   background-position-y: -400px;
 }
 #startlist {

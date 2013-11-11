@@ -7,6 +7,9 @@ var openExternalLink = function (url) {
     window.open(url, "_blank");
 };
 
+function initDeviceConfig() {
+    //app.config.pageTransition = "fade";
+}
 
 /**
  * Forces the desired orientation. 

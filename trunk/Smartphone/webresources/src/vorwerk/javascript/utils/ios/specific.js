@@ -7,6 +7,10 @@ var openExternalLink = function (url) {
     window.open(url, "_blank");
 };
 
+function initDeviceConfig() {
+    app.config.pageTransition = "slide";
+}
+
 /**
  * Rotation handling in iOS
  *  
