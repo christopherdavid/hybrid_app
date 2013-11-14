@@ -10,6 +10,7 @@ import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPack
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,7 +26,7 @@ public class PushNotificationMessageHandler {
 	
 	private Context mContext;
 	private PushNotificationListener mPushNotificationListener;
-	
+	//private static int messageid = 0; 
 	private static HashMap<String, Integer> sNotificationResourceIdMap = new HashMap<String, Integer>();
 	
 	static {
@@ -82,12 +83,18 @@ public class PushNotificationMessageHandler {
 				.setTicker(message).setContentIntent(pendingIntent)
 				.setAutoCancel(true);
 		
+		//TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+		// Adds the back stack for the Intent (but not the Intent itself)
+		//stackBuilder.addParentStack(ResultActivity.class);
+
 		Notification notification = builder.getNotification();
+		//notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		//messageid = Integer.parseInt(bundle.getString("time"));
 		notificationManager.notify(0, notification);
 		PushNotificationUtils.setPendingPushNotification(bundle);
 	}
 
-	private void sendForegroundNotification(Context context, Bundle bundle) {
+	public void sendForegroundNotification(Context context, Bundle bundle) {
 		String message = bundle.getString(PushNotificationConstants.NOTIFICATION_MESSAGE_KEY);
 		LogHelper.logD(TAG, "sendForegroundNotification: " + message);
 		if (mPushNotificationListener != null) {
