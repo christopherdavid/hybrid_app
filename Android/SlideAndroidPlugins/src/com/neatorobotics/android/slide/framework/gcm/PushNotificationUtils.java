@@ -77,4 +77,5 @@ public class PushNotificationUtils {
 	public static void clearPendingPushNotification() {
 		mPendingPushNotificationBundle = null;
 	}
+	
 }

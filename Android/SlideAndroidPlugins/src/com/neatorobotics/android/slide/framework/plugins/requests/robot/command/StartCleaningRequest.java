@@ -38,11 +38,11 @@ public class StartCleaningRequest extends RobotManagerRequest {
 			cleaningCategory = Integer.valueOf(commadParamsMap.get(JsonMapKeys.KEY_CLEANING_CATEGORY));
 		}
 		
-		if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_MANUAL) {
+		/*if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_MANUAL) {
 			LogHelper.log(TAG, "Cleaning called with manual category. Send error result.");
 			sendError(callbackId, ErrorTypes.ERROR_NOT_SUPPORTED, "This API does not supports Manual Cleaning");
 			return;
-		}
+		}*/
 		
 		if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_SPOT) {
 			CleaningSettings cleaningSettings = RobotHelper.getCleaningSettings(context, robotId);
