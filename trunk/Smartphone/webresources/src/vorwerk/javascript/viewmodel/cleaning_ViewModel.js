@@ -367,12 +367,17 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.startStopRobotSuccess = function(result) {
         console.log("startStopRobotSuccess " + JSON.stringify(result))
         // some delay
+        var tDeffer = null;
         if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1) {
             handleTimedMode(result.expectedTimeToExecute, that.robot().robotId());
         // robot is connected to server
         } else {
             if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() != ROBOT_STATE_MANUAL_CLEANING) {
                 robotUiStateHandler.setUiState(ROBOT_UI_STATE_CONNECTING);
+                 tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [that.robot().robotId(),
+                      that.visualSelectedCategory(), that.robot().cleaningMode(), that.robot().cleaningModifier()]);
+                 tDeffer.done(that.startManualModeSuccess);
+                      
             } else if (that.robot().robotNewVirtualState() == ROBOT_STATE_PAUSED) {
                 // resumed
                 parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_RESUMED);
@@ -390,6 +395,10 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         }
     }
     
+     this.startManualModeSuccess = function(result) {
+       console.log("startManualModeSuccess" + JSON.stringify(result));
+     }
+     
     // navigation menu actions
     this.cleaning = function() {
         $("#menuPopup").popup("close");
@@ -427,29 +436,33 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.stopRobot = function() {
         navigator.notification.vibrate(500);
         var tDeffer = null;
+        var tDefferStop = null;
         if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() == ROBOT_STATE_MANUAL_CLEANING) {
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.stopRobotDrive, [that.robot().robotId()], 
                       { type: notificationType.OPERATION, message: $.i18n.t('communication.stop_drive',{'robotName':that.robot().robotName()})});
         } else if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.currentUiState().ui() == ROBOT_UI_STATE_CONNECTING) {
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.cancelIntendToDrive, [that.robot().robotId()], 
                       { type: notificationType.OPERATION, message: $.i18n.t('communication.stop_drive',{'robotName':that.robot().robotName()})});
-        } else {
+        } 
+        //else {
             // Send command that the robot should stop
-            tDeffer = parent.communicationWrapper.exec(RobotPluginManager.stopCleaning, [that.robot().robotId()], 
+            tDefferStop = parent.communicationWrapper.exec(RobotPluginManager.stopCleaning, [that.robot().robotId()], 
                       { type: notificationType.OPERATION, message: $.i18n.t('communication.stop_robot',{'robotName':that.robot().robotName()})});
-        }
-        tDeffer.done(that.successStopRobot);
-        return tDeffer; 
+        //}
+        
+        tDefferStop.done(that.successStopRobot);
+        return tDefferStop; 
     }
     this.successStopRobot = function(result) {
         console.log("successStopRobot" + JSON.stringify(result));
-        if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1) {
+        if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1 && (that.visualSelectedCategory() != CLEANING_CATEGORY_MANUAL)) {
             handleTimedMode(result.expectedTimeToExecute, that.robot().robotId());
         // robot is connected to server
         } else {
             parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_STOPPED);
         }
     }
+    
     
     // test different states
     this.stateTest = function(newState) {

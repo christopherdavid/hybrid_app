@@ -193,6 +193,13 @@ function WorkflowNotification(parent) {
             break;
             case NOTIFICATION_CLEANING_DONE:
                 console.log("NOTIFICATION_CLEANING_DONE")
+                var tempRobots = parent.communicationWrapper.getDataValue("robotList");
+                $.each(tempRobots(), function(index, item){
+                    if(item.robotId() == result.robotId) {
+                		parent.communicationWrapper.updateRobotStateWithCode(item, ROBOT_STATE_STOPPED);
+                		return false;
+                 	}
+                });
                 if(isCurRobot) {
                     if(statusListener[NOTIFICATION_CLEANING_DONE] && statusListener[NOTIFICATION_CLEANING_DONE].length > 0) {
                         statusListener[NOTIFICATION_CLEANING_DONE][0](translatedText);
@@ -410,7 +417,13 @@ function WorkflowNotification(parent) {
             if(testTitle.indexOf(error.errorCode) == -1) {
                 // replace it with default text
                 errorTitle = testTitle;
-                errorMessage =  $.i18n.t("error." + error.errorCode + ".message", {robotName:curRobot().robotName()});
+                if((typeof curRobot().robotName === 'function')||(typeof curRobot().robotName != 'undefined'))
+                	errorMessage =  $.i18n.t("error." + error.errorCode + ".message", {robotName:curRobot().robotName()});
+                else
+                	errorMessage =  $.i18n.t("error." + error.errorCode + ".message");
+                	
+                
+                	
             }
             
             

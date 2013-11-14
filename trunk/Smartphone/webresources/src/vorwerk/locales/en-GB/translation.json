@@ -96,6 +96,7 @@
         "delete": "delete",
         "on": "on",
         "ok": "OK",
+        "next": "NEXT",
         "day": {
             "3": "Wednesday",
             "2": "Tuesday",
@@ -133,10 +134,8 @@
             "title": "Please tell us, if you would like to subscribe for news and updates regarding your VR-200.",
             "information_header": "LEGAL INFORMATION",
             "subscribe": "Subscribe",
-            "registration_done_message": "<div class='mailAnimation'><\/div>A confirmation mail was sent to<br/><span class='highlightedText'>__email__<\/span><br /><br />Please confirm your account within 48 hours.<br />After confirmation you can login and connect to your robot.",
-            "registration_done_title": "Account created",
             "edit_done_title": "Account Modified",
-            "edit_done_message": "The user account has been modified successfully",
+            "edit_done_message": "The user account has been updated successfully",
             "no_subscribe": "Don't subscribe"
         },
         "navi": {"title": "Registration"}
@@ -245,6 +244,8 @@
     "createAccount": {
         "page": {
             "title": "Welcome to the registration.<br />We need some information to continue",
+            "registration_done_message": "<div class='mailAnimation'><\/div>A confirmation mail was sent to<br/><span class='highlightedText'>__email__<\/span><br /><br />Please confirm your account within 48 hours.<br />After confirmation you can login and connect to your robot.",
+            "registration_done_title": "Account created",
             "email": "Email Address",
             "password_show": "Show password",
             "password_verify": "Password verification",
@@ -259,7 +260,9 @@
             "select_robot": "Please choose your robot:",
             "logged_in": "Hello <span class='highlightedText font_bold'>__email__<\/span>.",
             "login": "Welcome <span class='highlightedText font_bold'>__email__<\/span>!",
-            "no_robot": "You have no robots registered yet.<br />Please add your new robot by selecting <span class='font_bold'>+<\/span>."
+            "no_robot": "You have no robots registered yet.<br />Please add your new robot by selecting <span class='font_bold'>+<\/span>.",
+            "edit_title":"Registration",
+            "edit_message":"Please select country and subscription option to complete your registration."
         },
         "navi": {"title": "Robot Selection"}
     },

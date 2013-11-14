@@ -2,7 +2,7 @@ Application.prototype.loadWorkflow = function() {
     return {
         "start" : {
             navrules : [{
-                targetScreenId : "selectCountry",
+                 targetScreenId : "createAccount",
                 conditions : [{
                     "key" : "register",
                     "value" : true
@@ -16,41 +16,41 @@ Application.prototype.loadWorkflow = function() {
             }],
             clearHistory : true
         },
-        "selectCountry" : {
-            navrules : [{
-                targetScreenId : "createAccount",
-                conditions : [{
-                    "key" : "valid",
-                    "value" : true
-                }]
-            },{
+        "selectCountry" :{
+               navrules : [{
                 targetScreenId : "legalInformation",
                 conditions : [{
-                    "key" : "changeSubscription",
+                    "key" : "valid",
                     "value" : true
                 }]
             }]
         },
         "createAccount" : {
-            navrules : [{
-                targetScreenId : "legalInformation",
+          navrules : [{
+                targetScreenId : "selectCountry",
                 conditions : [{
                     "key" : "valid",
                     "value" : true
                 }]
-            }]
+             }]  
         },
         "legalInformation" : {
             navrules : [{
                 targetScreenId : "start",
                 conditions : [{
-                    "key" : "valid",
+                    "key" : "start",
                     "value" : true
                 }]
             },{
                 targetScreenId : "userSettings",
                 conditions : [{
                     "key" : "userSettings",
+                    "value" : true
+                }]
+            },{
+            	targetScreenId : "robotSelection",
+                conditions : [{
+                    "key" : "robotSelection",
                     "value" : true
                 }]
             }]
@@ -78,6 +78,12 @@ Application.prototype.loadWorkflow = function() {
                 targetScreenId : "start",
                 backConditions : [{
                     "key" : "logout",
+                    "value" : true
+                }]
+            },{
+                targetScreenId : "selectCountry",
+                conditions : [{
+                    "key" : "selectCountry",
                     "value" : true
                 }]
             }]
