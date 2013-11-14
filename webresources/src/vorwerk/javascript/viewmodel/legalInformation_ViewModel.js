@@ -3,6 +3,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
     var that = this, myScroll;
     this.conditions = {};
     var user = parent.communicationWrapper.getDataValue("user");
+    this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     this.isLegalinfoEdit = ko.observable(false); 
     this.selectedSubscribe = ko.observable();
     
@@ -19,7 +20,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
             hScroll : true,
             momentum : true
         });
-        
+        that.isLegalinfoEdit(that.bundle.userlogin);
         $(document).one("pageshow.legal", function(e) {
             var tempLine = $("#topLine");
             $("#legalWrapper").css({
@@ -36,10 +37,13 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
             myScroll.refresh();
         });
         
-        if(user != null){
-        	that.isLegalinfoEdit(true);
-        	if(user.extra_param != null )
-        		that.selectedSubscribe(user.extra_param.optIn);
+        if(that.isLegalinfoEdit()){
+        	if(user.extra_param != null ){
+        		if(user.extra_param.optIn == "null")
+        			that.selectedSubscribe(false);
+        		else
+        			that.selectedSubscribe(user.extra_param.optIn);
+        		}
         	if(that.bundle){
         		if(that.bundle.country == "")
         			that.bundle.country(user.extra_param.CountryCode);
@@ -60,14 +64,14 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
     };
 
     this.next = function() {
-     if(that.isLegalinfoEdit())
+    // if(that.isLegalinfoEdit())
      	that.commitCountryEdit()
-     else{
+     /*else{
         //TODO clarify what username should be set instead of 'default'
-        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.createUser3, [that.bundle.email, that.bundle.pw, 'default', '', {"countryCode":that.bundle.country, "optIn":that.selectedSubscribe()} ], {});
+        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.createUser3, [that.bundle.email, that.bundle.pw, 'default', '', {"country_code":that.bundle.country, "opt_in":that.selectedSubscribe()} ], {});
         tDeffer.done(that.successRegister);
         tDeffer.fail(that.errorRegister);
-        }
+        }*/
     };
 
     this.successRegister = function(result) {
@@ -98,7 +102,18 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         parent.communicationWrapper.setDataValue("user", user);
         var translatedTitle = $.i18n.t("legalInformation.page.edit_done_title");
         var translatedText = $.i18n.t("legalInformation.page.edit_done_message", {email:that.bundle.email});
-        parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); that.conditions['userSettings'] = true; parent.flowNavigator.next(robotScreenCaller.DELETE);}}]);
+        parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ 
+        				parent.notification.closeDialog(); 
+        				if(that.isLegalinfoEdit())
+        				{ 
+        				    if (typeof that.robot().robotId == 'undefined')
+        				   	   that.conditions['robotSelection'] = true;	
+        				   else
+        						that.conditions['userSettings'] = true;
+        				}
+        				else 
+        					that.conditions['start'] = true; 
+        				parent.flowNavigator.next(robotScreenCaller.REGISTER);}}]);
     }
 
 })

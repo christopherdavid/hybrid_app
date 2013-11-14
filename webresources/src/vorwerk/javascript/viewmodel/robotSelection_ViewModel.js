@@ -19,6 +19,10 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
     var userName = parent.communicationWrapper.getFromLocalStorage('username');
     
     this.init = function() {
+    	
+    	that.finishRegistration();
+    		//return false;
+    		
         // show robot has been deleted message
         if (that.bundle && that.bundle == robotScreenCaller.DELETE) {
             var sDelete = $.i18n.t('communication.delete_robot_done', {robotName:that.robot().robotName()});
@@ -52,6 +56,23 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         parent.flowNavigator.previous();
     };
 
+	this.finishRegistration = function(){
+		var user = parent.communicationWrapper.getDataValue("user");
+		if(user != null){
+			if((user.extra_param.countryCode == null)||(user.extra_param.countryCode == "null"))
+			{
+				var translatedTitle = $.i18n.t("robotSelection.page.edit_title");
+        		var translatedText = $.i18n.t("robotSelection.page.edit_message");
+        		parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.next"), "callback":function(e){ parent.notification.closeDialog();  that.conditions['selectCountry'] = true; parent.flowNavigator.next({"userlogin":true});}}]);
+        		return false;
+			}
+			else
+				return true;
+		}
+		else
+			return true;
+	};
+	
     this.logout = function() {
         var tDeffer = parent.communicationWrapper.exec(UserPluginManager.logout, []);
         tDeffer.done(that.successLogout);

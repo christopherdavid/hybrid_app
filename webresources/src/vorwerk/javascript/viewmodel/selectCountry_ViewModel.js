@@ -6,7 +6,7 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
     this.conditions = {};
     this.isCountryEdit = ko.observable(false);
     this.countryScreenTitle = ko.observable($.i18n.t("createAccount.page.country"));
-    
+   
     this.back = function() {
         that.conditions['back'] = true;
         parent.flowNavigator.previous();
@@ -21,6 +21,12 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
     var countriesRendered = false;
     
     this.init = function() {
+       
+        if((user.extra_param.countryCode == null)||(user.extra_param.countryCode == "null"))
+        	that.isCountryEdit(false);
+        else
+        	that.isCountryEdit(that.bundle.userlogin);
+        	
         // init scroll container
     	myScroll = new iScroll('countryWrapper',{
             hScrollbar : false,
@@ -44,15 +50,13 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
         }
         // get country code of language string e.g. 'de-DE' -> 'DE,'en-GB' -> 'GB'
         var appCountry = null;
-        if(user == null){
-        	appCountry = parent.language().split("-")[1];
-        	}
-        else if(user.extra_param.countryCode){
+        if(that.isCountryEdit()){
        	  this.countryScreenTitle($.i18n.t("userSettings.page.country"));
        	  $('.ui-btn-left .btn-with-image').attr("data-image","cancel");
        	  appCountry = user.extra_param.countryCode;
-       	  that.isCountryEdit(true);
        	 }
+       	 else
+       	   appCountry = parent.language().split("-")[1];
                  
         
         // check if country has already been selected (back button in workflow was pressed)
@@ -81,15 +85,8 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
     }
 
     this.next = function() {
-    	if(that.isCountryEdit())
-    	{
-    		that.conditions['changeSubscription'] = true;
-        	parent.flowNavigator.next({"country":that.selectedCountry()});
-    	}
-    	else{
         	that.conditions['valid'] = true;
-        	parent.flowNavigator.next({"country":that.selectedCountry()});
-        }
+        	parent.flowNavigator.next({"country":that.selectedCountry(),"userlogin":that.bundle.userlogin});
     };
     
     this.deinit = function() {

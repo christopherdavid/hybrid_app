@@ -14,6 +14,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     this.selectedCountryCode = ko.observable('');
     this.selectedCountryLabel = ko.observable('');
     
+    
     var countryOrder = $.map($.i18n.t("pattern.countryOrder").split(","), function(value){
         return value;
         });
@@ -51,6 +52,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     this.init = function() {
         var user = parent.communicationWrapper.getDataValue("user");
         var uCountryCode = (user.extra_param && user.extra_param.countryCode) ? user.extra_param.countryCode : null;
+        
         that.user(ko.mapping.fromJS(user), null, that.user);
         
         if(uCountryCode && uCountryCode != "null" && $.inArray(uCountryCode, countryOrder) != -1) {
@@ -63,13 +65,13 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     };
     this.changeCountry = function() {
     	that.conditions['changeCountry'] = true;
-        parent.flowNavigator.next();
+        parent.flowNavigator.next({"userlogin":true});
     	
     }
     
      this.changeSubscription  = function() {
         that.conditions['changeSubscription'] = true;
-        parent.flowNavigator.next({"country":that.selectedCountryCode()});
+        parent.flowNavigator.next({"country":that.selectedCountryCode(),"userlogin":true});
     }
     
        

@@ -402,15 +402,14 @@ var UserPluginManager = ( function() {
                         "email" : "demo1@demo.com",
                         "username" : "demo",
                         "userId" : "48",
-                        "extra_param":{"countryCode":"IT","optIn":"null"}
+                        "extra_param":{"countryCode":null,"optIn":null}
                     });
                 }, 1000);
-                /*
-                 callbackError({
-                 "errorMessage":"Server Error",
-                 "errorCode":1003
+                /* callbackError({
+                 "errorMessage":"Type Error",
+                 "errorCode":-101
                  });
-                 */
+                */
             },
 
             logout : function(callbackSuccess, callbackError) {
@@ -426,8 +425,7 @@ var UserPluginManager = ( function() {
                         "email" : "homer@uid.com",
                         "username" : "Homer",
                         "userId" : "82",
-                        "countryCode": optional.countryCode,
-                        "optIn":optional.optIn
+                        "extra_param":{"countryCode":"GB","optIn":"null"}
                     });
                 }, 1000);
             },
@@ -484,7 +482,7 @@ var UserPluginManager = ( function() {
                         "email" : "homer@uid.com",
                         "username" : "Homer",
                         "userId" : "82",
-                        "extra_param":{"countryCode":"null","optIn":"null"}
+                        "extra_param":{"countryCode":"GB","optIn":"null"}
                     });
                 }, 1000);
 
