@@ -111,11 +111,8 @@
         [[UIApplication sharedApplication] setStatusBarOrientation:newOrient];
     }
     
-    self.window.rootViewController = self.viewController;
-    [self.window makeKeyAndVisible];
-    
     //Correct margin to top for ios 7 statusbar
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
+   if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
         
         [application setStatusBarStyle:UIStatusBarStyleLightContent];
         
@@ -123,6 +120,9 @@
         
         self.window.frame =  CGRectMake(0,20,self.window.frame.size.width,self.window.frame.size.height-20);
     }
+    
+    self.window.rootViewController = self.viewController;
+    [self.window makeKeyAndVisible];
     
     return YES;
 }
