@@ -162,5 +162,10 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
         }
     }
     
+     this.deinit = function() {
+        that.countries([]);
+        countriesRendered = false;
+    }
+    
 })
 console.log('loaded file: userSettings_ViewModel.js');
