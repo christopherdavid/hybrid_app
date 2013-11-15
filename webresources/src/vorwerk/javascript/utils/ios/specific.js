@@ -9,6 +9,7 @@ var openExternalLink = function (url) {
 
 function initDeviceConfig() {
     app.config.pageTransition = "slide";
+    app.config.device = DEVICETYPE.iOS;
 }
 
 /**

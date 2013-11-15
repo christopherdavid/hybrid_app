@@ -11,29 +11,17 @@
         "navi": {"title": "清扫中"}
     },
     "error": {
-        "-502": {
-            "message": "您需要互联网连接来使用本软件。请在设置中开启移动互联网或Wi-Fi。",
-            "title": "连接问题"
-        },
-        "-501": {
-            "message": "发生未知错误。请再次尝试。",
-            "title": "未知错误"
+        "-106": {
+            "message": "Email id is already registered with the server.",
+            "title": "输入错误"
         },
         "-105": {
             "message": "请检查您的email地址",
             "title": "输入错误"
         },
-        "-511": {
-            "message": "__robotName__ 无法被连接。",
-            "title": "连接错误"
-        },
         "-108": {
             "message": "用户创建失败。请再次尝试",
             "title": "输入错误"
-        },
-        "-504": {
-            "message": "您的定时规划无法被同步。",
-            "title": "连接错误"
         },
         "-111": {
             "message": "您需要添加机器人名称",
@@ -47,13 +35,33 @@
             "message": "该机器人ID未被注册过。",
             "title": "输入错误"
         },
+        "-101": {
+            "message": "输入的用户名或密码有错误",
+            "title": "输入错误"
+        },
         "-110": {
             "message": "旧密码不吻合",
             "title": "输入错误"
         },
-        "-101": {
-            "message": "输入的用户名或密码有错误",
-            "title": "输入错误"
+        "-515": {
+            "message": "You are already connected to a different robot",
+            "title": "连接错误"
+        },
+        "-502": {
+            "message": "您需要互联网连接来使用本软件。请在设置中开启移动互联网或Wi-Fi。",
+            "title": "连接问题"
+        },
+        "-501": {
+            "message": "发生未知错误。请再次尝试。",
+            "title": "未知错误"
+        },
+        "-511": {
+            "message": "__robotName__ 无法被连接。",
+            "title": "连接错误"
+        },
+        "-504": {
+            "message": "您的定时规划无法被同步。",
+            "title": "连接错误"
         }
     },
     "robotActivationId": {
@@ -71,6 +79,7 @@
             "cleaning": "清扫中",
             "settings": "设置"
         },
+        "next": "Next",
         "edit": "编辑",
         "cancel": "取消",
         "cleaningMode": {
@@ -133,10 +142,8 @@
             "title": "请告诉我们，你是否愿意订阅关于VR200的新闻及升级信息。",
             "information_header": "法律信息",
             "subscribe": "订阅",
-            "registration_done_message": "<div class='mailAnimation'><\/div>一封确认邮件已发送至<br/><span class='highlightedText'>__email__<\/span><br/><br/>请在48小时内确认你的注册账号。<br />确认后你即可连接你的机器人。",
-            "registration_done_title": "账号已开设",
             "edit_done_title": "Account Modified",
-            "edit_done_message": "The user account has been modified successfully",
+            "edit_done_message": "The user account has been updated successfully",
             "no_subscribe": "不要订阅"
         },
         "navi": {"title": "注册"}
@@ -247,6 +254,8 @@
             "title": "欢迎注册。<br/>我们需要一些你的信息来继续。",
             "email": "Email地址",
             "password_show": "显示密码",
+            "registration_done_message": "<div class='mailAnimation'><\/div>一封确认邮件已发送至<br/><span class='highlightedText'>__email__<\/span><br/><br/>请在48小时内确认你的注册账号。<br />确认后你即可连接你的机器人。",
+            "registration_done_title": "账号已开设",
             "password_verify": "密码确认",
             "password": "密码",
             "country": "Select Country"
@@ -258,8 +267,10 @@
             "register": "注册完成。<br>欢迎  <span class='highlightedText font_bold'>__email__<\/span>",
             "select_robot": "请选择你的机器人:",
             "logged_in": "你好 <span class='highlightedText font_bold'>__email__<\/span>.",
+            "edit_message": "Please select country and subscription option to complete your registration.",
             "login": "欢迎 <span class='highlightedText font_bold'>__email__<\/span>!",
-            "no_robot": "你还未有机器人注册过。<br>请注册你的新机器人，请点<span class='font_bold'>+<\/span>.s"
+            "no_robot": "你还未有机器人注册过。<br>请注册你的新机器人，请点<span class='font_bold'>+<\/span>.s",
+            "edit_title": "Registration"
         },
         "navi": {"title": "选择机器人"}
     },

@@ -269,7 +269,10 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     
     /* </actionbar functions> */
    
-   // popup links
+    // navigation menu and menu actions
+    this.showMenu = function() {
+        parent.notification.showDomDialog("#menuPopup", true);
+    }
     this.cleaning = function() {
         that.conditions['cleaning'] = true;
         parent.flowNavigator.next();

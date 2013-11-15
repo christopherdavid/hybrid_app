@@ -41,6 +41,11 @@ var dialogType = {
     ERROR : "3"
 }
 
+var DEVICETYPE = {
+    "iOS":0,
+    "Android":1
+};
+
 var ROBOT_UI_STATE_ERROR    = 20001;
 var ROBOT_UI_STATE_WAIT     = 20002;
 var ROBOT_UI_STATE_WAKEUP   = 20003;

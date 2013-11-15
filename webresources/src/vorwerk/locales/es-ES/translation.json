@@ -11,29 +11,17 @@
         "navi": {"title": "Limpieza"}
     },
     "error": {
-        "-502": {
-            "message": "Necesita una conexión para utilizar esta aplicación. Por favor, active la conexión de su móvil o el WIFI en Ajustes.",
-            "title": "Problemas de conectividad."
-        },
-        "-501": {
-            "message": "Se ha detectado un error desconocido. Inténtelo de nuevo.",
-            "title": "Error desconocido"
+        "-106": {
+            "message": "Email id is already registered with the server.",
+            "title": "Error"
         },
         "-105": {
             "message": "Por favor revise su e-mail.",
             "title": "Error"
         },
-        "-511": {
-            "message": "__robotName__ ya no está conectado.",
-            "title": "Error de conexión"
-        },
         "-108": {
             "message": "Ha sido imposible crear una cuenta. Por favor inténtenlo de nuevo.",
             "title": "Error del servidor"
-        },
-        "-504": {
-            "message": "Su programación no pudo ser sincronizada.",
-            "title": "Error de conexión"
         },
         "-111": {
             "message": "Necesita añadir un nombre de robot.",
@@ -47,13 +35,33 @@
             "message": "Este robot no está registrado.",
             "title": "Error"
         },
+        "-101": {
+            "message": "El usario o contraseña es incorrecto.",
+            "title": "Error"
+        },
         "-110": {
             "message": "La antigua contraseña no coincide.",
             "title": "Error"
         },
-        "-101": {
-            "message": "El usario o contraseña es incorrecto.",
-            "title": "Error"
+        "-515": {
+            "message": "You are already connected to a different robot",
+            "title": "Error de conexión"
+        },
+        "-502": {
+            "message": "Necesita una conexión para utilizar esta aplicación. Por favor, active la conexión de su móvil o el WIFI en Ajustes.",
+            "title": "Problemas de conectividad."
+        },
+        "-501": {
+            "message": "Se ha detectado un error desconocido. Inténtelo de nuevo.",
+            "title": "Error desconocido"
+        },
+        "-511": {
+            "message": "__robotName__ ya no está conectado.",
+            "title": "Error de conexión"
+        },
+        "-504": {
+            "message": "Su programación no pudo ser sincronizada.",
+            "title": "Error de conexión"
         }
     },
     "robotActivationId": {
@@ -71,6 +79,7 @@
             "cleaning": "Limpieza",
             "settings": "Ajustes"
         },
+        "next": "Next",
         "edit": "Editar",
         "cancel": "Cancelar",
         "cleaningMode": {
@@ -133,10 +142,8 @@
             "title": "Por favor, indíquenos si desea recibir información y actualizaciones de su VR200.",
             "information_header": "Información legal",
             "subscribe": "Suscribirse",
-            "registration_done_message": "<div class='mailAnimation'><\/div>Un email de confirmación ha sido enviado a <br/><span class='highlightedText'>__email__<\/span><br /><br />Por favor confime su cuenta en las próximas 48h. Después de confirmar podrá entrar y conectarse a su robot.",
-            "registration_done_title": "Cuenta creada.",
             "edit_done_title": "Account Modified",
-            "edit_done_message": "The user account has been modified successfully",
+            "edit_done_message": "The user account has been updated successfully",
             "no_subscribe": "No deseo suscribirme."
         },
         "navi": {"title": "Registro."}
@@ -247,6 +254,8 @@
             "title": "Bienvenido al proceso de registro.<br/>Necesitamos algo de información para continuar.",
             "email": "Dirección de e-mail.",
             "password_show": "Mostrar contraseña.",
+            "registration_done_message": "<div class='mailAnimation'><\/div>Un email de confirmación ha sido enviado a <br/><span class='highlightedText'>__email__<\/span><br /><br />Por favor confime su cuenta en las próximas 48h. Después de confirmar podrá entrar y conectarse a su robot.",
+            "registration_done_title": "Cuenta creada.",
             "password_verify": "Verificación de la contraseña.",
             "password": "Contraseña.",
             "country": "Select Country"
@@ -258,8 +267,10 @@
             "register": "Registro completado...<br>Bienvenido <span class='highlightedText font_bold'>__email__<\/span>",
             "select_robot": "Por favor seleccione su robot:",
             "logged_in": "Hola <span class='highlightedText font_bold'>__email__<\/span>.",
+            "edit_message": "Please select country and subscription option to complete your registration.",
             "login": "Bienvenido <span class='highlightedText font_bold'>__email__<\/span>!",
-            "no_robot": "Todavía no ha registrado su robot.<br>Por favor, añada un nuevo robot pulsando <span class='font_bold'>+<\/span>."
+            "no_robot": "Todavía no ha registrado su robot.<br>Por favor, añada un nuevo robot pulsando <span class='font_bold'>+<\/span>.",
+            "edit_title": "Registration"
         },
         "navi": {"title": "Selección de robot"}
     },

@@ -2,7 +2,7 @@ Application.prototype.loadWorkflow = function() {
     return {
         "start" : {
             navrules : [{
-                 targetScreenId : "createAccount",
+                targetScreenId : "createAccount",
                 conditions : [{
                     "key" : "register",
                     "value" : true
@@ -16,8 +16,8 @@ Application.prototype.loadWorkflow = function() {
             }],
             clearHistory : true
         },
-        "selectCountry" :{
-               navrules : [{
+        "selectCountry" : {
+            navrules : [{
                 targetScreenId : "legalInformation",
                 conditions : [{
                     "key" : "valid",
@@ -26,13 +26,13 @@ Application.prototype.loadWorkflow = function() {
             }]
         },
         "createAccount" : {
-          navrules : [{
+            navrules : [{
                 targetScreenId : "selectCountry",
                 conditions : [{
                     "key" : "valid",
                     "value" : true
                 }]
-             }]  
+            }]
         },
         "legalInformation" : {
             navrules : [{
@@ -41,14 +41,14 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "start",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "userSettings",
                 conditions : [{
                     "key" : "userSettings",
                     "value" : true
                 }]
-            },{
-            	targetScreenId : "robotSelection",
+            }, {
+                targetScreenId : "robotSelection",
                 conditions : [{
                     "key" : "robotSelection",
                     "value" : true
@@ -80,7 +80,7 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "logout",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "selectCountry",
                 conditions : [{
                     "key" : "selectCountry",
@@ -150,31 +150,31 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "robotManagement",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "userSettings",
                 conditions : [{
                     "key" : "userSettings",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "generalSettings",
                 conditions : [{
                     "key" : "generalSettings",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "about",
                 conditions : [{
                     "key" : "about",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "basicScheduler",
                 conditions : [{
                     "key" : "schedule",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "cleaning",
                 conditions : [{
                     "key" : "cleaning",
@@ -190,7 +190,7 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "changeRobot",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "cleaning",
                 backConditions : [{
                     "key" : "home",
@@ -205,25 +205,25 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "changeCountry",
                     "value" : true
                 }]
-            } ,{
+            }, {
                 targetScreenId : "legalInformation",
                 conditions : [{
                     "key" : "changeSubscription",
                     "value" : true
                 }]
-            } ,{
+            }, {
                 targetScreenId : "settings",
                 conditions : [{
                     "key" : "settings",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "cleaning",
                 backConditions : [{
                     "key" : "home",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "start",
                 backConditions : [{
                     "key" : "logout",
@@ -238,7 +238,7 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "changeRobot",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "cleaning",
                 backConditions : [{
                     "key" : "home",
@@ -265,13 +265,13 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "editEvent",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "settings",
                 conditions : [{
                     "key" : "settings",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "robotSelection",
                 conditions : [{
                     "key" : "changeRobot",
@@ -293,7 +293,7 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "next",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "robotSelection",
                 conditions : [{
                     "key" : "changeRobot",
@@ -308,7 +308,7 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "changeRobot",
                     "value" : true
                 }]
-            },{
+            }, {
                 targetScreenId : "settings",
                 conditions : [{
                     "key" : "back",
@@ -319,6 +319,5 @@ Application.prototype.loadWorkflow = function() {
         "test" : {
             navrules : []
         }
-
     };
 };

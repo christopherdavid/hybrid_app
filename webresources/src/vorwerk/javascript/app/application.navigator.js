@@ -131,8 +131,11 @@ function WorkflowNavigator(parent, workflow) {
      * Closes the application if the user agreed 
      */
     this.exit = function() {
-        if (confirm($.i18n.t('confirm.close_app'))) {
-            navigator.app.exitApp();
+        // only show exit app dialog on android devices
+        if(parent.config.device == DEVICETYPE.Android) {
+            if (confirm($.i18n.t('confirm.close_app'))) {
+                navigator.app.exitApp();
+            }
         }
     }
     this.loadScreenFromHistory = function(historyIndex, bundle) {

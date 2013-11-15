@@ -13,6 +13,8 @@ function WorkflowNotification(parent) {
     this.messageStack = [];
     this.messageTimer = null;
     this.curHandledNotification = null;
+    this.dialogStack = [];
+    this.curHandledDialog = null;
     
     
     this.init = function() {
@@ -36,6 +38,8 @@ function WorkflowNotification(parent) {
                 $("#dialogPopup .ui-bar-buttons .ui-btn").removeClass("ui-disabled");
                 // remove event listener
                 $("#dialogPopup .ui-bar-buttons .ui-btn").off(".dialog");
+                that.curHandledDialog = null;
+                that.handleDialogStack();
             }
         });
     }
@@ -122,7 +126,6 @@ function WorkflowNotification(parent) {
                 });
             }
         }
-        //that.showDialog(dialogType.WARNING, "notificationStatusSuccess", JSON.stringify(result));
     }
     
     this.notificationStatusError = function(error) {
@@ -145,7 +148,6 @@ function WorkflowNotification(parent) {
     this.clearStatusListener = function() {
         statusListener = {};
     }
-    //TODO: add check for robotId 
     this.successNotifyPushMessage = function(result) {
         console.log("successNotifyPushMessage " + JSON.stringify(result))
         var tempRobots = parent.communicationWrapper.getDataValue("robotList");
@@ -196,9 +198,9 @@ function WorkflowNotification(parent) {
                 var tempRobots = parent.communicationWrapper.getDataValue("robotList");
                 $.each(tempRobots(), function(index, item){
                     if(item.robotId() == result.robotId) {
-                		parent.communicationWrapper.updateRobotStateWithCode(item, ROBOT_STATE_STOPPED);
-                		return false;
-                 	}
+                        parent.communicationWrapper.updateRobotStateWithCode(item, ROBOT_STATE_STOPPED);
+                        return false;
+                    }
                 });
                 if(isCurRobot) {
                     if(statusListener[NOTIFICATION_CLEANING_DONE] && statusListener[NOTIFICATION_CLEANING_DONE].length > 0) {
@@ -215,7 +217,6 @@ function WorkflowNotification(parent) {
         }
     }
     
-    
     this.errorNotifyPushMessage = function(error) {
         console.log("errorNotifyPushMessage " + JSON.stringify(error));
     }
@@ -224,7 +225,62 @@ function WorkflowNotification(parent) {
      * buttons: [{label:"ok", callback:callbackOk}, {label:"cancel", callback:callbackCancel}] 
      */
     this.showDialog = function(dialogType, textHeadline, textContent, buttons) {
-                
+        // wrap parameter in object and add type "js"
+        that.dialogStack.push({
+            "type":"js",
+            "closeable": false,
+            "onShow": null,
+            "id":"#dialogPopup",
+            "dialogType":dialogType,
+            "textHeadline":textHeadline,
+            "textContent":textContent,
+            "buttons":buttons
+        });
+        that.handleDialogStack();
+    }
+    
+    this.showDomDialog = function(domId, blnCloseable, onShow) {
+        blnCloseable = typeof blnCloseable != "undefined" ? blnCloseable :  false;
+        onShow = typeof onShow != "undefined" ? onShow :  null;
+        // wrap parameter in object and add type "dom"
+        that.dialogStack.push({
+            "type":"dom",
+            "id":domId,
+            "closeable": blnCloseable,
+            "onShow": onShow
+        });
+        that.handleDialogStack();
+    }
+    
+    this.handleDialogStack = function() {
+        // check if currently a dialog is shown and could be closed
+        if(that.curHandledDialog != null && that.curHandledDialog.closeable) {
+            $(that.curHandledDialog.id).popup("close");
+        } else if(that.curHandledDialog == null && that.dialogStack.length > 0) {
+            that.curHandledDialog = that.dialogStack.shift();
+            
+            // show new message from stack
+            if(that.curHandledDialog.type == "dom") {
+                $(that.curHandledDialog.id).on( "popupafterclose", function( event, ui ) {
+                    // remove event listener
+                    $(that.curHandledDialog.id).off("popupafterclose");
+                    that.curHandledDialog = null;
+                    that.handleDialogStack();
+                } );
+                $(that.curHandledDialog.id).popup("open");
+                if(that.curHandledDialog.onShow != null && typeof that.curHandledDialog.onShow == "function") {
+                    that.curHandledDialog.onShow();
+                }
+            } else {
+                that.showDialogWindow(that.curHandledDialog.dialogType,
+                    that.curHandledDialog.textHeadline,
+                    that.curHandledDialog.textContent,
+                    that.curHandledDialog.buttons);
+            }
+        }
+    }
+    
+    this.showDialogWindow = function(dialogType, textHeadline, textContent, buttons) {
         $("#dialogPopup").addClass("dialogType_" + dialogType);
         
         $(".headerbar").addClass("dialogType_" + dialogType);
@@ -417,13 +473,11 @@ function WorkflowNotification(parent) {
             if(testTitle.indexOf(error.errorCode) == -1) {
                 // replace it with default text
                 errorTitle = testTitle;
-                if((typeof curRobot().robotName === 'function')||(typeof curRobot().robotName != 'undefined'))
-                	errorMessage =  $.i18n.t("error." + error.errorCode + ".message", {robotName:curRobot().robotName()});
-                else
-                	errorMessage =  $.i18n.t("error." + error.errorCode + ".message");
-                	
-                
-                	
+                if(curRobot().robotName && typeof curRobot().robotName == "function" ) {
+                    errorMessage =  $.i18n.t("error." + error.errorCode + ".message", {robotName:curRobot().robotName()});
+                } else {
+                    errorMessage =  $.i18n.t("error." + error.errorCode + ".message", {robotName:""});
+                }
             }
             
             
