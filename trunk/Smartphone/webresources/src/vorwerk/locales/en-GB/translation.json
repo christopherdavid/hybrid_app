@@ -11,29 +11,17 @@
         "navi": {"title": "Cleaning"}
     },
     "error": {
-        "-502": {
-            "message": "You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings.",
-            "title": "Connectivity Problems"
-        },
-        "-501": {
-            "message": "Unknown error has occurred. Please try again.",
-            "title": "Unknown Error"
+        "-106": {
+            "message": "Email id is already registered with the server.",
+            "title": "Type Error"
         },
         "-105": {
             "message": "Please check your email address.",
             "title": "Type Error"
         },
-        "-511": {
-            "message": "__robotName__ is no longer connected.",
-            "title": "Connection Error"
-        },
         "-108": {
             "message": "Failed to create a user account. Please try again.",
             "title": "Server Error"
-        },
-        "-504": {
-            "message": "Your schedule could not be sychronized.",
-            "title": "Connection Error"
         },
         "-111": {
             "message": "You need to add a robot name.",
@@ -47,13 +35,33 @@
             "message": "This robot id isn't registered.",
             "title": "Type Error"
         },
+        "-101": {
+            "message": "Entered user name or password is incorrect.",
+            "title": "Type Error"
+        },
         "-110": {
             "message": "The old password does not match.",
             "title": "Type Error"
         },
-        "-101": {
-            "message": "Entered user name or password is incorrect.",
-            "title": "Type Error"
+        "-515": {
+            "message": "You are already connected to a different robot",
+            "title": "Connection Error"
+        },
+        "-502": {
+            "message": "You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings.",
+            "title": "Connectivity Problems"
+        },
+        "-501": {
+            "message": "Unknown error has occurred. Please try again.",
+            "title": "Unknown Error"
+        },
+        "-511": {
+            "message": "__robotName__ is no longer connected.",
+            "title": "Connection Error"
+        },
+        "-504": {
+            "message": "Your schedule could not be sychronized.",
+            "title": "Connection Error"
         }
     },
     "robotActivationId": {
@@ -71,6 +79,7 @@
             "cleaning": "Cleaning",
             "settings": "Settings"
         },
+        "next": "Next",
         "edit": "Edit",
         "cancel": "Cancel",
         "cleaningMode": {
@@ -96,7 +105,6 @@
         "delete": "delete",
         "on": "on",
         "ok": "OK",
-        "next": "NEXT",
         "day": {
             "3": "Wednesday",
             "2": "Tuesday",
@@ -244,10 +252,10 @@
     "createAccount": {
         "page": {
             "title": "Welcome to the registration.<br />We need some information to continue",
-            "registration_done_message": "<div class='mailAnimation'><\/div>A confirmation mail was sent to<br/><span class='highlightedText'>__email__<\/span><br /><br />Please confirm your account within 48 hours.<br />After confirmation you can login and connect to your robot.",
-            "registration_done_title": "Account created",
             "email": "Email Address",
             "password_show": "Show password",
+            "registration_done_message": "<div class='mailAnimation'><\/div>A confirmation mail was sent to<br/><span class='highlightedText'>__email__<\/span><br /><br />Please confirm your account within 48 hours.<br />After confirmation you can login and connect to your robot.",
+            "registration_done_title": "Account created",
             "password_verify": "Password verification",
             "password": "Password",
             "country": "Select Country"
@@ -259,10 +267,10 @@
             "register": "Registration completed.<br />Welcome <span class='highlightedText font_bold'>__email__<\/span>",
             "select_robot": "Please choose your robot:",
             "logged_in": "Hello <span class='highlightedText font_bold'>__email__<\/span>.",
+            "edit_message": "Please select country and subscription option to complete your registration.",
             "login": "Welcome <span class='highlightedText font_bold'>__email__<\/span>!",
             "no_robot": "You have no robots registered yet.<br />Please add your new robot by selecting <span class='font_bold'>+<\/span>.",
-            "edit_title":"Registration",
-            "edit_message":"Please select country and subscription option to complete your registration."
+            "edit_title": "Registration"
         },
         "navi": {"title": "Robot Selection"}
     },

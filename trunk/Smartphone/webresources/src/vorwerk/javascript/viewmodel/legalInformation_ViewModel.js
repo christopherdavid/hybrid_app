@@ -8,10 +8,9 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
     this.selectedSubscribe = ko.observable();
     
     this.isValid = ko.computed(function() {
-    	event.stopPropagation();
+        event.stopPropagation();
         return (typeof(that.selectedSubscribe()) != 'undefined');
     }, this);
-    
     
     this.init = function() {
         myScroll = new iScroll('legalWrapper',{
@@ -40,19 +39,21 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
             myScroll.refresh();
         });
         
-        if(that.isLegalinfoEdit()){
-        	if(typeof that.bundle.country == 'undefine')
-        		that.selectedSubscribe(user.extra_param.optIn);
-        	
-        	if(that.bundle){
-        		if(that.bundle.country == "")
-        			that.bundle.country(user.extra_param.countryCode);
-        		else if(that.bundle.country == user.extra_param.countryCode)
-        		 	that.selectedSubscribe(user.extra_param.optIn);
-        	}
-        	$('.ui-btn-right .btn-with-image').attr("data-image","ok");	
+        if(that.isLegalinfoEdit()) {
+            if(typeof that.bundle.country == 'undefine') {
+                that.selectedSubscribe(user.extra_param.optIn);
+            }
+            
+            if(that.bundle) {
+                if(that.bundle.country == "") {
+                    that.bundle.country(user.extra_param.countryCode);
+                } else if(that.bundle.country == user.extra_param.countryCode) {
+                    that.selectedSubscribe(user.extra_param.optIn);
+                }
+            }
+            $('.ui-btn-right .btn-with-image').attr("data-image","ok");	
         }
-        	
+        
     }
     
     this.deinit = function() {
@@ -64,10 +65,10 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         that.conditions['back'] = true;
         parent.flowNavigator.previous();
     };
-	
+
     this.submitChange = function() {
         event.stopPropagation();
-    	that.commitCountryEdit()
+        that.commitCountryEdit()
     };
 
     this.successRegister = function(result) {
@@ -96,27 +97,27 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         user.extra_param.countryCode = that.bundle.country;
         user.extra_param.optIn = that.selectedSubscribe();
         parent.communicationWrapper.setDataValue("user", user);
-        if(that.bundle.userlogin){
-	        var translatedTitle = $.i18n.t("legalInformation.page.edit_done_title");
-	        var translatedText = $.i18n.t("legalInformation.page.edit_done_message", {email:that.bundle.email});
-	        parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ 
-	        				parent.notification.closeDialog(); that.navigate();	}}]);
+        if(that.bundle.userlogin) {
+            var translatedTitle = $.i18n.t("legalInformation.page.edit_done_title");
+            var translatedText = $.i18n.t("legalInformation.page.edit_done_message", {email:that.bundle.email});
+            parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ 
+            parent.notification.closeDialog(); that.navigate();}}]);
+        } else {
+            that.navigate();
         }
-        else
-        	that.navigate();				
     }
     
     this.navigate = function(){
-   			if(that.isLegalinfoEdit())
-        	{ 
-        	    if (typeof that.robot().robotId == 'undefined')
-        	   	   that.conditions['robotSelection'] = true;	
-        	   else
-        			that.conditions['userSettings'] = true;
-        	}
-        	else 
-        			that.conditions['start'] = true; 
-        	parent.flowNavigator.next(robotScreenCaller.REGISTER);
+        if(that.isLegalinfoEdit()) { 
+            if (typeof that.robot().robotId == 'undefined') {
+                that.conditions['robotSelection'] = true;
+            } else {
+                that.conditions['userSettings'] = true;
+            }
+        } else {
+            that.conditions['start'] = true;
+        } 
+        parent.flowNavigator.next(robotScreenCaller.REGISTER);
     }
 
 })

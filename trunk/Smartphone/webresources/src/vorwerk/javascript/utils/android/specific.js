@@ -8,7 +8,7 @@ var openExternalLink = function (url) {
 };
 
 function initDeviceConfig() {
-    
+    app.config.device = DEVICETYPE.Android;
 }
 
 var screenOrientation = function() {}

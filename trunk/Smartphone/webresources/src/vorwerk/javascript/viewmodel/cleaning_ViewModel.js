@@ -320,8 +320,9 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             "top": 'auto'
         });
         
-        $spotPopup.popup("open");
-        resizePopupButtons("#spotSize .ui-bar-buttons", ($("#spotSize .spotWrap").width() - $("#spotSize .spotWrap .left-block").width() - 10));
+        parent.notification.showDomDialog("#spotSize", false, function(){
+            resizePopupButtons("#spotSize .ui-bar-buttons", ($("#spotSize .spotWrap").width() - $("#spotSize .spotWrap .left-block").width() - 10));
+        });
     }
     this.popupOk = function() {
         $spotPopup.popup("close");
@@ -399,7 +400,10 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
        console.log("startManualModeSuccess" + JSON.stringify(result));
      }
      
-    // navigation menu actions
+    // navigation menu and menu actions
+    this.showMenu = function() {
+        parent.notification.showDomDialog("#menuPopup", true);
+    }
     this.cleaning = function() {
         $("#menuPopup").popup("close");
     }

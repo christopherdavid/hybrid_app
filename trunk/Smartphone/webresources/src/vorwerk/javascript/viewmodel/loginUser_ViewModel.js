@@ -21,7 +21,7 @@ resourceHandler.registerFunction('loginUser_ViewModel.js', function(parent) {
 
     this.passwordLost = function() {
         console.log("password lost, show dialog");
-        $("#passwordLostPopup").popup("open");
+        parent.notification.showDomDialog("#passwordLostPopup");
     }
     this.cancelReset = function() {
         $("#passwordLostPopup").popup("close");

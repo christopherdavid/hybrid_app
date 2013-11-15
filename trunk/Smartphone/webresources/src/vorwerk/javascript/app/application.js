@@ -18,10 +18,11 @@ function Application() {
         firstScreen : "start",
         pageTransition : "none",
         pageReverseDirection: false,
-        version:"0.6.3.0",
+        version:"0.6.3.2",
         pluginVersion:"0.6.1.0",
         fallbackLanguage:"en-GB",
         viewPath:"",
+        device:"",
         emailRegEx: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
     };
     this.scheduler;

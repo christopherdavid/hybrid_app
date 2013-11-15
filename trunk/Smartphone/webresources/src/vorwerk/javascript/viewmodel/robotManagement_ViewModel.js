@@ -18,8 +18,8 @@ resourceHandler.registerFunction('robotManagement_ViewModel.js', function(parent
     this.changeName = function() {
         // set robot name
         that.newRobotName(that.robot().robotName());
-        //open popup
-        $("#changeNamePopup").popup("open");
+        // open popup
+        parent.notification.showDomDialog("#changeNamePopup");
     };
     
     this.cancelEdit = function() {

@@ -41,7 +41,7 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         // Update the back button depending on the screen that opened this view
         that.updateButtons();
         
-        if(that.bundle && (that.bundle == robotScreenCaller.REGISTER || that.bundle == robotScreenCaller.LOGIN)) {
+        if(that.bundle && (that.bundle == robotScreenCaller.REGISTER || that.bundle == robotScreenCaller.LOGIN || that.bundle == robotScreenCaller.DELETE)) {
             that.isLogoutVisible(true);
         }
         if (that.robots().length == 0){
@@ -51,28 +51,34 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
             that.updateButtons(true);
         }
     };
+    
+    this.deinit = function() {
+        if (that.bundle && that.bundle == robotScreenCaller.DELETE) {
+            // clear bundle
+            that.bundle = null;
+        }
+    }
 
     this.back = function() {
         parent.flowNavigator.previous();
     };
 
-	this.finishRegistration = function(){
-		var user = parent.communicationWrapper.getDataValue("user");
-		if(user != null){
-			if((user.extra_param.countryCode == null)||(user.extra_param.countryCode == "null"))
-			{
-				var translatedTitle = $.i18n.t("robotSelection.page.edit_title");
-        		var translatedText = $.i18n.t("robotSelection.page.edit_message");
-        		parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.next"), "callback":function(e){ parent.notification.closeDialog();  that.conditions['selectCountry'] = true; parent.flowNavigator.next({"userlogin":true});}}]);
-        		return false;
-			}
-			else
-				return true;
-		}
-		else
-			return true;
-	};
-	
+    this.finishRegistration = function(){
+        var user = parent.communicationWrapper.getDataValue("user");
+        if(user != null) {
+            if((user.extra_param.countryCode == null)||(user.extra_param.countryCode == "null")) {
+                var translatedTitle = $.i18n.t("robotSelection.page.edit_title");
+                var translatedText = $.i18n.t("robotSelection.page.edit_message");
+                parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.next"), "callback":function(e){ parent.notification.closeDialog();  that.conditions['selectCountry'] = true; parent.flowNavigator.next({"userlogin":true});}}]);
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    };
+
     this.logout = function() {
         var tDeffer = parent.communicationWrapper.exec(UserPluginManager.logout, []);
         tDeffer.done(that.successLogout);

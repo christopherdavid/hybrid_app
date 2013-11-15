@@ -617,6 +617,13 @@ var RobotPluginManager = ( function() {
                 }, 1000);
                 //window.plugins.neatoPluginLayer.robotMgr.sendCommandToRobot(robotId, commandId, commandParams, callbackSuccess, callbackError);
             },
+            
+            clearRobotData: function(email, robotId, callbackSuccess, callbackError) {
+                //window.plugins.neatoPluginLayer.userMgr.disassociateRobot(email, robotId, callbackSuccess, callbackError);
+                window.setTimeout(function() {
+                    callbackSuccess("OK");
+                }, 1000);
+            },
 
             setRobotName : function(robotId, robotName, callbackSuccess, callbackError) {
               	 window.setTimeout(function() {

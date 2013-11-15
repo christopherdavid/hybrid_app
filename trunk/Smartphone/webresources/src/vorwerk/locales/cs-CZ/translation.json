@@ -11,29 +11,17 @@
         "navi": {"title": "Úklid"}
     },
     "error": {
-        "-502": {
-            "message": "Pro použití aplikace potřebujete internetové připojení. Zapněte si prosím mobilní internet nebo Wi-Fi.",
-            "title": "Potíže s připojením"
-        },
-        "-501": {
-            "message": "Došlo k neznámé chybě. Zkuste to prosím znovu.",
-            "title": "Neznámá chyba"
+        "-106": {
+            "message": "Email id is already registered with the server.",
+            "title": "Chyba"
         },
         "-105": {
             "message": "Zkontrolujte prosím Váš e-mail.",
             "title": "Chyba"
         },
-        "-511": {
-            "message": "__robotName__ již není připojen.",
-            "title": "Chyba připojení"
-        },
         "-108": {
             "message": "Nepodařilo se vytvořit uživatelský účet. Zkuste to prosím znovu.",
             "title": "Chyba serveru"
-        },
-        "-504": {
-            "message": "Váš plán úklidu nemůže být synchronizován.",
-            "title": "Chyba připojení"
         },
         "-111": {
             "message": "Je nutné přidat jméno robota",
@@ -47,13 +35,33 @@
             "message": "Tento robot není registrován.",
             "title": "Chyba"
         },
+        "-101": {
+            "message": "Vložené jméno uživatele nebo heslo je chybné.",
+            "title": "Chyba"
+        },
         "-110": {
             "message": "Vaše staré heslo neodpovídá.",
             "title": "Chyba"
         },
-        "-101": {
-            "message": "Vložené jméno uživatele nebo heslo je chybné.",
-            "title": "Chyba"
+        "-515": {
+            "message": "You are already connected to a different robot",
+            "title": "Chyba připojení"
+        },
+        "-502": {
+            "message": "Pro použití aplikace potřebujete internetové připojení. Zapněte si prosím mobilní internet nebo Wi-Fi.",
+            "title": "Potíže s připojením"
+        },
+        "-501": {
+            "message": "Došlo k neznámé chybě. Zkuste to prosím znovu.",
+            "title": "Neznámá chyba"
+        },
+        "-511": {
+            "message": "__robotName__ již není připojen.",
+            "title": "Chyba připojení"
+        },
+        "-504": {
+            "message": "Váš plán úklidu nemůže být synchronizován.",
+            "title": "Chyba připojení"
         }
     },
     "robotActivationId": {
@@ -71,6 +79,7 @@
             "cleaning": "Úklid",
             "settings": "Nastavení"
         },
+        "next": "Next",
         "edit": "Upravit",
         "cancel": "Zrušit",
         "cleaningMode": {
@@ -133,10 +142,8 @@
             "title": "Přejete si dostáva informace o vylepšeních a novinách svého VR200?",
             "information_header": "Právní podmínky",
             "subscribe": "Přihlásit",
-            "registration_done_message": "<div class='mailAnimation'><\/div>Potvrzení bylo odesláno na <br/><span class='highlightedText'>__email__<\/span><br /><br />Vaši registraci potvrďte do 48 hodin kliknutím na zaslaný odkaz.<br />Po dokončení registrace se budete moci připojit k vašemu robotovi.",
-            "registration_done_title": "Účet založen.",
             "edit_done_title": "Account Modified",
-            "edit_done_message": "The user account has been modified successfully",
+            "edit_done_message": "The user account has been updated successfully",
             "no_subscribe": "Nepřihlašovat"
         },
         "navi": {"title": "Registrace"}
@@ -247,6 +254,8 @@
             "title": "Vítejte v registraci.<br/>Pro pokračování vyplňte několich základních údajů.",
             "email": "E-mail",
             "password_show": "Ukázat heslo",
+            "registration_done_message": "<div class='mailAnimation'><\/div>Potvrzení bylo odesláno na <br/><span class='highlightedText'>__email__<\/span><br /><br />Vaši registraci potvrďte do 48 hodin kliknutím na zaslaný odkaz.<br />Po dokončení registrace se budete moci připojit k vašemu robotovi.",
+            "registration_done_title": "Účet založen.",
             "password_verify": "Ověření hesla",
             "password": "Heslo",
             "country": "Select Country"
@@ -258,8 +267,10 @@
             "register": "Registrace proběhla úspěšně. <br />Vítejte <span class='highlightedText font_bold'>__email__<\/span>",
             "select_robot": "Vyberte prosím svého robota:",
             "logged_in": "Ahoj <span class='highlightedText font_bold'>__email__<\/span>.",
+            "edit_message": "Please select country and subscription option to complete your registration.",
             "login": "Vítejte <span class='highlightedText font_bold'>__email__<\/span>!",
-            "no_robot": "Zatím nemáte registrovaného žádného robota.<br>Přidejte robota klepnutím na <span class='font_bold'>+<\/span>."
+            "no_robot": "Zatím nemáte registrovaného žádného robota.<br>Přidejte robota klepnutím na <span class='font_bold'>+<\/span>.",
+            "edit_title": "Registration"
         },
         "navi": {"title": "Výběr robota"}
     },
