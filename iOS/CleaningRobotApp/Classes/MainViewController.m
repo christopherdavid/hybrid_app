@@ -36,14 +36,6 @@
         // Custom initialization
     }
     
-    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-        // iOS 7
-        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
-    } else {
-        // iOS 6
-        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-    }
-    
     return self;
 }
 
@@ -128,10 +120,6 @@
 	return [super webViewDidFinishLoad:theWebView];
 }
 
-
-- (BOOL)prefersStatusBarHidden {
-    return YES;
-}
 
 /* Comment out the block below to over-ride */
 /*
