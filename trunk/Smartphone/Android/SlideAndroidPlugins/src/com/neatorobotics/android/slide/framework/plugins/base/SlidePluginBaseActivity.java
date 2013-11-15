@@ -26,6 +26,7 @@ import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
 public class SlidePluginBaseActivity extends DroidGap implements Observer {
 
 	private static final String TAG = SlidePluginBaseActivity.class.getSimpleName();
+	private static Boolean showPendingMessage = true;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
 			AppUtils.createNeatoUserDeviceIdIfNotExists(this);
 			UserManager.getInstance(this).setUserAttributesOnServer(authToken, DeviceUtils.getUserAttributes(this));
 			PushNotificationUtils.registerForPushNotification(this);
+			showPendingMessage = false;
 		}
 	}
 	
@@ -67,7 +69,7 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
 		if(UserHelper.isUserLoggedIn(this)) {
 			Bundle pendingMessage = PushNotificationUtils.getPendingPushNotification();
 			//LogHelper.logD(TAG, "Pending Message"+ pendingMessage.getString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID));
-			if(pendingMessage != null){
+			if((pendingMessage != null)&&(showPendingMessage)){
 				LogHelper.logD(TAG, "Yes some Pending message");
 				//LogHelper.logD(TAG, "Pending Message Send"+ pendingMessage.getString(PushNotificationConstants.NOTIFICATION_ID_KEY));
 				PushNotificationMessageHandler.getInstance(this).sendForegroundNotification(getApplicationContext(), pendingMessage);
@@ -84,6 +86,7 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
 			}
 			else
 				LogHelper.logD(TAG, "No Pending message");
+			showPendingMessage = true;
 		}	
 	}
 	
@@ -97,6 +100,7 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
 	@Override
 	public void update(Observable observable, Object data) {
 		NeatoServiceManager serviceManager = NeatoServiceManager.getInstance(getApplicationContext());
+		LogHelper.logD(TAG, "onUpdate Called");
 		if (serviceManager != null) {
 			if (UserHelper.isUserLoggedIn(this)) {
 				serviceManager.initialize();
