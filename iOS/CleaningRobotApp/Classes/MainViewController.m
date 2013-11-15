@@ -116,6 +116,11 @@
      
      // Black base color for background matches the native apps
      theWebView.backgroundColor = [UIColor blackColor];
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
+        theWebView.frame =  CGRectMake(0,0,theWebView.frame.size.width,theWebView.frame.size.height-20);
+    }
+    
 
 	return [super webViewDidFinishLoad:theWebView];
 }

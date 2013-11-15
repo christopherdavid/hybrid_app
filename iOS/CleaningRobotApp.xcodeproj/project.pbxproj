@@ -552,8 +552,8 @@
 					"\"/Users/uid/Library/Developer/Xcode/DerivedData/CleaningRobotApp-fjjopscayftduodhuhxpfnpddrra/Build/Products/Debug-iphoneos\"",
 				);
 				PRODUCT_NAME = "Kobold VR200";
-				PROVISIONING_PROFILE = "E10240A2-F8DB-4504-821C-839FEC17B75B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E10240A2-F8DB-4504-821C-839FEC17B75B";
+				PROVISIONING_PROFILE = "51ABEF10-37A8-4B5B-949B-E9330AF38AAC";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "51ABEF10-37A8-4B5B-949B-E9330AF38AAC";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -581,8 +581,8 @@
 					"\"/Users/uid/Library/Developer/Xcode/DerivedData/CleaningRobotApp-fjjopscayftduodhuhxpfnpddrra/Build/Products/Debug-iphoneos\"",
 				);
 				PRODUCT_NAME = "Kobold VR200";
-				PROVISIONING_PROFILE = "E10240A2-F8DB-4504-821C-839FEC17B75B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E10240A2-F8DB-4504-821C-839FEC17B75B";
+				PROVISIONING_PROFILE = "51ABEF10-37A8-4B5B-949B-E9330AF38AAC";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "51ABEF10-37A8-4B5B-949B-E9330AF38AAC";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
