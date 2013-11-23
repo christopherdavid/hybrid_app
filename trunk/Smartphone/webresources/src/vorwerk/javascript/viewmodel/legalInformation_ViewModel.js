@@ -51,7 +51,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
                     that.selectedSubscribe(user.extra_param.optIn);
                 }
             }
-            $('.ui-btn-right .btn-with-image').attr("data-image","ok");	
+            	
         }
         
     }
@@ -97,14 +97,13 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         user.extra_param.countryCode = that.bundle.country;
         user.extra_param.optIn = that.selectedSubscribe();
         parent.communicationWrapper.setDataValue("user", user);
-        if(that.bundle.userlogin) {
-            var translatedTitle = $.i18n.t("legalInformation.page.edit_done_title");
-            var translatedText = $.i18n.t("legalInformation.page.edit_done_message", {email:that.bundle.email});
-            parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ 
-            parent.notification.closeDialog(); that.navigate();}}]);
-        } else {
+        var callGuid = guid();
+         parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("legalInformation.page.edit_done_message", {email:that.bundle.email}), callGuid);
+        window.setTimeout(function(){
+            parent.notification.showLoadingArea(false, notificationType.HINT, "", callGuid);
             that.navigate();
-        }
+        }, 3000);
+      
     }
     
     this.navigate = function(){
