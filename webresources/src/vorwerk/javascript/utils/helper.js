@@ -183,16 +183,56 @@ function resizePopupButtons(buttonGroup, maxContainer) {
 var robotUiStateHandler = {
     subscription: null,
     current:null,
+    statusTimer:null,
+    statusTimout:10000,
     
     subscribeToRobot:function(refRobot) {
         this.current().robot(refRobot().robotNewVirtualState());
         this.updateStates(refRobot().robotNewVirtualState());
         
         subscription = refRobot().robotNewVirtualState.subscribe(function(newValue) {
+            // cancel old timer
+            window.clearTimeout(this.statusTimer);
+            
             // console.log("robotUiStateHandler robotNewVirtualState.subscribe " + newValue + " visualState " + visualState[newValue]);
+            var newUiState = newValue;
+            if(newValue == ROBOT_STATE_PAUSED || newValue == ROBOT_STATE_STOPPED || newValue == ROBOT_STATE_CLEANING) {
+                var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
+                // create new state number
+                var newState = 20000;
+                
+                // add 1-3 depending on the category
+                newState += parseInt(curRobot().cleaningCategory(),10);
+                
+                // add the state block (stop 20, pause 30) 
+                switch (newValue) {
+                    case ROBOT_STATE_STOPPED:
+                        // for stopoed we need to change the current message and add a timer for another message
+                        // ROBOT_UI_STATE_PAUSED_MANUAL starts at 20021
+                        newUiState = newState + 20;
+                        // ROBOT_UI_STATE_PAUSED_WAITED_MANUAL starts at 20031
+                        newState += 30;
+                        // start timer
+                        this.statusTimer = window.setTimeout(function() {robotUiStateHandler.setUiState(newState)}, this.statusTimout);
+                        break;
+                    case ROBOT_STATE_PAUSED:
+                        // ROBOT_UI_STATE_PAUSED_MANUAL starts at 20041
+                        newState += 40;
+                        // change ui state
+                        newUiState = newState;
+                        break;
+                    case ROBOT_STATE_CLEANING:
+                        // ROBOT_UI_STATE_CLEANING_MANUAL starts at 20051
+                        newState += 50;
+                        // change ui state
+                        newUiState = newState;
+                        break;
+                }
+            }
             this.current().robot(newValue);
-            this.current().ui(newValue);
-            this.updateStates(newValue);
+            this.current().ui(newUiState);
+            this.updateStates(newUiState);
+            
         }, this);
     },
     
@@ -202,17 +242,24 @@ var robotUiStateHandler = {
     // robotNewVirtualState register to robot state
     // ui state of the app
     setUiState: function(state) {
+        // cancel old timer
+        window.clearTimeout(this.statusTimer);
         if(visualState[state]) {
             this.current().ui(state);
             this.updateStates(state);
         }
     },
     updateStates: function(state) {
+        var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
         this.current().messageIcon(visualState[state]);
         if(state == ROBOT_UI_STATE_WAIT) {
             this.current().messageText($.i18n.t("visualState.waiting_unknown"));
         } else if(state == ROBOT_UI_STATE_WAKEUP) {
             this.current().messageText($.i18n.t("visualState.wakeup_unknown"));
+        } else if(state == ROBOT_UI_STATE_STOPPED_SPOT || state == ROBOT_UI_STATE_STOPPED_WAITED_SPOT || state == ROBOT_UI_STATE_PAUSED_SPOT || state == ROBOT_UI_STATE_CLEANING_SPOT) {
+            var message = $.i18n.t("visualState." + visualState[state]);
+            message += " " + curRobot().spotCleaningAreaLength() + "x" + curRobot().spotCleaningAreaHeight() + " " + $.i18n.t("pattern.spotUnit");
+            this.current().messageText(message);
         } else {
             this.current().messageText($.i18n.t("visualState." + visualState[state]));
         }
