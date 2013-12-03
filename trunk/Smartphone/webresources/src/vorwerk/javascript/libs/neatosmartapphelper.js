@@ -610,6 +610,12 @@ var RobotPluginManager = ( function() {
             disconnectDirectConnection : function(robotId, callbackSuccess, callbackError) {
                 window.plugins.neatoPluginLayer.robotMgr.disconnectDirectConnection(robotId, callbackSuccess, callbackError);
             },
+            
+            getRobotCleaningCategory: function(robotId, callbackSuccess, callbackError) {
+                 window.setTimeout(function() {
+                     callbackSuccess({cleaningCatageory:2,robotId:robotId});
+                 }, 1000);
+            },
 
             sendCommandToRobot : function(robotId, commandId, commandParams, callbackSuccess, callbackError) {
                 window.setTimeout(function() {

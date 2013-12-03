@@ -69,6 +69,8 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
         if(that.remoteButtonDown) {
             remote.triggerHandler("remotePressed", that.remoteButtonDown);
             this.pressedTimer = window.setTimeout(function() {that.pressing()}, this.pressedIntervall);
+        } else {
+            remote.triggerHandler("remoteReleased", that.remoteButtonDown);
         }
     }
 

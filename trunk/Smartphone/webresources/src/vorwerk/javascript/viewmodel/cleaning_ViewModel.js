@@ -129,6 +129,10 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getSpotDefinition, [that.robot().robotId()]);
         tDeffer.done(that.successGetSpotDefinition);
         
+        // getRobotCleaningCategory
+        var tDeffer2 = parent.communicationWrapper.exec(RobotPluginManager.getRobotCleaningCategory, [that.robot().robotId()]);
+        tDeffer2.done(that.successGetRobotCleaningCategory);
+        
         // get jquery object for spotSize popup
         $spotPopup = $("#spotSize");
         
@@ -152,6 +156,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         // pressed event listener for remote buttons
         $('#remote').on('remotePressed', that.remotePressed);
         
+        $('#remote').on('remoteReleased', that.remoteReleased);
+        
         $(window).on("resize.cleaning", function() {
             that.updateLayout();
         });
@@ -169,9 +175,16 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.successGetSpotDefinition = function(result) {
         if(result.spotCleaningAreaLength > 0 && result.spotCleaningAreaHeight > 0) {
             var convSize = convertSpotsize(result.spotCleaningAreaLength, result.spotCleaningAreaHeight, true);
+            that.robot().spotCleaningAreaLength(convSize.length);
+            that.robot().spotCleaningAreaHeight(convSize.height);
             this.spotSizeLength = ko.observable(convSize.length);
             this.spotSizeHeight = ko.observable(convSize.height);
         }
+    }
+    
+    // {cleaningCatageory: <1-Manual,2-All,3-Spot>,robotId:"robotId"}
+    this.successGetRobotCleaningCategory = function(result) {
+        that.robot().cleaningCategory(result.cleaningCatageory);
     }
     
     // everytime called when the user taps on an category item
@@ -195,6 +208,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                             tDeffer.done(function(result) {
                                 console.log("robot stopped");
                                 that.robot().cleaningCategory(newValue);
+                                // set stopped state to switch speech bubble text depending on category
+                                robotUiStateHandler.setUiState(ROBOT_STATE_STOPPED);
                                 if(newValue == CLEANING_CATEGORY_SPOT) {
                                     // show spot popup
                                     that.editSpotSize();
@@ -211,6 +226,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                 ]);
             } else {
                 that.robot().cleaningCategory(newValue);
+                // set stopped state to switch speech bubble text depending on category
+                robotUiStateHandler.setUiState(ROBOT_STATE_STOPPED);
                 if(newValue == CLEANING_CATEGORY_SPOT) {
                     // show spot popup
                     that.editSpotSize();
@@ -252,10 +269,15 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                 break;
         }
         if(navigationControlId > 0) {
+            robotUiStateHandler.setUiState(ROBOT_UI_STATE_CLEANING_TAP_MANUAL);
             // Send robot drive direction
             var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.driveRobot, [that.robot().robotId(), navigationControlId], { type: notificationType.NONE });
             console.log("drive robot direction: " + navigationControlId);
         }
+    }
+    
+    this.remoteReleased = function(event, button) {
+        robotUiStateHandler.setUiState(ROBOT_UI_STATE_CLEANING_MANUAL);
     }
     
     // viewmodel reload 
@@ -272,6 +294,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         that.startAreaControl = null;
         $('#startBtn').off("startClick");
         $('#remote').off('remotePressed');
+        $('#remote').off('remoteReleased');
         $(window).off(".cleaning");
         $rightSpotContainer.off('resize');
         //that.robotUiStateMachine.callback = null;
@@ -330,8 +353,11 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.setSpotDefinition, [that.robot().robotId(), newSize.length, newSize.height],
         { type: notificationType.OPERATION, message: "Set new Spotsize: " + (that.newSpotSizeLength()*spotFactor) + "x" +  (that.newSpotSizeHeight()*spotFactor) , bHide: true });
         tDeffer.done(function(result) {
+            that.robot().spotCleaningAreaLength(that.newSpotSizeLength());
+            that.robot().spotCleaningAreaHeight(that.newSpotSizeHeight());
             that.spotSizeLength(that.newSpotSizeLength());
             that.spotSizeHeight(that.newSpotSizeHeight());
+            robotUiStateHandler.setUiState(ROBOT_UI_STATE_STOPPED_WAITED_SPOT);
         });
     }
     
