@@ -441,75 +441,31 @@
         background-size:@spot_grid_icon_width @spot_grid_icon_height;
         background-repeat:repeat;
         
+        #spotSelection {
+            position:absolute;
+            bottom:@spot_grid_space;
+            left:@spot_container_width/2 - @spot_grid_cell_width/2;
+            width:@spot_grid_cell_width;
+            height:@spot_grid_cell_height;
+            background-color:@cleaning_spotsize_selection_bg;
+            border:@spot_selection_border solid @cleaning_spotsize_selection_border;
+        }
+            
+        
         #spotSizeContainer {
             position: relative;
-            width:@spot_container_width;
-            height:@spot_container_height;
-            left:@spot_grid_space;
-            top:@spot_grid_space;
+            width:@spot_grid_cell_width*3;
+            height:@spot_grid_cell_height*5;
+            left:@spot_grid_space + @spot_grid_cell_width*3 - @spot_resize_icon_width/2;
+            top:@spot_grid_space - @spot_resize_icon_height/2;
             
-            // we need an extra element for the border to avoid calculation issues with jquery UI and border of an element
-            .border {
-                border-top:@spot_selection_border solid @cleaning_spotsize_selection_border;
-                border-bottom:@spot_selection_border solid @cleaning_spotsize_selection_border;
-                position:absolute;
-                top:@spot_border_correction_top;
-                bottom:0;
-                left:0;
-                right:0;
-            }
-            
-            #leftSpotContainer {
-                position:absolute;
-                bottom:0;
-                left:@spot_container_width/2 - @spot_grid_cell_width/2; 
-                width:@spot_grid_cell_width/2;
-                height:@spot_grid_cell_height;
-                background-color:@cleaning_spotsize_selection_bg;
-                z-index:801;
-                .border {
-                    border-left:@spot_selection_border solid @cleaning_spotsize_selection_border;
-                    left:@spot_border_correction;
-                }
-            }
-            
-            #rightSpotContainer {
-                position:absolute;
-                bottom:0;
-                width:@spot_grid_cell_width/2;
-                height:@spot_grid_cell_height;
-                left:@spot_container_width/2;
-                background-color:@cleaning_spotsize_selection_bg;
-                z-index:801;
-                .border {
-                    border-right:@spot_selection_border solid @cleaning_spotsize_selection_border;
-                    right:@spot_border_correction;
-                }
-                .ui-resizable-ne {
-                    right:-@spot_resize_icon_width/2;
-                    top:-@spot_resize_icon_height/2;
-                    z-index:802;
-                    background-image: url("../../img/icons/spot_arrow_40x40.png");
-                    background-size:@spot_resize_icon_width @spot_resize_icon_height;
-                    width: @spot_resize_icon_width;
-                    height: @spot_resize_icon_height;
-                    background-repeat: no-repeat;
-                }
-                .ui-resizable-se {
-                    right:-25px;
-                    bottom:-25px;
-                    z-index:802;
-                }
-                .ui-resizable-nw {
-                    left:-25px;
-                    top:-25px;
-                    z-index:802;
-                }
-                .ui-resizable-sw {
-                    left:-25px;
-                    bottom:-25px;
-                    z-index:802;
-                }
+            #spotResizer {
+                width: @spot_resize_icon_width;
+                height: @spot_resize_icon_height;
+                background-image: url("../../img/icons/ani_spot_arrow_160x40.png");
+                background-repeat: no-repeat;
+                background-position:-@spot_resize_icon_width*3 0;
+                background-size:@spot_resize_icon_width*4 @spot_resize_icon_height;
             }
         }
     }

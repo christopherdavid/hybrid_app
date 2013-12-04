@@ -18,7 +18,7 @@ function Application() {
         firstScreen : "start",
         pageTransition : "none",
         pageReverseDirection: false,
-        version:"0.6.4.0",
+        version:"0.6.4.2",
         pluginVersion:"0.6.1.0",
         fallbackLanguage:"en-GB",
         viewPath:"",
