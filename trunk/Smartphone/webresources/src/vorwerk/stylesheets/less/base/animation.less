@@ -2,8 +2,46 @@
  * animation.less 
  */
 
+.spotResizeAnimation {
+    background-position:0 0;
+    .animation(spotResizeFrames, 2.0s, steps(1, end), 0.5s, infinite);
+    .animation-play-state(running);
+}
+.spotResizeFrames-frames() {
+    0%   {
+        background-position-x:0;
+    }
+    25%   {
+        background-position-x:-@spot_resize_icon_width;
+    }
+    50% {
+        background-position-x:-@spot_resize_icon_width*2;
+    }
+    75%  {
+        background-position-x:-@spot_resize_icon_width*3;
+    }
+    100%  {
+        background-position-x:-@spot_resize_icon_width*4;
+    }
+}
 
-.mailAnimation{
+@-moz-keyframes spotResizeFrames {
+    .spotResizeFrames-frames();
+}
+@-webkit-keyframes spotResizeFrames {
+    .spotResizeFrames-frames();
+}
+@-ms-keyframes spotResizeFrames {
+    .spotResizeFrames-frames();
+}
+@-o-keyframes spotResizeFrames {
+    .spotResizeFrames-frames();
+}
+@keyframes spotResizeFrames {
+    .spotResizeFrames-frames();
+}
+  
+.mailAnimation {
     width: @mailAnimationWidth;
     height: @mailAnimationHeight;
     background-image: url(../../img/icons/ani_mail_2805x170.png);

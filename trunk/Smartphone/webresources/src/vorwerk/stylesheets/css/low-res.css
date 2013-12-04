@@ -701,6 +701,124 @@ label {
 /**
  * animation.less 
  */
+.spotResizeAnimation {
+  background-position: 0 0;
+  -moz-animation-name: spotResizeFrames;
+  -webkit-animation-name: spotResizeFrames;
+  -ms-animation-name: spotResizeFrames;
+  -o-animation-name: spotResizeFrames;
+  animation-name: spotResizeFrames;
+  -moz-animation-duration: 2s;
+  -webkit-animation-duration: 2s;
+  -ms-animation-duration: 2s;
+  -o-animation-duration: 2s;
+  animation-duration: 2s;
+  -moz-animation-timing-function: steps(1, end);
+  -webkit-animation-timing-function: steps(1, end);
+  -ms-animation-timing-function: steps(1, end);
+  -o-animation-timing-function: steps(1, end);
+  animation-timing-function: steps(1, end);
+  -moz-animation-delay: 0.5s;
+  -webkit-animation-delay: 0.5s;
+  -ms-animation-delay: 0.5s;
+  -o-animation-delay: 0.5s;
+  animation-delay: 0.5s;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  -ms-animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -moz-animation-play-state: running;
+  -webkit-animation-play-state: running;
+  -ms-animation-play-state: running;
+  -o-animation-play-state: running;
+  animation-play-state: running;
+}
+@-moz-keyframes spotResizeFrames {
+  0% {
+    background-position-x: 0;
+  }
+  25% {
+    background-position-x: -30px;
+  }
+  50% {
+    background-position-x: -60px;
+  }
+  75% {
+    background-position-x: -90px;
+  }
+  100% {
+    background-position-x: -120px;
+  }
+}
+@-webkit-keyframes spotResizeFrames {
+  0% {
+    background-position-x: 0;
+  }
+  25% {
+    background-position-x: -30px;
+  }
+  50% {
+    background-position-x: -60px;
+  }
+  75% {
+    background-position-x: -90px;
+  }
+  100% {
+    background-position-x: -120px;
+  }
+}
+@-ms-keyframes spotResizeFrames {
+  0% {
+    background-position-x: 0;
+  }
+  25% {
+    background-position-x: -30px;
+  }
+  50% {
+    background-position-x: -60px;
+  }
+  75% {
+    background-position-x: -90px;
+  }
+  100% {
+    background-position-x: -120px;
+  }
+}
+@-o-keyframes spotResizeFrames {
+  0% {
+    background-position-x: 0;
+  }
+  25% {
+    background-position-x: -30px;
+  }
+  50% {
+    background-position-x: -60px;
+  }
+  75% {
+    background-position-x: -90px;
+  }
+  100% {
+    background-position-x: -120px;
+  }
+}
+@keyframes spotResizeFrames {
+  0% {
+    background-position-x: 0;
+  }
+  25% {
+    background-position-x: -30px;
+  }
+  50% {
+    background-position-x: -60px;
+  }
+  75% {
+    background-position-x: -90px;
+  }
+  100% {
+    background-position-x: -120px;
+  }
+}
 .mailAnimation {
   width: 127px;
   height: 85px;
@@ -4154,72 +4272,29 @@ label {
   background-size: 264px 264px;
   background-repeat: repeat;
 }
+#spotContainer #spotGridContainer #spotSelection {
+  position: absolute;
+  bottom: 2px;
+  left: 104px;
+  width: 52px;
+  height: 52px;
+  background-color: rgba(0, 225, 89, 0.25);
+  border: 1px solid #00e159;
+}
 #spotContainer #spotGridContainer #spotSizeContainer {
   position: relative;
-  width: 260px;
+  width: 156px;
   height: 260px;
-  left: 2px;
-  top: 2px;
+  left: 143px;
+  top: -13px;
 }
-#spotContainer #spotGridContainer #spotSizeContainer .border {
-  border-top: 1px solid #00e159;
-  border-bottom: 1px solid #00e159;
-  position: absolute;
-  top: 0px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-#spotContainer #spotGridContainer #spotSizeContainer #leftSpotContainer {
-  position: absolute;
-  bottom: 0;
-  left: 104px;
-  width: 26px;
-  height: 52px;
-  background-color: rgba(0, 225, 89, 0.25);
-  z-index: 801;
-}
-#spotContainer #spotGridContainer #spotSizeContainer #leftSpotContainer .border {
-  border-left: 1px solid #00e159;
-  left: 0px;
-}
-#spotContainer #spotGridContainer #spotSizeContainer #rightSpotContainer {
-  position: absolute;
-  bottom: 0;
-  width: 26px;
-  height: 52px;
-  left: 130px;
-  background-color: rgba(0, 225, 89, 0.25);
-  z-index: 801;
-}
-#spotContainer #spotGridContainer #spotSizeContainer #rightSpotContainer .border {
-  border-right: 1px solid #00e159;
-  right: 0px;
-}
-#spotContainer #spotGridContainer #spotSizeContainer #rightSpotContainer .ui-resizable-ne {
-  right: -15px;
-  top: -15px;
-  z-index: 802;
-  background-image: url("../../img/icons/spot_arrow_40x40.png");
-  background-size: 30px 30px;
+#spotContainer #spotGridContainer #spotSizeContainer #spotResizer {
   width: 30px;
   height: 30px;
+  background-image: url("../../img/icons/ani_spot_arrow_160x40.png");
   background-repeat: no-repeat;
-}
-#spotContainer #spotGridContainer #spotSizeContainer #rightSpotContainer .ui-resizable-se {
-  right: -25px;
-  bottom: -25px;
-  z-index: 802;
-}
-#spotContainer #spotGridContainer #spotSizeContainer #rightSpotContainer .ui-resizable-nw {
-  left: -25px;
-  top: -25px;
-  z-index: 802;
-}
-#spotContainer #spotGridContainer #spotSizeContainer #rightSpotContainer .ui-resizable-sw {
-  left: -25px;
-  bottom: -25px;
-  z-index: 802;
+  background-position: -90px 0;
+  background-size: 120px 30px;
 }
 #spotSize .ui-navbar {
   float: left;

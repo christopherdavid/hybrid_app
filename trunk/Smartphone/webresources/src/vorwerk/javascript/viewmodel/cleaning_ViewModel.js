@@ -1,12 +1,14 @@
 resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     console.log('instance created for: cleaning_ViewModel');
     var that = this, $spotPopup, 
-        $leftSpotContainer,$rightSpotContainer,
+        $spotResizer,$spotSelection,
         spotGridSize = {
             cellWidth:deviceSize.getResolution() == "high" ? 39 : 26,
             cellHeight:deviceSize.getResolution() == "high" ? 78 : 52,
-            maxWidth:deviceSize.getResolution() == "high" ? 195 : 130,
-            maxHeight:deviceSize.getResolution() == "high" ? 390 : 260,
+            maxWidth:deviceSize.getResolution() == "high" ? 396 : 264,
+            gridSpace:deviceSize.getResolution() == "high" ? 3 : 2,
+            maxCol:5,
+            maxRow:5
         },
         spotFactor = parseInt($.i18n.t("pattern.spotFactor"),10),
         spotUnit = $.i18n.t("pattern.spotUnit");
@@ -92,33 +94,24 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         
         parent.orientation.landscape = false;
         forceRotation('portrait');
-        
-        $leftSpotContainer = $('#leftSpotContainer');
-        $rightSpotContainer = $('#rightSpotContainer');
-        
-        $rightSpotContainer.resizable({
-            gridWithEvent : [spotGridSize.cellWidth,spotGridSize.cellHeight],
-            handles : "ne",
-            maxHeight: spotGridSize.maxHeight,
-            maxWidth:  spotGridSize.maxWidth,
-            minHeight: spotGridSize.cellHeight,
-            minWidth: spotGridSize.cellWidth,
-            gridSnapEvent:function(event, ui, coords) {
-                //console.log("gridSnapEvent");
-                //console.log(coords)
-                $leftSpotContainer.css({
-                    "left": (spotGridSize.maxWidth - coords.w) + "px",
-                    "width" : coords.w + 'px',
-                    "height": coords.h + 'px'
-                });
-                that.newSpotSizeLength(coords.w/spotGridSize.cellWidth);
-                that.newSpotSizeHeight(coords.h/spotGridSize.cellHeight);
+        $spotResizer = $("#spotResizer");
+        $spotResizer.draggable({
+            grid : [spotGridSize.cellWidth,spotGridSize.cellHeight],
+            containment: "parent",
+            scroll:false,
+            start : function(event, ui) {
+                $spotResizer.toggleClass("spotResizeAnimation",false);
+            },
+            drag:function(event, ui) {
+                that.newSpotSizeLength((ui.position.left / spotGridSize.cellWidth)+1)
+                // invert values
+                that.newSpotSizeHeight(spotGridSize.maxRow - (ui.position.top / spotGridSize.cellHeight));
+            },
+            stop : function(event, ui) {
+                $spotResizer.toggleClass("spotResizeAnimation",true);
             }
         });
-        
-        $rightSpotContainer.on('resize', function (e) {
-            e.stopPropagation(); 
-        });
+        $spotSelection = $("#spotSelection");
         
         // register for push notifications type of NOTIFICATION_CLEANING_DONE
         parent.notification.registerStatus(NOTIFICATION_CLEANING_DONE, function(resultText) {
@@ -184,7 +177,15 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     // {cleaningCatageory: <1-Manual,2-All,3-Spot>,robotId:"robotId"}
     this.successGetRobotCleaningCategory = function(result) {
-        that.robot().cleaningCategory(result.cleaningCatageory);
+        // need to add a check if it's a valid category (in some cases got 0 from server)
+        if(result.cleaningCatageory == CLEANING_CATEGORY_MANUAL || result.cleaningCatageory == CLEANING_CATEGORY_ALL
+            || result.cleaningCatageory == CLEANING_CATEGORY_SPOT) {
+                that.robot().cleaningCategory(result.cleaningCatageory);
+        } else {
+            // set All as fallback
+            that.robot().cleaningCategory(CLEANING_CATEGORY_ALL);
+        }
+        
     }
     
     // everytime called when the user taps on an category item
@@ -296,8 +297,6 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         $('#remote').off('remotePressed');
         $('#remote').off('remoteReleased');
         $(window).off(".cleaning");
-        $rightSpotContainer.off('resize');
-        //that.robotUiStateMachine.callback = null;
     }
     
     
@@ -317,7 +316,18 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     // spot size popup
     this.newSpotSizeLength = ko.observable();
     this.newSpotSizeHeight = ko.observable();
+    
     this.newSpotSize = ko.computed(function() {
+         // check if spotSelection has been already initialized
+         if(typeof $spotSelection != "undefined") {
+             // update spot selection
+             $spotSelection.css({
+                "left": (spotGridSize.maxWidth/2 - (that.newSpotSizeLength() * spotGridSize.cellWidth)) + "px",
+                "width" : ((that.newSpotSizeLength() * spotGridSize.cellWidth*2) - spotGridSize.gridSpace) + 'px',
+                "height": (that.newSpotSizeHeight() * spotGridSize.cellHeight) + 'px'
+            });
+        }
+         
          return ((that.newSpotSizeLength()*spotFactor)  + "x" + (that.newSpotSizeHeight()*spotFactor) + " " + spotUnit);
     }, this);  
     
@@ -331,16 +341,11 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         // set currentSpot Size
         that.newSpotSizeLength(that.spotSizeLength());
         that.newSpotSizeHeight(that.spotSizeHeight());
-        
-        $leftSpotContainer.css({
-            "left": (spotGridSize.maxWidth - (that.spotSizeLength() * spotGridSize.cellWidth)) + "px",
-            "width" : (that.spotSizeLength() * spotGridSize.cellWidth) + 'px',
-            "height": (that.spotSizeHeight() * spotGridSize.cellHeight) + 'px'
-        });
-        $rightSpotContainer.css({
-            "width" : (that.spotSizeLength() * spotGridSize.cellWidth) + 'px',
-            "height": (that.spotSizeHeight() * spotGridSize.cellHeight) + 'px',
-            "top": 'auto'
+        // set position of spotResizer
+        $spotResizer.css({
+            // invert top because top 0 equals spotSizeHeight 5
+            "top": ((spotGridSize.maxRow * spotGridSize.cellHeight) - (that.spotSizeHeight() * spotGridSize.cellHeight)) + "px",
+            "left": ((that.spotSizeLength() - 1) * spotGridSize.cellWidth) + 'px'
         });
         
         parent.notification.showDomDialog("#spotSize", false, function(){

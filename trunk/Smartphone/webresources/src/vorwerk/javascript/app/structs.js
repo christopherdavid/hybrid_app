@@ -24,7 +24,7 @@ function getRobotStruct() {
         // has to be filled initially with RobotPluginManager.getSpotDefinition
         spotCleaningAreaLength:"",
         spotCleaningAreaHeight:"",
-        // no initial value available 
+        // has to be filled initially with RobotPluginManager.getRobotCleaningCategory
         cleaningCategory:CLEANING_CATEGORY_ALL,
         cleaningMode:"1",
         cleaningModifier:"1",
