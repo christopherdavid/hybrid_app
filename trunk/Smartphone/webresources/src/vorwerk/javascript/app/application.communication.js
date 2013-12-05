@@ -264,9 +264,9 @@ function WorkflowCommunication(parent) {
             
             // check if robot is the current robot 
             if(curRobot().robotId && robot.robotId() == curRobot().robotId()) {
-                // update state handler
+                // update state handler if state hasen't changed, this is necessary to update the UI initially
                 if(!stateChanged) {
-                    robotUiStateHandler.updateStates(virtualState);
+                    robotUiStateHandler.setVirtualState(virtualState);
                 }
                 
             }
