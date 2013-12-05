@@ -191,12 +191,19 @@ var robotUiStateHandler = {
         this.updateStates(refRobot().robotNewVirtualState());
         
         subscription = refRobot().robotNewVirtualState.subscribe(function(newValue) {
+            this.setVirtualState(newValue);
+        }, this);
+    },
+    
+    setVirtualState:function(state) {
+        // check if timer for this state is already running
+        if(this.statusTimer == null || this.current().robot() != state) { 
             // cancel old timer
             window.clearTimeout(this.statusTimer);
             
             // console.log("robotUiStateHandler robotNewVirtualState.subscribe " + newValue + " visualState " + visualState[newValue]);
-            var newUiState = newValue;
-            if(newValue == ROBOT_STATE_PAUSED || newValue == ROBOT_STATE_STOPPED || newValue == ROBOT_STATE_CLEANING) {
+            var newUiState = state;
+            if(state == ROBOT_STATE_PAUSED || state == ROBOT_STATE_STOPPED || state == ROBOT_STATE_CLEANING) {
                 var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
                 // create new state number
                 var newState = 20000;
@@ -205,7 +212,7 @@ var robotUiStateHandler = {
                 newState += parseInt(curRobot().cleaningCategory(),10);
                 
                 // add the state block (stop 20, pause 30) 
-                switch (newValue) {
+                switch (state) {
                     case ROBOT_STATE_STOPPED:
                         // for stopoed we need to change the current message and add a timer for another message
                         // ROBOT_UI_STATE_PAUSED_MANUAL starts at 20021
@@ -229,11 +236,10 @@ var robotUiStateHandler = {
                         break;
                 }
             }
-            this.current().robot(newValue);
+            this.current().robot(state);
             this.current().ui(newUiState);
             this.updateStates(newUiState);
-            
-        }, this);
+        }
     },
     
     disposeFromRobot:function() {
@@ -279,9 +285,11 @@ var robotUiStateHandler = {
         // - waiting
         // - stopped
         
-        if(state == ROBOT_STATE_CLEANING || state == ROBOT_STATE_RESUMED) {
+        if(state == ROBOT_STATE_CLEANING || state == ROBOT_STATE_RESUMED || state == ROBOT_UI_STATE_CLEANING_ALL 
+            || state == ROBOT_UI_STATE_CLEANING_MANUAL || state == ROBOT_UI_STATE_CLEANING_SPOT || state == ROBOT_UI_STATE_CLEANING_TAP_MANUAL) {
             this.current().startButton(visualState[ROBOT_STATE_CLEANING]);
-        } else if(state == ROBOT_STATE_PAUSED || state == ROBOT_UI_STATE_WAIT) {
+        } else if(state == ROBOT_STATE_PAUSED || state == ROBOT_UI_STATE_WAIT
+            || state == ROBOT_UI_STATE_PAUSED_ALL || state == ROBOT_UI_STATE_PAUSED_MANUAL || state == ROBOT_UI_STATE_PAUSED_SPOT) {
             this.current().startButton(visualState[state]);
         } else if(state == ROBOT_UI_STATE_CONNECTING || state == ROBOT_UI_STATE_WAKEUP || state == ROBOT_UI_STATE_GETREADY) {
             this.current().startButton(visualState[ROBOT_UI_STATE_WAIT]);

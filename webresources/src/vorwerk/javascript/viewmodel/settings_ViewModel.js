@@ -8,9 +8,11 @@ resourceHandler.registerFunction('settings_ViewModel.js', function(parent) {
     this.init = function() {
         // check if country is italy. if so change product logo
         var user = parent.communicationWrapper.getDataValue("user");
-        var country = parent.communicationWrapper.getFromLocalStorage(user.email + "_country");
-        if(country && country == "italy") {
-            $("#menuPopupLogo").addClass("folletto");
+        var uCountryCode = (user.extra_param && user.extra_param.countryCode) ? user.extra_param.countryCode : null;
+        if(uCountryCode != null && uCountryCode == "IT") {
+            $(document).one("pageshow.menuPopup", function(e) {
+                $("#menuPopupLogo").addClass("folletto");
+            });
         }
     };
     
