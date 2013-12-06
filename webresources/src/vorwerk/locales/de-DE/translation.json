@@ -31,6 +31,10 @@
             "message": "E-Mail-Adresse ist nicht registriert.",
             "title": "Eingabefehler"
         },
+        "-509": {
+            "message": "TBD",
+            "title": "TBD"
+        },
         "-114": {
             "message": "Diese Roboter ID ist nicht registriert.",
             "title": "Eingabefehler"
@@ -54,6 +58,10 @@
         "-501": {
             "message": "Ein unbekannter Fehler ist aufgetreten. Bitte erneut versuchen.",
             "title": "Unbekannter Fehler"
+        },
+        "-154": {
+            "message": "TBD",
+            "title": "Eingabefehler"
         },
         "-511": {
             "message": "__robotName__ ist nicht mehr verbunden.",

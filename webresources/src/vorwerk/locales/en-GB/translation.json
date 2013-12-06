@@ -31,6 +31,10 @@
             "message": "Your email address isn't registered.",
             "title": "Type Error"
         },
+        "-509": {
+            "message": "This account has not been confirmed.  Please respond to the confirmation mail sent to this email address.",
+            "title": "Confirmation Error"
+        },
         "-114": {
             "message": "This robot id isn't registered.",
             "title": "Type Error"
@@ -54,6 +58,10 @@
         "-501": {
             "message": "Unknown error has occurred. Please try again.",
             "title": "Unknown Error"
+        },
+        "-154": {
+            "message": "Invalid linking code. Please enter valid linking code.",
+            "title": "Type Error"
         },
         "-511": {
             "message": "__robotName__ is no longer connected.",

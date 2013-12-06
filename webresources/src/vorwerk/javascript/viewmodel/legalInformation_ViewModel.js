@@ -104,6 +104,32 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
       
     }
     
+    this.backgroundlogin = function() {
+        // TODO: add validation check for entries
+        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.login, [user.email, that.bundle.password], {});
+        tDeffer.done(that.sucessLogin);
+        tDeffer.fail(that.errorLogin);
+    };
+
+    this.sucessLogin = function(result, notifyOptions) {
+        that.conditions['robotSelection'] = true;
+        console.log("result: " + result);
+        parent.communicationWrapper.setDataValue("user", result);
+        
+        // register for push notifications (from server)
+        parent.notification.registerForRobotMessages();
+        
+        // register for notifications from robot if app is running
+        parent.notification.registerForRobotNotifications();
+        
+        parent.communicationWrapper.saveToLocalStorage('username', user.email);
+        parent.flowNavigator.next(robotScreenCaller.LOGIN);
+    };
+
+    this.errorLogin = function(error) {
+        console.log("Error: " + error.errorMessage);
+    };
+    
     this.navigate = function(){
         if(that.isLegalinfoEdit()) { 
             if (typeof that.robot().robotId == 'undefined') {
@@ -112,7 +138,8 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
                 that.conditions['userSettings'] = true;
             }
         } else {
-            that.conditions['start'] = true;
+            that.backgroundlogin();
+            //that.conditions['start'] = true;
         } 
         parent.flowNavigator.next(robotScreenCaller.REGISTER);
     }

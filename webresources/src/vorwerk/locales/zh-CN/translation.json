@@ -31,6 +31,10 @@
             "message": "您的email地址未被注册过。",
             "title": "输入错误"
         },
+        "-509": {
+            "message": "TBD",
+            "title": "TBD"
+        },
         "-114": {
             "message": "该机器人ID未被注册过。",
             "title": "输入错误"
@@ -54,6 +58,10 @@
         "-501": {
             "message": "发生未知错误。请再次尝试。",
             "title": "未知错误"
+        },
+        "-154": {
+            "message": "TBD",
+            "title": "输入错误"
         },
         "-511": {
             "message": "__robotName__ 无法被连接。",
