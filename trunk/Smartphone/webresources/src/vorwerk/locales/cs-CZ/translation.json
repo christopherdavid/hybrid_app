@@ -31,6 +31,10 @@
             "message": "Váš e-mail není registrován.",
             "title": "Chyba"
         },
+        "-509": {
+            "message": "TBD",
+            "title": "TBD"
+        },
         "-114": {
             "message": "Tento robot není registrován.",
             "title": "Chyba"
@@ -54,6 +58,10 @@
         "-501": {
             "message": "Došlo k neznámé chybě. Zkuste to prosím znovu.",
             "title": "Neznámá chyba"
+        },
+        "-154": {
+            "message": "TBD",
+            "title": "Chyba"
         },
         "-511": {
             "message": "__robotName__ již není připojen.",

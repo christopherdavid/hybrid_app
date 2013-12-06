@@ -31,6 +31,10 @@
             "message": "Su e-mail no está registrado.",
             "title": "Error"
         },
+        "-509": {
+            "message": "TBD",
+            "title": "TBD"
+        },
         "-114": {
             "message": "Este robot no está registrado.",
             "title": "Error"
@@ -54,6 +58,10 @@
         "-501": {
             "message": "Se ha detectado un error desconocido. Inténtelo de nuevo.",
             "title": "Error desconocido"
+        },
+        "-154": {
+            "message": "TBD",
+            "title": "Error"
         },
         "-511": {
             "message": "__robotName__ ya no está conectado.",

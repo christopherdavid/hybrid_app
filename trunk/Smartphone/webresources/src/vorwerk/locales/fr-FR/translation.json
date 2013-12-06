@@ -31,6 +31,10 @@
             "message": "Votre adresse e-mail n'est pas enregistrée",
             "title": "Type d'erreur"
         },
+        "-509": {
+            "message": "TBD",
+            "title": "TBD"
+        },
         "-114": {
             "message": "L'identifiant du robot n'est pas enregistré",
             "title": "Type d'erreur"
@@ -54,6 +58,10 @@
         "-501": {
             "message": "Une erreur inconnue est survenue, merci de réessayer.",
             "title": "Erreur inconnue"
+        },
+        "-154": {
+            "message": "TBD",
+            "title": "Type d'erreur"
         },
         "-511": {
             "message": "__robotName__ n'est plus connecté",

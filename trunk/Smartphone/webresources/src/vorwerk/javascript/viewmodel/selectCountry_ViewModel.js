@@ -85,7 +85,7 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
     this.next = function() {
         event.stopPropagation();
         that.conditions['valid'] = true;
-        parent.flowNavigator.next({"country":that.selectedCountry(),"userlogin":that.bundle.userlogin});
+        parent.flowNavigator.next({"country":that.selectedCountry(),"userlogin":that.bundle.userlogin,"password":that.bundle.password});
     };
     
     this.deinit = function() {
