@@ -32,8 +32,8 @@
             "title": "Error"
         },
         "-509": {
-            "message": "TBD",
-            "title": "TBD"
+            "message": "This account has not been confirmed.  Please respond to the confirmation mail sent to this email address.",
+            "title": "Confirmation Error"
         },
         "-114": {
             "message": "Este robot no está registrado.",
@@ -60,8 +60,8 @@
             "title": "Error desconocido"
         },
         "-154": {
-            "message": "TBD",
-            "title": "Error"
+            "message": "Invalid linking code. Please enter valid linking code.",
+            "title": "Type Error"
         },
         "-511": {
             "message": "__robotName__ ya no está conectado.",
