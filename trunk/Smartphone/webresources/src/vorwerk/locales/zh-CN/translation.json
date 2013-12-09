@@ -32,8 +32,8 @@
             "title": "输入错误"
         },
         "-509": {
-            "message": "TBD",
-            "title": "TBD"
+            "message": "This account has not been confirmed.  Please respond to the confirmation mail sent to this email address.",
+            "title": "Confirmation Error"
         },
         "-114": {
             "message": "该机器人ID未被注册过。",
@@ -60,8 +60,8 @@
             "title": "未知错误"
         },
         "-154": {
-            "message": "TBD",
-            "title": "输入错误"
+            "message": "Invalid linking code. Please enter valid linking code.",
+            "title": "Type Error"
         },
         "-511": {
             "message": "__robotName__ 无法被连接。",

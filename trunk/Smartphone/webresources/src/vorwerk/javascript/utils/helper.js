@@ -288,8 +288,9 @@ var robotUiStateHandler = {
         if(state == ROBOT_STATE_CLEANING || state == ROBOT_STATE_RESUMED || state == ROBOT_UI_STATE_CLEANING_ALL 
             || state == ROBOT_UI_STATE_CLEANING_MANUAL || state == ROBOT_UI_STATE_CLEANING_SPOT || state == ROBOT_UI_STATE_CLEANING_TAP_MANUAL) {
             this.current().startButton(visualState[ROBOT_STATE_CLEANING]);
-        } else if(state == ROBOT_STATE_PAUSED || state == ROBOT_UI_STATE_WAIT
-            || state == ROBOT_UI_STATE_PAUSED_ALL || state == ROBOT_UI_STATE_PAUSED_MANUAL || state == ROBOT_UI_STATE_PAUSED_SPOT) {
+        } else if(state == ROBOT_STATE_PAUSED || state == ROBOT_UI_STATE_PAUSED_ALL || state == ROBOT_UI_STATE_PAUSED_MANUAL || state == ROBOT_UI_STATE_PAUSED_SPOT) {
+            this.current().startButton(visualState[ROBOT_STATE_PAUSED]);
+        } else if(state == ROBOT_UI_STATE_WAIT) {
             this.current().startButton(visualState[state]);
         } else if(state == ROBOT_UI_STATE_CONNECTING || state == ROBOT_UI_STATE_WAKEUP || state == ROBOT_UI_STATE_GETREADY) {
             this.current().startButton(visualState[ROBOT_UI_STATE_WAIT]);

@@ -32,8 +32,8 @@
             "title": "Eingabefehler"
         },
         "-509": {
-            "message": "TBD",
-            "title": "TBD"
+            "message": "This account has not been confirmed.  Please respond to the confirmation mail sent to this email address.",
+            "title": "Confirmation Error"
         },
         "-114": {
             "message": "Diese Roboter ID ist nicht registriert.",
@@ -60,8 +60,8 @@
             "title": "Unbekannter Fehler"
         },
         "-154": {
-            "message": "TBD",
-            "title": "Eingabefehler"
+            "message": "Invalid linking code. Please enter valid linking code.",
+            "title": "Type Error"
         },
         "-511": {
             "message": "__robotName__ ist nicht mehr verbunden.",
