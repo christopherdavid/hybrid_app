@@ -4295,6 +4295,7 @@ label {
   background-repeat: no-repeat;
   background-position: -90px 0;
   background-size: 120px 30px;
+  z-index: 500;
 }
 #spotSize .ui-navbar {
   float: left;
