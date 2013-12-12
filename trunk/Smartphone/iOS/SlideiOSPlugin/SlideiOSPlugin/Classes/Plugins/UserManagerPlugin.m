@@ -564,4 +564,37 @@
     [callWrapper createUser3:neatoUser callbackID:callbackId];
 }
 
+- (void)setUserAccountDetails:(CDVInvokedUrlCommand *)command
+{
+    debugLog(@"");
+    
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"setUserAccountDetails received parameters : %@",parameters);
+    
+    NSString *extraParams = [parameters objectForKey:KEY_EXTRA_PARAM];
+    NSDictionary *extraParamsDict = [AppHelper parseJSON:[extraParams dataUsingEncoding:NSUTF8StringEncoding]];
+    debugLog(@"setUserAccountDetails extra params received = %@", extraParamsDict);
+    
+    NeatoUser *neatoUser = [[NeatoUser alloc] init];
+    neatoUser.email = [parameters objectForKey:KEY_EMAIL];
+    neatoUser.userCountryCode = [extraParamsDict objectForKey:KEY_COUNTRY_CODE] ? [extraParamsDict objectForKey:KEY_COUNTRY_CODE] : nil;
+    neatoUser.optIn = [AppHelper boolValueFromString:[extraParamsDict objectForKey:KEY_OPT_IN]];
+    
+    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
+    callWrapper.delegate = self;
+
+    [callWrapper setUserAccountDetails:neatoUser authToken:[NeatoUserHelper getUsersAuthToken] callbackID:callbackId];
+}
+
 @end
+
+
+
+
+
+
+
+
+
+

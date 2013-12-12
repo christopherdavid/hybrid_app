@@ -76,4 +76,7 @@
 - (void)notificationSettingsForUserWithEmail:(NSString *)email callbackID:(NSString *)callbackId;
 - (void)turnNotification:(NeatoNotification *)notification onOffForUserWithEmail:(NSString *)email callbackID:(NSString *)callbackId;
 - (void)createUser3:(NeatoUser *)neatoUser callbackID:(NSString *)callbackId;
+- (void)setUserAccountDetails:(NeatoUser *)neatoUser authToken:(NSString *)auth_token callbackID:(NSString *)callbackId;
+
+
 @end

@@ -118,4 +118,6 @@ typedef void (^ServerHelperCompletionBlock)(id response, NSError *error);
 - (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email;
 - (void)createUser3:(NeatoUser *)neatoUser;
 - (void)dataForRequest:(NSURLRequest *)request completionBlock:(ServerHelperCompletionBlock)completionBlock;
+- (void)setUserAccountDetails:(NSString *)authToken user:(NeatoUser *)user;
+
 @end

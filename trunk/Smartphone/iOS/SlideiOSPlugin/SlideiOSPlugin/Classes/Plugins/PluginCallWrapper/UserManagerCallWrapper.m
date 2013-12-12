@@ -550,4 +550,18 @@
     manager.delegate = self;
     [manager createUser3:neatoUser];
 }
+
+- (void)setUserAccountDetails:(NeatoUser *)neatoUser authToken:(NSString *)auth_token callbackID:(NSString *)callbackId {
+    debugLog(@"");
+    self.retained_self = self;
+    self.callbackId = callbackId;
+    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+    manager.delegate = self;
+    [manager setUserAccountDetails:neatoUser authToken:auth_token];
+}
+
+
 @end
+
+
+

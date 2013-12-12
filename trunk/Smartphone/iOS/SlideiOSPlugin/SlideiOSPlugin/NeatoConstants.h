@@ -333,3 +333,5 @@
 #define NEATO_LINK_ROBOT_URL @"method=robot.link_to_robot"
 #define NEATO_CLEAR_ROBOT_DATA_URL @"method=robot.clear_robot_association"
 #define NEATO_CREATE_USER3_URL @"method=user.create3"
+#define NEATO_SET_ACCOUNT_DETAILS @"method=user.set_account_details"
+
