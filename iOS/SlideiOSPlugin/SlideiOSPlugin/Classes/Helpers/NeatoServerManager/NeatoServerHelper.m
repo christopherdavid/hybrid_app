@@ -80,6 +80,8 @@
 #define DELETE_PROFILE_DETAIL_KEY_POST_STRING @"api_key=%@&serial_number=%@&key=%@&cause_agent_id=%@&source_serial_number=%@&source_smartapp_id=%@&notification_flag=%@"
 #define CLEAR_ROBOT_DATA_POST_STRING @"api_key=%@&serial_number=%@&email=%@&is_delete=%@"
 #define CREATE_USER3_POST_STRING @"api_key=%@&name=%@&email=%@&alternate_email=%@&password=%@&account_type=%@&extra_param=%@"
+#define SET_ACCOUNT_DETAILS_POST_STRING @"api_key=%@&email=%@&auth_token=%@&country_code=%@&opt_in=%@"
+
 
 @interface NeatoServerHelper()
 
@@ -508,6 +510,23 @@
         NSError *error = [NSError errorWithDomain:SMART_APP_ERROR_DOMAIN code:200 userInfo:details];
         [self notifyRequestFailed:@selector(failedToGetRobotDetailsWihError:) withError:error];
     }
+}
+
+- (void)setUserAccountDetails:(NSString *)authToken user:(NeatoUser *)user {
+    debugLog(@"authToken = %@, user = %@", authToken, [user description]);
+    self.retained_self = self;
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_SET_ACCOUNT_DETAILS]];
+    [request setHTTPMethod:@"POST"];
+
+    [request setHTTPBody:[[NSString stringWithFormat:SET_ACCOUNT_DETAILS_POST_STRING, API_KEY, user.email, authToken, user.countryCode, [AppHelper stringFromBool:user.optIn]] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //MSM TEMP!
+    [request setValue:GET_USER_DETAILS_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
+    
+    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
+    helper.delegate = self;
+    [helper getDataForRequest:request];
 }
 
 - (void)getUserAccountDetails:(NSString *)authToken email:(NSString *)email {

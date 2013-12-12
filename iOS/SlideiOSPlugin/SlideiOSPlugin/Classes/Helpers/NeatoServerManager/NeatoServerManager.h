@@ -98,4 +98,6 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 - (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode completion:(RequestCompletionBlockDictionary)completion;
 - (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email;
 - (void)createUser3:(NeatoUser *)neatoUser;
+- (void)setUserAccountDetails:(NeatoUser *)neatoUser authToken:(NSString *)authToken;
+
 @end

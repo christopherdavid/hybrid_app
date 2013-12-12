@@ -28,4 +28,6 @@
 - (void)getNotificationSettings:(CDVInvokedUrlCommand *)command;
 - (void)tryLinkingToRobot:(CDVInvokedUrlCommand *)command;
 - (void)createUser3:(CDVInvokedUrlCommand *)command;
+- (void)setUserAccountDetails:(CDVInvokedUrlCommand *)command;
+
 @end
