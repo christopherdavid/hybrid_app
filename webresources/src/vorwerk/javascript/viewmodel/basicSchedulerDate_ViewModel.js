@@ -245,16 +245,8 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
         }
     }
     
-    this.selectCleaningMode = function(data,value) {
-        console.log("selectCleaningMode " + value)
-        that.cleaningMode(value);
-    }
-    
-    this.selectEco = function() {
-        that.cleaningMode("1");
-    }
-    this.selectNormal = function() {
-        that.cleaningMode("2");
+    this.toggleEcoMode = function() {
+        that.cleaningMode(that.cleaningMode() == "1" ? "2" : "1");
     }
     
     this.del = function() {
