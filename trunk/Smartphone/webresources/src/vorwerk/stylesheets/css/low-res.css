@@ -1219,6 +1219,9 @@ label {
   }
 }
 #statusIcon[data-status='cleaning'],
+#statusIcon[data-status='cleaning_manual'],
+#statusIcon[data-status='cleaning_all'],
+#statusIcon[data-status='cleaning_spot'],
 #statusIcon[data-status='resumed'] {
   -moz-animation-name: cleaningFrames;
   -webkit-animation-name: cleaningFrames;
@@ -3162,6 +3165,51 @@ label {
 .dayPicker li.checked .icon {
   background-position-x: -21px;
 }
+.control-button-bar-daypicker .ui-btn {
+  -webkit-border-radius: 27.5px;
+  -moz-border-radius: 27.5px;
+  border-radius: 27.5px;
+  width: 53px;
+  height: 53px;
+}
+.control-button-bar-daypicker .ui-btn.ui-btn-left {
+  margin: 0 0 12px 12px;
+}
+.control-button-bar-daypicker .ui-btn .ui-btn-inner {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  line-height: 53px;
+  padding: 0px;
+}
+.control-button-bar-daypicker .ui-btn:before {
+  -webkit-border-radius: 27.5px;
+  -moz-border-radius: 27.5px;
+  border-radius: 27.5px;
+}
+.control-button-bar-daypicker .ui-btn.btn-with-image .ui-btn-inner {
+  background-size: 110px 165px;
+  background-image: url(../../img/icons/support_icons_220x330.png);
+  background-position: 0 0;
+  top: 0;
+  height: 55px;
+  width: 55px;
+}
+.control-button-bar-daypicker .ui-btn.btn-with-image[data-image='eco'] .ui-btn-inner {
+  background-position-y: 0;
+  background-position-x: -55px;
+}
+.control-button-bar-daypicker .ui-btn.btn-with-image.ui-btn-active[data-image='eco'] .ui-btn-inner {
+  background-position-x: 0;
+}
+.control-button-bar-daypicker .ui-btn.btn-with-image.ui-disabled[data-image='eco'] {
+  background: none;
+  -moz-box-shadow: none !important;
+  -o-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  border-color: transparent;
+}
 /**
  * timepicker.less
  */
@@ -3924,6 +3972,9 @@ label {
   background-position-y: 0;
 }
 .line-grid-container .first-line #statusLine #statusIcon[data-status='cleaning'],
+.line-grid-container .first-line #statusLine #statusIcon[data-status='cleaning_manual'],
+.line-grid-container .first-line #statusLine #statusIcon[data-status='cleaning_all'],
+.line-grid-container .first-line #statusLine #statusIcon[data-status='cleaning_spot'],
 .line-grid-container .first-line #statusLine #statusIcon[data-status='resumed'] {
   background-position-y: -45px;
 }

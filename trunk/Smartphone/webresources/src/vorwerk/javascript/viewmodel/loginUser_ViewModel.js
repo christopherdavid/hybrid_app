@@ -3,7 +3,8 @@ resourceHandler.registerFunction('loginUser_ViewModel.js', function(parent) {
     var that = this;
     this.conditions = {};
     this.email = ko.observable("");
-    this.password = ko.observable("");    this.showPassword = ko.observable(false);
+    this.password = ko.observable("");    this.showPassword = ko.observable(false);
+    this.emailInvalidGuid;
     this.back = function() {
         that.conditions['back'] = true;
         parent.flowNavigator.previous();
@@ -14,9 +15,15 @@ resourceHandler.registerFunction('loginUser_ViewModel.js', function(parent) {
     }, this);
     
     this.isEmailValid = ko.computed(function() {
-        if (that.email() == '')
+        if (that.email() == '') {
             return true;
-        return (that.email() != '' && parent.config.emailRegEx.test(that.email()));
+        } else {
+            if(!parent.config.emailRegEx.test(that.email())) {
+                // show notification
+                parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.email"));
+            }
+            return parent.config.emailRegEx.test(that.email());
+        }
     },this);
 
     this.passwordLost = function() {

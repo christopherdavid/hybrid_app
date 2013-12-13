@@ -1,4 +1,161 @@
 {
+    "common": {
+        "change": "Změnit",
+        "no": "Ne",
+        "menu": {
+            "schedule": "Plánovací kalendář",
+            "cleaning": "Úklid",
+            "settings": "Nastavení"
+        },
+        "next": "Next",
+        "edit": "Upravit",
+        "cancel": "Zrušit",
+        "cleaningMode": {
+            "2": "Běžný",
+            "1": "EKO"
+        },
+        "countries": {
+            "JP": "Japonsko",
+            "CZ": "Česká republika",
+            "AT": "Rakousko",
+            "FR": "Francie",
+            "0": "jiné",
+            "CH": "Švýcarsko",
+            "ES": "Španělsko",
+            "GB": "Anglie",
+            "DE": "Německo",
+            "IT": "Itálie",
+            "CN": "Čína"
+        },
+        "yes": "Ano",
+        "logout": "Odhlásit",
+        "off": "Vypnout",
+        "delete": "Smazat",
+        "on": "Zapnout",
+        "ok": "OK",
+        "day": {
+            "3": "Středa",
+            "2": "Úterý",
+            "1": "Pondělí",
+            "0": "Neděle",
+            "6": "Sobota",
+            "5": "Pátek",
+            "4": "Čtvrtek"
+        }
+    },
+    "legalInformation": {
+        "page": {
+            "information": "Rádi bychom Vás informovali o nových aktualizacích, tématech souvisejících s výrobkem a nových výrobcích. <br />Dbáme na zachování Vašeho soukromí. Souhlasíte, že společnost Vorwerk International Streckker & Co. může uložit Vaše soukromé údaje v souladu se zásadami ochrany osobních údajů EU. Vaše data nebudou poskytnuta třetím stranám mimo skupinu Vorwerk. <br />Chcete-li se odhlásit, viz spodní část tohoto e-mailu.",
+            "title": "Přejete si dostáva informace o vylepšeních a novinách svého VR200?",
+            "information_header": "Právní podmínky",
+            "subscribe": "Přihlásit",
+            "edit_done_title": "Account Modified",
+            "edit_done_message": "The user account has been updated successfully",
+            "no_subscribe": "Nepřihlašovat"
+        },
+        "navi": {"title": "Registrace"}
+    },
+    "settings": {
+        "page": {
+            "about_desc": "Informace o verzi",
+            "user_settings_desc": "Změnit heslo",
+            "user_settings": "Uživatelské nastavení",
+            "robot_management": "Správa nastavení robota",
+            "link": "Vorwerk",
+            "link_url": "http://kobold.vorwerk.cz",
+            "about": "Tiráž",
+            "link_desc": "Navštívit stránky Vorwerk",
+            "general_settings": "Obecné nastavení",
+            "general_settings_desc": "Správa oznámení robota",
+            "robot_management_desc": "Editovat nastavení robota nebo přepnout na jiného"
+        },
+        "navi": {"title": "Nastavení"}
+    },
+    "messages": {
+        "not_same_network": {
+            "message": "Musíme být připojení ke stejné síti Wi-Fi.",
+            "title": "Chyba spojení"
+        },
+        "no_wifi": {
+            "message": "Pro použití této funkce potřebuji Wi-Fi připojení. Zapněte prosím v nastavení Wi-Fi.",
+            "title": "Chyba spojení"
+        },
+        "103": {
+            "message": "<span class='font_bold'>__robotName__<\/span>: Hotovo, vracím se zpět do dobíjecí základny.",
+            "title": "Vracím se zpět do dobíjecí základny."
+        },
+        "102": {
+            "message": "<span class='font_bold'>__robotName__<\/span>: Vysypte nádobu na prach a je-li to nutné, vyčistěte také filtr.",
+            "title": "Nádoba na prach je plná."
+        },
+        "101": {
+            "message": "<span class='font_bold'>__robotName__<\/span>: Uvolněte mi prosím cestu, abych mohl pokračovat v úklidu.",
+            "title": "Uvízl jsem."
+        },
+        "no_connection": {
+            "message": "Pro použití této aplikace potřebujete být připojeni k síti. Zapněte prosím v nastavení mobilní nebo Wi-Fi síť.",
+            "title": "Chyba spojení."
+        }
+    },
+    "basicSchedulerDate": {
+        "page": {
+            "starting_time": "Začátek",
+            "cleaning_mode_title": "Nastavení úklidu",
+            "clean_every": "Uklízej vždy v\u2026",
+            "cleaning_mode": "Uklízej v EKO režimu"
+        },
+        "navi": {"title": "Funkce plánování"}
+    },
+    "robotStateCodes": {
+        "10001": "Neznámý stav",
+        "10002": "Úklid začal",
+        "10010": "Manuální úklid",
+        "10005": "Úklid skončil",
+        "10006": "Uvízlý",
+        "10003": "V klidu",
+        "10004": "Nabíjení",
+        "10009": "V dobíjecí základně",
+        "10007": "Úklid přerušen",
+        "10008": "Pokračování úklidu"
+    },
+    "dialogs": {
+        "EVENT_DELETE": {
+            "message": "Opravdu chcete zrušit naplánovaný úklid?",
+            "title": "Zrušit úklid",
+            "button_1": "Ano",
+            "button_2": "Ne"
+        },
+        "ROBOT_ADDED": {
+            "message": "Děkuji, registrace je úspěšně dokončena. <br /><\/br />Nyní mohu začít uklízet.",
+            "title": "Hotovo!",
+            "button_1": "OK"
+        },
+        "CANCEL_CLEANING": {
+            "message": "Opravdu mám ukončit probíhající úklid?",
+            "title": "Ukončit úklid?",
+            "button_1": "Ano",
+            "button_2": "Ne"
+        },
+        "ROBOT_DELETE": {
+            "message": "Chcete opravdu odebrat __robotName__?",
+            "title": "Odebrat robota?",
+            "button_1": "Ano",
+            "button_2": "Ne"
+        }
+    },
+    "loginUser": {
+        "page": {
+            "title": "Vložte prosím jméno a heslo Vašeho účtu Vorwerk",
+            "password_lost": "Zapomenuté heslo?",
+            "tap_here": "Klikněte zde.",
+            "email": "E-mail",
+            "description": "Chcete-li získat nové heslo, zadejte prosím níže svoji registrovanou e-mailovou adresu.<br />Nové heslo Vám bude odesláno neprodleně.",
+            "password_show": "Zobrazit heslo",
+            "password_reset": "Obnovit heslo",
+            "password": "Heslo"
+        },
+        "navi": {"title": "Přihlášení uživatele"}
+    },
     "cleaning": {
         "page": {
             "cleaningCategory": {
@@ -72,56 +229,9 @@
             "title": "Chyba připojení"
         }
     },
-    "robotActivationId": {
-        "page": {
-            "robotId": "Registrační číslo",
-            "wifisetup": "Zadejte prosím registrační číslo.<\/br> Naleznete je v menu robota: <span class='font_bold highlightedText'>Nastavení Wi-Fi / Registrace<\/span>"
-        },
-        "navi": {"title": "Aktivace robota"}
-    },
-    "common": {
-        "change": "Změnit",
-        "no": "Ne",
-        "menu": {
-            "schedule": "Plánovací kalendář",
-            "cleaning": "Úklid",
-            "settings": "Nastavení"
-        },
-        "next": "Next",
-        "edit": "Upravit",
-        "cancel": "Zrušit",
-        "cleaningMode": {
-            "2": "Běžný",
-            "1": "EKO"
-        },
-        "countries": {
-            "JP": "Japonsko",
-            "CZ": "Česká republika",
-            "AT": "Rakousko",
-            "FR": "Francie",
-            "0": "jiné",
-            "CH": "Švýcarsko",
-            "ES": "Španělsko",
-            "GB": "Anglie",
-            "DE": "Německo",
-            "IT": "Itálie",
-            "CN": "Čína"
-        },
-        "yes": "Ano",
-        "logout": "Odhlásit",
-        "off": "Vypnout",
-        "delete": "Smazat",
-        "on": "Zapnout",
-        "ok": "OK",
-        "day": {
-            "3": "Středa",
-            "2": "Úterý",
-            "1": "Pondělí",
-            "0": "Neděle",
-            "6": "Sobota",
-            "5": "Pátek",
-            "4": "Čtvrtek"
-        }
+    "selectCountry": {
+        "page": {"title": "Potvrďte prosím výběr země: "},
+        "navi": {"title": "Registrace"}
     },
     "communication": {
         "wait_robot": "Robot bude připraven za __wakeUp__ vteřin",
@@ -140,37 +250,16 @@
         "reset_password_done": "Tvé heslo bylo změněno.",
         "stop_drive": "Zastavuji __robotName__ \u2026"
     },
-    "selectCountry": {
-        "page": {"title": "Potvrďte prosím výběr země: "},
-        "navi": {"title": "Registrace"}
-    },
-    "legalInformation": {
+    "robotActivationId": {
         "page": {
-            "information": "Rádi bychom Vás informovali o nových aktualizacích, tématech souvisejících s výrobkem a nových výrobcích. <br />Dbáme na zachování Vašeho soukromí. Souhlasíte, že společnost Vorwerk International Streckker & Co. může uložit Vaše soukromé údaje v souladu se zásadami ochrany osobních údajů EU. Vaše data nebudou poskytnuta třetím stranám mimo skupinu Vorwerk. <br />Chcete-li se odhlásit, viz spodní část tohoto e-mailu.",
-            "title": "Přejete si dostáva informace o vylepšeních a novinách svého VR200?",
-            "information_header": "Právní podmínky",
-            "subscribe": "Přihlásit",
-            "edit_done_title": "Account Modified",
-            "edit_done_message": "The user account has been updated successfully",
-            "no_subscribe": "Nepřihlašovat"
+            "robotId": "Registrační číslo",
+            "wifisetup": "Zadejte prosím registrační číslo.<\/br> Naleznete je v menu robota: <span class='font_bold highlightedText'>Nastavení Wi-Fi / Registrace<\/span>"
         },
-        "navi": {"title": "Registrace"}
+        "navi": {"title": "Aktivace robota"}
     },
-    "settings": {
-        "page": {
-            "about_desc": "Informace o verzi",
-            "user_settings_desc": "Změnit heslo",
-            "user_settings": "Uživatelské nastavení",
-            "robot_management": "Správa nastavení robota",
-            "link": "Vorwerk",
-            "link_url": "http://kobold.vorwerk.cz",
-            "about": "Tiráž",
-            "link_desc": "Navštívit stránky Vorwerk",
-            "general_settings": "Obecné nastavení",
-            "general_settings_desc": "Správa oznámení robota",
-            "robot_management_desc": "Editovat nastavení robota nebo přepnout na jiného"
-        },
-        "navi": {"title": "Nastavení"}
+    "validation": {
+        "email": "This email address is invalid",
+        "password": "The passwords do not match."
     },
     "robotActivationName": {
         "page": {
@@ -178,13 +267,6 @@
             "id_accepted": "Vaše registrační číslo bylo přijato.<\/br><\/br>Pokud chcete, můžete dát Vašemu robotovi jméno. Robota můžete kdykoliv přejmenovat v nastavení."
         },
         "navi": {"title": "Aktivace robota"}
-    },
-    "basicScheduler": {
-        "page": {"cleaning_options": {
-            "schedule": "Pro aktivaci použijte přepínač v levé horní části.",
-            "title": "Plánovač je vypnutý."
-        }},
-        "navi": {"title": "Plánovací kalendář"}
     },
     "generalSettings": {
         "page": {
@@ -197,6 +279,13 @@
         },
         "navi": {"title": "Obecné nastavení"}
     },
+    "basicScheduler": {
+        "page": {"cleaning_options": {
+            "schedule": "Pro aktivaci použijte přepínač v levé horní části.",
+            "title": "Plánovač je vypnutý."
+        }},
+        "navi": {"title": "Plánovací kalendář"}
+    },
     "robotManagement": {
         "page": {
             "robot_change": "Přidat / změnit robota",
@@ -206,32 +295,6 @@
             "robot_type": "Typ"
         },
         "navi": {"title": "Ovládání robota"}
-    },
-    "messages": {
-        "not_same_network": {
-            "message": "Musíme být připojení ke stejné síti Wi-Fi.",
-            "title": "Chyba spojení"
-        },
-        "no_wifi": {
-            "message": "Pro použití této funkce potřebuji Wi-Fi připojení. Zapněte prosím v nastavení Wi-Fi.",
-            "title": "Chyba spojení"
-        },
-        "103": {
-            "message": "<span class='font_bold'>__robotName__<\/span>: Hotovo, vracím se zpět do dobíjecí základny.",
-            "title": "Vracím se zpět do dobíjecí základny."
-        },
-        "102": {
-            "message": "<span class='font_bold'>__robotName__<\/span>: Vysypte nádobu na prach a je-li to nutné, vyčistěte také filtr.",
-            "title": "Nádoba na prach je plná."
-        },
-        "101": {
-            "message": "<span class='font_bold'>__robotName__<\/span>: Uvolněte mi prosím cestu, abych mohl pokračovat v úklidu.",
-            "title": "Uvízl jsem."
-        },
-        "no_connection": {
-            "message": "Pro použití této aplikace potřebujete být připojeni k síti. Zapněte prosím v nastavení mobilní nebo Wi-Fi síť.",
-            "title": "Chyba spojení."
-        }
     },
     "pattern": {
         "time": "HHii",
@@ -248,14 +311,17 @@
         "register_desc": "Nemáte dosud zřízený účet?",
         "login": "Přihlašte se prosím!"
     },
-    "basicSchedulerDate": {
+    "robotSelection": {
         "page": {
-            "starting_time": "Začátek",
-            "cleaning_mode_title": "Nastavení úklidu",
-            "clean_every": "Uklízej vždy v\u2026",
-            "cleaning_mode": "Uklízej v EKO režimu"
+            "register": "Registrace proběhla úspěšně. <br />Vítejte <span class='highlightedText font_bold'>__email__<\/span>",
+            "select_robot": "Vyberte prosím svého robota:",
+            "logged_in": "Ahoj <span class='highlightedText font_bold'>__email__<\/span>.",
+            "edit_message": "Please select country and subscription option to complete your registration.",
+            "login": "Vítejte <span class='highlightedText font_bold'>__email__<\/span>!",
+            "no_robot": "Zatím nemáte registrovaného žádného robota.<br>Přidejte robota klepnutím na <span class='font_bold'>+<\/span>.",
+            "edit_title": "Registration"
         },
-        "navi": {"title": "Funkce plánování"}
+        "navi": {"title": "Výběr robota"}
     },
     "createAccount": {
         "page": {
@@ -269,18 +335,6 @@
             "country": "Select Country"
         },
         "navi": {"title": "Vytvořit uživatelský účet"}
-    },
-    "robotSelection": {
-        "page": {
-            "register": "Registrace proběhla úspěšně. <br />Vítejte <span class='highlightedText font_bold'>__email__<\/span>",
-            "select_robot": "Vyberte prosím svého robota:",
-            "logged_in": "Ahoj <span class='highlightedText font_bold'>__email__<\/span>.",
-            "edit_message": "Please select country and subscription option to complete your registration.",
-            "login": "Vítejte <span class='highlightedText font_bold'>__email__<\/span>!",
-            "no_robot": "Zatím nemáte registrovaného žádného robota.<br>Přidejte robota klepnutím na <span class='font_bold'>+<\/span>.",
-            "edit_title": "Registration"
-        },
-        "navi": {"title": "Výběr robota"}
     },
     "visualState": {
         "connecting": "Připojuji se k serveru\u2026",
@@ -317,57 +371,7 @@
         "stopped": "Zastavil jsem úklid.",
         "cleaning_all": "I'm cleaning"
     },
-    "robotStateCodes": {
-        "10001": "Neznámý stav",
-        "10002": "Úklid začal",
-        "10010": "Manuální úklid",
-        "10005": "Úklid skončil",
-        "10006": "Uvízlý",
-        "10003": "V klidu",
-        "10004": "Nabíjení",
-        "10009": "V dobíjecí základně",
-        "10007": "Úklid přerušen",
-        "10008": "Pokračování úklidu"
-    },
     "confirm": {"close_app": "Chcet applikaci skutečně ukončit?"},
-    "dialogs": {
-        "EVENT_DELETE": {
-            "message": "Opravdu chcete zrušit naplánovaný úklid?",
-            "title": "Zrušit úklid",
-            "button_1": "Ano",
-            "button_2": "Ne"
-        },
-        "ROBOT_ADDED": {
-            "message": "Děkuji, registrace je úspěšně dokončena. <br /><\/br />Nyní mohu začít uklízet.",
-            "title": "Hotovo!",
-            "button_1": "OK"
-        },
-        "CANCEL_CLEANING": {
-            "message": "Opravdu mám ukončit probíhající úklid?",
-            "title": "Ukončit úklid?",
-            "button_1": "Ano",
-            "button_2": "Ne"
-        },
-        "ROBOT_DELETE": {
-            "message": "Chcete opravdu odebrat __robotName__?",
-            "title": "Odebrat robota?",
-            "button_1": "Ano",
-            "button_2": "Ne"
-        }
-    },
-    "loginUser": {
-        "page": {
-            "title": "Vložte prosím jméno a heslo Vašeho účtu Vorwerk",
-            "password_lost": "Zapomenuté heslo?",
-            "tap_here": "Klikněte zde.",
-            "email": "E-mail",
-            "description": "Chcete-li získat nové heslo, zadejte prosím níže svoji registrovanou e-mailovou adresu.<br />Nové heslo Vám bude odesláno neprodleně.",
-            "password_show": "Zobrazit heslo",
-            "password_reset": "Obnovit heslo",
-            "password": "Heslo"
-        },
-        "navi": {"title": "Přihlášení uživatele"}
-    },
     "userSettings": {
         "page": {
             "old_password": "Staré heslo",

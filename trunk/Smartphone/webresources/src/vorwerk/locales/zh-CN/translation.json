@@ -1,4 +1,161 @@
 {
+    "common": {
+        "change": "变更",
+        "no": "no",
+        "menu": {
+            "schedule": "日程表",
+            "cleaning": "清扫中",
+            "settings": "设置"
+        },
+        "next": "Next",
+        "edit": "编辑",
+        "cancel": "取消",
+        "cleaningMode": {
+            "2": "普通",
+            "1": "节能"
+        },
+        "countries": {
+            "JP": "日本",
+            "CZ": "捷克",
+            "AT": "奥地利",
+            "FR": "法国",
+            "0": "其它",
+            "CH": "瑞士",
+            "ES": "四班呀",
+            "GB": "英国",
+            "DE": "德国",
+            "IT": "意大利",
+            "CN": "中国"
+        },
+        "yes": "yes",
+        "logout": "登出",
+        "off": "关闭",
+        "delete": "删除",
+        "on": "打开",
+        "ok": "OK",
+        "day": {
+            "3": "周三",
+            "2": "周二",
+            "1": "周一",
+            "0": "周日",
+            "6": "周六",
+            "5": "周五",
+            "4": "周四"
+        }
+    },
+    "legalInformation": {
+        "page": {
+            "information": "We wish to keep you informed about new updates, product related issues and new products.<br />We  strive to keep your privacy safe. You agree that Vorwerk International Strecker & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br />To unsubscribe, please see bottom of email.",
+            "title": "请告诉我们，你是否愿意订阅关于VR200的新闻及升级信息。",
+            "information_header": "法律信息",
+            "subscribe": "订阅",
+            "edit_done_title": "Account Modified",
+            "edit_done_message": "The user account has been updated successfully",
+            "no_subscribe": "不要订阅"
+        },
+        "navi": {"title": "注册"}
+    },
+    "settings": {
+        "page": {
+            "about_desc": "显示版本信息。",
+            "user_settings_desc": "更改密码。",
+            "user_settings": "用户设置",
+            "robot_management": "机器人管理",
+            "link": "福维克",
+            "link_url": "http://www.vorwerk.com.cn",
+            "about": "关于",
+            "link_desc": "访问福维克网站",
+            "general_settings": "通用设置",
+            "general_settings_desc": "管理机器人的通知",
+            "robot_management_desc": "编辑此机器人或切换至另一个机器人。"
+        },
+        "navi": {"title": "设置"}
+    },
+    "messages": {
+        "not_same_network": {
+            "message": "我们必须在相同网络内",
+            "title": "网络连接故障"
+        },
+        "no_wifi": {
+            "message": "你需要WIFI连接来使用该功能，请在设置内打开WIFI",
+            "title": "网络连接故障"
+        },
+        "103": {
+            "message": "<span class='font_bold'>__robotName__<\/span>:  我已完成任务，返回基座",
+            "title": "返回基座"
+        },
+        "102": {
+            "message": "<span class='font_bold'>__robotName__<\/span>: 请清空我的尘盒及滤网",
+            "title": "尘盒已满"
+        },
+        "101": {
+            "message": "<span class='font_bold'>__robotName__<\/span>: 请移除障碍物让我继续清扫",
+            "title": "我被困住了"
+        },
+        "no_connection": {
+            "message": "需要网络连接来使用本程序。请在设置内开启移动网络及WIFI。",
+            "title": "网络连接故障"
+        }
+    },
+    "basicSchedulerDate": {
+        "page": {
+            "starting_time": "开始时间",
+            "cleaning_mode_title": "清扫选项",
+            "clean_every": "每逢何时清扫",
+            "cleaning_mode": "使用经济模式清扫"
+        },
+        "navi": {"title": "规划中"}
+    },
+    "robotStateCodes": {
+        "10001": "未知状态",
+        "10002": "开始清扫",
+        "10010": "手动清扫",
+        "10005": "停止清扫",
+        "10006": "被卡住",
+        "10003": "待机",
+        "10004": "充电",
+        "10009": "在基座",
+        "10007": "暂停清扫",
+        "10008": "继续清扫"
+    },
+    "dialogs": {
+        "EVENT_DELETE": {
+            "message": "是否确定删除此预设事件？",
+            "title": "删除预设事件？",
+            "button_1": "是",
+            "button_2": "否"
+        },
+        "ROBOT_ADDED": {
+            "message": "智能机器人注册完成。<\/br><\/br>感谢您选择本产品。祝使用愉快:-)",
+            "title": "Yay!成功添加!",
+            "button_1": "OK"
+        },
+        "CANCEL_CLEANING": {
+            "message": "是否确定取消当前清扫任务？",
+            "title": "取消清扫任务？",
+            "button_1": "是",
+            "button_2": "否"
+        },
+        "ROBOT_DELETE": {
+            "message": "是否确定删除 __robotName__？",
+            "title": "删除机器人？",
+            "button_1": "是",
+            "button_2": "否"
+        }
+    },
+    "loginUser": {
+        "page": {
+            "title": "请输入福维克账户的用户名和密码。",
+            "password_lost": "遗失密码？",
+            "tap_here": "点此处。",
+            "email": "Email地址",
+            "description": "为了获取新密码请先输入你的email地址。<br>你会立刻收到一封包含有新密码的邮件。",
+            "password_show": "显示密码",
+            "password_reset": "重置密码",
+            "password": "密码"
+        },
+        "navi": {"title": "用户登录"}
+    },
     "cleaning": {
         "page": {
             "cleaningCategory": {
@@ -72,56 +229,9 @@
             "title": "连接错误"
         }
     },
-    "robotActivationId": {
-        "page": {
-            "robotId": "注册ID",
-            "wifisetup": "请输入注册ID。<\/br> 你会在机器人显示屏上看到: <span class='font_bold highlightedText'>Wifi设置 / 注册<\/span>"
-        },
-        "navi": {"title": "机器人激活"}
-    },
-    "common": {
-        "change": "变更",
-        "no": "no",
-        "menu": {
-            "schedule": "日程表",
-            "cleaning": "清扫中",
-            "settings": "设置"
-        },
-        "next": "Next",
-        "edit": "编辑",
-        "cancel": "取消",
-        "cleaningMode": {
-            "2": "普通",
-            "1": "节能"
-        },
-        "countries": {
-            "JP": "日本",
-            "CZ": "捷克",
-            "AT": "奥地利",
-            "FR": "法国",
-            "0": "其它",
-            "CH": "瑞士",
-            "ES": "四班呀",
-            "GB": "英国",
-            "DE": "德国",
-            "IT": "意大利",
-            "CN": "中国"
-        },
-        "yes": "yes",
-        "logout": "登出",
-        "off": "关闭",
-        "delete": "删除",
-        "on": "打开",
-        "ok": "OK",
-        "day": {
-            "3": "周三",
-            "2": "周二",
-            "1": "周一",
-            "0": "周日",
-            "6": "周六",
-            "5": "周五",
-            "4": "周四"
-        }
+    "selectCountry": {
+        "page": {"title": "请确认你的国家:"},
+        "navi": {"title": "注册"}
     },
     "communication": {
         "wait_robot": "机器人会在大约 __wakeUp__ 秒后醒来。",
@@ -140,37 +250,16 @@
         "reset_password_done": "你的密码已被重置。",
         "stop_drive": "正在停止 __robotName__..."
     },
-    "selectCountry": {
-        "page": {"title": "请确认你的国家:"},
-        "navi": {"title": "注册"}
-    },
-    "legalInformation": {
+    "robotActivationId": {
         "page": {
-            "information": "We wish to keep you informed about new updates, product related issues and new products.<br />We  strive to keep your privacy safe. You agree that Vorwerk International Strecker & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br />To unsubscribe, please see bottom of email.",
-            "title": "请告诉我们，你是否愿意订阅关于VR200的新闻及升级信息。",
-            "information_header": "法律信息",
-            "subscribe": "订阅",
-            "edit_done_title": "Account Modified",
-            "edit_done_message": "The user account has been updated successfully",
-            "no_subscribe": "不要订阅"
+            "robotId": "注册ID",
+            "wifisetup": "请输入注册ID。<\/br> 你会在机器人显示屏上看到: <span class='font_bold highlightedText'>Wifi设置 / 注册<\/span>"
         },
-        "navi": {"title": "注册"}
+        "navi": {"title": "机器人激活"}
     },
-    "settings": {
-        "page": {
-            "about_desc": "显示版本信息。",
-            "user_settings_desc": "更改密码。",
-            "user_settings": "用户设置",
-            "robot_management": "机器人管理",
-            "link": "福维克",
-            "link_url": "http://www.vorwerk.com.cn",
-            "about": "关于",
-            "link_desc": "访问福维克网站",
-            "general_settings": "通用设置",
-            "general_settings_desc": "管理机器人的通知",
-            "robot_management_desc": "编辑此机器人或切换至另一个机器人。"
-        },
-        "navi": {"title": "设置"}
+    "validation": {
+        "email": "This email address is invalid",
+        "password": "The passwords do not match."
     },
     "robotActivationName": {
         "page": {
@@ -178,13 +267,6 @@
             "id_accepted": "你的注册ID已被接受!<\/br><\/br>你现在可以根据喜好变更机器人名字。今后也可以在设置菜单内再次变更机器人名字。"
         },
         "navi": {"title": "机器人激活"}
-    },
-    "basicScheduler": {
-        "page": {"cleaning_options": {
-            "schedule": "请拨动左上方的滑块来开启",
-            "title": "定时清扫已关闭"
-        }},
-        "navi": {"title": "规划中"}
     },
     "generalSettings": {
         "page": {
@@ -197,6 +279,13 @@
         },
         "navi": {"title": "通用设置"}
     },
+    "basicScheduler": {
+        "page": {"cleaning_options": {
+            "schedule": "请拨动左上方的滑块来开启",
+            "title": "定时清扫已关闭"
+        }},
+        "navi": {"title": "规划中"}
+    },
     "robotManagement": {
         "page": {
             "robot_change": "添加/切换机器人",
@@ -206,32 +295,6 @@
             "robot_type": "型号"
         },
         "navi": {"title": "机器人管理"}
-    },
-    "messages": {
-        "not_same_network": {
-            "message": "我们必须在相同网络内",
-            "title": "网络连接故障"
-        },
-        "no_wifi": {
-            "message": "你需要WIFI连接来使用该功能，请在设置内打开WIFI",
-            "title": "网络连接故障"
-        },
-        "103": {
-            "message": "<span class='font_bold'>__robotName__<\/span>:  我已完成任务，返回基座",
-            "title": "返回基座"
-        },
-        "102": {
-            "message": "<span class='font_bold'>__robotName__<\/span>: 请清空我的尘盒及滤网",
-            "title": "尘盒已满"
-        },
-        "101": {
-            "message": "<span class='font_bold'>__robotName__<\/span>: 请移除障碍物让我继续清扫",
-            "title": "我被困住了"
-        },
-        "no_connection": {
-            "message": "需要网络连接来使用本程序。请在设置内开启移动网络及WIFI。",
-            "title": "网络连接故障"
-        }
     },
     "pattern": {
         "time": "HHii",
@@ -248,14 +311,17 @@
         "register_desc": "暂时还没有账号？",
         "login": "请登录"
     },
-    "basicSchedulerDate": {
+    "robotSelection": {
         "page": {
-            "starting_time": "开始时间",
-            "cleaning_mode_title": "清扫选项",
-            "clean_every": "每逢何时清扫",
-            "cleaning_mode": "使用经济模式清扫"
+            "register": "注册完成。<br>欢迎  <span class='highlightedText font_bold'>__email__<\/span>",
+            "select_robot": "请选择你的机器人:",
+            "logged_in": "你好 <span class='highlightedText font_bold'>__email__<\/span>.",
+            "edit_message": "Please select country and subscription option to complete your registration.",
+            "login": "欢迎 <span class='highlightedText font_bold'>__email__<\/span>!",
+            "no_robot": "你还未有机器人注册过。<br>请注册你的新机器人，请点<span class='font_bold'>+<\/span>.s",
+            "edit_title": "Registration"
         },
-        "navi": {"title": "规划中"}
+        "navi": {"title": "选择机器人"}
     },
     "createAccount": {
         "page": {
@@ -269,18 +335,6 @@
             "country": "Select Country"
         },
         "navi": {"title": "创建用户账号"}
-    },
-    "robotSelection": {
-        "page": {
-            "register": "注册完成。<br>欢迎  <span class='highlightedText font_bold'>__email__<\/span>",
-            "select_robot": "请选择你的机器人:",
-            "logged_in": "你好 <span class='highlightedText font_bold'>__email__<\/span>.",
-            "edit_message": "Please select country and subscription option to complete your registration.",
-            "login": "欢迎 <span class='highlightedText font_bold'>__email__<\/span>!",
-            "no_robot": "你还未有机器人注册过。<br>请注册你的新机器人，请点<span class='font_bold'>+<\/span>.s",
-            "edit_title": "Registration"
-        },
-        "navi": {"title": "选择机器人"}
     },
     "visualState": {
         "connecting": "我正在搜寻我的服务器。",
@@ -317,57 +371,7 @@
         "stopped": "我已停止清扫。",
         "cleaning_all": "I'm cleaning"
     },
-    "robotStateCodes": {
-        "10001": "未知状态",
-        "10002": "开始清扫",
-        "10010": "手动清扫",
-        "10005": "停止清扫",
-        "10006": "被卡住",
-        "10003": "待机",
-        "10004": "充电",
-        "10009": "在基座",
-        "10007": "暂停清扫",
-        "10008": "继续清扫"
-    },
     "confirm": {"close_app": "是否确定关闭该程序？"},
-    "dialogs": {
-        "EVENT_DELETE": {
-            "message": "是否确定删除此预设事件？",
-            "title": "删除预设事件？",
-            "button_1": "是",
-            "button_2": "否"
-        },
-        "ROBOT_ADDED": {
-            "message": "智能机器人注册完成。<\/br><\/br>感谢您选择本产品。祝使用愉快:-)",
-            "title": "Yay!成功添加!",
-            "button_1": "OK"
-        },
-        "CANCEL_CLEANING": {
-            "message": "是否确定取消当前清扫任务？",
-            "title": "取消清扫任务？",
-            "button_1": "是",
-            "button_2": "否"
-        },
-        "ROBOT_DELETE": {
-            "message": "是否确定删除 __robotName__？",
-            "title": "删除机器人？",
-            "button_1": "是",
-            "button_2": "否"
-        }
-    },
-    "loginUser": {
-        "page": {
-            "title": "请输入福维克账户的用户名和密码。",
-            "password_lost": "遗失密码？",
-            "tap_here": "点此处。",
-            "email": "Email地址",
-            "description": "为了获取新密码请先输入你的email地址。<br>你会立刻收到一封包含有新密码的邮件。",
-            "password_show": "显示密码",
-            "password_reset": "重置密码",
-            "password": "密码"
-        },
-        "navi": {"title": "用户登录"}
-    },
     "userSettings": {
         "page": {
             "old_password": "旧密码",
