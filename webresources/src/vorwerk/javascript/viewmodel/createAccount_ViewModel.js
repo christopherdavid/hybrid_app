@@ -54,7 +54,7 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
         parent.communicationWrapper.setDataValue("user", result);
         var translatedTitle = $.i18n.t("createAccount.page.registration_done_title");
         var translatedText = $.i18n.t("createAccount.page.registration_done_message", {email:that.email()});
-        parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.next"), "callback":function(e){ parent.notification.closeDialog(); parent.flowNavigator.next({"userlogin":false,"password":that.password()});}}]);
+        parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); parent.flowNavigator.next({"userlogin":false,"password":that.password()});}}]);
     }
 
     this.errorRegister = function(error) {

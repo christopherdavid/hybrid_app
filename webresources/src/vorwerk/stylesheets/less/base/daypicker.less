@@ -50,3 +50,55 @@
         }
     }
 }
+
+.control-button-bar-daypicker{
+    .ui-btn {
+        .border-radius(@cleaning_control_button_size/2);
+        width: @cleaning_control_button_size - @button_border*2;
+        height:@cleaning_control_button_size - @button_border*2;
+     
+        &.ui-btn-left {
+            margin:0 0 @cleaning_control_button_space @cleaning_control_button_space;
+        }
+        
+        .ui-btn-inner {
+            .border-radius(0);
+            line-height:@cleaning_control_button_size - @button_border*2;
+            padding:0px;
+        }
+                      
+        &:before {
+            .border-radius(@cleaning_control_button_size/2);
+        }
+        
+        &.btn-with-image {
+            .ui-btn-inner {
+                background-size: @cleaning_control_button_icon_size;
+                background-image: url(../../img/icons/support_icons_220x330.png);
+                background-position:0 0;
+                top:0;
+                height:@cleaning_control_button_size;
+                width:@cleaning_control_button_size;
+            }
+            
+            &[data-image='eco'] .ui-btn-inner {
+                background-position-y:0;
+                background-position-x:-@cleaning_control_button_size;
+            }
+            
+            &.ui-btn-active {
+                &[data-image='eco'] .ui-btn-inner {
+                    background-position-x:0;
+                }
+            }
+             
+            &.ui-disabled { 
+                &[data-image='eco'] {
+                     background:none;
+                     .box-shadow-none()!important;
+                      border-color: transparent;
+               }
+           }
+        }     
+    }
+}
