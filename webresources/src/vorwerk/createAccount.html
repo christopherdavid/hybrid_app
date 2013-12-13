@@ -25,16 +25,16 @@
             </div>
             <div class="line">
                 <input type="password" data-i18n="createAccount.page.password" 
-                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'afterkeydown', jqmInputVisible:!showPassword()"/>
+                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'onblur', jqmInputVisible:!showPassword()"/>
                 <input type="text" data-i18n="createAccount.page.password" 
                     data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'onblur',  jqmInputVisible:showPassword()"/>
             </div>
             <div class="line">
                 <input type="password" data-i18n="createAccount.page.password_verify" 
-                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', jqmInputCSS: {invalid: passwordValid},  jqmInputVisible:!showPassword()"/>
+                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', jqmInputCSS: {invalid: !isPasswordVerified()},  jqmInputVisible:!showPassword(), event:{ blur: verifyPassword}"/>
                 
                 <input type="text" data-i18n="createAccount.page.password_verify" 
-                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', jqmInputCSS: {invalid: passwordValid},  jqmInputVisible:showPassword()"/>
+                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'afterkeydown', jqmInputCSS: {invalid: !isPasswordVerified()},  jqmInputVisible:showPassword(), event:{ blur: verifyPassword}"/>
             </div>
             <div class="line">
                 <input type="checkbox" name="togglePassword" id="togglePassword" class="custom" data-bind="checked: showPassword" data-theme="b" />

@@ -43,7 +43,8 @@
                 &[data-status='awake'] {
                     background-position-y:0;
                 }
-                &[data-status='cleaning'], &[data-status='resumed'] {
+                &[data-status='cleaning'], &[data-status='cleaning_manual'],&[data-status='cleaning_all'], 
+                &[data-status='cleaning_spot'], &[data-status='resumed']  {
                     background-position-y:-@cleaning_status_icon_height;
                 }
                 &[data-status='error'] {

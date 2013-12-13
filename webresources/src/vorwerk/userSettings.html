@@ -103,10 +103,10 @@
                 <div class="line">
                     <input type="password"
                         data-i18n="userSettings.page.new_password_verify" 
-                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', jqmInputVisible: !showPassword(), jqmInputCSS: {invalid: passwordValid}"/>
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', jqmInputVisible: !showPassword(), jqmInputCSS: {invalid: !isPasswordVerified()}, event:{ blur: verifyPassword}"/>
                     <input type="text"
                         data-i18n="userSettings.page.new_password_verify" 
-                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', jqmInputVisible: showPassword(), jqmInputCSS: {invalid: passwordValid}"/>
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', jqmInputVisible: showPassword(), jqmInputCSS: {invalid: !isPasswordVerified()}, event:{ blur: verifyPassword}"/>
                 </div>
                 <div class="line">
                     <input type="checkbox" name="togglePassword" id="togglePassword" data-theme="b" class="custom" data-bind="checked: showPassword" />

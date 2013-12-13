@@ -167,7 +167,8 @@
 
 
 #statusIcon {
-  &[data-status='cleaning'], &[data-status='resumed'] {
+  &[data-status='cleaning'], &[data-status='cleaning_manual'],&[data-status='cleaning_all'], 
+  &[data-status='cleaning_spot'], &[data-status='resumed'] {
       .animation(cleaningFrames, 1.4s, steps(1, end), 0.2s, infinite);
       .animation-play-state(running);
   }

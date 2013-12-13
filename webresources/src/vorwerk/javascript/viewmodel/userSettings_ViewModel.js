@@ -20,8 +20,15 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     this.countries = ko.observableArray([]);
     var countriesRendered = false;
     
+    this.isPasswordVerified = ko.observable(true);
     
-    var PASSWORD_LENGTH = 6;
+    this.verifyPassword = function() {
+        if(that.newPasswordRepeat() != that.newPassword()) {
+            // show notification
+            parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.password"));
+            that.isPasswordVerified(false);
+        }
+    }
 
     
     this.passwordValid = ko.computed(function() {
@@ -36,16 +43,16 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
         return that.newPassword().length != '' &&  that.oldPassword().length != '' && isPasswordValid();
     }
     
-    function isPasswordValid() {
-        if (that.newPasswordRepeat() == '')
-            return true;
-        return (that.newPasswordRepeat() == that.newPassword() && isPasswordComplex());
-    }
     
-    function isPasswordComplex() {
-        // if (that.newPassword() == '')
-            // return true;
-        // return (that.newPassword().length >= PASSWORD_LENGTH);        return true;
+    function isPasswordValid() {
+        if (that.newPasswordRepeat() == '') {
+            return true;
+        } else {
+            if(that.newPasswordRepeat() == that.newPassword()) {
+                that.isPasswordVerified(true);
+            }
+            return (that.newPasswordRepeat() == that.newPassword());
+        }
     }
     
     this.init = function() {

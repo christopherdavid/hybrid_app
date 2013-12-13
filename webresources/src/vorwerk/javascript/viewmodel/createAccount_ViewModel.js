@@ -11,15 +11,9 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
         return !isEmailValid();
     }, this);
     
-    this.passwordComplex = ko.computed(function() {
-        return !isPasswordComplex();
-    }, this);
-    
     this.passwordValid = ko.computed(function() {
-        return !isPasswordValid();
+        return isPasswordValid();
     }, this);
-
-    var PASSWORD_LENGTH = 6;
 
     this.back = function() {
         that.conditions['back'] = true;
@@ -27,13 +21,23 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
     };
 
     this.isFilledOut = ko.computed(function() {
-        return (this.email() != '' && this.password() != '' && this.password_verify() != '');
+        return (this.email() != '' && this.password() != '' && this.password().length == this.password_verify().length);
     }, this);
 
     this.isValid = ko.computed(function() {
-        return isPasswordValid() && isEmailValid() && isPasswordComplex();
+        return isPasswordValid() && isEmailValid();
     }, this);
-
+    
+    this.isPasswordVerified = ko.observable(true);
+    
+    this.verifyPassword = function() {
+        if(that.password_verify() != that.password()) {
+            // show notification
+            parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.password"));
+            that.isPasswordVerified(false);
+        }
+    }
+    
     this.next = function() {
         /*that.conditions['valid'] = true;
         var userBundle = {
@@ -62,22 +66,27 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
         console.log("errorRegister: " + JSON.stringify(error));
     }
     
-    function isPasswordComplex() {
-        // if (that.password() == '')
-            // return true;
-        // return (that.password().length >= PASSWORD_LENGTH);        return true;
-    }
-
     function isPasswordValid() {
-        if (that.password_verify() == '')
+        if (that.password_verify() == '') {
             return true;
-        return (that.password_verify() == that.password() && isPasswordComplex());
+        } else {
+            if(that.password_verify() == that.password()) {
+                that.isPasswordVerified(true);
+            }
+            return (that.password_verify() == that.password());
+        }
     }
 
     function isEmailValid() {
-        if (that.email() == '')
+        if (that.email() == '') {
             return true;
-        return (that.email() != '' && parent.config.emailRegEx.test(that.email()));
+        } else {
+            if(!parent.config.emailRegEx.test(that.email())) {
+                // show notification
+                parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.email"));
+            }
+            return parent.config.emailRegEx.test(that.email());
+        }
     }
 
 })

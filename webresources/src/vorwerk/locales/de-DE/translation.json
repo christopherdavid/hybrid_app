@@ -1,4 +1,161 @@
 {
+    "common": {
+        "change": "ändern",
+        "no": "nein",
+        "menu": {
+            "schedule": "Terminkalender",
+            "cleaning": "Reinigung",
+            "settings": "Einstellungen"
+        },
+        "next": "Weiter",
+        "edit": "Bearbeiten",
+        "cancel": "löschen",
+        "cleaningMode": {
+            "2": "Normal",
+            "1": "ECO"
+        },
+        "countries": {
+            "JP": "Japan",
+            "CZ": "Tschech. Repubik",
+            "AT": "Österreich",
+            "FR": "Frankreich",
+            "0": "Sonstiges",
+            "CH": "Schweiz",
+            "ES": "Spanien",
+            "GB": "Großbritannien",
+            "DE": "Deutschland",
+            "IT": "Italien",
+            "CN": "China"
+        },
+        "yes": "ja",
+        "logout": "Logout",
+        "off": "aus",
+        "delete": "entfernen",
+        "on": "ein",
+        "ok": "ok",
+        "day": {
+            "3": "Mittwoch",
+            "2": "Dienstag",
+            "1": "Montag",
+            "0": "Sonntag",
+            "6": "Samstag",
+            "5": "Freitag",
+            "4": "Donnerstag"
+        }
+    },
+    "legalInformation": {
+        "page": {
+            "information": "We wish to keep you informed about new updates, product related issues and new products.<br />We  strive to keep your privacy safe. You agree that Vorwerk International Strecker & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br />To unsubscribe, please see bottom of email.",
+            "title": "Möchtest du Informationen über Updates und Neuigkeiten zum VR200 erhalten?",
+            "information_header": "Rechtliche Hinweise",
+            "subscribe": "Anmelden",
+            "edit_done_title": "Account Modified",
+            "edit_done_message": "The user account has been updated successfully",
+            "no_subscribe": "Nicht anmelden."
+        },
+        "navi": {"title": "Registrierung"}
+    },
+    "settings": {
+        "page": {
+            "about_desc": "Version Info anzeigen.",
+            "user_settings_desc": "Passwort ändern.",
+            "user_settings": "Benutzereinstellungen",
+            "robot_management": "Roboter Management",
+            "link": "Vorwerk",
+            "link_url": "http://www.vorwerk-kobold.de",
+            "about": "Impressum",
+            "link_desc": "Besuche die Vorwerk Homepage.",
+            "general_settings": "Allgemeine Einstellungen",
+            "general_settings_desc": "Verwalte die Roboter-Benachrichtigungen.",
+            "robot_management_desc": "Bearbeite diesen Roboter oder wähle einen anderen."
+        },
+        "navi": {"title": "Einstellungen"}
+    },
+    "messages": {
+        "not_same_network": {
+            "message": "Zum manuellen Ansteuern müssen wir uns im selben WLAN-Bereich befinden.",
+            "title": "Ich habe ein Verbindungsproblem."
+        },
+        "no_wifi": {
+            "message": "Bitte WLAN-Verbindung herstellen.",
+            "title": "Ich habe ein Verbindungsproblem."
+        },
+        "103": {
+            "message": "<span class='font_bold'>__robotName__<\/span>: Fertig! Ich fahre zur Basisstation zurück!",
+            "title": "Ich fahre zur Basisstation zurück"
+        },
+        "102": {
+            "message": "<span class='font_bold'>__robotName__<\/span>: Bitte Staubfach leeren und Filter reinigen, falls nötig.",
+            "title": "Mein Staubfach ist voll."
+        },
+        "101": {
+            "message": "<span class='font_bold'>__robotName__<\/span>: Bitte Weg freiräumen, damit ich weiter reinigen kann.",
+            "title": "Ich habe mich festgefahren."
+        },
+        "no_connection": {
+            "message": "Eine Netzwerk Verbindung wird benötigt. Bitte mobiles Netzwerk oder WLAN aktivieren.",
+            "title": "Ich habe ein Verbindungsproblem."
+        }
+    },
+    "basicSchedulerDate": {
+        "page": {
+            "starting_time": "Startzeit",
+            "cleaning_mode_title": "Reinigungs Optionen",
+            "clean_every": "Reinige jeden\u2026",
+            "cleaning_mode": "Reinige im ECO Modus"
+        },
+        "navi": {"title": "Timer Funktion"}
+    },
+    "robotStateCodes": {
+        "10001": "Status unbekannt.",
+        "10002": "Reingung gestartet.",
+        "10010": "Manuelle Reinigung",
+        "10005": "Reinigung gestoppt.",
+        "10006": "Festgefahren.",
+        "10003": "Ruhend.",
+        "10004": "Läd auf.",
+        "10009": "Angedockt.",
+        "10007": "Reinigung unterbrochen.",
+        "10008": "Reinigung fortgesetzt."
+    },
+    "dialogs": {
+        "EVENT_DELETE": {
+            "message": "Soll der Eintrag wirklich gelöscht werden?",
+            "title": "Eintrag löschen?",
+            "button_1": "Ja",
+            "button_2": "Nein"
+        },
+        "ROBOT_ADDED": {
+            "message": "Die Registrierung wurde erfolgreich abgeschlossen.Danke! Jetzt kann es losgehen!",
+            "title": "Fertig!",
+            "button_1": "OK"
+        },
+        "CANCEL_CLEANING": {
+            "message": "Soll die aktuelle Reinigung wirklich beendet werden?",
+            "title": "Reinigung beenden?",
+            "button_1": "Ja",
+            "button_2": "Nein"
+        },
+        "ROBOT_DELETE": {
+            "message": "Soll __robotName__ wirklich entfernt werden?",
+            "title": "Roboter entfernen?",
+            "button_1": "Ja",
+            "button_2": "Nein"
+        }
+    },
+    "loginUser": {
+        "page": {
+            "title": "Bitte Name und Passwort des Vorwerk Kontos eingeben.",
+            "password_lost": "Passwort vergessen?",
+            "tap_here": "Hier drücken.",
+            "email": "Email Adresse",
+            "description": "Um ein neues Passwort zu erhalten, bitte die registrierte Email Adresse eingeben.<br />Ein neues Passwort wird umgehend dorthin gesendet.",
+            "password_show": "Zeige Passwort",
+            "password_reset": "Passwort zurückgesetzt",
+            "password": "Passwort"
+        },
+        "navi": {"title": "Benutzer Login"}
+    },
     "cleaning": {
         "page": {
             "cleaningCategory": {
@@ -72,56 +229,9 @@
             "title": "Verbindungsfehler"
         }
     },
-    "robotActivationId": {
-        "page": {
-            "robotId": "Registrierungs-ID",
-            "wifisetup": "Bitte die Registrierungs-ID eingeben.<\/br> Sie wird angezeigt im Roboter Menü unter <span class='font_bold highlightedText'>Wifi Setup / Registrierung<\/span>"
-        },
-        "navi": {"title": "Roboter Aktivierung."}
-    },
-    "common": {
-        "change": "ändern",
-        "no": "nein",
-        "menu": {
-            "schedule": "Terminkalender",
-            "cleaning": "Reinigung",
-            "settings": "Einstellungen"
-        },
-        "next": "Weiter",
-        "edit": "Bearbeiten",
-        "cancel": "löschen",
-        "cleaningMode": {
-            "2": "Normal",
-            "1": "ECO"
-        },
-        "countries": {
-            "JP": "Japan",
-            "CZ": "Tschech. Repubik",
-            "AT": "Österreich",
-            "FR": "Frankreich",
-            "0": "Sonstiges",
-            "CH": "Schweiz",
-            "ES": "Spanien",
-            "GB": "Großbritannien",
-            "DE": "Deutschland",
-            "IT": "Italien",
-            "CN": "China"
-        },
-        "yes": "ja",
-        "logout": "Logout",
-        "off": "aus",
-        "delete": "entfernen",
-        "on": "ein",
-        "ok": "ok",
-        "day": {
-            "3": "Mittwoch",
-            "2": "Dienstag",
-            "1": "Montag",
-            "0": "Sonntag",
-            "6": "Samstag",
-            "5": "Freitag",
-            "4": "Donnerstag"
-        }
+    "selectCountry": {
+        "page": {"title": "Bitte bestätige dein Land:"},
+        "navi": {"title": "Registrierung"}
     },
     "communication": {
         "wait_robot": "Roboter wacht in ca. __wakeUp__ Sekunden auf. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
@@ -140,37 +250,16 @@
         "reset_password_done": "Das Passwort wurde zurückgesetzt.",
         "stop_drive": "Stoppe __robotName__"
     },
-    "selectCountry": {
-        "page": {"title": "Bitte bestätige dein Land:"},
-        "navi": {"title": "Registrierung"}
-    },
-    "legalInformation": {
+    "robotActivationId": {
         "page": {
-            "information": "We wish to keep you informed about new updates, product related issues and new products.<br />We  strive to keep your privacy safe. You agree that Vorwerk International Strecker & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br />To unsubscribe, please see bottom of email.",
-            "title": "Möchtest du Informationen über Updates und Neuigkeiten zum VR200 erhalten?",
-            "information_header": "Rechtliche Hinweise",
-            "subscribe": "Anmelden",
-            "edit_done_title": "Account Modified",
-            "edit_done_message": "The user account has been updated successfully",
-            "no_subscribe": "Nicht anmelden."
+            "robotId": "Registrierungs-ID",
+            "wifisetup": "Bitte die Registrierungs-ID eingeben.<\/br> Sie wird angezeigt im Roboter Menü unter <span class='font_bold highlightedText'>Wifi Setup / Registrierung<\/span>"
         },
-        "navi": {"title": "Registrierung"}
+        "navi": {"title": "Roboter Aktivierung."}
     },
-    "settings": {
-        "page": {
-            "about_desc": "Version Info anzeigen.",
-            "user_settings_desc": "Passwort ändern.",
-            "user_settings": "Benutzereinstellungen",
-            "robot_management": "Roboter Management",
-            "link": "Vorwerk",
-            "link_url": "http://www.vorwerk-kobold.de",
-            "about": "Impressum",
-            "link_desc": "Besuche die Vorwerk Homepage.",
-            "general_settings": "Allgemeine Einstellungen",
-            "general_settings_desc": "Verwalte die Roboter-Benachrichtigungen.",
-            "robot_management_desc": "Bearbeite diesen Roboter oder wähle einen anderen."
-        },
-        "navi": {"title": "Einstellungen"}
+    "validation": {
+        "email": "This email address is invalid",
+        "password": "The passwords do not match."
     },
     "robotActivationName": {
         "page": {
@@ -178,13 +267,6 @@
             "id_accepted": "Deine Registrierungs-ID wurde akzeptiert.<\/br><\/br>Falls gewünscht, kannst du den Namen deines Roboters personalisieren. Dies kann in den Einstellungen auch wieder geändert werden."
         },
         "navi": {"title": "Aktivierung des Roboters."}
-    },
-    "basicScheduler": {
-        "page": {"cleaning_options": {
-            "schedule": "Zum Reaktivieren bitte den Schalter oben links verschieben.",
-            "title": "Timer Funktion ist inaktiv."
-        }},
-        "navi": {"title": "Timer Funktion"}
     },
     "generalSettings": {
         "page": {
@@ -197,6 +279,13 @@
         },
         "navi": {"title": "Allgemeine Einstellungen"}
     },
+    "basicScheduler": {
+        "page": {"cleaning_options": {
+            "schedule": "Zum Reaktivieren bitte den Schalter oben links verschieben.",
+            "title": "Timer Funktion ist inaktiv."
+        }},
+        "navi": {"title": "Timer Funktion"}
+    },
     "robotManagement": {
         "page": {
             "robot_change": "Roboter hinzufügen / wechseln",
@@ -206,32 +295,6 @@
             "robot_type": "Typ"
         },
         "navi": {"title": "Roboter Management"}
-    },
-    "messages": {
-        "not_same_network": {
-            "message": "Zum manuellen Ansteuern müssen wir uns im selben WLAN-Bereich befinden.",
-            "title": "Ich habe ein Verbindungsproblem."
-        },
-        "no_wifi": {
-            "message": "Bitte WLAN-Verbindung herstellen.",
-            "title": "Ich habe ein Verbindungsproblem."
-        },
-        "103": {
-            "message": "<span class='font_bold'>__robotName__<\/span>: Fertig! Ich fahre zur Basisstation zurück!",
-            "title": "Ich fahre zur Basisstation zurück"
-        },
-        "102": {
-            "message": "<span class='font_bold'>__robotName__<\/span>: Bitte Staubfach leeren und Filter reinigen, falls nötig.",
-            "title": "Mein Staubfach ist voll."
-        },
-        "101": {
-            "message": "<span class='font_bold'>__robotName__<\/span>: Bitte Weg freiräumen, damit ich weiter reinigen kann.",
-            "title": "Ich habe mich festgefahren."
-        },
-        "no_connection": {
-            "message": "Eine Netzwerk Verbindung wird benötigt. Bitte mobiles Netzwerk oder WLAN aktivieren.",
-            "title": "Ich habe ein Verbindungsproblem."
-        }
     },
     "pattern": {
         "time": "HHii",
@@ -248,14 +311,17 @@
         "register_desc": "Du hast noch kein Konto?",
         "login": "Bitte einloggen!"
     },
-    "basicSchedulerDate": {
+    "robotSelection": {
         "page": {
-            "starting_time": "Startzeit",
-            "cleaning_mode_title": "Reinigungs Optionen",
-            "clean_every": "Reinige jeden\u2026",
-            "cleaning_mode": "Reinige im ECO Modus"
+            "register": "Registrierung wurde abgeschlossen. <br>Willkommen <span class='highlightedText font_bold'>__email__<\/span>",
+            "select_robot": "Bitte Roboter auswählen:",
+            "logged_in": "Hallo <span class='highlightedText font_bold'>__email__<\/span>.",
+            "edit_message": "Please select country and subscription option to complete your registration.",
+            "login": "Willkommen <span class='highlightedText font_bold'>__email__<\/span>!",
+            "no_robot": "Du hast noch keinen Roboter registriert.<br>Bitte Roboter durch anwählen von____hinzufügen.",
+            "edit_title": "Registration"
         },
-        "navi": {"title": "Timer Funktion"}
+        "navi": {"title": "Roboter Auswahl"}
     },
     "createAccount": {
         "page": {
@@ -269,18 +335,6 @@
             "country": "Select Country"
         },
         "navi": {"title": "Benutzerkonto erstellen"}
-    },
-    "robotSelection": {
-        "page": {
-            "register": "Registrierung wurde abgeschlossen. <br>Willkommen <span class='highlightedText font_bold'>__email__<\/span>",
-            "select_robot": "Bitte Roboter auswählen:",
-            "logged_in": "Hallo <span class='highlightedText font_bold'>__email__<\/span>.",
-            "edit_message": "Please select country and subscription option to complete your registration.",
-            "login": "Willkommen <span class='highlightedText font_bold'>__email__<\/span>!",
-            "no_robot": "Du hast noch keinen Roboter registriert.<br>Bitte Roboter durch anwählen von____hinzufügen.",
-            "edit_title": "Registration"
-        },
-        "navi": {"title": "Roboter Auswahl"}
     },
     "visualState": {
         "connecting": "Ich suche nach meinem Server.",
@@ -317,57 +371,7 @@
         "stopped": "Ich habe die Reinigung gestoppt.",
         "cleaning_all": "I'm cleaning"
     },
-    "robotStateCodes": {
-        "10001": "Status unbekannt.",
-        "10002": "Reingung gestartet.",
-        "10010": "Manuelle Reinigung",
-        "10005": "Reinigung gestoppt.",
-        "10006": "Festgefahren.",
-        "10003": "Ruhend.",
-        "10004": "Läd auf.",
-        "10009": "Angedockt.",
-        "10007": "Reinigung unterbrochen.",
-        "10008": "Reinigung fortgesetzt."
-    },
     "confirm": {"close_app": "Möchtest du die App wirklich schliessen?"},
-    "dialogs": {
-        "EVENT_DELETE": {
-            "message": "Soll der Eintrag wirklich gelöscht werden?",
-            "title": "Eintrag löschen?",
-            "button_1": "Ja",
-            "button_2": "Nein"
-        },
-        "ROBOT_ADDED": {
-            "message": "Die Registrierung wurde erfolgreich abgeschlossen.Danke! Jetzt kann es losgehen!",
-            "title": "Fertig!",
-            "button_1": "OK"
-        },
-        "CANCEL_CLEANING": {
-            "message": "Soll die aktuelle Reinigung wirklich beendet werden?",
-            "title": "Reinigung beenden?",
-            "button_1": "Ja",
-            "button_2": "Nein"
-        },
-        "ROBOT_DELETE": {
-            "message": "Soll __robotName__ wirklich entfernt werden?",
-            "title": "Roboter entfernen?",
-            "button_1": "Ja",
-            "button_2": "Nein"
-        }
-    },
-    "loginUser": {
-        "page": {
-            "title": "Bitte Name und Passwort des Vorwerk Kontos eingeben.",
-            "password_lost": "Passwort vergessen?",
-            "tap_here": "Hier drücken.",
-            "email": "Email Adresse",
-            "description": "Um ein neues Passwort zu erhalten, bitte die registrierte Email Adresse eingeben.<br />Ein neues Passwort wird umgehend dorthin gesendet.",
-            "password_show": "Zeige Passwort",
-            "password_reset": "Passwort zurückgesetzt",
-            "password": "Passwort"
-        },
-        "navi": {"title": "Benutzer Login"}
-    },
     "userSettings": {
         "page": {
             "old_password": "Altes Passwort",
