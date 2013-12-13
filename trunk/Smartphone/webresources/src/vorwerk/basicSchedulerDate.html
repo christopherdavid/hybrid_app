@@ -47,17 +47,21 @@
             <div class="line">
                 <h2 data-i18n="basicSchedulerDate.page.cleaning_mode_title"
                     data-bind="translate: language">[cleaning options]</h2>
-                <p class="label" 
+                <!--<p class="label" 
                     data-i18n="basicSchedulerDate.page.cleaning_mode"
-                    data-bind="translate: language">[Mode]</p>
-                
-                <div class="right-block">
+                    data-bind="translate: language">[Mode]</p>-->
+                    
+               <!-- <div class="right-block">
                     <select name="flip-3" id="flip-3" data-role="slider" data-bind="value: cleaningMode, jqmFlipValue:cleaningMode">
                         <option value="2" data-i18n="common.no" data-bind="translate:{obs:language(), target: textTarget.SLIDER_LABEL_B}">[No]</option>
                         <option value="1" data-i18n="common.yes" data-bind="translate:{obs:language(), target: textTarget.SLIDER_LABEL_A}">[Yes]</option>
                     </select>
-                </div>
+                </div> -->
              </div>
+             <div class="control-button-bar-daypicker">
+               <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image" data-image="eco" data-inline="true"
+                            data-bind="click:toggleEcoMode, css:{'ui-btn-active':cleaningMode()=='1'? true:false}"></a>
+                    </div>
              <div class="emptyline"></div>
          </fieldset>
         
