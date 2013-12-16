@@ -114,4 +114,5 @@
 - (id)isConnectedOverTCPWithRobotId:(NSString *)robotId callbackId:(NSString *)callbackId;
 - (void)sendCommandOverTCPToRobotWithId:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params callbackId:(NSString *)callbackId;
 - (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email callbackId:(NSString *)callbackId;
+
 @end
