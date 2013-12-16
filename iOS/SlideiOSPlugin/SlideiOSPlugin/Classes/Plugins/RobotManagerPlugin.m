@@ -1176,4 +1176,25 @@
     [self sendError:error forCallbackId:command.callbackId];
 }
 
+- (void)getRobotCleaningCategory:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters %@",parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+  
+    NSDictionary *commandParams = [parameters objectForKey:KEY_COMMAND_PARAMETERS];
+    NSMutableDictionary *params = [commandParams objectForKey:KEY_PARAMS];
+    id category = [params objectForKey:KEY_CLEANING_CATEGORY];
+   
+    NSMutableDictionary *resultData = [[NSMutableDictionary alloc] init];
+                
+    [resultData setObject:category forKey:KEY_CLEANING_CATEGORY];
+    [resultData setObject:robotId forKey:KEY_ROBOT_ID];
+    
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultData];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+}
+
+
 @end

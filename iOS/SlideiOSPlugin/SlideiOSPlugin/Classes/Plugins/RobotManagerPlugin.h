@@ -60,4 +60,7 @@
 - (void)turnMotorOnOff2:(CDVInvokedUrlCommand *)command;
 - (void)clearRobotData:(CDVInvokedUrlCommand *)command;
 - (void)turnMotorOnOff:(CDVInvokedUrlCommand *)command;
+- (void)getRobotCleaningCategory:(CDVInvokedUrlCommand *)command;
+
+
 @end
