@@ -9,12 +9,9 @@ import android.content.Context;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.UserJsonData;
-import com.neatorobotics.android.slide.framework.plugins.requests.user.UserManagerRequest.UserRequestListenerWrapper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
-import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
-import com.neatorobotics.android.slide.framework.webservice.user.UserValidationHelper;
 
 public class SetUserAccountDetailsRequest extends UserManagerRequest{
 	
@@ -39,8 +36,8 @@ public class SetUserAccountDetailsRequest extends UserManagerRequest{
 			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
 					
 					JSONObject userAccountDetails = new JSONObject();
-					userAccountDetails.put(JsonMapKeys.KEY_COUNTRYCODE, CountryCode);
-					userAccountDetails.put(JsonMapKeys.KEY_OPTIN, optin);
+					userAccountDetails.put(JsonMapKeys.KEY_COUNTRY_CODE_CAMEL_CASE, CountryCode);
+					userAccountDetails.put(JsonMapKeys.KEY_OPT_IN_CAMEL_CASE, optin);
 				
 				return userAccountDetails;
 			}

@@ -47,13 +47,17 @@ public class CreateUserRequest extends UserManagerRequest {
 	}
 	
 	private void createUser3(final Context context, final UserJsonData jsonData, final String callbackId) {
-		LogHelper.logD(TAG, "createUser3 called");
+		LogHelper.logD(TAG, "Create User3 called");
 		String email = jsonData.getString(JsonMapKeys.KEY_EMAIL);
 		String alternateEmail = jsonData.getString(JsonMapKeys.KEY_ALTERNATE_EMAIL);
 		String password = jsonData.getString(JsonMapKeys.KEY_PASSWORD);
 		String name = jsonData.getString(JsonMapKeys.KEY_USER_NAME);
+		
+		// TODO: Do not use the direct json object from the js layer.
+		// Change to extract the known params and then send to server.
 		String extraParams = jsonData.getString(JsonMapKeys.KEY_EXTRA_PARAMS);
 		
+		LogHelper.log(TAG, "Extra parameters used : " + extraParams);
 		UserManager.getInstance(context).createUser3(name, email, alternateEmail, password, extraParams, new UserRequestListenerWrapper(callbackId) {
 
 			@Override
@@ -69,8 +73,15 @@ public class CreateUserRequest extends UserManagerRequest {
 					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);
 					int validationCode = UserValidationHelper.getUserValidationStatus(userItem.validation_status);
 					userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
-					String extraParam = "{\"countryCode\":\""+userItem.extra_param.country_code+"\", \"optIn\":\""+userItem.extra_param.opt_in+"\"}";
-					JSONObject jsonParam = new JSONObject(extraParam);
+					
+					JSONObject jsonParam = new JSONObject();
+					if (userItem.extra_param != null) {
+						jsonParam.put(JsonMapKeys.KEY_COUNTRY_CODE_CAMEL_CASE, userItem.extra_param.country_code);
+						jsonParam.put(JsonMapKeys.KEY_OPT_IN_CAMEL_CASE, userItem.extra_param.opt_in);
+					}
+					else {
+						LogHelper.log(TAG, "Extra parameters in the User item is null");
+					}
 					userDetails.put(JsonMapKeys.KEY_EXTRA_PARAMS, jsonParam);	
 					
 					PushNotificationUtils.registerForPushNotification(context);

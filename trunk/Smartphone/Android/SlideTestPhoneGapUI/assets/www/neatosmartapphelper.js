@@ -727,7 +727,7 @@ UserMgr.prototype.getUserDetail = function(email, callbackSuccess, callbackError
 /**
  * This API returns a JSON Object containing user details.
  * <p>
- * result is {Country_code:"Country_code", opt_In:"optin"}
+ * result is {countryCode:"countryCode", optIn:"optin"}
  * <br>where CountryCode is user selected country
  * <br>optIn is the email Subscription
  * <p>
@@ -3460,7 +3460,7 @@ var RobotPluginManager = (function() {
 		/**
 		 * This API gets the current state of the robot
 		 *  on success this API returns a JSON Object
-		 * <br>{cleaningCatageory: <1-Maual,2-All,3-Spot>,robotId:"robotId"}
+		 * <br>{cleaningCategory: <1-Maual,2-All,3-Spot>,robotId:"robotId"}
 		 * <br>robotCurrentState is an integer value of the current actual state of the robot
 		 * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
 		 * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState

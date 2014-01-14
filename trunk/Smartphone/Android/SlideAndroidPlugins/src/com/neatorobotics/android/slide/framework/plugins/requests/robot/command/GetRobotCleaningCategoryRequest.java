@@ -29,11 +29,12 @@ public class GetRobotCleaningCategoryRequest  extends RobotManagerRequest {
 		final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 		LogHelper.logD(TAG, "Params\nRobotId=" + robotId);
 		
+		// TODO: Should be retrieved from the server.
 		SettingsManager.getInstance(context).getCleaningSettings(robotId, new CleaningSettingsListener() {				
 			@Override
 			public void onSuccess(CleaningSettings cleaningSettings) {
-				LogHelper.log(TAG, "Successfully get the cleaningSettings"+ cleaningSettings.getCleaningCategory() + "Spot size :" + cleaningSettings.getSpotAreaHeight());
-				JSONObject cleaningCategoryJsonObj = getcleaningCategoryJsonObject(cleaningSettings, robotId);
+				LogHelper.log(TAG, "Successfully got the cleaningSettings"+ cleaningSettings.getCleaningCategory() + "Spot size :" + cleaningSettings.getSpotAreaHeight());
+				JSONObject cleaningCategoryJsonObj = getCleaningCategoryJsonObject(cleaningSettings, robotId);
 				if (cleaningCategoryJsonObj != null) {
 					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, cleaningCategoryJsonObj);
 					pluginResult.setKeepCallback(false);
@@ -54,7 +55,7 @@ public class GetRobotCleaningCategoryRequest  extends RobotManagerRequest {
 	}
 	
 
-	private JSONObject getcleaningCategoryJsonObject(CleaningSettings cleaningSettings, String robotId) {
+	private JSONObject getCleaningCategoryJsonObject(CleaningSettings cleaningSettings, String robotId) {
 		JSONObject cleaningCategoryJsonObj = null;
 		try {
 			LogHelper.log(TAG, "Cleaning Category from Settings "+ cleaningSettings.getCleaningCategory());

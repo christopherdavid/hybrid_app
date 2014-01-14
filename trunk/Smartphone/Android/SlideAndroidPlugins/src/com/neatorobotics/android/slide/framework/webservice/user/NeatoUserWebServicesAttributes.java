@@ -82,7 +82,6 @@ public class NeatoUserWebServicesAttributes {
 			public static final String ATTRIBUTE_VERSION = "version";
 		}
 	}
-	// Added on 10-24-13 by Neato to enhance the user settings
 	
 	public static class SetUserAccountDetails {
 		public static final String METHOD_NAME = "user.set_account_details";

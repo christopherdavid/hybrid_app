@@ -10,7 +10,6 @@ import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPack
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +18,8 @@ import android.text.TextUtils;
 
 public class PushNotificationMessageHandler {
 	
+	private static final int PUSH_NOTIFICATION_UNIQUE_ID = 0;
+
 	private static final String TAG = PushNotificationMessageHandler.class.getSimpleName();
 	
 	private static PushNotificationMessageHandler sPushNotificationMessageHandler;
@@ -26,7 +27,7 @@ public class PushNotificationMessageHandler {
 	
 	private Context mContext;
 	private PushNotificationListener mPushNotificationListener;
-	//private static int messageid = 0; 
+	
 	private static HashMap<String, Integer> sNotificationResourceIdMap = new HashMap<String, Integer>();
 	
 	static {
@@ -83,14 +84,8 @@ public class PushNotificationMessageHandler {
 				.setTicker(message).setContentIntent(pendingIntent)
 				.setAutoCancel(true);
 		
-		//TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-		// Adds the back stack for the Intent (but not the Intent itself)
-		//stackBuilder.addParentStack(ResultActivity.class);
-
 		Notification notification = builder.getNotification();
-		//notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		//messageid = Integer.parseInt(bundle.getString("time"));
-		notificationManager.notify(0, notification);
+		notificationManager.notify(PUSH_NOTIFICATION_UNIQUE_ID, notification);
 		PushNotificationUtils.setPendingPushNotification(bundle);
 	}
 
@@ -138,6 +133,14 @@ public class PushNotificationMessageHandler {
 	public void addPushNotificationListener(PushNotificationListener listener) {
 		mPushNotificationListener = listener;
 		// Send any pending notifications saved
+		showPendingPushNotification();
+	}
+
+	public void showPendingPushNotification() {
+		
+		if (mPushNotificationListener == null) {
+			return;
+		}
 		Bundle pendingNotification = PushNotificationUtils.getPendingPushNotification();
 		if (pendingNotification != null) {
 			mPushNotificationListener.onShowPushNotification(pendingNotification);
@@ -148,4 +151,13 @@ public class PushNotificationMessageHandler {
 	public void removePushNotificationListener() {
 		mPushNotificationListener = null;
 	}
+	
+	public void clearPushNotificationFromBar() {
+		NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+		if(notificationManager != null)
+		{
+			notificationManager.cancel(PUSH_NOTIFICATION_UNIQUE_ID);
+		}
+	}
+	
 }

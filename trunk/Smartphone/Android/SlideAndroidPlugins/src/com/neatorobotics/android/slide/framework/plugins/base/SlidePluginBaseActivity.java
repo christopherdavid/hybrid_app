@@ -5,19 +5,15 @@ import java.util.Observer;
 
 import org.apache.cordova.DroidGap;
 
-import android.app.NotificationManager;
-import android.content.Context;
 import android.os.Bundle;
 
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.NeatoServiceManager;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
-import com.neatorobotics.android.slide.framework.gcm.PushNotificationConstants;
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationMessageHandler;
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
-import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiverConstants;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
@@ -26,7 +22,14 @@ import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
 public class SlidePluginBaseActivity extends DroidGap implements Observer {
 
 	private static final String TAG = SlidePluginBaseActivity.class.getSimpleName();
-	private static Boolean showPendingMessage = true;
+	
+	/**
+	 * This boolean is used on the onResume call to know whether the activity is 
+	 * resumed from sleep or resumed from new creation.
+	 */
+	// TODO: We can work without this boolean flag. But there are prospective issues which
+	// which can happen. Need to look into it. For now we will keep this boolean flag as-is.
+	private static boolean mIsActivityResumedFromSleep = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -42,8 +45,8 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
 			AppUtils.createNeatoUserDeviceIdIfNotExists(this);
 			UserManager.getInstance(this).setUserAttributesOnServer(authToken, DeviceUtils.getUserAttributes(this));
 			PushNotificationUtils.registerForPushNotification(this);
-			showPendingMessage = false;
 		}
+		mIsActivityResumedFromSleep = false;
 	}
 	
 	@Override
@@ -65,30 +68,26 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
 		super.onResume();
 		UserManager.getInstance(this).addObserver(this);
 		ApplicationConfig.getInstance(getApplicationContext()).activityResumed();
-		LogHelper.logD(TAG, "onResume Called");
 		if(UserHelper.isUserLoggedIn(this)) {
-			Bundle pendingMessage = PushNotificationUtils.getPendingPushNotification();
-			//LogHelper.logD(TAG, "Pending Message"+ pendingMessage.getString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID));
-			if((pendingMessage != null)&&(showPendingMessage)){
-				LogHelper.logD(TAG, "Yes some Pending message");
-				//LogHelper.logD(TAG, "Pending Message Send"+ pendingMessage.getString(PushNotificationConstants.NOTIFICATION_ID_KEY));
-				PushNotificationMessageHandler.getInstance(this).sendForegroundNotification(getApplicationContext(), pendingMessage);
-				PushNotificationUtils.clearPendingPushNotification();
-				NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
-				if(notificationManager != null)
-				{
-					// No message stackup 
-					//LogHelper.logD(TAG, "Canceled the Pending message :"+ getIntent().getExtras().getString("time"));
-					//LogHelper.logD(TAG, "Notification id :"+ pendingMessage.getString("time"));
-					//notificationManager.cancel(Integer.parseInt(pendingMessage.getString("time")));
-					notificationManager.cancel(0);
-				}
-			}
-			else
-				LogHelper.logD(TAG, "No Pending message");
-			showPendingMessage = true;
-		}	
+			showIfPendingPushNotification();
+		}
+		mIsActivityResumedFromSleep = true;
 	}
+
+	/**
+	 * If the application is in foreground but the device goes to sleep, we send the notification to the notification bar 
+	 * as the application is in the paused state. <br>
+	 * But that is not what the requirement is, and so this fix is necessary. <br>
+	 * Once the application comes back to resume state from sleep, we check if any pending notifications are there and send 
+	 * the notification if listener is attached.
+	 */
+	private void showIfPendingPushNotification() {
+		if(mIsActivityResumedFromSleep) {
+			PushNotificationMessageHandler.getInstance(this).showPendingPushNotification();
+			PushNotificationMessageHandler.getInstance(this).clearPushNotificationFromBar();
+		}
+	}
+
 	
 	@Override
 	public void onPause() {
