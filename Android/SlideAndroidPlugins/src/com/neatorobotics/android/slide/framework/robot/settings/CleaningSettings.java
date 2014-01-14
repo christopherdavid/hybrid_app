@@ -10,7 +10,7 @@ public class CleaningSettings {
 	}
 
 	public void setSpotAreaLength(int spotAreaLength) {
-		this.mSpotAreaLength = spotAreaLength;
+		mSpotAreaLength = spotAreaLength;
 	}
 
 	public int getSpotAreaHeight() {
@@ -18,7 +18,7 @@ public class CleaningSettings {
 	}
 
 	public void setSpotAreaHeight(int spotAreaHeight) {
-		this.mSpotAreaHeight = spotAreaHeight;
+		mSpotAreaHeight = spotAreaHeight;
 	}
 	
 	public int getCleaningCategory() {
@@ -26,6 +26,6 @@ public class CleaningSettings {
 	}
 
 	public void setCleaningCategory(int CleaningCategory) {
-		this.mCleaningCategory = CleaningCategory;
+		mCleaningCategory = CleaningCategory;
 	}
 }

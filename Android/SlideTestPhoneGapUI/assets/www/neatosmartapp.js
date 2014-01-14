@@ -235,7 +235,7 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.showProgressBar();
 			
 			var passwordConfirm = document.querySelector('#regpasskeyconfirm').value;
-			var jsonParams = "{\"countryCode\":\""+option+"\", \"optIn\":\""+optIn.checked+"\"}";
+			var jsonParams = "{\"country_code\":\""+option+"\", \"opt_in\":\""+optIn.checked+"\"}";
 			neatoSmartApp.hideProgressBar();
 			UserPluginManager.createUser3(email, password, name, "", jsonParams, neatoSmartApp.successRegister, neatoSmartApp.errorRegister);
 		},
@@ -2812,7 +2812,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnPauseResumeCleaningCommand3').addEventListener('click', neatoSmartApp.pauseResumeCleaning3, true);
 			document.querySelector('#btnGoToSpotDefinitionAPIPage').addEventListener('click', neatoSmartApp.goToSpotDefinitionPage , true);
 			document.querySelector('#btnNavigateRobot').addEventListener('click', neatoSmartApp.navigateRobot, true);
-			
+			document.querySelector('#btnCleaningCategoryAPIPage').addEventListener('click', neatoSmartApp.getRobotCleaningCategory, true);
 			neatoSmartApp.populateCleaningCategoryList();
 			neatoSmartApp.populateCleaningModeList();
 			neatoSmartApp.populateNavigationControlList();
@@ -2843,7 +2843,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnPauseResumeCleaningCommand3').removeEventListener('click', neatoSmartApp.pauseResumeCleaning3, true);
 			document.querySelector('#btnGoToSpotDefinitionAPIPage').removeEventListener('click', neatoSmartApp.goToSpotDefinitionPage , true);
 			document.querySelector('#btnNavigateRobot').removeEventListener('click', neatoSmartApp.navigateRobot, true);
-			document.querySelector('#btnCleaningCategoryAPIPage').addEventListener('click', neatoSmartApp.getRobotCleaningCategory, true);
+			document.querySelector('#btnCleaningCategoryAPIPage').removeEventListener('click', neatoSmartApp.getRobotCleaningCategory, true);
 
 			// remove click handlers for the radio buttons
 			var radioCtrlCleaningModifier1x = document.querySelector('input[type="radio"][id="radioCleaningModifier1x"]');

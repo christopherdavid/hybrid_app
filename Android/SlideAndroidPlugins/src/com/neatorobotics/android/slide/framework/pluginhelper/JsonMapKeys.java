@@ -19,7 +19,16 @@ public class JsonMapKeys {
 	public static final String KEY_ALTERNATE_EMAIL = "alternate_email";
 	public static final String KEY_EXTRA_PARAMS = "extra_param";
 	public static final String KEY_VALIDATION_STATUS = "validation_status";	
+	
+	// In the code when the country code and opt in status goes VIA plugin result to 
+	// JS layer, camel case is used. While when it comes to the plugin layer from 
+	// js layer, underscore separated is used. This is quite confusing.
+	// But as changing the keys will impact the JS code in few places, keeping it as-is.
+	// We have to target making everything camel case. This will have changes in couple of view models 
+	// and neatosmartapphelper.js.
 	public static final String KEY_COUNTRYCODE = "country_code";
+	public static final String KEY_COUNTRY_CODE_CAMEL_CASE = "countryCode";
+	public static final String KEY_OPT_IN_CAMEL_CASE = "optIn";
 	public static final String KEY_OPTIN = "opt_in";
 	// Used by robot plugin
 	public static final String KEY_COMMAND_ID = "commandId";

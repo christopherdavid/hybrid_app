@@ -45,8 +45,14 @@ public class GetUserDetailsRequest extends UserManagerRequest {
 					userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);
 					int validationCode = UserValidationHelper.getUserValidationStatus(userItem.validation_status);
 					userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
-					String extraParam = "{\"countryCode\":\""+userItem.extra_param.country_code+"\", \"optIn\":\""+userItem.extra_param.opt_in+"\"}";
-					JSONObject jsonParam = new JSONObject(extraParam);
+					JSONObject jsonParam = new JSONObject();
+					if (userItem.extra_param != null) {
+						jsonParam.put(JsonMapKeys.KEY_COUNTRY_CODE_CAMEL_CASE, userItem.extra_param.country_code);
+						jsonParam.put(JsonMapKeys.KEY_OPT_IN_CAMEL_CASE, userItem.extra_param.opt_in);
+					}
+					else {
+						LogHelper.log(TAG, "Extra parameters in the User item is null");
+					}
 					userDetails.put(JsonMapKeys.KEY_EXTRA_PARAMS, jsonParam);	
 				}	
 				
