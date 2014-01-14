@@ -929,16 +929,13 @@
     [serverHelper createUser3:neatoUser];
 }
 
-- (void)setUserAccountDetails:(NeatoUser *)neatoUser authToken:(NSString *)authToken
-{
+- (void)setUserAccountDetails:(NeatoUser *)neatoUser authToken:(NSString *)authToken {
     debugLog(@"");
     self.retained_self = self;
     
     NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
     helper.delegate = self;
-    
     [helper setUserAccountDetails:authToken user:neatoUser];
-
 }
 
 @end
