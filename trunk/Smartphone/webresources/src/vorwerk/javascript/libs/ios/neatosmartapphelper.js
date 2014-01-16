@@ -167,7 +167,7 @@ var ACTION_TYPE_GET_ROBOT_CLEANING_STATE					= "getRobotCleaningState";
 
 // Debug method
 var ACTION_TYPE_DEBUG_GET_CONFIG_DETAILS 		= "debugGetConfigDetails";
-
+var ACTION_TYPE_GET_ROBOT_CLEANING_CATEGORY	= "getRobotCleaningCategory";
 //List of keys to send data:
 
 var KEY_EMAIL = 'email';
@@ -729,7 +729,7 @@ UserMgr.prototype.getUserDetail = function(email, callbackSuccess, callbackError
 /**
  * This API returns a JSON Object containing user details.
  * <p>
- * result is {CountryCode:"Country_code", optIn:"optin"}
+ * result is {countryCode:"countryCode", optIn:"optin"}
  * <br>where CountryCode is user selected country
  * <br>optIn is the email Subscription
  * <p>
@@ -2021,6 +2021,27 @@ RobotMgr.prototype.getRobotCleaningState = function(robotId, callbackSuccess, ca
 };
 
 /**
+ * This API gets the current state of the robot
+ *  on success this API returns a JSON Object
+ * <br>{cleaningCatageory: <1-Maual,2-All,3-Spot>,robotId:"robotId"}
+ * <br>robotCurrentState is an integer value of the current actual state of the robot
+ * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
+ * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
+ * <br>robotId is the serial number of the robot
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * @param robotId 			the serial number of the robot
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ */
+RobotMgr.prototype.getRobotCleaningCategory = function(robotId, callbackSuccess, callbackError) {
+	var params = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ROBOT_CLEANING_CATEGORY, [params]);
+};
+
+
+/**
  * This API clears the data on the specified robot associated with the specified user
  * <p>
  * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
@@ -2360,7 +2381,7 @@ var UserPluginManager = (function() {
 		 * @returns					JSON Object
 		 */
 		setUserAccountDetails: function(email, countryCode, optIn, callbackSuccess, callbackError) {
-			window.plugins.neatoPluginLayer.userMgr.setUserAccountDetails(email, countryCode, optIn, callbackSuccess, callbackError);
+			window.plugins.neatoPluginLayer.userMgr.setUserAccountDetails(email, countryCode, optIn,callbackSuccess, callbackError);
 		},
 		
 		/**
@@ -3452,6 +3473,25 @@ var RobotPluginManager = (function() {
 		},
 		
 		/**
+		 * This API gets the current state of the robot
+		 *  on success this API returns a JSON Object
+		 * <br>{cleaningCategory: <1-Maual,2-All,3-Spot>,robotId:"robotId"}
+		 * <br>robotCurrentState is an integer value of the current actual state of the robot
+		 * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
+		 * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
+		 * <br>robotId is the serial number of the robot
+		 * <p>
+		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+		 * @param robotId 			the serial number of the robot
+		 * @param callbackSuccess 	success callback for this API
+		 * @param callbackError 	error callback for this API
+		 */
+		
+		getRobotCleaningCategory: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotCleaningCategory(robotId, callbackSuccess, callbackError);
+		},
+		
+		/**
 		 * This API checks whether there  exists a direct-peer connection from the smartapp to robot.
 		 * If a robotId is passed, then it returns whether it is directly connected to the smartapp.
 		 * If an empty robotId is passed, it will return if any robot is directly connected.
@@ -3556,7 +3596,7 @@ var PluginManagerHelper =  (function() {
 		 *  - startTime
 		 *  - cleaningMode
 		 *  Returns: Basic Schedule JSON object
-		 *  {'day':day, 'startTime': startTime, ï¿½cleaningModeï¿½:cleaningMode}
+		 *  {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
 		 */
 		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {
