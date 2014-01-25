@@ -19,6 +19,7 @@ public class NeatoRobotDataWebServicesAttributes {
 		public static class ProfileAttributeKeys {
 			public static final String ROBOT_CURRENT_STATE 		= "robotCurrentState";
 			public static final String ROBOT_CLEANING_COMMAND 	= "cleaningCommand";
+			public static final String ROBOT_CURRENT_STATE_DETAILS = "robotCurrentStateDetails";
 			public static final String ROBOT_NAME 				= "name";
 			public static final String ROBOT_ENABLE_BASIC_SCHEDULE 	= "enable_basic_schedule";
 			public static final String ROBOT_ENABLE_ADVANCED_SCHEDULE 	= "enable_advanced_schedule";
@@ -35,6 +36,9 @@ public class NeatoRobotDataWebServicesAttributes {
 			public static final String DRIVE_AVAILABLE_STATUS				= "driveAvailableStatus";
 			public static final String ERROR_DRIVE_REASON_CODE			= "errorDriveReasonCode";
 			public static final String ROBOT_IP_ADDRESS 		= "robotIpAddress";
+			
+			public static final String ROBOT_STATE_DETAILS 		= "robotStateDetails";
+			public static final String ROBOT_CLEANING_CATEGORY 		= "robotCleaningCategory";
 		}
 
 		public static enum ProfileAttributeKeysEnum {

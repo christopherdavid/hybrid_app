@@ -2,10 +2,13 @@ package com.neatorobotics.android.slide.framework.robotdata;
 
 
 import java.util.HashMap;
+
 import android.content.Context;
 import android.text.TextUtils;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
+import com.neatorobotics.android.slide.framework.json.JsonHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.model.CleaningStateDetails;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacketUtils;
 import com.neatorobotics.android.slide.framework.robot.drive.RobotAvailabilityToDriveStatus;
@@ -63,6 +66,16 @@ public class RobotProfileDataUtils {
 			LogHelper.logD(TAG, "getBasicScheduleState, retrived ROBOT_SCHEDULE");
 		}
 		return scheduleState;
+	}
+	
+	public static int getRobotCleaningCategory(Context context, GetRobotProfileDetailsResult2 details) {
+		String cleaningStateDetails = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
+		LogHelper.log(TAG, "# Current Robot State is " + cleaningStateDetails);
+		CleaningStateDetails stateDetails = JsonHelper.objectFromJson(cleaningStateDetails, CleaningStateDetails.class);
+		if (stateDetails != null) {
+			return stateDetails.getCleaningCategory();
+		}
+		return RobotCommandPacketConstants.CLEANING_CATEGORY_ALL;
 	}
 	
 	public static boolean isScheduleUpdated(Context context, GetRobotProfileDetailsResult2 details) {
