@@ -559,13 +559,9 @@
     neatoUser.name = [parameters objectForKey:KEY_USER_NAME];
     neatoUser.account_type = ACCOUNT_TYPE_NATIVE;
     neatoUser.alternateEmail = [parameters objectForKey:KEY_ALTERNATE_EMAIL];
-    NSString *extraParams = [parameters objectForKey:KEY_EXTRA_PARAM];
-    
-    NSDictionary *extraParamsDict = [AppHelper parseJSON:[extraParams dataUsingEncoding:NSUTF8StringEncoding]];
-    debugLog(@"extra params received = %@", extraParamsDict);
-    
-    neatoUser.userCountryCode = [extraParamsDict objectForKey:@"country_code"] ? [extraParamsDict objectForKey:@"country_code"] : nil;
-    neatoUser.optIn = [AppHelper boolValueFromString:[extraParamsDict objectForKey:@"opt_in"]];
+    NSDictionary *extraParams = [parameters objectForKey:KEY_EXTRA_PARAM];
+    neatoUser.userCountryCode = [extraParams objectForKey:@"country_code"];
+    neatoUser.optIn = [AppHelper boolValueFromString:[extraParams objectForKey:@"opt_in"]];
     
     [callWrapper createUser3:neatoUser callbackID:callbackId];
 }
@@ -575,14 +571,12 @@
     
     NSString *callbackId = command.callbackId;
     NSDictionary *parameters = [command.arguments objectAtIndex:0];
-    
-    NSString *extraParams = [parameters objectForKey:KEY_EXTRA_PARAM];
-    NSDictionary *extraParamsDict = [AppHelper parseJSON:[extraParams dataUsingEncoding:NSUTF8StringEncoding]];
-    
+    debugLog(@"received parameters : %@",parameters);
+  
     NeatoUser *neatoUser = [[NeatoUser alloc] init];
     neatoUser.email = [parameters objectForKey:KEY_EMAIL];
-    neatoUser.userCountryCode = [extraParamsDict objectForKey:@"country_code"] ? [extraParamsDict objectForKey:@"country_code"] : nil;
-    neatoUser.optIn = [AppHelper boolValueFromString:[extraParamsDict objectForKey:@"opt_in"]];
+    neatoUser.userCountryCode = [parameters objectForKey:@"country_code"] ? [parameters objectForKey:@"country_code"] : nil;
+    neatoUser.optIn = [AppHelper boolValueFromString:[parameters objectForKey:@"opt_in"]];
     
     UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
     callWrapper.delegate = self;

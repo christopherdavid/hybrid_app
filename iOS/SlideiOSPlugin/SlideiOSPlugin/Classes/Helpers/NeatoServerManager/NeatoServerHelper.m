@@ -58,7 +58,7 @@
 #define UPDATE_AUTH_TOKEN_POST_STRING @"api_key=%@&auth_token=%@"
 #define GET_ASSOCIATED_ROBOTS_POST_STRING @"api_key=%@&auth_token=%@&email=%@"
 #define SET_ROBOT_PROFILE_POST_STRING @"api_key=%@&serial_number=%@&%@"
-#define ROBOT_PROFILE_DATA_FORMAT @"&profile[%@]=%@"
+#define PROFILE_DATA_FORMAT @"&profile[%@]=%@"
 #define DISSOCIATE_ALL_ROBOTS_POST_STRING @"api_key=%@&email=%@&serial_number=%@"
 #define GET_ROBOT_ONLINE_STATUS_POST_STRING @"api_key=%@&serial_number=%@"
 
@@ -80,7 +80,7 @@
 #define DELETE_PROFILE_DETAIL_KEY_POST_STRING @"api_key=%@&serial_number=%@&key=%@&cause_agent_id=%@&source_serial_number=%@&source_smartapp_id=%@&notification_flag=%@"
 #define CLEAR_ROBOT_DATA_POST_STRING @"api_key=%@&serial_number=%@&email=%@&is_delete=%@"
 #define CREATE_USER3_POST_STRING @"api_key=%@&name=%@&email=%@&alternate_email=%@&password=%@&account_type=%@&extra_param=%@"
-#define SET_ACCOUNT_DETAILS_POST_STRING @"api_key=%@&email=%@&auth_token=%@&country_code=%@&opt_in=%@"
+#define SET_ACCOUNT_DETAILS_POST_STRING @"api_key=%@&email=%@&auth_token=%@%@"
 
 
 @interface NeatoServerHelper()
@@ -89,7 +89,7 @@
 @property (nonatomic, retain) NSString *robotId;
 
 - (void)notifyRequestFailed:(SEL)selector withError:(NSError *)error;
-- (NSString *)getRobotProfileDataFromKey:(NSString *)key value:(NSString *)value;
+- (NSString *)getProfileDataFromKey:(NSString *)key value:(NSString *)value;
 - (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)email handler:(NSString *)handler;
 @end
 
@@ -518,8 +518,9 @@
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_SET_ACCOUNT_DETAILS]];
     [request setHTTPMethod:@"POST"];
-
-    [request setHTTPBody:[[NSString stringWithFormat:SET_ACCOUNT_DETAILS_POST_STRING, API_KEY, user.email, authToken, user.countryCode, [AppHelper stringFromBool:user.optIn]] dataUsingEncoding:NSUTF8StringEncoding]];
+    NSString *profileKeys = [self getProfileDataFromKey:KEY_SERVER_COUNTRY_CODE value:user.userCountryCode];
+    profileKeys = [profileKeys stringByAppendingString:[self getProfileDataFromKey:KEY_SERVER_OPT_IN value:[AppHelper stringFromBool:user.optIn]]];
+    [request setHTTPBody:[[NSString stringWithFormat:SET_ACCOUNT_DETAILS_POST_STRING, API_KEY, user.email, authToken, profileKeys] dataUsingEncoding:NSUTF8StringEncoding]];
     
     //MSM TEMP!
     [request setValue:GET_USER_DETAILS_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
@@ -569,8 +570,6 @@
     debugLog(@"status = %d", [status intValue]);
     if ([status intValue] == NEATO_STATUS_SUCCESS) {
         NSMutableDictionary *userData = [[jsonData valueForKey:NEATO_RESPONSE_RESULT] mutableCopy];
-        NSDictionary *extraParam = [userData objectForKey:NEATO_RESPONSE_EXTRA_PARAM];
-        [userData setObject:extraParam forKey:NEATO_RESPONSE_EXTRA_PARAM];
         NeatoUser *user = [[NeatoUser alloc] initWithDictionary:userData];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.delegate respondsToSelector:@selector(gotUserDetails:)])
@@ -730,8 +729,8 @@
     });
 }
 
-- (NSString *)getRobotProfileDataFromKey:(NSString *)key value:(NSString *)value {
-    return [NSString stringWithFormat:ROBOT_PROFILE_DATA_FORMAT, key, value];
+- (NSString *)getProfileDataFromKey:(NSString *)key value:(NSString *)value {
+    return [NSString stringWithFormat:PROFILE_DATA_FORMAT, key, value];
 }
 
 - (void)setRobotName2:(NSString *)robotName forRobotWithId:(NSString *)robotId forUserWithEmail:(NSString *)email {
@@ -1601,7 +1600,7 @@
     NSArray *keysArray = [profile.profileDict allKeys];
     NSMutableString *profileKeys = [[NSMutableString alloc] init];
     for (NSString *key in keysArray) {
-        NSString *profileKey = [self getRobotProfileDataFromKey:key value:[profile.profileDict valueForKey:key]];
+        NSString *profileKey = [self getProfileDataFromKey:key value:[profile.profileDict valueForKey:key]];
         [profileKeys appendString:profileKey];
     }
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_SET_ROBOT_PROFILE_DETAILS_3]];

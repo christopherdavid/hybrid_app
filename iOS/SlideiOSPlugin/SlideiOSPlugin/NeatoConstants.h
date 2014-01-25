@@ -147,7 +147,8 @@
 #define KEY_AVAILABLE_TO_DRIVE @"available_to_drive"
 #define KEY_TURN_VACUUM_ONOFF @"vacuum_onoff"
 #define KEY_TURN_WIFI_ONOFF @"wifi_onoff"
-
+#define KEY_SERVER_COUNTRY_CODE @"country_code"
+#define KEY_SERVER_OPT_IN @"opt_in"
 
 //Key Codes for profile data changes.
 #define ROBOT_CURRENT_STATE_CHANGED_CODE 4001
