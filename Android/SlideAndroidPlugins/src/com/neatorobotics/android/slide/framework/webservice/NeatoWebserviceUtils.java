@@ -165,6 +165,7 @@ public class NeatoWebserviceUtils {
 		return result;
 	}
 	
+	// TODO: Use Object mapper from JSOn Utils.
 	public static ObjectMapper getObjectMapper() {
 		return resultMapper;
 	}
