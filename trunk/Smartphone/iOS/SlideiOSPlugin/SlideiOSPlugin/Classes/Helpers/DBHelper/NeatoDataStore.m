@@ -756,7 +756,7 @@ static NeatoDataStore *sharedInstance;
             userEntity.external_social_id = user.external_social_id;
             userEntity.alternateEmail = user.alternateEmail;
             userEntity.validationStatus = user.validationStatus;
-            userEntity.userCountryCode = user.userCountryCode;
+            userEntity.userCountryCode = [user.userCountryCode isEqual:[NSNull null]] ? nil : user.userCountryCode;
             userEntity.optIn = [NSNumber numberWithBool:user.optIn];
             
             for(int i = 0; i<[user.robots count]; i++) {
