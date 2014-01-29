@@ -11,5 +11,8 @@
     <string name="notification_text_generic_message">You have a message from your robot.</string>  
     <string name="notification_text_cleaning_done">Cleaning complete.</string>
     <string name="error_robot_not_directly_connected">Robot not directly connected.</string>
-
+	<string name="notification_text_plug_cable">Plug the cable.</string>
+	<string name="notification_text_cancel_error">Robot cancel error.</string>
+	<string name="notification_text_dust_bin_missing">Dust Bin is missing.</string>
+    
 </resources>

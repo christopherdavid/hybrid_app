@@ -180,6 +180,20 @@ public class RobotHelper {
 			cleaningDoneObj.put(JsonMapKeys.KEY_NOTIFICATION_VALUE, false);
 			notificationsArray.put(cleaningDoneObj);
 			
+			JSONObject dustBinMissingObj = new JSONObject();
+			dustBinMissingObj.put(JsonMapKeys.KEY_NOTIFICATION_KEY, RobotCommandPacketConstants.NOTIFICATION_ID_DUST_BIN_MISSING);
+			dustBinMissingObj.put(JsonMapKeys.KEY_NOTIFICATION_VALUE, false);
+			notificationsArray.put(dustBinMissingObj);
+			
+			JSONObject cancelErrObj = new JSONObject();
+			cancelErrObj.put(JsonMapKeys.KEY_NOTIFICATION_KEY, RobotCommandPacketConstants.NOTIFICATION_ID_ERR_CANCEL);
+			cancelErrObj.put(JsonMapKeys.KEY_NOTIFICATION_VALUE, false);
+			notificationsArray.put(cancelErrObj);
+			
+			JSONObject plugCableObj = new JSONObject();
+			cleaningDoneObj.put(JsonMapKeys.KEY_NOTIFICATION_KEY, RobotCommandPacketConstants.NOTIFICATION_ID_PLUG_CABLE);
+			cleaningDoneObj.put(JsonMapKeys.KEY_NOTIFICATION_VALUE, false);
+			notificationsArray.put(plugCableObj);
 			
 			jsonObject.put(JsonMapKeys.KEY_NOTIFICATIONS, notificationsArray);
 		}
