@@ -2034,6 +2034,78 @@ var neatoSmartApp = (function() {
 					neatoSmartApp.turnNotificationOnOffStatusSuccess, neatoSmartApp.turnNotificationOnOffStatusError);					
 		},	
 		
+		onClickDBMNotificationON:function() {
+			var email = localStorage.getItem('email')
+			if ((email == null) || (email.length == 0)) {
+				alert("Please login");
+				return false;
+			}	
+			
+			neatoSmartApp.showProgressBar();				
+			UserPluginManager.turnNotificationOnoff(email, NOTIFICATION_DIRT_BIN_MISSING, true,
+					neatoSmartApp.turnNotificationOnOffStatusSuccess, neatoSmartApp.turnNotificationOnOffStatusError);					
+		},	
+
+		onClickDBMNotificationOFF:function() {			
+			var email = localStorage.getItem('email')
+			if ((email == null) || (email.length == 0)) {
+				alert("Please login");
+				return false;
+			}	
+			
+			neatoSmartApp.showProgressBar();				
+			UserPluginManager.turnNotificationOnoff(email, NOTIFICATION_DIRT_BIN_MISSING, false,
+					neatoSmartApp.turnNotificationOnOffStatusSuccess, neatoSmartApp.turnNotificationOnOffStatusError);					
+		},	
+		
+		onClickPCNotificationON:function() {
+			var email = localStorage.getItem('email')
+			if ((email == null) || (email.length == 0)) {
+				alert("Please login");
+				return false;
+			}	
+			
+			neatoSmartApp.showProgressBar();				
+			UserPluginManager.turnNotificationOnoff(email, NOTIFICATION_PLUG_CABLE, true,
+					neatoSmartApp.turnNotificationOnOffStatusSuccess, neatoSmartApp.turnNotificationOnOffStatusError);					
+		},	
+
+		onClickPCNotificationOFF:function() {			
+			var email = localStorage.getItem('email')
+			if ((email == null) || (email.length == 0)) {
+				alert("Please login");
+				return false;
+			}	
+			
+			neatoSmartApp.showProgressBar();				
+			UserPluginManager.turnNotificationOnoff(email, NOTIFICATION_PLUG_CABLE, false,
+					neatoSmartApp.turnNotificationOnOffStatusSuccess, neatoSmartApp.turnNotificationOnOffStatusError);					
+		},	
+		
+		onClickCENotificationON:function() {
+			var email = localStorage.getItem('email')
+			if ((email == null) || (email.length == 0)) {
+				alert("Please login");
+				return false;
+			}	
+			
+			neatoSmartApp.showProgressBar();				
+			UserPluginManager.turnNotificationOnoff(email, NOTIFICATION_ROBOT_CANCEL, true,
+					neatoSmartApp.turnNotificationOnOffStatusSuccess, neatoSmartApp.turnNotificationOnOffStatusError);					
+		},	
+
+		onClickCENotificationOFF:function() {			
+			var email = localStorage.getItem('email')
+			if ((email == null) || (email.length == 0)) {
+				alert("Please login");
+				return false;
+			}	
+			
+			neatoSmartApp.showProgressBar();				
+			UserPluginManager.turnNotificationOnoff(email, NOTIFICATION_ROBOT_CANCEL, false,
+					neatoSmartApp.turnNotificationOnOffStatusSuccess, neatoSmartApp.turnNotificationOnOffStatusError);					
+		},	
+		
 		turnNotificationOnOffStatusSuccess: function(result) {
 			var notificationId = result['key'];
 			var notificationValue = result['value'];
@@ -2060,6 +2132,30 @@ var neatoSmartApp = (function() {
 				}
 				else {
 					localStorage.setItem('isRSNotificationsON', "false");
+				}
+			}
+			if (notificationId == NOTIFICATION_DIRT_BIN_MISSING) {				
+				if (notificationValue) {
+					localStorage.setItem('isDBMNotificationsON', "true");
+				}
+				else {
+					localStorage.setItem('isDBMNotificationsON', "false");
+				}
+			}
+			if (notificationId == NOTIFICATION_PLUG_CABLE) {				
+				if (notificationValue) {
+					localStorage.setItem('isPCNotificationsON', "true");
+				}
+				else {
+					localStorage.setItem('isPCNotificationsON', "false");
+				}
+			}
+			if (notificationId == NOTIFICATION_ROBOT_CANCEL) {				
+				if (notificationValue) {
+					localStorage.setItem('isRCNotificationsON', "true");
+				}
+				else {
+					localStorage.setItem('isRCNotificationsON', "false");
 				}
 			}
 			
@@ -3248,14 +3344,29 @@ var neatoSmartApp = (function() {
 			var radioCtrlRSNotificationON = document.querySelector('input[type="radio"][id="radioRSNotificationON"]');
 			var radioCtrlRSNotificationOFF = document.querySelector('input[type="radio"][id="radioRSNotificationOFF"]');
 			
+			var radioCtrlDBMNotificationON = document.querySelector('input[type="radio"][id="radioDBMNotificationON"]');
+			var radioCtrlDBMNotificationOFF = document.querySelector('input[type="radio"][id="radioDBMNotificationOFF"]');
+			var radioCtrlPCNotificationON = document.querySelector('input[type="radio"][id="radioPCNotificationON"]');
+			var radioCtrlPCNotificationOFF = document.querySelector('input[type="radio"][id="radioPCNotificationOFF"]');
+			var radioCtrlCENotificationON = document.querySelector('input[type="radio"][id="radioCENotificationON"]');
+			var radioCtrlCENotificationOFF = document.querySelector('input[type="radio"][id="radioCENotificationOFF"]');
+			
+			
 			radioCtrlDBNotificationOFF.checked = true;
 			radioCtrlCDNotificationOFF.checked = true;
 			radioCtrlRSNotificationOFF.checked = true;
+			radioCtrlDBMNotificationOFF.checked = true;
+			radioCtrlPCNotificationOFF.checked = true;
+			radioCtrlCENotificationOFF.checked = true;
 			
 			localStorage.setItem('isGlobalNotificationsON', "false");
 			localStorage.setItem('isDBNotificationsON', "false");							
 			localStorage.setItem('isCDNotificationsON', "false");				
 			localStorage.setItem('isRSNotificationsON', "false");
+			
+			localStorage.setItem('isDBMNotificationsON', "false");							
+			localStorage.setItem('isPCNotificationsON', "false");				
+			localStorage.setItem('isCENotificationsON', "false");
 			
 			// Add click handler
 			// 1. for "Dirt Bin Notification" radio controls
@@ -3268,6 +3379,15 @@ var neatoSmartApp = (function() {
 			radioCtrlRSNotificationON.addEventListener('click', neatoSmartApp.onClickRSNotificationON, true);
 			radioCtrlRSNotificationOFF.addEventListener('click', neatoSmartApp.onClickRSNotificationOFF, true);
 
+			radioCtrlDBMNotificationON.addEventListener('click', neatoSmartApp.onClickDBMNotificationON, true);
+			radioCtrlDBMNotificationOFF.addEventListener('click', neatoSmartApp.onClickDBMNotificationOFF, true);
+			// 2. for "Cleaning Done Notification" radio controls
+			radioCtrlPCNotificationON.addEventListener('click', neatoSmartApp.onClickPCNotificationON, true);
+			radioCtrlPCNotificationOFF.addEventListener('click', neatoSmartApp.onClickPCNotificationOFF, true);
+			// 3. for "Robot Stuck Notification" radio controls
+			radioCtrlCENotificationON.addEventListener('click', neatoSmartApp.onClickCENotificationON, true);
+			radioCtrlCENotificationOFF.addEventListener('click', neatoSmartApp.onClickCENotificationOFF, true);
+			
 			document.querySelector('#btnEnableGlobalNotifications').addEventListener('click', neatoSmartApp.setGlobalNotifications, true);
 			
 			neatoSmartApp.showProgressBar();
@@ -3295,6 +3415,13 @@ var neatoSmartApp = (function() {
 			var radioCtrlRSNotificationON = document.querySelector('input[type="radio"][id="radioRSNotificationON"]');
 			var radioCtrlRSNotificationOFF = document.querySelector('input[type="radio"][id="radioRSNotificationOFF"]');
 	
+			var radioCtrlDBMNotificationON = document.querySelector('input[type="radio"][id="radioDBMNotificationON"]');
+			var radioCtrlDBMNotificationOFF = document.querySelector('input[type="radio"][id="radioDBMNotificationOFF"]');
+			var radioCtrlPCNotificationON = document.querySelector('input[type="radio"][id="radioPCNotificationON"]');
+			var radioCtrlPCNotificationOFF = document.querySelector('input[type="radio"][id="radioPCNotificationOFF"]');
+			var radioCtrlCENotificationON = document.querySelector('input[type="radio"][id="radioCENotificationON"]');
+			var radioCtrlCENotificationOFF = document.querySelector('input[type="radio"][id="radioCENotificationOFF"]');
+			
 			// Set initial state
 			isNotificationsON = result['global'];			
 			if (isNotificationsON) {
@@ -3344,12 +3471,48 @@ var neatoSmartApp = (function() {
 						radioCtrlRSNotificationOFF.checked = true;				
 					}
 				}
+				
+				if (notificationId == NOTIFICATION_DIRT_BIN_MISSING)
+				{
+					isDBMNotificationsON = notificationValue;			
+					if (isDBMNotificationsON) {
+						radioCtrlDBMNotificationON.checked = true;
+					}
+					else {
+						radioCtrlDBMNotificationOFF.checked = true;				
+					}
+				}
+				
+				if (notificationId == NOTIFICATION_PLUG_CABLE)
+				{
+					isPCNotificationsON = notificationValue;			
+					if (isPCNotificationsON) {
+						radioCtrlPCNotificationON.checked = true;
+					}
+					else {
+						radioCtrlPCNotificationOFF.checked = true;				
+					}
+				}
+				
+				if (notificationId == NOTIFICATION_ROBOT_CANCEL)
+				{
+					isCENotificationsON = notificationValue;			
+					if (isCENotificationsON) {
+						radioCtrlCENotificationON.checked = true;
+					}
+					else {
+						radioCtrlCENotificationOFF.checked = true;				
+					}
+				}
 			}
 			
 			localStorage.setItem('isGlobalNotificationsON', isNotificationsON);
 			localStorage.setItem('isDBNotificationsON', isDBNotificationsON);							
 			localStorage.setItem('isCDNotificationsON', isCDNotificationsON);				
 			localStorage.setItem('isRSNotificationsON', isRSNotificationsON);
+			localStorage.setItem('isDBMNotificationsON', isDBMNotificationsON);
+			localStorage.setItem('isPCNotificationsON', isPCNotificationsON);
+			localStorage.setItem('isCENotificationsON', isCENotificationsON);
 		},
 
 		getNotificationSettingsFailure: function (error) {

@@ -41,6 +41,9 @@ public class RobotCommandPacketConstants {
 	public static final String NOTIFICATION_ID_ROBOT_STUCK 		= "101";
 	public static final String NOTIFICATION_ID_DIRT_BIN_FULL 	= "102";
 	public static final String NOTIFICATION_ID_CLEANING_DONE 	= "103";
+	public static final String NOTIFICATION_ID_PLUG_CABLE 	= "212";
+	public static final String NOTIFICATION_ID_ERR_CANCEL 	= "22000";
+	public static final String NOTIFICATION_ID_DUST_BIN_MISSING 	= "20219";
 	public static final String NOTIFICATION_ID_GENERIC 			= "999";
 	
 	// Cleaning Category

@@ -34,6 +34,9 @@ public class PushNotificationMessageHandler {
 		sNotificationResourceIdMap.put(RobotCommandPacketConstants.NOTIFICATION_ID_ROBOT_STUCK, R.string.notification_text_robot_stuck);
 		sNotificationResourceIdMap.put(RobotCommandPacketConstants.NOTIFICATION_ID_DIRT_BIN_FULL, R.string.notification_text_dirt_bag_full);
 		sNotificationResourceIdMap.put(RobotCommandPacketConstants.NOTIFICATION_ID_CLEANING_DONE, R.string.notification_text_cleaning_done);
+		sNotificationResourceIdMap.put(RobotCommandPacketConstants.NOTIFICATION_ID_DUST_BIN_MISSING, R.string.notification_text_dust_bin_missing);
+		sNotificationResourceIdMap.put(RobotCommandPacketConstants.NOTIFICATION_ID_ERR_CANCEL, R.string.notification_text_cancel_error);
+		sNotificationResourceIdMap.put(RobotCommandPacketConstants.NOTIFICATION_ID_PLUG_CABLE, R.string.notification_text_plug_cable);
 		sNotificationResourceIdMap.put(RobotCommandPacketConstants.NOTIFICATION_ID_GENERIC, R.string.notification_text_generic_message);
 	}
 	private PushNotificationMessageHandler(Context context)
@@ -107,7 +110,12 @@ public class PushNotificationMessageHandler {
 			notificationResId = R.string.notification_text_generic_message;
 		} else {
 			LogHelper.logD(TAG, "getting it from hashmap");
-			notificationResId = sNotificationResourceIdMap.get(notificationId);
+			if (sNotificationResourceIdMap.containsKey(notificationId)) {
+				notificationResId = sNotificationResourceIdMap.get(notificationId);
+			}
+			else {
+				notificationResId = R.string.notification_text_generic_message;
+			}
 			LogHelper.logD(TAG, "Resource id = " + notificationResId);
 		}
 	
