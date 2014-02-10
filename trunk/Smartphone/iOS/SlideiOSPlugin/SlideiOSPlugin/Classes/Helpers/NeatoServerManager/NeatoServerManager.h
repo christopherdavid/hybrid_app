@@ -99,5 +99,5 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 - (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email;
 - (void)createUser3:(NeatoUser *)neatoUser;
 - (void)setUserAccountDetails:(NeatoUser *)neatoUser authToken:(NSString *)authToken;
-
+- (void)cleaningCategoryForRobot:(NSString *)serialNumber completion:(RequestCompletionBlockDictionary)completion;
 @end

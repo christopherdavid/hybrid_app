@@ -25,6 +25,9 @@
 #import "NeatoRobotHelper.h"
 #import "NeatoErrorCodes.h"
 
+// Server Manager
+#import "NeatoServerManager.h"
+
 @implementation RobotManagerPlugin
 
 
@@ -1177,19 +1180,34 @@
 }
 
 - (void)getRobotCleaningCategory:(CDVInvokedUrlCommand *)command {
-    debugLog(@"getRobotCleaningCategory called.");
+    debugLog(@"");
     NSString *callbackId = command.callbackId;
     NSDictionary *parameters = [command.arguments objectAtIndex:0];
     debugLog(@"received parameters %@",parameters);
     NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
-    
-    NSMutableDictionary *resultData = [[NSMutableDictionary alloc] init];
-    [resultData setObject:[NSNumber numberWithInteger:CLEANING_CATEGORY_SPOT] forKey:KEY_CLEANING_CATEGORY];
-    [resultData setObject:robotId forKey:KEY_ROBOT_ID];
-    
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultData];
-    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
+    [serverManager cleaningCategoryForRobot:robotId
+                                 completion:^(NSDictionary *result, NSError *error) {
+                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                         if (error) {
+                                             [self sendError:error forCallbackId:command.callbackId];
+                                             return;
+                                         }
+                                         
+                                         NSMutableDictionary *resultData = [[NSMutableDictionary alloc] init];
+                                         if (result) {
+                                             [resultData setObject:result forKey:KEY_CLEANING_CATEGORY];
+                                             [resultData setObject:robotId forKey:KEY_ROBOT_ID];
+                                         } else {
+                                             // If the response does not contain cleaning category, sending CLEANING_CATEGORY_ALL by default.
+                                             [resultData setObject:[NSNumber numberWithInteger:CLEANING_CATEGORY_ALL] forKey:KEY_CLEANING_CATEGORY];
+                                             [resultData setObject:robotId forKey:KEY_ROBOT_ID];
+                                         }
+                                         
+                                         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultData];
+                                         [self writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
+                                     });
+                                 }];
 }
-
 
 @end

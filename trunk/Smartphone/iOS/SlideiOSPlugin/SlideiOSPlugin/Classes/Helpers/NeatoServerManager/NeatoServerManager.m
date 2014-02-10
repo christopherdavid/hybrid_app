@@ -20,6 +20,12 @@
 #import "GetRobotDetailsHelper.h"
 #import "LinkRobotHelper.h"
 
+// Helpers
+#import "AppSettings.h"
+
+// Constants
+#define GET_ROBOT_DETAILS_POST_STRING @"api_key=%@&serial_number=%@&key=%@"
+
 @interface NeatoServerManager()
 
 @property (nonatomic, retain) NeatoServerManager *retained_self;
@@ -936,6 +942,34 @@
     NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
     helper.delegate = self;
     [helper setUserAccountDetails:authToken user:neatoUser];
+}
+
+- (void)cleaningCategoryForRobot:(NSString *)serialNumber completion:(RequestCompletionBlockDictionary)completion {
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ROBOT_PROFILE_DETAILS_2_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_ROBOT_DETAILS_POST_STRING, API_KEY, serialNumber, KEY_ROBOT_CURRENT_STATE_DETAILS] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request completionBlock:^(id response, NSError *error) {
+        if (error) {
+            completion ? completion(nil, error) : nil;
+            return;
+        }
+        // Getting profile details from response
+        NSDictionary *profileDetails = [response objectForKey:NEATO_RESPONSE_PROFILE_DETAILS];
+        NSString *value = [[profileDetails objectForKey:NEATO_RESPONSE_CURRENT_STATE_DETAILS] objectForKey:KEY_VALUE];
+        // Get robot state params by parsing data from string for value key
+        // Get cleaning category by parsing data from string robot state params
+        NSData *jsonData = [value dataUsingEncoding:NSUTF8StringEncoding];
+        if (!jsonData) {
+            completion ? completion(nil, error) : nil;
+            return;
+        }
+        NSString *robotStateParams = [[AppHelper parseJSON:jsonData] objectForKey:NEATO_RESPONSE_ROBOT_STATE_PARAMS];
+        jsonData = [robotStateParams dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *cleaningCategory = [[AppHelper parseJSON:jsonData] objectForKey:NEATO_RESPONSE_CLEANING_CATEGORY];
+        completion ? completion(cleaningCategory, error) : nil;
+    }];
 }
 
 @end
