@@ -58,6 +58,15 @@
                 break;
             case 3:
                 notification.notificationId = NOTIFICATON_ID_CLEANING_DONE;
+                break;
+            case 4:
+                notification.notificationId = NOTIFICATION_ID_PLUG_CABLE;
+                break;
+            case 5:
+                notification.notificationId = NOTIFICATION_ID_DUSTBIN_MISSING;
+                break;
+            case 6:
+                notification.notificationId = NOTIFICATION_ID_ROBOT_CANCEL;
                 
             default:
                 break;

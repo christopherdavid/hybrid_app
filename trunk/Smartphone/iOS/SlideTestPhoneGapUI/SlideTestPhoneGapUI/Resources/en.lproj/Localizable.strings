@@ -28,4 +28,7 @@
 "MSG_DIRT_BAG_FULL_NOTIFICATION_ID" = "Dirt bag full";
 "MSG_CLEANING_DONE_NOTIFICATION_ID" = "Cleaning Complete";
 "MSG_GENERIC_NOTIFICATION_ID" = "You have a message from your Robot";
+"MSG_UI_ERR_DUST_BIN_MISSING_NOTIFICATION_ID" = "Dust bin missing";
+"MSG_UI_ERR_CANCEL_NOTIFICATION_ID" = "Robot Cancel";
+"MSG_UI_ALERT_PLUG_CABLE_NOTIFICATION_ID" = "Plug Cable";
 "VIEW" = "View";
