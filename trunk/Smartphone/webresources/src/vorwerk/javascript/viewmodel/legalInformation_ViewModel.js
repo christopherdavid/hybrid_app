@@ -6,6 +6,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     this.isLegalinfoEdit = ko.observable(false); 
     this.selectedSubscribe = ko.observable();
+    this.isAgreed = ko.observable(false);
     
     this.isValid = ko.computed(function() {
         event.stopPropagation();
@@ -21,6 +22,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
             hScroll : true,
             momentum : true
         });
+         
         
         that.isLegalinfoEdit(that.bundle.userlogin);
         $(document).one("pageshow.legal", function(e) {
@@ -28,6 +30,15 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
             $("#legalWrapper").css({
                 "top":(tempLine.offset().top + tempLine.height())
             });
+        
+        $("#privacy").click(function(){
+           that.showagreement('privacy');
+        });
+            
+        $("#terms").click(function(){
+            that.showagreement('terms');
+        });
+        
             myScroll.refresh();
         });
         
@@ -36,6 +47,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
             $("#legalWrapper").css({
                 "top":(tempLine.offset().top + tempLine.height())
             });
+        
             myScroll.refresh();
         });
         
@@ -56,6 +68,8 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         
     }
     
+  
+        
     this.deinit = function() {
         $(window).off(".legal");
         myScroll.destroy();
@@ -65,10 +79,29 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         that.conditions['back'] = true;
         parent.flowNavigator.previous();
     };
-
+    
+    this.showagreement = function(doctype){
+        that.conditions = {};
+        if(doctype == 'privacy')
+            that.conditions['privacy'] = true;
+        else
+            that.conditions['terms'] = true;
+        parent.flowNavigator.next();
+    };
+    
     this.submitChange = function() {
         event.stopPropagation();
-        that.commitCountryEdit()
+        if(that.isAgreed())
+        {
+            that.commitCountryEdit();
+        }
+        else
+        {
+            var translatedTitle = $.i18n.t("legalInformation.page.notAccepted_title");
+            var translatedText = $.i18n.t("legalInformation.page.notAccepted_message", {email:that.bundle.email});
+            parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); }}]);
+        }    
+            
     };
 
     this.successRegister = function(result) {

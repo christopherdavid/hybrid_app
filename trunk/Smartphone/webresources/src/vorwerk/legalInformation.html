@@ -23,14 +23,32 @@
         
         <div id="legalWrapper">
             <div id="legalScroller">
-                <fieldset>
-                    <span class="font_bold font_small" data-i18n="legalInformation.page.information_header" data-bind="translate: language">[information_header]</span>
-                    <p class="font_small" data-i18n="legalInformation.page.information" data-bind="translate: language">[information]</p>
+                 <fieldset>
+                    <span class="font_bold font_small" data-i18n="legalInformation.page.tou_pp_header" data-bind="translate: language">[information_header]</span>
+                    <p class="font_small" data-i18n="legalInformation.page.tou_pp_agreement" data-bind="translate: language">[information]</p>
                  </fieldset>
+                        
+                  <div class="line">
+                      <input type="checkbox" name="checkbox_agreement" id="checkbox_agreement" class="custom" data-bind="checked: isAgreed" data-theme="b" />
+                      <label for="checkbox_agreement" data-inline="true" data-i18n="legalInformation.page.legal_agreement" 
+                           data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[Leagal Agreement]</label>
+                  </div>
+                  
+                 <div class="line">&nbsp</div>
+                 <fieldset>
+                    <span class="font_bold font_small" data-i18n="legalInformation.page.subscribe_header" data-bind="translate: language">[information_header]</span>
+                    <p class="font_small" data-i18n="legalInformation.page.subscribe_agreement" data-bind="translate: language">[information]</p>
+                 </fieldset>
+                  <div class="line ">
+                    <input type="checkbox" name="checkbox_subscribe" id="checkbox_subscribe" class="custom" data-bind="checked: selectedSubscribe" data-theme="b" />
+                    <label for="checkbox_subscribe" data-inline="true" data-i18n="legalInformation.page.legal_agreement"
+                    data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[Leagal Agreement]</label>
+                </div>
              </div>
-         </div>
-         
-         <div class="fixed-bottom">
+          </div>
+          
+      <!--  <div class="fixed-bottom">
+       
              <fieldset data-role="controlgroup" class="radioGroup">
                 <input type="radio" name="radio-legal" id="radio-legal-1" value="true" data-theme="a" 
                     data-bind="checked: selectedSubscribe, jqRadioChecked: selectedSubscribe"/>
@@ -41,7 +59,7 @@
                     data-bind="checked: selectedSubscribe, jqRadioChecked: selectedSubscribe"/>
                 <label for="radio-legal-2" data-i18n="legalInformation.page.no_subscribe"
                     data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[no_subscribe]</label>
-            </fieldset>
+            </fieldset>-->
         </div>
         
     </div><!-- /content -->

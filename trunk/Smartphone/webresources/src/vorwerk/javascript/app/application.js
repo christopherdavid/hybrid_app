@@ -18,9 +18,10 @@ function Application() {
         firstScreen : "start",
         pageTransition : "none",
         pageReverseDirection: false,
-        version:"0.6.5.0",
-        pluginVersion:"0.6.1.0",
+        version:"0.6.6.0",
+        pluginVersion:"0.6.1.03",
         fallbackLanguage:"en-GB",
+        policyDocumentURL:"http://dev-smartapp.neatorobotics.com/Neato/",
         viewPath:"",
         device:"",
         emailRegEx: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i

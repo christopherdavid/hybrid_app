@@ -1,4 +1,8 @@
 {
+    "privacyPolicy": {
+        "page": {"title": "Privacy Policy"},
+        "navi": {"title": "Privacy Policy"}
+    },
     "common": {
         "change": "ändern",
         "no": "nein",
@@ -45,13 +49,16 @@
     },
     "legalInformation": {
         "page": {
-            "information": "We wish to keep you informed about new updates, product related issues and new products.<br />We  strive to keep your privacy safe. You agree that Vorwerk International Strecker & Co. is allowed to store your private data in compliance with the EU privacy policy. We do not share your data with companies outside the Vorwerk group.<br />To unsubscribe, please see bottom of email.",
-            "title": "Möchtest du Informationen über Updates und Neuigkeiten zum VR200 erhalten?",
-            "information_header": "Rechtliche Hinweise",
-            "subscribe": "Anmelden",
+            "legal_agreement": "I Agree",
+            "title": "AGREEMENTS",
+            "notAccepted_title": "Missing Legal Agreement",
+            "notAccepted_message": "Please check the privacy policy and terms of use documents to complete the registration.",
+            "tou_pp_agreement": "We are committed to the safety of your data. This will not be disclosed to companies outside the Vorwerk group.  To use this application, you must agree to the <a id='terms' href='#' class='highlightedText font_bold font_small'>Terms of Use<\/a> and <a id='privacy' href='#' class='highlightedText font_bold font_small'>Privacy Policy<\/a>. I hereby declare that I have read and agree to the Privacy Policy and the Terms of Use.",
+            "subscribe_header": "MARKETING INFORMATION",
             "edit_done_title": "Account Modified",
             "edit_done_message": "The user account has been updated successfully",
-            "no_subscribe": "Nicht anmelden."
+            "tou_pp_header": "Rechtliche Hinweise",
+            "subscribe_agreement": "We would like to keep you informed about new updates and product information.  I agree that my e -mail address will be used by Vorwerk International Strecker & Co. for consumer information and advertising ( e.g., updates , information, special offers). This consent can be revoked at any time in the User Settings of this application. For more details, see the Privacy Policy."
         },
         "navi": {"title": "Registrierung"}
     },
@@ -155,6 +162,10 @@
             "password": "Passwort"
         },
         "navi": {"title": "Benutzer Login"}
+    },
+    "termsOfUse": {
+        "page": {"title": "Terms Of Use"},
+        "navi": {"title": "Terms Of Use"}
     },
     "cleaning": {
         "page": {
@@ -268,6 +279,13 @@
         },
         "navi": {"title": "Aktivierung des Roboters."}
     },
+    "basicScheduler": {
+        "page": {"cleaning_options": {
+            "schedule": "Zum Reaktivieren bitte den Schalter oben links verschieben.",
+            "title": "Timer Funktion ist inaktiv."
+        }},
+        "navi": {"title": "Timer Funktion"}
+    },
     "generalSettings": {
         "page": {
             "robot_need_cleaning": "Roboter möchte gereinigt werden.",
@@ -278,13 +296,6 @@
             "cleaning_done": "Reinigung wurde beendet."
         },
         "navi": {"title": "Allgemeine Einstellungen"}
-    },
-    "basicScheduler": {
-        "page": {"cleaning_options": {
-            "schedule": "Zum Reaktivieren bitte den Schalter oben links verschieben.",
-            "title": "Timer Funktion ist inaktiv."
-        }},
-        "navi": {"title": "Timer Funktion"}
     },
     "robotManagement": {
         "page": {

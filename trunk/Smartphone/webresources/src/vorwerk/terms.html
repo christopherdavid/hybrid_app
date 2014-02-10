@@ -1,0 +1,29 @@
+<div data-role="page" style="height: 100%">
+    
+    <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
+        <div class="ui-btn-left">
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-image="back" class="btn-with-image"
+                data-bind="click:back"></a>
+        </div>
+        <h1>
+            <div class="screenTitle">
+                <span data-i18n="termsOfUse.page.title" data-bind="translate: language">[navi title]</span> 
+            </div>
+            <div class="robotName">
+                <span data-bind="text: robot().robotName">[robot name]</span>
+            </div>
+        </h1>
+    </div>
+
+    <div data-role="content">
+     <div id="topLineTerms">
+     </div>
+       <div id="legalWrapperTerms">
+            <div id="legalScrollerTerms" class="font_bold font_small">
+                Loading... 
+            </div>
+        </div> 
+        
+    </div>
+    
+</div>
