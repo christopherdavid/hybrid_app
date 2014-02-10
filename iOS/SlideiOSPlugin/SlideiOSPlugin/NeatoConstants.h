@@ -35,6 +35,10 @@
 #define NEATO_RESPONSE_EXTRA_PARAM @"extra_param"
 #define NEATO_RESPONSE_EXPIRY_TIME @"expiry_time"
 #define NEATO_RESPONSE_SERIAL_NUMBER @"serial_number"
+#define NEATO_RESPONSE_CURRENT_STATE_DETAILS @"robotCurrentStateDetails"
+#define NEATO_RESPONSE_CLEANING_CATEGORY @"robotCleaningCategory"
+#define NEATO_RESPONSE_ROBOT_STATE_PARAMS @"robotStateParams"
+#define NEATO_RESPONSE_PROFILE_DETAILS @"profile_details"
 
 #define FIND_NEARBY_ROBOTS_BIND_PORT 48001
 #define GET_IP_OF_SELECTED_ROBOT_FIND_PORT 48002
@@ -149,6 +153,7 @@
 #define KEY_TURN_WIFI_ONOFF @"wifi_onoff"
 #define KEY_SERVER_COUNTRY_CODE @"country_code"
 #define KEY_SERVER_OPT_IN @"opt_in"
+#define KEY_ROBOT_CURRENT_STATE_DETAILS @"robotCurrentStateDetails"
 
 //Key Codes for profile data changes.
 #define ROBOT_CURRENT_STATE_CHANGED_CODE 4001

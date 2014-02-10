@@ -14,6 +14,9 @@
 @implementation AppHelper
 
 + (NSDictionary *)parseJSON:(NSData *)jsonData {
+    if (!jsonData) {
+        return nil;
+    }
     NSError* error = nil;
     NSDictionary *data = [NSJSONSerialization
                               JSONObjectWithData:jsonData
