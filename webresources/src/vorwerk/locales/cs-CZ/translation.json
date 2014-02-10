@@ -1,4 +1,8 @@
 {
+    "privacyPolicy": {
+        "page": {"title": "Privacy Policy"},
+        "navi": {"title": "Privacy Policy"}
+    },
     "common": {
         "change": "Změnit",
         "no": "Ne",
@@ -45,13 +49,16 @@
     },
     "legalInformation": {
         "page": {
-            "information": "Rádi bychom Vás informovali o nových aktualizacích, tématech souvisejících s výrobkem a nových výrobcích. <br />Dbáme na zachování Vašeho soukromí. Souhlasíte, že společnost Vorwerk International Streckker & Co. může uložit Vaše soukromé údaje v souladu se zásadami ochrany osobních údajů EU. Vaše data nebudou poskytnuta třetím stranám mimo skupinu Vorwerk. <br />Chcete-li se odhlásit, viz spodní část tohoto e-mailu.",
-            "title": "Přejete si dostáva informace o vylepšeních a novinách svého VR200?",
-            "information_header": "Právní podmínky",
-            "subscribe": "Přihlásit",
+            "legal_agreement": "I Agree",
+            "title": "AGREEMENTS",
+            "notAccepted_title": "Missing Legal Agreement",
+            "notAccepted_message": "Please check the privacy policy and terms of use documents to complete the registration.",
+            "tou_pp_agreement": "We are committed to the safety of your data. This will not be disclosed to companies outside the Vorwerk group.  To use this application, you must agree to the <a id='terms' href='#' class='highlightedText font_bold font_small'>Terms of Use<\/a> and <a id='privacy' href='#' class='highlightedText font_bold font_small'>Privacy Policy<\/a>. I hereby declare that I have read and agree to the Privacy Policy and the Terms of Use.",
+            "subscribe_header": "MARKETING INFORMATION",
             "edit_done_title": "Account Modified",
             "edit_done_message": "The user account has been updated successfully",
-            "no_subscribe": "Nepřihlašovat"
+            "tou_pp_header": "Právní podmínky",
+            "subscribe_agreement": "We would like to keep you informed about new updates and product information.  I agree that my e -mail address will be used by Vorwerk International Strecker & Co. for consumer information and advertising ( e.g., updates , information, special offers). This consent can be revoked at any time in the User Settings of this application. For more details, see the Privacy Policy."
         },
         "navi": {"title": "Registrace"}
     },
@@ -155,6 +162,10 @@
             "password": "Heslo"
         },
         "navi": {"title": "Přihlášení uživatele"}
+    },
+    "termsOfUse": {
+        "page": {"title": "Terms Of Use"},
+        "navi": {"title": "Terms Of Use"}
     },
     "cleaning": {
         "page": {
@@ -268,6 +279,13 @@
         },
         "navi": {"title": "Aktivace robota"}
     },
+    "basicScheduler": {
+        "page": {"cleaning_options": {
+            "schedule": "Pro aktivaci použijte přepínač v levé horní části.",
+            "title": "Plánovač je vypnutý."
+        }},
+        "navi": {"title": "Plánovací kalendář"}
+    },
     "generalSettings": {
         "page": {
             "robot_need_cleaning": "Robota je třeba vyčistit.",
@@ -278,13 +296,6 @@
             "cleaning_done": "Úklid je dokončen."
         },
         "navi": {"title": "Obecné nastavení"}
-    },
-    "basicScheduler": {
-        "page": {"cleaning_options": {
-            "schedule": "Pro aktivaci použijte přepínač v levé horní části.",
-            "title": "Plánovač je vypnutý."
-        }},
-        "navi": {"title": "Plánovací kalendář"}
     },
     "robotManagement": {
         "page": {

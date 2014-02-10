@@ -53,6 +53,18 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "robotSelection",
                     "value" : true
                 }]
+            }, {
+                targetScreenId : "privacy",
+                conditions : [{
+                    "key" : "privacy",
+                    "value" : true
+                }]
+            }, {
+                targetScreenId : "terms",
+                conditions : [{
+                    "key" : "terms",
+                    "value" : true
+                }]
             }]
         },
         "robotSelection" : {
@@ -315,6 +327,12 @@ Application.prototype.loadWorkflow = function() {
                     "value" : true
                 }]
             }]
+        },
+        "privacy" : {
+            navrules : []
+        },
+        "terms" : {
+            navrules : []
         },
         "test" : {
             navrules : []

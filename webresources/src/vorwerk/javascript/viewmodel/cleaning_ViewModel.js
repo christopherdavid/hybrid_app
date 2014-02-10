@@ -49,7 +49,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     }, this); 
     
     this.isRemoteEnabled = ko.computed(function() {
-         return (that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.currentUiState().robot() == ROBOT_STATE_MANUAL_CLEANING);
+         return (that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.currentUiState().robot() == ROBOT_STATE_MANUAL_CLEANING && that.currentUiState().robot() != ROBOT_STATE_STUCK);
     }, this);
     
     this.isSendToBaseVisible = ko.computed(function() {
@@ -61,6 +61,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                                              that.currentUiState().robot() != ROBOT_STATE_CLEANING && 
                                              that.currentUiState().robot() != ROBOT_STATE_PAUSED   && 
                                              that.currentUiState().robot() != ROBOT_STATE_RESUMED  &&
+                                             that.currentUiState().robot() != ROBOT_STATE_STUCK  &&
                                              that.currentUiState().robot() != ROBOT_STATE_MANUAL_CLEANING ));
     }, this);
     
@@ -68,6 +69,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
          return (!that.waitingForRobot() && (that.currentUiState().robot() == ROBOT_STATE_CLEANING || 
                                              that.currentUiState().robot() == ROBOT_STATE_PAUSED   || 
                                              that.currentUiState().robot() == ROBOT_STATE_RESUMED  ||
+                                             that.currentUiState().robot() == ROBOT_STATE_STUCK    ||
                                              that.currentUiState().robot() == ROBOT_STATE_MANUAL_CLEANING ));
     }, this);
     

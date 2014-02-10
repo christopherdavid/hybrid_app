@@ -212,6 +212,16 @@ function WorkflowNotification(parent) {
                     that.showDialog(dialogType.INFO, translatedTitle, translatedText);
                 }
             break;
+            case "212":
+                 that.showDialog(dialogType.ERROR, translatedTitle, translatedText);
+                   var tempRobots = parent.communicationWrapper.getDataValue("robotList");
+                    $.each(tempRobots(), function(index, item){
+                    if(item.robotId() == result.robotId) {
+                        parent.communicationWrapper.updateRobotStateWithCode(item, ROBOT_STATE_STOPPED);
+                        return false;
+                    }
+                });
+            break;
             default:
                 that.showDialog(dialogType.WARNING, "unhandled message", JSON.stringify(result));
         }

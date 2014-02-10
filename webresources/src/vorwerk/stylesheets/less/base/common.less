@@ -171,11 +171,12 @@ label {
     }
 }
 
-#legalWrapper {
+#legalWrapper, #legalWrapperPrivacy, #legalWrapperTerms {
     position:absolute;
     z-index:1;
     top:@headerbar_height + @form_line_height*2 +  @content_space - @headerbar_border_shadow;
-    bottom:@radiogroup_item_line_height*2 + @button_border*2 + @content_list_space + @headerbar_border_shadow;
+    /*bottom:@radiogroup_item_line_height*2 + @button_border*2 + @content_list_space + @headerbar_border_shadow;*/
+    bottom : 10px;
     left:@content_space;
     right:@content_space;
     overflow:auto;
@@ -204,7 +205,7 @@ label {
     }
     
     
-    #legalScroller {
+    #legalScroller, #legalScrollerPrivacy, #legalScrollerTerms  {
         position:absolute; z-index:1;
         -webkit-tap-highlight-color:rgba(0,0,0,0);
         width:100%;
@@ -215,6 +216,7 @@ label {
         } 
     }
 }
+
 
 .fixed-bottom {
     position:absolute;
