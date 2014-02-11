@@ -54,6 +54,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         if(that.isLegalinfoEdit()) {
             if(typeof that.bundle.country == 'undefine') {
                 that.selectedSubscribe(user.extra_param.optIn);
+                that.isAgreed(user.extra_param.touAgreement);
             }
             
             if(that.bundle) {
@@ -61,6 +62,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
                     that.bundle.country(user.extra_param.countryCode);
                 } else if(that.bundle.country == user.extra_param.countryCode) {
                     that.selectedSubscribe(user.extra_param.optIn);
+                    that.isAgreed(user.extra_param.touAgreement);
                 }
             }
             	
@@ -99,7 +101,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         {
             var translatedTitle = $.i18n.t("legalInformation.page.notAccepted_title");
             var translatedText = $.i18n.t("legalInformation.page.notAccepted_message", {email:that.bundle.email});
-            parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); }}]);
+            parent.notification.showDialog(dialogType.ERROR, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); }}]);
         }    
             
     };

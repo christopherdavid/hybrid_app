@@ -482,7 +482,7 @@ var UserPluginManager = ( function() {
                         "email" : "homer@uid.com",
                         "username" : "Homer",
                         "userId" : "82",
-                        "extra_param":{"countryCode":"GB","optIn":"true"}
+                        "extra_param":{"countryCode":"GB","optIn":"true","touAgreement":"true"}
                     });
                 }, 1000);
 

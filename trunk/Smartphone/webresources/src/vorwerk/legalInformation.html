@@ -11,7 +11,7 @@
         </h1>
         <div class="ui-btn-right">
             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" data-image="ok" class="btn-with-image"
-                data-bind="jqLinkButtonEnable:isValid(),  click:submitChange"></a>
+                data-bind="click:submitChange"></a>
         </div>
     </div>
     <div data-role="content">
@@ -25,11 +25,11 @@
             <div id="legalScroller">
                  <fieldset>
                     <span class="font_bold font_small" data-i18n="legalInformation.page.tou_pp_header" data-bind="translate: language">[information_header]</span>
-                    <p class="font_small" data-i18n="legalInformation.page.tou_pp_agreement" data-bind="translate: language">[information]</p>
+                    <p class="font_normal" data-i18n="legalInformation.page.tou_pp_agreement" data-bind="translate: language">[information]</p>
                  </fieldset>
                         
                   <div class="line">
-                      <input type="checkbox" name="checkbox_agreement" id="checkbox_agreement" class="custom" data-bind="checked: isAgreed" data-theme="b" />
+                      <input type="checkbox" name="checkbox_agreement" id="checkbox_agreement" class="custom" value="true" data-bind="checked: isAgreed, jqRadioChecked: isAgreed" data-theme="b" />
                       <label for="checkbox_agreement" data-inline="true" data-i18n="legalInformation.page.legal_agreement" 
                            data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[Leagal Agreement]</label>
                   </div>
@@ -37,10 +37,10 @@
                  <div class="line">&nbsp</div>
                  <fieldset>
                     <span class="font_bold font_small" data-i18n="legalInformation.page.subscribe_header" data-bind="translate: language">[information_header]</span>
-                    <p class="font_small" data-i18n="legalInformation.page.subscribe_agreement" data-bind="translate: language">[information]</p>
+                    <p class="font_normal" data-i18n="legalInformation.page.subscribe_agreement" data-bind="translate: language">[information]</p>
                  </fieldset>
                   <div class="line ">
-                    <input type="checkbox" name="checkbox_subscribe" id="checkbox_subscribe" class="custom" data-bind="checked: selectedSubscribe" data-theme="b" />
+                    <input type="checkbox" name="checkbox_subscribe" id="checkbox_subscribe" class="custom" value="true" data-bind="checked: selectedSubscribe, jqRadioChecked: selectedSubscribe" data-theme="b" />
                     <label for="checkbox_subscribe" data-inline="true" data-i18n="legalInformation.page.legal_agreement"
                     data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[Leagal Agreement]</label>
                 </div>
