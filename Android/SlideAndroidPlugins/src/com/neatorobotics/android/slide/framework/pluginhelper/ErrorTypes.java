@@ -131,5 +131,10 @@ public class ErrorTypes {
 	  * - This results if the linking code is already used for association.
 	  */
 	 public static final int ERROR_LINKING_CODE_IN_USE = -180;
+	 
+	 /**
+	  * Association is already present for robot and user
+	  */
+	 public static final int ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS = -182;
 	
 }
