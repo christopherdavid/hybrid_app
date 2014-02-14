@@ -28,7 +28,10 @@ public class NeatoWebserviceErrorCodeWrapper {
 		ERROR_CODE_MAP.put(NeatoWebServiceErrorCodes.ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT, ErrorTypes.ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT);
 		ERROR_CODE_MAP.put(NeatoWebServiceErrorCodes.ERROR_AUTHENTICATION_FAILED, ErrorTypes.ERROR_AUTHENTICATION_FAILED);
 		ERROR_CODE_MAP.put(NeatoWebServiceErrorCodes.ERROR_LINKING_CODE_IN_USE, ErrorTypes.ERROR_LINKING_CODE_IN_USE);
+		ERROR_CODE_MAP.put(NeatoWebServiceErrorCodes.ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS, ErrorTypes.ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS);
+		
 	}
+	
 	
 	public static int convertServerErrorToUIErrorCodes(int serverErrorCode) {
 		int error = ERROR_CODE_MAP.get(serverErrorCode, ErrorTypes.ERROR_TYPE_UNKNOWN);

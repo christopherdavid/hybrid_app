@@ -335,6 +335,12 @@ var ERROR_INVALID_SCHEDULE_TYPE = -133;
 var ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT = -159;
 
 /**
+ * Association is already present for robot and user
+ */
+var ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS = -182;
+
+
+/**
  * Unknown error has occured. Please try again.
  */
 var ERROR_TYPE_UNKNOWN = -501;
