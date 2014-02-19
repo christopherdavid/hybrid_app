@@ -7,6 +7,7 @@ public class NeatoWebServerType extends WebServerType {
 	private static final String SERVER_DEMO2 = "Demo2 (Neato)";
 	private static final String SERVER_DEMO = "Demo (Neato)";
 	private static final String SERVER_STAGING = "Staging (Neato)";
+	private static final String SERVER_NEATOSTAGING = "NeatoStaging (Neato)";
 	private static final String SERVER_DEVELOPMENT = "Development (Neato)";
 	private static final String SERVER_PRODUCTION = "Production (Neato)";
 	private static final String SERVER_WP = "WP (Neato)";
@@ -20,6 +21,10 @@ public class NeatoWebServerType extends WebServerType {
 	final String STAGING_API_KEY = "1e26686d806d82144a71ea9a99d1b3169adaad917";
 	final String STAGING_XMPP_SERVER_DOMAIN = "rajatogo.com";
 	final String STAGING_SERVER_URL = "http://neatostaging.rajatogo.com";
+	final String NEATOSTAGING_BASE_JSON_URL = "http://staging-smartapp.neatorobotics.com/api/rest/json";
+	final String NEATOSTAGING_API_KEY = "1e26686d806d82144a71ea9a99d1b3169adaad917";
+	final String NEATOSTAGING_XMPP_SERVER_DOMAIN = "staging-smartapp.neatorobotics.com";
+	final String NEATOSTAGING_SERVER_URL = "http://staging-smartapp.neatorobotics.com";
 	final String DEV_BASE_JSON_URL = "http://neatodev.rajatogo.com/api/rest/json";
 	final String DEV_API_KEY = "1e26686d806d82144a71ea9a99d1b3169adaad917";
 	final String DEV_XMPP_SERVER_DOMAIN = "rajatogo.com";
@@ -51,7 +56,9 @@ public class NeatoWebServerType extends WebServerType {
 		case NeatoWebConstants.PROD_SERVER_ID:
 			return PROD_BASE_JSON_URL;
 		case NeatoWebConstants.STAGING_SERVER_ID:
-			return STAGING_BASE_JSON_URL;			
+			return STAGING_BASE_JSON_URL;
+		case NeatoWebConstants.NEATOSTAGING_SERVER_ID:
+			return NEATOSTAGING_BASE_JSON_URL;
 		case NeatoWebConstants.DEV_SERVER_ID:
 			return DEV_BASE_JSON_URL;
 		case NeatoWebConstants.DEMO_SERVER_ID:
@@ -77,6 +84,9 @@ public class NeatoWebServerType extends WebServerType {
 				break;				
 			case NeatoWebConstants.STAGING_SERVER_ID:
 				serverName = SERVER_STAGING;
+				break;
+			case NeatoWebConstants.NEATOSTAGING_SERVER_ID:
+				serverName = SERVER_NEATOSTAGING;
 				break;
 			case NeatoWebConstants.PROD_SERVER_ID:
 				serverName = SERVER_PRODUCTION;
@@ -110,6 +120,9 @@ public class NeatoWebServerType extends WebServerType {
 			case NeatoWebConstants.STAGING_SERVER_ID:
 				serverUrl = STAGING_SERVER_URL;
 				break;
+			case NeatoWebConstants.NEATOSTAGING_SERVER_ID:
+				serverUrl = NEATOSTAGING_SERVER_URL;
+				break;
 			case NeatoWebConstants.PROD_SERVER_ID:
 				serverUrl = PROD_SERVER_URL;
 				break;
@@ -138,6 +151,8 @@ public class NeatoWebServerType extends WebServerType {
 			return PROD_API_KEY;
 		case NeatoWebConstants.STAGING_SERVER_ID:
 			return STAGING_API_KEY;
+		case NeatoWebConstants.NEATOSTAGING_SERVER_ID:
+			return NEATOSTAGING_API_KEY;
 		case NeatoWebConstants.DEV_SERVER_ID:
 			return DEV_API_KEY;
 		case NeatoWebConstants.DEMO_SERVER_ID:
@@ -160,6 +175,8 @@ public class NeatoWebServerType extends WebServerType {
 			return PROD_XMPP_SERVER_DOMAIN;
 		case NeatoWebConstants.STAGING_SERVER_ID:
 			return STAGING_XMPP_SERVER_DOMAIN;
+		case NeatoWebConstants.NEATOSTAGING_SERVER_ID:
+			return NEATOSTAGING_XMPP_SERVER_DOMAIN;
 		case NeatoWebConstants.DEV_SERVER_ID:
 			return DEV_XMPP_SERVER_DOMAIN;
 		case NeatoWebConstants.DEMO_SERVER_ID:
