@@ -95,7 +95,76 @@
                 margin:auto;
                 width:@cleaning_startContainer_width;
             }
-            
+            .control-button-bar-top {
+                height:@cleaning_control_button_size ;
+                position:relative;
+                top: 35px;
+                margin-top:10px;
+                
+                .ui-btn {
+                    .border-radius(@cleaning_control_button_size/2);
+                    width: @cleaning_control_button_size - @button_border*2;
+                    height:@cleaning_control_button_size - @button_border*2;
+                    
+                    
+                    
+                    &.ui-btn-right {
+                       /* margin:0 @cleaning_control_button_space @cleaning_control_button_space 0;*/
+                       margin:-5px 12px 0 0;
+                        float:right;
+                    }
+                    
+                    .ui-btn-inner {
+                        .border-radius(0);
+                        line-height:@cleaning_control_button_size - @button_border*2;
+                        padding:0px;
+                    }
+                    
+                    &:before {
+                        .border-radius(@cleaning_control_button_size/2);
+                    }
+                    //btn-with-image  ui-btn ui-shadow ui-btn-corner-all ui-fullsize ui-btn-inline ui-btn-active ui-btn-up-b ui-disabled
+                    &.btn-with-image {
+                        .ui-btn-inner {
+                          background-size: @cleaning_control_button_icon_size;
+                          background-image: url(../../img/icons/support_icons_220x330.png);
+                          background-position:0 0;
+                          top:0;
+                          height:@cleaning_control_button_size;
+                          width:@cleaning_control_button_size;
+                        }
+                        
+                        &[data-image='base'] .ui-btn-inner {
+                            background-position-y:-@cleaning_control_button_size*1;
+                        }
+                        
+                        &.ui-btn-active {
+                            &[data-image='eco'] .ui-btn-inner {
+                                background-position-x:0;
+                            }
+                        } 
+                        
+                        &.ui-disabled { 
+                            &[data-image='eco'] {
+                                background:none;
+                                .box-shadow-none()!important;
+                                border-color: transparent;
+                                
+                                &:before {
+                                    border-color: transparent;
+                                }
+                            }
+                            
+                            span {
+                                opacity:1;
+                            }
+                            &[data-image='base'] .ui-btn-inner, &[data-image='stop'] .ui-btn-inner{
+                                background-position-x:-@cleaning_control_button_size;
+                            }
+                        }
+                    }
+                }
+             }   
             .control-button-bar {
                 position: relative;
                 margin-top:-25px;

@@ -31,6 +31,10 @@
                 </div>
                 
                 <div class="control-line">
+                    <div class="control-button-bar-top">
+                        <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image ui-btn-right" data-image="base" data-inline="true"
+                            data-bind="click:sendToBase, jqLinkButtonEnable: isSendToBaseEnabled(), visible:!isSendToBaseVisible()"></a>
+                    </div>
                     <div class="halign">
                         <div id="startContainer">
                             <div id="startArea">
@@ -66,10 +70,10 @@
                             data-bind="click:toggleEcoMode, css:{'ui-btn-active':ecoMode()}, jqLinkButtonEnable: isEcoEnabled()"></a>
                         
                         <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image ui-btn-right" data-image="stop" data-inline="true"
-                            data-bind="click:stopRobot, visible:!isSendToBaseVisible(), jqLinkButtonEnable: isStopEnabled"></a>
+                            data-bind="click:stopRobot, jqLinkButtonEnable: isStopEnabled"></a>
                             
-                        <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image ui-btn-right" data-image="base" data-inline="true"
-                            data-bind="click:sendToBase, visible:isSendToBaseVisible, jqLinkButtonEnable: isSendToBaseEnabled()"></a>
+                        <!--<a data-role="button" data-theme="b" data-mini="false" class="btn-with-image ui-btn-right" data-image="base" data-inline="true"
+                            data-bind="click:sendToBase, visible:isSendToBaseVisible, jqLinkButtonEnable: isSendToBaseEnabled()"></a>-->
                     </div>
                     
                 </div>

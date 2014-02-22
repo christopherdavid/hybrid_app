@@ -163,11 +163,9 @@ var ACTION_TYPE_GET_SCHEDULE_DATA 				= "getScheduleData";
 var ACTION_TYPE_CREATE_SCHEDULE 				= "createSchedule";
 var ACTION_TYPE_IS_SCHEDULE_ENABLED 			= "isScheduleEnabled";
 var ACTION_TYPE_ENABLE_SCHEDULE				= "enableSchedule";
-var ACTION_TYPE_GET_ROBOT_CLEANING_STATE					= "getRobotCleaningState";
-
-// Debug method
-var ACTION_TYPE_DEBUG_GET_CONFIG_DETAILS 		= "debugGetConfigDetails";
+var ACTION_TYPE_GET_ROBOT_CLEANING_STATE	= "getRobotCleaningState";
 var ACTION_TYPE_GET_ROBOT_CLEANING_CATEGORY	= "getRobotCleaningCategory";
+
 //List of keys to send data:
 
 var KEY_EMAIL = 'email';
@@ -237,6 +235,9 @@ var NOTIFICATIONS_GLOBAL_OPTION = "global";
 var NOTIFICATION_ROBOT_STUCK = "101";
 var NOTIFICATION_DIRT_BIN_FULL = "102";
 var NOTIFICATION_CLEANING_DONE = "103";
+var NOTIFICATION_DIRT_BIN_MISSING = "20219";
+var NOTIFICATION_PLUG_CABLE = "212";
+var NOTIFICATION_ROBOT_CANCEL = "22000";
 
 // List of Error Code values returned from the plugin.
 
@@ -332,6 +333,12 @@ var ERROR_INVALID_SCHEDULE_TYPE = -133;
  * - This will occur if there is no schedule for the robot. The user/application should create a new schedule.
  */
 var ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT = -159;
+
+/**
+ * Association is already present for robot and user
+ */
+var ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS = -182;
+
 
 /**
  * Unknown error has occured. Please try again.
@@ -879,13 +886,6 @@ UserMgr.prototype.disassociateAllRobots = function(email, callbackSuccess, callb
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS, [disassociateAllRobotsArray]);
 };
-
-// Debug method.
-UserMgr.prototype.debugGetConfigurationDetails = function(callbackSuccess, callbackError) {
-	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
-                 ACTION_TYPE_DEBUG_GET_CONFIG_DETAILS, []);
-};
-
 
 /**
  * This API is used to switch on/off global and individual push notification settings
@@ -2452,12 +2452,6 @@ var UserPluginManager = (function() {
 		disassociateAllRobots: function(email, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.userMgr.disassociateAllRobots(email, callbackSuccess, callbackError);
 		},
-		
-        // Debug method. May not be exposed in the finished product
-        debugGetConfigurationDetails: function(callbackSuccess, callbackError) {
-            window.plugins.neatoPluginLayer.userMgr.debugGetConfigurationDetails(callbackSuccess, callbackError);
-        },
-
 		
 		/**
 		 * This API changes the user's password.
