@@ -485,10 +485,10 @@ function Scheduler($root, scheduleType) {
         } else if(newMin > 7 && newMin < 23) {
             //round to 15
             newMin = 15;
-        } else if(newMin > 22 && newMin < 38) {
+        } else if(newMin > 22 && newMin < 36) {
             //round to 30
             newMin = 30;
-        } else if(newMin > 37 && newMin < 53) {
+        } else if(newMin > 35 && newMin < 53) {
             //round to 45
             newMin = 45;
         } else {
@@ -496,8 +496,8 @@ function Scheduler($root, scheduleType) {
             newHour++;
             newMin = 0;
         }
-        
-        newMin = newMin/HOUR_IN_PX * 60;
+        //shows bad time in dialog - fix issue #224
+        //newMin = newMin/HOUR_IN_PX * 60;
         var newTime = newHour + ":" + (newMin < 10 ? "0" + newMin : newMin);
         console.log("newTime " + newTime);
         //console.log(oEvent);
@@ -587,10 +587,10 @@ function Scheduler($root, scheduleType) {
                 } else if(newMin > 7 && newMin < 23) {
                     //round to 15
                     newMin = 15;
-                } else if(newMin > 22 && newMin < 38) {
+                } else if(newMin > 22 && newMin < 36) {
                     //round to 30
                     newMin = 30;
-                } else if(newMin > 37 && newMin < 53) {
+                } else if(newMin > 35 && newMin < 53) {
                     //round to 45
                     newMin = 45;
                 } else {

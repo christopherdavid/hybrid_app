@@ -53,13 +53,14 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     }, this);
     
     this.isSendToBaseVisible = ko.computed(function() {
-         return (that.visualSelectedCategory() == CLEANING_CATEGORY_ALL && (that.currentUiState().robot() == ROBOT_STATE_STOPPED || that.currentUiState().robot() == ROBOT_STATE_ON_BASE));
+         //return (that.visualSelectedCategory() == CLEANING_CATEGORY_ALL && (that.currentUiState().robot() == ROBOT_STATE_STOPPED || that.currentUiState().robot() == ROBOT_STATE_ON_BASE));
+         return (that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL || that.visualSelectedCategory() == CLEANING_CATEGORY_SPOT);
     }, this);
     
     this.isSendToBaseEnabled = ko.computed(function() {
-        return (!that.waitingForRobot() && (that.currentUiState().robot() != ROBOT_STATE_ON_BASE && 
+        return (!that.waitingForRobot() && (that.currentUiState().robot() != ROBOT_STATE_IDLE && 
+                                            that.currentUiState().robot() != ROBOT_STATE_ON_BASE && 
                                              that.currentUiState().robot() != ROBOT_STATE_CLEANING && 
-                                             that.currentUiState().robot() != ROBOT_STATE_PAUSED   && 
                                              that.currentUiState().robot() != ROBOT_STATE_RESUMED  &&
                                              that.currentUiState().robot() != ROBOT_STATE_STUCK  &&
                                              that.currentUiState().robot() != ROBOT_STATE_MANUAL_CLEANING ));
@@ -166,7 +167,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     this.updateLayout = function() {
         console.log("update Layout")
-        $("#statusLine").css("bottom", $(".control-line").height());
+        $("#statusLine").css("bottom", $(".control-line").height() - 35);
     }
     
     this.successGetSpotDefinition = function(result) {

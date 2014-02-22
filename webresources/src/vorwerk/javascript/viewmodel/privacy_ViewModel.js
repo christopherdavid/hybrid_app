@@ -11,7 +11,7 @@ resourceHandler.registerFunction('privacy_ViewModel.js', function(parent) {
             bounce : true,
             vScroll : true,
             hScroll : true,
-            momentum : false
+            momentum : true
         });
          
         $.get(parent.config.policyDocumentURL + 'documents/privacyDocument_' + $.i18n.lng() + '.htm',

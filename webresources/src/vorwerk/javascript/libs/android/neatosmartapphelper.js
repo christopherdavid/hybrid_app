@@ -162,9 +162,9 @@ var ACTION_TYPE_GET_SCHEDULE_EVENTS 			= "getScheduleEvents";
 var ACTION_TYPE_GET_SCHEDULE_DATA 				= "getScheduleData";
 var ACTION_TYPE_CREATE_SCHEDULE 				= "createSchedule";
 var ACTION_TYPE_IS_SCHEDULE_ENABLED 			= "isScheduleEnabled";
-var ACTION_TYPE_ENABLE_SCHEDULE				    = "enableSchedule";
-var ACTION_TYPE_GET_ROBOT_CLEANING_STATE		= "getRobotCleaningState";
-var ACTION_TYPE_GET_ROBOT_CLEANING_CATEGORY	    = "getRobotCleaningCategory";
+var ACTION_TYPE_ENABLE_SCHEDULE				= "enableSchedule";
+var ACTION_TYPE_GET_ROBOT_CLEANING_STATE	= "getRobotCleaningState";
+var ACTION_TYPE_GET_ROBOT_CLEANING_CATEGORY	= "getRobotCleaningCategory";
 
 //List of keys to send data:
 
@@ -235,6 +235,9 @@ var NOTIFICATIONS_GLOBAL_OPTION = "global";
 var NOTIFICATION_ROBOT_STUCK = "101";
 var NOTIFICATION_DIRT_BIN_FULL = "102";
 var NOTIFICATION_CLEANING_DONE = "103";
+var NOTIFICATION_DIRT_BIN_MISSING = "20219";
+var NOTIFICATION_PLUG_CABLE = "212";
+var NOTIFICATION_ROBOT_CANCEL = "22000";
 
 // List of Error Code values returned from the plugin.
 
@@ -330,6 +333,12 @@ var ERROR_INVALID_SCHEDULE_TYPE = -133;
  * - This will occur if there is no schedule for the robot. The user/application should create a new schedule.
  */
 var ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT = -159;
+
+/**
+ * Association is already present for robot and user
+ */
+var ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS = -182;
+
 
 /**
  * Unknown error has occured. Please try again.
@@ -727,7 +736,7 @@ UserMgr.prototype.getUserDetail = function(email, callbackSuccess, callbackError
 /**
  * This API returns a JSON Object containing user details.
  * <p>
- * result is {CountryCode:"Country_code", optIn:"optin"}
+ * result is {countryCode:"countryCode", optIn:"optin"}
  * <br>where CountryCode is user selected country
  * <br>optIn is the email Subscription
  * <p>
@@ -2372,7 +2381,7 @@ var UserPluginManager = (function() {
 		 * @returns					JSON Object
 		 */
 		setUserAccountDetails: function(email, countryCode, optIn, callbackSuccess, callbackError) {
-			window.plugins.neatoPluginLayer.userMgr.setUserAccountDetails(email, countryCode, optIn, callbackSuccess, callbackError);
+			window.plugins.neatoPluginLayer.userMgr.setUserAccountDetails(email, countryCode, optIn,callbackSuccess, callbackError);
 		},
 		
 		/**
@@ -3460,7 +3469,7 @@ var RobotPluginManager = (function() {
 		/**
 		 * This API gets the current state of the robot
 		 *  on success this API returns a JSON Object
-		 * <br>{cleaningCatageory: <1-Maual,2-All,3-Spot>,robotId:"robotId"}
+		 * <br>{cleaningCategory: <1-Maual,2-All,3-Spot>,robotId:"robotId"}
 		 * <br>robotCurrentState is an integer value of the current actual state of the robot
 		 * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
 		 * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
@@ -3581,7 +3590,7 @@ var PluginManagerHelper =  (function() {
 		 *  - startTime
 		 *  - cleaningMode
 		 *  Returns: Basic Schedule JSON object
-		 *  {'day':day, 'startTime': startTime, ï¿½cleaningModeï¿½:cleaningMode}
+		 *  {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
 		 */
 		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {
