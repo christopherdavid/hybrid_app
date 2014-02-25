@@ -15,7 +15,7 @@
         "edit": "Edit",
         "cancel": "Cancel",
         "cleaningMode": {
-            "2": "Normal",
+            "2": "ALL ROOMS",
             "1": "ECO"
         },
         "countries": {
@@ -144,7 +144,7 @@
             "button_2": "No"
         },
         "ROBOT_DELETE": {
-            "message": "Do you really want to delete __robotName__?",
+            "message": "Do you really want to remove __robotName__?",
             "title": "Remove robot?",
             "button_1": "Yes",
             "button_2": "No"
@@ -252,7 +252,7 @@
         "robot_added": "Adding __robotName__ ...",
         "intend_drive": "Please wait...",
         "fetch_robots": "Accessing your robot list ...",
-        "delete_robot_done": "Robot __robotName__ has been deleted.",
+        "delete_robot_done": "Robot __robotName__ has been removed.",
         "stop_robot": "Stopping __robotName__ ...",
         "toggle_eco": "ECO mode is __ecoMode__",
         "reset_password": "Resetting your password ...",
@@ -263,7 +263,7 @@
     },
     "robotActivationId": {
         "page": {
-            "robotId": "Registration ID",
+            "robotId": "Robot Link Code",
             "wifisetup": "Please enter the Robot Link Code.<br />You will find it on the robot display under: <span class='font_bold highlightedText'>Settings / Link SmartDevice<\/span>"
         },
         "navi": {"title": "Robot activation"}
@@ -275,7 +275,7 @@
     "robotActivationName": {
         "page": {
             "robot_name": "Robot name",
-            "id_accepted": "Your Registration ID was accepted!<br /><\/br />If you want, you can now personalize your robot's name. You can always rename your robot's name in the settings menu."
+            "id_accepted": "Your Robot Link Code was accepted!<br /><\/br />If you want, you can now personalize your robot's name. You can always rename your robot's name in the settings menu."
         },
         "navi": {"title": "Robot activation"}
     },
@@ -349,9 +349,9 @@
     },
     "visualState": {
         "connecting": "Trying to connect to server\u2026",
-        "cleaning_tap_manual": "I'm cleaning",
+        "cleaning_tap_manual": "I'm manual cleaning",
         "stucked": "Help me! I'm stuck.",
-        "stopped_waited_spot": "I\u2019m ready to start spot",
+        "stopped_waited_spot": "I\u2019m ready to re-start spot",
         "getready": "Working\u2026",
         "wakeup": "Working\u2026",
         "cleaning_spot": "I'm cleaning spot",
@@ -378,7 +378,7 @@
         "manual": "Drive me with your app Remote!",
         "cleaning_manual": "Drive me with your app Remote!",
         "idle": "I'm ready to start.",
-        "stopped_waited_all": "I\u2019m ready to start",
+        "stopped_waited_all": "I\u2019m ready to re-start",
         "stopped": "I've stopped cleaning.",
         "cleaning_all": "I'm cleaning"
     },

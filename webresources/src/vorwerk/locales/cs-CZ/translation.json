@@ -11,11 +11,11 @@
             "cleaning": "Úklid",
             "settings": "Nastavení"
         },
-        "next": "Next",
+        "next": "Další",
         "edit": "Upravit",
         "cancel": "Zrušit",
         "cleaningMode": {
-            "2": "Běžný",
+            "2": "Všechny místnosti",
             "1": "EKO"
         },
         "countries": {
@@ -174,13 +174,13 @@
                 "2": "Úklid bytu",
                 "1": "Manuální úklid"
             },
-            "spot_size_title": "Velikost prostoru:"
+            "spot_size_title": "Velikost prostoru: "
         },
         "navi": {"title": "Úklid"}
     },
     "error": {
         "-106": {
-            "message": "Email id is already registered with the server.",
+            "message": "Tato e-mailová adresa je již serverem registrována",
             "title": "Chyba"
         },
         "-105": {
@@ -200,8 +200,8 @@
             "title": "Chyba"
         },
         "-509": {
-            "message": "This account has not been confirmed.  Please respond to the confirmation mail sent to this email address.",
-            "title": "Confirmation Error"
+            "message": "Účet nebyl potvrzen. Odpovězte prosím na potvrzující e-mail, který vám byl poslán na váš e-mail.",
+            "title": "Potvrzení chyby"
         },
         "-114": {
             "message": "Tento robot není registrován.",
@@ -216,7 +216,7 @@
             "title": "Chyba"
         },
         "-515": {
-            "message": "You are already connected to a different robot",
+            "message": "Jste již připojen k jinému robotu.",
             "title": "Chyba připojení"
         },
         "-502": {
@@ -228,8 +228,8 @@
             "title": "Neznámá chyba"
         },
         "-154": {
-            "message": "Invalid linking code. Please enter valid linking code.",
-            "title": "Type Error"
+            "message": "Neplatný odkaz. Zadejte platný odkaz.",
+            "title": "Druh chyby"
         },
         "-511": {
             "message": "__robotName__ již není připojen.",
@@ -327,10 +327,10 @@
             "register": "Registrace proběhla úspěšně. <br />Vítejte <span class='highlightedText font_bold'>__email__<\/span>",
             "select_robot": "Vyberte prosím svého robota:",
             "logged_in": "Ahoj <span class='highlightedText font_bold'>__email__<\/span>.",
-            "edit_message": "Please select country and subscription option to complete your registration.",
+            "edit_message": "Vyberte prosím zemi a souhlas s podmínkami pro dokončení registrace.",
             "login": "Vítejte <span class='highlightedText font_bold'>__email__<\/span>!",
             "no_robot": "Zatím nemáte registrovaného žádného robota.<br>Přidejte robota klepnutím na <span class='font_bold'>+<\/span>.",
-            "edit_title": "Registration"
+            "edit_title": "Registrace"
         },
         "navi": {"title": "Výběr robota"}
     },
@@ -343,51 +343,51 @@
             "registration_done_title": "Účet založen.",
             "password_verify": "Ověření hesla",
             "password": "Heslo",
-            "country": "Select Country"
+            "country": "Výběr země"
         },
         "navi": {"title": "Vytvořit uživatelský účet"}
     },
     "visualState": {
         "connecting": "Připojuji se k serveru\u2026",
-        "cleaning_tap_manual": "I'm cleaning",
+        "cleaning_tap_manual": "Uklízím",
         "stucked": "Pomoc! Uvízl jsem.",
-        "stopped_waited_spot": "I\u2019m ready to start spot",
+        "stopped_waited_spot": "Jesem připraven zahájit úklid SPOT",
         "getready": "Pracuji\u2026",
         "wakeup": "Pracuji\u2026",
-        "cleaning_spot": "I'm cleaning spot",
-        "stopped_all": "I've stopped cleaning",
-        "stopped_waited_manual": "I\u2019m ready to start manual cleaning",
+        "cleaning_spot": "Uklízím v režimu SPOT",
+        "stopped_all": "Zastavil jsem úklid.",
+        "stopped_waited_manual": "Jesem připraven zahájit úklid v režimu Manuál",
         "resumed": "Pokračuji v úklidu.",
-        "stopped_manual": "I've stopped manual cleaning",
-        "paused_spot": "I've paused cleaning spot",
-        "stopped_spot": "I've stopped cleaning spot",
+        "stopped_manual": "Zastavil jsem úklid v režimu Manuál",
+        "paused_spot": "Přerušil jsem úklid SPOT",
+        "stopped_spot": "Zastavil jsem úklid SPOT",
         "inbase": "Odpočívám v dobíjecí základně.",
         "cleaning": "Uklízím",
         "error": "Mám problém.",
         "wakeup_unknown": "Za pár vteřin budu připraven\u2026",
         "waiting": "Budu připraven asi za __wakeUp__ vteřin",
         "done": "Ukončil jsem úklid.",
-        "paused_manual": "I've paused manual cleaning",
+        "paused_manual": "Přerušil jsem úklid v režimu Manuál",
         "play": "Zahájil jsem úklid.",
         "paused": "Přerušil jsem úklid.",
         "charging": "Nabíjím se.",
         "unknown": "Připojuji se k serveru.",
         "awake": "Jsem připraven.",
-        "paused_all": "I've paused cleaning",
+        "paused_all": "Přerušil jsem úklid.",
         "waiting_unknown": "Za pár vteřin budu připraven.",
         "manual": "Řiď mne pomocí dálkového ovládání",
-        "cleaning_manual": "Drive me with your app Remote!",
+        "cleaning_manual": "Ovládej mě pomocí dálkového ovládání",
         "idle": "Jsem připraven začít.",
-        "stopped_waited_all": "I\u2019m ready to start",
+        "stopped_waited_all": "Jsem připraven",
         "stopped": "Zastavil jsem úklid.",
-        "cleaning_all": "I'm cleaning"
+        "cleaning_all": "Uklízím"
     },
     "confirm": {"close_app": "Chcet applikaci skutečně ukončit?"},
     "userSettings": {
         "page": {
             "old_password": "Staré heslo",
-            "subscription": "News Subscription",
-            "changesubscription": "Change Subscription",
+            "subscription": "Odběr novinek",
+            "changesubscription": "Změna podmínek",
             "new_password_verify": "Ověření nového hesla",
             "password_show": "Zobrazit heslo",
             "new_password": "Nové heslo",

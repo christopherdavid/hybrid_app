@@ -295,7 +295,8 @@ var robotUiStateHandler = {
         } else if(state == ROBOT_UI_STATE_CONNECTING || state == ROBOT_UI_STATE_WAKEUP || state == ROBOT_UI_STATE_GETREADY) {
             this.current().startButton(visualState[ROBOT_UI_STATE_WAIT]);
         } else if(state == ROBOT_STATE_MANUAL_CLEANING) {
-            this.current().startButton(visualState[ROBOT_STATE_CLEANING]);
+           // this.current().startButton(visualState[ROBOT_STATE_CLEANING]);
+            this.current().startButton(visualState[ROBOT_STATE_MANUAL_CLEANING]);
         } else {
             this.current().startButton(visualState[ROBOT_STATE_STOPPED]);
         }

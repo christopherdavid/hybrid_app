@@ -11,7 +11,7 @@
             "cleaning": "清扫中",
             "settings": "设置"
         },
-        "next": "Next",
+        "next": "下一步",
         "edit": "编辑",
         "cancel": "取消",
         "cleaningMode": {
@@ -174,13 +174,13 @@
                 "2": "全部清扫",
                 "1": "手动清扫"
             },
-            "spot_size_title": "定点区域大小:"
+            "spot_size_title": "定点区域大小: "
         },
         "navi": {"title": "清扫中"}
     },
     "error": {
         "-106": {
-            "message": "Email id is already registered with the server.",
+            "message": "该邮件地址已被注册。",
             "title": "输入错误"
         },
         "-105": {
@@ -216,7 +216,7 @@
             "title": "输入错误"
         },
         "-515": {
-            "message": "You are already connected to a different robot",
+            "message": "您已连接至另一台机器人。",
             "title": "连接错误"
         },
         "-502": {
@@ -327,10 +327,10 @@
             "register": "注册完成。<br>欢迎  <span class='highlightedText font_bold'>__email__<\/span>",
             "select_robot": "请选择你的机器人:",
             "logged_in": "你好 <span class='highlightedText font_bold'>__email__<\/span>.",
-            "edit_message": "Please select country and subscription option to complete your registration.",
+            "edit_message": "请选择国家及注册选项来完成您的注册。",
             "login": "欢迎 <span class='highlightedText font_bold'>__email__<\/span>!",
             "no_robot": "你还未有机器人注册过。<br>请注册你的新机器人，请点<span class='font_bold'>+<\/span>.s",
-            "edit_title": "Registration"
+            "edit_title": "注册"
         },
         "navi": {"title": "选择机器人"}
     },
@@ -343,51 +343,51 @@
             "registration_done_title": "账号已开设",
             "password_verify": "密码确认",
             "password": "密码",
-            "country": "Select Country"
+            "country": "选择国家"
         },
         "navi": {"title": "创建用户账号"}
     },
     "visualState": {
         "connecting": "我正在搜寻我的服务器。",
-        "cleaning_tap_manual": "I'm cleaning",
+        "cleaning_tap_manual": "我正在清扫中。",
         "stucked": "救命！我被卡住了。",
-        "stopped_waited_spot": "I\u2019m ready to start spot",
+        "stopped_waited_spot": "我准备就绪可以定点清扫。",
         "getready": "准备就绪中。",
         "wakeup": "准备就绪中！",
-        "cleaning_spot": "I'm cleaning spot",
-        "stopped_all": "I've stopped cleaning",
-        "stopped_waited_manual": "I\u2019m ready to start manual cleaning",
+        "cleaning_spot": "我正在定点清扫。",
+        "stopped_all": "我已停止清扫。",
+        "stopped_waited_manual": "我准备就绪可以手动清扫。",
         "resumed": "我已恢复清扫工作。",
-        "stopped_manual": "I've stopped manual cleaning",
-        "paused_spot": "I've paused cleaning spot",
-        "stopped_spot": "I've stopped cleaning spot",
+        "stopped_manual": "我已停止手动清扫。",
+        "paused_spot": "我已暂停定点清扫。",
+        "stopped_spot": "我已停止定点清扫。",
         "inbase": "我正在基座休息中。",
         "cleaning": "我正在清扫。",
         "error": "我想我有故障了。",
         "wakeup_unknown": "我马上就醒。",
         "waiting": "我会在大约 __wakeUp__ 秒后醒来。",
         "done": "清扫工作已完成。",
-        "paused_manual": "I've paused manual cleaning",
+        "paused_manual": "我已暂停手动清扫。",
         "play": "我已开始清扫。",
         "paused": "我已暂停清扫。",
         "charging": "我正在充电中。",
         "unknown": "我正在搜寻我的服务器。",
         "awake": "随时待命。",
-        "paused_all": "I've paused cleaning",
+        "paused_all": "我已暂停全部清扫。",
         "waiting_unknown": "我马上就醒。",
         "manual": "用你的软件来遥控我运作！",
-        "cleaning_manual": "Drive me with your app Remote!",
+        "cleaning_manual": "用你的软件来遥控我运作！",
         "idle": "随时待命。",
-        "stopped_waited_all": "I\u2019m ready to start",
+        "stopped_waited_all": "我准备就绪可以全部清扫。",
         "stopped": "我已停止清扫。",
-        "cleaning_all": "I'm cleaning"
+        "cleaning_all": "我正在全部清扫。"
     },
     "confirm": {"close_app": "是否确定关闭该程序？"},
     "userSettings": {
         "page": {
             "old_password": "旧密码",
-            "subscription": "News Subscription",
-            "changesubscription": "Change Subscription",
+            "subscription": "新建注册。",
+            "changesubscription": "更改注册。",
             "new_password_verify": "新密码确认",
             "password_show": "显示密码",
             "new_password": "新密码",

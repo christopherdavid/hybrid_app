@@ -11,11 +11,11 @@
             "cleaning": "Pulizia",
             "settings": "Impostazioni"
         },
-        "next": "Next",
+        "next": "Prossimo",
         "edit": "Modifica",
         "cancel": "Cancella",
         "cleaningMode": {
-            "2": "Normale",
+            "2": "CASA",
             "1": "ECO"
         },
         "countries": {
@@ -171,7 +171,7 @@
         "page": {
             "cleaningCategory": {
                 "3": "SPOT",
-                "2": "COMPLETA",
+                "2": "CASA",
                 "1": "MANUALE"
             },
             "spot_size_title": "Area Spot"
@@ -180,7 +180,7 @@
     },
     "error": {
         "-106": {
-            "message": "Email id is already registered with the server.",
+            "message": "L'indirizzo email è già registrato con il server",
             "title": "Errore"
         },
         "-105": {
@@ -200,8 +200,8 @@
             "title": "Errore"
         },
         "-509": {
-            "message": "This account has not been confirmed.  Please respond to the confirmation mail sent to this email address.",
-            "title": "Confirmation Error"
+            "message": "Questo account non è stato confermato. Si prega di rispondere alla email di conferma inviata a questo indirizzo email.",
+            "title": "Errore di conferma"
         },
         "-114": {
             "message": "Questo robot non è registrato.",
@@ -216,7 +216,7 @@
             "title": "Errore"
         },
         "-515": {
-            "message": "You are already connected to a different robot",
+            "message": "Sei già connesso con un altro robot",
             "title": "Errore di connessione"
         },
         "-502": {
@@ -228,8 +228,8 @@
             "title": "Errore sconosciuto"
         },
         "-154": {
-            "message": "Invalid linking code. Please enter valid linking code.",
-            "title": "Type Error"
+            "message": "Codice di collegamento non valido. Inserisci codice di collegamento valido.",
+            "title": "Errore"
         },
         "-511": {
             "message": "__robotName__ non è più connesso.",
@@ -327,10 +327,10 @@
             "register": "Registrazione completata<br>Benvenuto <span class='highlightedText font_bold'>__email__<\/span>",
             "select_robot": "Per favore scegli il tuo robot:",
             "logged_in": "Ciao <span class='highlightedText font_bold'>__email__<\/span>.",
-            "edit_message": "Please select country and subscription option to complete your registration.",
+            "edit_message": "Per favore seleziona un Paese e l'opzione di registrazione per completare la registrazione",
             "login": "Benvenuto <span class='highlightedText font_bold'>__email__<\/span>!",
             "no_robot": "Non hai robot registrati.<br>Aggiungi un Robot selezionando <span class='font_bold'>+<\/span>.",
-            "edit_title": "Registration"
+            "edit_title": "Registrazione"
         },
         "navi": {"title": "Selezione Robot"}
     },
@@ -343,51 +343,51 @@
             "registration_done_title": "Account creato ",
             "password_verify": "Verifica password",
             "password": "Password",
-            "country": "Select Country"
+            "country": "Seleziona un Paese"
         },
         "navi": {"title": "Crea il Tuo Account"}
     },
     "visualState": {
         "connecting": "Sto cercando il mio server.",
-        "cleaning_tap_manual": "I'm cleaning",
+        "cleaning_tap_manual": "Sto pulendo con modalità manuale",
         "stucked": "Aiutami sono bloccato!",
-        "stopped_waited_spot": "I\u2019m ready to start spot",
+        "stopped_waited_spot": "Sono pronto per la pulizia spot",
         "getready": "Mi sto preparando.",
         "wakeup": "Mi sto preparando.",
-        "cleaning_spot": "I'm cleaning spot",
-        "stopped_all": "I've stopped cleaning",
-        "stopped_waited_manual": "I\u2019m ready to start manual cleaning",
+        "cleaning_spot": "Sto pulendo con modalità spot",
+        "stopped_all": "Ho interrotto la pulizia.",
+        "stopped_waited_manual": "Sono pronto per la pulizia manuale ",
         "resumed": "Ho ripreso la pulizia.",
-        "stopped_manual": "I've stopped manual cleaning",
-        "paused_spot": "I've paused cleaning spot",
-        "stopped_spot": "I've stopped cleaning spot",
+        "stopped_manual": "Ho interrotto la pulizia manuale",
+        "paused_spot": "Pulizia Spot in pausa",
+        "stopped_spot": "Ho interrotto la pulizia spot",
         "inbase": "Rimango alla base.",
         "cleaning": "Sto pulendo.",
         "error": "Ho un problema.",
         "wakeup_unknown": "Mi attiverò in pochi secondi. ",
         "waiting": "Mi attivo in circa  __wakeUp__ secondi.",
         "done": "Ho finito la pulizia.",
-        "paused_manual": "I've paused manual cleaning",
+        "paused_manual": "Pulizia manuale in pausa",
         "play": "Ho iniziato la pulizia.",
         "paused": "Ho messo in pausa la pulizia.",
         "charging": "Mi sto ricaricando.",
         "unknown": "Sto cercando il mio server.",
         "awake": "Sono pronto a cominciare.",
-        "paused_all": "I've paused cleaning",
+        "paused_all": "Pulizia in pausa",
         "waiting_unknown": "Mi attiverò in pochi secondi. ",
         "manual": "Guidami con la tua app!",
-        "cleaning_manual": "Drive me with your app Remote!",
+        "cleaning_manual": "Guidami con la App",
         "idle": "Sono pronto ad iniziare.",
-        "stopped_waited_all": "I\u2019m ready to start",
+        "stopped_waited_all": "Sono pronto a cominciare",
         "stopped": "Ho interrotto la pulizia.",
-        "cleaning_all": "I'm cleaning"
+        "cleaning_all": "Sto pulendo"
     },
     "confirm": {"close_app": "Sei sicuro di voler chiudere l'applicazione?"},
     "userSettings": {
         "page": {
             "old_password": "Vecchia password",
-            "subscription": "News Subscription",
-            "changesubscription": "Change Subscription",
+            "subscription": "Notizie registrazione",
+            "changesubscription": "Modifica registrazione",
             "new_password_verify": "Verifica nuova password",
             "password_show": "Mostra password",
             "new_password": "Nuova passord",

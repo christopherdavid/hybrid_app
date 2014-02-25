@@ -7,11 +7,11 @@
         "change": "Cambiar",
         "no": "no",
         "menu": {
-            "schedule": "Calendario",
+            "schedule": "Programar",
             "cleaning": "Limpieza",
             "settings": "Ajustes"
         },
-        "next": "Next",
+        "next": "Siguiente",
         "edit": "Editar",
         "cancel": "Cancelar",
         "cleaningMode": {
@@ -31,8 +31,8 @@
             "IT": "Italia",
             "CN": "China"
         },
-        "yes": "yes",
-        "logout": "Salirse",
+        "yes": "Sí",
+        "logout": "Salir",
         "off": "Apagado",
         "delete": "Borrar",
         "on": "Encendido",
@@ -70,7 +70,7 @@
             "robot_management": "Gestión del robot.",
             "link": "Vorwerk",
             "link_url": "http://www.kobold.es",
-            "about": "Acerca de.",
+            "about": "Acerca de",
             "link_desc": "Visite la web de Vorwerk.",
             "general_settings": "Ajustes generales.",
             "general_settings_desc": "Gestionar las notificaciones del robot.",
@@ -127,8 +127,8 @@
     },
     "dialogs": {
         "EVENT_DELETE": {
-            "message": "¿Desea borrar esta fecha?",
-            "title": "¿Borrar fecha?",
+            "message": "¿Desea eliminar la tarea programada?",
+            "title": "¿Borrar tarea programada?",
             "button_1": "Sí",
             "button_2": "No"
         },
@@ -174,13 +174,13 @@
                 "2": "Todos",
                 "1": "Manual"
             },
-            "spot_size_title": "Área limpieza"
+            "spot_size_title": "Área limpieza: "
         },
         "navi": {"title": "Limpieza"}
     },
     "error": {
         "-106": {
-            "message": "Email id is already registered with the server.",
+            "message": "Este email ya ha sido registrado en el servidor.",
             "title": "Error"
         },
         "-105": {
@@ -188,7 +188,7 @@
             "title": "Error"
         },
         "-108": {
-            "message": "Ha sido imposible crear una cuenta. Por favor inténtenlo de nuevo.",
+            "message": "Ha sido imposible crear una cuenta. Por favor, inténtenlo de nuevo.",
             "title": "Error del servidor"
         },
         "-111": {
@@ -200,15 +200,15 @@
             "title": "Error"
         },
         "-509": {
-            "message": "This account has not been confirmed.  Please respond to the confirmation mail sent to this email address.",
-            "title": "Confirmation Error"
+            "message": "Esta cuenta no ha sido confirmada. Por favor, responda al email de confirmación enviado a esta dirección de email.",
+            "title": "Error de confirmación"
         },
         "-114": {
             "message": "Este robot no está registrado.",
             "title": "Error"
         },
         "-101": {
-            "message": "El usario o contraseña es incorrecto.",
+            "message": "El usuario o contraseña es incorrecto.",
             "title": "Error"
         },
         "-110": {
@@ -216,7 +216,7 @@
             "title": "Error"
         },
         "-515": {
-            "message": "You are already connected to a different robot",
+            "message": "Ya estás conectado a un robot diferente",
             "title": "Error de conexión"
         },
         "-502": {
@@ -228,7 +228,7 @@
             "title": "Error desconocido"
         },
         "-154": {
-            "message": "Invalid linking code. Please enter valid linking code.",
+            "message": "Código de enlace no válido. Por favor, introduzca un código de enlace válido.",
             "title": "Type Error"
         },
         "-511": {
@@ -254,7 +254,7 @@
         "fetch_robots": "Accediendo al listado del robot",
         "delete_robot_done": "El robot __robotName__ ha sido borrado.",
         "stop_robot": "Parando __robotName__",
-        "toggle_eco": "ECO modo es ahora __ecoMode__",
+        "toggle_eco": "ECO modo es  __ecoMode__",
         "reset_password": "Reseteando su contraseña.",
         "send_to_base": "Enviando __robotName__ a la base.",
         "update_scheduler": "Sincronizando calendario.",
@@ -275,7 +275,7 @@
     "robotActivationName": {
         "page": {
             "robot_name": "Nombre del Robot.",
-            "id_accepted": "Su ID de registro ha sido aceptado.<\/br><\/br>Si lo desea, puede personalizar el nombre de su robot. Podrá cambiarlo posteriormente si lo desea en Ajustes."
+            "id_accepted": "Su ID de registro ha sido aceptado.<\/br><\/br>Si lo desea, puede personalizar el nombre de su robot. Podrá cambiarlo posteriormente en Ajustes."
         },
         "navi": {"title": "Activación del robot"}
     },
@@ -317,9 +317,9 @@
         "week": "1,2,3,4,5,6,0"
     },
     "start": {
-        "login_desc": "¿Dispone ya de una cuenta?",
+        "login_desc": "¿Ya dispone de una cuenta?",
         "register": "Regístrese ahora.",
-        "register_desc": "¿No dispone de una cuenta?",
+        "register_desc": "Crear una cuenta ahora",
         "login": "Por favor, acceda."
     },
     "robotSelection": {
@@ -327,67 +327,67 @@
             "register": "Registro completado...<br>Bienvenido <span class='highlightedText font_bold'>__email__<\/span>",
             "select_robot": "Por favor seleccione su robot:",
             "logged_in": "Hola <span class='highlightedText font_bold'>__email__<\/span>.",
-            "edit_message": "Please select country and subscription option to complete your registration.",
+            "edit_message": "Por favor seleccione un país y opción de suscripción para completar su registro.",
             "login": "Bienvenido <span class='highlightedText font_bold'>__email__<\/span>!",
             "no_robot": "Todavía no ha registrado su robot.<br>Por favor, añada un nuevo robot pulsando <span class='font_bold'>+<\/span>.",
-            "edit_title": "Registration"
+            "edit_title": "Registro"
         },
         "navi": {"title": "Selección de robot"}
     },
     "createAccount": {
         "page": {
             "title": "Bienvenido al proceso de registro.<br/>Necesitamos algo de información para continuar.",
-            "email": "Dirección de e-mail.",
+            "email": "E-mail.",
             "password_show": "Mostrar contraseña.",
             "registration_done_message": "<div class='mailAnimation'><\/div>Un email de confirmación ha sido enviado a <br/><span class='highlightedText'>__email__<\/span><br /><br />Por favor confime su cuenta en las próximas 48h. Después de confirmar podrá entrar y conectarse a su robot.",
             "registration_done_title": "Cuenta creada.",
             "password_verify": "Verificación de la contraseña.",
             "password": "Contraseña.",
-            "country": "Select Country"
+            "country": "Seleccione un país"
         },
         "navi": {"title": "Crear una cuenta de usuario."}
     },
     "visualState": {
-        "connecting": "Buscando servidor.",
-        "cleaning_tap_manual": "I'm cleaning",
-        "stucked": "¡Ayuda! Creo que estoy atascado.",
-        "stopped_waited_spot": "I\u2019m ready to start spot",
-        "getready": "Me estoy preparando.",
-        "wakeup": "Me estoy preparando.",
-        "cleaning_spot": "I'm cleaning spot",
-        "stopped_all": "I've stopped cleaning",
-        "stopped_waited_manual": "I\u2019m ready to start manual cleaning",
+        "connecting": "Intentando conectar al servidor\u2026",
+        "cleaning_tap_manual": "Estoy limpiando",
+        "stucked": "¡Ayuda! Estoy atascado.",
+        "stopped_waited_spot": "Estoy listo para empezar en local",
+        "getready": "Preparándome\u2026",
+        "wakeup": "Preparándome\u2026",
+        "cleaning_spot": "Estoy limpiando en local",
+        "stopped_all": "He parado de limpiar",
+        "stopped_waited_manual": "Estoy listo para empezar en manual",
         "resumed": "Limpieza reanudada",
-        "stopped_manual": "I've stopped manual cleaning",
-        "paused_spot": "I've paused cleaning spot",
-        "stopped_spot": "I've stopped cleaning spot",
-        "inbase": "Conectado a la base.",
+        "stopped_manual": "He parado de limpiar en manual",
+        "paused_spot": "He pausado la limpieza local",
+        "stopped_spot": "He parado de limpiar en local",
+        "inbase": "Estoy conectado a la base.",
         "cleaning": "Limpieza en curso.",
         "error": "Creo que existe un problema",
-        "wakeup_unknown": "Estaré activo en unos instantes.",
+        "wakeup_unknown": "Estaré listo en unos segundos\u2026",
         "waiting": "Estaré activo en __wakeUp__ segundos.",
         "done": "He terminado de limpiar.",
-        "paused_manual": "I've paused manual cleaning",
+        "paused_manual": "He pausado la limpieza manual",
         "play": "He comenzado la limpieza",
         "paused": "Limpieza en pausa.",
         "charging": "Me estoy cargando.",
         "unknown": "Estoy buscando mi servidor.",
         "awake": "Estoy listo para empezar.",
-        "paused_all": "I've paused cleaning",
+        "paused_all": "He pausado la limpieza",
         "waiting_unknown": "Estaré activo en unos segundos.",
         "manual": "Manéjame con tu aplicación móvil",
-        "cleaning_manual": "Drive me with your app Remote!",
+        "cleaning_manual": "Manéjame con tu aplicación móvil",
         "idle": "Estoy listo para empezar.",
-        "stopped_waited_all": "I\u2019m ready to start",
+        "stopped_waited_all": "Estoy listo para empezar",
         "stopped": "He parado de limpiar",
-        "cleaning_all": "I'm cleaning"
+        "cleaning_all": "Estoy limpiando"
     },
     "confirm": {"close_app": "¿Desea cerrar la aplicación?"},
     "userSettings": {
         "page": {
             "old_password": "Contraseña antigua.",
-            "subscription": "News Subscription",
-            "changesubscription": "Change Subscription",
+            "subscription": "Suscripción a Newsletter",
+            "changesubscription": "Cambiar suscripción.",
             "new_password_verify": "Verificación de la nueva contraseña.",
             "password_show": "Mostrar contraseña.",
             "new_password": "Nueva contraseña.",

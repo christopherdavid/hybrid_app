@@ -13,9 +13,9 @@
         },
         "next": "Weiter",
         "edit": "Bearbeiten",
-        "cancel": "löschen",
+        "cancel": "zurück",
         "cleaningMode": {
-            "2": "Normal",
+            "2": "ALLE RÄUME",
             "1": "ECO"
         },
         "countries": {
@@ -133,7 +133,7 @@
             "button_2": "Nein"
         },
         "ROBOT_ADDED": {
-            "message": "Die Registrierung wurde erfolgreich abgeschlossen.Danke! Jetzt kann es losgehen!",
+            "message": "Die Registrierung wurde erfolgreich abgeschlossen. Danke! Jetzt kann es losgehen!",
             "title": "Fertig!",
             "button_1": "OK"
         },
@@ -174,13 +174,13 @@
                 "2": "ALLES",
                 "1": "MANUELL"
             },
-            "spot_size_title": "Spot Größe:"
+            "spot_size_title": "Spot Größe: "
         },
         "navi": {"title": "Reinigung"}
     },
     "error": {
         "-106": {
-            "message": "Email id is already registered with the server.",
+            "message": "Diese E-Mail-Adresse ist bereits registriert.",
             "title": "Eingabefehler"
         },
         "-105": {
@@ -200,8 +200,8 @@
             "title": "Eingabefehler"
         },
         "-509": {
-            "message": "This account has not been confirmed.  Please respond to the confirmation mail sent to this email address.",
-            "title": "Confirmation Error"
+            "message": "Diese E-Mail-Adresse wurde nicht bestätigt. Bitte die Bestätigungs-E-Mail beantworten, die an diese Adresse gesendet wurde. ",
+            "title": "Bestätigungsfehler"
         },
         "-114": {
             "message": "Diese Roboter ID ist nicht registriert.",
@@ -216,7 +216,7 @@
             "title": "Eingabefehler"
         },
         "-515": {
-            "message": "You are already connected to a different robot",
+            "message": "Du bist bereits mit einem anderen Roboter verbunden.",
             "title": "Verbindungsfehler"
         },
         "-502": {
@@ -228,8 +228,8 @@
             "title": "Unbekannter Fehler"
         },
         "-154": {
-            "message": "Invalid linking code. Please enter valid linking code.",
-            "title": "Type Error"
+            "message": "Ungültiger Verbindungscode. Bitte gültigen Code eingeben",
+            "title": "Eingabefehler"
         },
         "-511": {
             "message": "__robotName__ ist nicht mehr verbunden.",
@@ -327,10 +327,10 @@
             "register": "Registrierung wurde abgeschlossen. <br>Willkommen <span class='highlightedText font_bold'>__email__<\/span>",
             "select_robot": "Bitte Roboter auswählen:",
             "logged_in": "Hallo <span class='highlightedText font_bold'>__email__<\/span>.",
-            "edit_message": "Please select country and subscription option to complete your registration.",
+            "edit_message": "Bitte wähle Dein Land und bestätige den Datenschutzhinweis.",
             "login": "Willkommen <span class='highlightedText font_bold'>__email__<\/span>!",
             "no_robot": "Du hast noch keinen Roboter registriert.<br>Bitte Roboter durch anwählen von____hinzufügen.",
-            "edit_title": "Registration"
+            "edit_title": "Registrierung"
         },
         "navi": {"title": "Roboter Auswahl"}
     },
@@ -343,51 +343,51 @@
             "registration_done_title": "Konto wurde erstellt.",
             "password_verify": "Passwort verfizieren",
             "password": "Passwort",
-            "country": "Select Country"
+            "country": "Wähle Land"
         },
         "navi": {"title": "Benutzerkonto erstellen"}
     },
     "visualState": {
         "connecting": "Ich suche nach meinem Server.",
-        "cleaning_tap_manual": "I'm cleaning",
+        "cleaning_tap_manual": "Ich reinige.",
         "stucked": "Hilfe, ich klemme fest!",
-        "stopped_waited_spot": "I\u2019m ready to start spot",
+        "stopped_waited_spot": "Ich bin bereit für die Spotreinigung.",
         "getready": "Ich bin gleich bereit.",
         "wakeup": "Ich bin gleich bereit.",
-        "cleaning_spot": "I'm cleaning spot",
-        "stopped_all": "I've stopped cleaning",
-        "stopped_waited_manual": "I\u2019m ready to start manual cleaning",
+        "cleaning_spot": "Ich reinige im Spot-Modus.",
+        "stopped_all": "Ich habe die Reinigung gestoppt.",
+        "stopped_waited_manual": "Ich bin bereit für die manuelle Reinigung.",
         "resumed": "Ich habe die Reinigung fortgesetzt",
-        "stopped_manual": "I've stopped manual cleaning",
-        "paused_spot": "I've paused cleaning spot",
-        "stopped_spot": "I've stopped cleaning spot",
+        "stopped_manual": "<span style:\"\"> NOT TRANSLATED!<\/span>",
+        "paused_spot": "Ich habe die Spotreinigung unterbrochen.",
+        "stopped_spot": "Ich habe die Spotreinigung gestoppt.",
         "inbase": "Ich verweile an meiner Basisstation",
         "cleaning": "Ich reinige.",
         "error": "Ich habe ein Problem.",
         "wakeup_unknown": "Ich wache in ein paar Sekunden auf. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
         "waiting": "Ich werde in __wakeUp__ Sekunden aufwachen. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
         "done": "Ich bin fertig mit Reinigen.",
-        "paused_manual": "I've paused manual cleaning",
+        "paused_manual": "Ich habe die manuelle Reinigung unterbrochen.",
         "play": "Ich habe die Reinigung gestartet.",
         "paused": "Ich habe die Reinigung unterbrochen.",
         "charging": "Ich lade meinen Akku auf.",
         "unknown": "Ich suche nach meinem Server.",
         "awake": "Ich bin bereit.",
-        "paused_all": "I've paused cleaning",
+        "paused_all": "Ich habe die Reinigung unterbrochen.",
         "waiting_unknown": "Ich wache in ein paar Sekunden auf. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
         "manual": "Steuere mich per App Fernbedienung!",
-        "cleaning_manual": "Drive me with your app Remote!",
+        "cleaning_manual": "Steuere mich per App Fernbedienung!",
         "idle": "Ich bin bereit.",
-        "stopped_waited_all": "I\u2019m ready to start",
+        "stopped_waited_all": "Ich bin bereit.",
         "stopped": "Ich habe die Reinigung gestoppt.",
-        "cleaning_all": "I'm cleaning"
+        "cleaning_all": "Ich reinige."
     },
     "confirm": {"close_app": "Möchtest du die App wirklich schliessen?"},
     "userSettings": {
         "page": {
             "old_password": "Altes Passwort",
-            "subscription": "News Subscription",
-            "changesubscription": "Change Subscription",
+            "subscription": "Newsletter abonieren",
+            "changesubscription": "Updateinformationen erhalten",
             "new_password_verify": "Verfizierung neues Passwort",
             "password_show": "Zeige Passwort",
             "new_password": "Neues Passwort",
