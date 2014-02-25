@@ -18,7 +18,7 @@ function Application() {
         firstScreen : "start",
         pageTransition : "none",
         pageReverseDirection: false,
-        version:"0.6.7.0",
+        version:"0.6.8.0",
         pluginVersion:"0.6.1.03",
         fallbackLanguage:"en-GB",
         policyDocumentURL:"http://dev-smartapp.neatorobotics.com/Neato/",

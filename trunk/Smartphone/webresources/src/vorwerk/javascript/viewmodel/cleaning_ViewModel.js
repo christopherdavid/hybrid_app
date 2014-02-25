@@ -54,7 +54,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     this.isSendToBaseVisible = ko.computed(function() {
          //return (that.visualSelectedCategory() == CLEANING_CATEGORY_ALL && (that.currentUiState().robot() == ROBOT_STATE_STOPPED || that.currentUiState().robot() == ROBOT_STATE_ON_BASE));
-         return (that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL || that.visualSelectedCategory() == CLEANING_CATEGORY_SPOT);
+         // #270 Hide the send to base on manual category
+         return (that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL);
     }, this);
     
     this.isSendToBaseEnabled = ko.computed(function() {
@@ -71,7 +72,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                                              that.currentUiState().robot() == ROBOT_STATE_PAUSED   || 
                                              that.currentUiState().robot() == ROBOT_STATE_RESUMED  ||
                                              that.currentUiState().robot() == ROBOT_STATE_STUCK    ||
-                                             that.currentUiState().robot() == ROBOT_STATE_MANUAL_CLEANING ));
+                                             that.currentUiState().robot() == ROBOT_STATE_MANUAL_CLEANING ||
+                                             (that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.currentUiState().robot() == ROBOT_STATE_STOPPED)  ));
     }, this);
     
     this.isEcoEnabled = ko.computed(function() {
@@ -275,7 +277,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                 break;
         }
         if(navigationControlId > 0) {
-            robotUiStateHandler.setUiState(ROBOT_UI_STATE_CLEANING_TAP_MANUAL);
+            //robotUiStateHandler.setUiState(ROBOT_UI_STATE_CLEANING_TAP_MANUAL);
             // Send robot drive direction
             var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.driveRobot, [that.robot().robotId(), navigationControlId], { type: notificationType.NONE });
             console.log("drive robot direction: " + navigationControlId);
@@ -283,7 +285,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     }
     
     this.remoteReleased = function(event, button) {
-        robotUiStateHandler.setUiState(ROBOT_UI_STATE_CLEANING_MANUAL);
+        //robotUiStateHandler.setUiState(ROBOT_UI_STATE_CLEANING_MANUAL);
+        robotUiStateHandler.setUiState(ROBOT_STATE_MANUAL_CLEANING);
     }
     
     // viewmodel reload 
@@ -382,6 +385,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() != ROBOT_STATE_MANUAL_CLEANING) {
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.intendToDrive, [that.robot().robotId()], 
                       { type: notificationType.OPERATION, message: $.i18n.t('communication.intend_drive')}, false, true);
+        } else if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() == ROBOT_STATE_MANUAL_CLEANING) {
+           that.stopRobot();
         } else if (that.robot().robotNewVirtualState() == ROBOT_STATE_PAUSED) {
             // resume cleaning
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.resumeCleaning, [that.robot().robotId()]);
@@ -398,7 +403,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [that.robot().robotId(),
                       that.visualSelectedCategory(), that.robot().cleaningMode(), that.robot().cleaningModifier()]);
         }
-        tDeffer.done(that.startStopRobotSuccess);
+        if(tDeffer)
+            tDeffer.done(that.startStopRobotSuccess);
     }
     
     this.startStopRobotSuccess = function(result) {
@@ -421,11 +427,13 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             } else if (that.robot().robotNewVirtualState() == ROBOT_STATE_CLEANING ||
                        that.robot().robotNewVirtualState() == ROBOT_STATE_RESUMED) {
                 // paused
+                console.log("Other Cleaning is running");
                 parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_PAUSED);
-            } else if (that.robot().robotNewVirtualState() == ROBOT_STATE_MANUAL_CLEANING) {
+            }  /*else if (that.robot().robotNewVirtualState() == ROBOT_STATE_MANUAL_CLEANING) {
                 // paused drive
                 parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_PAUSED);
-            } else {
+                
+            }*/else {
                 // started cleaning
                 parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_CLEANING);
             }
@@ -434,6 +442,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
      this.startManualModeSuccess = function(result) {
        console.log("startManualModeSuccess" + JSON.stringify(result));
+       //parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_MANUAL_CLEANING);
+       //robotUiStateHandler.setUiState(ROBOT_STATE_MANUAL_CLEANING);
      }
      
     // navigation menu and menu actions
