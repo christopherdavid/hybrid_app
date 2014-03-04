@@ -136,5 +136,10 @@ public class ErrorTypes {
 	  * Association is already present for robot and user
 	  */
 	 public static final int ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS = -182;
+	 
+	 /**
+	  * Robot already has some other user associated with it.
+	  */
+	 public static final int ERROR_ROBOT_HAS_ASSOCIATED_USER = -192;
 	
 }
