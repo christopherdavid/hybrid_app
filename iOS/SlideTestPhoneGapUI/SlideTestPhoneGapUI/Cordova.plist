@@ -28,6 +28,8 @@
 	<string>cloud</string>
 	<key>ExternalHosts</key>
 	<array>
+		<string>*</string>
+		<string>http://staging-smartapp.neatorobotics.com/*</string>
 		<string>http://neatodev.rajatogo.com/*</string>
 		<string>http://neatostaging.rajatogo.com/api/rest/json/*</string>
 		<string>http://neato.rajatogo.com/api/rest/json/*</string>

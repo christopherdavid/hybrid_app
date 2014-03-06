@@ -201,11 +201,42 @@
 
 // To switch to Vorwerk's server, comment SERVER_TYPE_NEATO variable
 #define SERVER_TYPE_NEATO 1
+// #define SERVER_TYPE_RAJATOGO 1
 
-#ifdef SERVER_TYPE_NEATO
-    #define STAGING_SERVER @"Staging (Neato)"
-    #define PROD_SERVER @"Production (Neato)"
-    #define DEV_SERVER @"Development (Neato)"
+
+// To switch to prod server, uncomment SWITCH_TO_PROD_SERVER variable
+// #define SWITCH_TO_PROD_SERVER 1
+#ifdef SWITCH_TO_PROD_SERVER
+// Switch for create user\robot related API's
+#define ROBOT_SERVER_PROD     1
+// Switch for robot's maps related API's
+#define ROBOT_MAPS_SERVER_PROD      1
+// Switch for robot's schedule related API's
+#define ROBOT_SCHEDULE_SERVER_PROD  1
+// Switch for robot's Atlas API
+#define ROBOT_ATLAS_SERVER_PROD  1
+
+#define NOTIFICATION_SERVER_TYPE  @"PROD"
+
+#else
+// Logging would be 'ON' only in DEV mode.
+#define LOGGING_ENABLED             1
+#define ENABLE_DB_CREATION_IN_DOCUMENTS_DIR 1
+#define NOTIFICATION_SERVER_TYPE  @"DEV"
+
+// For internal testing we are going to use Dev server
+// Uncomment flag SWITCH_TO_DEV_SERVER to enable DEV server.
+// By default we would be using Staging server.
+// DO NOT check-in code with this flag enabled.
+// #define SWITCH_TO_DEV_SERVER 1
+
+#endif
+
+
+#ifdef SERVER_TYPE_RAJATOGO
+    #define STAGING_SERVER @"Staging (RAJATOGO)"
+    #define PROD_SERVER @"Production (RAJATOGO)"
+    #define DEV_SERVER @"Development (RAJATOGO)"
     #define XMPP_SERVER_ADDRESS @"rajatogo.com"
 
     #ifdef ROBOT_SERVER_PROD
@@ -221,6 +252,28 @@
     #else
         // Will use API's at http://neatostaging.rajatogo.com/wstest/
         #define BASE_URL @"http://neatostaging.rajatogo.com/api/rest/json"
+        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+    #endif
+
+#elif SERVER_TYPE_NEATO
+    #define STAGING_SERVER @"Staging (Neato)"
+    #define PROD_SERVER @"Production (Neato)"
+    #define DEV_SERVER @"Development (Neato)"
+    #define XMPP_SERVER_ADDRESS @"neatorobotics.com"
+
+    #ifdef ROBOT_SERVER_PROD
+        // Will use API's at http://neato.rajatogo.com/wstest/
+        #define BASE_URL @"http://neato.rajatogo.com/api/rest/json"
+        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+
+    #elif SWITCH_TO_DEV_SERVER
+        // Will use API's at http://neatodev.rajatogo.com/wstest/
+        #define BASE_URL @"http://neatodev.rajatogo.com/api/rest/json"
+        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+
+    #else
+        // Will use API's at http://staging-smartapp.neatorobotics.com/wstest/
+        #define BASE_URL @"http://staging-smartapp.neatorobotics.com/api/rest/json"
         #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
     #endif
 
@@ -249,33 +302,6 @@
 
 
 #define NETWORK_CONNECTION_FAILURE_MSG @"Request failed!Please check your network settings."
-// To switch to prod server, uncomment SWITCH_TO_PROD_SERVER variable
-// #define SWITCH_TO_PROD_SERVER 1
-#ifdef SWITCH_TO_PROD_SERVER
-    // Switch for create user\robot related API's
-    #define ROBOT_SERVER_PROD     1
-    // Switch for robot's maps related API's
-    #define ROBOT_MAPS_SERVER_PROD      1
-    // Switch for robot's schedule related API's
-    #define ROBOT_SCHEDULE_SERVER_PROD  1
-    // Switch for robot's Atlas API
-    #define ROBOT_ATLAS_SERVER_PROD  1
-
-    #define NOTIFICATION_SERVER_TYPE  @"PROD"
-
-#else
-    // Logging would be 'ON' only in DEV mode.
-    #define LOGGING_ENABLED             1
-    #define ENABLE_DB_CREATION_IN_DOCUMENTS_DIR 1
-    #define NOTIFICATION_SERVER_TYPE  @"DEV"
-
-    // For internal testing we are going to use Dev server
-    // Uncomment flag SWITCH_TO_DEV_SERVER to enable DEV server.
-    // By default we would be using Staging server.
-    // DO NOT check-in code with this flag enabled.
-    // #define SWITCH_TO_DEV_SERVER 1
-
-#endif
 
 #ifdef ROBOT_ATLAS_SERVER_PROD
     #define NEATO_GET_ROBOT_ATLAS_DATA_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.get_atlas_data"
