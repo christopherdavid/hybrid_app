@@ -45,6 +45,12 @@ static NeatoErrorCodesHelper *sharedInstance  = nil;
     [self.errorMap setObject:[NSNumber numberWithInteger:UI_ERROR_SCHEDULE_VERSION_MISMATCH] forKey:[NSNumber numberWithInteger:SERVER_ERROR_SCHEDULE_VERSION_MISMATCH]];
     [self.errorMap setObject:[NSNumber numberWithInteger:UI_ERROR_INVALID_SCHEDULE_TYPE] forKey:[NSNumber numberWithInteger:SERVER_ERROR_INVALID_SCHEDULE_TYPE]];
     [self.errorMap setObject:[NSNumber numberWithInteger:UI_ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT] forKey:[NSNumber numberWithInteger:SERVER_ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT]];
+    [self.errorMap setObject:[NSNumber numberWithInteger:UI_ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS] forKey:[NSNumber numberWithInteger:SERVER_ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS]];
+    [self.errorMap setObject:[NSNumber numberWithInteger:UI_ERROR_ROBOT_HAS_ASSOCIATED_USER] forKey:[NSNumber numberWithInteger:SERVER_ERROR_ROBOT_HAS_ASSOCIATED_USER]];
+    [self.errorMap setObject:[NSNumber numberWithInteger:UI_ERROR_INVALID_LINKING_CODE] forKey:[NSNumber numberWithInteger:SERVER_ERROR_INVALID_LINKING_CODE]];
+    [self.errorMap setObject:[NSNumber numberWithInteger:UI_ERROR_LINKING_CODE_EXPIRED] forKey:[NSNumber numberWithInteger:SERVER_ERROR_LINKING_CODE_EXPIRED]];
+    [self.errorMap setObject:[NSNumber numberWithInteger:UI_ERROR_LINKING_CODE_IN_USE] forKey:[NSNumber numberWithInteger:SERVER_ERROR_LINKING_CODE_IN_USE]];
+
 }
 
 // Returns UI error code for given server code
