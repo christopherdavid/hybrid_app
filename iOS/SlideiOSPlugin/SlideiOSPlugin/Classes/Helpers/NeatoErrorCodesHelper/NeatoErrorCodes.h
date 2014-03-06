@@ -90,11 +90,37 @@
 #define SERVER_ERROR_INVALID_SCHEDULE_TYPE -133
 
 /**
+ * Invalid linking code.
+ * - This will occur if the user enters an invalid linking code.
+ */
+#define SERVER_ERROR_INVALID_LINKING_CODE -154
+
+/**
+ * Linking code expired.
+ * - This happens if the user hasn't entered the linking code before the timeout.
+ */
+#define SERVER_ERROR_LINKING_CODE_EXPIRED -155
+
+/**
  * No schedule exists for given robot.
  * - This will occur if there is no schedule for the robot. The user/application should create a new schedule.
  */
 #define SERVER_ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT -159
 
+/**
+ * Linking code already in use.
+ * - This results if the linking code is already used for association.
+ */
+#define SERVER_ERROR_LINKING_CODE_IN_USE -180
+
+/**
+ * Association is already present for robot and user.
+ */
+#define SERVER_ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS -182
+/**
+ * Robot already has some other user associated with it.
+ */
+#define SERVER_ERROR_ROBOT_HAS_ASSOCIATED_USER -192
 
 
 /*************************UI ERROR CODES**********************/
@@ -204,8 +230,35 @@
 #define UI_ERROR_INVALID_SCHEDULE_TYPE -133
 
 /**
+ * Invalid linking code.
+ * - This will occur if the user enters an invalid linking code.
+ */
+#define UI_ERROR_INVALID_LINKING_CODE -154
+
+/**
+ * Linking code expired.
+ * - This happens if the user hasn't entered the linking code before the timeout.
+ */
+#define UI_ERROR_LINKING_CODE_EXPIRED -155
+
+/**
  * No schedule exists for given robot.
  * - This will occur if there is no schedule for the robot. The user/application should create a new schedule.
  */
 #define UI_ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT -159
+
+/**
+ * Linking code already in use.
+ * - This results if the linking code is already used for association.
+ */
+#define UI_ERROR_LINKING_CODE_IN_USE -180
+
+/**
+ * Association is already present for robot and user.
+ */
+#define UI_ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS -182
+/**
+ * Robot already has some other user associated with it.
+ */
+#define UI_ERROR_ROBOT_HAS_ASSOCIATED_USER -192
 

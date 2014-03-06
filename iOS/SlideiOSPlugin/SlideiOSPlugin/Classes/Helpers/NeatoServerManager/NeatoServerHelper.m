@@ -1933,7 +1933,8 @@
                       completionBlock ? completionBlock(response, nil) : nil;
                   }
                   else {
-                      completionBlock ? completionBlock(nil, [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:200]) : nil;
+                    NSDictionary *errorDict = [jsonData objectForKey:KEY_NEATO_SERVER_ERROR];
+                      completionBlock ? completionBlock(nil, [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:[[NeatoErrorCodesHelper sharedErrorCodesHelper] uiErrorCodeForServerErrorCode:[[errorDict objectForKey:KEY_NEATO_SERVER_ERROR_CODE] integerValue]]]) : nil;
                   }
               }];
 }
