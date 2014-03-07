@@ -5,6 +5,7 @@ resourceHandler.registerFunction('about_ViewModel.js', function(parent) {
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     this.version = ko.observable(parent.config.version);
     this.pluginVersion = ko.observable(parent.config.pluginVersion);
+    this.ServerName = ko.observable(parent.config.serverName);
     
     this.init = function() {
     };

@@ -187,6 +187,14 @@
             "message": "Bitte E-Mail-Adresse überprüfen.",
             "title": "Eingabefehler"
         },
+        "-192": {
+            "message": "This robot is already registered with another user.",
+            "title": "Eingabefehler"
+        },
+        "-182": {
+            "message": "This robot is already registered with this user.",
+            "title": "Eingabefehler"
+        },
         "-108": {
             "message": "Beim Erstellen des Nutzerkontos ist ein Fehler aufgetreten. Bitte Vorgang wiederholen.",
             "title": "Serverfehler"
@@ -329,7 +337,7 @@
             "logged_in": "Hallo <span class='highlightedText font_bold'>__email__<\/span>.",
             "edit_message": "Bitte wähle Dein Land und bestätige den Datenschutzhinweis.",
             "login": "Willkommen <span class='highlightedText font_bold'>__email__<\/span>!",
-            "no_robot": "Du hast noch keinen Roboter registriert.<br>Bitte Roboter durch anwählen von____hinzufügen.",
+            "no_robot": "Du hast noch keinen Roboter registriert.<br>Bitte Roboter durch anwählen von <span class='font_bold'>+<\/span> hinzufügen.",
             "edit_title": "Registrierung"
         },
         "navi": {"title": "Roboter Auswahl"}
@@ -339,7 +347,7 @@
             "title": "Willkommen zur Registrierung.<br/>Zum Fortfahren benötigen wir ein paar Informationen.",
             "email": "Email Adresse.",
             "password_show": "Passwort anzeigen",
-            "registration_done_message": "<div class='mailAnimation'><\/div>Die Bestätigung wurde an <br/><span class='highlightedText'>__email__<\/span><br /><br /> gesendet. Bitte bestätige deinen Account (Konto) mit dem zusendeten Link innerhalb von 48 Stunden.<br /> Danach kannst du dich mit deinem Roboter verbinden.",
+            "registration_done_message": "<div class='mailAnimation'><\/div>Die Bestätigung wurde an <br/><span class='highlightedText'>__email__<\/span><br /><br /> gesendet. Bitte bestätige deinen Account (Konto) mit dem zugesendeten Link innerhalb von 48 Stunden.<br /> Danach kannst du dich mit deinem Roboter verbinden.",
             "registration_done_title": "Konto wurde erstellt.",
             "password_verify": "Passwort verfizieren",
             "password": "Passwort",
@@ -358,7 +366,7 @@
         "stopped_all": "Ich habe die Reinigung gestoppt.",
         "stopped_waited_manual": "Ich bin bereit für die manuelle Reinigung.",
         "resumed": "Ich habe die Reinigung fortgesetzt",
-        "stopped_manual": "<span style:\"\"> NOT TRANSLATED!<\/span>",
+        "stopped_manual": "I've stopped manual cleaning",
         "paused_spot": "Ich habe die Spotreinigung unterbrochen.",
         "stopped_spot": "Ich habe die Spotreinigung gestoppt.",
         "inbase": "Ich verweile an meiner Basisstation",
