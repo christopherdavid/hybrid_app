@@ -187,6 +187,14 @@
             "message": "Por favor revise su e-mail.",
             "title": "Error"
         },
+        "-192": {
+            "message": "This robot is already registered with another user.",
+            "title": "Type Error"
+        },
+        "-182": {
+            "message": "This robot is already registered with this user.",
+            "title": "Type Error"
+        },
         "-108": {
             "message": "Ha sido imposible crear una cuenta. Por favor, inténtenlo de nuevo.",
             "title": "Error del servidor"

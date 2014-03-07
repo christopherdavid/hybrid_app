@@ -339,6 +339,11 @@ var ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT = -159;
  */
 var ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS = -182;
 
+/**
+ * Robot already has some other user associated with it.
+ */
+var ERROR_ROBOT_HAS_ASSOCIATED_USER = -192;
+
 
 /**
  * Unknown error has occured. Please try again.

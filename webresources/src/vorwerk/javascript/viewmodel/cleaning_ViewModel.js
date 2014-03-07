@@ -417,9 +417,9 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         } else {
             if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() != ROBOT_STATE_MANUAL_CLEANING) {
                 robotUiStateHandler.setUiState(ROBOT_UI_STATE_CONNECTING);
-                 tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [that.robot().robotId(),
-                      that.visualSelectedCategory(), that.robot().cleaningMode(), that.robot().cleaningModifier()]);
-                 tDeffer.done(that.startManualModeSuccess);
+                window.setTimeout(function(){
+		            that.startManualMode();
+		        }, 100);
                       
             } else if (that.robot().robotNewVirtualState() == ROBOT_STATE_PAUSED) {
                 // resumed
@@ -440,10 +440,14 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         }
     }
     
-     this.startManualModeSuccess = function(result) {
+    this.startManualMode = function(){
+      var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [that.robot().robotId(),
+                      that.visualSelectedCategory(), that.robot().cleaningMode(), that.robot().cleaningModifier()]);
+      tDeffer.done(that.startManualModeSuccess);
+    }
+    
+    this.startManualModeSuccess = function(result) {
        console.log("startManualModeSuccess" + JSON.stringify(result));
-       //parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_MANUAL_CLEANING);
-       //robotUiStateHandler.setUiState(ROBOT_STATE_MANUAL_CLEANING);
      }
      
     // navigation menu and menu actions
@@ -490,6 +494,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() == ROBOT_STATE_MANUAL_CLEANING) {
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.stopRobotDrive, [that.robot().robotId()], 
                       { type: notificationType.OPERATION, message: $.i18n.t('communication.stop_drive',{'robotName':that.robot().robotName()})});
+           
+        
         } else if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.currentUiState().ui() == ROBOT_UI_STATE_CONNECTING) {
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.cancelIntendToDrive, [that.robot().robotId()], 
                       { type: notificationType.OPERATION, message: $.i18n.t('communication.stop_drive',{'robotName':that.robot().robotName()})});
@@ -508,7 +514,13 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1 && (that.visualSelectedCategory() != CLEANING_CATEGORY_MANUAL)) {
             handleTimedMode(result.expectedTimeToExecute, that.robot().robotId());
         // robot is connected to server
-        } else {
+        }
+        else if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL)
+        {
+        	 var tDefferStop = parent.communicationWrapper.exec(RobotPluginManager.stopCleaning, [that.robot().robotId()]);
+        	 tDefferStop = null;
+        } 
+        else {
             parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_STOPPED);
         }
     }
