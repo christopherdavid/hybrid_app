@@ -5,7 +5,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
     var user = parent.communicationWrapper.getDataValue("user");
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     this.isLegalinfoEdit = ko.observable(false); 
-    this.selectedSubscribe = ko.observable();
+    this.selectedSubscribe = ko.observable(false);
     this.isAgreed = ko.observable(false);
     
     this.isValid = ko.computed(function() {
