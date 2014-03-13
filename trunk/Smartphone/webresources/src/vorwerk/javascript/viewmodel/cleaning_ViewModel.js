@@ -417,7 +417,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         } else {
             if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() != ROBOT_STATE_MANUAL_CLEANING) {
                 robotUiStateHandler.setUiState(ROBOT_UI_STATE_CONNECTING);
-                window.setTimeout(function(){
+               window.setTimeout(function(){
 		            that.startManualMode();
 		        }, 100);
                       

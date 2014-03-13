@@ -20,7 +20,7 @@ function Application() {
         pageReverseDirection: false,
         version:"0.6.9.0",
         pluginVersion:"0.6.2.01",
-        serverName:"Neato Staging",
+        serverName:"Raja Staging",
         fallbackLanguage:"en-GB",
         policyDocumentURL:"http://dev-smartapp.neatorobotics.com/Neato/",
         viewPath:"",
