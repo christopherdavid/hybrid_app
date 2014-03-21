@@ -169,7 +169,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     this.updateLayout = function() {
         console.log("update Layout")
-        $("#statusLine").css("bottom", $(".control-line").height() - 35);
+        $("#statusLine").css("bottom", $(".control-line").height() - 50);
     }
     
     this.successGetSpotDefinition = function(result) {
