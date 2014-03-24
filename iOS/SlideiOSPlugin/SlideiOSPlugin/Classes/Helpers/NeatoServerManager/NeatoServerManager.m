@@ -947,8 +947,7 @@
 - (void)cleaningCategoryForRobot:(NSString *)serialNumber completion:(RequestCompletionBlockDictionary)completion {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ROBOT_PROFILE_DETAILS_2_URL]];
     [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:[[NSString stringWithFormat:GET_ROBOT_DETAILS_POST_STRING, API_KEY, serialNumber, KEY_ROBOT_CURRENT_STATE_DETAILS] dataUsingEncoding:NSUTF8StringEncoding]];
-    
+    [request setHTTPBody:[[NSString stringWithFormat:GET_ROBOT_DETAILS_POST_STRING, API_KEY, serialNumber, KEY_ROBOT_CURRENT_STATE] dataUsingEncoding:NSUTF8StringEncoding]];
     NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
     [serverHelper dataForRequest:request completionBlock:^(id response, NSError *error) {
         if (error) {
