@@ -28,6 +28,9 @@
 // Server Manager
 #import "NeatoServerManager.h"
 
+// Helper class
+#import "TCPConnectionHelper.h"
+
 @implementation RobotManagerPlugin
 
 
@@ -713,7 +716,19 @@
     NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
     NSDictionary *commandParams = [parameters objectForKey:KEY_COMMAND_PARAMETERS];
     NSMutableDictionary *params = [commandParams objectForKey:KEY_PARAMS];
-    debugLog(@"params = %@",params);
+    debugLog(@"params = %@", params);
+  
+    // Do not send command if cleaning category is MANUAL and not directly connected (i.e over TCP)
+    NSNumber *cleaningCategory = [params valueForKey:KEY_CLEANING_CATEGORY];
+    if ([cleaningCategory integerValue] == CLEANING_CATEGORY_MANUAL) {
+        TCPConnectionHelper *helper = [TCPConnectionHelper sharedTCPConnectionHelper];
+        if (![helper isConnected]) {
+            debugLog(@"Manual cleaning cannot be started as direct connection does not exist");
+            NSError *error = [AppHelper nserrorWithDescription:@"Robot is not connected" code:UI_ROBOT_NOT_CONNECTED];
+            [self sendError:error forCallbackId:callbackId];
+            return;
+        }
+    }
     RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
     call.delegate = self;
     [call sendCommandToRobot2:robotId commandId:commandId params:params callbackId:callbackId];
