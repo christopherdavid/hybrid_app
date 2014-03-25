@@ -23,5 +23,6 @@ public class RobotNotificationConstants {
 	// Key codes for error and notification from robot
 	public static final int ROBOT_NOTIFICATION = 4013;
 	public static final int ROBOT_ERROR = 4014;
+	public static final int ROBOT_ONLINE_STATUS = 4015;
 	
 }

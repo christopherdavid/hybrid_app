@@ -30,6 +30,7 @@ public class NeatoRobotDataWebServicesAttributes {
 			public static final String ROBOT_SCHEDULE_UPDATED 	= "schedule_updated";
 			public static final String INTEND_TO_DRIVE 	= "intend_to_drive";
 			public static final String AVAILABLE_TO_DRIVE 		= "available_to_drive";
+			public static final String ROBOT_ONLINE_STATUS 		= "robotOnlineStatus";
 		}
 		
 		public static class ProfileAttributeValueKeys {
@@ -58,7 +59,8 @@ public class NeatoRobotDataWebServicesAttributes {
 			 INTEND_TO_DRIVE,
 			 AVAILABLE_TO_DRIVE, 
 			 ROBOT_NOTIFICATION, 
-			 ROBOT_ERROR
+			 ROBOT_ERROR, 
+			 ROBOT_ONLINE_STATUS
 		}
 		
 		public static String getProfileKey(ProfileAttributeKeysEnum key) {
@@ -87,6 +89,8 @@ public class NeatoRobotDataWebServicesAttributes {
 					return ProfileAttributeKeys.ROBOT_NOTIFICATION;
 				case ROBOT_ERROR:
 					return ProfileAttributeKeys.ROBOT_ERROR;
+				case ROBOT_ONLINE_STATUS:
+					return ProfileAttributeKeys.ROBOT_ONLINE_STATUS;
 				default:
 					return null;
 			}

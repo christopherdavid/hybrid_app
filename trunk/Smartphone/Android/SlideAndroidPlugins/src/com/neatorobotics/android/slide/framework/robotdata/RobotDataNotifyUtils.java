@@ -108,6 +108,11 @@ public class RobotDataNotifyUtils {
 					notifyRobotError(context, robotId, error);
 				}
 				break;
+			case ROBOT_ONLINE_STATUS:
+				if (changedStatus == RobotProfileValueChangedStatus.ROBOT_VALUE_CHANGED) {
+					notifyRobotIsOnlineStatusChanged(context, robotId, details);
+				}
+				break;
 			default:
 				break;
 		}
@@ -196,6 +201,15 @@ public class RobotDataNotifyUtils {
 		else {
 			LogHelper.logD(TAG, "No State for robotId: "+robotId);
 		}
+	}
+	
+	private static void notifyRobotIsOnlineStatusChanged(Context context, String robotId, GetRobotProfileDetailsResult2 details) {
+		int robotIsOnlineStatus = RobotProfileDataUtils.getRobotIsOnlineStatus(details);
+		LogHelper.logD(TAG, "Robot online status is changed");
+		LogHelper.logD(TAG, "Current Robot online status : " + robotIsOnlineStatus);
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put(JsonMapKeys.KEY_ROBOT_ONLINE_STATUS, String.valueOf(robotIsOnlineStatus));
+		RobotNotificationUtil.notifyDataChanged(context, robotId, RobotNotificationConstants.ROBOT_ONLINE_STATUS, data);
 	}
 	
 }
