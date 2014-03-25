@@ -13,7 +13,6 @@ public class RobotCommandPacketConstants {
 	public static final int COMMAND_SEND_ROBOT_STATE = 106;
 	public static final int COMMAND_PAUSE_CLEANING = 107;
 	public static final int COMMAND_ENABLE_SCHEDULE = 108;
-	public static final int COMMAND_DATA_CHANGED_ON_SERVER = 109;
 	public static final int COMMAND_SET_ROBOT_TIME = 110;
 	public static final int COMMAND_REGISTER_STATUS_NOTIFICATIONS = 111;
 	public static final int COMMAND_UNREGISTER_STATUS_NOTIFICATIONS = 112;
@@ -29,11 +28,6 @@ public class RobotCommandPacketConstants {
 	public static final int COMMAND_ROBOT_CONFIGURATION_CHANGED = 5002;
 	public static final int COMMAND_ROBOT_CONNECTION_PING = 5003;
 	public static final int COMMAND_ROBOT_CONNECTION_BREAK = 9999;
-	
-	public static final int COMMAND_ROBOT_LINKING_INITIATED = 10001;
-	public static final int COMMAND_ROBOT_LINKING_SUCCESS = 10002;
-	public static final int COMMAND_ROBOT_LINKING_REJECTED = 10003;
-	public static final int COMMAND_ROBOT_NEW_LINK_FORMED = 10004;
 	
 	
 	// Notification Ids

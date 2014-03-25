@@ -20,6 +20,8 @@ public class NeatoRobotDataWebServicesAttributes {
 			public static final String ROBOT_CURRENT_STATE 		= "robotCurrentState";
 			public static final String ROBOT_CLEANING_COMMAND 	= "cleaningCommand";
 			public static final String ROBOT_CURRENT_STATE_DETAILS = "robotCurrentStateDetails";
+			public static final String ROBOT_NOTIFICATION 		= "robotNotificationMsg";
+			public static final String ROBOT_ERROR 		= "robotErrorMsg";
 			public static final String ROBOT_NAME 				= "name";
 			public static final String ROBOT_ENABLE_BASIC_SCHEDULE 	= "enable_basic_schedule";
 			public static final String ROBOT_ENABLE_ADVANCED_SCHEDULE 	= "enable_advanced_schedule";
@@ -39,6 +41,9 @@ public class NeatoRobotDataWebServicesAttributes {
 			
 			public static final String ROBOT_STATE_DETAILS 		= "robotStateDetails";
 			public static final String ROBOT_CLEANING_CATEGORY 		= "robotCleaningCategory";
+			
+			public static final String ROBOT_NOTIFICATION_MESSAGE_ID = "messageID ";
+			
 		}
 
 		public static enum ProfileAttributeKeysEnum {
@@ -51,7 +56,9 @@ public class NeatoRobotDataWebServicesAttributes {
 			 ROBOT_TURN_WIFI_ONOFF,
 			 ROBOT_SCHEDULE_UPDATED,
 			 INTEND_TO_DRIVE,
-			 AVAILABLE_TO_DRIVE
+			 AVAILABLE_TO_DRIVE, 
+			 ROBOT_NOTIFICATION, 
+			 ROBOT_ERROR
 		}
 		
 		public static String getProfileKey(ProfileAttributeKeysEnum key) {
@@ -76,6 +83,10 @@ public class NeatoRobotDataWebServicesAttributes {
 					return ProfileAttributeKeys.AVAILABLE_TO_DRIVE;
 				case INTEND_TO_DRIVE:
 					return ProfileAttributeKeys.INTEND_TO_DRIVE;
+				case ROBOT_NOTIFICATION:
+					return ProfileAttributeKeys.ROBOT_NOTIFICATION;
+				case ROBOT_ERROR:
+					return ProfileAttributeKeys.ROBOT_ERROR;
 				default:
 					return null;
 			}
