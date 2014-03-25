@@ -17,6 +17,7 @@ import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotMan
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
 import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
+import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 
 public class StartCleaningRequest extends RobotManagerRequest {
 
@@ -36,6 +37,15 @@ public class StartCleaningRequest extends RobotManagerRequest {
 		
 		if (!TextUtils.isEmpty(commadParamsMap.get(JsonMapKeys.KEY_CLEANING_CATEGORY))) {
 			cleaningCategory = Integer.valueOf(commadParamsMap.get(JsonMapKeys.KEY_CLEANING_CATEGORY));
+		}
+		
+		if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_MANUAL) {
+			boolean isDirectConnected = RobotCommandServiceManager.isRobotDirectConnected(context, robotId);
+			if (!isDirectConnected) {
+				LogHelper.log(TAG, "Manual cleaning cannot be started as direct connection does not exist");
+				sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, "Robot is not connected");
+				return;
+			}
 		}
 		
 		if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_SPOT) {

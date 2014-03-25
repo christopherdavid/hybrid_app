@@ -58,6 +58,7 @@ public class RobotPeerConnection {
 			if (mHandler != null) {
 				mHandler.post(new Runnable() {
 					public void run() {
+						LogHelper.log(TAG, "Robot is connected peer-to-peer");
 						mRobotPeerDataListener.onConnect(robotId);
 					}
 				});
@@ -293,12 +294,12 @@ public class RobotPeerConnection {
 	
 	private void closeExistingConnectionInternal()
 	{
-		LogHelper.log(TAG, "closePeerConnection called");
 		RobotConnectionInfo robotConnection = getConnectedRobotInfo();
 		if (robotConnection != null) {
 			Transport transport = robotConnection.getTransport();
 			if (transport != null) {
 				if (transport.isConnected()) {
+					LogHelper.log(TAG, "closePeerConnection called");
 					String robot = robotConnection.getRobotId();
 					sendConnectionBreakPacket(robot);
 					TaskUtils.sleep(TCP_BREAK_CONNECTION_WAIT_TIME);

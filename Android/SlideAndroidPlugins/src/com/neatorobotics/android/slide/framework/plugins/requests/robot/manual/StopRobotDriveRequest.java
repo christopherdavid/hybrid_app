@@ -25,7 +25,7 @@ public class StopRobotDriveRequest extends RobotManagerRequest {
 		LogHelper.logD(TAG, "stopRobotDrive is called");
 		final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
 		
-		// If no connection exits, send error result.
+		// If no connection exists, send error result.
 		if (!RobotCommandServiceManager.isRobotDirectConnected(context, robotId)) {
 			sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, "Robot is not connected");
 			return;

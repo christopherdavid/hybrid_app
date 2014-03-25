@@ -103,7 +103,7 @@ public class RobotCommandParser {
 		@Override
 		public void startElement(String uri, String localName, String qName, 
 				Attributes attributes) throws SAXException {
-			Log.i(TAG, "RobotCommandHandler - Local Name = " + localName);
+			//Log.i(TAG, "RobotCommandHandler - Local Name = " + localName);
 			
 			if (localName.equalsIgnoreCase(RobotPacketConstants.XML_TAG_HEADER)) {
 				headerParser = new HeaderParser();
@@ -144,15 +144,15 @@ public class RobotCommandParser {
 
 		@Override
 		public void endDocument() throws SAXException {
-			Log.i(TAG, "Header = " + header);
-			Log.i(TAG, "Commands = " + commands);
+			//Log.i(TAG, "Header = " + header);
+			//Log.i(TAG, "Commands = " + commands);
 		}
 
 		@Override
 		public void endElement(String uri, String localName, String qName)
 				throws SAXException {
-			Log.i(TAG, "RobotCommandHandler - endElement Local Name = " + localName);
-			Log.i(TAG, "RobotCommandHandler - endElement qName = " + qName);
+			//Log.i(TAG, "RobotCommandHandler - endElement Local Name = " + localName);
+			//Log.i(TAG, "RobotCommandHandler - endElement qName = " + qName);
 			
 			if (headerParser != null) {
 				headerParser.endElement(uri, localName, qName);
@@ -208,21 +208,21 @@ public class RobotCommandParser {
 		
 		public void startElement(String uri, String localName, String qName,
 				Attributes attributes) throws SAXException {
-			Log.i(TAG, "HeaderParser - Local Name = " + localName);
+			//Log.i(TAG, "HeaderParser - Local Name = " + localName);
 			key = localName;
 		}
 
 		public void characters(char[] ch, int start, int length)
 				throws SAXException {
 			value = new String(ch, start, length);
-			Log.i(TAG, "HeaderParser - characters = " + value);
+			//Log.i(TAG, "HeaderParser - characters = " + value);
 		}
 
 		public void endElement(String uri, String localName, String qName)
 				throws SAXException {
 			
 			headerValues.put(convertToLowerCase(key), value);
-			Log.i(TAG, "HeaderParser - endElement Local Name = " + localName);
+			//Log.i(TAG, "HeaderParser - endElement Local Name = " + localName);
 		}
 		
 		public RobotCommandPacketHeader getRobotCommandHeader()
@@ -230,8 +230,8 @@ public class RobotCommandParser {
 			String version = headerValues.get(convertToLowerCase(RobotPacketConstants.XML_TAG_HEADER_VERSION));
 			String signature = headerValues.get(convertToLowerCase(RobotPacketConstants.XML_TAG_HEADER_SIGNATURE));
 			
-			Log.i(TAG, "HeaderParser - version = " + version);
-			Log.i(TAG, "HeaderParser - signature = " + signature);
+			//Log.i(TAG, "HeaderParser - version = " + version);
+			//Log.i(TAG, "HeaderParser - signature = " + signature);
 			RobotCommandPacketHeader header = new RobotCommandPacketHeader();
 			int signatureInNumber = 0;
 			if (signature.startsWith("0x")) {
@@ -251,7 +251,7 @@ public class RobotCommandParser {
 	private static String removeHexPrefix(String numberInHex)
 	{
 		String numberWithoutHexPrefix = numberInHex.substring("0x".length());
-		Log.i(TAG, "numberWithoutHexPrefix = " + numberWithoutHexPrefix);
+		//Log.i(TAG, "numberWithoutHexPrefix = " + numberWithoutHexPrefix);
 		return numberWithoutHexPrefix;
 				
 	}
