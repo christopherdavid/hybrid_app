@@ -2272,6 +2272,12 @@ var neatoSmartApp = (function() {
 			if (dataKeyCode == ROBOT_NEW_LINKING_FORMED) {
 				message = "Robot new link formed";
 			}
+			if (dataKeyCode == ROBOT_MESSAGE_NOTIFICATION) {
+				message = "Robot Notification: " + data['robotNotification'];
+			}
+			if (dataKeyCode == ROBOT_MESSAGE_ERROR) {
+				message = "Robot Error: " + data['robotError'];
+			}
 			alert(robotId + ": "+ message);
 			neatoSmartApp.toggleStartStop();
 		},

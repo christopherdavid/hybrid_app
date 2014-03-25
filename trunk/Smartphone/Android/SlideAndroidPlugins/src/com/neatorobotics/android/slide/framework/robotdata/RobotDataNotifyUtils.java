@@ -96,6 +96,18 @@ public class RobotDataNotifyUtils {
 				break;
 			case ROBOT_TURN_VACUUM_ONOFF:
 				break;
+			case ROBOT_NOTIFICATION:
+				if (changedStatus == RobotProfileValueChangedStatus.ROBOT_VALUE_CHANGED) {
+					String notification = RobotProfileDataUtils.getRobotNotification(context, details);
+					notifyRobotNotification(context, robotId, notification);
+				}
+				break;
+			case ROBOT_ERROR:
+				if (changedStatus == RobotProfileValueChangedStatus.ROBOT_VALUE_CHANGED) {
+					String error = RobotProfileDataUtils.getRobotNotificationError(context, details);
+					notifyRobotError(context, robotId, error);
+				}
+				break;
 			default:
 				break;
 		}
@@ -110,6 +122,24 @@ public class RobotDataNotifyUtils {
 			stateData.put(JsonMapKeys.KEY_SCHEDULE_TYPE, String.valueOf(SchedulerConstants2.SCHEDULE_TYPE_BASIC));
 			RobotNotificationUtil.notifyDataChanged(context, robotId, RobotNotificationConstants.ROBOT_SCHEDULE_STATE_CHANGED, stateData);
 		}
+	}
+	
+	private static void notifyRobotNotification(Context context, String robotId, String notification) {
+		if (TextUtils.isEmpty(notification)) {
+			return;
+		}
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put(JsonMapKeys.KEY_ROBOT_NOTIFICATION, notification);
+		RobotNotificationUtil.notifyDataChanged(context, robotId, RobotNotificationConstants.ROBOT_NOTIFICATION, data);
+	}
+	
+	private static void notifyRobotError(Context context, String robotId, String error) {
+		if (TextUtils.isEmpty(error)) {
+			return;
+		}
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put(JsonMapKeys.KEY_ROBOT_ERROR, error);
+		RobotNotificationUtil.notifyDataChanged(context, robotId, RobotNotificationConstants.ROBOT_ERROR, data);
 	}
 	
 	private static void notifyScheduleUpdated(Context context, String robotId, GetRobotProfileDetailsResult2 details) {

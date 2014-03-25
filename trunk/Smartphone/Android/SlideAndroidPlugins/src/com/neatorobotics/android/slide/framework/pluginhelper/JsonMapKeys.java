@@ -104,6 +104,10 @@ public class JsonMapKeys {
 	public static final String KEY_PUSH_NOTIFICATION_TYPES = "pushNotificationTypes";
 	public static final String KEY_FLAG_ON_OFF = "flagOnOff";
 	
+	// Used for robot error and notification
+	public static final String KEY_ROBOT_NOTIFICATION = "robotNotification";
+	public static final String KEY_ROBOT_ERROR = "robotError";
+	
 	// Timed Mode 
 	public static final String KEY_EXPECTED_TIME_TO_EXECUTE = "expectedTimeToExecute";
 	public static final String KEY_ROBOT_DATA_ID = "robotDataKeyId"; 

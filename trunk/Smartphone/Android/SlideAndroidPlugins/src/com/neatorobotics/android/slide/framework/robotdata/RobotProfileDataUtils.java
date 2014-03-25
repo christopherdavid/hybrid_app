@@ -102,6 +102,25 @@ public class RobotProfileDataUtils {
 		return null;
 	}
 	
+	public static String getRobotNotification(Context context, GetRobotProfileDetailsResult2 details) {
+		String robotNotification = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_NOTIFICATION);
+		
+		if (!TextUtils.isEmpty(robotNotification)) {
+			return robotNotification;
+		}
+		LogHelper.logD(TAG, "No robot notification available");
+		return null;
+	}
+	
+	public static String getRobotNotificationError(Context context, GetRobotProfileDetailsResult2 details) {
+		String robotError = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_ERROR);
+		if (!TextUtils.isEmpty(robotError)) {
+			return robotError;
+		}
+		LogHelper.logD(TAG, "No robot error available");
+		return null;
+	}
+	
 	public static String getState(String virtualState, String currentState) {
 		String actualState = null;
 		try {

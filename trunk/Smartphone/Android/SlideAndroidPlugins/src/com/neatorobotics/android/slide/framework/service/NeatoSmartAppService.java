@@ -111,10 +111,6 @@ public class NeatoSmartAppService extends Service {
 					processDataChangedRequest(from, request);
 					return;
 				}
-				if (isLinkingCommand(request)) {
-					processLinkingData(from, request);
-					return;
-				}
 			}
 			sendNotification(packet);
 		}
@@ -234,13 +230,6 @@ public class NeatoSmartAppService extends Service {
 		return (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_PROFILE_DATA_CHANGED);
 	}
 	
-	private boolean isLinkingCommand(RequestPacket request) {
-		int commandId = request.getCommand();
-		return ((commandId == RobotCommandPacketConstants.COMMAND_ROBOT_LINKING_SUCCESS)
-				|| (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_LINKING_REJECTED)
-				|| (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_NEW_LINK_FORMED));
-	}
-	
 	private void processDataChangedRequest(String from, RequestPacket request) {
 		LogHelper.log(TAG, "Data changed on server for robot");
 		String robotId = request.getCommandParam(RobotCommandPacketConstants.KEY_ROBOT_ID);
@@ -267,12 +256,6 @@ public class NeatoSmartAppService extends Service {
 		}
 		
 		RobotDataManager.getServerData(getApplicationContext(), robotId);
-	}
-	
-	private void processLinkingData(String from, RequestPacket request) {
-
-		LogHelper.log(TAG, "Process LinkingData for robot");
-		RobotLinkingManager.notifyLinkingData(getApplicationContext(), request);
 	}
 	
 	private void sendNotification(RobotCommandPacket robotPacket) {		
