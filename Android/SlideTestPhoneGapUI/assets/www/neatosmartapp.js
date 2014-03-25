@@ -2278,6 +2278,15 @@ var neatoSmartApp = (function() {
 			if (dataKeyCode == ROBOT_MESSAGE_ERROR) {
 				message = "Robot Error: " + data['robotError'];
 			}
+			if (dataKeyCode == ROBOT_ONLINE_STATUS_CHANGED) {
+				var onlineStatus = data['online'];
+				if (onlineStatus == 1) {
+					message = "Robot Is Online";
+				}
+				else if (onlineStatus == 0) {
+					message = "Robot Is Offline";
+				}
+			}
 			alert(robotId + ": "+ message);
 			neatoSmartApp.toggleStartStop();
 		},

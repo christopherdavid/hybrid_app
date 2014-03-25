@@ -49,6 +49,11 @@ public class RobotProfileDataUtils {
 		return robotName;
 	}
 	
+	public static int getRobotIsOnlineStatus(GetRobotProfileDetailsResult2 details) {
+		String robotIsOnlineStatus = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_ONLINE_STATUS);
+		return Integer.parseInt(robotIsOnlineStatus);
+	}
+	
 	public static String getRobotCurrentState(Context context, GetRobotProfileDetailsResult2 details) {
 		String currentState = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE);
 		LogHelper.logD(TAG, "getServerData, retrieved ROBOT_CURRENT_STATE");
