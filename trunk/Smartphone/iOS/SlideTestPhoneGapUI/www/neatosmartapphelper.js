@@ -56,6 +56,12 @@ var ROBOT_LINKING_FAILURE			= 4011
 // then all associate users with that robot gets the notification
 var ROBOT_NEW_LINKING_FORMED		= 4012
 
+var ROBOT_MESSAGE_NOTIFICATION = 4013;
+var ROBOT_MESSAGE_ERROR = 4014;
+
+var ROBOT_ONLINE_STATUS_CHANGED = 4015;
+
+
 // Robot state codes
 var ROBOT_STATE_UNKNOWN 	= 10001;
 var ROBOT_STATE_CLEANING 	= 10002;

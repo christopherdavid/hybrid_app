@@ -58,8 +58,25 @@
     [NeatoUserHelper saveNeatoUser:user];
     
     XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
-    helper.delegate = self;
-    [helper connectJID:user.chatId password:user.chatPassword host:XMPP_SERVER_ADDRESS];
+	// If XMPP is already connected then we need to tell
+	// the upper layer that login succeeded
+	// Because of some issue on the CleaningRobotApp UI, PhoneGap UI assumes that
+	// user is not logged in. XMPP Login succeed but CleaningRobotApp shows login UI
+    if (![helper isConnected]) {
+      helper.delegate = self;
+      [helper connectJID:user.chatId password:user.chatPassword host:XMPP_SERVER_ADDRESS];
+    }
+    else {
+      [self alreadyConnectedToXMPP];
+    }
+}
+
+- (void)alreadyConnectedToXMPP {
+  debugLog(@"XMPP connection already exists");
+  NeatoUser *user = [NeatoUserHelper getNeatoUser];
+  [self.delegate performSelectorOnMainThread:@selector(loginSuccess:) withObject:user waitUntilDone:NO];
+  self.delegate = nil;
+  self.retained_self = nil;
 }
 
 - (void)failedToGetUserDetailsWithError:(NSError *)error {

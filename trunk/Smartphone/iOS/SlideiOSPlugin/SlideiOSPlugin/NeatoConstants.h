@@ -157,6 +157,11 @@
 #define KEY_SERVER_COUNTRY_CODE @"country_code"
 #define KEY_SERVER_OPT_IN @"opt_in"
 #define KEY_ROBOT_CURRENT_STATE_DETAILS @"robotCurrentStateDetails"
+#define KEY_ROBOT_NOTIFICATION_MESSAGE @"robotNotificationMsg"
+#define KEY_ROBOT_ERROR_MESSAGE @"robotErrorMsg"
+#define KEY_ROBOT_NOTIFICATION @"robotNotification"
+#define KEY_ROBOT_ERROR @"robotError"
+#define KEY_ROBOT_ONLINE_STATUS_DATA @"robotOnlineStatus"
 
 //Key Codes for profile data changes.
 #define ROBOT_CURRENT_STATE_CHANGED_CODE 4001
@@ -167,6 +172,9 @@
 #define ROBOT_IS_CONNECTED 4007
 #define ROBOT_IS_DISCONNECTED 4008
 #define ROBOT_ERROR_IN_CONNECTING 4009
+#define ROBOT_NOTIFICATION_CODE 4013
+#define ROBOT_ERROR_CODE 4014
+#define ROBOT_ONLINE_STATUS_CHANGED_CODE 4015
 
 // Robot states
 #define ROBOT_STATE_CLEANING 10002
