@@ -8,7 +8,8 @@
 #define DEVICE_TYPE_IPHONE      2
 
 @interface AppBaseDelegate() <UserManagerProtocol>
-
+@property(nonatomic, strong) UserManagerCallWrapper *userManager;
+@property(nonatomic, strong)XMPPConnectionHelper *xmppHelper;
 @end
 
 @implementation AppBaseDelegate
@@ -16,11 +17,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     debugLog(@"didFinishLaunchingWithOptions called");
-    [self connectOverXMPPIfRequired];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectOverXMPPIfRequired) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disconnectXMPPConnection) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    
-    bool loggedIn = [[[UserManagerCallWrapper alloc] init] isUserLoggedIn];
+
+  [self connectOverXMPPIfRequired];
+  
+    bool loggedIn = [self.userManager isUserLoggedIn];
     if (loggedIn) {
         // Let the device know we want to receive push notifications
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
@@ -41,16 +43,15 @@
     token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
     debugLog(@"content---%@", token);
     
-    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
-    callWrapper.delegate = self;
+    self.userManager.delegate = self;
     debugLog(@"Registration Id  after parsing: %@", token);
-    bool loggedIn = [[[UserManagerCallWrapper alloc] init] isUserLoggedIn];
+    bool loggedIn = [self.userManager isUserLoggedIn];
     if (loggedIn) {
         NSString *email = [NeatoUserHelper getLoggedInUserEmail];
         debugLog(@"email in register push notification: %@", email);
-        [callWrapper registerPushNotificationForEmail:email deviceType:DEVICE_TYPE_IPHONE deviceToken:token];
+        [self.userManager registerPushNotificationForEmail:email deviceType:DEVICE_TYPE_IPHONE deviceToken:token];
     } else {
-        [callWrapper unregisterPushNotificationForDeviceToken:token];
+        [self.userManager unregisterPushNotificationForDeviceToken:token];
     }
 }
 
@@ -89,22 +90,36 @@
     [[PushNotificationHelper sharedInstance] setPushNotification:userInfo];
 }
 
+- (UserManagerCallWrapper *)userManager {
+  if (!_userManager) {
+    _userManager = [[UserManagerCallWrapper alloc] init];
+  }
+  return _userManager;
+}
+
+- (XMPPConnectionHelper *)xmppHelper {
+  if (!_xmppHelper) {
+    _xmppHelper = [[XMPPConnectionHelper alloc] init];
+  }
+  return _xmppHelper;
+}
+
+
 - (void)connectOverXMPPIfRequired {
     debugLog(@"connectOverXMPPIfRequired called.");
-    bool loggedIn = [[[UserManagerCallWrapper alloc] init] isUserLoggedIn];
+    bool loggedIn = [self.userManager isUserLoggedIn];
     if (loggedIn) {
         NeatoUser *user = [NeatoUserHelper getNeatoUser];
         if (!user) {
             debugLog(@"Couldn't find the logged-in user. Will not connect over XMPP!");
             return;
         }
-        XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
-        if ([helper isConnected]) {
+        if ([self.xmppHelper isConnected]) {
             debugLog(@"Already connected over XMPP!");
             return;
         }
-        helper.delegate = self;
-        [helper connectJID:user.chatId password:user.chatPassword host:XMPP_SERVER_ADDRESS];
+        self.xmppHelper.delegate = self;
+        [self.xmppHelper connectJID:user.chatId password:user.chatPassword host:XMPP_SERVER_ADDRESS];
         
     }
     else {
@@ -114,9 +129,8 @@
 
 - (void)disconnectXMPPConnection {
     debugLog(@"disconnectXMPPConnection called");
-    XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
-    helper.delegate = self;
-    [helper disconnectFromRobot];
+    self.xmppHelper.delegate = self;
+    [self.xmppHelper disconnectFromRobot];
 }
 
 - (void)didConnectOverXMPP {

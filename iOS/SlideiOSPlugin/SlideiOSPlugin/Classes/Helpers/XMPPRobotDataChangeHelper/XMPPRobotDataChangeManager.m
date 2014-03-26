@@ -139,6 +139,21 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
     if (robotDriveAvailableStatusChanged) {
         [self processRobotAvailableToDriveForProfile:robotProfile];
     }
+    // Check for notification message.
+    BOOL notificationMessage = [self hasRobotNotificationMessageChangedForProfile:robotProfile];
+    if (notificationMessage) {
+      [self notifyNotificationMessageForProfile:robotProfile];
+    }
+    // Check for Error message.
+    BOOL errorMessage = [self hasRobotErrorMessageChangedForProfile:robotProfile];
+    if (errorMessage) {
+      [self notifyErrorMessageForProfile:robotProfile];
+    }
+    // Check forOnline status change.
+    BOOL robotOnlineStatusChanged = [self hasRobotOnlineStatusChangedForProfile:robotProfile];
+    if (robotOnlineStatusChanged) {
+      [self notifyRobotOnlineStatusChangeForProfile:robotProfile];
+    }
 }
 
 - (BOOL)hasRobotIntendToDriveStatusChangedForProfile:(NSDictionary *)robotProfile {
@@ -167,6 +182,18 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 
 - (BOOL)hasRobotScheduleUpdatedForProfile:(NSDictionary *)robotProfile {
     return [self updateDataTimestampIfChangedForKey:KEY_ROBOT_SCHEDULE_UPDATED withProfile:robotProfile];
+}
+
+- (BOOL)hasRobotNotificationMessageChangedForProfile:(NSDictionary *)robotProfile {
+  return [self updateDataTimestampIfChangedForKey:KEY_ROBOT_NOTIFICATION_MESSAGE withProfile:robotProfile];
+}
+
+- (BOOL)hasRobotErrorMessageChangedForProfile:(NSDictionary *)robotProfile {
+  return [self updateDataTimestampIfChangedForKey:KEY_ROBOT_ERROR_MESSAGE withProfile:robotProfile];
+}
+
+- (BOOL)hasRobotOnlineStatusChangedForProfile:(NSDictionary *)robotProfile {
+  return [self updateDataTimestampIfChangedForKey:KEY_ROBOT_ONLINE_STATUS_DATA withProfile:robotProfile];
 }
 
 // This method returns YES in two cases :
@@ -392,6 +419,33 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
         // Somebody initiated intend to drive on server.
         debugLog(@"Somebody initiated intend to drive on server.");
     }
+}
+
+- (void)notifyNotificationMessageForProfile:(NSDictionary *)robotProfile {
+  debugLog(@"");
+  NSString *notificationMessage = [[robotProfile objectForKey:KEY_ROBOT_NOTIFICATION_MESSAGE] objectForKey:KEY_VALUE];
+
+  NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+  [data setObject:notificationMessage forKey:KEY_ROBOT_NOTIFICATION];
+  [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE] withKeyCode:[NSNumber numberWithInt:ROBOT_NOTIFICATION_CODE] andData:data];
+}
+
+- (void)notifyErrorMessageForProfile:(NSDictionary *)robotProfile {
+  debugLog(@"");
+  NSString *errorMessage = [[robotProfile objectForKey:KEY_ROBOT_ERROR_MESSAGE] objectForKey:KEY_VALUE];
+
+  NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+  [data setObject:errorMessage forKey:KEY_ROBOT_ERROR];
+  [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE] withKeyCode:[NSNumber numberWithInt:ROBOT_ERROR_CODE] andData:data];
+}
+
+- (void)notifyRobotOnlineStatusChangeForProfile:(NSDictionary *)robotProfile {
+  debugLog(@"");
+  NSString *robotOnlineStatus = [[robotProfile objectForKey:KEY_ROBOT_ONLINE_STATUS_DATA] objectForKey:KEY_VALUE];
+
+  NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+  [data setObject:robotOnlineStatus forKey:NEATO_ROBOT_ONLINE_STATUS];
+  [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE] withKeyCode:[NSNumber numberWithInt:ROBOT_ONLINE_STATUS_CHANGED_CODE] andData:data];
 }
 
 @end

@@ -2177,6 +2177,21 @@ var neatoSmartApp = (function() {
 			if (dataKeyCode == ROBOT_NEW_LINKING_FORMED) {
 				message = "Robot new link formed";
 			}
+      			if (dataKeyCode == ROBOT_MESSAGE_NOTIFICATION) {
+        			message = "Robot Notification: " + data['robotNotification'];
+      			}
+      			if (dataKeyCode == ROBOT_MESSAGE_ERROR) {
+        			message = "Robot Error: " + data['robotError'];
+      			}
+      			if (dataKeyCode == ROBOT_ONLINE_STATUS_CHANGED) {
+        			var onlineStatus = data['online'];
+          			if (onlineStatus == 1) {
+              				message = "Robot Is Online";
+          			}
+          			else if (onlineStatus == 0) {
+              				message = "Robot Is Offline";
+          			}
+      			}
       if (message != "" && robotId != "") {
         alert(robotId + ": "+ message);
       }

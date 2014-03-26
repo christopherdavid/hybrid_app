@@ -54,6 +54,7 @@
  */
 - (BOOL) application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
+  
     NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
     NSString* invokeString = nil;
     
@@ -123,8 +124,8 @@
     
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
-    
-    return YES;
+  
+    return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
 // this happens while we are running ( in the background, or from within our own app )
