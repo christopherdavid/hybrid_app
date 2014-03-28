@@ -75,6 +75,19 @@ function WorkflowNotification(parent) {
                             }
                             break;
                         case ROBOT_CONNECTED:
+                        	that.startManualMode();
+                        	break;
+                        case ROBOT_ONLINE_STATUS_CHANGED:
+                        	var data = result.robotData;
+                        	var onlineStatus = data.online;
+							console.log("Robot Online Status Changed :" + JSON.stringify(data));
+							curRobot().robotOnline(onlineStatus=="1"?true:false);
+							if(onlineStatus=="0"){
+								robotUiStateHandler.setVirtualState(ROBOT_UI_STATE_ROBOT_OFFLINE);
+							}else{
+								parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curRobot().robotCurrentState());
+							}
+                        	break;
                         case ROBOT_DISCONNECTED:
                             var curState = result.robotData.errorDriveResponseCode;
                             curRobot().connectionState(result.robotDataKeyId);
@@ -468,6 +481,16 @@ function WorkflowNotification(parent) {
         $notificationArea.notificationbar("hide", true);
     }
     
+    this.startManualMode = function(){
+    var curRobot = parent.communicationWrapper.getDataValue("selectedRobot");
+      var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [curRobot().robotId(),
+                      1, 1, 1]);
+      tDeffer.done(that.startManualModeSuccess);
+    }
+    
+    this.startManualModeSuccess = function(result) {
+       console.log("startManualModeSuccess" + JSON.stringify(result));
+     }
     
     /**
      * Shows an error message on the screen (and blocks all other interaction).

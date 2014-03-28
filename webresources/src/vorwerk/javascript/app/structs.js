@@ -29,7 +29,8 @@ function getRobotStruct() {
         cleaningMode:"1",
         cleaningModifier:"1",
         stateString:$.i18n.t("robotStateCodes." + defaultState),
-        connectionState:""
+        connectionState:"",
+        robotOnline:""
     }
 };
 

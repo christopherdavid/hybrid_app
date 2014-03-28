@@ -165,10 +165,25 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         $(document).one("pageshow", function(event) {
             that.updateLayout();
         });
+        
+        // setUI if the robot is offline
+          // getRobotCleaningCategory
+        var tDeffer3 = parent.communicationWrapper.exec(RobotPluginManager.getRobotOnlineStatus, [that.robot().robotId()]);
+        tDeffer3.done(that.successGetRobotOnlineState);
+        
     }
     
+    this.successGetRobotOnlineState = function(result) {
+    	console.log("Robot Online Success :"+ JSON.stringify(result));
+    	if(result.robotId) {
+            that.robot().robotOnline(result.online);
+            if(result.online == false){
+            	robotUiStateHandler.setVirtualState(ROBOT_UI_STATE_ROBOT_OFFLINE);
+            }
+        }
+    }
     this.updateLayout = function() {
-        console.log("update Layout")
+        console.log("update Layout");
         $("#statusLine").css("bottom", $(".control-line").height() - 50);
     }
     
@@ -380,6 +395,14 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     this.startBtnClick = function() {
         navigator.notification.vibrate(500);
+        console.log("Online Status :"+ that.robot().robotOnline());
+        if(!that.robot().robotOnline())
+        {
+        	var translatedTitle = that.robot().robotName() + " Offline";//$.i18n.t("legalInformation.page.notAccepted_title");
+            var translatedText = $.i18n.t("cleaning.page.offline_message");
+        	parent.notification.showDialog(dialogType.ERROR, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); }}]);
+        	return false;
+        }
         var tDeffer = null;
         // first check manual cleaning
         if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() != ROBOT_STATE_MANUAL_CLEANING) {
@@ -417,9 +440,9 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         } else {
             if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() != ROBOT_STATE_MANUAL_CLEANING) {
                 robotUiStateHandler.setUiState(ROBOT_UI_STATE_CONNECTING);
-               window.setTimeout(function(){
+              /* window.setTimeout(function(){
 		            that.startManualMode();
-		        }, 100);
+		        }, 100);*/
                       
             } else if (that.robot().robotNewVirtualState() == ROBOT_STATE_PAUSED) {
                 // resumed

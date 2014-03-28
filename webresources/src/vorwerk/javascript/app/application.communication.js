@@ -237,6 +237,27 @@ function WorkflowCommunication(parent) {
         }
     }
     
+    // this requests the robot online status of each roboter 
+    this.getRobotOnline = function(robotId) {
+        // request Online state
+        var tDeffer = that.exec(RobotPluginManager.getRobotOnlineStatus, [robotId], { type: notificationType.NONE }, true);
+        tDeffer.done(that.successGetRobotOnlineState);
+    };
+    
+    this.successGetRobotOnlineState = function(result) {
+    	console.log("Robot Online Success :"+ JSON.stringify(result));
+    	if(result.robotId) {
+            var tempRobots = that.getDataValue("robotList");
+            // find robote with robotId in global binding object
+            $.each(tempRobots(), function(index, item){
+                if(item.robotId() == result.robotId) {
+                    // update online state
+         		    item.robotOnline(result.Online);
+                    return false;
+                }
+            });
+        }
+    }
     this.updateRobotStateWithCode = function(robot, virtualState, currentState) {
         // make sure virtualState is an integer
         virtualState = parseInt(virtualState, 10);

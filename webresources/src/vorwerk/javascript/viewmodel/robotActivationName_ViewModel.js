@@ -56,6 +56,7 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
         robotUiStateHandler.subscribeToRobot(parent.communicationWrapper.getDataValue("selectedRobot"));
         parent.communicationWrapper.updateRobotStateWithCode(that.robot(), that.robot().robotNewVirtualState());
         parent.communicationWrapper.getRobotState(that.bundle.robot.robotId);
+        parent.communicationWrapper.getRobotOnline(that.bundle.robot.robotId);
         
         var msgTitle = $.i18n.t("dialogs.ROBOT_ADDED.title");
         var msgText = $.i18n.t("dialogs.ROBOT_ADDED.message");

@@ -56,6 +56,11 @@ var ROBOT_LINKING_FAILURE			= 4011
 // then all associate users with that robot gets the notification
 var ROBOT_NEW_LINKING_FORMED		= 4012
 
+var ROBOT_MESSAGE_NOTIFICATION = 4013;
+var ROBOT_MESSAGE_ERROR = 4014;
+
+var ROBOT_ONLINE_STATUS_CHANGED = 4015;
+
 // Robot state codes
 var ROBOT_STATE_UNKNOWN 	= 10001;
 var ROBOT_STATE_CLEANING 	= 10002;
@@ -327,6 +332,12 @@ var ERROR_SCHEDULE_VERSION_MISMATCH = -129;
  *   Currently supported schedule type is Basic schedule.
  */
 var ERROR_INVALID_SCHEDULE_TYPE = -133;
+
+/**
+ * Invalid linking code.
+ * - This will occur if the user enters an invalid linking code.
+ */
+ var ERROR_INVALID_LINKING_CODE = -154;
 
 /**
  * No schedule exists for given robot.
