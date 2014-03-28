@@ -833,6 +833,15 @@ var RobotPluginManager = ( function() {
             }, delay);
         },
         
+        getRobotOnlineStatus: function(robotId, callbackSuccess, callbackError) {
+            
+             window.setTimeout(function() {
+                callbackSuccess({
+                    "online":false,
+                    "robotId": robotId
+                });
+            }, 100);
+        },
         /*
          * Name: pauseCleaning
          * Sends "pause cleaning" command to the robot. This internally calls 

@@ -54,8 +54,8 @@
             <fieldset>
                 <p data-i18n="loginUser.page.description" data-bind="translate: language">[desription]</p>
                 <div class="line">
-                    <input type="text" data-i18n="loginUser.page.email"
-                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'afterkeydown'"/>
+                    <input type="email" data-i18n="loginUser.page.email"
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'onblur'"/>
                 </div>
             </fieldset>
             

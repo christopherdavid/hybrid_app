@@ -199,6 +199,7 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
            // separate API call because the user could navigate in the meantime 
            // to another screen
             parent.communicationWrapper.getRobotState(item.robotId);
+            parent.communicationWrapper.getRobotOnline(item.robotId);
         });
         that.robots(ko.mapping.fromJS(robotList)());
 

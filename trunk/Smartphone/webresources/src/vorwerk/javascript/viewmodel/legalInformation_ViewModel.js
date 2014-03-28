@@ -54,15 +54,13 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         if(that.isLegalinfoEdit()) {
             if(typeof that.bundle.country == 'undefine') {
                 that.selectedSubscribe(user.extra_param.optIn);
-                that.isAgreed(user.extra_param.touAgreement);
             }
-            
+            that.isAgreed("true");
             if(that.bundle) {
                 if(that.bundle.country == "") {
                     that.bundle.country(user.extra_param.countryCode);
                 } else if(that.bundle.country == user.extra_param.countryCode) {
                     that.selectedSubscribe(user.extra_param.optIn);
-                    that.isAgreed(user.extra_param.touAgreement);
                 }
             }
             	
