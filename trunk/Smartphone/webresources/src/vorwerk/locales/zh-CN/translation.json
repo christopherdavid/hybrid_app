@@ -169,6 +169,7 @@
     },
     "cleaning": {
         "page": {
+        	"offline_message":"The cleaning operation cannot be done when the robot is offline. Please switch-on/reboot the robot and try. ",
             "cleaningCategory": {
                 "3": "定点清扫",
                 "2": "全部清扫",
@@ -388,7 +389,8 @@
         "idle": "随时待命。",
         "stopped_waited_all": "我准备就绪可以全部清扫。",
         "stopped": "我已停止清扫。",
-        "cleaning_all": "我正在全部清扫。"
+        "cleaning_all": "我正在全部清扫。",
+        "robot_offline": "I'm Offline"
     },
     "confirm": {"close_app": "是否确定关闭该程序？"},
     "userSettings": {
