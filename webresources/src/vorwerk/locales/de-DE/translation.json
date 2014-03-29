@@ -169,6 +169,7 @@
     },
     "cleaning": {
         "page": {
+        	"offline_message":"The cleaning operation cannot be done when the robot is offline. Please switch-on/reboot the robot and try. ",
             "cleaningCategory": {
                 "3": "SPOT",
                 "2": "ALLES",
@@ -388,7 +389,8 @@
         "idle": "Ich bin bereit.",
         "stopped_waited_all": "Ich bin bereit.",
         "stopped": "Ich habe die Reinigung gestoppt.",
-        "cleaning_all": "Ich reinige."
+        "cleaning_all": "Ich reinige.",
+        "robot_offline": "I'm Offline"
     },
     "confirm": {"close_app": "Möchtest du die App wirklich schliessen?"},
     "userSettings": {
