@@ -54,7 +54,6 @@
  */
 - (BOOL) application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
-  
     NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
     NSString* invokeString = nil;
     
@@ -119,13 +118,14 @@
         
         self.window.clipsToBounds =YES;
         
-        self.window.frame =  CGRectMake(0,20,self.window.frame.size.width,self.window.frame.size.height-20);
+       
+        //self.window.frame =  CGRectMake(0,20,self.window.frame.size.width,self.window.frame.size.height-20);
     }
     
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
-  
-    return [super application:application didFinishLaunchingWithOptions:launchOptions];
+    
+    return YES;
 }
 
 // this happens while we are running ( in the background, or from within our own app )

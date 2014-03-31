@@ -57,10 +57,50 @@
 	NSDictionary* dictionary = nil;
 	
 	NSLocale* locale = [NSLocale currentLocale];
-	
-	if(locale) {
-		dictionary = [NSDictionary dictionaryWithObject:[locale localeIdentifier] forKey:@"value"];
-	
+    
+    if(locale) {
+        // this should be the correct method to get current language of the device
+        NSString* languageDevice = [[NSLocale preferredLanguages] objectAtIndex:0];
+        
+        NSString* regionDevice = [locale localeIdentifier];
+        
+        NSString * test = [regionDevice substringToIndex:2];
+        
+        // check if region is different with language so calculate new language
+        if(test != languageDevice)
+        {
+            // check if current language is supported
+            // build lang + region code from language by setting correct region for all availabel langs
+            // has to be changed if new language files are supported
+            if ([languageDevice isEqual: @"it"]) {
+                languageDevice = @"it_IT";
+            } else if ([languageDevice isEqual: @"de"]) {
+                languageDevice = @"de_DE";
+                
+            } else if ([languageDevice isEqual: @"es"]) {
+                languageDevice = @"es_ES";
+                
+            } else if ([languageDevice isEqual: @"fr"]) {
+                languageDevice = @"fr_FR";
+                
+            } else if ([languageDevice isEqual: @"cs"]) {
+                languageDevice = @"cs_CZ";
+                
+            } else if ([languageDevice isEqual: @"zh"]) {
+                languageDevice = @"zh_CN";
+                
+            } else if ([languageDevice isEqual: @"en"]) {
+                languageDevice = @"en_GB";
+            // fallback language
+            } else {
+                languageDevice = @"en_GB";
+            }
+        } else {
+            // region code is same as language code so use region code for app language
+            languageDevice = regionDevice;
+        }
+        
+        dictionary = [NSDictionary dictionaryWithObject:languageDevice forKey:@"value"];
 		result = [CDVPluginResult resultWithStatus: CDVCommandStatus_OK messageAsDictionary: dictionary];
 		jsString = [result toSuccessCallbackString:callbackId];
 	}
@@ -68,7 +108,7 @@
 		result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsInt: UNKNOWN_ERROR];
 		jsString = [result toErrorCallbackString:callbackId];
 	}
-	
+
 	[self writeJavascript:jsString];
 }
 
