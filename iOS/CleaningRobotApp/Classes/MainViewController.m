@@ -65,6 +65,7 @@
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
+
     return [super shouldAutorotateToInterfaceOrientation:interfaceOrientation];
 }
 
@@ -117,12 +118,12 @@
      // Black base color for background matches the native apps
      theWebView.backgroundColor = [UIColor blackColor];
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
-        theWebView.frame =  CGRectMake(0,0,theWebView.frame.size.width,theWebView.frame.size.height-20);
-    }
+     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
+     {
+         self.webView.frame =  CGRectMake(0,20,self.webView.frame.size.width,self.webView.frame.size.height - 5);
+     }
     
-
-	return [super webViewDidFinishLoad:theWebView];
+	 return [super webViewDidFinishLoad:theWebView];
 }
 
 
