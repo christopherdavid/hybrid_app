@@ -1,7 +1,7 @@
 {
     "privacyPolicy": {
-        "page": {"title": "Privacy Policy"},
-        "navi": {"title": "Privacy Policy"}
+        "page": {"title": "Ochrana osobních údajů"},
+        "navi": {"title": "Ochrana osobních údajů"}
     },
     "common": {
         "change": "Změnit",
@@ -49,16 +49,16 @@
     },
     "legalInformation": {
         "page": {
-            "legal_agreement": "I Agree",
+            "legal_agreement": "Souhlasím",
             "title": "AGREEMENTS",
-            "notAccepted_title": "Missing Legal Agreement",
-            "notAccepted_message": "Please check the privacy policy and terms of use documents to complete the registration.",
-            "tou_pp_agreement": "We are committed to the safety of your data. This will not be disclosed to companies outside the Vorwerk group.  To use this application, you must agree to the <a id='terms' href='#' class='highlightedText font_bold font_small'>Terms of Use<\/a> and <a id='privacy' href='#' class='highlightedText font_bold font_small'>Privacy Policy<\/a>. I hereby declare that I have read and agree to the Privacy Policy and the Terms of Use.",
-            "subscribe_header": "MARKETING INFORMATION",
-            "edit_done_title": "Account Modified",
-            "edit_done_message": "The user account has been updated successfully",
+            "notAccepted_title": "Chybí souhlas s právními podmínkami",
+            "notAccepted_message": "Zkontrolujte si prosím pro dokončení registrace podmínky ochrany osobních údajů a podmínky použití dokumentace",
+            "tou_pp_agreement": "Abyste mohli aplikaci používat, musíte souhlasit s podmínkami používání a s prohlášením o ochraně osobních údajů.  TICK BOX Tímto prohlašuji, že jsem četl/a a se souhlasem vzal/a na vědomí <a id='terms' href='#' class='highlightedText font_bold font_small'>podmínky používání<\/a> a <a id='privacy' href='#' class='highlightedText font_bold font_small'>prohlášení o ochraně osobních údajů<\/a>.",
+            "subscribe_header": "Marketingová infromace",
+            "edit_done_title": "Účet byl změněn",
+            "edit_done_message": "Uživatelský účet byl úspěšně změněn",
             "tou_pp_header": "Právní podmínky",
-            "subscribe_agreement": "We would like to keep you informed about new updates and product information.  I agree that my e -mail address will be used by Vorwerk International Strecker & Co. for consumer information and advertising ( e.g., updates , information, special offers). This consent can be revoked at any time in the User Settings of this application. For more details, see the Privacy Policy."
+            "subscribe_agreement": "Chtěli bychom Vás jakožto zákazníka průběžně informovat o nových aktualizacích a o výrobcích a budeme usilovat o bezpečnost Vašich údajů. Nebudeme je předávat dále podnikům mimo koncern Vorwerk. TICK BOX Jsem srozuměn/a s tím, aby mi na moji e-mailovou adresu zasílal Vorwerk International Strecker & Co. informace a reklamy (např. aktualizace, upozornění, speciální nabídky). Tento souhlas můžete kdykoli odvolat pod bodem nabídky \u201eNastavení\". Další detaily naleznete v prohlášení o ochraně osobních údajů."
         },
         "navi": {"title": "Registrace"}
     },
@@ -164,18 +164,18 @@
         "navi": {"title": "Přihlášení uživatele"}
     },
     "termsOfUse": {
-        "page": {"title": "Terms Of Use"},
-        "navi": {"title": "Terms Of Use"}
+        "page": {"title": "Podmínky užívání"},
+        "navi": {"title": "Podmínky užívání"}
     },
     "cleaning": {
         "page": {
-        	"offline_message":"The cleaning operation cannot be done when the robot is offline. Please switch-on/reboot the robot and try. ",
             "cleaningCategory": {
                 "3": "SPOT úklid",
                 "2": "Úklid bytu",
                 "1": "Manuální úklid"
             },
-            "spot_size_title": "Velikost prostoru: "
+            "spot_size_title": "Velikost prostoru: ",
+            "offline_message": "The cleaning operation cannot be done when the robot is offline. Please switch-on/reboot the robot and try. "
         },
         "navi": {"title": "Úklid"}
     },
@@ -189,11 +189,11 @@
             "title": "Chyba"
         },
         "-192": {
-            "message": "This robot is already registered with another user.",
+            "message": "Robot je již registrován jiným uživatelem",
             "title": "Druh chyby"
         },
         "-182": {
-            "message": "This robot is already registered with this user.",
+            "message": "Robot je již registrován tímto uživatelem",
             "title": "Druh chyby"
         },
         "-108": {
@@ -278,8 +278,8 @@
         "navi": {"title": "Aktivace robota"}
     },
     "validation": {
-        "email": "This email address is invalid",
-        "password": "The passwords do not match."
+        "email": "Tato e-mailová adresa je neplatná",
+        "password": "Hesla se neshodují"
     },
     "robotActivationName": {
         "page": {
@@ -370,6 +370,7 @@
         "stopped_manual": "Zastavil jsem úklid v režimu Manuál",
         "paused_spot": "Přerušil jsem úklid SPOT",
         "stopped_spot": "Zastavil jsem úklid SPOT",
+        "robot_offline": "I'm Offline",
         "inbase": "Odpočívám v dobíjecí základně.",
         "cleaning": "Uklízím",
         "error": "Mám problém.",
@@ -389,8 +390,7 @@
         "idle": "Jsem připraven začít.",
         "stopped_waited_all": "Jsem připraven",
         "stopped": "Zastavil jsem úklid.",
-        "cleaning_all": "Uklízím",
-        "robot_offline": "I'm Offline"
+        "cleaning_all": "Uklízím"
     },
     "confirm": {"close_app": "Chcet applikaci skutečně ukončit?"},
     "userSettings": {

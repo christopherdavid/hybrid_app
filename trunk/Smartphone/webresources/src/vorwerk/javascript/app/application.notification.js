@@ -78,14 +78,17 @@ function WorkflowNotification(parent) {
                         	that.startManualMode();
                         	break;
                         case ROBOT_ONLINE_STATUS_CHANGED:
+                        	//Update robot online status
                         	var data = result.robotData;
                         	var onlineStatus = data.online;
 							console.log("Robot Online Status Changed :" + JSON.stringify(data));
-							curRobot().robotOnline(onlineStatus=="1"?true:false);
+							curRobot().robotOnline(onlineStatus=="1" ? true:false);
 							if(onlineStatus=="0"){
-								robotUiStateHandler.setVirtualState(ROBOT_UI_STATE_ROBOT_OFFLINE);
+								robotUiStateHandler.setUiState(ROBOT_UI_STATE_ROBOT_OFFLINE);
 							}else{
-								parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curRobot().robotCurrentState());
+							console.log("Robot Current Status:" + curRobot().robotCurrentState());
+								if((curRobot().robotCurrentState() == ROBOT_STATE_STOPPED)||(curRobot().robotCurrentState() == ROBOT_STATE_IDLE))
+									parent.communicationWrapper.updateRobotStateWithCode(curRobot(), ROBOT_STATE_IDLE);
 							}
                         	break;
                         case ROBOT_DISCONNECTED:

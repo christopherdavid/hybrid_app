@@ -53,12 +53,12 @@
             "title": "AGREEMENTS",
             "notAccepted_title": "Missing Legal Agreement",
             "notAccepted_message": "Please check the privacy policy and terms of use documents to complete the registration.",
-            "tou_pp_agreement": "We are committed to the safety of your data. This will not be disclosed to companies outside the Vorwerk group.  To use this application, you must agree to the <a id='terms' href='#' class='highlightedText font_bold font_small'>Terms of Use<\/a> and <a id='privacy' href='#' class='highlightedText font_bold font_small'>Privacy Policy<\/a>. I hereby declare that I have read and agree to the Privacy Policy and the Terms of Use.",
+            "tou_pp_agreement": "In order to use the App, you must agree to the Terms of Use and the Data Protection Statement. TICK BOX I hereby declare that I have read and agree to the <a id='terms' href='#' class='highlightedText font_bold font_small'>Terms of Use<\/a> and <a id='privacy' href='#' class='highlightedText font_bold font_small'>Data Protection Statement<\/a>.",
             "subscribe_header": "MARKETING INFORMATION",
             "edit_done_title": "Account Modified",
             "edit_done_message": "The user account has been updated successfully",
             "tou_pp_header": "LEGAL INFORMATION",
-            "subscribe_agreement": "We would like to keep you informed about new updates and product information.  I agree that my e -mail address will be used by Vorwerk International Strecker & Co. for consumer information and advertising ( e.g., updates , information, special offers). This consent can be revoked at any time in the User Settings of this application. For more details, see the Privacy Policy."
+            "subscribe_agreement": "As our customer, we would like to keep you informed of new updates and product information, and we take the greatest care to keep your data secure. This data will not be communicated to companies outside of the Vorwerk Group. TICK BOX I agree that my email address may be used by Vorwerk International Strecker & Co. for information and advertising that is addressed to me personally (e.g. updates, notices, special offers). This consent may be revoked at any time under the menu item \"Settings\". Further details can be found in the Data Protection Statement."
         },
         "navi": {"title": "Registration"}
     },
@@ -169,19 +169,19 @@
     },
     "cleaning": {
         "page": {
-            "offline_message":"The cleaning operation cannot be done when the robot is offline. Please switch-on/reboot the robot and try. ",
             "cleaningCategory": {
                 "3": "SPOT",
                 "2": "ALL",
                 "1": "MANUAL"
             },
-            "spot_size_title": "Spot size: "
+            "spot_size_title": "Spot size: ",
+            "offline_message": "The cleaning operation cannot be done when the robot is offline. Please switch-on/reboot the robot and try. "
         },
         "navi": {"title": "Cleaning"}
     },
     "error": {
         "-106": {
-            "message": "Email id is already registered with the server.",
+            "message": "This email address is already registered with the server.",
             "title": "Type Error"
         },
         "-105": {
@@ -279,7 +279,7 @@
     },
     "validation": {
         "email": "This email address is invalid",
-        "password": "The passwords do not match."
+        "password": "The password does not match."
     },
     "robotActivationName": {
         "page": {
@@ -370,6 +370,7 @@
         "stopped_manual": "I've stopped manual cleaning",
         "paused_spot": "I've paused cleaning spot",
         "stopped_spot": "I've stopped cleaning spot",
+        "robot_offline": "I'm Offline",
         "inbase": "I\u2019m having a rest at my base.",
         "cleaning": "I'm cleaning.",
         "error": "I guess I have a problem.",
@@ -389,8 +390,7 @@
         "idle": "I'm ready to start.",
         "stopped_waited_all": "I\u2019m ready to re-start",
         "stopped": "I've stopped cleaning.",
-        "cleaning_all": "I'm cleaning",
-        "robot_offline": "I'm Offline"
+        "cleaning_all": "I'm cleaning"
     },
     "confirm": {"close_app": "Do you really want to close the application?"},
     "userSettings": {

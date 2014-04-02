@@ -212,6 +212,10 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     // everytime called when the user taps on an category item
     this.changeCategory = function(newValue) {
+    	if(that.isOffline()){
+    	 	that.robot().cleaningCategory(CLEANING_CATEGORY_ALL);
+       		return false; 
+       	}
         console.log("changeCategory " + JSON.stringify(newValue) + " robot cleaningCategory " + that.robot().cleaningCategory());
         // check if category has changed
         if(that.robot().cleaningCategory() != newValue) {
@@ -392,17 +396,25 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.popupCancel = function() {
         $spotPopup.popup("close");
     }
-    
-    this.startBtnClick = function() {
-        navigator.notification.vibrate(500);
-        console.log("Online Status :"+ that.robot().robotOnline());
+    this.isOffline = function(){
+     	console.log("Online Status :"+ that.robot().robotOnline());
         if(!that.robot().robotOnline())
         {
         	var translatedTitle = that.robot().robotName() + " Offline";//$.i18n.t("legalInformation.page.notAccepted_title");
             var translatedText = $.i18n.t("cleaning.page.offline_message");
         	parent.notification.showDialog(dialogType.ERROR, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); }}]);
-        	return false;
+        	robotUiStateHandler.setUiState(ROBOT_UI_STATE_ROBOT_OFFLINE);
+        	that.robot().cleaningCategory(CLEANING_CATEGORY_ALL);
+        	return true;
         }
+        else
+        	return false;
+    }
+    this.startBtnClick = function() {
+       	if(that.isOffline()){
+       		return false; 
+       	}
+        navigator.notification.vibrate(500);
         var tDeffer = null;
         // first check manual cleaning
         if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() != ROBOT_STATE_MANUAL_CLEANING) {
