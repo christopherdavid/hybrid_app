@@ -1,7 +1,7 @@
 {
     "privacyPolicy": {
-        "page": {"title": "Privacy Policy"},
-        "navi": {"title": "Privacy Policy"}
+        "page": {"title": "隐私条款"},
+        "navi": {"title": "隐私条款"}
     },
     "common": {
         "change": "变更",
@@ -49,16 +49,16 @@
     },
     "legalInformation": {
         "page": {
-            "legal_agreement": "I Agree",
+            "legal_agreement": "我同意",
             "title": "AGREEMENTS",
-            "notAccepted_title": "Missing Legal Agreement",
-            "notAccepted_message": "Please check the privacy policy and terms of use documents to complete the registration.",
-            "tou_pp_agreement": "We are committed to the safety of your data. This will not be disclosed to companies outside the Vorwerk group.  To use this application, you must agree to the <a id='terms' href='#' class='highlightedText font_bold font_small'>Terms of Use<\/a> and <a id='privacy' href='#' class='highlightedText font_bold font_small'>Privacy Policy<\/a>. I hereby declare that I have read and agree to the Privacy Policy and the Terms of Use.",
+            "notAccepted_title": "无有效法律协仪",
+            "notAccepted_message": "请仔细阅读隐私条款及使用条款来完成本次注册。",
+            "tou_pp_agreement": "为了能够使用应用程序，您必须同意使用条件和数据保护声明. TICK BOX 我特此声明，我已阅读并了解同意  <a id='terms' href='#' class='highlightedText font_bold font_small'>使用条件<\/a> 及其 <a id='privacy' href='#' class='highlightedText font_bold font_small'>数据保护声明<\/a>.",
             "subscribe_header": "MARKETING INFORMATION",
-            "edit_done_title": "Account Modified",
-            "edit_done_message": "The user account has been updated successfully",
+            "edit_done_title": "账户更改",
+            "edit_done_message": "用户账户已被成功更新",
             "tou_pp_header": "法律信息",
-            "subscribe_agreement": "We would like to keep you informed about new updates and product information.  I agree that my e -mail address will be used by Vorwerk International Strecker & Co. for consumer information and advertising ( e.g., updates , information, special offers). This consent can be revoked at any time in the User Settings of this application. For more details, see the Privacy Policy."
+            "subscribe_agreement": "作为用户，我们会使您始终了解更新和产品信息的最新情况，并尽力确保您数据资料的安全。我们不会将这些数据资料转交给福维克集团以外的企业。TICK BOX 我同意福维克国际有限公司将我的电子邮箱地址用于向我发送信息和广告(例如，更新、提示、特价优惠)。此同意声明可随时在 \u201c设置\u201d菜单项中撤销。详情请参阅数据保护声明\u201d"
         },
         "navi": {"title": "注册"}
     },
@@ -164,18 +164,18 @@
         "navi": {"title": "用户登录"}
     },
     "termsOfUse": {
-        "page": {"title": "Terms Of Use"},
-        "navi": {"title": "Terms Of Use"}
+        "page": {"title": "使用条款"},
+        "navi": {"title": "使用条款"}
     },
     "cleaning": {
         "page": {
-        	"offline_message":"The cleaning operation cannot be done when the robot is offline. Please switch-on/reboot the robot and try. ",
             "cleaningCategory": {
                 "3": "定点清扫",
                 "2": "全部清扫",
                 "1": "手动清扫"
             },
-            "spot_size_title": "定点区域大小: "
+            "spot_size_title": "定点区域大小: ",
+            "offline_message": "The cleaning operation cannot be done when the robot is offline. Please switch-on/reboot the robot and try. "
         },
         "navi": {"title": "清扫中"}
     },
@@ -189,11 +189,11 @@
             "title": "输入错误"
         },
         "-192": {
-            "message": "This robot is already registered with another user.",
-            "title": "Type Error"
+            "message": "本机器人已被其他用户注册。",
+            "title": "输入错误"
         },
         "-182": {
-            "message": "This robot is already registered with this user.",
+            "message": "本机器人已被此用户注册。",
             "title": "Type Error"
         },
         "-108": {
@@ -237,7 +237,7 @@
             "title": "未知错误"
         },
         "-154": {
-            "message": "Invalid linking code. Please enter valid linking code.",
+            "message": "无效连接密码，请输入有效密码。",
             "title": "Type Error"
         },
         "-511": {
@@ -278,8 +278,8 @@
         "navi": {"title": "机器人激活"}
     },
     "validation": {
-        "email": "This email address is invalid",
-        "password": "The passwords do not match."
+        "email": "本邮件地址无效。",
+        "password": "密码无法匹配。"
     },
     "robotActivationName": {
         "page": {
@@ -370,6 +370,7 @@
         "stopped_manual": "我已停止手动清扫。",
         "paused_spot": "我已暂停定点清扫。",
         "stopped_spot": "我已停止定点清扫。",
+        "robot_offline": "I'm Offline",
         "inbase": "我正在基座休息中。",
         "cleaning": "我正在清扫。",
         "error": "我想我有故障了。",
@@ -389,8 +390,7 @@
         "idle": "随时待命。",
         "stopped_waited_all": "我准备就绪可以全部清扫。",
         "stopped": "我已停止清扫。",
-        "cleaning_all": "我正在全部清扫。",
-        "robot_offline": "I'm Offline"
+        "cleaning_all": "我正在全部清扫。"
     },
     "confirm": {"close_app": "是否确定关闭该程序？"},
     "userSettings": {

@@ -1,7 +1,7 @@
 {
     "privacyPolicy": {
-        "page": {"title": "Privacy Policy"},
-        "navi": {"title": "Privacy Policy"}
+        "page": {"title": "Informativa Privacy"},
+        "navi": {"title": "Informativa Privacy"}
     },
     "common": {
         "change": "Cambia",
@@ -49,16 +49,16 @@
     },
     "legalInformation": {
         "page": {
-            "legal_agreement": "I Agree",
+            "legal_agreement": "Acconsento",
             "title": "AGREEMENTS",
-            "notAccepted_title": "Missing Legal Agreement",
-            "notAccepted_message": "Please check the privacy policy and terms of use documents to complete the registration.",
-            "tou_pp_agreement": "We are committed to the safety of your data. This will not be disclosed to companies outside the Vorwerk group.  To use this application, you must agree to the <a id='terms' href='#' class='highlightedText font_bold font_small'>Terms of Use<\/a> and <a id='privacy' href='#' class='highlightedText font_bold font_small'>Privacy Policy<\/a>. I hereby declare that I have read and agree to the Privacy Policy and the Terms of Use.",
-            "subscribe_header": "MARKETING INFORMATION",
-            "edit_done_title": "Account Modified",
-            "edit_done_message": "The user account has been updated successfully",
-            "tou_pp_header": "Note legali",
-            "subscribe_agreement": "We would like to keep you informed about new updates and product information.  I agree that my e -mail address will be used by Vorwerk International Strecker & Co. for consumer information and advertising ( e.g., updates , information, special offers). This consent can be revoked at any time in the User Settings of this application. For more details, see the Privacy Policy."
+            "notAccepted_title": "Manca l'Accordo Legale",
+            "notAccepted_message": "Si prega di controllare l'Informativa sulla Privacy e le Condizioni d'uso per completare la registrazione.",
+            "tou_pp_agreement": "Per poter utilizzare l\u2019App dovete approvare le nostre Condizioni d\u2019uso e la Dichiarazione di protezione dei dati. TICK BOX Con la presente dichiaro di aver letto le <a id='terms' href='#' class='highlightedText font_bold font_small'>Condizioni d'uso<\/a> e la <a id='privacy' href='#' class='highlightedText font_bold font_small'>Dichiarazione di protezione dei dati<\/a>, di averne preso conoscenza e di approvarle.",
+            "subscribe_header": "INFORMAZIONI DI MARKETING",
+            "edit_done_title": "Account Modificato",
+            "edit_done_message": "L'account utente è stato aggiornato con successo",
+            "tou_pp_header": "Informazioni legali",
+            "subscribe_agreement": "Come cliente vi terremo volentieri al corrente di nuovi aggiornamenti e informazioni sui prodotti e ci impegniamo alla sicurezza dei vostri dati. Questi non vengono da noi trasmessi ad aziende esterne al gruppo Vorwerk. TICK BOX Acconsento che il mio indirizzo e-mail venga utilizzato da Vorwerk Folletto. per informazioni e pubblicità a me indirizzati (per es. aggiornamenti, avvertenze, offerte speciali). Questo consenso può essere ritirato in qualsiasi momento sotto il punto di menu \u201cImpostazioni\u201d. Ulteriori dettagli si trovano nella Dichiarazione di protezione dei dati."
         },
         "navi": {"title": "Registrazione"}
     },
@@ -164,18 +164,18 @@
         "navi": {"title": "Log-in utente"}
     },
     "termsOfUse": {
-        "page": {"title": "Terms Of Use"},
-        "navi": {"title": "Terms Of Use"}
+        "page": {"title": "Condizioni d'Uso"},
+        "navi": {"title": "Condizioni d'Uso"}
     },
     "cleaning": {
         "page": {
-        	"offline_message":"The cleaning operation cannot be done when the robot is offline. Please switch-on/reboot the robot and try. ",
             "cleaningCategory": {
                 "3": "SPOT",
                 "2": "CASA",
                 "1": "MANUALE"
             },
-            "spot_size_title": "Area Spot"
+            "spot_size_title": "Area Spot",
+            "offline_message": "The cleaning operation cannot be done when the robot is offline. Please switch-on/reboot the robot and try. "
         },
         "navi": {"title": "Pulizia"}
     },
@@ -189,11 +189,11 @@
             "title": "Errore"
         },
         "-192": {
-            "message": "This robot is already registered with another user.",
+            "message": "Questo robot è già stato registrato con un'altra user.",
             "title": "Errore"
         },
         "-182": {
-            "message": "This robot is already registered with this user.",
+            "message": "Questo robot è già stato registrato con questa user.",
             "title": "Errore"
         },
         "-108": {
@@ -272,19 +272,19 @@
     },
     "robotActivationId": {
         "page": {
-            "robotId": "Registrazione ID",
-            "wifisetup": "Inserisci l'ID di registrazione.<\/br>Lo troverai sul display del robot accedendo a: <span class='font_bold highlightedText'>Impostazioni Wifi / Registrati<\/span>"
+            "robotId": "Codice di connessione Robot ",
+            "wifisetup": "Inserisci il codice di connessione del robot.<\/br>Lo troverai sul display del robot accedendo a: <span class='font_bold highlightedText'>Impostazioni /Link SmartDevice<\/span>"
         },
         "navi": {"title": "Attivazione Robot"}
     },
     "validation": {
-        "email": "This email address is invalid",
-        "password": "The passwords do not match."
+        "email": "Questo indirizzo email non è valido.",
+        "password": "La password non corrisponde."
     },
     "robotActivationName": {
         "page": {
             "robot_name": "Nome Robot",
-            "id_accepted": "Il tuo ID è stato registrato, se vuoi puoi personalizzare il nome del robot.<\/br><\/br>Puoi modificarlo in qualsiasi momento nelle impostazioni del menu."
+            "id_accepted": "Il tuo codice di connessione Robot è stato registrato, se vuoi puoi personalizzare il nome del robot.<\/br><\/br>Puoi modificarlo in qualsiasi momento nelle impostazioni del menu."
         },
         "navi": {"title": "Attivazione Robot"}
     },
@@ -348,7 +348,7 @@
             "title": "Benvenuto nella Registrazione.<br/>Inserisci alcune informazioni per continuare.",
             "email": "Indirizzo Email",
             "password_show": "Mostra password",
-            "registration_done_message": "<div class='mailAnimation'><\/div>La conferma è stata inviata a<br/><span class='highlightedText'>__email__<\/span><br /><br />Si prega di registrarsi attraverso il link entro 48 ore.<br/>Dopo la conferma puoi effettuare il log-in e connetterti al tuo robot. ",
+            "registration_done_message": "<div class='mailAnimation'><\/div>L'email di conferma è stata inviata a<br/><span class='highlightedText'>__email__<\/span><br /><br />Si prega di registrarsi attraverso il link entro 48 ore.<br/>Dopo la conferma puoi effettuare il log-in e connetterti al tuo robot. ",
             "registration_done_title": "Account creato ",
             "password_verify": "Verifica password",
             "password": "Password",
@@ -370,6 +370,7 @@
         "stopped_manual": "Ho interrotto la pulizia manuale",
         "paused_spot": "Pulizia Spot in pausa",
         "stopped_spot": "Ho interrotto la pulizia spot",
+        "robot_offline": "I'm Offline",
         "inbase": "Rimango alla base.",
         "cleaning": "Sto pulendo.",
         "error": "Ho un problema.",
@@ -389,8 +390,7 @@
         "idle": "Sono pronto ad iniziare.",
         "stopped_waited_all": "Sono pronto a cominciare",
         "stopped": "Ho interrotto la pulizia.",
-        "cleaning_all": "Sto pulendo",
-        "robot_offline": "I'm Offline"
+        "cleaning_all": "Sto pulendo"
     },
     "confirm": {"close_app": "Sei sicuro di voler chiudere l'applicazione?"},
     "userSettings": {

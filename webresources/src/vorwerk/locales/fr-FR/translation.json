@@ -1,7 +1,7 @@
 {
     "privacyPolicy": {
-        "page": {"title": "Privacy Policy"},
-        "navi": {"title": "Privacy Policy"}
+        "page": {"title": "Clauses de protection des données"},
+        "navi": {"title": "Clauses de protection des données"}
     },
     "common": {
         "change": "Changer",
@@ -49,16 +49,16 @@
     },
     "legalInformation": {
         "page": {
-            "legal_agreement": "I Agree",
+            "legal_agreement": "J'accepte ",
             "title": "AGREEMENTS",
-            "notAccepted_title": "Missing Legal Agreement",
-            "notAccepted_message": "Please check the privacy policy and terms of use documents to complete the registration.",
-            "tou_pp_agreement": "We are committed to the safety of your data. This will not be disclosed to companies outside the Vorwerk group.  To use this application, you must agree to the <a id='terms' href='#' class='highlightedText font_bold font_small'>Terms of Use<\/a> and <a id='privacy' href='#' class='highlightedText font_bold font_small'>Privacy Policy<\/a>. I hereby declare that I have read and agree to the Privacy Policy and the Terms of Use.",
-            "subscribe_header": "MARKETING INFORMATION",
-            "edit_done_title": "Account Modified",
-            "edit_done_message": "The user account has been updated successfully",
+            "notAccepted_title": "Consentement légal manquant",
+            "notAccepted_message": "Veuillez vérifiez la clause de confidentialité et les termes d'utilisation des documents pour finaliser l'enregistrement",
+            "tou_pp_agreement": "Pour pouvoir utiliser l'application, vous devez donner votre accord aux conditions d'utilisation et à la déclaration de protection des données. TICK BOX Par la présente, je déclare avoir lu et accepté la <a id='terms' href='#' class='highlightedText font_bold font_small'>conditions d'utilisation<\/a> et les <a id='privacy' href='#' class='highlightedText font_bold font_small'>déclaration de protection des données<\/a>. ",
+            "subscribe_header": "INFORMATION MARKETIING",
+            "edit_done_title": "Compte modifié",
+            "edit_done_message": "Le compte utilisateur a été bien à jour avec succès",
             "tou_pp_header": "INFORMATIONS LEGALES",
-            "subscribe_agreement": "We would like to keep you informed about new updates and product information.  I agree that my e -mail address will be used by Vorwerk International Strecker & Co. for consumer information and advertising ( e.g., updates , information, special offers). This consent can be revoked at any time in the User Settings of this application. For more details, see the Privacy Policy."
+            "subscribe_agreement": "Nous souhaitons vous tenir informé des dernières mises à jour et informations produit. Nous nous efforçons d'assurer la protection de vos données. Celles-ci ne seront pas communiquées à des entreprises n'appartenant pas au groupe Vorwerk. TICK BOX J'autorise Vorwerk International Strecker & Co. à utiliser mon adresse email pour l'envoi d'informations et de publicités (p. ex. des mises à jour, des informations produit ou des offres spéciales) qui me sont destinées. Ce consentement peut être révoqué à tout moment sous la rubrique « Paramètres » du menu. Vous trouverez des informations supplémentaires dans la déclaration de protection des données. "
         },
         "navi": {"title": "Enregistrer"}
     },
@@ -164,18 +164,18 @@
         "navi": {"title": "Connexion utilisateur"}
     },
     "termsOfUse": {
-        "page": {"title": "Terms Of Use"},
-        "navi": {"title": "Terms Of Use"}
+        "page": {"title": "Conditions d'utilisation"},
+        "navi": {"title": "Conditions d'utilisation"}
     },
     "cleaning": {
         "page": {
-        	"offline_message":"The cleaning operation cannot be done when the robot is offline. Please switch-on/reboot the robot and try. ",
             "cleaningCategory": {
                 "3": "TACHE",
                 "2": "TOUS",
                 "1": "MANUEL"
             },
-            "spot_size_title": "Taille de la tâche : "
+            "spot_size_title": "Taille de la tâche : ",
+            "offline_message": "The cleaning operation cannot be done when the robot is offline. Please switch-on/reboot the robot and try. "
         },
         "navi": {"title": "Nettoyage"}
     },
@@ -189,11 +189,11 @@
             "title": "Type d'erreur"
         },
         "-192": {
-            "message": "This robot is already registered with another user.",
+            "message": "Le robot est déjà enregistré avec un autre nom",
             "title": "Type d'erreur"
         },
         "-182": {
-            "message": "This robot is already registered with this user.",
+            "message": "Le robot est déjà enregistré avec ce nom",
             "title": "Type d'erreur"
         },
         "-108": {
@@ -278,8 +278,8 @@
         "navi": {"title": "Activation du robot"}
     },
     "validation": {
-        "email": "This email address is invalid",
-        "password": "The passwords do not match."
+        "email": "L'adresse e-mail n'est pas valide",
+        "password": "Le mot de passe ne correspond pas"
     },
     "robotActivationName": {
         "page": {
@@ -370,6 +370,7 @@
         "stopped_manual": "J'arrête le nettoyage manuel",
         "paused_spot": "Je mets en pause le nettoyage ciblé",
         "stopped_spot": "J'arrête le nettoyage ciblé",
+        "robot_offline": "I'm Offline",
         "inbase": "Je me repose à ma station de charge",
         "cleaning": "Je nettoie",
         "error": "Je suppose que j'ai un problème",
@@ -389,8 +390,7 @@
         "idle": "Je suis prêt à démarrer",
         "stopped_waited_all": "Je suis prêt à re-démarrer le nettoyage",
         "stopped": "J'ai arrêté de nettoyer",
-        "cleaning_all": "Je nettoie",
-        "robot_offline": "I'm Offline"
+        "cleaning_all": "Je nettoie"
     },
     "confirm": {"close_app": "Souhaitez-vous réellement arrêter l'application ?"},
     "userSettings": {
