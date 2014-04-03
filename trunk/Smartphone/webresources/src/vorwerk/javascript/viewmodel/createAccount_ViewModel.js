@@ -6,10 +6,18 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
     this.password = ko.observable('');
     this.password_verify = ko.observable('');
     this.showPassword = ko.observable(false);
-    
-    this.mailValid = ko.computed(function() {
-        return !isEmailValid();
-    }, this);
+
+
+    // mark email input as invalid after some delay after user stops typing if input is not valid
+    this.markInvalidEmail = ko.computed(function() {
+        var validationResult = isEmailValid();
+
+        if(!validationResult) {
+            parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.email"));
+        }
+
+        return !validationResult;
+    }, this).extend({ throttle: 2000 });
     
     this.passwordValid = ko.computed(function() {
         return isPasswordValid();
@@ -32,8 +40,6 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
     
     this.verifyPassword = function() {
         if(that.password_verify() != that.password()) {
-            // show notification
-            parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.password"));
             that.isPasswordVerified(false);
         }
     }
@@ -77,14 +83,21 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
         }
     }
 
+    // mark password input as invalid after some delay after user stops typing, if passwords don't concur
+    this.markInvalidPassword = ko.computed(function() {
+        var validationResult = that.isPasswordVerified();
+
+        if(!validationResult) {
+            parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.password"));
+        }
+
+        return !validationResult;
+    }, this).extend({ throttle: 2000 });
+
     function isEmailValid() {
         if (that.email() == '') {
             return true;
         } else {
-            if(!parent.config.emailRegEx.test(that.email())) {
-                // show notification
-                parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.email"));
-            }
             return parent.config.emailRegEx.test(that.email());
         }
     }

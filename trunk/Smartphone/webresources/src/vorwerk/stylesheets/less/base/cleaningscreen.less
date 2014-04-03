@@ -2,476 +2,476 @@
 .gradient-definition("gradient-startBtnBorder", @home_btn_border_gradient_start, @home_btn_border_gradient_end);
 
 .line-grid-container {
+  position:absolute;
+  top:@headerbar_height;
+  left:0;
+  right:0;
+  bottom:0;
+  overflow:hidden;
+
+  .first-line {
     position:absolute;
-    top:@headerbar_height;
+    top:@headerbar_border_shadow/2;
     left:0;
     right:0;
-    bottom:0;
-    overflow:hidden;
-    
-    .first-line {
+    bottom:@cleaning_last_line_height;
+    .vertical-gradient(@cleaning_bg_gradient_start, @cleaning_bg_gradient_end);
+    .border-radius-bottom(@cleaning_control_button_size/2 + @cleaning_control_button_space);
+    .box-shadow(0px, 0px, @cleaning_box_shadow_distance, @cleaning_box_shadow_size, @cleaning_box_shadow_color);
+
+    #statusLine {
+      position:absolute;
+      top:0;
+      left:@cleaning_status_line_space;
+      right:@content_space;
+
+      .valign {
         position:absolute;
-        top:@headerbar_border_shadow/2;
-        left:0;
+        top:50%;
+        width:100%;
+        min-height:@cleaning_status_icon_height;
+        margin-top:-@cleaning_status_icon_height/2;
+      }
+
+      #statusIcon {
+        height:@cleaning_status_icon_height;
+        width:@cleaning_status_icon_width;
+        background-image:url(../../img/icons/robot_status_3240x450.png);
+        background-repeat:no-repeat;
+        background-size:@cleaning_status_icon_image_size;
+
+        &[data-status='awake'] {
+          background-position-y:0;
+        }
+        &[data-status='cleaning'], &[data-status='cleaning_manual'],&[data-status='cleaning_all'],
+        &[data-status='cleaning_spot'], &[data-status='resumed']  {
+          background-position-y:-@cleaning_status_icon_height;
+        }
+        &[data-status='error'] {
+          background-position-y:-@cleaning_status_icon_height*2;
+        }
+        &[data-status='wakeup'] {
+          background-position-y:-@cleaning_status_icon_height*3;
+        }
+        &[data-status='inbase'], &[data-status='sleeping'] {
+          background-position-y:-@cleaning_status_icon_height*4;
+        }
+      }
+      #statusText {
+        position:absolute;
+        left:@cleaning_status_icon_width;
+        top:(@cleaning_status_icon_height - @cleaning_status_text_min_height - @cleaning_status_text_padding_top - @cleaning_status_text_padding_bottom)/2;
         right:0;
-        bottom:@cleaning_last_line_height;
-        .vertical-gradient(@cleaning_bg_gradient_start, @cleaning_bg_gradient_end);
-        .border-radius-bottom(@cleaning_control_button_size/2 + @cleaning_control_button_space);
-        .box-shadow(0px, 0px, @cleaning_box_shadow_distance, @cleaning_box_shadow_size, @cleaning_box_shadow_color);
-        
-        #statusLine {
-            position:absolute;
-            top:10px;
-            left:@cleaning_status_line_space;
-            right:@content_space;
-            
-            .valign {
-                position:absolute;
-                top:50%;
-                width:100%;
-                min-height:@cleaning_status_icon_height;
-                margin-top:-@cleaning_status_icon_height/2;
+        color:@cleaning_status_text_color;
+        background-color:@cleaning_status_text_bg;
+        border-radius:@cleaning_status_border_radius;
+        padding:@cleaning_status_text_padding;
+        .font_reg;
+        .font_normal;
+        min-height:@cleaning_status_text_min_height;
+        margin-left:@cleaning_status_bubble_icon_width;
+
+        &:before {
+          content:"";
+          position:absolute;
+          left:-@cleaning_status_bubble_icon_width;
+          top:@cleaning_status_bubble_icon_top;
+          background-image:url(../../img/status_text_bubble_22x22.png);
+          background-repeat:no-repeat;
+          background-size:@cleaning_status_bubble_icon_size;
+          width:@cleaning_status_bubble_icon_width;
+          height:@cleaning_status_bubble_icon_height;
+        }
+      }
+    }
+
+    .control-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+
+      .halign {
+        margin:auto;
+        width:@cleaning_startContainer_width;
+      }
+      .control-button-bar-top {
+        height:@cleaning_control_button_size ;
+        position:relative;
+        top: 35px;
+        margin-top:10px;
+
+        .ui-btn {
+          .border-radius(@cleaning_control_button_size/2);
+          width: @cleaning_control_button_size - @button_border*2;
+          height:@cleaning_control_button_size - @button_border*2;
+
+
+
+          &.ui-btn-right {
+            /* margin:0 @cleaning_control_button_space @cleaning_control_button_space 0;*/
+            margin:-5px 12px 0 0;
+            float:right;
+          }
+
+          .ui-btn-inner {
+            .border-radius(0);
+            line-height:@cleaning_control_button_size - @button_border*2;
+            padding:0px;
+          }
+
+          &:before {
+            .border-radius(@cleaning_control_button_size/2);
+          }
+          //btn-with-image  ui-btn ui-shadow ui-btn-corner-all ui-fullsize ui-btn-inline ui-btn-active ui-btn-up-b ui-disabled
+          &.btn-with-image {
+            .ui-btn-inner {
+              background-size: @cleaning_control_button_icon_size;
+              background-image: url(../../img/icons/support_icons_220x330.png);
+              background-position:0 0;
+              top:0;
+              height:@cleaning_control_button_size;
+              width:@cleaning_control_button_size;
             }
-            
-            #statusIcon {
-                height:@cleaning_status_icon_height;
-                width:@cleaning_status_icon_width;
-                background-image:url(../../img/icons/robot_status_3240x450.png);
-                background-repeat:no-repeat;
-                background-size:@cleaning_status_icon_image_size;
-                
-                &[data-status='awake'] {
-                    background-position-y:0;
-                }
-                &[data-status='cleaning'], &[data-status='cleaning_manual'],&[data-status='cleaning_all'], 
-                &[data-status='cleaning_spot'], &[data-status='resumed']  {
-                    background-position-y:-@cleaning_status_icon_height;
-                }
-                &[data-status='error'] {
-                    background-position-y:-@cleaning_status_icon_height*2;
-                }
-                &[data-status='wakeup'] {
-                    background-position-y:-@cleaning_status_icon_height*3;
-                }
-                &[data-status='inbase'], &[data-status='sleeping'] {
-                    background-position-y:-@cleaning_status_icon_height*4;
-                }
+
+            &[data-image='base'] .ui-btn-inner {
+              background-position-y:-@cleaning_control_button_size*1;
             }
-            #statusText {
-                position:absolute;
-                left:@cleaning_status_icon_width;
-                top:(@cleaning_status_icon_height - @cleaning_status_text_min_height - @cleaning_status_text_padding_top - @cleaning_status_text_padding_bottom)/2;
-                right:0;
-                color:@cleaning_status_text_color;
-                background-color:@cleaning_status_text_bg;
-                border-radius:@cleaning_status_border_radius;
-                padding:@cleaning_status_text_padding;
-                .font_reg;
-                .font_normal;
-                min-height:@cleaning_status_text_min_height;
-                margin-left:@cleaning_status_bubble_icon_width;
-                
+
+            &.ui-btn-active {
+              &[data-image='eco'] .ui-btn-inner {
+                background-position-x:0;
+              }
+            }
+
+            &.ui-disabled {
+              &[data-image='eco'] {
+                background:none;
+                .box-shadow-none()!important;
+                border-color: transparent;
+
                 &:before {
-                    content:"";
-                    position:absolute;
-                    left:-@cleaning_status_bubble_icon_width;
-                    top:@cleaning_status_bubble_icon_top;
-                    background-image:url(../../img/status_text_bubble_22x22.png);
-                    background-repeat:no-repeat;
-                    background-size:@cleaning_status_bubble_icon_size;
-                    width:@cleaning_status_bubble_icon_width;
-                    height:@cleaning_status_bubble_icon_height;
+                  border-color: transparent;
                 }
+              }
+
+              span {
+                opacity:1;
+              }
+              &[data-image='base'] .ui-btn-inner, &[data-image='stop'] .ui-btn-inner{
+                background-position-x:-@cleaning_control_button_size;
+              }
             }
+          }
         }
-        
-        .control-line {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            
-            .halign {
-                margin:auto;
-                width:@cleaning_startContainer_width;
+      }
+      .control-button-bar {
+        position: relative;
+        margin-top:-25px;
+
+        .ui-btn {
+          .border-radius(@cleaning_control_button_size/2);
+          width: @cleaning_control_button_size - @button_border*2;
+          height:@cleaning_control_button_size - @button_border*2;
+
+
+          &.ui-btn-left {
+            margin:0 0 @cleaning_control_button_space @cleaning_control_button_space;
+          }
+          &.ui-btn-right {
+            margin:0 @cleaning_control_button_space @cleaning_control_button_space 0;
+            float:right;
+          }
+
+          .ui-btn-inner {
+            .border-radius(0);
+            line-height:@cleaning_control_button_size - @button_border*2;
+            padding:0px;
+          }
+
+          &:before {
+            .border-radius(@cleaning_control_button_size/2);
+          }
+          //btn-with-image  ui-btn ui-shadow ui-btn-corner-all ui-fullsize ui-btn-inline ui-btn-active ui-btn-up-b ui-disabled
+          &.btn-with-image {
+            .ui-btn-inner {
+              background-size: @cleaning_control_button_icon_size;
+              background-image: url(../../img/icons/support_icons_220x330.png);
+              background-position:0 0;
+              top:0;
+              height:@cleaning_control_button_size;
+              width:@cleaning_control_button_size;
             }
-            .control-button-bar-top {
-                height:@cleaning_control_button_size ;
-                position:relative;
-                top: 60px;
-                margin-top:10px;
-                
-                .ui-btn {
-                    .border-radius(@cleaning_control_button_size/2);
-                    width: @cleaning_control_button_size - @button_border*2;
-                    height:@cleaning_control_button_size - @button_border*2;
-                    
-                    
-                    
-                    &.ui-btn-right {
-                       /* margin:0 @cleaning_control_button_space @cleaning_control_button_space 0;*/
-                       margin:-5px 12px 0 0;
-                        float:right;
-                    }
-                    
-                    .ui-btn-inner {
-                        .border-radius(0);
-                        line-height:@cleaning_control_button_size - @button_border*2;
-                        padding:0px;
-                    }
-                    
-                    &:before {
-                        .border-radius(@cleaning_control_button_size/2);
-                    }
-                    //btn-with-image  ui-btn ui-shadow ui-btn-corner-all ui-fullsize ui-btn-inline ui-btn-active ui-btn-up-b ui-disabled
-                    &.btn-with-image {
-                        .ui-btn-inner {
-                          background-size: @cleaning_control_button_icon_size;
-                          background-image: url(../../img/icons/support_icons_220x330.png);
-                          background-position:0 0;
-                          top:0;
-                          height:@cleaning_control_button_size;
-                          width:@cleaning_control_button_size;
-                        }
-                        
-                        &[data-image='base'] .ui-btn-inner {
-                            background-position-y:-@cleaning_control_button_size*1;
-                        }
-                        
-                        &.ui-btn-active {
-                            &[data-image='eco'] .ui-btn-inner {
-                                background-position-x:0;
-                            }
-                        } 
-                        
-                        &.ui-disabled { 
-                            &[data-image='eco'] {
-                                background:none;
-                                .box-shadow-none()!important;
-                                border-color: transparent;
-                                
-                                &:before {
-                                    border-color: transparent;
-                                }
-                            }
-                            
-                            span {
-                                opacity:1;
-                            }
-                            &[data-image='base'] .ui-btn-inner, &[data-image='stop'] .ui-btn-inner{
-                                background-position-x:-@cleaning_control_button_size;
-                            }
-                        }
-                    }
-                }
-             }   
-            .control-button-bar {
-                position: relative;
-                margin-top:-25px;
-                
-                .ui-btn {
-                    .border-radius(@cleaning_control_button_size/2);
-                    width: @cleaning_control_button_size - @button_border*2;
-                    height:@cleaning_control_button_size - @button_border*2;
-                    
-                    
-                    &.ui-btn-left {
-                        margin:0 0 @cleaning_control_button_space @cleaning_control_button_space;
-                    }
-                    &.ui-btn-right {
-                        margin:0 @cleaning_control_button_space @cleaning_control_button_space 0;
-                        float:right;
-                    }
-                    
-                    .ui-btn-inner {
-                        .border-radius(0);
-                        line-height:@cleaning_control_button_size - @button_border*2;
-                        padding:0px;
-                    }
-                    
-                    &:before {
-                        .border-radius(@cleaning_control_button_size/2);
-                    }
-                    //btn-with-image  ui-btn ui-shadow ui-btn-corner-all ui-fullsize ui-btn-inline ui-btn-active ui-btn-up-b ui-disabled
-                    &.btn-with-image {
-                        .ui-btn-inner {
-                          background-size: @cleaning_control_button_icon_size;
-                          background-image: url(../../img/icons/support_icons_220x330.png);
-                          background-position:0 0;
-                          top:0;
-                          height:@cleaning_control_button_size;
-                          width:@cleaning_control_button_size;
-                        }
-                        
-                        &[data-image='eco'] .ui-btn-inner {
-                            background-position-y:0;
-                            background-position-x:-@cleaning_control_button_size;
-                        }
-                        &[data-image='base'] .ui-btn-inner {
-                            background-position-y:-@cleaning_control_button_size*1;
-                        }
-                        &[data-image='stop'] .ui-btn-inner {
-                            background-position-y:-@cleaning_control_button_size*2;
-                        }
-                        
-                        &.ui-btn-active {
-                            &[data-image='eco'] .ui-btn-inner {
-                                background-position-x:0;
-                            }
-                        } 
-                        
-                        &.ui-disabled { 
-                            &[data-image='eco'] {
-                                background:none;
-                                .box-shadow-none()!important;
-                                border-color: transparent;
-                                
-                                &:before {
-                                    border-color: transparent;
-                                }
-                            }
-                            
-                            span {
-                                opacity:1;
-                            }
-                            &[data-image='base'] .ui-btn-inner, &[data-image='stop'] .ui-btn-inner{
-                                background-position-x:-@cleaning_control_button_size;
-                            }
-                        }
-                    }
-                }
-                
+
+            &[data-image='eco'] .ui-btn-inner {
+              background-position-y:0;
+              background-position-x:-@cleaning_control_button_size;
             }
+            &[data-image='base'] .ui-btn-inner {
+              background-position-y:-@cleaning_control_button_size*1;
+            }
+            &[data-image='stop'] .ui-btn-inner {
+              background-position-y:-@cleaning_control_button_size*2;
+            }
+
+            &.ui-btn-active {
+              &[data-image='eco'] .ui-btn-inner {
+                background-position-x:0;
+              }
+            }
+
+            &.ui-disabled {
+              &[data-image='eco'] {
+                background:none;
+                .box-shadow-none()!important;
+                border-color: transparent;
+
+                &:before {
+                  border-color: transparent;
+                }
+              }
+
+              span {
+                opacity:1;
+              }
+              &[data-image='base'] .ui-btn-inner, &[data-image='stop'] .ui-btn-inner{
+                background-position-x:-@cleaning_control_button_size;
+              }
+            }
+          }
         }
+
+      }
     }
-    .last-line {
-        position:absolute;
-        bottom:0;
-        left:0;
-        right:0;
-        height:@cleaning_last_line_height;
-        
-        fieldset.ui-controlgroup.mode-switch {
-            
-            .ui-controlgroup-controls {
-                display:table;
-                width:auto;
-                min-width:none;
-                margin:auto;
-                
-                
-                .ui-radio {
-                    width:auto;
-                    margin:0;
-                    input {
-                      visibility:hidden;
-                    }
-                    
-                    .ui-btn {
-                        
-                        &.ui-btn-active {
-                            .ui-btn-inner .ui-btn-text {
-                                .font_bold;
-                                color:@cleaning_navbar_item_selected_color;
-                            }
-                        }
-                      
-                        .ui-btn-inner {
-                            padding:0px 20px;
-                            
-                            .ui-btn-text {
-                                color:@cleaning_navbar_item_color;
-                            }
-                        }
-                    }
-                }
+  }
+  .last-line {
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    height:@cleaning_last_line_height;
+
+    fieldset.ui-controlgroup.mode-switch {
+
+      .ui-controlgroup-controls {
+        display:table;
+        width:auto;
+        min-width:none;
+        margin:auto;
+
+
+        .ui-radio {
+          width:auto;
+          margin:0;
+          input {
+            visibility:hidden;
+          }
+
+          .ui-btn {
+
+            &.ui-btn-active {
+              .ui-btn-inner .ui-btn-text {
+                .font_bold;
+                color:@cleaning_navbar_item_selected_color;
+              }
             }
+
+            .ui-btn-inner {
+              padding:0px 20px;
+
+              .ui-btn-text {
+                color:@cleaning_navbar_item_color;
+              }
+            }
+          }
         }
+      }
     }
+  }
 }
 
 #spotSize-popup {
-    left: 20px!important;
-    right: 20px!important;
-    max-width: 616px!important;
-    max-height: 616px!important;
-    min-width: 280px!important;
-    margin: auto;
-    
-    .selected-value {
-      color:@color_robot_status;
-    }
+  left: 20px!important;
+  right: 20px!important;
+  max-width: 616px!important;
+  max-height: 616px!important;
+  min-width: 280px!important;
+  margin: auto;
+
+  .selected-value {
+    color:@color_robot_status;
+  }
 }
 
 // remote
 #startContainer {
+  width:@cleaning_startContainer_width;
+  height:@cleaning_startContainer_height;
+  position:relative;
+  overflow:hidden;
+
+  #startArea {
     width:@cleaning_startContainer_width;
     height:@cleaning_startContainer_height;
-    position:relative;
-    overflow:hidden;
-    
-    #startArea {
-        width:@cleaning_startContainer_width;
-        height:@cleaning_startContainer_height;
-        background-image: url(../../img/bg_startbtn.png);
+    background-image: url(../../img/bg_startbtn.png);
+    background-repeat: no-repeat;
+    background-size:@cleaning_startContainer_width @cleaning_startContainer_height;
+    overflow: visible;
+    display: table-cell;
+    vertical-align: middle;
+
+    #remote {
+      position:absolute;
+      top:0;
+      bottom:0;
+      left:0;
+      right:0;
+
+      .img-remote {
+        background-image: url(../../img/icons/remote_icons_300x400.png);
+        background-size:@cleaning_remote_button_width*3 @cleaning_remote_button_height*4;
         background-repeat: no-repeat;
-        background-size:@cleaning_startContainer_width @cleaning_startContainer_height;
-        overflow: visible;
-        display: table-cell;
-        vertical-align: middle;
-        
-        #remote {
-            position:absolute;
-            top:0;
-            bottom:0;
-            left:0;
-            right:0;
-            
-            .img-remote {
-                background-image: url(../../img/icons/remote_icons_300x400.png);
-                background-size:@cleaning_remote_button_width*3 @cleaning_remote_button_height*4;
-                background-repeat: no-repeat;
-                background-position:0 0;
-                position:absolute;
-                width:@cleaning_remote_button_width;
-                height:@cleaning_remote_button_height;
-                
-                &.disabled {
-                    background-position-x:0!important;
-                }
-                &.ui-down {
-                    background-position-x:-@cleaning_remote_button_width*2;
-                }
-                &.ui-up {
-                    background-position-x:-@cleaning_remote_button_width;
-                }
-            }
-            .img-remote-diagonal {
-                background-image: url(../../img/icons/remote_diag_icons_200x200.png);
-                background-size:@cleaning_remote_button_width*2 @cleaning_remote_button_height*2;
-                background-repeat: no-repeat;
-                background-position:0 0;
-                position:absolute;
-                width:@cleaning_remote_button_width;
-                height:@cleaning_remote_button_height;
-                
-                &.disabled {
-                    background-position:0 0!important;
-                }
-                &.ui-up {
-                    background-position:-@cleaning_remote_button_width 0;
-                }
-            }
-            #remoteUp {
-                top:0;
-                left:50%;
-                margin-left:-@cleaning_remote_button_width/2;
-                background-position-y:-@cleaning_remote_button_height*3;
-            }
-            
-            #remoteDown {
-                bottom:0;
-                left:50%;
-                margin-left:-@cleaning_remote_button_width/2;
-                background-position-y:-@cleaning_remote_button_height;
-            }
-            
-            #remoteLeft {
-                left:0;
-                top:50%;
-                margin-top:-@cleaning_remote_button_height/2;
-                background-position-y:0;
-            }
-            
-            #remoteRight {
-                right:0;
-                top:50%;
-                margin-top:-@cleaning_remote_button_height/2;
-                background-position-y:-@cleaning_remote_button_height*2;
-            }
-            
-            #remoteDiagLeft {
-                left:@cleaning_remote_button_diag_left;
-                top:@cleaning_remote_button_diag_top;
-                
-                &.ui-down {
-                    background-position:0 -@cleaning_remote_button_height;
-                }
-            }
-            
-            #remoteDiagRight {
-                right:@cleaning_remote_button_diag_left;
-                top:@cleaning_remote_button_diag_top;
-                
-                &.ui-down {
-                    background-position:-@cleaning_remote_button_height -@cleaning_remote_button_width;
-                }
-            }
+        background-position:0 0;
+        position:absolute;
+        width:@cleaning_remote_button_width;
+        height:@cleaning_remote_button_height;
+
+        &.disabled {
+          background-position-x:0!important;
         }
-        
-        #startBtn {
-            margin:auto;
-            background-image:url(../../img/icons/startstopbtn_390x390.png);
-            background-repeat: no-repeat;
-            background-position:0 0;
-            background-size:@cleaning_start_button_width*4 @cleaning_start_button_height*3;
-            width:@cleaning_start_button_width;
-            height:@cleaning_start_button_height;
-            
-            &.startBtn-up {
-                background-position-x:0;
-            }
-            &.startBtn-down {
-                background-position-x:-@cleaning_start_button_width;
-            }
-            &[data-state='manual'] {
-                background-position-x:-@cleaning_start_button_width;
-            }
-            &[data-state='paused'] {
-                background-position-y:-@cleaning_start_button_height;
-            }
-            &[data-state='cleaning'] {
-                background-position-y:-@cleaning_start_button_height*2;
-            }
-            &[data-state='stopped'] {
-                background-position-y:0;
-            }
-            &[data-state='disabled'] {
-                background-position:-@cleaning_start_button_width*2 0;
-            }
-            &[data-state='waiting'] {
-                background-position:-@cleaning_start_button_width*3 0;
-                
-                #loadingSpinnerButton {
-                    display:block;
-                }
-            }
-            
-            #loadingSpinnerButton {
-                position:absolute;
-                display:none;
-                left:50%;
-                top:50%;
-                margin-left: -64px;
-                margin-top: -64px;
-                z-index: 900;
-                width:128px;
-                height:128px;
-                .transform-scale(@cleaning_spinner_scale);
-            }
+        &.ui-down {
+          background-position-x:-@cleaning_remote_button_width*2;
         }
-        
-        #eventArea {
-            position:absolute;
-            width:@cleaning_startContainer_width;
-            height:@cleaning_startContainer_height;
-            top:0;
-            left:0;
-            z-index:25;
-            -webkit-user-drag: none;
-            -webkit-user-select: none;
+        &.ui-up {
+          background-position-x:-@cleaning_remote_button_width;
         }
+      }
+      .img-remote-diagonal {
+        background-image: url(../../img/icons/remote_diag_icons_200x200.png);
+        background-size:@cleaning_remote_button_width*2 @cleaning_remote_button_height*2;
+        background-repeat: no-repeat;
+        background-position:0 0;
+        position:absolute;
+        width:@cleaning_remote_button_width;
+        height:@cleaning_remote_button_height;
+
+        &.disabled {
+          background-position:0 0!important;
+        }
+        &.ui-up {
+          background-position:-@cleaning_remote_button_width 0;
+        }
+      }
+      #remoteUp {
+        top:0;
+        left:50%;
+        margin-left:-@cleaning_remote_button_width/2;
+        background-position-y:-@cleaning_remote_button_height*3;
+      }
+
+      #remoteDown {
+        bottom:0;
+        left:50%;
+        margin-left:-@cleaning_remote_button_width/2;
+        background-position-y:-@cleaning_remote_button_height;
+      }
+
+      #remoteLeft {
+        left:0;
+        top:50%;
+        margin-top:-@cleaning_remote_button_height/2;
+        background-position-y:0;
+      }
+
+      #remoteRight {
+        right:0;
+        top:50%;
+        margin-top:-@cleaning_remote_button_height/2;
+        background-position-y:-@cleaning_remote_button_height*2;
+      }
+
+      #remoteDiagLeft {
+        left:@cleaning_remote_button_diag_left;
+        top:@cleaning_remote_button_diag_top;
+
+        &.ui-down {
+          background-position:0 -@cleaning_remote_button_height;
+        }
+      }
+
+      #remoteDiagRight {
+        right:@cleaning_remote_button_diag_left;
+        top:@cleaning_remote_button_diag_top;
+
+        &.ui-down {
+          background-position:-@cleaning_remote_button_height -@cleaning_remote_button_width;
+        }
+      }
     }
+
+    #startBtn {
+      margin:auto;
+      background-image:url(../../img/icons/startstopbtn_390x390.png);
+      background-repeat: no-repeat;
+      background-position:0 0;
+      background-size:@cleaning_start_button_width*4 @cleaning_start_button_height*3;
+      width:@cleaning_start_button_width;
+      height:@cleaning_start_button_height;
+
+      &.startBtn-up {
+        background-position-x:0;
+      }
+      &.startBtn-down {
+        background-position-x:-@cleaning_start_button_width;
+      }
+      &[data-state='manual'] {
+        background-position-x:-@cleaning_start_button_width;
+      }
+      &[data-state='paused'] {
+        background-position-y:-@cleaning_start_button_height;
+      }
+      &[data-state='cleaning'] {
+        background-position-y:-@cleaning_start_button_height*2;
+      }
+      &[data-state='stopped'] {
+        background-position-y:0;
+      }
+      &[data-state='disabled'] {
+        background-position:-@cleaning_start_button_width*2 0;
+      }
+      &[data-state='waiting'] {
+        background-position:-@cleaning_start_button_width*3 0;
+
+        #loadingSpinnerButton {
+          display:block;
+        }
+      }
+
+      #loadingSpinnerButton {
+        position:absolute;
+        display:none;
+        left:50%;
+        top:50%;
+        margin-left: -64px;
+        margin-top: -64px;
+        z-index: 900;
+        width:128px;
+        height:128px;
+        .transform-scale(@cleaning_spinner_scale);
+      }
+    }
+
+    #eventArea {
+      position:absolute;
+      width:@cleaning_startContainer_width;
+      height:@cleaning_startContainer_height;
+      top:0;
+      left:0;
+      z-index:25;
+      -webkit-user-drag: none;
+      -webkit-user-select: none;
+    }
+  }
 }
 
 // spot size grid
@@ -489,65 +489,65 @@
 }
 
 #spotContainer {
+  width:@spot_grid_icon_width;
+  height:@spot_grid_icon_height + @spot_robot_icon_height/2;
+  position:relative;
+  margin:auto;
+
+  #spotRobot {
+    position:absolute;
+    bottom:0px;
+    width:@spot_robot_icon_width ;
+    height:@spot_robot_icon_height;
+    left:50%;
+    margin-left:-(@spot_robot_icon_width/2);
+    background-image:url(../../img/icons/spot_robot_108x112.png);
+    background-repeat:no-repeat;
+    background-size:@spot_robot_icon_width @spot_robot_icon_height;
+    z-index:999;
+  }
+  #spotGridContainer {
+    position: relative;
     width:@spot_grid_icon_width;
-    height:@spot_grid_icon_height + @spot_robot_icon_height/2;
-    position:relative;
-    margin:auto;
-    
-    #spotRobot {
-        position:absolute;
-        bottom:0px;
-        width:@spot_robot_icon_width ;
-        height:@spot_robot_icon_height;
-        left:50%;
-        margin-left:-(@spot_robot_icon_width/2);
-        background-image:url(../../img/icons/spot_robot_108x112.png);
-        background-repeat:no-repeat;
-        background-size:@spot_robot_icon_width @spot_robot_icon_height;
-        z-index:999;
+    height:@spot_grid_icon_height;
+    background-image:url(../../img/bg_spot_grid_530x530.png);
+    background-size:@spot_grid_icon_width @spot_grid_icon_height;
+    background-repeat:repeat;
+
+    #spotSelection {
+      position:absolute;
+      bottom:@spot_grid_space;
+      left:@spot_container_width/2 - @spot_grid_cell_width/2;
+      width:@spot_grid_cell_width;
+      height:@spot_grid_cell_height;
+      background-color:@cleaning_spotsize_selection_bg;
+      border:@spot_selection_border solid @cleaning_spotsize_selection_border;
     }
-    #spotGridContainer {
-        position: relative;
-        width:@spot_grid_icon_width;
-        height:@spot_grid_icon_height;
-        background-image:url(../../img/bg_spot_grid_530x530.png);
-        background-size:@spot_grid_icon_width @spot_grid_icon_height;
-        background-repeat:repeat;
-        
-        #spotSelection {
-            position:absolute;
-            bottom:@spot_grid_space;
-            left:@spot_container_width/2 - @spot_grid_cell_width/2;
-            width:@spot_grid_cell_width;
-            height:@spot_grid_cell_height;
-            background-color:@cleaning_spotsize_selection_bg;
-            border:@spot_selection_border solid @cleaning_spotsize_selection_border;
-        }
-            
-        
-        #spotSizeContainer {
-            position: relative;
-            width:@spot_grid_cell_width*3;
-            height:@spot_grid_cell_height*5;
-            left:@spot_grid_space + @spot_grid_cell_width*3 - @spot_resize_icon_width/2;
-            top:@spot_grid_space - @spot_resize_icon_height/2;
-            
-            #spotResizer {
-                width: @spot_resize_icon_width;
-                height: @spot_resize_icon_height;
-                background-image: url("../../img/icons/ani_spot_arrow_160x40.png");
-                background-repeat: no-repeat;
-                background-position:-@spot_resize_icon_width*3 0;
-                background-size:@spot_resize_icon_width*4 @spot_resize_icon_height;
-                z-index:500;
-            }
-        }
+
+
+    #spotSizeContainer {
+      position: relative;
+      width:@spot_grid_cell_width*3;
+      height:@spot_grid_cell_height*5;
+      left:@spot_grid_space + @spot_grid_cell_width*3 - @spot_resize_icon_width/2;
+      top:@spot_grid_space - @spot_resize_icon_height/2;
+
+      #spotResizer {
+        width: @spot_resize_icon_width;
+        height: @spot_resize_icon_height;
+        background-image: url("../../img/icons/ani_spot_arrow_160x40.png");
+        background-repeat: no-repeat;
+        background-position:-@spot_resize_icon_width*3 0;
+        background-size:@spot_resize_icon_width*4 @spot_resize_icon_height;
+        z-index:500;
+      }
     }
+  }
 }
 
-#spotSize .ui-navbar{
-  float:left;
-  position:relative;
-  top: 19px;
-  left: 8px;
+#spotSize .ui-navbar {
+	float:left;
+    position:relative;
+    top: 19px;
+    left: 8px;
 }

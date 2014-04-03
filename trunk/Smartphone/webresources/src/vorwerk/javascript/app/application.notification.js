@@ -180,6 +180,7 @@ function WorkflowNotification(parent) {
                 if(item.robotId() == result.robotId) {
                     robotName = item.robotName();
                     console.log("found in robot list: " + robotName);
+                    that.showPushMessage(robotName,result, false);
                     return false;
                 }
             });
@@ -228,7 +229,7 @@ function WorkflowNotification(parent) {
                     that.showDialog(dialogType.INFO, translatedTitle, translatedText);
                 }
             break;
-            case "22000":
+            case NOTIFICATION_ROBOT_CANCEL:
                 that.showLoadingArea(true,notificationType.HINT,translatedText)
             break;
             case "22212":
@@ -312,7 +313,6 @@ function WorkflowNotification(parent) {
     
     this.showDialogWindow = function(dialogType, textHeadline, textContent, buttons) {
         $("#dialogPopup").addClass("dialogType_" + dialogType);
-        
         $(".headerbar").addClass("dialogType_" + dialogType);
         
         var popup = $("#dialogPopup");
