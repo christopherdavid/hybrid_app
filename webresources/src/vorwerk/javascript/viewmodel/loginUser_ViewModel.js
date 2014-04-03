@@ -3,8 +3,10 @@ resourceHandler.registerFunction('loginUser_ViewModel.js', function(parent) {
     var that = this;
     this.conditions = {};
     this.email = ko.observable("");
-    this.password = ko.observable("");    this.showPassword = ko.observable(false);
-    this.emailInvalidGuid;
+    this.password = ko.observable("");
+    this.showPassword = ko.observable(false);
+    this.emailInvalidGuid;
+
     this.back = function() {
         that.conditions['back'] = true;
         parent.flowNavigator.previous();
@@ -18,13 +20,20 @@ resourceHandler.registerFunction('loginUser_ViewModel.js', function(parent) {
         if (that.email() == '') {
             return true;
         } else {
-            if(!parent.config.emailRegEx.test(that.email())) {
-                // show notification
-                parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.email"));
-            }
             return parent.config.emailRegEx.test(that.email());
         }
     },this);
+
+    // mark email input as invalid after some delay after user stops typing if input is not valid
+    this.markEmailInvalid = ko.computed(function() {
+        var validationResult = that.isEmailValid();
+
+        if(!validationResult) {
+            parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.email"));
+        }
+
+        return !validationResult;
+    }, this).extend({ throttle: 2000 });
 
     this.passwordLost = function() {
         console.log("password lost, show dialog");

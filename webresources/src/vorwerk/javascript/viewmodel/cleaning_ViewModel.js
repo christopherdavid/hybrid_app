@@ -3,9 +3,9 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     var that = this, $spotPopup, 
         $spotResizer,$spotSelection,
         spotGridSize = {
-            cellWidth:deviceSize.getResolution() == "high" ? 39 : 26,
-            cellHeight:deviceSize.getResolution() == "high" ? 78 : 52,
-            maxWidth:deviceSize.getResolution() == "high" ? 396 : 264,
+            cellWidth:deviceSize.getResolution() == "high" ? 39 : 24,
+            cellHeight:deviceSize.getResolution() == "high" ? 78 : 48,
+            maxWidth:deviceSize.getResolution() == "high" ? 396 : 244,
             gridSpace:deviceSize.getResolution() == "high" ? 3 : 2,
             maxCol:5,
             maxRow:5
@@ -351,7 +351,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
              $spotSelection.css({
                 "left": (spotGridSize.maxWidth/2 - (that.newSpotSizeLength() * spotGridSize.cellWidth)) + "px",
                 "width" : ((that.newSpotSizeLength() * spotGridSize.cellWidth*2) - spotGridSize.gridSpace) + 'px',
-                "height": (that.newSpotSizeHeight() * spotGridSize.cellHeight) + 'px'
+                "height": ((that.newSpotSizeHeight() * spotGridSize.cellHeight) - spotGridSize.gridSpace) + 'px'
             });
         }
          
@@ -438,8 +438,9 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [that.robot().robotId(),
                       that.visualSelectedCategory(), that.robot().cleaningMode(), that.robot().cleaningModifier()]);
         }
-        if(tDeffer)
+        if(tDeffer) {
             tDeffer.done(that.startStopRobotSuccess);
+	}
     }
     
     this.startStopRobotSuccess = function(result) {

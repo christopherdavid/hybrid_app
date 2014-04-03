@@ -24,8 +24,6 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     
     this.verifyPassword = function() {
         if(that.newPasswordRepeat() != that.newPassword()) {
-            // show notification
-            parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.password"));
             that.isPasswordVerified(false);
         }
     }
@@ -54,6 +52,18 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
             return (that.newPasswordRepeat() == that.newPassword());
         }
     }
+
+    // mark password input as invalid after some delay after user stops typing, if passwords don't concur
+    this.markInvalidPassword = ko.computed(function() {
+        var validationResult = that.isPasswordVerified();
+
+        if(!validationResult) {
+            parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.password"));
+        }
+
+        return !validationResult;
+    }, this).extend({ throttle: 2000 });
+
     
     this.init = function() {
         var user = parent.communicationWrapper.getDataValue("user");

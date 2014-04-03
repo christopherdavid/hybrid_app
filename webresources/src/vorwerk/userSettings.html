@@ -87,26 +87,26 @@
                 <div class="line">
                     <input type="password"
                         data-i18n="userSettings.page.old_password" 
-                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'afterkeydown', jqmInputVisible: !showPassword()"/>
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'input', jqmInputVisible: !showPassword()"/>
                     <input type="text"
                         data-i18n="userSettings.page.old_password" 
-                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'afterkeydown', jqmInputVisible: showPassword()"/>
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'input', jqmInputVisible: showPassword()"/>
                 </div>
                 <div class="line">
                     <input type="password"
                         data-i18n="userSettings.page.new_password" 
-                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'afterkeydown', jqmInputVisible: !showPassword()"/>
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'input', jqmInputVisible: !showPassword()"/>
                     <input type="text"
                         data-i18n="userSettings.page.new_password" 
-                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'afterkeydown', jqmInputVisible: showPassword()"/>
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'input', jqmInputVisible: showPassword()"/>
                 </div>
                 <div class="line">
                     <input type="password"
                         data-i18n="userSettings.page.new_password_verify" 
-                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', jqmInputVisible: !showPassword(), jqmInputCSS: {invalid: !isPasswordVerified()}, event:{ blur: verifyPassword}"/>
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'input', jqmInputVisible: !showPassword(), jqmInputCSS: {invalid: markInvalidPassword()}, event:{ input: verifyPassword}"/>
                     <input type="text"
                         data-i18n="userSettings.page.new_password_verify" 
-                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'afterkeydown', jqmInputVisible: showPassword(), jqmInputCSS: {invalid: !isPasswordVerified()}, event:{ blur: verifyPassword}"/>
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'input', jqmInputVisible: showPassword(), jqmInputCSS: {invalid: markInvalidPassword()}, event:{ input: verifyPassword}"/>
                 </div>
                 <div class="line">
                     <input type="checkbox" name="togglePassword" id="togglePassword" data-theme="b" class="custom" data-bind="checked: showPassword" />
