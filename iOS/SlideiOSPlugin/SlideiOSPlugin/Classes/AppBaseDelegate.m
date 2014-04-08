@@ -5,9 +5,15 @@
 #import "PushNotificationHelper.h"
 #import "XMPPConnectionHelper.h"
 
+// Frameworks
+#import "Crittercism.h"
+
+// Helper
+#import "AppHelper.h"
+
 #define DEVICE_TYPE_IPHONE      2
 
-@interface AppBaseDelegate() <UserManagerProtocol>
+@interface AppBaseDelegate() <UserManagerProtocol, CrittercismDelegate>
 @property(nonatomic, strong) UserManagerCallWrapper *userManager;
 @property(nonatomic, strong)XMPPConnectionHelper *xmppHelper;
 @end
@@ -17,6 +23,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     debugLog(@"didFinishLaunchingWithOptions called");
+    [self enableCrittercism];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectOverXMPPIfRequired) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disconnectXMPPConnection) name:UIApplicationDidEnterBackgroundNotification object:nil];
 
@@ -148,6 +155,20 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+}
+
+#pragma mark - Private helpers
+
+// Initializes crittercism for this run. Username would be set if the app is configured
+- (void)enableCrittercism {
+  debugLog(@"Enabling Crittercism");
+  [Crittercism enableWithAppID:[AppHelper crittercismAppId] andDelegate:self];
+}
+
+#pragma mark - CrittercismDelegate
+
+- (void)crittercismDidCrashOnLastLoad {
+  debugLog(@"App did crash on last launch.");
 }
 
 @end

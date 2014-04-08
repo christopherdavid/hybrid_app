@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2838B97F17549B4200145B6C /* PushNotificationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2838B97E17549B4200145B6C /* PushNotificationHelper.m */; };
 		28B4A9F9173786D30017702D /* AppBaseDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B4A9F8173786D30017702D /* AppBaseDelegate.m */; };
+		840F3C0F18E5D531006D5BED /* libCrittercism_v4_3_1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 840F3C0E18E5D531006D5BED /* libCrittercism_v4_3_1.a */; };
 		B22BDAAC168D7C8400FFCB76 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B22BDAAB168D7C8400FFCB76 /* Foundation.framework */; };
 		B22BDAB1168D7C8400FFCB76 /* SlideiOSPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B22BDAB0168D7C8400FFCB76 /* SlideiOSPlugin.h */; };
 		B22BDAB3168D7C8400FFCB76 /* SlideiOSPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B22BDAB2168D7C8400FFCB76 /* SlideiOSPlugin.m */; };
@@ -217,6 +218,11 @@
 		2838B97E17549B4200145B6C /* PushNotificationHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushNotificationHelper.m; sourceTree = "<group>"; };
 		28B4A9F7173786D30017702D /* AppBaseDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBaseDelegate.h; sourceTree = "<group>"; };
 		28B4A9F8173786D30017702D /* AppBaseDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBaseDelegate.m; sourceTree = "<group>"; };
+		840F3C0A18E5D531006D5BED /* CRFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRFilter.h; sourceTree = "<group>"; };
+		840F3C0B18E5D531006D5BED /* Crittercism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crittercism.h; sourceTree = "<group>"; };
+		840F3C0C18E5D531006D5BED /* CrittercismDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrittercismDelegate.h; sourceTree = "<group>"; };
+		840F3C0D18E5D531006D5BED /* dsym_upload.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = dsym_upload.sh; sourceTree = "<group>"; };
+		840F3C0E18E5D531006D5BED /* libCrittercism_v4_3_1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism_v4_3_1.a; sourceTree = "<group>"; };
 		B22BDAA8168D7C8400FFCB76 /* libSlideiOSPlugin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSlideiOSPlugin.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B22BDAAB168D7C8400FFCB76 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B22BDAAF168D7C8400FFCB76 /* SlideiOSPlugin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SlideiOSPlugin-Prefix.pch"; sourceTree = "<group>"; };
@@ -552,6 +558,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				840F3C0F18E5D531006D5BED /* libCrittercism_v4_3_1.a in Frameworks */,
 				E1AC0E921695BE19005601EE /* libidn.a in Frameworks */,
 				B22BDAAC168D7C8400FFCB76 /* Foundation.framework in Frameworks */,
 			);
@@ -585,6 +592,18 @@
 				2838B97E17549B4200145B6C /* PushNotificationHelper.m */,
 			);
 			path = PushNotification;
+			sourceTree = "<group>";
+		};
+		840F3C0918E5D531006D5BED /* CrittercismSDK */ = {
+			isa = PBXGroup;
+			children = (
+				840F3C0A18E5D531006D5BED /* CRFilter.h */,
+				840F3C0B18E5D531006D5BED /* Crittercism.h */,
+				840F3C0C18E5D531006D5BED /* CrittercismDelegate.h */,
+				840F3C0D18E5D531006D5BED /* dsym_upload.sh */,
+				840F3C0E18E5D531006D5BED /* libCrittercism_v4_3_1.a */,
+			);
+			path = CrittercismSDK;
 			sourceTree = "<group>";
 		};
 		B22BDA9D168D7C8400FFCB76 = {
@@ -690,6 +709,7 @@
 		B22BDAD8168D7EF400FFCB76 /* ThirtyPartyTools */ = {
 			isa = PBXGroup;
 			children = (
+				840F3C0918E5D531006D5BED /* CrittercismSDK */,
 				E1A064FD169563B5009C22F7 /* CocoaAsyncSocket */,
 				E1A06504169563B5009C22F7 /* XMPPFramework */,
 			);
@@ -1831,6 +1851,7 @@
 					"\"$(SRCROOT)/../CordovaLib_2_2_0/bin\"",
 					"\"$(SRCROOT)/../CordovaLib/bin\"",
 					"\"$(SRCROOT)/SlideiOSPlugin/Classes/ThirtyPartyTools/XMPPFramework/libidn\"",
+					"\"$(SRCROOT)/SlideiOSPlugin/Classes/ThirtyPartyTools/CrittercismSDK\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1856,6 +1877,7 @@
 					"\"$(SRCROOT)/../CordovaLib_2_2_0/bin\"",
 					"\"$(SRCROOT)/../CordovaLib/bin\"",
 					"\"$(SRCROOT)/SlideiOSPlugin/Classes/ThirtyPartyTools/XMPPFramework/libidn\"",
+					"\"$(SRCROOT)/SlideiOSPlugin/Classes/ThirtyPartyTools/CrittercismSDK\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
