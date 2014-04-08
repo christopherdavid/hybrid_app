@@ -4,7 +4,7 @@
  * @param {object} parent Reference to the parent object.
  */
 function WorkflowCommunication(parent) {
-    console.log('create WorkflowCommunication instance')
+    console.log('create WorkflowCommunication instance');
     var that = this;
     this.dataValues = {};
     // stores the callbacks for the current view
@@ -13,7 +13,7 @@ function WorkflowCommunication(parent) {
     this.staticCallbacks = {};
     
     this.onCallbackReturn = function(guid, success, result){
-        console.log("guid: " + guid + " result: " + JSON.stringify(result) + "\nsuccess: " + success)
+        console.log("guid: " + guid + " result: " + JSON.stringify(result) + "\nsuccess: " + success);
         // check if callback belongs to the current viewmodel, otherwise ignore it
         if(that.callbacks[guid]) {
             if(that.callbacks[guid].notifyOptions.type != notificationType.NONE && typeof that.callbacks[guid].notifyOptions.bHide == "undefined" || that.callbacks[guid].notifyOptions.bHide === true) {
@@ -70,7 +70,7 @@ function WorkflowCommunication(parent) {
         var connectionChecked = $.Deferred();
         var connectionCheckedDone = connectionChecked.promise();
         
-        that.connectionCheck(wifiCheck, connectionChecked)
+        that.connectionCheck(wifiCheck, connectionChecked);
         // connected
         connectionCheckedDone.done(function(result) {
             that.conectedExecute(oDeferred, command, args, notificationOptions, bStatic);
@@ -117,7 +117,7 @@ function WorkflowCommunication(parent) {
         } else {
             conDeffer.resolve({"networkState":networkState, "state":"connected"});
         }
-    }
+    };
     
     this.conectedExecute = function(oDeferred, command, args, notificationOptions, bStatic) {
         var notifyOptions = notificationOptions;
@@ -168,13 +168,13 @@ function WorkflowCommunication(parent) {
             default:
             alert("The communcation layer doesn't support this number of arguments: " + args.length);
         }
-    }
+    };
     
     
     //TODO: add comments
     this.mapDataValue = function(key, dataValue) {
         that.dataValues[key](ko.mapping.fromJS(dataValue), null, that.dataValues[key]);
-    }
+    };
     
     this.clearDataValues = function(){
       that.getDataValue("robotList")([]);
@@ -186,15 +186,15 @@ function WorkflowCommunication(parent) {
     
     this.setDataValue = function(key, dataValue){
         that.dataValues[key] = dataValue;
-    }
+    };
     
     this.getDataValue = function(key) {
         return that.dataValues[key]||null;
-    }
+    };
     
     this.removeDataValue = function(key) {
         delete that.dataValues[key];
-    }
+    };
     
     /**
      * Add a value to the localStorage 
@@ -204,7 +204,7 @@ function WorkflowCommunication(parent) {
         var tempStore = $.parseJSON( window.localStorage.getItem("cleaningAppStore")) || {};
         tempStore[key] = value;
         window.localStorage.setItem("cleaningAppStore", JSON.stringify(tempStore));
-    }
+    };
 
     /**
      * @return value from localStorage or null 
@@ -212,10 +212,12 @@ function WorkflowCommunication(parent) {
     this.getFromLocalStorage = function(key) {
         var tempStore = $.parseJSON( window.localStorage.getItem("cleaningAppStore")) || {};
         return tempStore[key] || null;
-    }
+    };
+    
     this.clearStaticCallbacks = function(staticKey) {
         that.staticCallbacks = {};
-    }
+    };
+    
     // this requests the robot state for each roboter 
     this.getRobotState = function(robotId) {
         // request cleaning state
@@ -235,7 +237,7 @@ function WorkflowCommunication(parent) {
                 }
             });
         }
-    }
+    };
     
     // this requests the robot online status of each roboter 
     this.getRobotOnline = function(robotId) {
@@ -257,7 +259,8 @@ function WorkflowCommunication(parent) {
                 }
             });
         }
-    }
+    };
+    
     this.updateRobotStateWithCode = function(robot, virtualState, currentState) {
         // make sure virtualState is an integer
         virtualState = parseInt(virtualState, 10);
@@ -266,7 +269,7 @@ function WorkflowCommunication(parent) {
             var curRobot = that.getDataValue("selectedRobot");
             var state = $.i18n.t("robotStateCodes." + virtualState);
             var stateChanged = robot.robotNewVirtualState() != virtualState;
-            console.log("updateRobotStateWithCode: "  + virtualState + " text: " + state + " for robot: " + robot.robotId())
+            console.log("updateRobotStateWithCode: "  + virtualState + " text: " + state + " for robot: " + robot.robotId());
             // update robot object
             robot.robotNewVirtualState(virtualState);
             robot.stateString(state);
@@ -293,6 +296,6 @@ function WorkflowCommunication(parent) {
             }
             
         }
-    }
+    };
 }
 

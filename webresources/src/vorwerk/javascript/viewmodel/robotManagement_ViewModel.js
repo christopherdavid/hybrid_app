@@ -24,7 +24,7 @@ resourceHandler.registerFunction('robotManagement_ViewModel.js', function(parent
     
     this.cancelEdit = function() {
         $("#changeNamePopup").popup("close");
-    }
+    };
     
     this.commitEdit = function() {
         console.log("change name of robot with id: " + that.robot().robotId() + " to " + that.newRobotName());
@@ -36,15 +36,16 @@ resourceHandler.registerFunction('robotManagement_ViewModel.js', function(parent
         }
         
         $("#changeNamePopup").popup("close");
-    }
+    };
     
     this.successSetRobotName = function(result) {
         that.robot().robotName(that.newRobotName());
         console.log("result" + JSON.stringify(result));
-    }
+    };
+    
     this.errorSetRobotName = function(error) {
         console.log("error" + JSON.stringify(error));
-    }
+    };
     
     this.back = function() {
         that.conditions['back'] = true;
@@ -66,7 +67,7 @@ resourceHandler.registerFunction('robotManagement_ViewModel.js', function(parent
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.clearRobotData, [userEmail, that.robot().robotId()]);
         tDeffer.done(that.successRemoveRobot);
         tDeffer.fail(that.errorRemoveRobot);
-    }
+    };
     
     this.successRemoveRobot = function(result) {
         console.log("Result" + result);
@@ -80,6 +81,6 @@ resourceHandler.registerFunction('robotManagement_ViewModel.js', function(parent
 
     this.reload = function() {
         this.conditions = {};
-    }
-})
+    };
+});
 console.log('loaded file: robotManagement_ViewModel.js');

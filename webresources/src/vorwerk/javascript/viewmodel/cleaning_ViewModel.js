@@ -28,7 +28,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         
     // listener when robot category changes
     this.robot().cleaningCategory.subscribe(function(newValue) {
-            console.log("cleaningCategory subscribe " + newValue)
+            console.log("cleaningCategory subscribe " + newValue);
             if(newValue != this.visualSelectedCategory()) {
                 that.visualSelectedCategory(newValue);
             }
@@ -114,7 +114,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                 $spotResizer.toggleClass("spotResizeAnimation",false);
             },
             drag:function(event, ui) {
-                that.newSpotSizeLength((ui.position.left / spotGridSize.cellWidth)+1)
+                that.newSpotSizeLength((ui.position.left / spotGridSize.cellWidth)+1);
                 // invert values
                 that.newSpotSizeHeight(spotGridSize.maxRow - (ui.position.top / spotGridSize.cellHeight));
             },
@@ -175,7 +175,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         var tDeffer3 = parent.communicationWrapper.exec(RobotPluginManager.getRobotOnlineStatus, [that.robot().robotId()]);
         tDeffer3.done(that.successGetRobotOnlineState);
         
-    }
+    };
     
     this.successGetRobotOnlineState = function(result) {
     	console.log("Robot Online Success :"+ JSON.stringify(result));
@@ -185,11 +185,12 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             	robotUiStateHandler.setVirtualState(ROBOT_UI_STATE_ROBOT_OFFLINE);
             }
         }
-    }
+    };
+    
     this.updateLayout = function() {
         console.log("update Layout");
         $("#statusLine").css("bottom", $(".control-line").height() - 50);
-    }
+    };
     
     this.successGetSpotDefinition = function(result) {
         if(result.spotCleaningAreaLength > 0 && result.spotCleaningAreaHeight > 0) {
@@ -199,7 +200,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             this.spotSizeLength = ko.observable(convSize.length);
             this.spotSizeHeight = ko.observable(convSize.height);
         }
-    }
+    };
     
     // {cleaningCatageory: <1-Manual,2-All,3-Spot>,robotId:"robotId"}
     this.successGetRobotCleaningCategory = function(result) {
@@ -212,7 +213,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             that.robot().cleaningCategory(CLEANING_CATEGORY_ALL);
         }
         
-    }
+    };
     
     // everytime called when the user taps on an category item
     this.changeCategory = function(newValue) {
@@ -270,8 +271,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                 that.editSpotSize();
             }
         }
-    }
-    
+    };
     
     this.remotePressed = function(event, button) {
     	var now = +new Date;
@@ -282,9 +282,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
 	        that.lastMoveTimestamp = now;
 	        that.remotePressedNotThrottled(event, button);
 	    }
-    }
-    
-    
+    };   
     
     // handle remote pressed events
     this.remotePressedNotThrottled = function(event, button) {
@@ -321,18 +319,18 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.driveRobot, [that.robot().robotId(), navigationControlId], { type: notificationType.NONE });
             console.log("drive robot direction: " + navigationControlId);
         }
-    }
+    };
     
     this.remoteReleased = function(event, button) {
         //robotUiStateHandler.setUiState(ROBOT_UI_STATE_CLEANING_MANUAL);
         robotUiStateHandler.setUiState(ROBOT_STATE_MANUAL_CLEANING);
-    }
+    };
     
     // viewmodel reload 
     this.reload = function() {
         // reset the conditions
-        that.conditions = {}
-    }
+        that.conditions = {};
+    };
     
     // viewmodel deinit, destroy objects and remove event listener
     this.deinit = function() {
@@ -344,21 +342,20 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         $('#remote').off('remotePressed');
         $('#remote').off('remoteReleased');
         $(window).off(".cleaning");
-    }
-    
+    };    
     
     this.toggleEcoMode = function() {
         that.ecoMode(!that.ecoMode());
         var onoff = $.i18n.t("common." + (that.ecoMode() == true ? "on":"off"));
         var callGuid = guid();
-        that.robot().cleaningMode((that.ecoMode() == true ? CLEANING_MODE_ECO:CLEANING_MODE_NORMAL))
+        that.robot().cleaningMode((that.ecoMode() == true ? CLEANING_MODE_ECO:CLEANING_MODE_NORMAL));
         
         parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("communication.toggle_eco", {"ecoMode":onoff}), callGuid);
         window.setTimeout(function(){
             parent.notification.showLoadingArea(false, notificationType.HINT, "", callGuid);
         }, 1000);
         
-    }
+    };
     
     // spot size popup
     this.newSpotSizeLength = ko.observable();
@@ -398,7 +395,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         parent.notification.showDomDialog("#spotSize", false, function(){
             resizePopupButtons("#spotSize .ui-bar-buttons", ($("#spotSize .spotWrap").width() - $("#spotSize .spotWrap .left-block").width() - 10));
         });
-    }
+    };
+    
     this.popupOk = function() {
         $spotPopup.popup("close");
         var newSize = convertSpotsize(that.newSpotSizeLength(), that.newSpotSizeHeight()); 
@@ -411,11 +409,12 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             that.spotSizeHeight(that.newSpotSizeHeight());
             robotUiStateHandler.setUiState(ROBOT_UI_STATE_STOPPED_WAITED_SPOT);
         });
-    }
+    };
     
     this.popupCancel = function() {
         $spotPopup.popup("close");
-    }
+    };
+    
     this.isOffline = function(){
      	console.log("Online Status :"+ that.robot().robotOnline());
         if(!that.robot().robotOnline())
@@ -426,10 +425,11 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         	robotUiStateHandler.setUiState(ROBOT_UI_STATE_ROBOT_OFFLINE);
         	that.robot().cleaningCategory(CLEANING_CATEGORY_ALL);
         	return true;
-        }
-        else
+        } else {
         	return false;
-    }
+        }
+    };
+    
     this.startBtnClick = function() {
        	if(that.isOffline()){
        		return false; 
@@ -460,11 +460,11 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         }
         if(tDeffer) {
             tDeffer.done(that.startStopRobotSuccess);
-	}
-    }
+	   }
+    };
     
     this.startStopRobotSuccess = function(result) {
-        console.log("startStopRobotSuccess " + JSON.stringify(result))
+        console.log("startStopRobotSuccess " + JSON.stringify(result));
         // some delay
         var tDeffer = null;
         if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1) {
@@ -494,34 +494,37 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                 parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_CLEANING);
             }
         }
-    }
+    };
     
     this.startManualMode = function(){
       var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [that.robot().robotId(),
                       that.visualSelectedCategory(), that.robot().cleaningMode(), that.robot().cleaningModifier()]);
       tDeffer.done(that.startManualModeSuccess);
-    }
+    };
     
     this.startManualModeSuccess = function(result) {
        console.log("startManualModeSuccess" + JSON.stringify(result));
-     }
+    };
      
     // navigation menu and menu actions
     this.showMenu = function() {
         parent.notification.showDomDialog("#menuPopup", true);
-    }
+    };
+    
     this.cleaning = function() {
         $("#menuPopup").popup("close");
-    }
+    };
+    
     this.schedule = function() {
         that.conditions['schedule'] = true;
         parent.flowNavigator.next();
-    }
+    };
+    
     this.settings = function() {
         // switch to settings workflow
         that.conditions['settings'] = true;
         parent.flowNavigator.next();
-    }
+    };
     
     // send to base button
     this.sendToBase = function() {
@@ -530,6 +533,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             { type: notificationType.OPERATION, message: $.i18n.t('communication.send_to_base',{'robotName':that.robot().robotName()})});
         tDeffer.done(that.successSendToBase);
     };
+    
     this.successSendToBase = function(result) {
         console.log("successSendToBase" + JSON.stringify(result));
          // some delay
@@ -540,7 +544,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             // send to base
             parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_ON_BASE);
         }
-    }
+    };
     
     // stop robot button
     this.stopRobot = function() {
@@ -564,7 +568,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         
         tDefferStop.done(that.successStopRobot);
         return tDefferStop; 
-    }
+    };
+    
     this.successStopRobot = function(result) {
         console.log("successStopRobot" + JSON.stringify(result));
         if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1 && (that.visualSelectedCategory() != CLEANING_CATEGORY_MANUAL)) {
@@ -579,8 +584,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         else {
             parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_STOPPED);
         }
-    }
-    
+    };    
     
     // test different states
     this.stateTest = function(newState) {
@@ -589,10 +593,9 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             parent.communicationWrapper.updateRobotStateWithCode(that.robot(), newState, newState);
         } else if (newState >= 20001 && newState <= 20007) {
             // UI states
-            robotUiStateHandler.setUiState(newState)
+            robotUiStateHandler.setUiState(newState);
         }
-    }
+    };    
     
-    
-})
+});
 console.log('loaded file: cleaning_ViewModel.js');

@@ -66,10 +66,10 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
                 that.selectedCountry("0");
             }
         }
-    }
+    };
     
     this.renderedCountries = function(element, data) {
-        console.log("renderedCountries")
+        console.log("renderedCountries");
         if(!countriesRendered) {
             // check if selected country is complete and control could be initialized
             if($(element).parent().children().length == that.countries().length) {
@@ -80,7 +80,7 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
                 countriesRendered = true;
             }
         }
-    }
+    };
 
     this.next = function() {
         event.stopPropagation();
@@ -92,7 +92,7 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
         myScroll.destroy();
         that.countries([]);
         countriesRendered = false;
-    }
+    };
 
-})
+});
 console.log('loaded file: selectCountry_ViewModel.js');

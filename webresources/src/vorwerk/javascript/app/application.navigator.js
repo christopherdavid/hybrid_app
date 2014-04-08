@@ -6,7 +6,7 @@
  * @param {object} parent Reference to the parent dataTemplate object.
  */
 function WorkflowNavigator(parent, workflow) {
-    console.log('create WorkflowNavigator instance')
+    console.log('create WorkflowNavigator instance');
     var that = this;
     var currentScreen = {
         'id' : '',
@@ -26,7 +26,8 @@ function WorkflowNavigator(parent, workflow) {
         
             that.loadScreen(tempScreenId, typeof bundle != "undefined" ? bundle : null);
         }
-    }
+    };
+    
     /**
      * Checks if the workflow condition rules were correct
      * @returns {string} The screenId for the valid condition rule
@@ -70,7 +71,8 @@ function WorkflowNavigator(parent, workflow) {
             }
         }
         return screenId;
-    }
+    };
+    
     /**
      * Triggered whenever back button (Android) is pressed or from a view model
      * for workflow navigation
@@ -103,7 +105,8 @@ function WorkflowNavigator(parent, workflow) {
         } else {
             defaultBack();
         }
-    }
+    };
+    
     function defaultBack() {
         if (parent.history.getLastEntry() != null) {
             // disable history for current screen
@@ -137,7 +140,8 @@ function WorkflowNavigator(parent, workflow) {
                 navigator.app.exitApp();
             }
         }
-    }
+    };
+    
     this.loadScreenFromHistory = function(historyIndex, bundle) {
         console.log('WorkflowNavigator.loadScreenFromHistory(' + historyIndex + ')');
          // always true because it comes from history
@@ -158,8 +162,7 @@ function WorkflowNavigator(parent, workflow) {
         });
         currentScreen.id = tempViewModel.screenId;
         currentScreen.storeInHistory = storeInHistory;
-    }
-    
+    };
     
     /**
      * loads a screen according to it's screenId
@@ -197,7 +200,8 @@ function WorkflowNavigator(parent, workflow) {
         } else {
             console.log('screenId NOT found in dataTemplate or workflow');
         }
-    }
+    };
+    
     /**
      * called before the DOM of a page gets removed
      * handles if a page gets stored in workflow history
@@ -211,5 +215,5 @@ function WorkflowNavigator(parent, workflow) {
             parent.history.store(parent.viewModel, currentScreen.id);
             parent.unloadViewModel();
         }
-    }
+    };
 }

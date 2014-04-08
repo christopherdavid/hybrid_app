@@ -56,12 +56,8 @@ function Application() {
         that.communicationWrapper.setDataValue("robotList", ko.observableArray([]));
         that.communicationWrapper.setDataValue("selectedRobot", ko.observable({}));
         robotUiStateHandler.current = ko.observable("");
-        robotUiStateHandler.current(ko.mapping.fromJS(statusInformation), null, robotUiStateHandler.current)
+        robotUiStateHandler.current(ko.mapping.fromJS(statusInformation), null, robotUiStateHandler.current);
         
-        //that.communicationWrapper.mapDataValue("selectedRobot", getRobotStruct());
-        
-        
-        // that.changeLanguage('de-de', function() { loadFirstPage(); });
         // get last language selection from local storage
         window.plugins.globalization.getLocaleName(function(locale) {
             console.log('plugin.getLocaleName: ' + locale.value);
@@ -75,7 +71,7 @@ function Application() {
                 loadFirstPage();
             });
         });
-    }
+    };
     
     /**
      * Load the first page when the application starts
@@ -136,7 +132,7 @@ function Application() {
         });
         // disable reverse animation
         that.config.pageReverseDirection = false;
-    }
+    };
     
     /**
      * Loads the view model creates a new view model object or uses a history
@@ -162,7 +158,7 @@ function Application() {
             that.viewModel.language = that.language;
             that.viewModel.bundle = bundle;
         });
-    }
+    };
     
     this.loadViewModelFromHistory = function(tempViewModel, bundle, fncCallback) {
         console.log('loadViewModelFromHistory ');
@@ -173,7 +169,7 @@ function Application() {
         }
         // maybe the language has changed since that, so reassign it
         that.viewModel.language = that.language;
-    }
+    };
     
     /**
      * Removes the view model
@@ -188,7 +184,7 @@ function Application() {
         that.notification.clearStatusListener();
         
         that.viewModel = null;
-    }
+    };
     
     /**
      * Handles the back button key event
@@ -199,7 +195,7 @@ function Application() {
     this.onBackKeyDown = function(e) {
         // console.log('back button event')
         that.flowNavigator.previous();
-    }
+    };
     
     /**
      * changes the language and triggers binding
@@ -235,7 +231,8 @@ function Application() {
                 }
             });
         }
-    }
+    };
+    
     /**
      * bind to back button pressed event handler
      */
@@ -262,7 +259,7 @@ function Application() {
     $(document).on('pagebeforeshow', '[data-role=page]', function(event) {
         // apply binding. ignore splash screen
         if (event.target.id != 'splash') {
-            console.log('pagebeforeshow add binding to DOM:' + event.target.id)
+            console.log('pagebeforeshow add binding to DOM:' + event.target.id);
             if ( typeof that.viewModel.init != "undefined") {
                 that.viewModel.init();
             }
@@ -273,10 +270,8 @@ function Application() {
 
 Application.prototype.loadWorkflow = function() {
     // console.log('called empty loadWorkflow');
-    return {}
+    return {};
 };
-
-
 
 
 /**
@@ -295,6 +290,6 @@ $(document).one('frameworksReady', function() {
 
     // splash screen is visible load next page
     setTimeout(function() {
-        app.init()
+        app.init();
     }, 2000);
 });

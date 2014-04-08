@@ -6,7 +6,7 @@ $.ui.plugin.add("resizable", "gridWithEvent", {
             that.oldSnapFactor = {
                 x : 0,
                 y : 0
-            }
+            };
         }
         var s = that.oldSnapFactor, o = that.options, cs = that.size, os = that.originalSize, op = that.originalPosition, a = that.axis, ratio = o._aspectRatio || event.shiftKey;
         o.grid = typeof o.gridWithEvent == "number" ? [o.gridWithEvent, o.gridWithEvent] : o.gridWithEvent;

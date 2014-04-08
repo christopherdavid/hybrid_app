@@ -36,9 +36,8 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
 
     // checks if a circle contains the point x,y
     var containsPoint = function(x, y, cx, cy, r) {
-        var dx = x - cx
-        var dy = y - cy
-        return dx * dx + dy * dy <= r * r
+        var dx = x - cx, dy = y - cy;
+        return dx * dx + dy * dy <= r * r;
     };
 
     this.updatePosition = function() {
@@ -68,11 +67,11 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
     this.pressing = function() {
         if(that.remoteButtonDown) {
             remote.triggerHandler("remotePressed", that.remoteButtonDown);
-            this.pressedTimer = window.setTimeout(function() {that.pressing()}, this.pressedIntervall);
+            this.pressedTimer = window.setTimeout(function() {that.pressing();}, this.pressedIntervall);
         } else {
             remote.triggerHandler("remoteReleased", that.remoteButtonDown);
         }
-    }
+    };
 
     this.init = function() {
         /**
@@ -106,7 +105,7 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
                     }
                 }
             }
-        })
+        });
         
         
         eventArea.on("vmouseout", function(event) {
@@ -227,7 +226,7 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
             element.addClass("ui-up");
             element.removeClass("ui-down");
         }
-    }
+    };
 
     this.updateBtnState = function(divElement, isMouseDown) {
         // First remove all styling classes
@@ -240,6 +239,6 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
             that.startBtnDown = isMouseDown;
         }
         divElement[0].className = className;
-    }
+    };
 }
 

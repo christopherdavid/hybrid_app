@@ -79,15 +79,15 @@ resourceHandler.registerFunction('generalSettings_ViewModel.js', function(parent
             console.log("waiting for init done.");
         }
                 
-    }
+    };
     
     this.successSetNotifications = function(result) {
         console.log("result" + JSON.stringify(result));
-    }
+    };
     
     this.errorSetNotifications = function(error) {
         console.log("error" + JSON.stringify(error));
-    }
+    };
     
     this.back = function() {
         that.conditions['back'] = true;
@@ -96,7 +96,7 @@ resourceHandler.registerFunction('generalSettings_ViewModel.js', function(parent
     
     this.reload = function() {
         this.conditions = {};
-    }
+    };
     
-})
+});
 console.log('loaded file: generalSettings_ViewModel.js');

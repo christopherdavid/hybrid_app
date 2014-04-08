@@ -40,18 +40,18 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         
         console.log("getScheduleEvents for robot with id: " + that.robot().robotId());
         that.loadScheduler();
-    }
+    };
 
     this.reload = function() {
         // remove conditions
         that.conditions = {};
         that.blockedDays.length = 0;
-    }
+    };
 
     this.deinit = function() {
         $('#schedulerTarget').off('updatedEvent');
         that.scheduler.destroy();
-    }
+    };
     
     this.isScheduleEnabledSuccess = function(result) {
         console.log("isScheduleEnabledSuccess\n" +JSON.stringify(result));
@@ -75,7 +75,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getScheduleEvents, [that.robot().robotId(), 0]);
         tDeffer.done(that.getScheduleEventsSuccess);
         tDeffer.fail(that.getScheduleEventsError);
-    }
+    };
     
     // callbacks
     this.getScheduleEventsSuccess = function(result) {
@@ -110,7 +110,8 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
                 });
             }
         }
-    }
+    };
+    
     this.getScheduleEventsError = function(error, notificationOptions, errorHandled) {
         // Server Error create an empty scheduler
         if(error && error.errorCode == ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT) {
@@ -120,15 +121,18 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             tDeffer.fail(that.createScheduleEventsError);
         }
         console.log(error);
-    }
+    };
+    
     this.createScheduleEventsSuccess = function(result) {
         console.log("createScheduleEventsSuccess\n" +JSON.stringify(result));
         parent.communicationWrapper.setDataValue("scheduleId", result.scheduleId);
         $('#addButton').removeClass("ui-disabled");
-    }
+    };
+    
     this.createScheduleEventsError = function(error) {
          console.log(error);
-    }
+    };
+    
     this.loadScheduleDataSuccess = function(result) {
         console.log("loadScheduleDataSuccess\n" + JSON.stringify(result));
         // {
@@ -140,10 +144,11 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         // add the day to the day blocked list
         that.blockedDays.push(result.scheduleEventData.day);
         that.scheduler.addEvent(result);
-    }
+    };
+    
     this.loadScheduleDataError = function(error) {
         console.log(error);
-    }
+    };
     
     this.newEvent = function(event, newEvent) {
         // make sure day doesn't contain already an event
@@ -155,7 +160,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             bundle.newEvent = newEvent;
             parent.flowNavigator.next(bundle);
         }
-    }
+    };
     
     this.selectEvent = function(event, element) {
         that.conditions['editEvent'] = true;
@@ -164,7 +169,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         bundle.blockedDays = that.blockedDays;
         bundle.events = [element];
         parent.flowNavigator.next(bundle);
-    }
+    };
 
     this.add = function() {
         that.conditions['addEvent'] = true;
@@ -172,7 +177,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         bundle.type = "add";
         bundle.blockedDays = that.blockedDays;
         parent.flowNavigator.next(bundle);
-    }
+    };
 
     this.del = function() {
         var events = that.scheduler.selectedEvents();
@@ -199,7 +204,8 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         // show delete warning message 
         parent.notification.showDialog(dialogType.WARNING,$.i18n.t('dialogs.EVENT_DELETE.title'), $.i18n.t('dialogs.EVENT_DELETE.message') +"</br>"+ contextBufferAsString, 
             [{label:$.i18n.t('dialogs.EVENT_DELETE.button_1'), callback:that.commitDel}, {label:$.i18n.t('dialogs.EVENT_DELETE.button_2')}]); 
-    }
+    };
+    
     this.commitDel = function() {
         var events = that.scheduler.selectedEvents();
         var aDeffer = [];
@@ -228,7 +234,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             parent.notification.showLoadingArea(false, notificationType.SPINNER);
             that.updateSchedule(null);
         });
-    }
+    };
     
     this.updateSchedule = function(element) {
         var sUpdate = $.i18n.t('communication.update_scheduler');
@@ -237,55 +243,61 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.updateSchedule, [parent.communicationWrapper.dataValues["scheduleId"]],
             { type: notificationType.OPERATION, message: sUpdate}
         );
-        tDeffer.done(function(result) {that.updateScheduleSuccess(result, element)});
+        tDeffer.done(function(result) {that.updateScheduleSuccess(result, element); });
         tDeffer.fail(that.updateScheduleError);
-    }
+    };
+    
     this.updateScheduleSuccess = function(result, element) {
         console.log("updateScheduleSuccess\n" + JSON.stringify(result));
         if(element != null) {
             that.scheduler.updatedEvent(element);
         }
-    }
+    };
+    
     this.updateScheduleError = function(error) {
         console.log("updateScheduleError\n" + JSON.stringify(error));
-    }
+    };
     
     this.updateEvent = function(event, element) {
         //console.log($(element));
         var item = $(element).data('reference');
-        console.log(JSON.stringify(item))
+        console.log(JSON.stringify(item));
         var tempDeferred = parent.communicationWrapper.exec(RobotPluginManager.updateScheduleEvent, [parent.communicationWrapper.dataValues["scheduleId"],item.scheduleEventId, { startTime:item.scheduleEventData.startTime,day:item.scheduleEventData.day, cleaningMode:item.scheduleEventData.cleaningMode}], 
             { type: notificationType.NONE, message: ""});
         
-        tempDeferred.done(function(result) {that.updateScheduleEventSuccess(result, element)});
+        tempDeferred.done(function(result) {that.updateScheduleEventSuccess(result, element); });
         tempDeferred.fail(that.updateScheduleEventError);
-    }
+    };
     
     this.updateScheduleEventSuccess = function(result, element) {
         console.log("updateScheduleEventSuccess\n" + JSON.stringify(result));
         this.updateSchedule(element);
-    }
+    };
+    
     this.updateScheduleEventError = function(error) {
         console.log("updateScheduleEventError\n" + JSON.stringify(error));
-    }
+    };
     
     /* </actionbar functions> */
    
     // navigation menu and menu actions
     this.showMenu = function() {
         parent.notification.showDomDialog("#menuPopup", true);
-    }
+    };
+    
     this.cleaning = function() {
         that.conditions['cleaning'] = true;
         parent.flowNavigator.next();
-    }
+    };
+    
     this.schedule = function() {
         $("#menuPopup").popup("close");
-    }
+    };
+    
     this.settings = function() {
         // switch to settings workflow
         that.conditions['settings'] = true;
         parent.flowNavigator.next();
-    }
-})
+    };
+});
 console.log('loaded file: basicScheduler_ViewModel.js');

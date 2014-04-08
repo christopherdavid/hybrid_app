@@ -34,14 +34,14 @@ resourceHandler.registerFunction('robotActivationId_ViewModel.js', function(pare
        // robotBundle.robot.robotId = that.robotId();
         robotBundle.robot.robotId = result.robotId;
         parent.flowNavigator.next(robotBundle);
-    }
+    };
 
     this.robotIdError = function(error) {
         console.log("robotId invalid:" + error.errorMessage);
-    }
+    };
 
     this.reload = function() {
         that.conditions = {};
-    }
-})
+    };
+});
 console.log('loaded file: robotActivationId_ViewModel.js');

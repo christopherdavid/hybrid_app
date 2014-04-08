@@ -37,13 +37,13 @@ OrientationPlugin.prototype.setAllowed = function(options) {
     PhoneGap.exec(null, null, "Orientation", "setAllowed", options);
 };
     
-OrientationPlugin.install = function()
-{
-    if(!window.plugins)
+OrientationPlugin.install = function() {
+    if(!window.plugins) {
         window.plugins = {};
+    }
         
     window.plugins.orientation = new OrientationPlugin();
-}
+};
 
 /**
  * Add to PhoneGap constructor
@@ -59,4 +59,4 @@ var forceRotation = function (orientation) {
     } else if(orientation == "landscape"){
         window.plugins.orientation.setAllowed([{pp:false, pd:false, ll:true, lr:true}]);
     }  
-}
+};

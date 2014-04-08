@@ -17,7 +17,7 @@ resourceHandler.registerFunction('about_ViewModel.js', function(parent) {
     
     this.reload = function() {
         this.conditions = {};
-    }
+    };
     
-})
+});
 console.log('loaded file: about_ViewModel.js');

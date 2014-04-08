@@ -26,7 +26,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
         if(that.newPasswordRepeat() != that.newPassword()) {
             that.isPasswordVerified(false);
         }
-    }
+    };
 
     
     this.passwordValid = ko.computed(function() {
@@ -78,17 +78,16 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
         that.selectedCountryLabel($.i18n.t("common.countries." + that.selectedCountryCode()));
         this.initCountry(that.selectedCountryCode());
     };
+    
     this.changeCountry = function() {
     	that.conditions['changeCountry'] = true;
         parent.flowNavigator.next({"userlogin":true});
-    	
-    }
+    };
     
-     this.changeSubscription  = function() {
+    this.changeSubscription  = function() {
         that.conditions['changeSubscription'] = true;
         parent.flowNavigator.next({"country":that.selectedCountryCode(),"userlogin":true});
-    }
-    
+    };
        
     this.changePassword = function() {
         parent.notification.showDomDialog("#changePasswordPopup");
@@ -96,14 +95,14 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     
     this.cancelEdit = function() {
         $("#changePasswordPopup").popup("close");
-    }
+    };
     
     this.commitEdit = function() {
         console.log("change password of user with email: " + that.user().email() + " to " + that.newPassword());
         $("#changePasswordPopup").popup("close");
         var tDeffer = parent.communicationWrapper.exec(UserPluginManager.changePassword, [that.user().email(), that.oldPassword(), that.newPassword()]);
         tDeffer.done(that.successChangePassword);
-    }
+    };
     
     this.successChangePassword = function(result) {
         console.log("result" + JSON.stringify(result));
@@ -111,7 +110,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
         that.newPassword = ko.observable("");
         that.newPasswordRepeat = ko.observable("");
         that.oldPassword = ko.observable("");
-    }
+    };
     
     this.logout = function() {
         var tDeffer = parent.communicationWrapper.exec(UserPluginManager.logout, []);
@@ -128,7 +127,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
 
     this.errorLogout = function(error) {
         console.log("Error (Logout): " + error.errorMessage);
-    }
+    };
     
     this.back = function() {
       that.conditions['settings'] = true;
@@ -137,7 +136,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     
     this.reload = function() {
         this.conditions = {};
-    }
+    };
     
     this.initCountry = function(appCountry) {
         
@@ -161,7 +160,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
                 that.selectedCountryCode("0");
             }
         }
-    }
+    };
     
      this.renderedCountries = function(element, data) {
         console.log("renderedCountries")
@@ -175,12 +174,12 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
                 countriesRendered = true;
             }
         }
-    }
+    };
     
     this.deinit = function() {
         that.countries([]);
         countriesRendered = false;
-    }
+    };
     
-})
+});
 console.log('loaded file: userSettings_ViewModel.js');

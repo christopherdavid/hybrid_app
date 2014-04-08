@@ -38,34 +38,37 @@ resourceHandler.registerFunction('settings_ViewModel.js', function(parent) {
     this.about = function() {
         that.conditions['about'] = true;
         parent.flowNavigator.next();
-    }
+    };
     
     this.weblink = function() {
         // open language specific link in new window
         var url = $.i18n.t("settings.page.link_url");
         openExternalLink(url);
-    }
+    };
 
     this.reload = function() {
         // remove conditions
         that.conditions = {};
-    }
+    };
     
     // navigation menu and menu actions
     this.showMenu = function() {
         parent.notification.showDomDialog("#menuPopup", true);
-    }
+    };
+    
     this.cleaning = function() {
         that.conditions['cleaning'] = true;
         parent.flowNavigator.next();
-    }
+    };
+    
     this.schedule = function() {
         that.conditions['schedule'] = true;
         parent.flowNavigator.next();
-    }
+    };
+    
     this.settings = function() {
         $("#menuPopup").popup("close");
-    }
+    };
     
-})
+});
 console.log('loaded file: settings_ViewModel.js');

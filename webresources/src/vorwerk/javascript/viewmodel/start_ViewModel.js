@@ -3,7 +3,7 @@ resourceHandler.registerFunction('start_ViewModel.js', function(parent) {
     var that = this;
     this.conditions = {};
     
-    this.init = function() {}
+    this.init = function() {};
     
     this.login = function() {
         that.conditions['login'] = true;
@@ -14,9 +14,10 @@ resourceHandler.registerFunction('start_ViewModel.js', function(parent) {
         that.conditions['register'] = true;
         parent.flowNavigator.next();
     };
+    
     this.reload = function() {
         // remove conditions
         that.conditions = {};
     };
-})
+});
 console.log('loaded file: start_ViewModel.js');

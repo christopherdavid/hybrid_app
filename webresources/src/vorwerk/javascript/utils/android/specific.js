@@ -11,7 +11,7 @@ function initDeviceConfig() {
     app.config.device = DEVICETYPE.Android;
 }
 
-var screenOrientation = function() {}
+var screenOrientation = function() {};
 
 screenOrientation.prototype.set = function(str, success, fail) {
     cordova.exec(null, null, "ScreenOrientation", "set", [str]);
@@ -20,4 +20,4 @@ navigator.screenOrientation = new screenOrientation();
 
 var forceRotation = function (orientation) {
     navigator.screenOrientation.set(orientation);
-}
+};

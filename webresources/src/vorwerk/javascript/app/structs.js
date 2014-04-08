@@ -10,7 +10,7 @@ var statusInformation = {
     startButton:"",
     ui:"",
     robot:""
-}
+};
 
 function getRobotStruct() {
     var defaultState = ROBOT_STATE_UNKNOWN;
@@ -31,7 +31,7 @@ function getRobotStruct() {
         stateString:$.i18n.t("robotStateCodes." + defaultState),
         connectionState:"",
         robotOnline:""
-    }
+    };
 };
 
 

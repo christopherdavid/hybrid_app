@@ -38,10 +38,11 @@ resourceHandler.registerFunction('loginUser_ViewModel.js', function(parent) {
     this.passwordLost = function() {
         console.log("password lost, show dialog");
         parent.notification.showDomDialog("#passwordLostPopup");
-    }
+    };
+    
     this.cancelReset = function() {
         $("#passwordLostPopup").popup("close");
-    }
+    };
     
     this.commitReset = function() {
         console.log("reset password of user with email: " + that.email());
@@ -51,12 +52,14 @@ resourceHandler.registerFunction('loginUser_ViewModel.js', function(parent) {
             { type: notificationType.OPERATION, message: sReset});
         tDeffer.done(that.sucessReset);
         tDeffer.fail(that.errorReset);
-    }
+    };
+    
     this.sucessReset = function(result, notifyOptions) {
         console.log("result: " + result);
         var sReset = $.i18n.t('communication.reset_password_done');
         parent.notification.showLoadingArea(true, notificationType.HINT, sReset);
-    }
+    };
+    
     this.errorReset = function(error) {
         console.log("Error: " + error.errorMessage);
     };
@@ -89,6 +92,7 @@ resourceHandler.registerFunction('loginUser_ViewModel.js', function(parent) {
 
     this.reload = function() {
         this.conditions = {};
-    }
-})
+    };
+    
+});
 console.log('loaded file: loginUser_ViewModel.js');

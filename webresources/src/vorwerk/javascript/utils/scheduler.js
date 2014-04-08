@@ -63,7 +63,7 @@ function Scheduler($root, scheduleType) {
         direction: 0, //0: up 1: down
         UP:0,
         DOWN:1
-    }
+    };
     this.tasks = [];
     this.selectedEvents = ko.observableArray([]);
     this.updatedEvents = ko.observableArray([]);
@@ -106,7 +106,8 @@ function Scheduler($root, scheduleType) {
         $(document).one("pageshow.scheduler", function(e) {
             initLayout();
         });
-    }
+    };
+    
     /**
      * remove event handler and destroy objects
      */
@@ -118,13 +119,13 @@ function Scheduler($root, scheduleType) {
         // remove all event handler for scheduler
         $('.event div').off(".scheduler");
         $(window).off(".scheduler");
-    }
+    };
 
     /**
      * updates the width of layout to take resize/orientation changes
      */
     this.updateLayout = function() {
-        console.log("updateLayout draggedElement? " + draggedElement)
+        console.log("updateLayout draggedElement? " + draggedElement);
         // if element is already dragged trigger mouseup to stop it
         if(draggedElement != null) {
             var oEvent = draggedElement.data('reference');
@@ -169,13 +170,14 @@ function Scheduler($root, scheduleType) {
         } else {
             scrollToTime(DEFAULT_START_TIME_PORTRAIT);
         }
-    }
+    };
     
     this.addEvents = function(eventArray) {
         for (var i = 0; i < eventArray.length; i++) {
             that.addEvent(eventArray[i]);
         }
-    }
+    };
+    
     this.addEvent = function(oEvent) {
         var parsedStartTime = $.scroller.parseDate('HH:ii', oEvent.scheduleEventData.startTime);
         var startTimeInMin = parsedStartTime.getHours() * 60 + parsedStartTime.getMinutes();
@@ -289,7 +291,7 @@ function Scheduler($root, scheduleType) {
                         containerScrollY = autoScroll.direction == autoScroll.DOWN ? containerScrollY + autoScroll.step : containerScrollY - autoScroll.step;
                         $content.css('-webkit-transform', 'translate(' + containerScrollX + 'px, ' + containerScrollY + 'px)');
                         $('.timeColumn').css('-webkit-transform', 'translate(0px, ' + containerScrollY + 'px)');
-                        autoScroll.timer = window.setTimeout(function(){ that.handleAutoScroll() }, autoScroll.interval);
+                        autoScroll.timer = window.setTimeout(function(){ that.handleAutoScroll(); }, autoScroll.interval);
                     }
                 // state update: auto scroll already initialized, update position of event
                 } else {
@@ -319,13 +321,13 @@ function Scheduler($root, scheduleType) {
                             if(autoScroll.direction == autoScroll.DOWN && autoScroll.element.position.y == 0
                                 && ui.position.top >= 0) {
                                     autoScroll.element.delta.y += ui.position.top - autoScroll.element.scrollStart.y;
-                                    console.log("synchronized scrollStart and fixed delta: " + autoScroll.element.delta.y)
+                                    console.log("synchronized scrollStart and fixed delta: " + autoScroll.element.delta.y);
                                     autoScroll.element.scrollStart.y = ui.position.top;
                                     autoScroll.element.synced = true;
                             } else if(autoScroll.direction == autoScroll.UP && (autoScroll.element.position.y == $('.day').height() - HOUR_IN_PX)
                                 && ui.position.top <= $('.day').height() - HOUR_IN_PX) {
                                     autoScroll.element.delta.y += ui.position.top - autoScroll.element.scrollStart.y;
-                                    console.log("synchronized scrollStart and fixed delta: " + autoScroll.element.delta.y)
+                                    console.log("synchronized scrollStart and fixed delta: " + autoScroll.element.delta.y);
                                     autoScroll.element.scrollStart.y = ui.position.top;
                                     autoScroll.element.synced = true;
                             }
@@ -347,7 +349,7 @@ function Scheduler($root, scheduleType) {
                             containerScrollY = autoScroll.direction == autoScroll.DOWN ? containerScrollY + autoScroll.step : containerScrollY - autoScroll.step;
                             $content.css('-webkit-transform', 'translate(' + containerScrollX + 'px, ' + containerScrollY + 'px)');
                             $('.timeColumn').css('-webkit-transform', 'translate(0px, ' + containerScrollY + 'px)');
-                            autoScroll.timer = window.setTimeout(function(){ that.handleAutoScroll() }, autoScroll.interval);
+                            autoScroll.timer = window.setTimeout(function(){ that.handleAutoScroll(); }, autoScroll.interval);
                         }
                     }
                     
@@ -384,24 +386,24 @@ function Scheduler($root, scheduleType) {
         });
         // store event in data
         that.tasks.push($task);
-    }
+    };
     
     this.checkScrolling = function(posY) {
         //console.log("border.top:" + autoScroll.border.top + " border.bottom:" + autoScroll.border.bottom + " posY " + posY);
         
         if(posY < autoScroll.border.top && (containerScrollY + autoScroll.step) < 0 ) {
-            console.log("hit top border")
+            console.log("hit top border");
             autoScroll.isScrolling = true;
             autoScroll.direction = autoScroll.DOWN;
             return true;
         } else if(posY > autoScroll.border.bottom && (-containerScrollY + autoScroll.step < $content.height() - $scrollWrapper.height()) ) {
-            console.log("hit bottom border")
+            console.log("hit bottom border");
             autoScroll.isScrolling = true;
             autoScroll.direction = autoScroll.UP;
             return true;
         }
         return false;
-    }
+    };
     
     this.handleAutoScroll = function() {
         if(autoScroll.direction == autoScroll.DOWN) {
@@ -419,7 +421,7 @@ function Scheduler($root, scheduleType) {
                 autoScroll.element.ui.helper[0].style.top = autoScroll.element.position.y + "px";
                 
                 // restart timer till top is reached
-                autoScroll.timer = window.setTimeout(function(){ that.handleAutoScroll() }, autoScroll.interval);
+                autoScroll.timer = window.setTimeout(function(){ that.handleAutoScroll(); }, autoScroll.interval);
                             } else {
                 autoScroll.element.position.y = 0;
                 autoScroll.isScrolling = false;
@@ -441,7 +443,7 @@ function Scheduler($root, scheduleType) {
                 autoScroll.element.ui.helper[0].style.top = autoScroll.element.position.y + "px";
                 
                 // restart timer till bottom is reached
-                autoScroll.timer = window.setTimeout(function(){ that.handleAutoScroll() }, autoScroll.interval);
+                autoScroll.timer = window.setTimeout(function(){ that.handleAutoScroll(); }, autoScroll.interval);
             } else {
                 autoScroll.element.position.y = $('.day').height() - EVENT_HEIGHT;
                 autoScroll.isScrolling = false;
@@ -453,14 +455,14 @@ function Scheduler($root, scheduleType) {
         $content.css('-webkit-transform', 'translate(' + containerScrollX + 'px, ' + containerScrollY + 'px)');
         $('.timeColumn').css('-webkit-transform', 'translate(0px, ' + containerScrollY + 'px)');
         
-    }
+    };
 
     this.deleteEvents = function(eventArray) {
         //iterate from behind, because the last item always got deleted
         for (var i = eventArray.length - 1; i >= 0; i--) {
             that.deleteEvent(eventArray[i]);
         }
-    }
+    };
 
     this.deleteEvent = function(event) {
         that.selectedEvents.remove(event);
@@ -473,7 +475,8 @@ function Scheduler($root, scheduleType) {
                 $(this).remove();
             }
         });
-    }
+    };
+    
     this.movedEvent = function(element, newPos) {
         var oEvent = element.data('reference');
         var newHour = Math.floor(newPos/HOUR_IN_PX);
@@ -509,20 +512,22 @@ function Scheduler($root, scheduleType) {
             element.addClass("state-local");
             $root.triggerHandler("updatedEvent", element);
         }
-    }
+    };
+    
     this.updatedEvent = function(element) {
-        console.log(element)
+        console.log(element);
         var oEvent = $(element).data('reference');
         $(element).removeClass("state-local");
         that.updatedEvents.remove(oEvent);
-    }
+    };
+    
     /**
      * selects the current clicked element of this event.
      */
     this.clickedEvent = function(element) {
         var oEvent = element.data('reference');
         element.addClass('selected');
-        $root.triggerHandler("selectEvent", oEvent);    }
+        $root.triggerHandler("selectEvent", oEvent);    };
     
     /**
      * adds the timeline on the left side
@@ -547,7 +552,7 @@ function Scheduler($root, scheduleType) {
                 }));
             }
             
-            $timeColumn.append($time)
+            $timeColumn.append($time);
         }
     }
 
@@ -681,7 +686,6 @@ function Scheduler($root, scheduleType) {
         });
         $scrollWrapper.append($content);
     }
-
 
     that.init();
 }

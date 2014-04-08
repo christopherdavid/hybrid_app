@@ -6,7 +6,7 @@
  * @param {object} parent Reference to the parent dataTemplate object.
  */
 function WorkflowNotification(parent) {
-    console.log('create WorkflowNotification instance')
+    console.log('create WorkflowNotification instance');
     var that = this;
     var $loadingSpinner, $notificationArea;
     var statusListener = {};
@@ -28,7 +28,7 @@ function WorkflowNotification(parent) {
                 //make buttons to size auto again, to later calculate the biggest one
                 $("#dialogPopup .ui-btn").each(function(index ){
                      $(this).width("auto");
-                })
+                });
                 
                 $("#dialogPopup").removeClass("dialogType_1 dialogType_2 dialogType_3");
                 $(".headerbar").removeClass("dialogType_1 dialogType_2 dialogType_3");
@@ -42,13 +42,13 @@ function WorkflowNotification(parent) {
                 that.handleDialogStack();
             }
         });
-    }
+    };
     
     // registers to notifications which were only send if the app is running
     this.registerForRobotNotifications = function() {
         console.log("registerForRobotNotifications");
         RobotPluginManager.registerNotifications2(that.notificationStatusSuccess, that.notificationStatusError);
-    }
+    };
     
     //{robotDataKeyId:"robotDataKeyId", robotId:"robotId", robotData:"robotData"}
     this.notificationStatusSuccess = function(result) {
@@ -60,7 +60,7 @@ function WorkflowNotification(parent) {
             
             // first check if notification is for current selected robot (due performance reason)
             if(curRobot().robotId && curRobot().robotId() == result.robotId) {
-                console.log("notification for current robot")
+                console.log("notification for current robot");
                 switch(result.robotDataKeyId) {
                         case ROBOT_CURRENT_STATE_CHANGED:
                         case ROBOT_STATE_UPDATE:
@@ -142,30 +142,31 @@ function WorkflowNotification(parent) {
                 });
             }
         }
-    }
+    };
     
     this.notificationStatusError = function(error) {
         console.log("notificationStatusError " + JSON.stringify(error));
-    }
+    };
     
     // registers for push notifications which also arrives if the app is not running or in background
     this.registerForRobotMessages = function() {
         console.log("registerForRobotMessages");
         RobotPluginManager.registerForRobotMessages(that.successNotifyPushMessage, that.errorNotifyPushMessage);
-    }
+    };
     
     this.registerStatus = function(notficationId, callback) {
         if(!statusListener[notficationId]) {
             statusListener[notficationId] = [];
         }
         statusListener[notficationId].push(callback);
-    }
+    };
     
     this.clearStatusListener = function() {
         statusListener = {};
-    }
+    };
+    
     this.successNotifyPushMessage = function(result) {
-        console.log("successNotifyPushMessage " + JSON.stringify(result))
+        console.log("successNotifyPushMessage " + JSON.stringify(result));
         var tempRobots = parent.communicationWrapper.getDataValue("robotList");
         var curRobot = parent.communicationWrapper.getDataValue("selectedRobot");
         var robotName = "";
@@ -189,7 +190,7 @@ function WorkflowNotification(parent) {
         // robot wasn't found in list nor is the current one
         if(robotName == ""){
             // get robot details
-            console.log("robot list not loaded yet, request robot details")
+            console.log("robot list not loaded yet, request robot details");
             var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotDetail, [result.robotId], { type: notificationType.NONE, message: ""}, true);
             tDeffer.done(function(subresult) {
                 that.showPushMessage(subresult.robotName, result);
@@ -197,7 +198,7 @@ function WorkflowNotification(parent) {
         } else {
             that.showPushMessage(robotName,result, false);
         }
-    }
+    };
     
     this.showPushMessage = function(robotName, result, isCurRobot) {
         var translatedTitle = $.i18n.t("messages." + result.notificationId + ".title") || "";
@@ -211,7 +212,7 @@ function WorkflowNotification(parent) {
                 that.showDialog(dialogType.WARNING, translatedTitle, translatedText);
             break;
             case NOTIFICATION_CLEANING_DONE:
-                console.log("NOTIFICATION_CLEANING_DONE")
+                console.log("NOTIFICATION_CLEANING_DONE");
                 var tempRobots = parent.communicationWrapper.getDataValue("robotList");
                 $.each(tempRobots(), function(index, item){
                     if(item.robotId() == result.robotId) {
@@ -223,14 +224,14 @@ function WorkflowNotification(parent) {
                     if(statusListener[NOTIFICATION_CLEANING_DONE] && statusListener[NOTIFICATION_CLEANING_DONE].length > 0) {
                         statusListener[NOTIFICATION_CLEANING_DONE][0](translatedText);
                     } else  {
-                        that.showLoadingArea(true,notificationType.HINT,translatedText)
+                        that.showLoadingArea(true,notificationType.HINT,translatedText);
                     }
                 } else {
                     that.showDialog(dialogType.INFO, translatedTitle, translatedText);
                 }
             break;
             case NOTIFICATION_ROBOT_CANCEL:
-                that.showLoadingArea(true,notificationType.HINT,translatedText)
+                that.showLoadingArea(true,notificationType.HINT,translatedText);
             break;
             case "22212":
                  that.showDialog(dialogType.ERROR, translatedTitle, translatedText);
@@ -246,11 +247,11 @@ function WorkflowNotification(parent) {
             default:
                 that.showDialog(dialogType.WARNING, "unhandled message", JSON.stringify(result));
         }
-    }
+    };
     
     this.errorNotifyPushMessage = function(error) {
         console.log("errorNotifyPushMessage " + JSON.stringify(error));
-    }
+    };
     
     /**
      * buttons: [{label:"ok", callback:callbackOk}, {label:"cancel", callback:callbackCancel}] 
@@ -268,7 +269,7 @@ function WorkflowNotification(parent) {
             "buttons":buttons
         });
         that.handleDialogStack();
-    }
+    };
     
     this.showDomDialog = function(domId, blnCloseable, onShow) {
         blnCloseable = typeof blnCloseable != "undefined" ? blnCloseable :  false;
@@ -281,7 +282,7 @@ function WorkflowNotification(parent) {
             "onShow": onShow
         });
         that.handleDialogStack();
-    }
+    };
     
     this.handleDialogStack = function() {
         // check if currently a dialog is shown and could be closed
@@ -309,14 +310,14 @@ function WorkflowNotification(parent) {
                     that.curHandledDialog.buttons);
             }
         }
-    }
+    };
     
     this.showDialogWindow = function(dialogType, textHeadline, textContent, buttons) {
         $("#dialogPopup").addClass("dialogType_" + dialogType);
         $(".headerbar").addClass("dialogType_" + dialogType);
         
         var popup = $("#dialogPopup");
-        popup.find(".ui-bar-buttons")
+        popup.find(".ui-bar-buttons");
 
         $("#dialogPopup .dialogPopupTitle")[0].innerHTML = textHeadline;
         $("#dialogPopup .dialogPopupContent")[0].innerHTML = textContent; 
@@ -356,12 +357,12 @@ function WorkflowNotification(parent) {
                 } else {
                     return false;
                 }
-            })
+            });
             
             //make all buttons the same width
             $("#dialogPopup .ui-btn").each(function(index ){
                  $(this).width(maxWidth);
-            })
+            });
 
             
         } else {
@@ -373,16 +374,17 @@ function WorkflowNotification(parent) {
             });
         }
         $("#dialogPopup").popup("open");
-    }
+    };
     
     this.closeDialog = function(dialogType) {
         $("#dialogPopup").popup("close");
-    }
+    };
     
     
     this.showNotification = function() {
         
-    }
+    };
+    
     // show each notification at least about 2s
     this.handleStack = function() {
         // check if currently a message is shown
@@ -390,9 +392,9 @@ function WorkflowNotification(parent) {
             // show new message from stack
             that.curHandledNotification = that.messageStack.shift();
             $notificationArea.notificationbar("show", that.curHandledNotification.message, that.curHandledNotification.type);
-            that.messageTimer = window.setTimeout(function() { that.tryToHideNotification()}, 2000);
+            that.messageTimer = window.setTimeout(function() { that.tryToHideNotification(); }, 2000);
         }
-    }
+    };
     
     this.tryToHideNotification = function() {
         if(that.curHandledNotification != null) {
@@ -402,10 +404,10 @@ function WorkflowNotification(parent) {
                 that.curHandledNotification = null;
                 that.handleStack();
             } else {
-                that.messageTimer = window.setTimeout(function() { that.tryToHideNotification()}, 2000);
+                that.messageTimer = window.setTimeout(function() { that.tryToHideNotification(); }, 2000);
             }
         }
-    }
+    };
     
     this.notificationDone = function(callGuid) {
         // first check if current handled notification is the on to finish
@@ -416,12 +418,11 @@ function WorkflowNotification(parent) {
             $.each(that.messageStack, function(index, item) {
                 if(item.callGuid == callGuid) {
                     item.finished = true;
-                    return false
+                    return false;
                 }
             });
         }
-        
-    }
+    };
     
     /**
      * Shows a loading spinner indicating background activity.
@@ -448,11 +449,11 @@ function WorkflowNotification(parent) {
                 case notificationType.OPERATION:
                 case notificationType.GETREADY:
                 case notificationType.WAKEUP:
-                    that.messageStack.push({type:type,message:message,callGuid:callGuid || "",finished:false})
+                    that.messageStack.push({type:type,message:message,callGuid:callGuid || "",finished:false});
                     that.handleStack();
                     break;
                 case notificationType.HINT:
-                    that.messageStack.push({type:type,message:message,callGuid:callGuid || "",finished:true})
+                    that.messageStack.push({type:type,message:message,callGuid:callGuid || "",finished:true});
                     that.handleStack();
                     break;
             }
@@ -472,7 +473,7 @@ function WorkflowNotification(parent) {
                     break;
             }
         }
-    }
+    };
     
     /**
      * hides notifications and clears message stack 
@@ -482,18 +483,18 @@ function WorkflowNotification(parent) {
         that.curHandledNotification = null;
         that.messageStack.length = 0;
         $notificationArea.notificationbar("hide", true);
-    }
+    };
     
     this.startManualMode = function(){
     var curRobot = parent.communicationWrapper.getDataValue("selectedRobot");
       var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [curRobot().robotId(),
                       1, 1, 1]);
       tDeffer.done(that.startManualModeSuccess);
-    }
+    };
     
     this.startManualModeSuccess = function(result) {
        console.log("startManualModeSuccess" + JSON.stringify(result));
-     }
+    };
     
     /**
      * Shows an error message on the screen (and blocks all other interaction).
@@ -538,5 +539,5 @@ function WorkflowNotification(parent) {
         if(bShowDialog) {
             that.showDialog(dialogType.ERROR, errorTitle, errorMessage);
         }
-    }
+    };
 }

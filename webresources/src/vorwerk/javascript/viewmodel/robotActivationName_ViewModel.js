@@ -9,13 +9,13 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
     this.init = function() {
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotDetail, [that.bundle.robot.robotId]);
         tDeffer.done(that.robotDetailSuccess);
-    }
+    };
     
     this.robotDetailSuccess = function(result) {
         // temporary store robot details
         tempRobot = result;//{robotId:"robotId", robotName:"robotName"}
         that.robotName(tempRobot.robotName);
-    }
+    };
 
     this.back = function() {
         that.conditions['back'] = true;
@@ -41,7 +41,7 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
     this.robotSetNameSuccess = function(result) {
         console.log("robotSetNameSuccess " + JSON.stringify(result));
         that.setRobotGoNext(result.robotName);
-    }
+    };
     
     this.setRobotGoNext = function(robotName) {
         that.conditions['robotNameValid'] = true;
@@ -64,14 +64,14 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
         parent.notification.showDialog(dialogType.INFO, msgTitle, msgText, [{"label":msgButton, "callback":function(e){
             parent.flowNavigator.next();
         }}]);
-    }
+    };
 
     this.robotSetNameError = function(error) {
         console.log("robotName can't be set:" + error);
-    }
+    };
 
     this.reload = function() {
         that.conditions = {};
-    }
-})
+    };
+});
 console.log('loaded file: robotActivationName_ViewModel.js');
