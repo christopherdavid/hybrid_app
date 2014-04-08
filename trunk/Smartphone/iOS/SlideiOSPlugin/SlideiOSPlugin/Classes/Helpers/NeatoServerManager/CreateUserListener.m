@@ -48,7 +48,7 @@
     self.retained_self = nil;
 }
 
-- (void)xmppLoginfailedWithError:(NSXMLElement *)error {
+- (void)xmppLoginfailedWithError:(NSError *)error {
 	debugLog(@"XMPP login failed");
     [self.delegate performSelector:@selector(failedToCreateUserWithError:) withObject:error];
     self.delegate = nil;

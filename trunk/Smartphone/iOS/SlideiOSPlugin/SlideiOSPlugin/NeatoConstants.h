@@ -207,7 +207,10 @@
 
 #define KEY_FORCED_DISCONNECTED @"forcedDisconnected"
 
-// To switch to Vorwerk's server, comment SERVER_TYPE_NEATO variable
+// Request completion block
+typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *error);
+
+// To switch to Vorwerk's server, comment SERVER_TYPE_NEATO and SERVER_TYPE_RAJATOGO.
 #define SERVER_TYPE_NEATO 1
 // #define SERVER_TYPE_RAJATOGO 1
 

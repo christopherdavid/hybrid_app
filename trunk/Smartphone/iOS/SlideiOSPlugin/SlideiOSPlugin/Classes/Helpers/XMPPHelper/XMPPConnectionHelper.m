@@ -3,6 +3,7 @@
 #import "XMPPConnection.h"
 #import "NeatoUserHelper.h"
 #import "NeatoUser.h"
+#import "AppHelper.h"
 
 @interface XMPPConnectionHelper()
 
@@ -169,7 +170,8 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([self.delegate respondsToSelector:@selector(xmppLoginfailedWithError:)])
         {
-            [self.delegate performSelector:@selector(xmppLoginfailedWithError:) withObject:error];
+            [self.delegate performSelector:@selector(xmppLoginfailedWithError:)
+                                withObject:[AppHelper nserrorWithDescription:(error.debugDescription ? error.debugDescription : @"") code:1001]];
         }
     });
     self.needToSendACommand = NO;
