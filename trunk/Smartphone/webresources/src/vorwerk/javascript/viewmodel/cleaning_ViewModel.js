@@ -22,6 +22,10 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     this.visualSelectedCategory = ko.observable();
     
+    this.lastMoveTimestamp = 1;
+    
+    this.threshhold = 500;
+        
     // listener when robot category changes
     this.robot().cleaningCategory.subscribe(function(newValue) {
             console.log("cleaningCategory subscribe " + newValue)
@@ -268,10 +272,26 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         }
     }
     
-    // handle remote pressed events
+    
     this.remotePressed = function(event, button) {
+    	var now = +new Date;
+
+    	console.log("that.lastMoveTimestamp:"+ that.lastMoveTimestamp);
+    	 
+    	if (now > that.lastMoveTimestamp + that.threshhold) {
+	        that.lastMoveTimestamp = now;
+	        that.remotePressedNotThrottled(event, button);
+	    }
+    }
+    
+    
+    
+    // handle remote pressed events
+    this.remotePressedNotThrottled = function(event, button) {
         navigator.notification.vibrate(500);
         //console.log("remote button pressed:")
+        var now = +new Date;
+         console.log("remote button Current Time:"+ now);
         //console.log(button)
         var navigationControlId = 0;
         switch(button.id) {
