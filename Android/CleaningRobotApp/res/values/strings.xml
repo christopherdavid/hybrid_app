@@ -4,5 +4,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="app_expired">Lieber User,\ndie von Dir verwendete Test-Version der VR200 App ist nicht mehr aktuell.\nBitte downloade Dir die neue und offizielle Version der Kobold VR200 App im Android bzw. App Store.\n\nBeste Grüße\nDein Vorwerk-Team</string>
 
 </resources>
