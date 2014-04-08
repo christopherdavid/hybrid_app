@@ -251,4 +251,12 @@
     return [[NSNumber numberWithInteger:seconds] stringValue];
 }
 
++ (NSString *)crittercismAppId {
+#ifdef DEBUG
+  return CRITTERCISM_DEBUG_APP_ID;
+#else
+  return CRITTERCISM_RELEASE_APP_ID;
+#endif
+}
+
 @end

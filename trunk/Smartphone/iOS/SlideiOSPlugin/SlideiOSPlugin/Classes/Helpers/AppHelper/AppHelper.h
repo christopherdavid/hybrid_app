@@ -29,4 +29,5 @@
 + (NSString *)getApplicationId;
 + (NSString *)getNotificationServerType;
 + (NSString *)appInfo;
++ (NSString *)crittercismAppId;
 @end

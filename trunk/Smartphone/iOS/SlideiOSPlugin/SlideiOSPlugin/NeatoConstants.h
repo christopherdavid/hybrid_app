@@ -378,3 +378,7 @@
 #define NEATO_CREATE_USER3_URL @"method=user.create3"
 #define NEATO_SET_ACCOUNT_DETAILS @"method=user.set_account_details"
 
+// Crittercism App IDs
+#define CRITTERCISM_DEBUG_APP_ID @"5332916c40ec922f32000006" // using c_neato@rajatogo.com login
+#define CRITTERCISM_RELEASE_APP_ID @"533277c3a6d3d77683000001" // using Neato account for crittercism
+
