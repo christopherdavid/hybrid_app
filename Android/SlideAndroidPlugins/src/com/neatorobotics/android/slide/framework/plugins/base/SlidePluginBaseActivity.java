@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.NeatoServiceManager;
+import com.neatorobotics.android.slide.framework.crittercism.CrittercismHelper;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationMessageHandler;
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
@@ -38,6 +39,7 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
 		AppUtils.logLibraryVersion();
 
 		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
+		CrittercismHelper.initializeCrittercism(this);
 		NeatoServiceManager serviceManager = NeatoServiceManager.getInstance(getApplicationContext());
 		if(UserHelper.isUserLoggedIn(this)) {
 			serviceManager.initialize();
