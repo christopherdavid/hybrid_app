@@ -22,9 +22,24 @@
 
 // Helpers
 #import "AppSettings.h"
+#import "XMPPRobotDataChangeManager.h"
 
 // Constants
+#define PROFILE_DATA_FORMAT @"&profile[%@]=%@"
+
+// ROBOT
 #define GET_ROBOT_DETAILS_POST_STRING @"api_key=%@&serial_number=%@"
+
+// USER
+#define SET_ACCOUNT_DETAILS_POST_STRING @"api_key=%@&email=%@&auth_token=%@%@"
+#define GET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING @"api_key=%@&email=%@"
+#define GET_USER_DETAILS_POST_STRING @"api_key=%@&email=%@&auth_token=%@"
+#define UPDATE_AUTH_TOKEN_POST_STRING @"api_key=%@&auth_token=%@"
+#define GET_IS_USER_VALIDATED_POST_STRING @"api_key=%@&email=%@"
+#define GET_RESEND_VALIDATION_EMAIL_POST_STRING @"api_key=%@&email=%@"
+#define GET_FORGET_PASSWORD_POST_STRING @"api_key=%@&email=%@"
+#define GET_CHANGE_PASSWORD_POST_STRING @"api_key=%@&auth_token=%@&password_old=%@&password_new=%@"
+#define DISSOCIATE_ALL_ROBOTS_POST_STRING @"api_key=%@&email=%@&serial_number=%@"
 
 @interface NeatoServerManager()
 
@@ -67,21 +82,20 @@
 }
 
 // Gets called from LoginListener
--(void) loginFailedWithError:(NSError *)error {
+- (void)loginFailedWithError:(NSError *)error {
     debugLog(@"");
     [self notifyRequestFailed:@selector(loginFailedWithError:) withError:error];
 }
 
 // Gets called from LoginListener
--(void) loginSuccess:(NeatoUser *)user {
+- (void)loginSuccess:(NeatoUser *)user {
     debugLog(@"");
     [self.delegate performSelectorOnMainThread:@selector(loginSuccess:) withObject:user waitUntilDone:NO];
     self.delegate = nil;
     self.retained_self = nil;
 }
 
--(void) notifyRequestFailed:(SEL) selector withError:(NSError *) error
-{
+- (void)notifyRequestFailed:(SEL) selector withError:(NSError *) error {
     debugLog(@"");
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.delegate performSelector:selector withObject:error];
@@ -91,15 +105,13 @@
 }
 
 // Gets called from NeatoServerHelper
--(void) failedToGetLoginHandle:(NSError *)error
-{
+- (void)failedToGetLoginHandle:(NSError *)error {
     debugLog(@"");
     [self notifyRequestFailed:@selector(loginFailedWithError:) withError:error];
 }
 
 // Gets called from NeatoServerHelper
--(void) gotUserHandleForLogin:(NSString *) userHandle;
-{
+- (void)gotUserHandleForLogin:(NSString *) userHandle; {
     debugLog(@"");
     // save auth token to local storage
     [NeatoUserHelper saveUserAuthToken:userHandle];
@@ -114,8 +126,7 @@
 }
 
 
--(void) loginFacebookUser:(NSString *) externalSocialId
-{
+- (void)loginFacebookUser:(NSString *) externalSocialId {
     debugLog(@"");
     self.retained_self = self;
 }
@@ -131,14 +142,12 @@
     [helper getUserAccountDetails:authToken email:email];
 }
 
--(void) failedToGetUserDetailsWithError:(NSError *)error
-{
+- (void)failedToGetUserDetailsWithError:(NSError *)error {
     debugLog(@"");
     [self notifyRequestFailed:@selector(failedToGetUserDetailsWithError:) withError:error];
 }
 
--(void) gotUserDetails:(NeatoUser *)neatoUser
-{
+- (void)gotUserDetails:(NeatoUser *)neatoUser {
     debugLog(@"");
     [NeatoUserHelper saveNeatoUser:neatoUser];
     if ([self.delegate respondsToSelector:@selector(gotUserDetails:)])
@@ -149,8 +158,7 @@
     }
 }
 
--(void) createUser:(NeatoUser *)neatoUser
-{
+- (void)createUser:(NeatoUser *)neatoUser {
     debugLog(@"");
     self.retained_self = self;
     NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
@@ -158,7 +166,7 @@
     [helper createUser:neatoUser];
 }
 
--(void)userCreated:(NeatoUser *) user {
+- (void)userCreated:(NeatoUser *) user {
     debugLog(@"");
     if ([self.delegate respondsToSelector:@selector(userCreated:)]) {
         [self.delegate performSelectorOnMainThread:@selector(userCreated:) withObject:user waitUntilDone:NO];
@@ -167,20 +175,17 @@
     }
 }
 
--(void) failedToCreateUserWithError:(NSError *) error
-{
+- (void)failedToCreateUserWithError:(NSError *) error {
     debugLog(@"");
     [self notifyRequestFailed:@selector(failedToCreateUserWithError:) withError:error];
 }
 
--(void) failedToGetCreateUserHandle:(NSError *)error
-{
+- (void)failedToGetCreateUserHandle:(NSError *)error {
     debugLog(@"");
     [self notifyRequestFailed:@selector(failedToCreateUserWithError:) withError:error];
 }
 
--(void) gotHandleForCreateUser:(NSString *) authToken
-{
+- (void)gotHandleForCreateUser:(NSString *) authToken {
     debugLog(@"");
     // save users auth token to local storage
     [NeatoUserHelper saveUserAuthToken:authToken];
@@ -192,8 +197,7 @@
     [helper getUserAccountDetails:authToken email:nil];
 }
 
--(void) createRobot:(NeatoRobot *)neatoRobot
-{
+- (void)createRobot:(NeatoRobot *)neatoRobot {
     debugLog(@"");
     self.retained_self = self;
     
@@ -202,14 +206,12 @@
     [helper createRobot:neatoRobot];
 }
 
--(void) robotCreationFailedWithError:(NSError *) error
-{
+- (void)robotCreationFailedWithError:(NSError *) error {
     debugLog(@"");
     [self notifyRequestFailed:@selector(robotCreationFailedWithError:) withError:error];
 }
 
--(void) robotCreated
-{
+- (void)robotCreated {
     debugLog(@"");
     if ([self.delegate respondsToSelector:@selector(robotCreated)])
     {
@@ -231,8 +233,7 @@
     [helper getRobotDetails:serialNumber];
 }
 
--(void) gotRobotDetails:(NeatoRobot *)neatoRobot
-{
+- (void)gotRobotDetails:(NeatoRobot *)neatoRobot {
     debugLog(@"");
     // Save the details to local storage
     [NeatoRobotHelper saveNeatoRobot:neatoRobot];
@@ -246,14 +247,12 @@
     }
 }
 
--(void) failedToGetRobotDetailsWihError:(NSError *)error
-{
+- (void)failedToGetRobotDetailsWihError:(NSError *)error {
     debugLog(@"");
     [self notifyRequestFailed:@selector(failedToGetRobotDetailsWihError:) withError:error];
 }
 
--(void) setRobotUserEmail:(NSString *)email serialNumber:(NSString *)serial_number
-{
+- (void)setRobotUserEmail:(NSString *)email serialNumber:(NSString *)serial_number {
     debugLog(@"");
     self.retained_self = self;
     
@@ -262,8 +261,7 @@
     [helper setRobotUserEmail:email serialNumber:serial_number];
 }
 
--(void) robotAssociatedWithUser:(NSString *)message robotId:(NSString *)robotId
-{
+- (void)robotAssociatedWithUser:(NSString *)message robotId:(NSString *)robotId {
     debugLog(@"");
     // Fetch all robots for user and update the DB
     // Then notify the caller
@@ -275,8 +273,7 @@
     [helper associatedRobotsForUserWithEmail:[NeatoUserHelper getLoggedInUserEmail] authToken:[NeatoUserHelper getUsersAuthToken]];
 }
 
--(void) robotAssociationCompletedSuccessfully:(NSString *) robotId
-{
+- (void)robotAssociationCompletedSuccessfully:(NSString *) robotId {
     // Notify the caller
     if ([self.delegate respondsToSelector:@selector(robotAssociatedWithUser:robotId:)])
     {
@@ -288,14 +285,12 @@
     }
 }
 
--(void) robotAssociationFailedWithError:(NSError *)error
-{
+- (void)robotAssociationFailedWithError:(NSError *)error {
     debugLog(@"");
     [self notifyRequestFailed:@selector(robotAssociationFailedWithError:) withError:error];
 }
 
--(void) logoutUserEmail:(NSString *)email authToken:(NSString *)auth_token
-{
+- (void)logoutUserEmail:(NSString *)email authToken:(NSString *)auth_token {
     debugLog(@"");
     self.retained_self = self;
     
@@ -305,14 +300,12 @@
 }
 
 
--(void) logoutRequestFailedWithEror:(NSError *)error
-{
+- (void)logoutRequestFailedWithEror:(NSError *)error {
     debugLog(@"");
     [self notifyRequestFailed:@selector(logoutRequestFailedWithEror:) withError:error];
 }
 
--(void) userLoggedOut
-{
+- (void)userLoggedOut {
     debugLog(@"");
     [NeatoUserHelper deleteUniqueDeviceIdForUser];
     if ([self.delegate respondsToSelector:@selector(userLoggedOut)])
@@ -334,14 +327,12 @@
     [helper associatedRobotsForUserWithEmail:email authToken:authToken];
 }
 
--(void) failedToGetAssociatedRobotsWithError:(NSError *)error
-{
+- (void)failedToGetAssociatedRobotsWithError:(NSError *)error {
     debugLog(@"");
     [self notifyRequestFailed:@selector(failedToGetAssociatedRobotsWithError:) withError:error];
 }
 
--(void) gotUserAssociatedRobots:(NSMutableArray *)robots
-{
+- (void)gotUserAssociatedRobots:(NSMutableArray *)robots {
     debugLog(@"");
     if ([self.delegate respondsToSelector:@selector(gotUserAssociatedRobots:)])
     {
@@ -353,8 +344,7 @@
     }
 }
 
--(void) updateUserAuthToken:(NSString *) authToken
-{
+- (void)updateUserAuthToken:(NSString *)authToken {
     debugLog(@"");
     self.retained_self = self;
     
@@ -594,6 +584,7 @@
     debugLog(@"");
     [self notifyRequestFailed:@selector(failedToResendValidationEmailWithError:) withError:error];
 }
+
 - (void)forgetPasswordForEmail:(NSString *)email {
     debugLog(@"");
     self.retained_self = self;
@@ -716,6 +707,7 @@
     }
     
 }
+
 - (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error {
     [self notifyRequestFailed:@selector(failedToSetUserPushNotificationOptionsWithError:) withError:error];
 }
@@ -950,26 +942,213 @@
     [request setHTTPBody:[[NSString stringWithFormat:GET_ROBOT_DETAILS_POST_STRING, API_KEY, serialNumber] dataUsingEncoding:NSUTF8StringEncoding]];
     
     NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
-    [serverHelper dataForRequest:request completionBlock:^(id response, NSError *error) {
-        if (error) {
-            completion ? completion(nil, error) : nil;
-            return;
-        }
-        // Getting profile details from response
-        NSDictionary *profileDetails = [response objectForKey:NEATO_RESPONSE_PROFILE_DETAILS];
-        NSString *value = [[profileDetails objectForKey:NEATO_RESPONSE_CURRENT_STATE_DETAILS] objectForKey:KEY_VALUE];
-        // Get robot state params by parsing data from string for value key
-        // Get cleaning category by parsing data from string robot state params
-        NSData *jsonData = [value dataUsingEncoding:NSUTF8StringEncoding];
-        if (!jsonData) {
-            completion ? completion(nil, error) : nil;
-            return;
-        }
-        NSString *robotStateParams = [[AppHelper parseJSON:jsonData] objectForKey:NEATO_RESPONSE_ROBOT_STATE_PARAMS];
-        jsonData = [robotStateParams dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary *cleaningCategory = [[AppHelper parseJSON:jsonData] objectForKey:NEATO_RESPONSE_CLEANING_CATEGORY];
-        completion ? completion(cleaningCategory, error) : nil;
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     if (error) {
+                         completion ? completion(nil, error) : nil;
+                         return;
+                     }
+                     // Getting profile details from response
+                     NSDictionary *profileDetails = [response objectForKey:NEATO_RESPONSE_PROFILE_DETAILS];
+                     NSString *value = [[profileDetails objectForKey:NEATO_RESPONSE_CURRENT_STATE_DETAILS] objectForKey:KEY_VALUE];
+                     // Get robot state params by parsing data from string for value key
+                     // Get cleaning category by parsing data from string robot state params
+                     NSData *jsonData = [value dataUsingEncoding:NSUTF8StringEncoding];
+                     if (!jsonData) {
+                         completion ? completion(nil, error) : nil;
+                         return;
+                     }
+                     NSString *robotStateParams = [[AppHelper parseJSON:jsonData] objectForKey:NEATO_RESPONSE_ROBOT_STATE_PARAMS];
+                     jsonData = [robotStateParams dataUsingEncoding:NSUTF8StringEncoding];
+                     NSDictionary *cleaningCategory = [[AppHelper parseJSON:jsonData] objectForKey:NEATO_RESPONSE_CLEANING_CATEGORY];
+                     completion ? completion(cleaningCategory, error) : nil;
+                 }];
+}
+
+- (void)notificationSettingsForUserWithEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING, API_KEY, email] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     completion ? completion(response, error) : nil;
     }];
+}
+
+- (void)forgetPasswordForEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_FORGET_PASSWORD_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_FORGET_PASSWORD_POST_STRING, API_KEY, email] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     completion ? completion(response, error) : nil;
+                 }];
+}
+
+- (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_CHANGE_PASSWORD_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_CHANGE_PASSWORD_POST_STRING, API_KEY, [NeatoUserHelper getUsersAuthToken], oldPassword, newPassword] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     // Update the database.
+                     [NeatoUserHelper updatePassword:newPassword];
+                     completion ? completion(response, error) : nil;
+                 }];
+}
+
+-(void)isUserValidatedForEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_IS_USER_VALIDATED_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_IS_USER_VALIDATED_POST_STRING, API_KEY, email]
+                          dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     completion ? completion(response, error) : nil;
+                 }];
+}
+
+- (void)resendValidationEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_RESEND_VALIDATION_EMAIL_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_RESEND_VALIDATION_EMAIL_POST_STRING, API_KEY, email] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     completion ? completion(response, error) : nil;
+                 }];
+}
+
+- (void)updateUserAuthToken:(NSString *) authToken completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_UPDATE_AUTH_TOKEN_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:UPDATE_AUTH_TOKEN_POST_STRING,API_KEY,authToken] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     completion ? completion(response, error) : nil;
+                 }];
+}
+
+- (void)getUserDetailsForEmail:(NSString *)email authToken:(NSString *)authToken completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_USER_DETAILS_URL]];
+    [request setHTTPMethod:@"POST"];
+    email = email ? email : @"";
+    [request setHTTPBody:[[NSString stringWithFormat:GET_USER_DETAILS_POST_STRING, API_KEY, email, authToken] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     completion ? completion(response, error) : nil;
+                 }];
+}
+
+- (void)setUserAccountDetails:(NeatoUser *)neatoUser authToken:(NSString *)authToken completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_SET_ACCOUNT_DETAILS]];
+    [request setHTTPMethod:@"POST"];
+    NSString *profileKeys = [self getProfileDataFromKey:KEY_SERVER_COUNTRY_CODE value:neatoUser.userCountryCode];
+    profileKeys = [profileKeys stringByAppendingString:[self getProfileDataFromKey:KEY_SERVER_OPT_IN value:[AppHelper stringFromBool:neatoUser.optIn]]];
+    [request setHTTPBody:[[NSString stringWithFormat:SET_ACCOUNT_DETAILS_POST_STRING, API_KEY, neatoUser.email, authToken, profileKeys] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     completion ? completion(response, error) : nil;
+                 }];
+}
+
+- (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)emailId completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_DISSOCIATE_ALL_ROBOTS_URL]];
+    [request setHTTPMethod:@"POST"];
+    if (!robotId){
+        robotId = @"";
+    }
+    [request setHTTPBody:[[NSString stringWithFormat:DISSOCIATE_ALL_ROBOTS_POST_STRING,API_KEY, emailId, robotId] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     if (!error && [robotId length] > 0) {
+                         //Updating the DB before notifying the caller.
+                         [NeatoUserHelper deleteRobotWithRobotId:robotId forUser:[NeatoUserHelper getNeatoUser].userId];
+                     }
+                     completion ? completion(response, error) : nil;
+                 }];
+}
+
+- (void)dissociateAllRobotsForUserWithEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    [self dissociateRobotWithId:nil
+              fromUserWithEmail:email
+                     completion:^(NSDictionary *result, NSError *error) {
+                         if (!error) {
+                             //Update the database.
+                             [NeatoUserHelper dissociateAllRobotsForUserWithEmail:self.userEmail];
+                         }
+                         completion ? completion(result, error) : nil;
+    }];
+}
+
+- (void)currentCleaningStateDetailsForRobot:(NSString *)robotId completion:(RequestCompletionBlockDictionary)completion {
+  debugLog(@"");
+  
+  NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ROBOT_PROFILE_DETAILS_2_URL]];
+  [request setHTTPMethod:@"POST"];
+  [request setHTTPBody:[[NSString stringWithFormat:GET_ROBOT_DETAILS_POST_STRING ,API_KEY, robotId] dataUsingEncoding:NSUTF8StringEncoding]];
+  
+  NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+  [serverHelper dataForRequest:request
+               completionBlock:^(id response, NSError *error) {
+                 if (error) {
+                   completion ? completion(nil, error) : nil;
+                   return;
+                 }
+                 // Getting profile details from response
+                 NSDictionary *profileDetails = [response objectForKey:NEATO_RESPONSE_PROFILE_DETAILS];
+                 debugLog(@"RobotProfileDetails received from server : %@", profileDetails);
+                 
+                 // Update the timestamp in DB.
+                 XMPPRobotDataChangeManager *xmppDataChangeManager = [XMPPRobotDataChangeManager sharedXmppDataChangeManager];
+                 [xmppDataChangeManager updateDataTimestampIfChangedForKey:KEY_ROBOT_CURRENT_STATE_DETAILS withProfile:profileDetails];
+                 
+                 // Send the data back to UI layer.
+                 NSString *robotCurrentCleaningStateDetails = [[profileDetails valueForKey:KEY_ROBOT_CURRENT_STATE_DETAILS] valueForKey:KEY_VALUE];
+                 NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+                 [data setValue:robotCurrentCleaningStateDetails forKey:NEATO_RESPONSE_CURRENT_STATE_DETAILS];
+                 completion ? completion(data, nil) : nil;
+               }];
+
+}
+
+#pragma mark - Private
+- (NSString *)getProfileDataFromKey:(NSString *)key value:(NSString *)value {
+    return [NSString stringWithFormat:PROFILE_DATA_FORMAT, key, value];
 }
 
 @end
