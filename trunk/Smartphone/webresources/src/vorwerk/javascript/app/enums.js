@@ -21,7 +21,7 @@ var robotScreenCaller = {
     CHANGE : "change",
     MANAGE : "manage",
     DELETE : "delete"
-}
+};
 
 /**
  * Enumeration defining the type of notifications. 
@@ -33,13 +33,13 @@ var notificationType = {
     NONE:"3", // no notification will be displayed 
     GETREADY:"4", // Notification area with text display and get ready animation, will be displayed until dismissed.
     WAKEUP:"5" // Notification area with text display and wake up animation, will be displayed until dismissed.
-}
+};
 
 var dialogType = {
     INFO : "1",
     WARNING : "2",
     ERROR : "3"
-}
+};
 
 var DEVICETYPE = {
     "iOS":0,

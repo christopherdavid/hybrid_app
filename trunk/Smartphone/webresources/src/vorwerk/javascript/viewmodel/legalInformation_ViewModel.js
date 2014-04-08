@@ -66,14 +66,12 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
             	
         }
         
-    }
-    
-  
+    };
         
     this.deinit = function() {
         $(window).off(".legal");
         myScroll.destroy();
-    }
+    };
     
     this.back = function() {
         that.conditions['back'] = true;
@@ -82,10 +80,11 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
     
     this.showagreement = function(doctype){
         that.conditions = {};
-        if(doctype == 'privacy')
+        if(doctype == 'privacy') {
             that.conditions['privacy'] = true;
-        else
+        } else {
             that.conditions['terms'] = true;
+        }
         parent.flowNavigator.next();
     };
     
@@ -94,14 +93,11 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         if(that.isAgreed())
         {
             that.commitCountryEdit();
-        }
-        else
-        {
+        } else {
             var translatedTitle = $.i18n.t("legalInformation.page.notAccepted_title");
             var translatedText = $.i18n.t("legalInformation.page.notAccepted_message", {email:that.bundle.email});
             parent.notification.showDialog(dialogType.ERROR, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); }}]);
         }    
-            
     };
 
     this.successRegister = function(result) {
@@ -110,18 +106,18 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         var translatedTitle = $.i18n.t("legalInformation.page.registration_done_title");
         var translatedText = $.i18n.t("legalInformation.page.registration_done_message", {email:that.bundle.email});
         parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); parent.flowNavigator.next(robotScreenCaller.REGISTER);}}]);
-    }
+    };
 
     this.errorRegister = function(error) {
         that.conditions['valid'] = false;
         console.log("errorRegister: " + JSON.stringify(error));
-    }
+    };
     
      this.commitCountryEdit = function() {
         console.log("Commit new Country :" + that.bundle.country + " OPT IN Value :"+ that.selectedSubscribe());
         var tDeffer = parent.communicationWrapper.exec(UserPluginManager.setUserAccountDetails, [user.email, that.bundle.country, that.selectedSubscribe()]);
         tDeffer.done(that.successUserAccountDetails);
-    }
+    };
     
     this.successUserAccountDetails = function(result) {
         console.log("result" + JSON.stringify(result));
@@ -129,13 +125,13 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         user.extra_param.optIn = that.selectedSubscribe();
         parent.communicationWrapper.setDataValue("user", user);
         var callGuid = guid();
-         parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("legalInformation.page.edit_done_message", {email:that.bundle.email}), callGuid);
+        parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("legalInformation.page.edit_done_message", {email:that.bundle.email}), callGuid);
         window.setTimeout(function(){
             parent.notification.showLoadingArea(false, notificationType.HINT, "", callGuid);
             that.navigate();
         }, 3000);
       
-    }
+    };
     
     this.backgroundlogin = function() {
         // TODO: add validation check for entries
@@ -175,7 +171,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
             //that.conditions['start'] = true;
         } 
         parent.flowNavigator.next(robotScreenCaller.REGISTER);
-    }
+    };
 
-})
+});
 console.log('loaded file: legalInformation_ViewModel.js');

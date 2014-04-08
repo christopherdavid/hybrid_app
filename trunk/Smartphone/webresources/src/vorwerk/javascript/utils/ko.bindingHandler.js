@@ -9,14 +9,14 @@ ko.bindingHandlers.translate = {
         var value = valueAccessor(), allBindings = allBindingsAccessor();
         var options = {
             target : value.target || textTarget.INNERHTML
-        }
+        };
         // Next, whether or not the supplied model property is observable, get its current value
         var valueUnwrapped = ko.utils.unwrapObservable(value);
         var jQElement = $(element);
         var translationKey = jQElement.attr('data-i18n');
         var translatedValue = "";
         if ( typeof viewModel.getTranslationVars == "function" && viewModel.getTranslationVars(translationKey).length > 0) {
-            console.log("translation variables " + viewModel.getTranslationVars(translationKey))
+            console.log("translation variables " + viewModel.getTranslationVars(translationKey));
             translatedValue = $.i18n.t(translationKey, {
                 postProcess : 'sprintf',
                 sprintf : viewModel.getTranslationVars(translationKey)
@@ -51,7 +51,8 @@ ko.bindingHandlers.translate = {
                 break;
         }
     }
-}
+};
+
 ko.bindingHandlers.jqText =  {
     update : function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
         //var value = ko.utils.unwrapObservable(valueAccessor());
@@ -64,16 +65,16 @@ ko.bindingHandlers.jqText =  {
         // $('label').contents()
         // $(element).text(value);
     }
-}
+};
 
 ko.bindingHandlers.jqLinkButtonEnable = {
     update : function(element, valueAccessor) {
         ko.bindingHandlers.enable.update(element, valueAccessor);
         var value = ko.utils.unwrapObservable(valueAccessor());
         //console.log("jqLinkButtonEnable " + value);
-        value ? $(element).removeClass("ui-disabled") : $(element).addClass("ui-disabled")
+        value ? $(element).removeClass("ui-disabled") : $(element).addClass("ui-disabled");
     }
-}
+};
 
 ko.bindingHandlers.jqLinkButtonText = {
     update : function(element, valueAccessor) {
@@ -83,7 +84,7 @@ ko.bindingHandlers.jqLinkButtonText = {
         //console.log("jqLinkButtonEnable " + value);
         jQElement.find("span.ui-btn-text").text(value);
     }
-}
+};
 
 ko.bindingHandlers.jqButtonEnable = {
     update : function(element, valueAccessor) {
@@ -92,7 +93,7 @@ ko.bindingHandlers.jqButtonEnable = {
         //console.log("jqButtonEnable " + value);
         $(element).button( value ? "enable" : "disable");
     }
-}
+};
 
 /**
  * 
@@ -143,7 +144,7 @@ ko.bindingHandlers.jqRadioEnable = {
         //console.log("jqRadioEnable " + valueUnwrapped);
         $(element).checkboxradio( valueUnwrapped ? "enable" : "disable");
     }
-}
+};
 
 /**
  * binding to class attribute of rendered jquery mobile button of a select element
@@ -172,7 +173,7 @@ ko.bindingHandlers.jqOptionsEnable = {
         //console.log("jqOptionsEnable " + value);
         $(element).selectmenu( value ? "enable" : "disable");
     }
-}
+};
 
 ko.bindingHandlers.jqmFlipValue = {
     update : function(element, valueAccessor, allBindingsAccessor, context) {
@@ -187,7 +188,7 @@ ko.bindingHandlers.jqmInputVisible = {
         var valueUnwrapped = ko.utils.unwrapObservable(valueAccessor());
         $(element).parent().toggle(valueUnwrapped);
     }
-}
+};
 
 ko.bindingHandlers.jqmInputCSS = {
     update : function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
@@ -204,4 +205,4 @@ ko.bindingHandlers.jqmInputCSS = {
         });
         
     }
-}
+};

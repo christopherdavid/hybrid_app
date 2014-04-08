@@ -8,7 +8,7 @@
 function isPointInPoly(poly, pt) {
     var c = false;
     for (var i = -1, l = poly.length, j = l - 1; ++i < l; j = i) {
-        ((poly[i].y <= pt.y && pt.y < poly[j].y) || (poly[j].y <= pt.y && pt.y < poly[i].y)) && (pt.x < (poly[j].x - poly[i].x) * (pt.y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x) && ( c = !c)
+        ((poly[i].y <= pt.y && pt.y < poly[j].y) || (poly[j].y <= pt.y && pt.y < poly[i].y)) && (pt.x < (poly[j].x - poly[i].x) * (pt.y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x) && ( c = !c);
     }
     return c;
 }
@@ -31,12 +31,13 @@ var deviceSize =  (function() {
     var size, res, orientation;
     $(window).on("resize.deviceSize", function() {
         //that.updateLayout();
-        console.log("deviceSize resize event")
+        console.log("deviceSize resize event");
         // update size
         size = {
             width: $(window).width(),
             height: $(window).height()
-        }
+        };
+        
         if(size.width > size.height) {
             orientation = deviceSize.ORIENTATION.landscape;
         } else {
@@ -44,6 +45,7 @@ var deviceSize =  (function() {
         }
         console.log("size " + JSON.stringify(size) + " orientation " + orientation);
     });
+    
     return {
         ORIENTATION: {
             "landscape":0,
@@ -59,18 +61,18 @@ var deviceSize =  (function() {
             }
             this.getOrientation = function() {
                 return orientation;
-            }
+            };
             return orientation;
         },
         getSize: function() {
             size = {
                 width: $(window).width(),
                 height: $(window).height()
-            }
+            };
             console.log("deviceSize " + JSON.stringify(size));
             this.getSize = function() {
                 return size;
-            }
+            };
             return size;
         },
         getResolution: function() {
@@ -78,17 +80,17 @@ var deviceSize =  (function() {
             console.log("resolution " + res);
             this.getResolution = function() {
                 return res;
-            }
+            };
             return res;
         }
-    }
+    };
 }());
 
 function localizeTime(time) {
     var timeFormat = $.i18n.t("pattern.time");
     var amPmMarker = "";
     var hour = time.split(":")[0];
-    var min = time.split(":")[1]
+    var min = time.split(":")[1];
     if (timeFormat == "hhiiA") {
         amPmMarker = hour < 12 ? ' am' : ' pm';
         
@@ -220,7 +222,7 @@ var robotUiStateHandler = {
                         // ROBOT_UI_STATE_PAUSED_WAITED_MANUAL starts at 20031
                         newState += 30;
                         // start timer
-                        this.statusTimer = window.setTimeout(function() {robotUiStateHandler.setUiState(newState)}, this.statusTimout);
+                        this.statusTimer = window.setTimeout(function() {robotUiStateHandler.setUiState(newState);}, this.statusTimout);
                         break;
                     case ROBOT_STATE_PAUSED:
                         // ROBOT_UI_STATE_PAUSED_MANUAL starts at 20041
@@ -303,7 +305,7 @@ var robotUiStateHandler = {
     }
 };
 function createWaitMessageLoop(delayWakeUp, delayGetReady, robotId, lastGuid) {
-    console.log("createWaitMessageLoop delayWakeUp: "+ delayWakeUp + " robotId: " + robotId)
+    console.log("createWaitMessageLoop delayWakeUp: "+ delayWakeUp + " robotId: " + robotId);
     var callGuid = guid();
     var sWakeUpTime = delayWakeUp + 2;
     //  sWakeUp = "Waking Up in about " + (delayWakeUp + 2) + " seconds";

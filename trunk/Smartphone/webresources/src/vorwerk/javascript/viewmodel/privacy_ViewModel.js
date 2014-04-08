@@ -47,7 +47,7 @@ resourceHandler.registerFunction('privacy_ViewModel.js', function(parent) {
      this.deinit = function() {
         $(window).off(".legalPrivacy");
         privacyScroll.destroy();
-    }
+    };
     
     this.back = function() {
         parent.flowNavigator.previous();
@@ -55,7 +55,7 @@ resourceHandler.registerFunction('privacy_ViewModel.js', function(parent) {
     
     this.reload = function() {
         this.conditions = {};
-    }
+    };
     
-})
+});
 console.log('loaded file: privacy_ViewModel.js');

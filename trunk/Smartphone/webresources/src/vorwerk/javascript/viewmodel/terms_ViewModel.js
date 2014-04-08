@@ -43,7 +43,7 @@ resourceHandler.registerFunction('terms_ViewModel.js', function(parent) {
      this.deinit = function() {
         $(window).off(".legalTerms");
         termsScroll.destroy();
-    }
+    };
     
     this.back = function() {
         parent.flowNavigator.previous();
@@ -51,7 +51,7 @@ resourceHandler.registerFunction('terms_ViewModel.js', function(parent) {
     
     this.reload = function() {
         this.conditions = {};
-    }
+    };
     
-})
+});
 console.log('loaded file: terms_ViewModel.js');

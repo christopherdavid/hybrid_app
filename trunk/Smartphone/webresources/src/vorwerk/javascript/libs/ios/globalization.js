@@ -531,7 +531,7 @@ Globalization.prototype.getCurrencyPattern = function(currencyCode, successCB, f
 
 GlobalizationError = function() {
 	this.code = null;
-}
+};
 
 // Globalization error codes
 GlobalizationError.UNKNOWN_ERROR = 0;

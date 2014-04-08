@@ -4,7 +4,7 @@
  * @param {object} parent Reference to the parent object.  
  */
 function WorkflowHistory(parent) {
-    console.log('create WorkflowHistory instance')
+    console.log('create WorkflowHistory instance');
     var that = this, entries = [];
     
     /**
@@ -15,7 +15,8 @@ function WorkflowHistory(parent) {
     this.compareLastEntry = function(screenlId) {
         return (entries.length > 0  
             && entries[entries.length -1].screenId == screenlId);
-    }
+    };
+    
     /**
      * checks if an entry in history matches the screenId and returns its index
      * @param {string} screenlId The id of the current screen
@@ -28,7 +29,7 @@ function WorkflowHistory(parent) {
             }
         }
         return -1;
-    }
+    };
     
     this.getEntryByIndex = function(index) {
         var temp = null;
@@ -38,7 +39,7 @@ function WorkflowHistory(parent) {
             that.clearTillIndex(index);
         }
         return temp;
-    }
+    };
     
     this.clearTillIndex = function(index) {
         for(var i = entries.length - 1; i >= index; i--) {
@@ -48,7 +49,7 @@ function WorkflowHistory(parent) {
             delete entries[i];
         }
         entries = entries.slice(0, index);
-    }
+    };
     
     /**
      * Clear the history 
@@ -61,18 +62,19 @@ function WorkflowHistory(parent) {
             delete entries[i];
         }
         entries.length = 0;
-    }
+    };
+    
     /**
      * Returns the last entry from history 
      * @return {object} Last entry in history or null if there were no entries
      */
     this.getLastEntry = function() {
         return entries.length > 0  ? entries[entries.length -1] : null;
-    }
+    };
     
     this.getLastIndex = function() {
         return entries.length > 0  ? (entries.length -1) : -1;
-    }
+    };
     
     /**
      * Removes last entry from history and returns the object 
@@ -80,7 +82,7 @@ function WorkflowHistory(parent) {
      */
     this.pop = function() {
         return entries.pop() || null;
-    }
+    };
     
     /**
      * Stores the view model in history
@@ -94,5 +96,5 @@ function WorkflowHistory(parent) {
             && entries[entries.length - 1].screenId != screenId)) {
             entries.push(viewModel);
         }
-    }
+    };
 }

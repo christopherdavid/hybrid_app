@@ -57,7 +57,7 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
             // clear bundle
             that.bundle = null;
         }
-    }
+    };
 
     this.back = function() {
         parent.flowNavigator.previous();
@@ -95,7 +95,7 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
 
     this.errorLogout = function(error) {
         console.log("Error (Logout): " + error.errorMessage);
-    }
+    };
 
     this.addRobot = function() {
         that.conditions['addRobot'] = true;
@@ -131,7 +131,7 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
             translationKey = "robotSelection.page.select_robot";
         }
         that.message($.i18n.t(translationKey));
-    }
+    };
 
     this.updateScreenTitle = function() {
         var translationKey;
@@ -213,5 +213,5 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         console.log("Error(Get AssociatedRobots)" + error.errorMessage);
         that.updateScreenTitle();
     };
-})
+});
 console.log('loaded file: robotSelection_ViewModel.js');

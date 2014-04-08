@@ -20,7 +20,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     
     this.isNextEnabled = ko.computed(function() {
         return (that.selectedCleaningDays().length > 0);
-    }, this)
+    }, this);
     
     /* <enviroment functions> */
     this.init = function() {
@@ -111,19 +111,20 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
         $(document).one("pageshow.timeset", function(e) {
             that.updateLayout();
         });
-    }
+    };
 
     this.toggleEcoMode = function() {
         that.cleaningMode(that.cleaningMode()==2?1:2);
-    }
+    };
+    
     this.reload = function() {
         // remove conditions
         that.conditions = {};
-    }
+    };
 
     this.deinit = function() {
         $(window).off(".timeset");
-    }
+    };
     /* </enviroment functions> */
 
     /* <actionbar functions> */
@@ -150,7 +151,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
             // check if it is a new event or an update
             if(that.bundle && that.bundle.events && that.bundle.events.length > 0) {
                 // update the current events and remove them from bundle.events
-                var tempEvent = that.bundle.events.pop()
+                var tempEvent = that.bundle.events.pop();
                 //RobotPluginManager.updateScheduleEvent(scheduleId, scheduleEventId, scheduleEventData, callbackSuccess, callbackError) 
                 
                 var tempDeferred = parent.communicationWrapper.exec(RobotPluginManager.updateScheduleEvent, [parent.communicationWrapper.dataValues["scheduleId"],tempEvent.scheduleEventId, { startTime:startTime,day:item.id, cleaningMode:that.cleaningMode()}], 
@@ -173,11 +174,11 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
         });
         
         $.when.apply(window, aDeffer).then(function(result, notificationOptions) {
-            console.log("all events have been created or updated")
+            console.log("all events have been created or updated");
             //parent.notification.showLoadingArea(false, notificationOptions.type);
             
             if(that.bundle && that.bundle.events && that.bundle.events.length > 0) {
-                console.log("remove remaining events contained in bundle")
+                console.log("remove remaining events contained in bundle");
                 var aDefferRem = [];    
                 $.each(that.bundle.events, function(index, item) {
                     //RobotPluginManager.deleteScheduleEvent(scheduleId, scheduleEventId, callbackSuccess, callbackError)
@@ -205,30 +206,35 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.updateSchedule, [parent.communicationWrapper.dataValues["scheduleId"]]);
         tDeffer.done(that.updateScheduleSuccess);
         tDeffer.fail(that.updateScheduleError);
-    }
+    };
     
     /* callbacks */
     this.addScheduleEventSuccess = function(result) {
         console.log("addScheduleEventSuccess\n" + JSON.stringify(result));
-    }
+    };
+    
     this.addScheduleEventError = function(error) {
         console.log("addScheduleEventError\n" + JSON.stringify(error));
-    }
+    };
+    
     this.updateScheduleEventSuccess = function(result) {
         console.log("updateScheduleEventSuccess\n" + JSON.stringify(result));
-    }
+    };
+    
     this.updateScheduleEventError = function(error) {
         console.log("updateScheduleEventError\n" + JSON.stringify(error));
-    }
+    };
+    
     this.updateScheduleSuccess = function(result, notificationOptions) {
         console.log("updateScheduleSuccess\n" + JSON.stringify(result));
         parent.notification.showLoadingArea(false, notificationOptions.type);
         that.conditions['next'] = true;
         parent.flowNavigator.next();
-    }
+    };
+    
     this.updateScheduleError = function(error) {
         console.log("updateScheduleError\n" + JSON.stringify(error));
-    }
+    };
     
     
     /* </actionbar functions> */
@@ -238,7 +244,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
         if(that.blockedDays.indexOf(item.id) == -1) {
             toggleItem(item, that.selectedCleaningDays);
         }
-    }
+    };
     
     function toggleItem(item, list) {
         var removedItemId = list.indexOf(item);
@@ -252,7 +258,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     
     this.toggleEcoMode = function() {
         that.cleaningMode(that.cleaningMode() == "1" ? "2" : "1");
-    }
+    };
     
     this.del = function() {
         if (that.bundle.events && that.bundle.events.length > 0) {
@@ -267,7 +273,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
             parent.notification.showDialog(dialogType.WARNING,$.i18n.t('dialogs.EVENT_DELETE.title'), $.i18n.t('dialogs.EVENT_DELETE.message') +"</br>"+ sContext, 
                 [{label:$.i18n.t('dialogs.EVENT_DELETE.button_1'), callback:that.commitDel}, {label:$.i18n.t('dialogs.EVENT_DELETE.button_2')}]);
         } 
-    }
+    };
     
     this.commitDel = function() {
         if (that.bundle.events && that.bundle.events.length > 0) {
@@ -283,13 +289,13 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
                 that.updateSchedule();
             });
         }
-    }
+    };
 
 
     this.updateLayout = function() {
         var width = $('.dayPicker').innerWidth();
         $('.dayPicker li').width(Math.floor(width / 7) - 2 + "px");
-    }
+    };
 
-})
+});
 console.log('loaded file: basicSchedulerDate_ViewModel.js'); 

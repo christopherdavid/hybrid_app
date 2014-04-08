@@ -27,7 +27,7 @@ var resourceHandler = {
         var s = document.createElement("link");
         s.setAttribute("rel", "stylesheet");
         s.setAttribute("type", "text/css");
-        s.setAttribute("href", 'stylesheets/css/' + src)
+        s.setAttribute("href", 'stylesheets/css/' + src);
         resourceHandler.getDomHeader().appendChild(s);
     },
     /**
@@ -58,7 +58,8 @@ var resourceHandler = {
                 }
                 // Wipe callback, to prevent multiple calls.
                 callback = null;
-            }
+            };
+            
             s.onreadystatechange = function() {
                 //console.log('\treadyState: ' + s.readyState)
                 if (s.readyState == 4 || s.readyState == 'complete') {
@@ -68,7 +69,7 @@ var resourceHandler = {
                     // Wipe callback, to prevent multiple calls.
                     callback = null;
                 }
-            }
+            };
             
         } else {
             console.log('file already loaded. using cached one');
@@ -92,7 +93,7 @@ var resourceHandler = {
              resourceHandler.posFile.shift();
              }
              */
-            resourceHandler.posFile.push('src')
+            resourceHandler.posFile.push('src');
         }
 
     },
@@ -110,4 +111,4 @@ var resourceHandler = {
             console.log('called unloadJS(' + src + ') file not found!');
         }
     }
-}
+};
