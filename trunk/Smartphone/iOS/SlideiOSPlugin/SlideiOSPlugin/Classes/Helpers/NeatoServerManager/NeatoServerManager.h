@@ -65,6 +65,26 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 
 @property(nonatomic, weak) id delegate;
 
+/*
+ User
+ */
+- (void)notificationSettingsForUserWithEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion;
+- (void)setUserAccountDetails:(NeatoUser *)neatoUser authToken:(NSString *)authToken completion:(RequestCompletionBlockDictionary)completion;
+- (void)getUserDetailsForEmail:(NSString *)email authToken:(NSString *)authToken completion:(RequestCompletionBlockDictionary)completion;
+- (void)updateUserAuthToken:(NSString *)authToken completion:(RequestCompletionBlockDictionary)completion;
+- (void)isUserValidatedForEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion;
+- (void)forgetPasswordForEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion;
+- (void)resendValidationEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion;
+- (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword completion:(RequestCompletionBlockDictionary)completion;
+- (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)emailId completion:(RequestCompletionBlockDictionary) completion;
+- (void)dissociateAllRobotsForUserWithEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion;
+
+/*
+ Robot
+ */
+- (void)cleaningCategoryForRobot:(NSString *)serialNumber completion:(RequestCompletionBlockDictionary)completion;
+- (void)currentCleaningStateDetailsForRobot:(NSString *)robotId completion:(RequestCompletionBlockDictionary)completion;
+
 - (void)loginNativeUser:(NSString *)email password:(NSString *)password;
 - (void)loginFacebookUser:(NSString *)externalSocialId;
 - (void)getUserDetailsForEmail:(NSString *)email authToken:(NSString *)authToken;
@@ -99,5 +119,4 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 - (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email;
 - (void)createUser3:(NeatoUser *)neatoUser;
 - (void)setUserAccountDetails:(NeatoUser *)neatoUser authToken:(NSString *)authToken;
-- (void)cleaningCategoryForRobot:(NSString *)serialNumber completion:(RequestCompletionBlockDictionary)completion;
 @end

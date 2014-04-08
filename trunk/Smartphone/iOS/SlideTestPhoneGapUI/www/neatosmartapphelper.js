@@ -174,6 +174,8 @@ var ACTION_TYPE_GET_ROBOT_CLEANING_STATE					= "getRobotCleaningState";
 // Debug method
 var ACTION_TYPE_DEBUG_GET_CONFIG_DETAILS 		= "debugGetConfigDetails";
 var ACTION_TYPE_GET_ROBOT_CLEANING_CATEGORY	= "getRobotCleaningCategory";
+var ACTION_TYPE_GET_ROBOT_CURRENT_CLEANING_DETAILS	= "getRobotCurrentCleaningDetails";
+
 //List of keys to send data:
 
 var KEY_EMAIL = 'email';
@@ -1708,6 +1710,12 @@ RobotMgr.prototype.getSpotDefinition = function(robotId, callbackSuccess, callba
 			ACTION_TYPE_GET_SPOT_DEFINITION, [commandParams]);
 };
 
+RobotMgr.prototype.getRobotCurrentCleaningDetails = function(robotId, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+               ACTION_TYPE_GET_ROBOT_CURRENT_CLEANING_DETAILS, [commandParams]);
+};
+
 /**
  * This API checks whether there  exists a direct-peer connection from the smartapp to robot.
  * If a robotId is passed, then it returns whether it is directly connected to the smartapp.
@@ -2804,6 +2812,10 @@ var RobotPluginManager = (function() {
 		getSpotDefinition: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getSpotDefinition(robotId, callbackSuccess, callbackError);
 		},
+
+    getRobotCurrentCleaningDetails: function(robotId, callbackSuccess, callbackError) {
+      window.plugins.neatoPluginLayer.robotMgr.getRobotCurrentCleaningDetails(robotId, callbackSuccess, callbackError);
+    },
 
 		/**
 		 * This API sends drive command to the robot. This API calls Neato Smart App Service.

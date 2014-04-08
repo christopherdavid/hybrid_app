@@ -31,6 +31,12 @@
 // Helper class
 #import "TCPConnectionHelper.h"
 
+@interface RobotManagerPlugin ()
+
+@property (nonatomic, strong) NeatoServerManager *serverManager;
+
+@end
+
 @implementation RobotManagerPlugin
 
 
@@ -804,11 +810,32 @@
 
 - (void)sendError:(NSError *)error forCallbackId:(NSString *)callbackId {
     debugLog(@"Error description = %@, userInfo = %@", [error localizedDescription], [error userInfo]);
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
-    [dictionary setValue:[NSNumber numberWithInt:error.code] forKey:KEY_ERROR_CODE];
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
-    [self writeJavascript:[result toErrorCallbackString:callbackId]];
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+      NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+      [dictionary setValue:[error localizedDescription] forKey:KEY_ERROR_MESSAGE];
+      [dictionary setValue:[NSNumber numberWithInt:error.code] forKey:KEY_ERROR_CODE];
+      CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dictionary];
+      [weakSelf writeJavascript:[result toErrorCallbackString:callbackId]];
+    });
+}
+
+- (void)sendSuccessResultAsString:(NSString *)resultString forCallbackId:(NSString *)callbackId {
+    debugLog(@"");
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:resultString];
+        [weakSelf writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
+    });
+}
+
+- (void)sendSuccessResultAsDictionary:(NSDictionary *)resultDictionary forCallbackId:(NSString *)callbackId {
+    debugLog(@"");
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultDictionary];
+        [weakSelf writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
+    });
 }
 
 - (void)setSpotDefinition:(CDVInvokedUrlCommand *)command {
@@ -1195,12 +1222,14 @@
     NSDictionary *parameters = [command.arguments objectAtIndex:0];
     debugLog(@"received parameters %@",parameters);
     NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    
+    __weak typeof(self) weakSelf = self;
     NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
     [serverManager cleaningCategoryForRobot:robotId
                                  completion:^(NSDictionary *result, NSError *error) {
                                      dispatch_async(dispatch_get_main_queue(), ^{
                                          if (error) {
-                                             [self sendError:error forCallbackId:command.callbackId];
+                                             [weakSelf sendError:error forCallbackId:command.callbackId];
                                              return;
                                          }
                                          
@@ -1214,10 +1243,37 @@
                                              [resultData setObject:robotId forKey:KEY_ROBOT_ID];
                                          }
                                          
-                                         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultData];
-                                         [self writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
+                                         [weakSelf sendSuccessResultAsDictionary:resultData forCallbackId:callbackId];
                                      });
                                  }];
+}
+
+#pragma mark - Property Getter
+- (NeatoServerManager *)serverManager {
+  if (!_serverManager) {
+    _serverManager = [[NeatoServerManager alloc] init];
+  }
+  return _serverManager;
+}
+
+- (void)getRobotCurrentCleaningDetails:(CDVInvokedUrlCommand *)command {
+  debugLog(@"");
+  NSString *callbackId = command.callbackId;
+  NSDictionary *parameters = [command.arguments objectAtIndex:0];
+  debugLog(@"received parameters : %@", parameters);
+  
+  NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+
+  __weak typeof(self) weakSelf = self;
+  [self.serverManager currentCleaningStateDetailsForRobot:robotId
+                     completion:^(NSDictionary *result, NSError *error) {
+                         if (error) {
+                             debugLog(@"Failed to get cleaning details with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                             [weakSelf sendError:error forCallbackId:callbackId];
+                             return;
+                         }
+                         [weakSelf sendSuccessResultAsDictionary:result forCallbackId:callbackId];
+                     }];
 }
 
 @end
