@@ -5,8 +5,6 @@
 #import "NeatoServerHelper.h"
 #import "NeatoNotification.h"
 
-typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *error);
-
 @class NeatoRobotCommand;
 
 @protocol NeatoServerManagerProtocol <NSObject>
@@ -78,6 +76,13 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 - (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword completion:(RequestCompletionBlockDictionary)completion;
 - (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)emailId completion:(RequestCompletionBlockDictionary) completion;
 - (void)dissociateAllRobotsForUserWithEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion;
+- (void)logoutUserEmail:(NSString *)email authToken:(NSString *)auth_token completion:(RequestCompletionBlockDictionary)completion;
+- (void)loginNativeUser:(NSString *)email password:(NSString *)password completion:(RequestCompletionBlockDictionary)completion;
+- (void)createUser3:(NeatoUser *)neatoUser completion:(RequestCompletionBlockDictionary)completion;
+- (void)turnNotification:(NeatoNotification *)notification onOffForUserWithEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion;
+- (void)associatedRobotsForUserWithEmail:(NSString *)email authToken:(NSString *)authToken completion:(RequestCompletionBlockDictionary)completion;
+- (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken completion:(RequestCompletionBlockDictionary)completion;
+- (void)unregisterPushNotificationForDeviceToken:(NSString *)deviceToken completion:(RequestCompletionBlockDictionary)completion;
 
 /*
  Robot

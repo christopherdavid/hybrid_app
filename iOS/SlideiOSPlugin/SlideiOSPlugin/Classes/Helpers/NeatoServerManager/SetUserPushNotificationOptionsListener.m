@@ -3,12 +3,19 @@
 #import "NeatoUserHelper.h"
 #import "NeatoServerHelper.h"
 #import "AppHelper.h"
+#import "AppSettings.h"
+
+#define SET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING @"api_key=%@&email=%@&json_object=%@"
 
 @interface SetUserPushNotificationOptionsListener()
+
 @property(nonatomic, weak) id delegate;
 @property(nonatomic, strong) SetUserPushNotificationOptionsListener *retained_self;
+@property (nonatomic, strong) RequestCompletionBlockDictionary completion;
+@property (nonatomic, strong) NSDictionary *response;
 
 @end
+
 @implementation SetUserPushNotificationOptionsListener
 
 @synthesize retained_self = _retained_self;
@@ -31,6 +38,38 @@
     NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
     helper.delegate = self;
     [helper setUserPushNotificationOptions:notificationJson forUserWithEmail:self.email];
+}
+
+- (void)startWithCompletion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    // When first time user tries to update default values are set
+    // and then database is updated with user value.
+    if (![NeatoUserHelper notificationsExistForUserWithEmail:self.email]) {
+        // No notification exists in database. Set a default one.
+        [self setDefaultNotificationOptions];
+    }
+    [NeatoUserHelper insertOrUpdateNotificaton:self.notification forEmail:self.email];
+    // Get all notificationOptions from database and form JSON.
+    NSArray *notificationsArray = [NeatoUserHelper notificationsForUserWithEmail:self.email];
+    NSString *notificationJson = [self jsonStringFromNotificationsArray:notificationsArray];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:SET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING, API_KEY, self.email, notificationJson] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    __weak typeof(self) weakSelf = self;
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     if (error) {
+                         completion ? completion(nil, error) : nil;
+                         return;
+                     }
+                     NSMutableDictionary *notificationJson = [[NSMutableDictionary alloc] init];
+                     [notificationJson setValue:weakSelf.notification.notificationId forKey:KEY_NOTIFICATION_KEY];
+                     [notificationJson setValue:[NSNumber numberWithBool:[AppHelper boolValueFromString:weakSelf.notification.notificationValue]] forKey:KEY_NOTIFICATION_VALUE];
+                     completion ? completion(notificationJson, nil) : nil;
+    }];
 }
 
 - (id)initWithDelegate:(id)delegate {

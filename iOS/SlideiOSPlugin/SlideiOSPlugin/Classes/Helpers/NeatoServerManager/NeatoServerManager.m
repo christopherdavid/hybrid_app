@@ -23,6 +23,8 @@
 // Helpers
 #import "AppSettings.h"
 #import "XMPPRobotDataChangeManager.h"
+#import "TCPConnectionHelper.h"
+#import "XMPPConnectionHelper.h"
 
 // Constants
 #define PROFILE_DATA_FORMAT @"&profile[%@]=%@"
@@ -40,6 +42,13 @@
 #define GET_FORGET_PASSWORD_POST_STRING @"api_key=%@&email=%@"
 #define GET_CHANGE_PASSWORD_POST_STRING @"api_key=%@&auth_token=%@&password_old=%@&password_new=%@"
 #define DISSOCIATE_ALL_ROBOTS_POST_STRING @"api_key=%@&email=%@&serial_number=%@"
+#define GET_USER_LOGOUT_POST_STRING @"api_key=%@&email=%@&auth_token=%@"
+#define GET_ASSOCIATED_ROBOTS_POST_STRING @"api_key=%@&auth_token=%@&email=%@"
+#define PUSH_NOTIFICATION_REGISTRATION_POST_STRING  @"api_key=%@&user_email=%@&device_type=%ld&registration_id=%@"
+#define PUSH_NOTIFICATION_UNREGISTRATION_POST_STRING  @"api_key=%@&registration_id=%@"
+#define PUSH_NOTIFICATION_DEVICE_TOKEN  @"deviceTokenForPush"
+#define PUSH_NOTIFICATION_SERVER_TYPE   @"notification_server_type"
+#define PUSH_NOTIFICATION_APPLICATION_ID   @"application_id"
 
 @interface NeatoServerManager()
 
@@ -298,7 +307,6 @@
     helper.delegate = self;
     [helper logoutUserEmail:email authToken:auth_token];
 }
-
 
 - (void)logoutRequestFailedWithEror:(NSError *)error {
     debugLog(@"");
@@ -639,8 +647,13 @@
     debugLog(@"");
     self.retained_self = self;
     self.createUserListener2 = [[CreateUserListener2 alloc] initWithDelegate:self];
-    self.createUserListener2 .user = neatoUser;
-    [self.createUserListener2 start];
+    self.createUserListener2.user = neatoUser;
+    
+    // There is no differencce in the data handling for createUser2 and createUser3, so using CreateUserListener2 with
+    // override for new url. This saves code copy-paste.
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    serverHelper.delegate = self.createUserListener2;
+    [serverHelper createUser2:neatoUser];
 }
 
 - (void)userCreated2:(NeatoUser *)user {
@@ -918,13 +931,11 @@
 - (void)createUser3:(NeatoUser *)neatoUser {
     debugLog(@"");
     self.retained_self = self;
-    CreateUserListener2 *createUserListener2 = [[CreateUserListener2 alloc] initWithDelegate:self];
-    createUserListener2 .user = neatoUser;
     // There is no differencce in the data handling for createUser2 and createUser3, so using CreateUserListener2 with
     // override for new url. This saves code copy-paste.
-    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
-    serverHelper.delegate = createUserListener2;
-    [serverHelper createUser3:neatoUser];
+    CreateUserListener2 *createUserListener2 = [[CreateUserListener2 alloc] initWithDelegate:self];
+    createUserListener2.user = neatoUser;
+    [createUserListener2 start];
 }
 
 - (void)setUserAccountDetails:(NeatoUser *)neatoUser authToken:(NSString *)authToken {
@@ -958,11 +969,26 @@
                          completion ? completion(nil, error) : nil;
                          return;
                      }
-                     NSString *robotStateParams = [[AppHelper parseJSON:jsonData] objectForKey:NEATO_RESPONSE_ROBOT_STATE_PARAMS];
-                     jsonData = [robotStateParams dataUsingEncoding:NSUTF8StringEncoding];
-                     NSDictionary *cleaningCategory = [[AppHelper parseJSON:jsonData] objectForKey:NEATO_RESPONSE_CLEANING_CATEGORY];
-                     completion ? completion(cleaningCategory, error) : nil;
+                     NSDictionary *robotStateParams = [[AppHelper parseJSON:jsonData] objectForKey:NEATO_RESPONSE_ROBOT_STATE_PARAMS];
+                     completion ? completion(robotStateParams, nil) : nil;
                  }];
+}
+
+- (void)loginNativeUser:(NSString *)email password:(NSString *)password completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    self.loginListener2 = [[LoginListener2 alloc] initWithDelegate:self];
+    self.loginListener2.email = email;
+    self.loginListener2.password = password;
+    [self.loginListener2 startWithCompletion:completion];
+}
+
+- (void)createUser3:(NeatoUser *)neatoUser completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    // There is no differencce in the data handling for createUser2 and createUser3, so using CreateUserListener2 with
+    // override for new url. This saves code copy-paste.
+    CreateUserListener2 *createUserListener2 = [[CreateUserListener2 alloc] initWithDelegate:self];
+    createUserListener2.user = neatoUser;
+    [createUserListener2 startWithCompletion:completion];
 }
 
 - (void)notificationSettingsForUserWithEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion {
@@ -1115,6 +1141,128 @@
     }];
 }
 
+- (void)logoutUserEmail:(NSString *)email authToken:(NSString *)auth_token completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_LOGOUT_USER_URL]];
+    [request setHTTPMethod:@"POST"];
+    if (email == nil) {
+        email = @"";
+    }
+    [request setHTTPBody:[[NSString stringWithFormat:GET_USER_LOGOUT_POST_STRING, API_KEY, email, auth_token] dataUsingEncoding:NSUTF8StringEncoding]];
+
+    __weak typeof(self) weakSelf = self;
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     if (!error) {
+                         // Delete current user
+                         [NeatoUserHelper deleteUniqueDeviceIdForUser];
+                         NSString *deviceToken = [NeatoUserHelper getDevicePushAuthToken];
+                         if (deviceToken && deviceToken.length > 0) {
+                             [weakSelf unregisterPushNotificationForDeviceToken:deviceToken
+                                                                 completion:^(NSDictionary *result, NSError *error) {
+                                                                     // Disconect TCP and XMPP connection
+                                                                     TCPConnectionHelper *tcpHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
+                                                                     [tcpHelper disconnectFromRobot:@"" delegate:self];
+                                                                     XMPPConnectionHelper *xmppHelper = [[XMPPConnectionHelper alloc] init];
+                                                                     [xmppHelper disconnectFromRobot];
+                                                                     // Clear robot data
+                                                                     [NeatoUserHelper clearUserData];
+                                                                     completion ? completion(response, nil) : nil;
+                             }];
+                         }
+                         
+                     }
+                     else {
+                        completion ? completion(nil, error) : nil;
+                     }
+                 }];
+}
+
+- (void)turnNotification:(NeatoNotification *)notification onOffForUserWithEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    self.setPushNotificationsListener = [[SetUserPushNotificationOptionsListener alloc] initWithDelegate:self];
+    self.setPushNotificationsListener.notification = notification;
+    self.setPushNotificationsListener.email = email;
+    [self.setPushNotificationsListener startWithCompletion:completion];
+}
+
+- (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"registerPushNotification called");
+    self.retained_self = self;
+    
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self;
+    NSString *serverType = [AppHelper getNotificationServerType];
+    NSString *appId = [AppHelper getApplicationId];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:PUSH_NOTIFICATION_REGISTRATION_POST_STRING, API_KEY,
+                           email, (long)deviceType, deviceToken] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:deviceToken forHTTPHeaderField:PUSH_NOTIFICATION_DEVICE_TOKEN];
+    [request setValue:serverType forHTTPHeaderField:PUSH_NOTIFICATION_SERVER_TYPE];
+    [request setValue:appId forHTTPHeaderField:PUSH_NOTIFICATION_APPLICATION_ID];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     if (error) {
+                         [NeatoUserHelper saveDevicePushAuthToken:@""];
+                         completion ? completion(nil, error) : nil;
+                         return;
+                     }
+                     [NeatoUserHelper saveDevicePushAuthToken:deviceToken];
+                     completion ? completion(response, nil) : nil;
+                 }];
+}
+
+- (void)unregisterPushNotificationForDeviceToken:(NSString *)deviceToken completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"unregisterPushNotification called");
+    self.retained_self = self;
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:PUSH_NOTIFICATION_UNREGISTRATION_POST_STRING, API_KEY,
+                           deviceToken] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     [NeatoUserHelper saveDevicePushAuthToken:@""];
+                     completion ? completion(response, error) : nil;
+                 }];
+}
+
+#pragma mark - Robot APIs
+- (void)associatedRobotsForUserWithEmail:(NSString *)email authToken:(NSString *)authToken completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    if (authToken == nil || email == nil) {
+        debugLog(@"authToken or email is NIL. Will not fetch associated robots.");
+        [self notifyRequestFailed:@selector(failedToGetAssociatedRobotsWithError:) withError:[AppHelper nserrorWithDescription:@"authToken or Email is NIL. Will not fetch associated robots." code:200]];
+        return;
+    }
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ASSOCIATED_ROBOTS_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_ASSOCIATED_ROBOTS_POST_STRING,API_KEY, authToken, email] dataUsingEncoding:NSUTF8StringEncoding]];
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     if (error) {
+                         completion ? completion(nil, error) : nil;
+                     }
+                     NSMutableArray *neatoRobotsArr = [[NSMutableArray alloc] init];
+                     for (NSDictionary *robotsDict in response) {
+                         NeatoRobot *robot = [[NeatoRobot alloc] initWithDictionary:robotsDict];
+                         [neatoRobotsArr addObject:robot];
+                     }
+                     NSDictionary *result = @{NEATO_RESPONSE_RESULT : neatoRobotsArr};
+                     completion ? completion(result, nil) : nil;
+    }];
+}
+
 - (void)currentCleaningStateDetailsForRobot:(NSString *)robotId completion:(RequestCompletionBlockDictionary)completion {
   debugLog(@"");
   
@@ -1143,7 +1291,6 @@
                  [data setValue:robotCurrentCleaningStateDetails forKey:NEATO_RESPONSE_CURRENT_STATE_DETAILS];
                  completion ? completion(data, nil) : nil;
                }];
-
 }
 
 #pragma mark - Private

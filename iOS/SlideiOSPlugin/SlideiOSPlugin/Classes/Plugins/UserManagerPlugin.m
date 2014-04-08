@@ -24,43 +24,6 @@
 @implementation UserManagerPlugin
 
 #pragma mark - Public
-- (void)login:(CDVInvokedUrlCommand *)command {
-    debugLog(@"");
-    //get the callback id
-    NSString *callbackId = command.callbackId;
-    NSDictionary *parameters = [command.arguments objectAtIndex:0];
-    debugLog(@"received parameters : %@", parameters);
-    
-    NSString *email = [parameters valueForKey:KEY_EMAIL];
-    NSString *password = [parameters valueForKey:KEY_PASSWORD];
-    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
-    callWrapper.delegate = self;
-    [callWrapper loginUserWithEmail:email password:password callbackID:callbackId];
-}
-
-- (void)loginFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
-    [self sendError:error forCallbackId:callbackId];
-}
-
-- (void)loginSuccess:(NeatoUser *) user  callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-    [data setValue:user.name forKey:KEY_USER_NAME];
-    [data setValue:user.userId forKey:KEY_USER_ID];
-    [data setValue:user.email forKey:KEY_EMAIL];
-    
-    // Params
-    NSMutableDictionary *extraParams = [[NSMutableDictionary alloc] init];
-    [extraParams setObject:user.userCountryCode ? user.userCountryCode : @"" forKey:KEY_COUNTRY_CODE];
-    [extraParams setObject:[AppHelper stringFromBool:user.optIn] forKey:KEY_OPT_IN];
-    [data setValue:extraParams forKey:KEY_EXTRA_PARAM];
-    
-    [self sendSuccessResultAsDictionary:data forCallbackId:callbackId];
-  
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
-                            (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-}
-
 - (void)userCreated:(NeatoUser *) neatoUser  callbackId:(NSString *)callbackId {
     debugLog(@"");
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
@@ -76,20 +39,6 @@
 
 - (void)failedToCreateUserWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"");
-    [self sendError:error forCallbackId:callbackId];
-}
-
-
-- (void)logout:(CDVInvokedUrlCommand *)command {
-    debugLog(@"");
-    //get the callback id
-    NSString *callbackId = command.callbackId;
-    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
-    callWrapper.delegate = self;
-    [callWrapper logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail] authToken:[NeatoUserHelper getUsersAuthToken] callbackID:callbackId];
-}
-
-- (void)logoutRequestFailedWithEror:(NSError *)error callbackId:(NSString *)callbackId {
     [self sendError:error forCallbackId:callbackId];
 }
 
@@ -158,38 +107,6 @@
     [self sendSuccessResultAsDictionary:jsonRobot forCallbackId:callbackId];
 }
 
-
-- (void)getAssociatedRobots:(CDVInvokedUrlCommand *)command {
-    debugLog(@"");
-    NSString *callbackId = command.callbackId;
-    NSDictionary *parameters = [command.arguments objectAtIndex:0];
-    debugLog(@"parameters = %@", parameters);
-    NSString *email = [parameters objectForKey:@"email"];
-    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
-    callWrapper.delegate = self;
-    [callWrapper associatedRobotsForUserWithEmail:email authToken:[NeatoUserHelper getUsersAuthToken] callbackId:callbackId];
-
-}
-
-- (void)gotUserAssociatedRobots:(NSMutableArray *)robots callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    NSMutableArray *jsonArray = [[NSMutableArray alloc] init];
-    for (int i=0 ; i<[robots count] ; i++) {
-        NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-        [data setValue:[[robots objectAtIndex:i] name] forKey:KEY_ROBOT_NAME];
-        [data setValue:[[robots objectAtIndex:i] serialNumber] forKey:KEY_ROBOT_ID];
-        [jsonArray addObject:data];
-    }
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:jsonArray];
-    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
-}
-
-- (void)failedToGetAssociatedRobotsWithError:(NSError *)error callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    [self sendError:error forCallbackId:callbackId];
-}
-
-
 - (void)robotCreationFailedWithError:(NSError *)error callbackId:(NSString *)callbackId {
     debugLog(@"Error = %@", error);
 }
@@ -213,13 +130,6 @@
     [robotDict setValue:robot.serialNumber forKey:KEY_ROBOT_ID];
     [robotDict setValue:[NSNumber numberWithInteger:ROBOT_ASSOCIATION_SUCCESS] forKey:@"responseStat"];
     [self sendSuccessResultAsDictionary:robotDict forCallbackId:callbackId];
-}
-
-
-- (void)userLoggedOut:(NSString *)callbackId {
-    debugLog(@"");
-    [self sendSuccessResultAsString:@"User logged out." forCallbackId:callbackId];
-    [[UIApplication sharedApplication]  unregisterForRemoteNotifications];
 }
 
 - (void)createUser2:(CDVInvokedUrlCommand *)command {
@@ -256,28 +166,57 @@
     [self sendError:error forCallbackId:callbackId];
 }
 
-- (void)turnNotificationOnOff:(CDVInvokedUrlCommand *)command {
+#pragma mark - Temp - New - Remove
+- (void)login:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
-    // Get the callback id
+    //get the callback id
     NSString *callbackId = command.callbackId;
     NSDictionary *parameters = [command.arguments objectAtIndex:0];
     debugLog(@"received parameters : %@", parameters);
-    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
-    callWrapper.delegate = self;
-    NeatoNotification *notification = [[NeatoNotification alloc] init];
-    notification.notificationId = [parameters valueForKey:KEY_NOTFICATION_ID];
-    notification.notificationValue = [AppHelper stringFromBool:[[parameters valueForKey:KEY_ON] boolValue]];
-    [callWrapper turnNotification:notification onOffForUserWithEmail:[parameters valueForKey:KEY_EMAIL] callbackID:callbackId];
-}
-
-- (void)notificationsTurnedOnOffWithResult:(NSDictionary *)notification callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    [self sendSuccessResultAsDictionary:notification forCallbackId:callbackId];
-}
-
-- (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    [self sendError:error forCallbackId:callbackId];
+    
+    NSString *email = [parameters valueForKey:KEY_EMAIL];
+    NSString *password = [parameters valueForKey:KEY_PASSWORD];
+    
+    // Logout current user (if any) before calling login
+    __weak typeof(self) weakSelf = self;
+    if ([NeatoUserHelper getNeatoUser]) {
+        [self.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
+                                  authToken:[NeatoUserHelper getUsersAuthToken]
+                                 completion:^(NSDictionary *result, NSError *error) {
+                                     if (error) {
+                                         debugLog(@"Failed to logout user with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                                         [weakSelf sendError:error forCallbackId:callbackId];
+                                         return;
+                                     }
+                                     [weakSelf loginNativeUser:email
+                                                  password:password
+                                                completion:^(NSDictionary *result, NSError *error) {
+                                                    if (error) {
+                                                        debugLog(@"Login failed with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                                                        [weakSelf sendError:error forCallbackId:callbackId];
+                                                        return;
+                                                    }
+                                                    [weakSelf sendSuccessResultAsDictionary:result forCallbackId:callbackId];
+                                                    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+                                                    
+                                                }];
+                                 }];
+    }
+    else {
+        [self loginNativeUser:email
+                     password:password
+                   completion:^(NSDictionary *result, NSError *error) {
+                       if (error) {
+                           debugLog(@"Login failed with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                           [weakSelf sendError:error forCallbackId:callbackId];
+                           return;
+                       }
+                       [weakSelf sendSuccessResultAsDictionary:result forCallbackId:callbackId];
+                       [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+                   }];
+    }
+    
+    
 }
 
 - (void)createUser3:(CDVInvokedUrlCommand *)command {
@@ -285,8 +224,6 @@
     NSString *callbackId = command.callbackId;
     NSDictionary *parameters = [command.arguments objectAtIndex:0];
     debugLog(@"received parameters : %@",parameters);
-    UserManagerCallWrapper *callWrapper = [[UserManagerCallWrapper alloc] init];
-    callWrapper.delegate = self;
     NeatoUser *neatoUser = [[NeatoUser alloc] init];
     neatoUser.email = [parameters objectForKey:KEY_EMAIL];
     neatoUser.password = [parameters objectForKey:KEY_PASSWORD];
@@ -296,18 +233,48 @@
     NSDictionary *extraParams = [parameters objectForKey:KEY_EXTRA_PARAM];
     neatoUser.userCountryCode = [extraParams objectForKey:@"country_code"];
     neatoUser.optIn = [AppHelper boolValueFromString:[extraParams objectForKey:@"opt_in"]];
-    
-    [callWrapper createUser3:neatoUser callbackID:callbackId];
+      
+    __weak typeof(self) weakSelf = self;
+    // Logout current user (if any) before creating new one.
+    if ([NeatoUserHelper getNeatoUser]) {
+        [self.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
+                                  authToken:[NeatoUserHelper getUsersAuthToken]
+                                 completion:^(NSDictionary *result, NSError *error) {
+                                     if (error) {
+                                         debugLog(@"Failed to logout user with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                                         [weakSelf sendError:error forCallbackId:callbackId];
+                                         return;
+                                     }
+                                     [weakSelf createNeatoUser:neatoUser
+                                                    completion:^(NSDictionary *result, NSError *error) {
+                                                        if (error) {
+                                                            debugLog(@"Failed to create user with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                                                            [weakSelf sendError:error forCallbackId:callbackId];
+                                                        }
+                                                        [weakSelf sendSuccessResultAsDictionary:result forCallbackId:callbackId];
+                                                        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+                                                    }];
+                                 }];
+    }
+    else {
+        [self createNeatoUser:neatoUser
+                   completion:^(NSDictionary *result, NSError *error) {
+                       if (error) {
+                           debugLog(@"Failed to create user with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                           [weakSelf sendError:error forCallbackId:callbackId];
+                       }
+                       [weakSelf sendSuccessResultAsDictionary:result forCallbackId:callbackId];
+                       [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+                   }];
+    }
 }
-
-#pragma mark - Temp - New - Remove
 
 - (void)isLoggedIn:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
     NSString *callbackId = command.callbackId;
     BOOL loggedIn;
     debugLog(@"");
-    if ([NeatoUserHelper getNeatoUser])     {
+    if ([NeatoUserHelper getNeatoUser]) {
         // User is logged in, lets extend the auth key expiry
         [self.serverManager updateUserAuthToken:[NeatoUserHelper getUsersAuthToken]
                                      completion:^(NSDictionary *result, NSError *error) {
@@ -325,8 +292,8 @@
     }
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:[[NSNumber numberWithBool:loggedIn] intValue]];
-        [weakSelf writeJavascript:[result toSuccessCallbackString:callbackId]];
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:[[NSNumber numberWithBool:loggedIn] intValue]];
+        [weakSelf writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
     });
 }
 
@@ -348,7 +315,7 @@
                                         // Empty Dictionary object.
                                         NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
                                         [weakSelf sendSuccessResultAsDictionary:dictionary forCallbackId:callbackId];
-    }];
+                                    }];
 }
 
 - (void)changePassword:(CDVInvokedUrlCommand *)command {
@@ -371,7 +338,7 @@
                                                // Empty Dictionary object.
                                                NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
                                                [weakSelf sendSuccessResultAsDictionary:dictionary forCallbackId:callbackId];
-    }];
+                                           }];
 }
 
 - (void)isUserValidated:(CDVInvokedUrlCommand *)command {
@@ -396,7 +363,7 @@
                                          [data setValue:[result valueForKey:NEATO_VALIDATION_STATUS] forKey:NEATO_VALIDATION_STATUS];
                                          
                                          [weakSelf sendSuccessResultAsDictionary:data forCallbackId:callbackId];
-    }];
+                                     }];
 }
 
 - (void)resendValidationMail:(CDVInvokedUrlCommand *)command {
@@ -421,7 +388,7 @@
                                        [data setValue:message forKey:KEY_MESSAGE];
                                        
                                        [weakSelf sendSuccessResultAsDictionary:data forCallbackId:callbackId];
-    }];
+                                   }];
 }
 
 - (void)getUserDetails:(CDVInvokedUrlCommand *)command {
@@ -454,7 +421,7 @@
                                         [data setValue:extraParams forKey:KEY_EXTRA_PARAM];
                                         
                                         [weakSelf sendSuccessResultAsDictionary:data forCallbackId:callbackId];
-    }];
+                                    }];
 }
 
 - (void)getNotificationSettings:(CDVInvokedUrlCommand *)command {
@@ -558,7 +525,7 @@
                                        }
                                        NSString *message = [result valueForKey:NEATO_RESPONSE_MESSAGE];
                                        [weakSelf sendSuccessResultAsString:message forCallbackId:callbackId];
-    }];
+                                   }];
     
 }
 
@@ -582,7 +549,98 @@
                                                      }
                                                      NSString *message = [result valueForKey:NEATO_RESPONSE_MESSAGE];
                                                      [weakSelf sendSuccessResultAsString:message forCallbackId:callbackId];
-    }];
+                                                 }];
+}
+
+- (void)logout:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    //get the callback id
+    NSString *callbackId = command.callbackId;
+    
+    __weak typeof(self) weakSelf = self;
+    [self.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
+                              authToken:[NeatoUserHelper getUsersAuthToken]
+                             completion:^(NSDictionary *result, NSError *error) {
+                                 if (error) {
+                                     debugLog(@"Failed to logout user with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                                     [weakSelf sendError:error forCallbackId:callbackId];
+                                     return;
+                                 }
+                                 [weakSelf sendSuccessResultAsString:@"User logged out." forCallbackId:callbackId];
+                             }];
+}
+
+- (void)turnNotificationOnOff:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    // Get the callback id
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    
+    NeatoNotification *notification = [[NeatoNotification alloc] init];
+    notification.notificationId = [parameters valueForKey:KEY_NOTFICATION_ID];
+    notification.notificationValue = [AppHelper stringFromBool:[[parameters valueForKey:KEY_ON] boolValue]];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.serverManager turnNotification:notification
+                   onOffForUserWithEmail:[parameters valueForKey:KEY_EMAIL]
+                              completion:^(NSDictionary *result, NSError *error) {
+                                  if (error) {
+                                      debugLog(@"Failed to turn notification on/off with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                                      [weakSelf sendError:error forCallbackId:callbackId];
+                                      return;
+                                  }
+                                  [weakSelf sendSuccessResultAsDictionary:result forCallbackId:callbackId];
+                              }];
+}
+
+- (void)getAssociatedRobots:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"parameters = %@", parameters);
+    NSString *email = [parameters objectForKey:@"email"];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.serverManager associatedRobotsForUserWithEmail:email
+                                               authToken:[NeatoUserHelper getUsersAuthToken]
+                                              completion:^(NSDictionary *result, NSError *error) {
+                                                  if (error) {
+                                                      debugLog(@"Failed to get associated robots with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                                                      [weakSelf sendError:error forCallbackId:callbackId];
+                                                      return;
+                                                  }
+                                                  NSArray *robots = [result valueForKey:NEATO_RESPONSE_RESULT];
+                                                  NSMutableArray *jsonArray = [[NSMutableArray alloc] init];
+                                                  for (int i=0 ; i<[robots count] ; i++) {
+                                                      NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+                                                      [data setValue:[[robots objectAtIndex:i] name] forKey:KEY_ROBOT_NAME];
+                                                      [data setValue:[[robots objectAtIndex:i] serialNumber] forKey:KEY_ROBOT_ID];
+                                                      [jsonArray addObject:data];
+                                                  }
+                                                  __weak typeof(self) weakSelf = self;
+                                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                                      CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:jsonArray];
+                                                      [weakSelf writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
+                                                  });
+                                                  
+                                              }];
+    
+}
+
+- (void)gotUserAssociatedRobots:(NSMutableArray *)robots callbackId:(NSString *)callbackId {
+    debugLog(@"");
+    NSMutableArray *jsonArray = [[NSMutableArray alloc] init];
+    for (int i=0 ; i<[robots count] ; i++) {
+        NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+        [data setValue:[[robots objectAtIndex:i] name] forKey:KEY_ROBOT_NAME];
+        [data setValue:[[robots objectAtIndex:i] serialNumber] forKey:KEY_ROBOT_ID];
+        [jsonArray addObject:data];
+    }
+    
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:jsonArray];
+    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    
 }
 
 #pragma mark - Property Getter
@@ -607,21 +665,21 @@
 }
 
 - (void)sendSuccessResultAsString:(NSString *)resultString forCallbackId:(NSString *)callbackId {
-  debugLog(@"");
-  __weak typeof(self) weakSelf = self;
-  dispatch_async(dispatch_get_main_queue(), ^{
-    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:resultString];
-    [weakSelf writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
-  });
+    debugLog(@"");
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:resultString];
+        [weakSelf writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
+    });
 }
 
 - (void)sendSuccessResultAsDictionary:(NSDictionary *)resultDictionary forCallbackId:(NSString *)callbackId {
-  debugLog(@"");
-  __weak typeof(self) weakSelf = self;
-  dispatch_async(dispatch_get_main_queue(), ^{
-    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultDictionary];
-    [weakSelf writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
-  });
+    debugLog(@"");
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultDictionary];
+        [weakSelf writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
+    });
 }
 
 - (NSArray *)arrayFromNotificationJson:(NSDictionary *)notificationJson {
@@ -637,6 +695,48 @@
         [notificationsArray addObject:notification];
     }
     return notificationsArray;
+}
+
+- (void)createNeatoUser:(NeatoUser *)neatoUser completion:(RequestCompletionBlockDictionary)completion {
+    [self.serverManager createUser3:neatoUser
+                         completion:^(NSDictionary *result, NSError *error) {
+                             if (error) {
+                                 completion ? completion(nil, error) : nil;
+                                 return;
+                             }
+                             NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+                             NeatoUser *user = [NeatoUserHelper getNeatoUser];
+                             [data setValue:user.name forKey:KEY_USER_NAME];
+                             [data setValue:user.userId forKey:KEY_USER_ID];
+                             [data setValue:user.email forKey:KEY_EMAIL];
+                             [data setValue:user.alternateEmail forKey:KEY_ALTERNATE_EMAIL];
+                             [data setValue:[user userValidationStatus] forKey:NEATO_VALIDATION_STATUS];
+                             completion ? completion(data, nil) : nil;
+                         }];
+}
+
+- (void)loginNativeUser:(NSString *)email password:(NSString *)password completion:(RequestCompletionBlockDictionary)completion {
+    [self.serverManager loginNativeUser:email
+                               password:password
+                             completion:^(NSDictionary *result, NSError *error) {
+                                 if (error) {
+                                     debugLog(@"Login failed with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                                     completion ? completion(nil, error) : nil;
+                                     return;
+                                 }
+                                 NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+                                 NeatoUser *user = [NeatoUserHelper getNeatoUser];
+                                 [data setValue:user.name forKey:KEY_USER_NAME];
+                                 [data setValue:user.userId forKey:KEY_USER_ID];
+                                 [data setValue:user.email forKey:KEY_EMAIL];
+                                 
+                                 // Params
+                                 NSMutableDictionary *extraParams = [[NSMutableDictionary alloc] init];
+                                 [extraParams setObject:user.userCountryCode ? user.userCountryCode : @"" forKey:KEY_COUNTRY_CODE];
+                                 [extraParams setObject:[AppHelper stringFromBool:user.optIn] forKey:KEY_OPT_IN];
+                                 [data setValue:extraParams forKey:KEY_EXTRA_PARAM];
+                                 completion ? completion(data, nil) : nil;
+                             }];
 }
 
 @end

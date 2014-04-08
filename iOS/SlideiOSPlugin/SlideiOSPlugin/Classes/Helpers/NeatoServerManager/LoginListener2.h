@@ -7,6 +7,6 @@
 
 - (id)initWithDelegate:(id) delegate;
 - (void)start;
-
+- (void)startWithCompletion:(RequestCompletionBlockDictionary)completion;
 
 @end

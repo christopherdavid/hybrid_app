@@ -144,7 +144,7 @@
     debugLog(@"didConnectOverXMPP called");
 }
 
-- (void)xmppLoginfailedWithError:(NSXMLElement *)error; {
+- (void)xmppLoginfailedWithError:(NSError *)error; {
     debugLog(@"xmppLoginfailedWithError called. error = %@", error);
 }
 

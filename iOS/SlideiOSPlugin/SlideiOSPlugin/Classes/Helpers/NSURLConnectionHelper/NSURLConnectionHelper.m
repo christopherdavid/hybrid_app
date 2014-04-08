@@ -144,6 +144,14 @@
     [self notifyRequestFailed:error];
 }
 
+- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+    debugLog(@"connection:willSendRequestForAuthenticationChallenge called.");
+    // TODO: For now we are by-passing the 'untrusted certificate' warning by accepting all certificates. This is bad.
+    // We should fix this on the server and remove this delegate callback.
+    debugLog(@"Received certificate challenge from host = %@", challenge.protectionSpace.host);
+    [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+}
+
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
     debugLog(@"");

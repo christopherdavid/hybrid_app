@@ -23,3 +23,8 @@
 "timed recording complete" = "timed recording complete";
 // accessibility hint for display of recorded elapsed time
 "recorded time in minutes and seconds" = "recorded time in minutes and seconds";
+
+"MSG_STUCK_NOTIFICATION_ID" = "I\'m Stuck";
+"MSG_DIRT_BAG_FULL_NOTIFICATION_ID" = "Dirt bag full";
+"MSG_CLEANING_DONE_NOTIFICATION_ID" = "Cleaning Complete";
+"MSG_GENERIC_NOTIFICATION_ID" = "You have a message from your Robot";

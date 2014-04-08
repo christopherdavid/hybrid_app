@@ -1234,8 +1234,9 @@
                                          }
                                          
                                          NSMutableDictionary *resultData = [[NSMutableDictionary alloc] init];
-                                         if (result) {
-                                             [resultData setObject:result forKey:KEY_CLEANING_CATEGORY];
+                                         NSNumber *cleaningCategory = [result objectForKey:NEATO_RESPONSE_CLEANING_CATEGORY];
+                                         if (result && cleaningCategory) {
+                                             [resultData setObject:cleaningCategory forKey:KEY_CLEANING_CATEGORY];
                                              [resultData setObject:robotId forKey:KEY_ROBOT_ID];
                                          } else {
                                              // If the response does not contain cleaning category, sending CLEANING_CATEGORY_ALL by default.
