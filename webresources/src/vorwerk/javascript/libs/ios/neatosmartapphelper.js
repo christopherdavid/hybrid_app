@@ -61,6 +61,7 @@ var ROBOT_MESSAGE_ERROR = 4014;
 
 var ROBOT_ONLINE_STATUS_CHANGED = 4015;
 
+
 // Robot state codes
 var ROBOT_STATE_UNKNOWN 	= 10001;
 var ROBOT_STATE_CLEANING 	= 10002;
@@ -168,7 +169,10 @@ var ACTION_TYPE_GET_SCHEDULE_DATA 				= "getScheduleData";
 var ACTION_TYPE_CREATE_SCHEDULE 				= "createSchedule";
 var ACTION_TYPE_IS_SCHEDULE_ENABLED 			= "isScheduleEnabled";
 var ACTION_TYPE_ENABLE_SCHEDULE				= "enableSchedule";
-var ACTION_TYPE_GET_ROBOT_CLEANING_STATE	= "getRobotCleaningState";
+var ACTION_TYPE_GET_ROBOT_CLEANING_STATE					= "getRobotCleaningState";
+
+// Debug method
+var ACTION_TYPE_DEBUG_GET_CONFIG_DETAILS 		= "debugGetConfigDetails";
 var ACTION_TYPE_GET_ROBOT_CLEANING_CATEGORY	= "getRobotCleaningCategory";
 
 //List of keys to send data:
@@ -902,6 +906,13 @@ UserMgr.prototype.disassociateAllRobots = function(email, callbackSuccess, callb
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS, [disassociateAllRobotsArray]);
 };
+
+// Debug method.
+UserMgr.prototype.debugGetConfigurationDetails = function(callbackSuccess, callbackError) {
+	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
+                 ACTION_TYPE_DEBUG_GET_CONFIG_DETAILS, []);
+};
+
 
 /**
  * This API is used to switch on/off global and individual push notification settings

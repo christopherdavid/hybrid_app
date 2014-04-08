@@ -170,6 +170,7 @@ var ACTION_TYPE_IS_SCHEDULE_ENABLED 			= "isScheduleEnabled";
 var ACTION_TYPE_ENABLE_SCHEDULE				= "enableSchedule";
 var ACTION_TYPE_GET_ROBOT_CLEANING_STATE	= "getRobotCleaningState";
 var ACTION_TYPE_GET_ROBOT_CLEANING_CATEGORY	= "getRobotCleaningCategory";
+var ACTION_TYPE_GET_ROBOT_CURRENT_CLEANING_DETAILS	= "getRobotCurrentCleaningDetails";
 
 //List of keys to send data:
 
@@ -197,16 +198,8 @@ var KEY_END_TIME = "endTime";
 //COMMAND IDS:
 var COMMAND_ROBOT_START = 101;
 var COMMAND_ROBOT_STOP = 102;
-var COMMAND_ROBOT_JABBER_DETAILS = 103;
 var COMMAND_SEND_BASE = 104;
-var COMMAND_GET_ROBOT_STATE = 105;
-var COMMAND_SEND_ROBOT_STATE = 106;
 var COMMAND_PAUSE_CLEANING = 107;
-var COMMAND_ENABLE_SCHEDULE = 108;
-var COMMAND_DATA_CHANGED_ON_SERVER = 109;
-var COMMAND_SET_ROBOT_TIME = 110;
-var COMMAND_REGISTER_NOTIFICATIONS = 111;
-var COMMAND_UNREGISTER_NOTIFICATIONS = 112;
 var COMMAND_RESUME_CLEANING = 114;
 
 // NOTE: Cleaning type is now referred as cleaning category with new
@@ -1008,7 +1001,7 @@ UserMgr.prototype.getNotificationSettings = function(email, callbackSuccess, cal
  * robot is stuck
  * <p>
  * The API calls Neato Smart App Service
- * 
+ * @deprecated
  * @param robotId			the serial number of the robot
  * @param callbackSuccess 	success callback for this API
  * @param callbackError 	error callback for this API
@@ -1025,6 +1018,7 @@ RobotMgr.prototype.registerNotifications = function(robotId, callbackSuccess, ca
  * unregisters for all notifications for the robot i.e. robot needs cleaning,
  * cleaning is done, and robot is stuck
  * <p>
+ * @deprecated
  * This API calls Neato Smart App Service.
  * 
  * @param robotId			the serial number of the robot
@@ -1718,6 +1712,13 @@ RobotMgr.prototype.getSpotDefinition = function(robotId, callbackSuccess, callba
 			ACTION_TYPE_GET_SPOT_DEFINITION, [commandParams]);
 };
 
+
+
+RobotMgr.prototype.getRobotCurrentCleaningDetails = function(robotId, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ROBOT_CURRENT_CLEANING_DETAILS, [commandParams]);
+};
 /**
  * This API checks whether there  exists a direct-peer connection from the smartapp to robot.
  * If a robotId is passed, then it returns whether it is directly connected to the smartapp.
@@ -2809,6 +2810,11 @@ var RobotPluginManager = (function() {
 			window.plugins.neatoPluginLayer.robotMgr.getSpotDefinition(robotId, callbackSuccess, callbackError);
 		},
 
+		
+		
+		getRobotCurrentCleaningDetails: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotCurrentCleaningDetails(robotId, callbackSuccess, callbackError);
+		},
 		/**
 		 * This API sends drive command to the robot. This API calls Neato Smart App Service.
 		 * <p>
