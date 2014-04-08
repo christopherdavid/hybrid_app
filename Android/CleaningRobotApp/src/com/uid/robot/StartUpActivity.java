@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 /**
- * startup is a post activity which checks the expired date (1.9.2014)
+ * startup is the first activity which checks the expired date (1.9.2014)
  * if the app has been started before a specific date the cleaning robot activity starts
  * otherwise an expired text  is shown
  * @author Lars.Kuhs
@@ -21,8 +21,8 @@ public class StartUpActivity extends Activity {
         Calendar now = Calendar.getInstance();
         Calendar endDate = new GregorianCalendar();
         endDate.set(Calendar.YEAR, 2014);
-        endDate.set(Calendar.MONTH, Calendar.APRIL);
-        endDate.set(Calendar.DAY_OF_MONTH, 8);
+        endDate.set(Calendar.MONTH, Calendar.SEPTEMBER);
+        endDate.set(Calendar.DAY_OF_MONTH, 1);
 
         if(now.after(endDate)) {
         	// expired
