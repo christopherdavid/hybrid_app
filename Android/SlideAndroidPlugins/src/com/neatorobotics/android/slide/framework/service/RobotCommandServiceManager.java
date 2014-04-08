@@ -8,10 +8,7 @@ import android.os.RemoteException;
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiver;
-import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotDiscoveryListener;
-import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotNotificationsListener;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
-import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotStateListener;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RequestPacket;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotRequests;
@@ -38,7 +35,7 @@ public class RobotCommandServiceManager {
 		}
 	}
 	
-	public static void sendCommandThroughServer(Context context, String robotId, int commandId, HashMap<String, String> commandParams) {
+	public static void sendCommandThroughXmpp(Context context, String robotId, int commandId, HashMap<String, String> commandParams) {
 		LogHelper.logD(TAG, "sendCommandThroughServer called - RobotId = " + robotId);
 		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
 		RequestPacket request = RequestPacket.createRequestPacket(context, commandId, commandParams);
@@ -57,49 +54,6 @@ public class RobotCommandServiceManager {
 		}
 	}
 	
-	public static void discoverRobot(Context context, RobotDiscoveryListener listener) {
-		LogHelper.logD(TAG, "Discovery action initiated internal");
-		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-		NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
-		if (receiver != null) {
-			receiver.addDiscoveryListener(listener);
-		}
-		if (neatoService != null) {
-			try {
-				
-				LogHelper.logD(TAG, "Service exists. Starting discovery");
-				neatoService.startDiscovery();
-			} catch (RemoteException e) {
-				LogHelper.logD(TAG, "Could not initiate discover action");
-			}
-		} else {
-			LogHelper.logD(TAG, "Service is not started!");
-			
-		}
-	}
-	
-	public static void tryDirectConnection(Context context, String robotId, RobotPeerConnectionListener listener) {
-		LogHelper.logD(TAG, "tryDirectConnection called");
-		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-		NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
-		if (receiver != null) {
-			receiver.addPeerConnectionListener(listener);
-		}
-		if (neatoService != null) {
-			try {
-
-				LogHelper.logD(TAG, "Service exists. Start peer connection: " + robotId);
-				neatoService.connectToRobot2(robotId);
-			} catch (RemoteException e) {
-				LogHelper.logD(TAG, "Could not initiate peer conneciton action");
-			}
-		} 
-		else {
-			LogHelper.logD(TAG, "Service is not started!");
-		}
-
-	}
-	
 	public static void tryDirectConnectionWithIp(Context context, String robotId, String ip, RobotPeerConnectionListener listener) {
 		LogHelper.logD(TAG, "tryDirectConnectionWithIp called with ip to connect: " + ip);
 		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
@@ -115,7 +69,7 @@ public class RobotCommandServiceManager {
 					neatoService.connectToRobot3(robotId, ip);
 				}
 				else {
-					neatoService.connectToRobot2(robotId);
+					listener.errorInConnecting(robotId);
 				}
 			} catch (RemoteException e) {
 				LogHelper.logD(TAG, "Could not initiate peer conneciton action");
@@ -208,46 +162,6 @@ public class RobotCommandServiceManager {
 				neatoService.loginToXmpp();
 			} catch (RemoteException e) {
 				LogHelper.logD(TAG, "Could not initiate XMPP login conneciton action");
-			}
-		} else {
-			LogHelper.logD(TAG, "Service is not started!");
-		}
-	}
-	
-	public static void registerRobotStateNotificationListener(Context context, RobotStateListener listener) {
-		LogHelper.logD(TAG, "registerRobotStateNotificationListener called");		
-		NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
-		if (receiver != null) {
-			receiver.addRobotStateNotificationListener(listener);
-		}
-	}
-	
-	public static void registerRobotNotificationsListener(Context context, String robotId, RobotNotificationsListener listener) {
-		LogHelper.logD(TAG, "registerRobotNotificationsListener called");		
-		NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
-		if (receiver != null) {
-			receiver.addRobotNotificationsListener(listener);		
-		}
-		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-		if (neatoService != null) {
-			try {
-				neatoService.registerRobotNotifications(robotId);
-			} catch (RemoteException ex) {
-				LogHelper.logD(TAG, "RemoteException in registerRobotNotificationsListener", ex);
-			}
-		} else {
-			LogHelper.logD(TAG, "Service is not started!");
-		}
-	}
-	
-	public static void unregisteredRobotNotificationsListener(Context context, String robotId) {
-		LogHelper.logD(TAG, "unregisteredRobotNotificationsListener called");
-		INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-		if (neatoService != null) {
-			try {
-				neatoService.unregisterRobotNotifications(robotId);
-			} catch (RemoteException ex) {
-				LogHelper.logD(TAG, "RemoteException in unregisterFromRobotStatusChangeNotifications", ex);
 			}
 		} else {
 			LogHelper.logD(TAG, "Service is not started!");

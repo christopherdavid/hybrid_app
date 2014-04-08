@@ -8,15 +8,8 @@ public class RobotCommandPacketConstants {
 	
 	public static final int COMMAND_ROBOT_START = 101;
 	public static final int COMMAND_ROBOT_STOP = 102;
-	public static final int COMMAND_ROBOT_JABBER_DETAILS = 103;
 	public static final int COMMAND_SEND_BASE = 104;
-	public static final int COMMAND_SEND_ROBOT_STATE = 106;
 	public static final int COMMAND_PAUSE_CLEANING = 107;
-	public static final int COMMAND_ENABLE_SCHEDULE = 108;
-	public static final int COMMAND_SET_ROBOT_TIME = 110;
-	public static final int COMMAND_REGISTER_STATUS_NOTIFICATIONS = 111;
-	public static final int COMMAND_UNREGISTER_STATUS_NOTIFICATIONS = 112;
-	public static final int COMMAND_STATUS_NOTIFICATION = 113;
 	public static final int COMMAND_RESUME_CLEANING = 114;
 	public static final int COMMAND_DRIVE_ROBOT = 115;
 	public static final int COMMAND_TURN_MOTOR_ONOFF = 116;
@@ -25,7 +18,6 @@ public class RobotCommandPacketConstants {
 	
 	
 	public static final int COMMAND_ROBOT_PROFILE_DATA_CHANGED = 5001;
-	public static final int COMMAND_ROBOT_CONFIGURATION_CHANGED = 5002;
 	public static final int COMMAND_ROBOT_CONNECTION_PING = 5003;
 	public static final int COMMAND_ROBOT_CONNECTION_BREAK = 9999;
 	
@@ -55,7 +47,6 @@ public class RobotCommandPacketConstants {
 	
 	public static final String KEY_ROBOT_ID 								= "robotId";
 	public static final String KEY_COMMAND_PARAMS_TAG 						= "params";
-	public static final String KEY_DATA_CODE_CHANGED_ON_SERVER 				= "dataCodeChangedOnServer";
 	public static final String KEY_REQUEST_COMMAND 							= "requestCommand";
 	public static final String KEY_USER_ID 									= "userId";
 	public static final String KEY_CHAT_ID 									= "chatId";

@@ -43,7 +43,7 @@ public class RobotProfileConstants {
 	
 	//Used to see if the command should be sent VIA timedmode or XMPP.
 	//Add profileattribute key whenever a support for command is added here.
-	public static boolean isTimedModeSupportedForCommand(int commandId) {
+	public static boolean isCommandSendViaServer(int commandId) {
 		LogHelper.logD(TAG, "isTimedModeSupportedForCommand called for commandId:" + commandId);
 		switch (commandId) {
 			case RobotCommandPacketConstants.COMMAND_ROBOT_START:

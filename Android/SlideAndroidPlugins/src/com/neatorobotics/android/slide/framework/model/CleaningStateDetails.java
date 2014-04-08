@@ -17,6 +17,7 @@ public class CleaningStateDetails {
 
 	private static final String TAG = CleaningStateDetails.class
 			.getSimpleName();
+	
 	public String robotCurrentState;
 	public String robotStateParams;
 

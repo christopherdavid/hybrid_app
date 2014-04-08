@@ -10,5 +10,4 @@ public class NeatoRobotResultReceiverConstants {
 	
 	public static final String ROBOT_DATA_KEY_CODE = "robotDataKeyCode";
 	public static final String ROBOT_DATA_KEY = "robotDataKey";
-	public static final String DISCOVERY_ROBOT_INFO = "robot.info";
 }

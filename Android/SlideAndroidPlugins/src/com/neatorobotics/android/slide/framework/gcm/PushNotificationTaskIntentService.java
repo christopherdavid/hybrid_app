@@ -12,9 +12,9 @@ import android.content.Intent;
 public class PushNotificationTaskIntentService extends IntentService{
 	private static final String TAG = PushNotificationTaskIntentService.class.getSimpleName();
 	
-	public static final String SERVICE_NAME = "GCMTaskIntentService";
-	public static final String REGISTRATION_ID = "registrationId";
-	public static final String KEY_IS_REGISTER = "isRegister";
+	private static final String SERVICE_NAME = "GCMTaskIntentService";
+	static final String REGISTRATION_ID = "registrationId";
+	static final String KEY_IS_REGISTER = "isRegister";
 	
 	public PushNotificationTaskIntentService() {
 		super(SERVICE_NAME);
