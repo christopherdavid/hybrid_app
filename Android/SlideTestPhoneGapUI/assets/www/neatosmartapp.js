@@ -976,6 +976,27 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 		},
 		
+		
+		getRobotCurrentCleaningDetails : function(){
+			var robotId = localStorage.getItem('robotId');
+				if ((robotId == null) || (robotId.length == 0)) {
+					alert("Please associate a Robot");
+					return;
+				}
+				RobotPluginManager.getRobotCurrentCleaningDetails(robotId, neatoSmartApp.getcleaningDetailsSuccess, 
+						neatoSmartApp.getcleaningDetailsError);
+			},
+			
+			getcleaningDetailsSuccess: function(result) {
+				neatoSmartApp.setResponseText(result);
+				neatoSmartApp.hideProgressBar();
+			},
+			
+			getcleaningDetailsError: function(error) {
+				neatoSmartApp.setResponseText(error);
+				neatoSmartApp.hideProgressBar();
+			},
+		
 		enableSchedule: function() {
 			var robotId = localStorage.getItem('robotId');
 			if ((robotId == null) || (robotId.length == 0)) {
@@ -3106,6 +3127,7 @@ var neatoSmartApp = (function() {
 
 			document.querySelector('#btnSetSpotDefinition').addEventListener('click', neatoSmartApp.setSpotDefinition, true);
 			document.querySelector('#btnGetSpotDefinition').addEventListener('click', neatoSmartApp.getSpotDefinition, true);
+			document.querySelector('#btnGetCleaningDetails').addEventListener('click', neatoSmartApp.getRobotCurrentCleaningDetails, true);
 			
 			neatoSmartApp.populateSpotAreaLists();
 			
@@ -3122,6 +3144,7 @@ var neatoSmartApp = (function() {
 
 			document.querySelector('#btnSetSpotDefinition').removeEventListener('click', neatoSmartApp.setSpotDefinition, true);
 			document.querySelector('#btnGetSpotDefinition').removeEventListener('click', neatoSmartApp.getSpotDefinition, true);
+			document.querySelector('#btnGetCleaningDetails').removeEventListener('click', neatoSmartApp.getRobotCurrentCleaningDetails, true);
 		},
 		
 		onClickCleaningModifier1x:function() {

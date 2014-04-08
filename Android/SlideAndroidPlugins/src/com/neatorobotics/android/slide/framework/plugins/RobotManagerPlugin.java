@@ -10,6 +10,7 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotClearDataRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetRobotCleaningCategoryRequest;
+import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetRobotCleaningDetailsRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetSpotDefinationRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.PauseCleaningRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.ResumeCleaningRequest;
@@ -70,6 +71,7 @@ public class RobotManagerPlugin extends Plugin {
 	private RobotManagerRequest mSetSpotDefinationRequest = new SetSpotDefinationRequest();
 	private RobotManagerRequest mGetSpotDefinationRequest = new GetSpotDefinationRequest();
 	private RobotManagerRequest mGetRobotCleaningCategoryRequest = new GetRobotCleaningCategoryRequest();
+	private RobotManagerRequest mGetRobotCleaningDetails = new GetRobotCleaningDetailsRequest();
 
 	// Manual Commands
 	private RobotManagerRequest mCancelIntendToDriveRequest = new CancelIntendToDriveRequest();
@@ -164,7 +166,8 @@ public class RobotManagerPlugin extends Plugin {
 					mRobotScheduleRequest);
 			ACTION_COMMAND_MAP.put(ActionTypes.CLEAR_ROBOT_DATA,
 					mRobotClearDataRequest);
-
+			ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_CLEANING_DETAILS, mGetRobotCleaningDetails);
+			
 			Set<String> keys = ACTION_COMMAND_MAP.keySet();
 			for (String key : keys) {
 				RobotManagerRequest robotCommand = getRobotRequest(key);
@@ -252,6 +255,7 @@ public class RobotManagerPlugin extends Plugin {
 		public static final String CANCEL_INTEND_TO_DRIVE = "cancelIntendToDrive";
 		public static final String IS_ROBOT_PEER_CONNECTED = "isRobotPeerConnected";
 		public static final String CLEAR_ROBOT_DATA = "clearRobotData";
+			public static final String GET_ROBOT_CLEANING_DETAILS = "getRobotCurrentCleaningDetails";
 	}
 
 }
