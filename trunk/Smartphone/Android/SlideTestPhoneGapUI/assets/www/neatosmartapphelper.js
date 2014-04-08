@@ -197,16 +197,8 @@ var KEY_END_TIME = "endTime";
 //COMMAND IDS:
 var COMMAND_ROBOT_START = 101;
 var COMMAND_ROBOT_STOP = 102;
-var COMMAND_ROBOT_JABBER_DETAILS = 103;
 var COMMAND_SEND_BASE = 104;
-var COMMAND_GET_ROBOT_STATE = 105;
-var COMMAND_SEND_ROBOT_STATE = 106;
 var COMMAND_PAUSE_CLEANING = 107;
-var COMMAND_ENABLE_SCHEDULE = 108;
-var COMMAND_DATA_CHANGED_ON_SERVER = 109;
-var COMMAND_SET_ROBOT_TIME = 110;
-var COMMAND_REGISTER_NOTIFICATIONS = 111;
-var COMMAND_UNREGISTER_NOTIFICATIONS = 112;
 var COMMAND_RESUME_CLEANING = 114;
 
 // NOTE: Cleaning type is now referred as cleaning category with new
@@ -1008,7 +1000,7 @@ UserMgr.prototype.getNotificationSettings = function(email, callbackSuccess, cal
  * robot is stuck
  * <p>
  * The API calls Neato Smart App Service
- * 
+ * @deprecated
  * @param robotId			the serial number of the robot
  * @param callbackSuccess 	success callback for this API
  * @param callbackError 	error callback for this API
@@ -1025,6 +1017,7 @@ RobotMgr.prototype.registerNotifications = function(robotId, callbackSuccess, ca
  * unregisters for all notifications for the robot i.e. robot needs cleaning,
  * cleaning is done, and robot is stuck
  * <p>
+ * @deprecated
  * This API calls Neato Smart App Service.
  * 
  * @param robotId			the serial number of the robot

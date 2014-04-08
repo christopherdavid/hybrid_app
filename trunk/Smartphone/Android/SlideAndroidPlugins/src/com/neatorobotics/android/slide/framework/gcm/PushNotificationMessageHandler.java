@@ -92,7 +92,7 @@ public class PushNotificationMessageHandler {
 		PushNotificationUtils.setPendingPushNotification(bundle);
 	}
 
-	public void sendForegroundNotification(Context context, Bundle bundle) {
+	private void sendForegroundNotification(Context context, Bundle bundle) {
 		String message = bundle.getString(PushNotificationConstants.NOTIFICATION_MESSAGE_KEY);
 		LogHelper.logD(TAG, "sendForegroundNotification: " + message);
 		if (mPushNotificationListener != null) {

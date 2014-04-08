@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.database.ScheduleHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
@@ -154,16 +153,14 @@ public class RobotScheduleRequest extends RobotManagerRequest {
 				public void onScheduleData(JSONObject scheduleJson) {
 					super.onScheduleData(scheduleJson);
 					final String robotId = ScheduleHelper.getRobotIdForSchedule(context, scheduleId);
-					if (AppConstants.isServerDataModeEnabled()) {
-						// Passing NoActionWebServiceRequestListener in listener because we don't want to 
-						// send the response to the UI layer
-						// TODO:
-						// However this has one issue. If Schedule is updated but the API to tell the robot that schedule is updated
-						// fails then robot will not know that scheduled has changed. Either server should send the message
-						// to the robot whenever schedule is updated or if this API fails, SmartApp needs to save this information
-						// and try again
-						RobotDataManager.sendRobotScheduleUpdated(context, robotId, new NoActionWebServiceRequestListener());
-					}
+					// Passing NoActionWebServiceRequestListener in listener because we don't want to 
+					// send the response to the UI layer
+					// TODO:
+					// However this has one issue. If Schedule is updated but the API to tell the robot that schedule is updated
+					// fails then robot will not know that scheduled has changed. Either server should send the message
+					// to the robot whenever schedule is updated or if this API fails, SmartApp needs to save this information
+					// and try again
+					RobotDataManager.sendRobotScheduleUpdated(context, robotId, new NoActionWebServiceRequestListener());
 				}
 			});
 		}

@@ -87,10 +87,6 @@ public class RobotDataManager {
 	
 	public static void getServerData(final Context context, final String robotId) {
 		
-		if (!AppConstants.isServerDataModeEnabled()) {
-			return;
-		}
-		
 		Runnable task = new Runnable() {
 			public void run() {
 				try {
@@ -112,10 +108,6 @@ public class RobotDataManager {
 	}
 	
 	private static void robotCommandExpiryResetData(final Context context, final String robotId) {
-		if (!AppConstants.isServerDataModeEnabled()) {
-			return;
-		}
-
 		Runnable task = new Runnable() {
 			public void run() {
 				try {

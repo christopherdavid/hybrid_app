@@ -327,27 +327,6 @@ public class UserManager extends Observable {
 		TaskUtils.scheduleTask(task, 0);
 	}
 	
-	public void sendMessageToRobot(final String userId, final String robotId, final String message) {
-		Runnable task = new Runnable() {
-			@Override
-			public void run() {
-				try {
-					NeatoUserWebservicesHelper.sendMessageToRobotRequest(mContext, userId, robotId, message);
-				}
-				catch (UserUnauthorizedException ex) {
-					LogHelper.log(TAG, "UserUnauthorizedException in sendMessageToRobot - " + ex.getErrorMessage());
-				}
-				catch (NeatoServerException ex) {
-					LogHelper.log(TAG, "NeatoServerException in sendMessageToRobot - " + ex.getErrorMessage());
-				}
-				catch (IOException ex) {					
-					LogHelper.log(TAG, "IOException in sendMessageToRobot", ex);
-				}
-			}
-		};
-		TaskUtils.scheduleTask(task, 0);
-	}
-	
 	public void forgetPassword(final String email, final WebServiceBaseRequestListener listener) {
 		Runnable task = new Runnable() {
 			@Override

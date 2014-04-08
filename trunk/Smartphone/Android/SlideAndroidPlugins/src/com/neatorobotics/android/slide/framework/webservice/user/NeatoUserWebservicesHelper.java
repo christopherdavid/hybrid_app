@@ -27,7 +27,6 @@ import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebSer
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.LoginNeatoUser;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.RegisterPushNotifications;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.ResendValidationMail;
-import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.SendMessageToRobot;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.SetUserAccountDetails;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.SetUserAttributes;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.UnregisterPushNotifications;
@@ -201,17 +200,6 @@ public class NeatoUserWebservicesHelper {
 		userSetAccountDetailsParams.putAll(addProfilePrefix(profileDetailsParams));
 		String response = MobileWebServiceClient.executeHttpPost(context, SetUserAccountDetails.METHOD_NAME, userSetAccountDetailsParams);
 		return AppUtils.checkResponseResult(response, SetUserAccountDetailsResult.class);
-	}
-	
-	public static SendMessageToRobotResult sendMessageToRobotRequest(Context context, String userId, String robotId, String message)
-				throws UserUnauthorizedException, NeatoServerException, IOException {
-		
-		Map<String, String> sendRobotMessageParams = new HashMap<String, String>();
-		sendRobotMessageParams.put(SendMessageToRobot.Attribute.USER_ID, userId);
-		sendRobotMessageParams.put(SendMessageToRobot.Attribute.SERIAL_NUMBER, robotId);
-		sendRobotMessageParams.put(SendMessageToRobot.Attribute.MESSAGE, message);
-		String response = MobileWebServiceClient.executeHttpPost(context, SendMessageToRobot.METHOD_NAME, sendRobotMessageParams);		
-		return AppUtils.checkResponseResult(response, SendMessageToRobotResult.class);
 	}
 	
 	public static ForgetPasswordResult forgetPasswordRequest(Context context, String email) 

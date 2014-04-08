@@ -38,12 +38,13 @@ public class SendRobotCommandRequest extends RobotManagerRequest {
 	private void sendCommandHelper(Context context, String robotId, int commandId, HashMap<String, String> params, String callbackId) {
 		// Create Robot state notification listener to notify when we get a robot state info
 		// from the robot
-		if (AppConstants.isServerDataModeEnabled() && RobotProfileConstants.isTimedModeSupportedForCommand(commandId)) {
+		if (RobotProfileConstants.isCommandSendViaServer(commandId)) {
 			LogHelper.logD(TAG, "Sending command VIA webservice");
 			RobotDataManager.sendRobotCommand(context, robotId, commandId, params, new RobotSetProfileDataRequestListener(callbackId));
 			return;
 		}
-		RobotCommandServiceManager.sendCommandThroughServer(context, robotId, commandId, params);
+		// TODO: This is NOT applicable now. Remove this call.
+		RobotCommandServiceManager.sendCommandThroughXmpp(context, robotId, commandId, params);
 		PluginResult pluginStartResult = new PluginResult(PluginResult.Status.OK);
 		pluginStartResult.setKeepCallback(false);
 		sendSuccessPluginResult(pluginStartResult,callbackId);

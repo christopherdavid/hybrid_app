@@ -1030,9 +1030,9 @@ var neatoSmartApp = (function() {
 				alert("Please associate a Robot");
 				return;
 			}
-			neatoSmartApp.showProgressBar();
-			var time=Date.UTC(2012,03,20, 11, 30, 00);
-			RobotPluginManager.sendCommandToRobot2(robotId, COMMAND_SET_ROBOT_TIME, {'time':time}, neatoSmartApp.setRobotClockSuccess, neatoSmartApp.setRobotClockErr);
+			alert("Not supported");
+			//var time=Date.UTC(2012,03,20, 11, 30, 00);
+			//RobotPluginManager.sendCommandToRobot2(robotId, COMMAND_SET_ROBOT_TIME, {'time':time}, neatoSmartApp.setRobotClockSuccess, neatoSmartApp.setRobotClockErr);
 		},
 		
 		setRobotClockSuccess: function(result) {
@@ -3752,7 +3752,7 @@ var neatoSmartApp = (function() {
 			if (isOnline == true) {				
 				// Getting current state of the robot
 				var robotId = result['robotId'];
-				RobotPluginManager.sendCommandToRobot2(robotId, COMMAND_GET_ROBOT_STATE, {}, neatoSmartApp.refreshGetStateSuccess, neatoSmartApp.refreshGetStateError);
+				//RobotPluginManager.sendCommandToRobot2(robotId, COMMAND_GET_ROBOT_STATE, {}, neatoSmartApp.refreshGetStateSuccess, neatoSmartApp.refreshGetStateError);
 			}
 			else {
 				neatoSmartApp.hideProgressBar();				

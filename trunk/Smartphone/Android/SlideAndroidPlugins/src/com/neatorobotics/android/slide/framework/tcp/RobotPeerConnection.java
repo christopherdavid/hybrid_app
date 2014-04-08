@@ -12,14 +12,9 @@ import android.os.Handler;
 
 import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.model.RobotInfo;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacket;
 import com.neatorobotics.android.slide.framework.transport.Transport;
 import com.neatorobotics.android.slide.framework.transport.TransportFactory;
-import com.neatorobotics.android.slide.framework.udp.RobotDiscoveryListener;
-import com.neatorobotics.android.slide.framework.udp.RobotDiscoveryService;
-import com.neatorobotics.android.slide.framework.udp.UdpUtils;
-import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 
 public class RobotPeerConnection {
@@ -114,51 +109,6 @@ public class RobotPeerConnection {
 				connectToRobotInternal(robotId, robotIpAddress, peerPort);
 			}
 		};
-		TaskUtils.scheduleTask(task, 0);
-	}
-
-	public void connectToRobot(final String robotId) {
-
-		LogHelper.logD(TAG, "connectToRobot called");
-		final int peerPort = TCP_ROBOT_SERVER_PORT;
-		Runnable task = new Runnable() {
-			public void run() {
-				String userId = AppUtils.getLoggedInUserId(mContext);
-				if (UdpUtils.isUdpBroadcastSupported()) {
-					RobotDiscoveryService.startRobotsDiscovery(mContext, userId, robotId, new RobotDiscoveryListener() {
-		
-						private boolean receivedRobotIp = false;
-						@Override
-						public void onRobotDiscovered(RobotInfo robotInfo) {
-							// We send the discovery request 3 times and we get the response 3 times. So
-							// whenever we get the request we ignore subsequent request
-							if (receivedRobotIp) {
-								return;
-							}
-							LogHelper.logD(TAG, "Robot Discovered. Now will try to connect");
-							if (robotInfo != null) {
-								receivedRobotIp = true;
-								//As we are supporting only one TCP connection as of now, break the exisiting conneciton if any
-								closeExistingConnectionInternal();
-								connectToRobotInternal(robotId, robotInfo.getRobotIpAddress(), peerPort);
-							}
-						}
-		
-						@Override
-						public void onDiscoveryStarted() {
-						}
-		
-						@Override
-						public void onDiscoveryEnd() {
-						}
-					});
-				}
-				else {
-					// TODO:
-				}
-			}
-		};
-
 		TaskUtils.scheduleTask(task, 0);
 	}
 

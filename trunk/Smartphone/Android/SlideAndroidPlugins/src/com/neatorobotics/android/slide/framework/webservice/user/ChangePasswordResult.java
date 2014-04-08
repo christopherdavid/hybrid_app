@@ -9,7 +9,6 @@ public class ChangePasswordResult extends NeatoWebserviceResult {
 		super();
 	}
 	
-	
 	@Override
 	public boolean success() {
 		return ((status == RESPONSE_STATUS_SUCCESS) && ((result != null) && result.success));
