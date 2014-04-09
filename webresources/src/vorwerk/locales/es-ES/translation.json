@@ -50,7 +50,7 @@
     "legalInformation": {
         "page": {
             "legal_agreement": "Estoy de acuerdo",
-            "title": "AGREEMENTS",
+            "title": "Acuerdos",
             "notAccepted_title": "Falta acuerdo legal",
             "notAccepted_message": "Por favor revise los documentos de la política de privacidad y las condiciones de uso para completar el registro",
             "tou_pp_agreement": "Para poder utilizar la Aplicación, debe aceptar las Condiciones de uso de la misma y la Política de privacidad.  TICK BOX Por la presente declaro que he leído y acepto las <a id='terms' href='#' class='highlightedText font_bold font_small'>Condiciones de uso<\/a> y la <a id='privacy' href='#' class='highlightedText font_bold font_small'>Política de privacidad<\/a>.",

@@ -50,7 +50,7 @@
     "legalInformation": {
         "page": {
             "legal_agreement": "J'accepte ",
-            "title": "AGREEMENTS",
+            "title": "CONSENTEMENT",
             "notAccepted_title": "Consentement légal manquant",
             "notAccepted_message": "Veuillez vérifiez la clause de confidentialité et les termes d'utilisation des documents pour finaliser l'enregistrement",
             "tou_pp_agreement": "Pour pouvoir utiliser l'application, vous devez donner votre accord aux conditions d'utilisation et à la déclaration de protection des données. TICK BOX Par la présente, je déclare avoir lu et accepté la <a id='terms' href='#' class='highlightedText font_bold font_small'>conditions d'utilisation<\/a> et les <a id='privacy' href='#' class='highlightedText font_bold font_small'>déclaration de protection des données<\/a>. ",

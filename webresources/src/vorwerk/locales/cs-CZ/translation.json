@@ -50,7 +50,7 @@
     "legalInformation": {
         "page": {
             "legal_agreement": "Souhlasím",
-            "title": "AGREEMENTS",
+            "title": "Souhlas",
             "notAccepted_title": "Chybí souhlas s právními podmínkami",
             "notAccepted_message": "Zkontrolujte si prosím pro dokončení registrace podmínky ochrany osobních údajů a podmínky použití dokumentace",
             "tou_pp_agreement": "Abyste mohli aplikaci používat, musíte souhlasit s podmínkami používání a s prohlášením o ochraně osobních údajů.  TICK BOX Tímto prohlašuji, že jsem četl/a a se souhlasem vzal/a na vědomí <a id='terms' href='#' class='highlightedText font_bold font_small'>podmínky používání<\/a> a <a id='privacy' href='#' class='highlightedText font_bold font_small'>prohlášení o ochraně osobních údajů<\/a>.",

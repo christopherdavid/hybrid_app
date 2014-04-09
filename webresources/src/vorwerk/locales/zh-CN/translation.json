@@ -50,7 +50,7 @@
     "legalInformation": {
         "page": {
             "legal_agreement": "我同意",
-            "title": "AGREEMENTS",
+            "title": "法律协议",
             "notAccepted_title": "无有效法律协仪",
             "notAccepted_message": "请仔细阅读隐私条款及使用条款来完成本次注册。",
             "tou_pp_agreement": "为了能够使用应用程序，您必须同意使用条件和数据保护声明. TICK BOX 我特此声明，我已阅读并了解同意  <a id='terms' href='#' class='highlightedText font_bold font_small'>使用条件<\/a> 及其 <a id='privacy' href='#' class='highlightedText font_bold font_small'>数据保护声明<\/a>.",
@@ -209,8 +209,8 @@
             "title": "输入错误"
         },
         "-509": {
-            "message": "This account has not been confirmed.  Please respond to the confirmation mail sent to this email address.",
-            "title": "Confirmation Error"
+            "message": "本账户已被认证",
+            "title": "认证错误"
         },
         "-114": {
             "message": "该机器人ID未被注册过。",

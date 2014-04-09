@@ -50,7 +50,7 @@
     "legalInformation": {
         "page": {
             "legal_agreement": "Acconsento",
-            "title": "AGREEMENTS",
+            "title": "ACCORDI",
             "notAccepted_title": "Manca l'Accordo Legale",
             "notAccepted_message": "Si prega di controllare l'Informativa sulla Privacy e le Condizioni d'uso per completare la registrazione.",
             "tou_pp_agreement": "Per poter utilizzare l\u2019App dovete approvare le nostre Condizioni d\u2019uso e la Dichiarazione di protezione dei dati. TICK BOX Con la presente dichiaro di aver letto le <a id='terms' href='#' class='highlightedText font_bold font_small'>Condizioni d'uso<\/a> e la <a id='privacy' href='#' class='highlightedText font_bold font_small'>Dichiarazione di protezione dei dati<\/a>, di averne preso conoscenza e di approvarle.",
