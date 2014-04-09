@@ -50,7 +50,7 @@
     "legalInformation": {
         "page": {
             "legal_agreement": "I stimme zu",
-            "title": "AGREEMENTS",
+            "title": "Zustimmungen",
             "notAccepted_title": "Rechtliche Zustimmung fehlt",
             "notAccepted_message": "Du musst der Datenschutzerklärung und den Nutzungsbedingungen zustimmen, um die Registrierung abzuschließen. ",
             "tou_pp_agreement": "Um die App nutzen zu können, müssen sie den Nutzungsbedingungen und der Datenschutzerklärung zustimmen. TICK BOX Hiermit erkläre ich, dass ich die <a id='terms' href='#' class='highlightedText font_bold font_small'>Nutzungsbedinungen<\/a> und die <a id='privacy' href='#' class='highlightedText font_bold font_small'>Datenschutzerklärung<\/a> gelesen und zustimmend zur Kenntnis genommen habe.",
@@ -189,11 +189,11 @@
             "title": "Eingabefehler"
         },
         "-192": {
-            "message": "This robot is already registered with another user.",
+            "message": "Der Roboter ist bereits mit einem anderen Nutzer registiert.",
             "title": "Eingabefehler"
         },
         "-182": {
-            "message": "This robot is already registered with this user.",
+            "message": "Der Roboter ist bereits mit diesem Nutzer registriert.",
             "title": "Eingabefehler"
         },
         "-108": {
@@ -278,8 +278,8 @@
         "navi": {"title": "Roboter Aktivierung."}
     },
     "validation": {
-        "email": "This email address is invalid",
-        "password": "The password does not match."
+        "email": "Die E-Mail-Adresse ist ungültig.",
+        "password": "Die Passwörter stimmen nicht überein."
     },
     "robotActivationName": {
         "page": {
@@ -367,7 +367,7 @@
         "stopped_all": "Ich habe die Reinigung gestoppt.",
         "stopped_waited_manual": "Ich bin bereit für die manuelle Reinigung.",
         "resumed": "Ich habe die Reinigung fortgesetzt",
-        "stopped_manual": "I've stopped manual cleaning",
+        "stopped_manual": "Ich habe die manuelle Reinigung gestoppt.",
         "paused_spot": "Ich habe die Spotreinigung unterbrochen.",
         "stopped_spot": "Ich habe die Spotreinigung gestoppt.",
         "robot_offline": "I'm Offline",
