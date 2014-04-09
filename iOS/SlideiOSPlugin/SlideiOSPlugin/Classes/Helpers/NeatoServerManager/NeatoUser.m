@@ -27,8 +27,8 @@
         self.userId = [dictionary valueForKey:@"id"];
         self.name = [dictionary valueForKey:@"name"];
         self.alternateEmail = [dictionary valueForKey:@"alternate_email"];
-        NSInteger validationStatus = [NSNumber numberWithInteger:[dictionary valueForKey:@"validation_status"]];
-        self.validationStatus = [NSString stringWithFormat:@"%d", validationStatus];
+        NSNumber *validationStatus = [dictionary valueForKey:@"validation_status"];
+        self.validationStatus = [NSString stringWithFormat:@"%d", validationStatus.integerValue];
         NSArray *robots = [dictionary valueForKey:@"robots"];
         NSArray *socialNetworks = [dictionary valueForKey:@"social_networks"];
         NSDictionary *extraParam = [dictionary objectForKey:@"extra_param"];
