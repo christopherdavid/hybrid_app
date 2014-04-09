@@ -22,7 +22,7 @@ function Application() {
         pluginVersion:"0.6.2.06",
         serverName:"Raja Staging",
         fallbackLanguage:"en-GB",
-        policyDocumentURL:"http://dev-smartapp.neatorobotics.com/Neato/",
+        policyDocumentURL:"http://staging-smartapp.neatorobotics.com/",
         viewPath:"",
         device:"",
         emailRegEx: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
