@@ -10,7 +10,9 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
     this.isRemoteEnabled = ko.observable(true);
     this.eventMouseDown = false;
     that = this;
-    this.pressedIntervall = 250;
+    
+    // trigger pressed event every x ms
+    this.pressedIntervall = 500;
     this.pressedTimer;
     
 
@@ -65,7 +67,8 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
     };
     
     this.pressing = function() {
-        if(that.remoteButtonDown) {
+        // added check if remote is enabled to avoid an event loop on error 
+        if(that.remoteButtonDown && that.isRemoteEnabled()) {
             remote.triggerHandler("remotePressed", that.remoteButtonDown);
             this.pressedTimer = window.setTimeout(function() {that.pressing();}, this.pressedIntervall);
         } else {
@@ -84,6 +87,10 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
                     that.updatePosition();
                 }
                 */
+                
+                // FIX to get more than two move events:
+                // Google Chrome will fire a touchcancel event about 200 milliseconds after touchstart if it thinks the user is panning/scrolling and you do not call event.preventDefault().
+                event.preventDefault();
                
                 // console.log("vmousedown px " + event.pageX + " py " + event.pageY);                
                 if (containsPoint((event.pageX - posX), (event.pageY - posY), centerX, centerY, radius)) {

@@ -22,10 +22,6 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     this.visualSelectedCategory = ko.observable();
     
-    this.lastMoveTimestamp = 1;
-    
-    this.threshhold = 500;
-        
     // listener when robot category changes
     this.robot().cleaningCategory.subscribe(function(newValue) {
             console.log("cleaningCategory subscribe " + newValue);
@@ -144,6 +140,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         document.addEventListener('touchmove.clean', function(e) {
             e.preventDefault();
         }, false);
+        
         
         // create startAreaControl (start button with remote control functionality)
         that.startAreaControl = new StartAreaControl($('#startArea'), $("#startContainer"),$('#eventArea'), $('#startBtn'),$('#remote'), [$('#remoteUp'), $('#remoteDown'), $('#remoteLeft'), $('#remoteRight'), $('#remoteDiagLeft'), $('#remoteDiagRight')]);
@@ -273,23 +270,11 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         }
     };
     
-    this.remotePressed = function(event, button) {
-    	var now = +new Date;
-
-    	console.log("that.lastMoveTimestamp:"+ that.lastMoveTimestamp);
-    	 
-    	if (now > that.lastMoveTimestamp + that.threshhold) {
-	        that.lastMoveTimestamp = now;
-	        that.remotePressedNotThrottled(event, button);
-	    }
-    };   
-    
     // handle remote pressed events
-    this.remotePressedNotThrottled = function(event, button) {
+    this.remotePressed = function(event, button) {
         navigator.notification.vibrate(500);
         //console.log("remote button pressed:")
-        var now = +new Date;
-         console.log("remote button Current Time:"+ now);
+        
         //console.log(button)
         var navigationControlId = 0;
         switch(button.id) {
