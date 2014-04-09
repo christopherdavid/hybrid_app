@@ -711,6 +711,9 @@
                              [data setValue:user.email forKey:KEY_EMAIL];
                              [data setValue:user.alternateEmail forKey:KEY_ALTERNATE_EMAIL];
                              [data setValue:[user userValidationStatus] forKey:NEATO_VALIDATION_STATUS];
+                             if ([result valueForKey:KEY_EXTRA_PARAM]) {
+                                 [data setValue:[result valueForKey:KEY_EXTRA_PARAM] forKey:KEY_EXTRA_PARAM];
+                             }
                              completion ? completion(data, nil) : nil;
                          }];
 }
