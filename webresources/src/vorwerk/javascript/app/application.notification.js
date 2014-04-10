@@ -219,11 +219,7 @@ function WorkflowNotification(parent) {
                     }
                 });
                 if(isCurRobot) {
-                    if(statusListener[NOTIFICATION_CLEANING_DONE] && statusListener[NOTIFICATION_CLEANING_DONE].length > 0) {
-                        statusListener[NOTIFICATION_CLEANING_DONE][0](translatedText);
-                    } else  {
-                        that.showLoadingArea(true,notificationType.HINT,translatedText);
-                    }
+                    that.showLoadingArea(true,notificationType.HINT,translatedTitle);
                 } else {
                     that.showDialog(dialogType.INFO, translatedTitle, translatedText);
                 }

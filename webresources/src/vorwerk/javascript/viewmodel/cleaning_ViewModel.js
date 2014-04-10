@@ -120,11 +120,6 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         });
         $spotSelection = $("#spotSelection");
         
-        // register for push notifications type of NOTIFICATION_CLEANING_DONE
-        parent.notification.registerStatus(NOTIFICATION_CLEANING_DONE, function(resultText) {
-            that.robot().stateString(resultText);
-        });
-        
         // getSpotDefinition
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getSpotDefinition, [that.robot().robotId()]);
         tDeffer.done(that.successGetSpotDefinition);
