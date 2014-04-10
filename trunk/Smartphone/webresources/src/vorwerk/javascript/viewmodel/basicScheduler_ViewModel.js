@@ -140,6 +140,11 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         // 'scheduleEventId':'76d784e0-78a2-45e0-a67a-3f404eecafc8',
         // 'scheduleEventData': {'startTime':'10:30','day':1, 'cleaningMode':'1'}
         // }
+        
+        // check if mode is eco or all and set eco as fallback
+        if(result.scheduleEventData.cleaningMode != 0 && result.scheduleEventData.cleaningMode != 1) {
+            result.scheduleEventData.cleaningMode = 1;
+        }
 
         // add the day to the day blocked list
         that.blockedDays.push(result.scheduleEventData.day);

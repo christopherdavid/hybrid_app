@@ -195,8 +195,6 @@ function WorkflowNotification(parent) {
             tDeffer.done(function(subresult) {
                 that.showPushMessage(subresult.robotName, result);
             });
-        } else {
-            that.showPushMessage(robotName,result, false);
         }
     };
     
@@ -380,7 +378,16 @@ function WorkflowNotification(parent) {
         $("#dialogPopup").popup("close");
     };
     
+    this.forceCloseDialog = function() {
+        if(that.curHandledDialog != null) {
+            $(that.curHandledDialog.id).popup("close");
+        } 
+    };
     
+    this.isDialogOpen = function() {
+        return (that.curHandledDialog != null);
+    };
+        
     this.showNotification = function() {
         
     };
