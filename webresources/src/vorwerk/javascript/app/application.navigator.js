@@ -79,31 +79,39 @@ function WorkflowNavigator(parent, workflow) {
      */
     this.previous = function() {
         console.log('WorkflowNavigator.previous()');
-        // enable reverse animation
-        parent.config.pageReverseDirection = true;
         
-        // check if loading indicators and hide them is necessary
-        hideLoadingIndicators();
+        // check if a dialog is open and close it
+        if(parent.notification.isDialogOpen()) {
+           parent.notification.forceCloseDialog();
         
-        // check if backConditions were set
-        if(parent.viewModel.backConditions) {
-            var tempScreenId = getNextValidScreenId("backConditions");
-            if (tempScreenId != null) {
-                // check if history contains an entry with the screenId
-                var historyIndex = parent.history.getIndexById(tempScreenId);
-                if(historyIndex > -1) {
-                    // disable history for current screen
-                    currentScreen.storeInHistory = false;
-                    // navigate
-                    that.loadScreenFromHistory(historyIndex, typeof bundle != "undefined" ? bundle : null);
+        // otherwise handle page navigation
+        } else {
+            // enable reverse animation
+            parent.config.pageReverseDirection = true;
+            
+            // check if loading indicators and hide them is necessary
+            hideLoadingIndicators();
+            
+            // check if backConditions were set
+            if(parent.viewModel.backConditions) {
+                var tempScreenId = getNextValidScreenId("backConditions");
+                if (tempScreenId != null) {
+                    // check if history contains an entry with the screenId
+                    var historyIndex = parent.history.getIndexById(tempScreenId);
+                    if(historyIndex > -1) {
+                        // disable history for current screen
+                        currentScreen.storeInHistory = false;
+                        // navigate
+                        that.loadScreenFromHistory(historyIndex, typeof bundle != "undefined" ? bundle : null);
+                    } else {
+                        that.loadScreen(tempScreenId, typeof bundle != "undefined" ? bundle : null);
+                    }
                 } else {
-                    that.loadScreen(tempScreenId, typeof bundle != "undefined" ? bundle : null);
+                    defaultBack();
                 }
             } else {
                 defaultBack();
             }
-        } else {
-            defaultBack();
         }
     };
     
