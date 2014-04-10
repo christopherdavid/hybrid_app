@@ -183,11 +183,6 @@
         [self.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
                                   authToken:[NeatoUserHelper getUsersAuthToken]
                                  completion:^(NSDictionary *result, NSError *error) {
-                                     if (error) {
-                                         debugLog(@"Failed to logout user with error = %@, info = %@", [error localizedDescription], [error userInfo]);
-                                         [weakSelf sendError:error forCallbackId:callbackId];
-                                         return;
-                                     }
                                      [weakSelf loginNativeUser:email
                                                   password:password
                                                 completion:^(NSDictionary *result, NSError *error) {
@@ -240,11 +235,6 @@
         [self.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
                                   authToken:[NeatoUserHelper getUsersAuthToken]
                                  completion:^(NSDictionary *result, NSError *error) {
-                                     if (error) {
-                                         debugLog(@"Failed to logout user with error = %@, info = %@", [error localizedDescription], [error userInfo]);
-                                         [weakSelf sendError:error forCallbackId:callbackId];
-                                         return;
-                                     }
                                      [weakSelf createNeatoUser:neatoUser
                                                     completion:^(NSDictionary *result, NSError *error) {
                                                         if (error) {
@@ -561,11 +551,6 @@
     [self.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
                               authToken:[NeatoUserHelper getUsersAuthToken]
                              completion:^(NSDictionary *result, NSError *error) {
-                                 if (error) {
-                                     debugLog(@"Failed to logout user with error = %@, info = %@", [error localizedDescription], [error userInfo]);
-                                     [weakSelf sendError:error forCallbackId:callbackId];
-                                     return;
-                                 }
                                  [weakSelf sendSuccessResultAsString:@"User logged out." forCallbackId:callbackId];
                              }];
 }

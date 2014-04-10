@@ -1155,12 +1155,11 @@
     NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
     [serverHelper dataForRequest:request
                  completionBlock:^(id response, NSError *error) {
-                     if (!error) {
-                         // Delete current user
-                         [NeatoUserHelper deleteUniqueDeviceIdForUser];
-                         NSString *deviceToken = [NeatoUserHelper getDevicePushAuthToken];
-                         if (deviceToken && deviceToken.length > 0) {
-                             [weakSelf unregisterPushNotificationForDeviceToken:deviceToken
+                     // Delete current user
+                     [NeatoUserHelper deleteUniqueDeviceIdForUser];
+                     NSString *deviceToken = [NeatoUserHelper getDevicePushAuthToken];
+                     if (deviceToken && deviceToken.length > 0) {
+                         [weakSelf unregisterPushNotificationForDeviceToken:deviceToken
                                                                  completion:^(NSDictionary *result, NSError *error) {
                                                                      // Disconect TCP and XMPP connection
                                                                      TCPConnectionHelper *tcpHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
@@ -1170,12 +1169,7 @@
                                                                      // Clear robot data
                                                                      [NeatoUserHelper clearUserData];
                                                                      completion ? completion(response, nil) : nil;
-                             }];
-                         }
-                         
-                     }
-                     else {
-                        completion ? completion(nil, error) : nil;
+                                                                 }];
                      }
                  }];
 }
