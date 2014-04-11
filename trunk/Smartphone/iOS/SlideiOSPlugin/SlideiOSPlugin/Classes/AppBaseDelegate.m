@@ -4,6 +4,7 @@
 #import "LogHelper.h"
 #import "PushNotificationHelper.h"
 #import "XMPPConnectionHelper.h"
+#import "NeatoDataStore.h"
 
 // Frameworks
 #import "Crittercism.h"
@@ -23,6 +24,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     debugLog(@"didFinishLaunchingWithOptions called");
+    // Create core data stack from main thread
+    [NeatoDataStore sharedNeatoDataStore];
     [self enableCrittercism];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectOverXMPPIfRequired) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disconnectXMPPConnection) name:UIApplicationDidEnterBackgroundNotification object:nil];

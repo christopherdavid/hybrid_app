@@ -67,6 +67,7 @@
 #define KEY_POINT_X @"x"
 #define KEY_POINT_Y @"y"
 
+#define KEY_NOTIFICATIONID @"notificationId"
 #define KEY_ID @"id"
 #define KEY_NAME @"name"
 #define KEY_ICON @"icon"
