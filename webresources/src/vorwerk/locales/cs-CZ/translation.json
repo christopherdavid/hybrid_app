@@ -180,6 +180,58 @@
         "navi": {"title": "Úklid"}
     },
     "error": {
+        "-21259": {
+            "message": "NAVIGATION_UndockingFailed",
+            "title": "Error"
+        },
+        "-182": {
+            "message": "Robot je již registrován tímto uživatelem",
+            "title": "Druh chyby"
+        },
+        "-21258": {
+            "message": "Please clear my path.",
+            "title": "Error"
+        },
+        "-21257": {
+            "message": "BATTERY_InvalidSensor",
+            "title": "Error"
+        },
+        "-21256": {
+            "message": "BATTERY_NoThermistor",
+            "title": "Error"
+        },
+        "-21255": {
+            "message": "BATTERY_Unplugged",
+            "title": "Error"
+        },
+        "-21254": {
+            "message": "BATTERY_UnderTemp",
+            "title": "Error"
+        },
+        "-21253": {
+            "message": "BATTERY_LithiumAdapterFailure",
+            "title": "Error"
+        },
+        "-21252": {
+            "message": "BATTERY_Mismatch",
+            "title": "Error"
+        },
+        "-21251": {
+            "message": "BATTERY_UnderCurrent",
+            "title": "Error"
+        },
+        "-21250": {
+            "message": "BATTERY_UnderVolt",
+            "title": "Error"
+        },
+        "-515": {
+            "message": "Jste již připojen k jinému robotu.",
+            "title": "Chyba připojení"
+        },
+        "-511": {
+            "message": "__robotName__ již není připojen.",
+            "title": "Chyba připojení"
+        },
         "-106": {
             "message": "Tato e-mailová adresa je již serverem registrována",
             "title": "Chyba"
@@ -192,41 +244,241 @@
             "message": "Robot je již registrován jiným uživatelem",
             "title": "Druh chyby"
         },
-        "-182": {
-            "message": "Robot je již registrován tímto uživatelem",
-            "title": "Druh chyby"
+        "-21247": {
+            "message": "Please check my Filter and Dirt Bin.",
+            "title": "Error"
+        },
+        "-21246": {
+            "message": "My fan is stuck. Please press OKAY to restart.",
+            "title": "Error"
         },
         "-108": {
             "message": "Nepodařilo se vytvořit uživatelský účet. Zkuste to prosím znovu.",
             "title": "Chyba serveru"
         },
-        "-111": {
-            "message": "Je nutné přidat jméno robota",
-            "title": "Chyba"
+        "-21249": {
+            "message": "BATTERY_OverVolt",
+            "title": "Error"
         },
-        "-112": {
-            "message": "Váš e-mail není registrován.",
-            "title": "Chyba"
+        "-21248": {
+            "message": "Please press OKAY to continue. Battery issue xxxx.",
+            "title": "Error"
         },
-        "-509": {
-            "message": "Účet nebyl potvrzen. Odpovězte prosím na potvrzující e-mail, který vám byl poslán na váš e-mail.",
-            "title": "Potvrzení chyby"
+        "-21243": {
+            "message": "LDS_BAD_PACKETS",
+            "title": "Error"
         },
-        "-114": {
-            "message": "Tento robot není registrován.",
-            "title": "Chyba"
+        "-21242": {
+            "message": "LDS_MISSED_PACKETS",
+            "title": "Error"
+        },
+        "-21245": {
+            "message": "My Brush needs to be cleaned.",
+            "title": "Error"
+        },
+        "-21244": {
+            "message": "Please clean my brush.",
+            "title": "Error"
+        },
+        "-21241": {
+            "message": "LDS_DISCONNECTED",
+            "title": "Error"
         },
         "-101": {
             "message": "Vložené jméno uživatele nebo heslo je chybné.",
             "title": "Chyba"
         },
+        "-21240": {
+            "message": "LDS_JAMMED",
+            "title": "Error"
+        },
+        "-21230": {
+            "message": "Please put my Dirt Bin back in.",
+            "title": "Error"
+        },
+        "-21279": {
+            "message": "SCB_VALIDATION",
+            "title": "Error"
+        },
+        "-21233": {
+            "message": "Please return me to my base.",
+            "title": "Error"
+        },
+        "-21234": {
+            "message": "Please contact Customer Support. Tests not complete.",
+            "title": "Error"
+        },
+        "-21231": {
+            "message": "DUST_BIN_FULL",
+            "title": "Error"
+        },
+        "-21232": {
+            "message": "Please wait while I cool down my battery.",
+            "title": "Error"
+        },
+        "-21274": {
+            "message": "xxxx",
+            "title": "Error"
+        },
+        "-111": {
+            "message": "Je nutné přidat jméno robota",
+            "title": "Chyba"
+        },
+        "-21237": {
+            "message": "I can't charge. Try moving the base station to a new location.",
+            "title": "Error"
+        },
+        "-21273": {
+            "message": "A software update is available. Please visit web support.",
+            "title": "Error"
+        },
+        "-112": {
+            "message": "Váš e-mail není registrován.",
+            "title": "Chyba"
+        },
+        "-21238": {
+            "message": "My Left Wheel is stuck. Please free it from debris.",
+            "title": "Error"
+        },
+        "-21272": {
+            "message": "WDT",
+            "title": "Error"
+        },
+        "-21235": {
+            "message": "My Bumper is stuck. Please free it.",
+            "title": "Error"
+        },
+        "-21271": {
+            "message": "I can't shut down while I'm connected to power.",
+            "title": "Error"
+        },
+        "-114": {
+            "message": "Tento robot není registrován.",
+            "title": "Chyba"
+        },
+        "-21236": {
+            "message": "Please put me down on the floor.",
+            "title": "Error"
+        },
+        "-21278": {
+            "message": "SCB_CHECKSUM",
+            "title": "Error"
+        },
+        "-21277": {
+            "message": "SCB_LENGTH_MISMATCH",
+            "title": "Error"
+        },
+        "-21276": {
+            "message": "SCB_SIGNATURE",
+            "title": "Error"
+        },
+        "-21239": {
+            "message": "My Right Wheel is stuck. Please free it from debris.",
+            "title": "Error"
+        },
+        "-21275": {
+            "message": "SCB_FLASH_READ",
+            "title": "Error"
+        },
         "-110": {
             "message": "Vaše staré heslo neodpovídá.",
             "title": "Chyba"
         },
-        "-515": {
-            "message": "Jste již připojen k jinému robotu.",
-            "title": "Chyba připojení"
+        "-21280": {
+            "message": "HARDWARE_FAILURE",
+            "title": "Error"
+        },
+        "-154": {
+            "message": "Neplatný odkaz. Zadejte platný odkaz.",
+            "title": "Druh chyby"
+        },
+        "-21281": {
+            "message": "Please dust me off so that I can see.",
+            "title": "Error"
+        },
+        "-21284": {
+            "message": "I can't see!",
+            "title": "Error"
+        },
+        "-21285": {
+            "message": "TILTED_ON_CLEANING_STARTUP",
+            "title": "Error"
+        },
+        "-21282": {
+            "message": "Please clean my right drop sensor window.",
+            "title": "Error"
+        },
+        "-21283": {
+            "message": "Please clean my left drop sensor window.",
+            "title": "Error"
+        },
+        "-21269": {
+            "message": "NAVIGATION_NoProgress",
+            "title": "Error"
+        },
+        "-21268": {
+            "message": "NAVIGATION_PathProblems",
+            "title": "Error"
+        },
+        "-21261": {
+            "message": "NAVIGATION_PinkyCommsFail",
+            "title": "Error"
+        },
+        "-21224": {
+            "message": "CHECK_BATTERY_SWITCH",
+            "title": "Error"
+        },
+        "-21260": {
+            "message": "NAVIGATION_Falling",
+            "title": "Error"
+        },
+        "-21225": {
+            "message": "Please unplug my Power Cable when you want me to clean.",
+            "title": "Error"
+        },
+        "-21263": {
+            "message": "NAVIGATION_BackDrop_LeftBump",
+            "title": "Error"
+        },
+        "-21226": {
+            "message": "Please unplug my USB Cable when you want me to clean.",
+            "title": "Error"
+        },
+        "-21262": {
+            "message": "NAVIGATION_NoMotionCommands",
+            "title": "Error"
+        },
+        "-21227": {
+            "message": "SCHED_OFF",
+            "title": "Error"
+        },
+        "-509": {
+            "message": "Účet nebyl potvrzen. Odpovězte prosím na potvrzující e-mail, který vám byl poslán na váš e-mail.",
+            "title": "Potvrzení chyby"
+        },
+        "-21265": {
+            "message": "NAVIGATION_BackDrop_WheelExtended",
+            "title": "Error"
+        },
+        "-21228": {
+            "message": "Please set my clock first.",
+            "title": "Error"
+        },
+        "-21264": {
+            "message": "NAVIGATION_BackDrop_FrontBump",
+            "title": "Error"
+        },
+        "-21229": {
+            "message": "Thank you for emptying my Dirt Bin and cleaning my Filter.",
+            "title": "Error"
+        },
+        "-21267": {
+            "message": "NAVIGATION_NoExitsToGo",
+            "title": "Error"
+        },
+        "-21266": {
+            "message": "NAVIGATION_RightDrop_LeftBump",
+            "title": "Error"
         },
         "-502": {
             "message": "Pro použití aplikace potřebujete internetové připojení. Zapněte si prosím mobilní internet nebo Wi-Fi.",
@@ -236,13 +488,9 @@
             "message": "Došlo k neznámé chybě. Zkuste to prosím znovu.",
             "title": "Neznámá chyba"
         },
-        "-154": {
-            "message": "Neplatný odkaz. Zadejte platný odkaz.",
-            "title": "Druh chyby"
-        },
-        "-511": {
-            "message": "__robotName__ již není připojen.",
-            "title": "Chyba připojení"
+        "-21270": {
+            "message": "WARNING",
+            "title": "Error"
         },
         "-504": {
             "message": "Váš plán úklidu nemůže být synchronizován.",
@@ -254,21 +502,45 @@
         "navi": {"title": "Registrace"}
     },
     "communication": {
-        "wait_robot": "Robot bude připraven za __wakeUp__ vteřin",
         "wakeup_unknown_robot": "Robot bude připraven za několik vteřin",
-        "wakeup_robot": "Robot bude připraven za __wakeUp__ vteřin",
         "getready_robot": "Robot bude hned připraven.",
         "robot_added": "Přidávám robota __robotName__\u2026",
         "intend_drive": "Čekej prosím\u2026",
-        "fetch_robots": "Otevírám nabídku robotů\u2026",
+        "20208": "Please wait while I check my surrounding.",
+        "20209": "Thank you!",
         "delete_robot_done": "Robot __robotName__ byl odstraněn.",
+        "fetch_robots": "Otevírám nabídku robotů\u2026",
+        "20206": "My battery is low. I need to charge my battery before I can clean.",
+        "20207": "I had to reset. Please press OKAY to restart.",
+        "20204": "I'm returning to my starting location to charge.",
+        "20205": "Please empty my Dirt Bin and Filter if needed.",
+        "20220": "timer_set",
+        "20202": "Vracím se na základnu, abych se dobil",
+        "20221": "timer_removed",
         "stop_robot": "Zastavuji __robotName__",
-        "toggle_eco": "EKO režim je __ecoMode__",
-        "reset_password": "Měním tvé heslo.",
-        "send_to_base": "Posílám __robotName__ zpět do dobíjecí základny.",
+        "20203": "Finished! I'm returning to my starting location.",
+        "20200": "Chyba: Upozornění",
+        "20201": "Hotovo! Vracím se na základnu.",
         "update_scheduler": "Plánovací kalendář byl synchronizován.",
+        "20222": "enable_timer",
+        "20223": "battery_chargbasecommerr",
+        "stop_drive": "Zastavuji __robotName__ \u2026",
+        "wait_robot": "Robot bude připraven za __wakeUp__ vteřin",
+        "wakeup_robot": "Robot bude připraven za __wakeUp__ vteřin",
+        "20215": "USB Flash Drive was Removed.",
+        "20216": "Software Update FAILED.",
+        "20217": "log_write_success",
+        "20218": "Please set my clock first.",
+        "20219": "time_set",
+        "toggle_eco": "EKO režim je __ecoMode__",
+        "20210": "My battery is low. Please charge me.",
+        "reset_password": "Měním tvé heslo.",
+        "20211": "Please check the base is connected to power.",
+        "send_to_base": "Posílám __robotName__ zpět do dobíjecí základny.",
+        "20212": "I need to charge. Please plug in my Charger.",
+        "20213": "Read FAILED. Cannot read USB Flash Drive.",
         "reset_password_done": "Tvé heslo bylo změněno.",
-        "stop_drive": "Zastavuji __robotName__ \u2026"
+        "20214": "Copy FAILED.  USB Flash Drive is Full."
     },
     "robotActivationId": {
         "page": {
