@@ -204,8 +204,8 @@ function WorkflowNotification(parent) {
     };
     
     this.didStateChange = function(robot, newOnlineState){
-    	var currentOnlineState = robot.robotOnline();
-        return ( newOnlineState == currentOnlineState) ? false : true;       
+    	var currentOnlineState = robot.robotOnline;
+    	return ( newOnlineState == currentOnlineState) ? false : true;       
     };
     
     this.notificationStatusError = function(error) {
