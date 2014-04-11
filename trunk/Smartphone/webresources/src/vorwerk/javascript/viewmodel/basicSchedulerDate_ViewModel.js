@@ -267,7 +267,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
             var localTime = localizeTime(item.scheduleEventData.startTime);
             sContext += $.i18n.t("common.day." + item.scheduleEventData.day);
             sContext += " " + localTime.time + " " + localTime.marker + ",";
-            sContext += $.i18n.t("common.cleaningMode." + item.scheduleEventData.cleaningMode);
+            sContext += $.i18n.t("common.cleaningMode." + (item.scheduleEventData.cleaningMode == "1" ? 1 : 2));
             
             // show delete warning message 
             parent.notification.showDialog(dialogType.WARNING,$.i18n.t('dialogs.EVENT_DELETE.title'), $.i18n.t('dialogs.EVENT_DELETE.message') +"</br>"+ sContext, 
