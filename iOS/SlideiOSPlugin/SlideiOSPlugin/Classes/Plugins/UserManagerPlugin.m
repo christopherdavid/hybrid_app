@@ -262,29 +262,40 @@
 - (void)isLoggedIn:(CDVInvokedUrlCommand *)command {
     debugLog(@"");
     NSString *callbackId = command.callbackId;
-    BOOL loggedIn;
-    debugLog(@"");
     if ([NeatoUserHelper getNeatoUser]) {
+        __weak typeof(self) weakSelf = self;
         // User is logged in, lets extend the auth key expiry
         [self.serverManager updateUserAuthToken:[NeatoUserHelper getUsersAuthToken]
                                      completion:^(NSDictionary *result, NSError *error) {
                                          if (error) {
                                              debugLog(@"Failed to update user auth token with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                                             if (error.code == NSURLErrorNotConnectedToInternet) {
+                                                 // Failed to update auth token - but it was network failure. Lets treat this as 'user logged-in'.
+                                                 [weakSelf sendSuccessResultOKWithInt:[[NSNumber numberWithBool:YES] integerValue] forCallbackId:callbackId];
+                                             }
+                                             else {
+                                                 // Failed to update auth token but it wasn't a network error. Treat this as 'user not logged-in'
+                                                 // Logout and clear user data.
+                                                 [weakSelf.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
+                                                                               authToken:[NeatoUserHelper getUsersAuthToken]
+                                                                              completion:^(NSDictionary *result, NSError *error) {
+                                                                                  // User not logged-in.
+                                                                                  [weakSelf sendSuccessResultOKWithInt:[[NSNumber numberWithBool:NO] integerValue] forCallbackId:callbackId];
+                                                                              }];
+                                             }
                                          }
                                          else {
+                                             // Auth token extended.
                                              debugLog(@"Updated user auth token");
+                                             // User logged-in.
+                                             [weakSelf sendSuccessResultOKWithInt:[[NSNumber numberWithBool:YES] integerValue] forCallbackId:callbackId];
                                          }
                                      }];
-        loggedIn = YES;
     }
-    else     {
-        loggedIn = NO;
+    else {
+        // User not logged-in
+        [self sendSuccessResultOKWithInt:[[NSNumber numberWithBool:NO] integerValue] forCallbackId:callbackId];
     }
-    __weak typeof(self) weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:[[NSNumber numberWithBool:loggedIn] intValue]];
-        [weakSelf writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
-    });
 }
 
 - (void)forgetPassword:(CDVInvokedUrlCommand *)command {
@@ -663,6 +674,15 @@
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultDictionary];
+        [weakSelf writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
+    });
+}
+
+- (void)sendSuccessResultOKWithInt:(NSInteger *)resultInt forCallbackId:(NSString *)callbackId {
+    debugLog(@"");
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:resultInt];
         [weakSelf writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
     });
 }

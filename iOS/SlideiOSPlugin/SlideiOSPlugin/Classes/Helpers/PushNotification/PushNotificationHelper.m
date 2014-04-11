@@ -61,7 +61,7 @@ static PushNotificationHelper *sharedInstance = nil;
     }
     
     if (notificationId) {
-        [pushNotificationJson setValue:notificationId forKey:KEY_ID];
+        [pushNotificationJson setValue:notificationId forKey:KEY_NOTIFICATIONID];
     }
     
     if (message) {

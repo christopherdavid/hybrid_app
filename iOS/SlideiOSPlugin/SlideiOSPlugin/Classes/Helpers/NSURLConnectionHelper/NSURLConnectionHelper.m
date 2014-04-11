@@ -118,13 +118,17 @@
     }
     else {
         if ([[self.destinationPath absoluteString] length] != 0 && self.downloadCompletionBlock) {
-            self.downloadCompletionBlock(nil, error);
-            self.retained_self = nil;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.downloadCompletionBlock(nil, error);
+                self.retained_self = nil;
+            });
             return;
         }
         else if (self.connectionCompletionBlock) {
-            self.connectionCompletionBlock(nil, error);
-            self.retained_self = nil;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.connectionCompletionBlock(nil, error);
+                self.retained_self = nil;
+             });
             return;
         }
         if ([self.delegate respondsToSelector:@selector(requestFailedForConnection:error:)]) {
@@ -242,8 +246,10 @@
         if (!self.destinationPath)
         {
             if (self.connectionCompletionBlock) {
-                self.connectionCompletionBlock(self.responseData, nil);
-                self.retained_self = nil;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.connectionCompletionBlock(self.responseData, nil);
+                    self.retained_self = nil;
+                });
                 return;
             }
             if ([self.delegate respondsToSelector:@selector(connectionDidFinishLoading:responseData:)])
@@ -263,8 +269,10 @@
             {
                 debugLog(@"File download SUCCESS!");
                 if (self.downloadCompletionBlock) {
-                    self.downloadCompletionBlock([self.destinationPath absoluteString], nil);
-                    self.retained_self = nil;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.downloadCompletionBlock([self.destinationPath absoluteString], nil);
+                        self.retained_self = nil;
+                    });
                     return;
                 }
                 if ([self.delegate respondsToSelector:@selector(connectionDidFinishLoading:filePath:)])
