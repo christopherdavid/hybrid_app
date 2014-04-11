@@ -447,10 +447,13 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         console.log("startStopRobotSuccess " + JSON.stringify(result));
         // some delay
         var tDeffer = null;
-        if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1) {
+       // to fix the bug #320 No Timed Mode concept in the robot so just commenting the lines
+        /*if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1) {
             handleTimedMode(result.expectedTimeToExecute, that.robot().robotId());
         // robot is connected to server
-        } else {
+        } else
+        */
+         {
             if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() != ROBOT_STATE_MANUAL_CLEANING) {
                 robotUiStateHandler.setUiState(ROBOT_UI_STATE_CONNECTING);
               /* window.setTimeout(function(){
@@ -517,13 +520,15 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.successSendToBase = function(result) {
         console.log("successSendToBase" + JSON.stringify(result));
          // some delay
-        if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1) {
+         // to fix the bug #320 No Timed Mode concept in the robot so just commenting the lines
+        /*if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1) {
             handleTimedMode(result.expectedTimeToExecute, that.robot().robotId());
         // robot is connected to server
         } else {
             // send to base
             parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_ON_BASE);
-        }
+        }*/
+         parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_ON_BASE);
     };
     
     // stop robot button
@@ -552,11 +557,12 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     this.successStopRobot = function(result) {
         console.log("successStopRobot" + JSON.stringify(result));
-        if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1 && (that.visualSelectedCategory() != CLEANING_CATEGORY_MANUAL)) {
+       // to fix the bug #320 No Timed Mode concept in the robot so just commenting the lines
+        /*if(result.expectedTimeToExecute && result.expectedTimeToExecute > 1 && (that.visualSelectedCategory() != CLEANING_CATEGORY_MANUAL)) {
             handleTimedMode(result.expectedTimeToExecute, that.robot().robotId());
         // robot is connected to server
-        }
-        else if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL)
+        }*/
+        if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL)
         {
         	 var tDefferStop = parent.communicationWrapper.exec(RobotPluginManager.stopCleaning, [that.robot().robotId()]);
         	 tDefferStop = null;

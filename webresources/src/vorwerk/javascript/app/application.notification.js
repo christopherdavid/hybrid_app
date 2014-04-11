@@ -16,7 +16,6 @@ function WorkflowNotification(parent) {
     this.dialogStack = [];
     this.curHandledDialog = null;
     
-    
     this.init = function() {
         $loadingSpinner = $('#loadingArea');
         $notificationArea = $('#notificationArea');
@@ -78,19 +77,59 @@ function WorkflowNotification(parent) {
                         	that.startManualMode();
                         	break;
                         case ROBOT_ONLINE_STATUS_CHANGED:
-                        	//Update robot online status
+                        	// attention: also been called periodically even if state didn`t change
                         	var data = result.robotData;
                         	var onlineStatus = data.online;
-							console.log("Robot Online Status Changed :" + JSON.stringify(data));
-							curRobot().robotOnline(onlineStatus=="1" ? true:false);
-							if(onlineStatus=="0"){
-								robotUiStateHandler.setUiState(ROBOT_UI_STATE_ROBOT_OFFLINE);
-							}else{
-							console.log("Robot Current Status:" + curRobot().robotCurrentState());
-								if((curRobot().robotCurrentState() == ROBOT_STATE_STOPPED)||(curRobot().robotCurrentState() == ROBOT_STATE_IDLE))
-									parent.communicationWrapper.updateRobotStateWithCode(curRobot(), ROBOT_STATE_IDLE);
-							}
+							console.log("Current Online Status data:" + JSON.stringify(data));
+                        	var stateChanged = that.didStateChange( curRobot(), onlineStatus ); // returns true if state changed; false if it didn
+                        
+                        	if( stateChanged ) {
+                        		console.log("Current Robot State changed to:" + onlineStatus);
+                        		// new state offline:
+                        		if ( onlineStatus=="0" ) {
+                        			curRobot().robotOnline( false );
+                        			robotUiStateHandler.setUiState(ROBOT_UI_STATE_ROBOT_OFFLINE);
+                        		}
+                        		// new state online:
+                        		else {
+                        			curRobot().robotOnline( true );
+                        			parent.communicationWrapper.updateRobotStateWithCode(curRobot(), ROBOT_STATE_IDLE);
+                        		}
+                        	} 
                         	break;
+                        case ROBOT_MESSAGE_NOTIFICATION:
+                        	// Alerts Message Handling
+                        	var data = result.robotData;
+                        	var message = data.robotNotification;
+                        	if(message){
+                        	// TODO : Handle the same error message not shown multiple times.
+                        		message =  $.parseJSON(message);
+                        		var messageId = message.messageID;
+                        		console.log("Alert Message ID :" + messageId);
+                        		if(messageId != "22000"){
+                        			var notificationText   =  $.i18n.t("communication.messageId");
+                            		that.showLoadingArea(true,notificationType.HINT,notificationText);
+                            	}
+                        	}
+                        break;
+                        case ROBOT_MESSAGE_ERROR:
+                        	// Error Message handling
+                        	var data = result.robotData;
+                        	var message = data.robotError;
+                        	if(message){
+                        	// TODO : Handle the same error message not shown multiple times.	
+                        		message =  $.parseJSON(message);
+                        		var messageId = "-"+message.messageID;
+                        		console.log("Error Message ID :" + messageId);
+                        		var dialogHeader =  $.i18n.t("error." + messageId +".title");
+                            	var dialogText   =  $.i18n.t("error." + messageId +".message");
+                            	that.showDialog(dialogType.ERROR, dialogHeader, dialogText, 
+	                                [{"label":$.i18n.t("common.ok"), "callback":function(e){
+	                                        that.closeDialog();
+	                                    }
+	                                }]);
+                        	}
+                        break;
                         case ROBOT_DISCONNECTED:
                             var curState = result.robotData.errorDriveResponseCode;
                             curRobot().connectionState(result.robotDataKeyId);
@@ -128,6 +167,26 @@ function WorkflowNotification(parent) {
                                     item.robotName(result.robotData.robotName);
                                 }
                                 break;
+                            case ROBOT_ONLINE_STATUS_CHANGED:
+                        	// attention: also been called periodically even if state didn`t change
+                        	var data = result.robotData;
+                        	var onlineStatus = data.online;
+							console.log("Current Online Status data:" + JSON.stringify(data));
+                        	var stateChanged = that.didStateChange( curRobot(), onlineStatus ); // returns true if state changed; false if it didn
+                        	if( stateChanged ) {
+                        		console.log("Current Robot State changed to:" + onlineStatus);
+                        		// new state offline:
+                        		if ( onlineStatus=="0" ) {
+                        			curRobot().robotOnline( false );
+                        			robotUiStateHandler.setUiState(ROBOT_UI_STATE_ROBOT_OFFLINE);
+                        		}
+                        		// new state online:
+                        		else {
+                        			curRobot().robotOnline( true );
+                        			parent.communicationWrapper.updateRobotStateWithCode(curRobot(), ROBOT_STATE_IDLE);
+                        		}
+                        	} 
+                        	break;
                             case ROBOT_CONNECTED:
                             case ROBOT_DISCONNECTED:
                             case ROBOT_NOT_CONNECTED:
@@ -142,6 +201,11 @@ function WorkflowNotification(parent) {
                 });
             }
         }
+    };
+    
+    this.didStateChange = function(robot, newOnlineState){
+    	var currentOnlineState = robot.robotOnline();
+        return ( newOnlineState == currentOnlineState) ? false : true;       
     };
     
     this.notificationStatusError = function(error) {
@@ -372,6 +436,7 @@ function WorkflowNotification(parent) {
     
     this.closeDialog = function(dialogType) {
         $("#dialogPopup").popup("close");
+       
     };
     
     this.forceCloseDialog = function() {
