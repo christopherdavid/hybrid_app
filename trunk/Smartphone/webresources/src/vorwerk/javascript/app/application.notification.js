@@ -203,8 +203,17 @@ function WorkflowNotification(parent) {
         }
     };
     
-    this.didStateChange = function(robot, newOnlineState){
-    	var currentOnlineState = robot.robotOnline;
+ 	this.didStateChange = function(robot, newOnlineState){
+    	var currentOnlineState = null;
+    	
+    	if(typeof(robot.robotOnline) == "function") {
+    		currentOnlineState = robot.robotOnline();
+    	} else {
+    		currentOnlineState = robot.robotOnline;
+    	}
+    	
+    	console.log("## currentOnlineState: " + currentOnlineState);
+    	    		
     	return ( newOnlineState == currentOnlineState) ? false : true;       
     };
     
