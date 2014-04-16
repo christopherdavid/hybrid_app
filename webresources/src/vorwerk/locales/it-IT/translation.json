@@ -49,16 +49,18 @@
     },
     "legalInformation": {
         "page": {
+            "change_notAccepted_message": "Please check the privacy policy and terms of use documents to change the country settings.",
+            "register_notAccepted_title": "Manca l'Accordo Legale",
             "legal_agreement": "Acconsento",
             "title": "ACCORDI",
-            "notAccepted_title": "Manca l'Accordo Legale",
-            "notAccepted_message": "Si prega di controllare l'Informativa sulla Privacy e le Condizioni d'uso per completare la registrazione.",
             "tou_pp_agreement": "Per poter utilizzare l\u2019App dovete approvare le nostre Condizioni d\u2019uso e la Dichiarazione di protezione dei dati. TICK BOX Con la presente dichiaro di aver letto le <a id='terms' href='#' class='highlightedText font_bold font_small'>Condizioni d'uso<\/a> e la <a id='privacy' href='#' class='highlightedText font_bold font_small'>Dichiarazione di protezione dei dati<\/a>, di averne preso conoscenza e di approvarle.",
+            "change_notAccepted_title": "Manca l'Accordo Legale",
             "subscribe_header": "INFORMAZIONI DI MARKETING",
             "edit_done_title": "Account Modificato",
             "edit_done_message": "L'account utente è stato aggiornato con successo",
             "tou_pp_header": "Informazioni legali",
-            "subscribe_agreement": "Come cliente vi terremo volentieri al corrente di nuovi aggiornamenti e informazioni sui prodotti e ci impegniamo alla sicurezza dei vostri dati. Questi non vengono da noi trasmessi ad aziende esterne al gruppo Vorwerk. TICK BOX Acconsento che il mio indirizzo e-mail venga utilizzato da Vorwerk Folletto. per informazioni e pubblicità a me indirizzati (per es. aggiornamenti, avvertenze, offerte speciali). Questo consenso può essere ritirato in qualsiasi momento sotto il punto di menu \u201cImpostazioni\u201d. Ulteriori dettagli si trovano nella Dichiarazione di protezione dei dati."
+            "subscribe_agreement": "Come cliente vi terremo volentieri al corrente di nuovi aggiornamenti e informazioni sui prodotti e ci impegniamo alla sicurezza dei vostri dati. Questi non vengono da noi trasmessi ad aziende esterne al gruppo Vorwerk. TICK BOX Acconsento che il mio indirizzo e-mail venga utilizzato da Vorwerk Folletto. per informazioni e pubblicità a me indirizzati (per es. aggiornamenti, avvertenze, offerte speciali). Questo consenso può essere ritirato in qualsiasi momento sotto il punto di menu \u201cImpostazioni\u201d. Ulteriori dettagli si trovano nella Dichiarazione di protezione dei dati.",
+            "register_notAccepted_message": "Si prega di controllare l'Informativa sulla Privacy e le Condizioni d'uso per completare la registrazione."
         },
         "navi": {"title": "Registrazione"}
     },

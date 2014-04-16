@@ -25,6 +25,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
          
         
         that.isLegalinfoEdit(that.bundle.userlogin);
+		
         $(document).one("pageshow.legal", function(e) {
             var tempLine = $("#topLine");
             $("#legalWrapper").css({
@@ -55,7 +56,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
             if(typeof that.bundle.country == 'undefine') {
                 that.selectedSubscribe(user.extra_param.optIn);
             }
-            that.isAgreed("true");
+            //that.isAgreed("true");
             if(that.bundle) {
                 if(that.bundle.country == "") {
                     that.bundle.country(user.extra_param.countryCode);
@@ -88,54 +89,126 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         parent.flowNavigator.next();
     };
     
+	/*
+	 * Called when user submits changes.
+	 */
     this.submitChange = function() {
         event.stopPropagation();
-        if(that.isAgreed())
-        {
+		
+		// check if legal information has been agreed on (then continue), otherwise show error dialog
+        if (that.isAgreed()) {
             that.commitCountryEdit();
         } else {
-            var translatedTitle = $.i18n.t("legalInformation.page.notAccepted_title");
-            var translatedText = $.i18n.t("legalInformation.page.notAccepted_message", {email:that.bundle.email});
-            parent.notification.showDialog(dialogType.ERROR, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); }}]);
+			var translatedTitle = null;
+			var translatedText = null;
+		
+			if (that.isLegalinfoEdit()) {
+			    translatedTitle = $.i18n.t("legalInformation.page.change_notAccepted_title");
+				translatedText = $.i18n.t("legalInformation.page.change_notAccepted_message", {email:that.bundle.email});
+			} else {
+				translatedTitle = $.i18n.t("legalInformation.page.register_notAccepted_title");
+				translatedText = $.i18n.t("legalInformation.page.register_notAccepted_message", {email:that.bundle.email});
+			}
+			
+			parent.notification.showDialog(dialogType.ERROR, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); }}]);
         }    
     };
-
-    this.successRegister = function(result) {
-        that.conditions['valid'] = true;
-        parent.communicationWrapper.setDataValue("user", result);
-        var translatedTitle = $.i18n.t("legalInformation.page.registration_done_title");
-        var translatedText = $.i18n.t("legalInformation.page.registration_done_message", {email:that.bundle.email});
-        parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); parent.flowNavigator.next(robotScreenCaller.REGISTER);}}]);
+    
+	/*
+	 * Deliver changes to server.
+	 */
+    this.commitCountryEdit = function() { 
+		if (that.isLegalinfoEdit()) {
+			// edit country information
+			var tDeffer = parent.communicationWrapper.exec(UserPluginManager.setUserAccountDetails, [
+				user.email, 
+				that.bundle.country, 
+				that.selectedSubscribe()]
+			);
+			tDeffer.done(that.successCountryUpdate);
+		} else {
+			// create new account & submit country information
+			var tDeffer = parent.communicationWrapper.exec(UserPluginManager.createUser3, [
+				that.bundle.email, 
+				that.bundle.password, 
+				'default', 
+				'', 
+				{	"country_code":	that.bundle.country, 
+					"opt_in":		that.selectedSubscribe()
+				}],{}
+			);
+			tDeffer.done(that.successUserCreation);
+			tDeffer.fail(that.errorRegister);
+		}
     };
-
-    this.errorRegister = function(error) {
+	
+	this.errorRegister = function(error) {
         that.conditions['valid'] = false;
         console.log("errorRegister: " + JSON.stringify(error));
     };
-    
-     this.commitCountryEdit = function() {
-        console.log("Commit new Country :" + that.bundle.country + " OPT IN Value :"+ that.selectedSubscribe());
-        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.setUserAccountDetails, [user.email, that.bundle.country, that.selectedSubscribe()]);
-        tDeffer.done(that.successUserAccountDetails);
-    };
-    
-    this.successUserAccountDetails = function(result) {
-        console.log("result" + JSON.stringify(result));
-        user.extra_param.countryCode = that.bundle.country;
+	
+	/*
+	 * Updates user object, informs user that country information has been updated and continues navigation.
+	 */
+	this.successCountryUpdate = function() {
+		// update user object
+	    user.extra_param.countryCode = that.bundle.country;
         user.extra_param.optIn = that.selectedSubscribe();
         parent.communicationWrapper.setDataValue("user", user);
-        var callGuid = guid();
-        parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("legalInformation.page.edit_done_message", {email:that.bundle.email}), callGuid);
-        window.setTimeout(function(){
-            parent.notification.showLoadingArea(false, notificationType.HINT, "", callGuid);
-            that.navigate();
-        }, 3000);
-      
-    };
+	
+		// inform user
+		var callGuid = guid();
+		parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("legalInformation.page.edit_done_message", {email:that.bundle.email}), callGuid);
+		
+		// fade out after some time and contiune navigation
+		window.setTimeout(function(){
+			parent.notification.showLoadingArea(false, notificationType.HINT, "", callGuid);	
+			that.navigate();
+		}, 3000);
+	};
+	
+    /*
+     * Inform user that account has been created and show e mail validation information and enable further navigation (ok button).
+	 */
+	this.successUserCreation = function() {
+		var translatedTitle = $.i18n.t("createAccount.page.registration_done_title");
+        var translatedText = $.i18n.t("createAccount.page.registration_done_message", {email:that.bundle.email});
+		
+        parent.notification.showDialog(
+			dialogType.INFO, 
+			translatedTitle, 
+			translatedText, [{ 
+				"label":$.i18n.t("common.ok"), 
+				"callback": that.leaveAccountCreation
+			}]
+		);
+	};
+	
+    /*
+	 * Navigate to next screen after user has been informed that account has been created.
+	 */
+	this.leaveAccountCreation = function() {
+		parent.notification.closeDialog();
+		
+		var tDeffer = parent.communicationWrapper.exec(UserPluginManager.isUserValidated, [that.bundle.email],{});
+		tDeffer.done(function(result) {
+			if (result.validation_status == USER_STATUS_VALIDATED) {
+				that.conditions['robotSelection'] = true;
+				that.backgroundLogin();
+			} else {
+				// go to start screen if user hasn't validated his e mail so far
+				that.conditions['start'] = true;
+				parent.flowNavigator.next();
+			}
+		});
+		tDeffer.fail(function(error) {
+			console.log("Error: " + error.errorMessage);
+		});
+	};
     
-    this.backgroundlogin = function() {
+    this.backgroundLogin = function() {
         // TODO: add validation check for entries
-        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.login, [user.email, that.bundle.password], {});
+        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.login, [that.bundle.email, that.bundle.password], {});
         tDeffer.done(that.sucessLogin);
         tDeffer.fail(that.errorLogin);
     };
@@ -144,6 +217,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         that.conditions['robotSelection'] = true;
         console.log("result: " + result);
         parent.communicationWrapper.setDataValue("user", result);
+		user = parent.communicationWrapper.getDataValue("user");
         
         // register for push notifications (from server)
         parent.notification.registerForRobotMessages();
@@ -160,18 +234,13 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
     };
     
     this.navigate = function(){
-        if(that.isLegalinfoEdit()) { 
-            if (typeof that.robot().robotId == 'undefined') {
-                that.conditions['robotSelection'] = true;
-            } else {
-                that.conditions['userSettings'] = true;
-            }
+        if (typeof that.robot().robotId == 'undefined') {
+            that.conditions['robotSelection'] = true;
         } else {
-            that.backgroundlogin();
-            //that.conditions['start'] = true;
-        } 
-        parent.flowNavigator.next(robotScreenCaller.REGISTER);
+			that.conditions['userSettings'] = true;
+        }
+			
+		parent.flowNavigator.next(robotScreenCaller.REGISTER);
     };
-
 });
 console.log('loaded file: legalInformation_ViewModel.js');

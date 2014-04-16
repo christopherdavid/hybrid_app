@@ -49,16 +49,18 @@
     },
     "legalInformation": {
         "page": {
+            "change_notAccepted_message": "Please check the privacy policy and terms of use documents to change the country settings.",
+            "register_notAccepted_title": "Falta acuerdo legal",
             "legal_agreement": "Estoy de acuerdo",
             "title": "Acuerdos",
-            "notAccepted_title": "Falta acuerdo legal",
-            "notAccepted_message": "Por favor revise los documentos de la política de privacidad y las condiciones de uso para completar el registro",
             "tou_pp_agreement": "Para poder utilizar la Aplicación, debe aceptar las Condiciones de uso de la misma y la Política de privacidad.  TICK BOX Por la presente declaro que he leído y acepto las <a id='terms' href='#' class='highlightedText font_bold font_small'>Condiciones de uso<\/a> y la <a id='privacy' href='#' class='highlightedText font_bold font_small'>Política de privacidad<\/a>.",
+            "change_notAccepted_title": "Falta acuerdo legal",
             "subscribe_header": "Información de marketing",
             "edit_done_title": "Cuenta modificada",
             "edit_done_message": "La cuenta de usuario ha sido actualizada correctamente",
             "tou_pp_header": "Información legal",
-            "subscribe_agreement": "Nuestro propósito es mantenerle al tanto de las últimas novedades y de la información sobre productos y nos esforzamos por mantener la seguridad de sus datos. No transmitimos sus datos a empresas no pertenecientes al grupo Vorwerk. TICK BOX Acepto que Vorwerk International Strecker & Co. utilice mi dirección de correo electrónico para enviarme información y publicidad (como últimas noticias, notificaciones u ofertas especiales). Este consentimiento se puede revocar en cualquier momento en la opción de menú \"Ajustes\". Para obtener más información, consulte la Política de privacidad."
+            "subscribe_agreement": "Nuestro propósito es mantenerle al tanto de las últimas novedades y de la información sobre productos y nos esforzamos por mantener la seguridad de sus datos. No transmitimos sus datos a empresas no pertenecientes al grupo Vorwerk. TICK BOX Acepto que Vorwerk International Strecker & Co. utilice mi dirección de correo electrónico para enviarme información y publicidad (como últimas noticias, notificaciones u ofertas especiales). Este consentimiento se puede revocar en cualquier momento en la opción de menú \"Ajustes\". Para obtener más información, consulte la Política de privacidad.",
+            "register_notAccepted_message": "Por favor revise los documentos de la política de privacidad y las condiciones de uso para completar el registro"
         },
         "navi": {"title": "Registro."}
     },
@@ -618,7 +620,7 @@
     "createAccount": {
         "page": {
             "title": "Bienvenido al proceso de registro.<br/>Necesitamos algo de información para continuar.",
-            "email": "E-mail.",
+            "email": "E-Mail",
             "password_show": "Mostrar contraseña.",
             "registration_done_message": "<div class='mailAnimation'><\/div>Un email de confirmación ha sido enviado a <br/><span class='highlightedText'>__email__<\/span><br /><br />Por favor confime su cuenta en las próximas 48h. Después de confirmar podrá entrar y conectarse a su robot.",
             "registration_done_title": "Cuenta creada.",

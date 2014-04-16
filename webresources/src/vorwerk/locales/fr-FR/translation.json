@@ -49,16 +49,18 @@
     },
     "legalInformation": {
         "page": {
+            "change_notAccepted_message": "Please check the privacy policy and terms of use documents to change the country settings.",
+            "register_notAccepted_title": "Consentement légal manquant",
             "legal_agreement": "J'accepte ",
             "title": "CONSENTEMENT",
-            "notAccepted_title": "Consentement légal manquant",
-            "notAccepted_message": "Veuillez vérifiez la clause de confidentialité et les termes d'utilisation des documents pour finaliser l'enregistrement",
             "tou_pp_agreement": "Pour pouvoir utiliser l'application, vous devez donner votre accord aux conditions d'utilisation et à la déclaration de protection des données. TICK BOX Par la présente, je déclare avoir lu et accepté la <a id='terms' href='#' class='highlightedText font_bold font_small'>conditions d'utilisation<\/a> et les <a id='privacy' href='#' class='highlightedText font_bold font_small'>déclaration de protection des données<\/a>. ",
+            "change_notAccepted_title": "Consentement légal manquant",
             "subscribe_header": "INFORMATION MARKETIING",
             "edit_done_title": "Compte modifié",
             "edit_done_message": "Le compte utilisateur a été bien à jour avec succès",
             "tou_pp_header": "INFORMATIONS LEGALES",
-            "subscribe_agreement": "Nous souhaitons vous tenir informé des dernières mises à jour et informations produit. Nous nous efforçons d'assurer la protection de vos données. Celles-ci ne seront pas communiquées à des entreprises n'appartenant pas au groupe Vorwerk. TICK BOX J'autorise Vorwerk International Strecker & Co. à utiliser mon adresse email pour l'envoi d'informations et de publicités (p. ex. des mises à jour, des informations produit ou des offres spéciales) qui me sont destinées. Ce consentement peut être révoqué à tout moment sous la rubrique « Paramètres » du menu. Vous trouverez des informations supplémentaires dans la déclaration de protection des données. "
+            "subscribe_agreement": "Nous souhaitons vous tenir informé des dernières mises à jour et informations produit. Nous nous efforçons d'assurer la protection de vos données. Celles-ci ne seront pas communiquées à des entreprises n'appartenant pas au groupe Vorwerk. TICK BOX J'autorise Vorwerk International Strecker & Co. à utiliser mon adresse email pour l'envoi d'informations et de publicités (p. ex. des mises à jour, des informations produit ou des offres spéciales) qui me sont destinées. Ce consentement peut être révoqué à tout moment sous la rubrique « Paramètres » du menu. Vous trouverez des informations supplémentaires dans la déclaration de protection des données. ",
+            "register_notAccepted_message": "Veuillez vérifiez la clause de confidentialité et les termes d'utilisation des documents pour finaliser l'enregistrement"
         },
         "navi": {"title": "Enregistrer"}
     },
