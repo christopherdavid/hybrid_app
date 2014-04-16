@@ -15,11 +15,9 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     this.cleaningMode = ko.observable(1);
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     this.hasDelete = ko.observable(false);
-       // set cleaning mode "eco" as default
-   
     
     this.isNextEnabled = ko.computed(function() {
-        return (that.selectedCleaningDays().length > 0);
+        return (that.selectedCleaningDays().length > 0 && that.robot().visualOnline());
     }, this);
     
     /* <enviroment functions> */

@@ -18,6 +18,7 @@ function getRobotStruct() {
         // has to be filled with one robot of UserPluginManager.getAssociatedRobots or RobotPluginManager.getRobotDetail
         robotId:"",
         robotName:"",
+        displayName:"",
         // has to be filled initially with RobotPluginManager.getRobotCleaningState
         robotCurrentState:defaultState,
         robotNewVirtualState:defaultState,
@@ -30,7 +31,8 @@ function getRobotStruct() {
         cleaningModifier:"1",
         stateString:$.i18n.t("robotStateCodes." + defaultState),
         connectionState:"",
-        robotOnline:null
+        robotOnline:null,
+        visualOnline:null
     };
 };
 

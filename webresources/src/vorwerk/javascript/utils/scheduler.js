@@ -5,9 +5,10 @@
  * @(Integer) scheduleType the type describes the layout and behavior of
  * the scheduler, 0: basic, 1: advanced
  */
-function Scheduler($root, scheduleType) {
+function Scheduler($root, scheduleType, enabled) {
 
     that = this;
+    var isEnabled = enabled;
     var HOUR = 60;
     var HOUR_IN_PX = deviceSize.getResolution() == "high" ? 72 : 48;
     var MIN_IN_PX = HOUR_IN_PX / 60;
@@ -118,7 +119,24 @@ function Scheduler($root, scheduleType) {
         columns = null;
         // remove all event handler for scheduler
         $('.event div').off(".scheduler");
+        $('.day').off(".scheduler");
         $(window).off(".scheduler");
+    };
+    
+    this.offline = function() {
+        isEnabled = false;
+        $.each(that.tasks, function(index, element) {
+            element.addClass("offline");
+            element.draggable("disable");
+        });
+        
+    };
+    this.online = function() {
+        isEnabled = true;
+        $.each(that.tasks, function(index, element) {
+            element.removeClass("offline");
+            element.draggable("enable");
+        });        
     };
 
     /**
@@ -231,21 +249,27 @@ function Scheduler($root, scheduleType) {
         $task.append($taskInner);
         
         $taskInner.on("vclick.scheduler", function(event) {
-            that.clickedEvent($(event.target.parentElement));
-            event.preventDefault();
-            event.stopPropagation();
+            if(isEnabled) {
+                that.clickedEvent($(event.target.parentElement));
+                event.preventDefault();
+                event.stopPropagation();
+            }
         });
         
         $taskInner.on("taphold.scheduler", function(event) {
-            var oEvent = $(event.target.parentElement).data('reference');
-            var $column = columns[jQuery.inArray((oEvent.scheduleEventData.day), weekIndex)];
-            $column.toggleClass("dragging",true);
-            draggedElement = $(event.target.parentElement);
+            if(isEnabled) {
+                var oEvent = $(event.target.parentElement).data('reference');
+                var $column = columns[jQuery.inArray((oEvent.scheduleEventData.day), weekIndex)];
+                $column.toggleClass("dragging",true);
+                draggedElement = $(event.target.parentElement);
+            }
         });
         $taskInner.on("vmouseup.scheduler", function(event) {
-            var oEvent = $(event.target.parentElement).data('reference');
-            var $column = columns[jQuery.inArray((oEvent.scheduleEventData.day), weekIndex)];
-            $column.toggleClass("dragging",false);
+            if(isEnabled) {
+                var oEvent = $(event.target.parentElement).data('reference');
+                var $column = columns[jQuery.inArray((oEvent.scheduleEventData.day), weekIndex)];
+                $column.toggleClass("dragging",false);
+            }
         });
         
         $column.append($task);
@@ -384,6 +408,10 @@ function Scheduler($root, scheduleType) {
                 draggedElement = null;
             }
         });
+        if(!isEnabled) {
+            $task.draggable("disable");
+        }
+        
         // store event in data
         that.tasks.push($task);
     };
@@ -567,72 +595,74 @@ function Scheduler($root, scheduleType) {
             columns[i] = $day;
             $day.data('dayIndex',weekIndex[i]);
             $day.on("vclick.scheduler", function(event, i) {
-                var dayIndex = $(this).data('dayIndex');
-                /*
-                console.log("pageY  :\t" + event.pageY
-                        + "\nscreenY:\t" + event.screenY
-                        + "\nclientY:\t" + event.clientY
-                        + "\noffsetY:\t" + event.offsetY
-                        + "\n$day.offset().top:" + $day.offset().top
-                        + "\ncontainerScrollY:" + containerScrollY
-                 );
-                 */
-                 
-                // minus day margin-top and minus background-position-y
-                var offsetY = (event.pageY - $day.offset().top);
-                var newY = offsetY + parseInt($day.css('margin-top')) - parseInt($content.css('background-position-y'));
-                
-                var newHour = Math.floor(newY/HOUR_IN_PX);
-                var newMin  = newY%HOUR_IN_PX;
-                newMin = parseInt(newMin/HOUR_IN_PX * 60);
-                
-                if(newMin < 8) {
-                    // round to 0
-                    newMin = 0;
-                } else if(newMin > 7 && newMin < 23) {
-                    //round to 15
-                    newMin = 15;
-                } else if(newMin > 22 && newMin < 36) {
-                    //round to 30
-                    newMin = 30;
-                } else if(newMin > 35 && newMin < 53) {
-                    //round to 45
-                    newMin = 45;
-                } else {
-                    //round to next hour
-                    newHour++;
-                    newMin = 0;
+                if(isEnabled) {
+                    var dayIndex = $(this).data('dayIndex');
+                    /*
+                    console.log("pageY  :\t" + event.pageY
+                            + "\nscreenY:\t" + event.screenY
+                            + "\nclientY:\t" + event.clientY
+                            + "\noffsetY:\t" + event.offsetY
+                            + "\n$day.offset().top:" + $day.offset().top
+                            + "\ncontainerScrollY:" + containerScrollY
+                     );
+                     */
+                     
+                    // minus day margin-top and minus background-position-y
+                    var offsetY = (event.pageY - $day.offset().top);
+                    var newY = offsetY + parseInt($day.css('margin-top')) - parseInt($content.css('background-position-y'));
+                    
+                    var newHour = Math.floor(newY/HOUR_IN_PX);
+                    var newMin  = newY%HOUR_IN_PX;
+                    newMin = parseInt(newMin/HOUR_IN_PX * 60);
+                    
+                    if(newMin < 8) {
+                        // round to 0
+                        newMin = 0;
+                    } else if(newMin > 7 && newMin < 23) {
+                        //round to 15
+                        newMin = 15;
+                    } else if(newMin > 22 && newMin < 36) {
+                        //round to 30
+                        newMin = 30;
+                    } else if(newMin > 35 && newMin < 53) {
+                        //round to 45
+                        newMin = 45;
+                    } else {
+                        //round to next hour
+                        newHour++;
+                        newMin = 0;
+                    }
+                    // hand if click would be less than 0 hour or bigger than 24 hour
+                    if(newHour < 0 || newHour >= 24) {
+                        newHour = 0;
+                        newMin = 0;
+                    }
+                    var newTime = newHour + ":" + (newMin < 10 ? "0" + newMin : newMin);
+                    
+                    // visual show a new event on scheduler just for debug reasons
+                    /*
+                    var visualY = (newHour*60 + newMin)*MIN_IN_PX;
+                    
+                    var $task = $('<div/>', {
+                        'class' : 'event',
+                        'style' : 'top:' + visualY + 'px'
+                    });
+                    
+                    $('<div/>', {
+                        'class' : 'newEnty'
+                    }).appendTo($task);
+                    
+                    $task.appendTo($(this));
+                    console.log("visualY: " + visualY);
+                    */ 
+                    //console.log("Y: " + event.offsetY + " newTime " + newTime + " dayIndex " + dayIndex);
+                    event.preventDefault();
+                    event.stopPropagation();
+                    $root.triggerHandler("newEvent", {
+                        startTime:newTime,
+                        day: dayIndex
+                    });
                 }
-                // hand if click would be less than 0 hour or bigger than 24 hour
-                if(newHour < 0 || newHour >= 24) {
-                    newHour = 0;
-                    newMin = 0;
-                }
-                var newTime = newHour + ":" + (newMin < 10 ? "0" + newMin : newMin);
-                
-                // visual show a new event on scheduler just for debug reasons
-                /*
-                var visualY = (newHour*60 + newMin)*MIN_IN_PX;
-                
-                var $task = $('<div/>', {
-                    'class' : 'event',
-                    'style' : 'top:' + visualY + 'px'
-                });
-                
-                $('<div/>', {
-                    'class' : 'newEnty'
-                }).appendTo($task);
-                
-                $task.appendTo($(this));
-                console.log("visualY: " + visualY);
-                */ 
-                //console.log("Y: " + event.offsetY + " newTime " + newTime + " dayIndex " + dayIndex);
-                event.preventDefault();
-                event.stopPropagation();
-                $root.triggerHandler("newEvent", {
-                    startTime:newTime,
-                    day: dayIndex
-                });
             });
 
             var $label = $('<div/>', {

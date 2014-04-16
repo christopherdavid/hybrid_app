@@ -40,6 +40,7 @@ resourceHandler.registerFunction('robotManagement_ViewModel.js', function(parent
     
     this.successSetRobotName = function(result) {
         that.robot().robotName(that.newRobotName());
+        that.robot().displayName(that.newRobotName());
         console.log("result" + JSON.stringify(result));
     };
     

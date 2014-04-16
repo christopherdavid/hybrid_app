@@ -1,6 +1,6 @@
 resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent) {
     console.log('instance created for: basicScheduler_ViewModel');
-    var that = this, schedulerModified = false;
+    var that = this, schedulerModified = false, subscribeOnline;
     var weekIndex = $.map($.i18n.t("pattern.week").split(","), function(value){
         return +value;
         });
@@ -14,10 +14,27 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     this.isScheduleEnabled = ko.observable("true");
     var initScheduleCheckDone = false;
     this.eventsAddable = ko.observable("false");
+    this.isScheduleOnline = ko.observable("true");
+    isTimeSet = true;
     
     this.addEnabled = ko.computed(function() {
-        return that.isScheduleEnabled() && that.eventsAddable();
+        return that.isScheduleEnabled() && that.eventsAddable() && that.isScheduleOnline();
     }, this);
+    
+    // listener when robot online status changed    
+    subscribeOnline = this.robot().visualOnline.subscribe(function(newValue) {
+            if(isTimeSet) {
+                if(!newValue) {
+                    // disable scheduler
+                    that.scheduler.offline();
+                    that.isScheduleOnline(false);
+                } else {
+                    // enable scheduler
+                    that.scheduler.online();
+                    that.isScheduleOnline(true);
+            }
+            }
+        }, this);
 
     this.init = function() {
         // check if country is italy. if so change product logo
@@ -33,11 +50,12 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.isScheduleEnabled, [that.robot().robotId(), SCHEDULE_TYPE_BASIC]);
         tDeffer.done(that.isScheduleEnabledSuccess);
         
-        that.scheduler = new Scheduler($('#schedulerTarget'), 0);
+        // added visual online state as isEnabled parameter for scheduler 
+        that.scheduler = new Scheduler($('#schedulerTarget'), 0, that.robot().visualOnline());
         $('#schedulerTarget').on('updatedEvent', that.updateEvent);
         $('#schedulerTarget').on('newEvent', that.newEvent);
         $('#schedulerTarget').on('selectEvent', that.selectEvent);
-        
+        that.isScheduleOnline(that.robot().visualOnline());
         console.log("getScheduleEvents for robot with id: " + that.robot().robotId());
         that.loadScheduler();
     };
@@ -51,6 +69,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     this.deinit = function() {
         $('#schedulerTarget').off('updatedEvent');
         that.scheduler.destroy();
+        subscribeOnline.dispose();
     };
     
     this.isScheduleEnabledSuccess = function(result) {
@@ -113,12 +132,24 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
     };
     
     this.getScheduleEventsError = function(error, notificationOptions, errorHandled) {
-        // Server Error create an empty scheduler
-        if(error && error.errorCode == ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT) {
-            errorHandled.resolve();
-            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.createSchedule, [that.robot().robotId(), 0]);
-            tDeffer.done(that.createScheduleEventsSuccess);
-            tDeffer.fail(that.createScheduleEventsError);
+        // Server Error 
+        if(error && error.errorCode) {
+            switch (error.errorCode) {
+                case ERROR_NO_SCHEDULE_FOR_GIVEN_ROBOT:
+                    // create an empty scheduler
+                    errorHandled.resolve();
+                    var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.createSchedule, [that.robot().robotId(), 0]);
+                    tDeffer.done(that.createScheduleEventsSuccess);
+                    tDeffer.fail(that.createScheduleEventsError);
+                    break;
+                case -21228:
+                    // set scheduler offline
+                    isTimeSet = false;
+                    that.scheduler.offline();
+                    that.isScheduleOnline(false);
+                break; 
+            }
+            
         }
         console.log(error);
     };

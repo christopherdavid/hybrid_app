@@ -9,7 +9,7 @@
                 <span data-i18n="basicScheduler.navi.title" data-bind="translate: language">[navi title]</span>
             </div>
             <div class="robotName">
-                <span data-bind="text: robot().robotName">[robot name]</span>
+                <span data-bind="text: robot().displayName">[robot name]</span>
             </div>
         </h1>
         <div class="ui-btn-right">
@@ -22,7 +22,7 @@
     <div data-role="content">
         <div id="schedulerTarget">
             <div class="schedulerLeftCorner">
-                <select name="flip-1" id="flip-1" data-role="slider" data-bind="value: useSchedule, jqmFlipValue:useSchedule">
+                <select name="flip-1" id="flip-1" data-role="slider" data-bind="value: useSchedule, jqmFlipValue:useSchedule, jqmSliderEnable:isScheduleOnline()">
                     <option value="off"></option>
                     <option value="on"></option>
                 </select>

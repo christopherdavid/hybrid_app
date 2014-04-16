@@ -6,12 +6,12 @@
     "common": {
         "change": "change",
         "no": "no",
+        "next": "Next",
         "menu": {
             "schedule": "Schedule",
             "cleaning": "Cleaning",
             "settings": "Settings"
         },
-        "next": "Next",
         "edit": "Edit",
         "cancel": "Cancel",
         "cleaningMode": {
@@ -31,6 +31,7 @@
             "IT": "Italy",
             "CN": "China"
         },
+        "offline": "offline",
         "yes": "yes",
         "logout": "Logout",
         "off": "off",
@@ -121,6 +122,7 @@
         "10010": "Manual Cleaning",
         "10005": "Stopped Cleaning",
         "10006": "Stuck",
+        "10012": "In Use",
         "10003": "Idle",
         "10004": "Charging",
         "10009": "At Base",
@@ -507,8 +509,8 @@
         "wakeup_unknown_robot": "Robot wakes up in some seconds.",
         "getready_robot": "Robot is getting ready.",
         "robot_added": "Adding __robotName__ ...",
-        "intend_drive": "Please wait...",
         "20208": "Please wait while I check my surrounding.",
+        "intend_drive": "Please wait...",
         "20209": "Thank you!",
         "delete_robot_done": "Robot __robotName__ has been removed.",
         "fetch_robots": "Accessing your robot list ...",
@@ -521,6 +523,7 @@
         "20221": "timer_removed",
         "stop_robot": "Stopping __robotName__ ...",
         "20203": "Finished! I'm returning to my starting location.",
+        "inuse": "__robotName__ is currentyl in use",
         "20200": "Error: Invalid Alert",
         "20201": "Finished! I'm returning to my base station.",
         "update_scheduler": "Synchronizing your scheduler ...",
@@ -528,6 +531,7 @@
         "20223": "battery_chargbasecommerr",
         "stop_drive": "Stopping __robotName__ ...",
         "wait_robot": "Robot wakes up in about __wakeUp__ seconds.",
+        "robot_offline": "__robotName__  is currently offline",
         "wakeup_robot": "Robot wakes up in about __wakeUp__ seconds.",
         "20215": "USB Flash Drive was Removed.",
         "20216": "Software Update FAILED.",
@@ -638,6 +642,7 @@
         "getready": "Working\u2026",
         "wakeup": "Working\u2026",
         "cleaning_spot": "I'm cleaning spot",
+        "inuse": "I'm in use by someone else",
         "stopped_all": "I've stopped cleaning",
         "stopped_waited_manual": "I\u2019m ready to start manual cleaning",
         "resumed": "Resuming Cleaning.",

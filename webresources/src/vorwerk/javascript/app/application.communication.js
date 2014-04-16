@@ -228,7 +228,7 @@ function WorkflowCommunication(parent) {
     this.successGetRobotState = function(result) {
         if(result.robotCurrentState && result.robotId && result.robotNewVirtualState) {
             var tempRobots = that.getDataValue("robotList");
-            // find robote with robotId in global binding object
+            // find robot with robotId in global binding object
             $.each(tempRobots(), function(index, item){
                 if(item.robotId() == result.robotId) {
                     // update state
@@ -239,7 +239,7 @@ function WorkflowCommunication(parent) {
         }
     };
     
-    // this requests the robot online status of each roboter 
+    // this requests the robot online status of each robot
     this.getRobotOnline = function(robotId) {
         // request Online state
         var tDeffer = that.exec(RobotPluginManager.getRobotOnlineStatus, [robotId], { type: notificationType.NONE }, true);
@@ -250,22 +250,46 @@ function WorkflowCommunication(parent) {
     	console.log("Robot Online Success :"+ JSON.stringify(result));
     	if(result.robotId) {
             var tempRobots = that.getDataValue("robotList");
-            // find robote with robotId in global binding object
+            // find robot with robotId in global binding object
             $.each(tempRobots(), function(index, item){
                 if(item.robotId() == result.robotId) {
                     // update online state
-         		    item.robotOnline(result.Online);
-                    return false;
+                    that.updateRobotOnlineState(item, result.online);
+         		    return false;
                 }
             });
+        }
+    };
+    
+    this.updateRobotOnlineState = function(robot, online) {
+        var curRobot = that.getDataValue("selectedRobot");
+        var state =  $.i18n.t("common.offline");
+        var stateChanged = robot.robotOnline() != online; // 0:offline  1:online
+        
+        console.log("updateRobotOnlineState: "  + online + " for robot: " + robot.robotId() + " stateChanged " + stateChanged);
+        
+        robot.robotOnline(online == "1");
+        
+        if(stateChanged) {
+            if (online == "0") {
+                robot.stateString(state);
+                // check if robot is the current robot 
+                if(curRobot().robotId && robot.robotId() == curRobot().robotId()) {
+                    robotUiStateHandler.setUiState(ROBOT_UI_STATE_ROBOT_OFFLINE);
+                }
+            // new state online:
+            } else {
+                that.updateRobotStateWithCode(robot, ROBOT_STATE_IDLE);
+                robot.visualOnline(true);
+            }
         }
     };
     
     this.updateRobotStateWithCode = function(robot, virtualState, currentState) {
         // make sure virtualState is an integer
         virtualState = parseInt(virtualState, 10);
-        // update state, make sure it's an valid state code
-        if(virtualState >= 10001 && virtualState <= 10011 && robot.robotNewVirtualState) {
+        // update state, make sure it's an valid state code and robot is online
+        if(virtualState >= 10001 && virtualState <= 10012 && robot.robotNewVirtualState && robot.robotOnline()) {
             var curRobot = that.getDataValue("selectedRobot");
             var state = $.i18n.t("robotStateCodes." + virtualState);
             var stateChanged = robot.robotNewVirtualState() != virtualState;
@@ -277,7 +301,7 @@ function WorkflowCommunication(parent) {
                 // make sure currentState is an integer
                 currentState = parseInt(currentState, 10);
                 // make sure it's an valid state code
-                if(currentState >= 10001 && currentState <= 10011) {
+                if(currentState >= 10001 && currentState <= 10012) {
                     robot.robotCurrentState(currentState);
                 }
             }

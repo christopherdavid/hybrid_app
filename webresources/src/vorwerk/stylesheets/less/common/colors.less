@@ -4,7 +4,7 @@
 // general
 @page_gradient_start:fade(@color_page_background,100%);
 @page_gradient_end:fade(@color_page_background,0%);
-
+@offline_color:#b1b2b3;
 
 // spinner.less
 @color_spinner_active:#009a3d;
@@ -31,6 +31,8 @@
 @button_bg_gradient_crit_end:#401616;
 @button_border_color:fade(#FFFFFF, 6%);
 @button_inner_border_color:#202020;
+@button_bg_disabled_color:fade(#000,15%);
+
 
 // listview.less
 @listview_bg_color:#333333;
@@ -43,6 +45,7 @@
 // scheduler.less
 @scheduler_marker_color:#808080;
 @scheduler_day_blocked:#009a3d;
+@scheduler_day_disabled:@offline_color;
 @scheduler_time_column_odd:fade(#FFFFFF, 3%);
 
 // daypicker.less
@@ -92,6 +95,7 @@
 @cleaning_status_text_color:#262626;
 
 @cleaning_navbar_item_color:#545454;
+@cleaning_navbar_item_disabled_color:#8c8c8c;
 @cleaning_navbar_item_selected_color:#FFFFFF;
 
 @color_robot_status:#009a3d;
