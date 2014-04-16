@@ -45,31 +45,15 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
     };
     
     this.next = function() {
-        /*that.conditions['valid'] = true;
-        var userBundle = {
-            email:that.email(),
-            pw: that.password(),
-            country:that.bundle.country
-        }
-        parent.flowNavigator.next(userBundle);*/
-    
-    var tDeffer = parent.communicationWrapper.exec(UserPluginManager.createUser3, [that.email(), that.password(), 'default', '', {"country_code":null, "opt_in":null} ], {});
-        tDeffer.done(that.successRegister);
-        tDeffer.fail(that.errorRegister);
-        
-    };
-    
-    this.successRegister = function(result) {
         that.conditions['valid'] = true;
-        parent.communicationWrapper.setDataValue("user", result);
-        var translatedTitle = $.i18n.t("createAccount.page.registration_done_title");
-        var translatedText = $.i18n.t("createAccount.page.registration_done_message", {email:that.email()});
-        parent.notification.showDialog(dialogType.INFO, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); parent.flowNavigator.next({"userlogin":false,"password":that.password()});}}]);
-    };
-
-    this.errorRegister = function(error) {
-        that.conditions['valid'] = false;
-        console.log("errorRegister: " + JSON.stringify(error));
+		
+        var userBundle = {
+			userlogin: 	false,
+            email:		that.email(),
+            password: 	that.password()
+        }
+		
+        parent.flowNavigator.next( userBundle );
     };
     
     function isPasswordValid() {

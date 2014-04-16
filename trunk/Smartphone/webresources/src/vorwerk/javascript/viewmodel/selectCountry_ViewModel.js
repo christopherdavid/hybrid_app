@@ -21,11 +21,8 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
     var countriesRendered = false;
     
     this.init = function() {
-        if((user.extra_param.countryCode == null)||(user.extra_param.countryCode == "null")) {
-            that.isCountryEdit(false);
-        } else {
-            that.isCountryEdit(that.bundle.userlogin);
-        }
+		that.isCountryEdit(that.bundle.userlogin);
+		
         // init scroll container
         myScroll = new iScroll('countryWrapper',{
             hScrollbar : false,
@@ -85,7 +82,12 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
     this.next = function() {
         event.stopPropagation();
         that.conditions['valid'] = true;
-        parent.flowNavigator.next({"country":that.selectedCountry(),"userlogin":that.bundle.userlogin,"password":that.bundle.password});
+        parent.flowNavigator.next({
+			userlogin:	that.bundle.userlogin,
+			email:		that.bundle.email,
+			password:	that.bundle.password,
+			country:	that.selectedCountry()
+		});
     };
     
     this.deinit = function() {

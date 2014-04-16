@@ -49,16 +49,18 @@
     },
     "legalInformation": {
         "page": {
-            "legal_agreement": "I stimme zu",
+            "change_notAccepted_message": "Please check the privacy policy and terms of use documents to change the country settings.",
+            "register_notAccepted_title": "Rechtliche Zustimmung fehlt",
+            "legal_agreement": "Ich stimme zu",
             "title": "Zustimmungen",
-            "notAccepted_title": "Rechtliche Zustimmung fehlt",
-            "notAccepted_message": "Du musst der Datenschutzerklärung und den Nutzungsbedingungen zustimmen, um die Registrierung abzuschließen. ",
             "tou_pp_agreement": "Um die App nutzen zu können, müssen sie den Nutzungsbedingungen und der Datenschutzerklärung zustimmen. TICK BOX Hiermit erkläre ich, dass ich die <a id='terms' href='#' class='highlightedText font_bold font_small'>Nutzungsbedinungen<\/a> und die <a id='privacy' href='#' class='highlightedText font_bold font_small'>Datenschutzerklärung<\/a> gelesen und zustimmend zur Kenntnis genommen habe.",
+            "change_notAccepted_title": "Rechtliche Zustimmung fehlt",
             "subscribe_header": "MARKETING INFORMATION",
             "edit_done_title": "Konto wurde angepasst.",
             "edit_done_message": "Das Nutzerkonto wurde erfolgreich aktualisiert.",
             "tou_pp_header": "Rechtliche Hinweise",
-            "subscribe_agreement": "Wir würden Sie als Kunden gerne über neue Updates und Produktinformationen auf dem Laufenden halten und sind um die Sicherheit Ihrer Daten bemüht. Diese werden von uns nicht an Unternehmen außerhalb der Vorwerk-Gruppe weitergegeben. TICK BOX Ich bin damit einverstanden, dass meine E-Mail- Adresse von der Vorwerk International Strecker & Co. für an mich gerichtete Informationen und Werbung (z.B. Updates, Hinweise, Sonderangebote) genutzt wird. Diese Einwilligung kann jederzeit unter dem Menüpunkt \u201eEinstellungen\u201c widerrufen werden. Weitere Details finden Sie in der Datenschutzerklärung."
+            "subscribe_agreement": "Wir würden Sie als Kunden gerne über neue Updates und Produktinformationen auf dem Laufenden halten und sind um die Sicherheit Ihrer Daten bemüht. Diese werden von uns nicht an Unternehmen außerhalb der Vorwerk-Gruppe weitergegeben. TICK BOX Ich bin damit einverstanden, dass meine E-Mail- Adresse von der Vorwerk International Strecker & Co. für an mich gerichtete Informationen und Werbung (z.B. Updates, Hinweise, Sonderangebote) genutzt wird. Diese Einwilligung kann jederzeit unter dem Menüpunkt \u201eEinstellungen\u201c widerrufen werden. Weitere Details finden Sie in der Datenschutzerklärung.",
+            "register_notAccepted_message": "Du musst der Datenschutzerklärung und den Nutzungsbedingungen zustimmen, um die Registrierung abzuschließen. "
         },
         "navi": {"title": "Registrierung"}
     },
@@ -618,7 +620,7 @@
     "createAccount": {
         "page": {
             "title": "Willkommen zur Registrierung.<br/>Zum Fortfahren benötigen wir ein paar Informationen.",
-            "email": "Email Adresse.",
+            "email": "Email Adresse",
             "password_show": "Passwort anzeigen",
             "registration_done_message": "<div class='mailAnimation'><\/div>Die Bestätigung wurde an <br/><span class='highlightedText'>__email__<\/span><br /><br /> gesendet. Bitte bestätige deinen Account (Konto) mit dem zugesendeten Link innerhalb von 48 Stunden.<br /> Danach kannst du dich mit deinem Roboter verbinden.",
             "registration_done_title": "Konto wurde erstellt.",

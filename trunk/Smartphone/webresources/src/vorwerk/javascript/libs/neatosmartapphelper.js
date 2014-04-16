@@ -465,6 +465,14 @@ var UserPluginManager = ( function() {
                 }, 1000);
                 //callbackSuccess(false);
             },
+			
+			isUserValidated : function(email, callbackSuccess, callbackError) {
+				//window.plugins.neatoPluginLayer.userMgr.isUserValidated(email, callbackSuccess, callbackError);
+				window.setTimeout(function() {
+                    //callbackSuccess({validation_status:USER_STATUS_VALIDATED, message:"message"});
+					callbackSuccess({validation_status:USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD, message:"message"});
+                }, 1000);
+			},
             
             associateRobot : function(email, robotId, callbackSuccess, callbackError) {
                 window.setTimeout(function() {
