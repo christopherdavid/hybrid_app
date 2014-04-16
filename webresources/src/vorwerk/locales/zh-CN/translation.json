@@ -556,7 +556,9 @@
         "navi": {"title": "机器人激活"}
     },
     "validation": {
+        "error_title": "Email validation missing",
         "email": "本邮件地址无效。",
+        "error_message": "The email hasn't been validated yet. Please validate your email to complete the registration.",
         "password": "密码无法匹配。"
     },
     "robotActivationName": {
