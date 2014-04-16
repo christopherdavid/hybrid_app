@@ -156,7 +156,7 @@
                     border-radius:5px;
                     line-height:@scheduler_event_height;
                     .font_bold;
-                    
+                    .font_small;
                     
                     // zoom factor 1.5
                     &:active {
@@ -165,6 +165,18 @@
                         height:@scheduler_event_height + @scheduler_event_zoom;
                         line-height:@scheduler_event_height + @scheduler_event_zoom;
                         .font_big;
+                    }
+                }
+                &.basicTask.ui-state-disabled .basicTaskInner {
+                    background-color:@scheduler_day_disabled;
+                    
+                    // remove zoom factor 1.5 for disabled style
+                    &:active {
+                        left: @scheduler_event_space;
+                        right: @scheduler_event_space;
+                        height:@scheduler_event_height;                        
+                        line-height:@scheduler_event_height;
+                        .font_small;
                     }
                 }
                 &.basicTask.state-local .basicTaskInner {

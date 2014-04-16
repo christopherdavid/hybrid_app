@@ -95,6 +95,15 @@ ko.bindingHandlers.jqButtonEnable = {
     }
 };
 
+ko.bindingHandlers.jqmSliderEnable = {
+    update : function(element, valueAccessor) {
+        ko.bindingHandlers.enable.update(element, valueAccessor);
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        //console.log("jqmSliderEnable " + value);
+        $(element).slider( value ? "enable" : "disable");
+    }
+};
+
 /**
  * 
  * example: <select data-bind="jqmOptions: [property bind to]"> 

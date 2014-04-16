@@ -6,12 +6,12 @@
     "common": {
         "change": "Cambiar",
         "no": "no",
+        "next": "Siguiente",
         "menu": {
             "schedule": "Programar",
             "cleaning": "Limpieza",
             "settings": "Ajustes"
         },
-        "next": "Siguiente",
         "edit": "Editar",
         "cancel": "Cancelar",
         "cleaningMode": {
@@ -31,6 +31,7 @@
             "IT": "Italia",
             "CN": "China"
         },
+        "offline": "offline",
         "yes": "Sí",
         "logout": "Salir",
         "off": "Apagado",
@@ -121,6 +122,7 @@
         "10010": "Limpieza manual",
         "10005": "Limpieza detenida.",
         "10006": "Atascado.",
+        "10012": "In Use",
         "10003": "Inactivo.",
         "10004": "Cargando.",
         "10009": "En la base.",
@@ -507,8 +509,8 @@
         "wakeup_unknown_robot": "El robot estará listo en unos segundos.",
         "getready_robot": "El robot se está preparando.",
         "robot_added": "Añadiendo __robotName__",
-        "intend_drive": "Por favor, espere.",
         "20208": "Please wait while I check my surrounding.",
+        "intend_drive": "Por favor, espere.",
         "20209": "Thank you!",
         "delete_robot_done": "El robot __robotName__ ha sido borrado.",
         "fetch_robots": "Accediendo al listado del robot",
@@ -521,6 +523,7 @@
         "20221": "timer_removed",
         "stop_robot": "Parando __robotName__",
         "20203": "Finished! I'm returning to my starting location.",
+        "inuse": "__robotName__ is currentyl in use",
         "20200": "Error",
         "20201": "¡He terminado! Regreso a la base.",
         "update_scheduler": "Sincronizando calendario.",
@@ -528,6 +531,7 @@
         "20223": "battery_chargbasecommerr",
         "stop_drive": "Parando __robotName__",
         "wait_robot": "El robot estará listo en __wakeUp__ segundos.",
+        "robot_offline": "__robotName__  is currently offline",
         "wakeup_robot": "El robot estará listo en __wakeUp__ segundos.",
         "20215": "USB Flash Drive was Removed.",
         "20216": "Software Update FAILED.",
@@ -638,6 +642,7 @@
         "getready": "Preparándome\u2026",
         "wakeup": "Preparándome\u2026",
         "cleaning_spot": "Estoy limpiando en local",
+        "inuse": "I'm in use by someone else",
         "stopped_all": "He parado de limpiar",
         "stopped_waited_manual": "Estoy listo para empezar en manual",
         "resumed": "Limpieza reanudada",

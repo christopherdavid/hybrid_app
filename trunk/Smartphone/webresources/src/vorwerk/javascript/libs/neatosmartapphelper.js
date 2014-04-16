@@ -71,6 +71,21 @@ var ROBOT_CONNECTED                 = 4007;
 var ROBOT_DISCONNECTED              = 4008;
 var ROBOT_NOT_CONNECTED             = 4009;
 
+// The keyCode to denote about linking success
+var ROBOT_LINKING_SUCCESS           = 4010
+// The keyCode to denote about linking failure
+var ROBOT_LINKING_FAILURE           = 4011
+
+// The keyCode to denote that robot is linked to some other user.
+// Whenever new user is linked to the robot
+// then all associate users with that robot gets the notification
+var ROBOT_NEW_LINKING_FORMED        = 4012
+
+var ROBOT_MESSAGE_NOTIFICATION = 4013;
+var ROBOT_MESSAGE_ERROR = 4014;
+
+var ROBOT_ONLINE_STATUS_CHANGED = 4015;
+
 // Robot state codes
 var ROBOT_STATE_UNKNOWN     = 10001;
 var ROBOT_STATE_CLEANING    = 10002;
@@ -245,6 +260,10 @@ var NOTIFICATIONS_GLOBAL_OPTION = "global";
 var NOTIFICATION_ROBOT_STUCK = "101";
 var NOTIFICATION_DIRT_BIN_FULL = "102";
 var NOTIFICATION_CLEANING_DONE = "103";
+var NOTIFICATION_DIRT_BIN_MISSING = "20219";
+var NOTIFICATION_PLUG_CABLE = "212";
+var NOTIFICATION_ROBOT_CANCEL = "22000";
+
 
 // List of Error Code values returned from the plugin.
 
@@ -405,7 +424,8 @@ var UserPluginManager = ( function() {
                         "extra_param":{"countryCode":"GB","optIn":true}
                     });
                 }, 1000);
-                /* callbackError({
+                /*
+                callbackError({
                  "errorMessage":"Type Error",
                  "errorCode":-101
                  });
@@ -1101,6 +1121,16 @@ var RobotPluginManager = ( function() {
             
             // New Schedule APIs being added:
             getScheduleEvents: function(robotId, scheduleType, callbackSuccess, callbackError) {
+                /*
+                window.setTimeout(function() {
+                    callbackError(
+                        {
+                            "errorMessage":"No schedule data found for this robot",
+                            "errorCode":-21228
+                        }
+                    );
+                }, 500);
+                */
                 /*
                 window.setTimeout(function() {
                     callbackError(

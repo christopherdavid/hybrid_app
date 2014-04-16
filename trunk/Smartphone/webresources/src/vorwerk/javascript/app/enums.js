@@ -53,6 +53,7 @@ var ROBOT_UI_STATE_GETREADY = 20004;
 var ROBOT_UI_STATE_AWAKE    = 20005;
 var ROBOT_UI_STATE_DISABLED = 20006;
 var ROBOT_UI_STATE_CONNECTING = 20007;
+var ROBOT_UI_STATE_ROBOT_OFFLINE = 20008;
 // new ui states which were shown after a specified timeout (e.g. 10s) out when robot has stopped
 var ROBOT_UI_STATE_STOPPED_MANUAL = 20021;
 var ROBOT_UI_STATE_STOPPED_ALL = 20022;
@@ -67,9 +68,6 @@ var ROBOT_UI_STATE_CLEANING_MANUAL = 20051;
 var ROBOT_UI_STATE_CLEANING_ALL = 20052;
 var ROBOT_UI_STATE_CLEANING_SPOT = 20053;
 var ROBOT_UI_STATE_CLEANING_TAP_MANUAL = 20061;
-var ROBOT_UI_STATE_ROBOT_OFFLINE = 20062;
-
-
 
 
 var visualState = {};
@@ -85,6 +83,8 @@ visualState[ROBOT_STATE_RESUMED] = "resumed";
 visualState[ROBOT_STATE_ON_BASE] = "inbase";
 visualState[ROBOT_STATE_MANUAL_CLEANING] = "manual";
 visualState[ROBOT_STATE_MANUAL_PLAY_MODE] = "play";
+// TODO: replace with correct constant from neatosmartapphelper.js
+visualState[10012] = "inuse";
 // UI states
 visualState[ROBOT_UI_STATE_ERROR] = "error";
 visualState[ROBOT_UI_STATE_WAIT] = "waiting";

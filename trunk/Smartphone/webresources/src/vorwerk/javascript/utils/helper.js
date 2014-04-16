@@ -184,6 +184,7 @@ function resizePopupButtons(buttonGroup, maxContainer) {
  */
 var robotUiStateHandler = {
     subscription: null,
+    subscriptionOnline:null,
     current:null,
     statusTimer:null,
     statusTimout:10000,
@@ -195,6 +196,10 @@ var robotUiStateHandler = {
         subscription = refRobot().robotNewVirtualState.subscribe(function(newValue) {
             this.setVirtualState(newValue);
         }, this);
+        
+        subscriptionOnline = refRobot().visualOnline.subscribe(function(newValue) {
+            this.setVisualOnlineState(newValue);
+        }, this); 
     },
     
     setVirtualState:function(state) {
@@ -246,6 +251,7 @@ var robotUiStateHandler = {
     
     disposeFromRobot:function() {
         subscription.dispose();
+        subscriptionOnline.dispose();
     },
     // robotNewVirtualState register to robot state
     // ui state of the app
@@ -260,6 +266,7 @@ var robotUiStateHandler = {
     updateStates: function(state) {
         var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
         this.current().messageIcon(visualState[state]);
+        
         if(state == ROBOT_UI_STATE_WAIT) {
             this.current().messageText($.i18n.t("visualState.waiting_unknown"));
         } else if(state == ROBOT_UI_STATE_WAKEUP) {
@@ -268,6 +275,25 @@ var robotUiStateHandler = {
             var message = $.i18n.t("visualState." + visualState[state]);
             message += " " + curRobot().spotCleaningAreaLength() + "x" + curRobot().spotCleaningAreaHeight() + " " + $.i18n.t("pattern.spotUnit");
             this.current().messageText(message);
+        } else if(state == ROBOT_UI_STATE_ROBOT_OFFLINE) {
+            this.current().messageText($.i18n.t("visualState." + visualState[state]));
+            // change robot name
+            curRobot().displayName(curRobot().robotName() + " (" + $.i18n.t("common.offline") + ")");
+            curRobot().visualOnline(false);
+            // show notification
+            //TODO: add check if current view cleaning and don't show notification there
+            var translatedText = $.i18n.t("communication." + visualState[state], {robotName:curRobot().robotName()});
+            app.notification.showLoadingArea(true,notificationType.HINT,translatedText);
+        // TODO: replace with correct constant from neatosmartapphelper.js 
+        } else if(state == 10012) {
+            this.current().messageText($.i18n.t("visualState." + visualState[state]));
+            // change robot name
+            curRobot().displayName(curRobot().robotName() + " (" + $.i18n.t("robotStateCodes.10012") + ")");
+            curRobot().visualOnline(false);
+            // show notification
+            //TODO: add check if current view cleaning and don't show notification there 
+            var translatedText = $.i18n.t("communication." + visualState[state], {robotName:curRobot().robotName()});
+            app.notification.showLoadingArea(true,notificationType.HINT,translatedText);
         } else {
             this.current().messageText($.i18n.t("visualState." + visualState[state]));
         }
@@ -280,6 +306,24 @@ var robotUiStateHandler = {
     updateIcon: function(state) {
         this.current().messageIcon(visualState[state]);
     },
+    
+    setVisualOnlineState:function(onlineState) {
+        console.log("setVisualOnlineState " + onlineState); 
+        var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
+        // offline
+        if(!onlineState) {             
+            // add offline class
+            $("body").addClass("offline");
+        // online            
+        } else {
+            // remove offline class
+            $("body").removeClass("offline");
+            // update robot name
+            curRobot().displayName(curRobot().robotName());
+        }
+    },
+    
+    
     setStartButtonState:function(state) {
         // start button only has 4 state:
         // - cleaning
@@ -299,6 +343,9 @@ var robotUiStateHandler = {
         } else if(state == ROBOT_STATE_MANUAL_CLEANING) {
            // this.current().startButton(visualState[ROBOT_STATE_CLEANING]);
             this.current().startButton(visualState[ROBOT_STATE_MANUAL_CLEANING]);
+        // TODO: replace with correct constant from neatosmartapphelper.js 
+        } else if(state == ROBOT_UI_STATE_ROBOT_OFFLINE || state == 10012) {
+            this.current().startButton(visualState[ROBOT_UI_STATE_ROBOT_OFFLINE]);
         } else {
             this.current().startButton(visualState[ROBOT_STATE_STOPPED]);
         }

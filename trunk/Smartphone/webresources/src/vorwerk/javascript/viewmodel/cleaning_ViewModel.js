@@ -11,7 +11,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             maxRow:5
         },
         spotFactor = parseInt($.i18n.t("pattern.spotFactor"),10),
-        spotUnit = $.i18n.t("pattern.spotUnit");
+        spotUnit = $.i18n.t("pattern.spotUnit"),
+        subscribeCategory, subscribeOnline;
     
     this.conditions = {};
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
@@ -23,10 +24,22 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.visualSelectedCategory = ko.observable();
     
     // listener when robot category changes
-    this.robot().cleaningCategory.subscribe(function(newValue) {
+    subscribeCategory = this.robot().cleaningCategory.subscribe(function(newValue) {
             console.log("cleaningCategory subscribe " + newValue);
-            if(newValue != this.visualSelectedCategory()) {
+            if(newValue != this.visualSelectedCategory() && !that.robot().visualOnline()) {
                 that.visualSelectedCategory(newValue);
+            }
+        }, this);
+        
+    // listener when robot online status changed    
+    subscribeOnline = this.robot().visualOnline.subscribe(function(newValue) {
+            if(!newValue) {
+                // deselect category for offline mode
+                that.visualSelectedCategory(-1);
+                // close all dialogs
+                parent.notification.forceCloseDialog();
+            } else {
+                that.visualSelectedCategory(that.robot().cleaningCategory());
             }
         }, this);
     
@@ -45,11 +58,11 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.robotState = ko.observable("");
     
     this.waitingForRobot = ko.computed(function() {
-         return (that.currentUiState().ui() == ROBOT_UI_STATE_CONNECTING || that.currentUiState().ui() == ROBOT_UI_STATE_WAIT || that.currentUiState().ui() == ROBOT_UI_STATE_WAKEUP || that.currentUiState().ui() == ROBOT_UI_STATE_GETREADY || that.currentUiState().ui() == ROBOT_UI_STATE_DISABLED);
+         return (!that.robot().visualOnline() || that.currentUiState().ui() == ROBOT_UI_STATE_CONNECTING || that.currentUiState().ui() == ROBOT_UI_STATE_WAIT || that.currentUiState().ui() == ROBOT_UI_STATE_WAKEUP || that.currentUiState().ui() == ROBOT_UI_STATE_GETREADY || that.currentUiState().ui() == ROBOT_UI_STATE_DISABLED);
     }, this); 
     
     this.isRemoteEnabled = ko.computed(function() {
-         return (that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.currentUiState().robot() == ROBOT_STATE_MANUAL_CLEANING && that.currentUiState().robot() != ROBOT_STATE_STUCK);
+         return (that.robot().visualOnline() && that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.currentUiState().robot() == ROBOT_STATE_MANUAL_CLEANING && that.currentUiState().robot() != ROBOT_STATE_STUCK);
     }, this);
     
     this.isSendToBaseVisible = ko.computed(function() {
@@ -144,7 +157,11 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         that.startAreaControl.isRemoteEnabled = this.isRemoteEnabled;
         
         // set initial category
-        that.visualSelectedCategory(that.robot().cleaningCategory());
+        if(!that.robot().visualOnline()) {
+            that.visualSelectedCategory(-1);
+        } else {
+            that.visualSelectedCategory(that.robot().cleaningCategory());
+        }
         
         // click event listener for start button 
         $('#startBtn').on('startClick', that.startBtnClick);
@@ -163,7 +180,6 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         });
         
         // setUI if the robot is offline
-          // getRobotCleaningCategory
         var tDeffer3 = parent.communicationWrapper.exec(RobotPluginManager.getRobotOnlineStatus, [that.robot().robotId()]);
         tDeffer3.done(that.successGetRobotOnlineState);
         
@@ -174,7 +190,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     	if(result.robotId) {
             that.robot().robotOnline(result.online);
             if(result.online == false){
-            	robotUiStateHandler.setVirtualState(ROBOT_UI_STATE_ROBOT_OFFLINE);
+            	robotUiStateHandler.setUiState(ROBOT_UI_STATE_ROBOT_OFFLINE);
             }
         }
     };
@@ -209,11 +225,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     // everytime called when the user taps on an category item
     this.changeCategory = function(newValue) {
-    	if(that.isOffline()){
-    	 	that.robot().cleaningCategory(CLEANING_CATEGORY_ALL);
-       		return false; 
-       	}
-        console.log("changeCategory " + JSON.stringify(newValue) + " robot cleaningCategory " + that.robot().cleaningCategory());
+    	console.log("changeCategory " + JSON.stringify(newValue) + " robot cleaningCategory " + that.robot().cleaningCategory());
         // check if category has changed
         if(that.robot().cleaningCategory() != newValue) {
             // check if cleaning has already started
@@ -322,6 +334,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         $('#remote').off('remotePressed');
         $('#remote').off('remoteReleased');
         $(window).off(".cleaning");
+        subscribeCategory.dispose();
+        subscribeOnline.dispose();
     };    
     
     this.toggleEcoMode = function() {
@@ -395,23 +409,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         $spotPopup.popup("close");
     };
     
-    this.isOffline = function(){
-     	console.log("Online Status :"+ that.robot().robotOnline());
-        if(!that.robot().robotOnline())
-        {
-        	var translatedTitle = that.robot().robotName() + " Offline";//$.i18n.t("legalInformation.page.notAccepted_title");
-            var translatedText = $.i18n.t("cleaning.page.offline_message");
-        	parent.notification.showDialog(dialogType.ERROR, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); }}]);
-        	robotUiStateHandler.setUiState(ROBOT_UI_STATE_ROBOT_OFFLINE);
-        	that.robot().cleaningCategory(CLEANING_CATEGORY_ALL);
-        	return true;
-        } else {
-        	return false;
-        }
-    };
-    
     this.startBtnClick = function() {
-       	if(that.isOffline()){
+       	if(!that.robot().visualOnline()) {
        		return false; 
        	}
         navigator.notification.vibrate(500);
@@ -577,7 +576,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         if(newState >= 10001 && newState <= 10011) {
             // robot states from API
             parent.communicationWrapper.updateRobotStateWithCode(that.robot(), newState, newState);
-        } else if (newState >= 20001 && newState <= 20007) {
+        } else if (newState >= 20001 && newState <= 20008) {
             // UI states
             robotUiStateHandler.setUiState(newState);
         }

@@ -193,6 +193,7 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
            // fill properties
            tempRobot.robotId = item.robotId;
            tempRobot.robotName = item.robotName;
+           tempRobot.displayName = item.robotName;
            robotList.push(tempRobot);
            
            // request state from server due some delay we need to use a 

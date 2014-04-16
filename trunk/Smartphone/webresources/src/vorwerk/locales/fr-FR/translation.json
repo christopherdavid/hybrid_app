@@ -6,12 +6,12 @@
     "common": {
         "change": "Changer",
         "no": "no",
+        "next": "Prochain",
         "menu": {
             "schedule": "Programme",
             "cleaning": "Nettoyage",
             "settings": "Réglages"
         },
-        "next": "Prochain",
         "edit": "Editer",
         "cancel": "Annuler",
         "cleaningMode": {
@@ -31,6 +31,7 @@
             "IT": "Italie",
             "CN": "Chine"
         },
+        "offline": "offline",
         "yes": "yes",
         "logout": "Déconnexion",
         "off": "Arrêt",
@@ -121,6 +122,7 @@
         "10010": "Nettoyage manuel",
         "10005": "Arrêter nettoyage",
         "10006": "Coincé",
+        "10012": "In Use",
         "10003": "A l'arrêt",
         "10004": "En charge",
         "10009": "Sur sa station de charge",
@@ -507,8 +509,8 @@
         "wakeup_unknown_robot": "Le Robot se réveillera dans quelques secondes",
         "getready_robot": "Le Robot se prépare",
         "robot_added": "En train d'ajouter __robotName__",
-        "intend_drive": "Veuillez patienter",
         "20208": "Please wait while I check my surrounding.",
+        "intend_drive": "Veuillez patienter",
         "20209": "Thank you!",
         "delete_robot_done": "Robot __robotName__ a été supprimé",
         "fetch_robots": "En train d'accéder à votre liste robot\u2026",
@@ -521,6 +523,7 @@
         "20221": "timer_removed",
         "stop_robot": "En train d'arrêter __robotName__",
         "20203": "Finished! I'm returning to my starting location.",
+        "inuse": "__robotName__ is currentyl in use",
         "20200": "Erreur",
         "20201": "Terminé ! Je retourne à ma station de charge.",
         "update_scheduler": "Synchronisation du programmateur en cours\u2026",
@@ -528,6 +531,7 @@
         "20223": "battery_chargbasecommerr",
         "stop_drive": "Arrêt de __robotName__ en cours\u2026",
         "wait_robot": "Le Robot se réveillera dans à peu près __wakeUp__ secondes",
+        "robot_offline": "__robotName__  is currently offline",
         "wakeup_robot": "Le Robot se réveillera dans à peu près __wakeUp__ secondes",
         "20215": "USB Flash Drive was Removed.",
         "20216": "Software Update FAILED.",
@@ -638,6 +642,7 @@
         "getready": "Je me prépare à démarrer",
         "wakeup": "Je me prépare",
         "cleaning_spot": "Je nettoie en mode Nettoayge ciblé",
+        "inuse": "I'm in use by someone else",
         "stopped_all": "J'arrête le nettoyage",
         "stopped_waited_manual": "Je suis prêt à re-démarrer le nettoyage manuel",
         "resumed": "J'ai recommencé à nettoyer.",

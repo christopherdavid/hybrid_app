@@ -9,7 +9,7 @@
                 <span data-i18n="cleaning.navi.title" data-bind="translate: language">[navi title]</span>
             </div>
             <div class="robotName">
-                <span data-bind="text: robot().robotName">[robot name]</span>
+                <span data-bind="text: robot().displayName">[robot name]</span>
             </div>
         </h1>
         <!--TODO: remove test data
@@ -38,7 +38,7 @@
                     <div class="halign">
                         <div id="startContainer">
                             <div id="startArea">
-                                <div id="remote" data-bind="visible: robot().cleaningCategory() == CLEANING_CATEGORY_MANUAL">
+                                <div id="remote" data-bind="visible: visualSelectedCategory() == CLEANING_CATEGORY_MANUAL">
                                     <div id="remoteUp" class="img-remote" data-bind="css: {'disabled':!isRemoteEnabled()}"></div>
                                     <div id="remoteDown" class="img-remote" data-bind="css: {'disabled':!isRemoteEnabled()}"></div>
                                     <div id="remoteLeft" class="img-remote" data-bind="css: {'disabled':!isRemoteEnabled()}"></div>
@@ -67,7 +67,7 @@
                     </div>
                     <div class="control-button-bar">
                         <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image ui-btn-left" data-image="eco" data-inline="true"
-                            data-bind="click:toggleEcoMode, css:{'ui-btn-active':ecoMode()}, jqLinkButtonEnable: isEcoEnabled()"></a>
+                            data-bind="click:toggleEcoMode, css:{'ui-btn-active':ecoMode(), 'ui-btn-offline':!robot().visualOnline()}, jqLinkButtonEnable: isEcoEnabled()"></a>
                         
                         <a data-role="button" data-theme="b" data-mini="false" class="btn-with-image ui-btn-right" data-image="stop" data-inline="true"
                             data-bind="click:stopRobot, jqLinkButtonEnable: isStopEnabled"></a>
@@ -171,7 +171,7 @@
             </ul>
         </div>
     </div>
-    <!-- TODO: remove testdata
+    <!-- TODO: remove testdata 
     <div id="testPopup" data-history="false" data-role="popup" data-dismissible="true" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport dialogType_1">
         <div data-role="header" data-theme="b" class="ui-header ui-bar-b">
              <h1 class="ui-title dialogPopupTitle" role="heading" aria-level="1">State tests</h1>
@@ -235,6 +235,11 @@
                         <h3>ROBOT_STATE_MANUAL_PLAY_MODE</h3>
                     </a>
                 </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, 10012)">
+                        <h3>10012</h3>
+                    </a>
+                </li>
                 <li data-role="list-divider">UI states</li>
                 <li>
                     <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_ERROR)">
@@ -271,9 +276,13 @@
                         <h3>ROBOT_UI_STATE_CONNECTING</h3>
                     </a>
                 </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_ROBOT_OFFLINE)">
+                        <h3>ROBOT_UI_STATE_ROBOT_OFFLINE</h3>
+                    </a>
+                </li>
             </ul>
         </div>
-    </div>
-    -->
+    </div>-->
 
 </div><!-- /page -->

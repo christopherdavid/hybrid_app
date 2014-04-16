@@ -3,6 +3,12 @@
  */
 
 /* === HEADER BARS - DEFAULT AND BLACK === */
+.offline {
+  .ui-header:before {
+      background-color:@offline_color;
+  }
+}
+
 .ui-header {
     height: @headerbar_height - @headerbar_border_top;
     -webkit-box-sizing: border-box;

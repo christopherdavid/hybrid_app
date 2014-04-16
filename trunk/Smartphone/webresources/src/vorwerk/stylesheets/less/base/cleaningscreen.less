@@ -36,7 +36,7 @@
       #statusIcon {
         height:@cleaning_status_icon_height;
         width:@cleaning_status_icon_width;
-        background-image:url(../../img/icons/robot_status_3240x450.png);
+        background-image:url(../../img/icons/robot_status_3240x630.png);
         background-repeat:no-repeat;
         background-size:@cleaning_status_icon_image_size;
 
@@ -55,6 +55,12 @@
         }
         &[data-status='inbase'], &[data-status='sleeping'] {
           background-position-y:-@cleaning_status_icon_height*4;
+        }
+        &[data-status='robot_offline'] {
+          background-position-y:-@cleaning_status_icon_height*5;
+        }
+        &[data-status='inuse'] {
+          background-position-y:-@cleaning_status_icon_height*6;
         }
       }
       #statusText {
@@ -95,6 +101,7 @@
         margin:auto;
         width:@cleaning_startContainer_width;
       }
+      
       .control-button-bar-top {
         height:@cleaning_control_button_size ;
         position:relative;
@@ -102,79 +109,18 @@
         margin-top:10px;
 
         .ui-btn {
-          .border-radius(@cleaning_control_button_size/2);
-          width: @cleaning_control_button_size - @button_border*2;
-          height:@cleaning_control_button_size - @button_border*2;
-
-
-
           &.ui-btn-right {
-            /* margin:0 @cleaning_control_button_space @cleaning_control_button_space 0;*/
-            margin:-5px 12px 0 0;
+            margin:-5px @cleaning_control_button_space 0 0;
             float:right;
-          }
-
-          .ui-btn-inner {
-            .border-radius(0);
-            line-height:@cleaning_control_button_size - @button_border*2;
-            padding:0px;
-          }
-
-          &:before {
-            .border-radius(@cleaning_control_button_size/2);
-          }
-          //btn-with-image  ui-btn ui-shadow ui-btn-corner-all ui-fullsize ui-btn-inline ui-btn-active ui-btn-up-b ui-disabled
-          &.btn-with-image {
-            .ui-btn-inner {
-              background-size: @cleaning_control_button_icon_size;
-              background-image: url(../../img/icons/support_icons_220x330.png);
-              background-position:0 0;
-              top:0;
-              height:@cleaning_control_button_size;
-              width:@cleaning_control_button_size;
-            }
-
-            &[data-image='base'] .ui-btn-inner {
-              background-position-y:-@cleaning_control_button_size*1;
-            }
-
-            &.ui-btn-active {
-              &[data-image='eco'] .ui-btn-inner {
-                background-position-x:0;
-              }
-            }
-
-            &.ui-disabled {
-              &[data-image='eco'] {
-                background:none;
-                .box-shadow-none()!important;
-                border-color: transparent;
-
-                &:before {
-                  border-color: transparent;
-                }
-              }
-
-              span {
-                opacity:1;
-              }
-              &[data-image='base'] .ui-btn-inner, &[data-image='stop'] .ui-btn-inner{
-                background-position-x:-@cleaning_control_button_size;
-              }
-            }
-          }
+          }          
         }
       }
+      
       .control-button-bar {
         position: relative;
         margin-top:-25px;
 
         .ui-btn {
-          .border-radius(@cleaning_control_button_size/2);
-          width: @cleaning_control_button_size - @button_border*2;
-          height:@cleaning_control_button_size - @button_border*2;
-
-
           &.ui-btn-left {
             margin:0 0 @cleaning_control_button_space @cleaning_control_button_space;
           }
@@ -182,6 +128,14 @@
             margin:0 @cleaning_control_button_space @cleaning_control_button_space 0;
             float:right;
           }
+        }
+      }
+      
+      .control-button-bar, .control-button-bar-top {
+        .ui-btn {
+          .border-radius(@cleaning_control_button_size/2);
+          width: @cleaning_control_button_size - @button_border*2;
+          height:@cleaning_control_button_size - @button_border*2;
 
           .ui-btn-inner {
             .border-radius(0);
@@ -196,7 +150,7 @@
           &.btn-with-image {
             .ui-btn-inner {
               background-size: @cleaning_control_button_icon_size;
-              background-image: url(../../img/icons/support_icons_220x330.png);
+              background-image: url(../../img/icons/support_icons_330x330.png);
               background-position:0 0;
               top:0;
               height:@cleaning_control_button_size;
@@ -219,31 +173,39 @@
                 background-position-x:0;
               }
             }
+            
+            &.ui-btn-offline {
+              &[data-image='eco'] .ui-btn-inner {
+                background-position-x:-@cleaning_control_button_size*2;
+              }
+            }
 
             &.ui-disabled {
-              &[data-image='eco'] {
-                background:none;
-                .box-shadow-none()!important;
+              background:@button_bg_disabled_color!important;
+              .box-shadow-none()!important;
+              
+              &:before {
                 border-color: transparent;
-
-                &:before {
-                  border-color: transparent;
-                }
+              }              
+              
+              &[data-image='base'], &[data-image='stop'] {
+                .ui-btn-inner {
+                  background-position-x:-@cleaning_control_button_size*2;
+                }                
               }
 
               span {
                 opacity:1;
               }
-              &[data-image='base'] .ui-btn-inner, &[data-image='stop'] .ui-btn-inner{
-                background-position-x:-@cleaning_control_button_size;
-              }
             }
           }
         }
-
-      }
+      }      
     }
   }
+  
+  
+  
   .last-line {
     position:absolute;
     bottom:0;
@@ -282,6 +244,12 @@
               .ui-btn-text {
                 color:@cleaning_navbar_item_color;
               }
+            }
+          }
+          
+          &.ui-disabled {
+            .ui-btn .ui-btn-inner .ui-btn-text {
+              color:@cleaning_navbar_item_disabled_color;
             }
           }
         }
@@ -436,7 +404,7 @@
       &[data-state='stopped'] {
         background-position-y:0;
       }
-      &[data-state='disabled'] {
+      &[data-state='disabled'], &[data-state='robot_offline'] {
         background-position:-@cleaning_start_button_width*2 0;
       }
       &[data-state='waiting'] {
@@ -535,7 +503,7 @@
       #spotResizer {
         width: @spot_resize_icon_width;
         height: @spot_resize_icon_height;
-        background-image: url("../../img/icons/ani_spot_arrow_160x40.png");
+        background-image: url(../../img/icons/ani_spot_arrow_160x40.png);
         background-repeat: no-repeat;
         background-position:-@spot_resize_icon_width*3 0;
         background-size:@spot_resize_icon_width*4 @spot_resize_icon_height;

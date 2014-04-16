@@ -3612,7 +3612,7 @@ var PluginManagerHelper =  (function() {
 		 *  - startTime
 		 *  - cleaningMode
 		 *  Returns: Basic Schedule JSON object
-		 *  {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
+		 *  {'day':day, 'startTime': startTime, ï¿½cleaningModeï¿½:cleaningMode}
 		 */
 		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {

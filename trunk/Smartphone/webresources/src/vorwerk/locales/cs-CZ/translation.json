@@ -6,12 +6,12 @@
     "common": {
         "change": "Změnit",
         "no": "Ne",
+        "next": "Další",
         "menu": {
             "schedule": "Plánovací kalendář",
             "cleaning": "Úklid",
             "settings": "Nastavení"
         },
-        "next": "Další",
         "edit": "Upravit",
         "cancel": "Zrušit",
         "cleaningMode": {
@@ -31,6 +31,7 @@
             "IT": "Itálie",
             "CN": "Čína"
         },
+        "offline": "offline",
         "yes": "Ano",
         "logout": "Odhlásit",
         "off": "Vypnout",
@@ -121,6 +122,7 @@
         "10010": "Manuální úklid",
         "10005": "Úklid skončil",
         "10006": "Uvízlý",
+        "10012": "In Use",
         "10003": "V klidu",
         "10004": "Nabíjení",
         "10009": "V dobíjecí základně",
@@ -507,8 +509,8 @@
         "wakeup_unknown_robot": "Robot bude připraven za několik vteřin",
         "getready_robot": "Robot bude hned připraven.",
         "robot_added": "Přidávám robota __robotName__\u2026",
-        "intend_drive": "Čekej prosím\u2026",
         "20208": "Please wait while I check my surrounding.",
+        "intend_drive": "Čekej prosím\u2026",
         "20209": "Thank you!",
         "delete_robot_done": "Robot __robotName__ byl odstraněn.",
         "fetch_robots": "Otevírám nabídku robotů\u2026",
@@ -521,6 +523,7 @@
         "20221": "timer_removed",
         "stop_robot": "Zastavuji __robotName__",
         "20203": "Finished! I'm returning to my starting location.",
+        "inuse": "__robotName__ is currentyl in use",
         "20200": "Chyba: Upozornění",
         "20201": "Hotovo! Vracím se na základnu.",
         "update_scheduler": "Plánovací kalendář byl synchronizován.",
@@ -528,6 +531,7 @@
         "20223": "battery_chargbasecommerr",
         "stop_drive": "Zastavuji __robotName__ \u2026",
         "wait_robot": "Robot bude připraven za __wakeUp__ vteřin",
+        "robot_offline": "__robotName__  is currently offline",
         "wakeup_robot": "Robot bude připraven za __wakeUp__ vteřin",
         "20215": "USB Flash Drive was Removed.",
         "20216": "Software Update FAILED.",
@@ -638,6 +642,7 @@
         "getready": "Pracuji\u2026",
         "wakeup": "Pracuji\u2026",
         "cleaning_spot": "Uklízím v režimu SPOT",
+        "inuse": "I'm in use by someone else",
         "stopped_all": "Zastavil jsem úklid.",
         "stopped_waited_manual": "Jesem připraven zahájit úklid v režimu Manuál",
         "resumed": "Pokračuji v úklidu.",

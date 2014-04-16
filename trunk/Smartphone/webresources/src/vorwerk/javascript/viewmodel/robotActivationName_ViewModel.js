@@ -46,6 +46,7 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
     this.setRobotGoNext = function(robotName) {
         that.conditions['robotNameValid'] = true;
         that.bundle.robot.robotName = robotName;
+        that.bundle.robot.displayName = robotName;
         // request state from server due some delay we need to use a 
         // separate API call because the user could navigate in the meantime 
         // to another screen
