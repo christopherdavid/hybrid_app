@@ -421,6 +421,7 @@ var UserPluginManager = ( function() {
                         "email" : "demo1@demo.com",
                         "username" : "demo",
                         "userId" : "48",
+						"validation_status" : USER_STATUS_VALIDATED,
                         "extra_param":{"countryCode":"GB","optIn":true}
                     });
                 }, 1000);

@@ -556,7 +556,9 @@
         "navi": {"title": "Activación del robot"}
     },
     "validation": {
+        "error_title": "Email validation missing",
         "email": "La dirección de email no es válida.",
+        "error_message": "The email hasn't been validated yet. Please validate your email to complete the registration.",
         "password": "Las constraseñas no coinciden"
     },
     "robotActivationName": {

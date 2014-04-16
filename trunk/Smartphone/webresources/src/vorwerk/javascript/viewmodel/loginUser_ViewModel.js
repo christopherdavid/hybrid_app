@@ -72,18 +72,33 @@ resourceHandler.registerFunction('loginUser_ViewModel.js', function(parent) {
     };
 
     this.sucessLogin = function(result, notifyOptions) {
-        that.conditions['valid'] = true;
-        console.log("result: " + result);
-        parent.communicationWrapper.setDataValue("user", result);
+		if (result.validation_status == USER_STATUS_VALIDATED) {
+		    that.conditions['valid'] = true;
+			console.log("result: " + result);
+			parent.communicationWrapper.setDataValue("user", result);
         
-        // register for push notifications (from server)
-        parent.notification.registerForRobotMessages();
+			// register for push notifications (from server)
+			parent.notification.registerForRobotMessages();
         
-        // register for notifications from robot if app is running
-        parent.notification.registerForRobotNotifications();
+			// register for notifications from robot if app is running
+			parent.notification.registerForRobotNotifications();
         
-        parent.communicationWrapper.saveToLocalStorage('username', that.email());
-        parent.flowNavigator.next(robotScreenCaller.LOGIN);
+			parent.communicationWrapper.saveToLocalStorage('username', that.email());
+			parent.flowNavigator.next(robotScreenCaller.LOGIN);
+		} else {
+			translatedTitle = $.i18n.t("validation.error_title");
+			translatedText = $.i18n.t("validation.error_message");
+		
+			parent.notification.showDialog(
+				dialogType.ERROR, 
+				translatedTitle, 
+				translatedText, 
+				[{
+					"label":$.i18n.t("common.ok"), 
+					"callback":function(e){ parent.notification.closeDialog(); }
+				}]
+			);
+		}
     };
 
     this.errorLogin = function(error) {
