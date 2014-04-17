@@ -185,7 +185,7 @@
     },
     "error": {
         "-21259": {
-            "message": "NAVIGATION_UndockingFailed",
+            "message": "Please clear my path.",
             "title": "Error"
         },
         "-182": {
@@ -197,35 +197,35 @@
             "title": "Error"
         },
         "-21257": {
-            "message": "BATTERY_InvalidSensor",
+            "message": "Battery error. Please confirm on the robot.",
             "title": "Error"
         },
         "-21256": {
-            "message": "BATTERY_NoThermistor",
+            "message": "Battery error. Please confirm on the robot.",
             "title": "Error"
         },
         "-21255": {
-            "message": "BATTERY_Unplugged",
+            "message": "Battery error. Please confirm on the robot.",
             "title": "Error"
         },
         "-21254": {
-            "message": "BATTERY_UnderTemp",
+            "message": "Battery error. Please confirm on the robot.",
             "title": "Error"
         },
         "-21253": {
-            "message": "BATTERY_LithiumAdapterFailure",
+            "message": "Battery error. Please confirm on the robot.",
             "title": "Error"
         },
         "-21252": {
-            "message": "BATTERY_Mismatch",
+            "message": "Battery error. Please confirm on the robot.",
             "title": "Error"
         },
         "-21251": {
-            "message": "BATTERY_UnderCurrent",
+            "message": "Battery error. Please confirm on the robot.",
             "title": "Error"
         },
         "-21250": {
-            "message": "BATTERY_UnderVolt",
+            "message": "Battery error. Please confirm on the robot.",
             "title": "Error"
         },
         "-515": {
@@ -261,7 +261,7 @@
             "title": "Server Error"
         },
         "-21249": {
-            "message": "BATTERY_OverVolt",
+            "message": "Battery error. Please confirm on the robot.",
             "title": "Error"
         },
         "-21248": {
@@ -269,11 +269,11 @@
             "title": "Error"
         },
         "-21243": {
-            "message": "LDS_BAD_PACKETS",
+            "message": "Sensor error. Please reboot robot.",
             "title": "Error"
         },
         "-21242": {
-            "message": "LDS_MISSED_PACKETS",
+            "message": "Sensor error. Please reboot robot.",
             "title": "Error"
         },
         "-21245": {
@@ -285,7 +285,7 @@
             "title": "Error"
         },
         "-21241": {
-            "message": "LDS_DISCONNECTED",
+            "message": "Sensor error. Please reboot robot.",
             "title": "Error"
         },
         "-101": {
@@ -293,7 +293,7 @@
             "title": "Type Error"
         },
         "-21240": {
-            "message": "LDS_JAMMED",
+            "message": "Sensor error. Please reboot robot.",
             "title": "Error"
         },
         "-21230": {
@@ -301,7 +301,7 @@
             "title": "Error"
         },
         "-21279": {
-            "message": "SCB_VALIDATION",
+            "message": "Internal error. Please confirm on robot.",
             "title": "Error"
         },
         "-21233": {
@@ -313,7 +313,7 @@
             "title": "Error"
         },
         "-21231": {
-            "message": "DUST_BIN_FULL",
+            "message": "Please empty my Dirt Bin and Filter if needed.",
             "title": "Error"
         },
         "-21232": {
@@ -321,7 +321,7 @@
             "title": "Error"
         },
         "-21274": {
-            "message": "xxxx",
+            "message": "Internal error. Please confirm on robot.",
             "title": "Error"
         },
         "-111": {
@@ -345,7 +345,7 @@
             "title": "Error"
         },
         "-21272": {
-            "message": "WDT",
+            "message": "Roboter reset. Please recharge it.",
             "title": "Error"
         },
         "-21235": {
@@ -365,15 +365,15 @@
             "title": "Error"
         },
         "-21278": {
-            "message": "SCB_CHECKSUM",
+            "message": "Internal error. Please confirm on robot.",
             "title": "Error"
         },
         "-21277": {
-            "message": "SCB_LENGTH_MISMATCH",
+            "message": "Internal error. Please confirm on robot.",
             "title": "Error"
         },
         "-21276": {
-            "message": "SCB_SIGNATURE",
+            "message": "Internal error. Please confirm on robot.",
             "title": "Error"
         },
         "-21239": {
@@ -381,7 +381,7 @@
             "title": "Error"
         },
         "-21275": {
-            "message": "SCB_FLASH_READ",
+            "message": "Internal error. Please confirm on robot.",
             "title": "Error"
         },
         "-110": {
@@ -389,7 +389,7 @@
             "title": "Type Error"
         },
         "-21280": {
-            "message": "HARDWARE_FAILURE",
+            "message": "Hardware error. Please conform on robot.",
             "title": "Error"
         },
         "-154": {
@@ -417,23 +417,23 @@
             "title": "Error"
         },
         "-21269": {
-            "message": "NAVIGATION_NoProgress",
+            "message": "Please clear my path.",
             "title": "Error"
         },
         "-21268": {
-            "message": "NAVIGATION_PathProblems",
+            "message": "Please clear my path.",
             "title": "Error"
         },
         "-21261": {
-            "message": "NAVIGATION_PinkyCommsFail",
+            "message": "Please clear my path.",
             "title": "Error"
         },
         "-21224": {
-            "message": "CHECK_BATTERY_SWITCH",
+            "message": "Please turn on the robot's power switch.",
             "title": "Error"
         },
         "-21260": {
-            "message": "NAVIGATION_Falling",
+            "message": "Please clear my path.",
             "title": "Error"
         },
         "-21225": {
@@ -441,7 +441,7 @@
             "title": "Error"
         },
         "-21263": {
-            "message": "NAVIGATION_BackDrop_LeftBump",
+            "message": "Please clear my path.",
             "title": "Error"
         },
         "-21226": {
@@ -449,11 +449,11 @@
             "title": "Error"
         },
         "-21262": {
-            "message": "NAVIGATION_NoMotionCommands",
+            "message": "Please clear my path.",
             "title": "Error"
         },
         "-21227": {
-            "message": "SCHED_OFF",
+            "message": "Please set schedule to on first",
             "title": "Error"
         },
         "-509": {
@@ -461,7 +461,7 @@
             "title": "Confirmation Error"
         },
         "-21265": {
-            "message": "NAVIGATION_BackDrop_WheelExtended",
+            "message": "Please clear my path.",
             "title": "Error"
         },
         "-21228": {
@@ -469,7 +469,7 @@
             "title": "Error"
         },
         "-21264": {
-            "message": "NAVIGATION_BackDrop_FrontBump",
+            "message": "Please clear my path.",
             "title": "Error"
         },
         "-21229": {
@@ -477,11 +477,11 @@
             "title": "Error"
         },
         "-21267": {
-            "message": "NAVIGATION_NoExitsToGo",
+            "message": "Please clear my path.",
             "title": "Error"
         },
         "-21266": {
-            "message": "NAVIGATION_RightDrop_LeftBump",
+            "message": "Please clear my path.",
             "title": "Error"
         },
         "-502": {
@@ -493,7 +493,7 @@
             "title": "Unknown Error"
         },
         "-21270": {
-            "message": "WARNING",
+            "message": "ERROR_WARNING",
             "title": "Error"
         },
         "-504": {
@@ -518,26 +518,26 @@
         "20207": "I had to reset. Please press OKAY to restart.",
         "20204": "I'm returning to my starting location to charge.",
         "20205": "Please empty my Dirt Bin and Filter if needed.",
-        "20220": "timer_set",
+        "20220": "Schedule was programmed",
         "20202": "I'm returning to my base station for charging.",
-        "20221": "timer_removed",
+        "20221": "Schedule setting was removed.",
         "stop_robot": "Stopping __robotName__ ...",
         "20203": "Finished! I'm returning to my starting location.",
         "inuse": "__robotName__ is currentyl in use",
         "20200": "Error: Invalid Alert",
         "20201": "Finished! I'm returning to my base station.",
         "update_scheduler": "Synchronizing your scheduler ...",
-        "20222": "enable_timer",
-        "20223": "battery_chargbasecommerr",
+        "20222": "Please activate the schedule.",
+        "20223": "Battery error. Please restart robot",
         "stop_drive": "Stopping __robotName__ ...",
         "wait_robot": "Robot wakes up in about __wakeUp__ seconds.",
         "robot_offline": "__robotName__  is currently offline",
         "wakeup_robot": "Robot wakes up in about __wakeUp__ seconds.",
         "20215": "USB Flash Drive was Removed.",
         "20216": "Software Update FAILED.",
-        "20217": "log_write_success",
+        "20217": "Logfile was created successfully!",
         "20218": "Please set my clock first.",
-        "20219": "time_set",
+        "20219": "The robot's time and date was set.",
         "toggle_eco": "ECO mode is __ecoMode__",
         "20210": "My battery is low. Please charge me.",
         "reset_password": "Resetting your password ...",
