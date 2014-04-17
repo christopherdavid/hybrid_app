@@ -179,22 +179,10 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             that.updateLayout();
         });
         
-        // setUI if the robot is offline
-        var tDeffer3 = parent.communicationWrapper.exec(RobotPluginManager.getRobotOnlineStatus, [that.robot().robotId()]);
-        tDeffer3.done(that.successGetRobotOnlineState);
-        
+       
     };
     
-    this.successGetRobotOnlineState = function(result) {
-    	console.log("Robot Online Success :"+ JSON.stringify(result));
-    	if(result.robotId) {
-            that.robot().robotOnline(result.online);
-            if(result.online == false){
-            	robotUiStateHandler.setUiState(ROBOT_UI_STATE_ROBOT_OFFLINE);
-            }
-        }
-    };
-    
+     
     this.updateLayout = function() {
         console.log("update Layout");
         $("#statusLine").css("bottom", $(".control-line").height() - 50);
