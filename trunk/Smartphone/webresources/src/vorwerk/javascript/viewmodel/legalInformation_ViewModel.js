@@ -56,7 +56,8 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
             if(typeof that.bundle.country == 'undefine') {
                 that.selectedSubscribe(user.extra_param.optIn);
             }
-            //that.isAgreed("true");
+            // The agreement will be selected if the user come from the user settings screen
+            that.isAgreed("true");
             if(that.bundle) {
                 if(that.bundle.country == "") {
                     that.bundle.country(user.extra_param.countryCode);
