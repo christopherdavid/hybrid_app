@@ -57,6 +57,8 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
             // clear bundle
             that.bundle = null;
         }
+        
+        that.isRobotVisible.dispose();
     };
 
     this.back = function() {

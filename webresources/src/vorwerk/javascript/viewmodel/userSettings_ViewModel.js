@@ -33,7 +33,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
         return !isPasswordValid();
     }, this);
     
-    okEnabled = ko.computed(function() {
+    this.okEnabled = ko.computed(function() {
         return isOkButtonEnabled();
     }, this);
     
@@ -77,6 +77,13 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
         }
         that.selectedCountryLabel($.i18n.t("common.countries." + that.selectedCountryCode()));
         this.initCountry(that.selectedCountryCode());
+    };
+    
+    // viewmodel deinit, destroy objects and remove event listener
+    this.deinit = function() {
+        that.passwordValid.dispose();
+        that.okEnabled.dispose();
+        that.markInvalidPassword.dispose();
     };
     
     this.changeCountry = function() {

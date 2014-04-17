@@ -336,6 +336,14 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         $(window).off(".cleaning");
         subscribeCategory.dispose();
         subscribeOnline.dispose();
+        that.waitingForRobot.dispose();
+        that.isRemoteEnabled.dispose();
+        that.isSendToBaseVisible.dispose();
+        that.isSendToBaseEnabled.dispose();
+        that.isStopEnabled.dispose();
+        that.isEcoEnabled.dispose();
+        that.newSpotSize.dispose();
+        that.spotSize.dispose();
     };    
     
     this.toggleEcoMode = function() {

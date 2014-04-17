@@ -11,6 +11,11 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
         tDeffer.done(that.robotDetailSuccess);
     };
     
+    // viewmodel deinit, destroy objects and remove event listener
+    this.deinit = function() {
+        that.isFilledOut.dispose();
+    }
+    
     this.robotDetailSuccess = function(result) {
         // temporary store robot details
         tempRobot = result;//{robotId:"robotId", robotName:"robotName"}
