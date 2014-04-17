@@ -14,25 +14,27 @@ import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebSer
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.SetRobotPushNotificationOptions;
 
 public class NeatoRobotWebservicesSettingsHelper {
-	
-	public static RobotNotificationSettingsResult getRobotNotificationSettingsRequest(Context context, String email) 
-		throws UserUnauthorizedException, NeatoServerException, IOException	{
-		
-		Map<String, String> params = new HashMap<String, String>();		
-		params.put(GetRobotPushNotificationOptions.Attribute.EMAIL, email);
-		
-		String response = MobileWebServiceClient.executeHttpPost(context, GetRobotPushNotificationOptions.METHOD_NAME, params);		
-		return AppUtils.checkResponseResult(response, RobotNotificationSettingsResult.class);		
-	}
-	
-	public static SetRobotNotificationSettingsResult setRobotNotificationSettingsRequest(Context context, String email, String notificationJson) 
-			throws UserUnauthorizedException, NeatoServerException, IOException	{
-		
-		Map<String, String> params = new HashMap<String, String>();		
-		params.put(SetRobotPushNotificationOptions.Attribute.EMAIL, email);
-		params.put(SetRobotPushNotificationOptions.Attribute.JSON_OBJECT, notificationJson);
-		
-		String response = MobileWebServiceClient.executeHttpPost(context, SetRobotPushNotificationOptions.METHOD_NAME, params);		
-		return AppUtils.checkResponseResult(response, SetRobotNotificationSettingsResult.class);		
-	}
+
+    public static RobotNotificationSettingsResult getRobotNotificationSettingsRequest(Context context, String email)
+            throws UserUnauthorizedException, NeatoServerException, IOException {
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(GetRobotPushNotificationOptions.Attribute.EMAIL, email);
+
+        String response = MobileWebServiceClient.executeHttpPost(context, GetRobotPushNotificationOptions.METHOD_NAME,
+                params);
+        return AppUtils.checkResponseResult(response, RobotNotificationSettingsResult.class);
+    }
+
+    public static SetRobotNotificationSettingsResult setRobotNotificationSettingsRequest(Context context, String email,
+            String notificationJson) throws UserUnauthorizedException, NeatoServerException, IOException {
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(SetRobotPushNotificationOptions.Attribute.EMAIL, email);
+        params.put(SetRobotPushNotificationOptions.Attribute.JSON_OBJECT, notificationJson);
+
+        String response = MobileWebServiceClient.executeHttpPost(context, SetRobotPushNotificationOptions.METHOD_NAME,
+                params);
+        return AppUtils.checkResponseResult(response, SetRobotNotificationSettingsResult.class);
+    }
 }

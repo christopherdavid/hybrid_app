@@ -14,26 +14,26 @@ import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 
 public class StopRobotDriveRequest extends RobotManagerRequest {
-	
-	@Override
-	public void execute(String action, JSONArray data, String callbackId) {
-		RobotJsonData jsonData = new RobotJsonData(data);
-		stopRobotDrive(mContext, jsonData, callbackId);
-	}
-	
-	private void stopRobotDrive(final Context context, RobotJsonData jsonData, final String callbackId) {
-		LogHelper.logD(TAG, "stopRobotDrive is called");
-		final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-		
-		// If no connection exists, send error result.
-		if (!RobotCommandServiceManager.isRobotDirectConnected(context, robotId)) {
-			sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, "Robot is not connected");
-			return;
-		}
-		// Disconnect the robot connection and send success plugin result.
-		RobotDriveHelper.getInstance(context).stopRobotDrive(robotId);
-		PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
-		pluginResult.setKeepCallback(false);
-		sendSuccessPluginResult(pluginResult, callbackId);
-	}
+
+    @Override
+    public void execute(String action, JSONArray data, String callbackId) {
+        RobotJsonData jsonData = new RobotJsonData(data);
+        stopRobotDrive(mContext, jsonData, callbackId);
+    }
+
+    private void stopRobotDrive(final Context context, RobotJsonData jsonData, final String callbackId) {
+        LogHelper.logD(TAG, "stopRobotDrive is called");
+        final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+
+        // If no connection exists, send error result.
+        if (!RobotCommandServiceManager.isRobotDirectConnected(context, robotId)) {
+            sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, "Robot is not connected");
+            return;
+        }
+        // Disconnect the robot connection and send success plugin result.
+        RobotDriveHelper.getInstance(context).stopRobotDrive(robotId);
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+        pluginResult.setKeepCallback(false);
+        sendSuccessPluginResult(pluginResult, callbackId);
+    }
 }

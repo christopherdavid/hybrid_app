@@ -12,17 +12,17 @@ import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotMan
 
 public class UnRegisterForPushMessagesRequest extends RobotManagerRequest {
 
-	@Override
-	public void execute(String action, JSONArray data, String callbackId) {
-		RobotJsonData jsonData = new RobotJsonData(data);
-		unregisterForRobotMessages(mContext, jsonData, callbackId);
-	}
-	
-	private void unregisterForRobotMessages(Context context, RobotJsonData jsonData, final String callbackId) {
-		LogHelper.logD(TAG, "unregisterForRobotMessages called");
-		PushNotificationMessageHandler.getInstance(context).removePushNotificationListener();
-		PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
-		pluginResult.setKeepCallback(false);
-		sendSuccessPluginResult(pluginResult, callbackId);
-	}
+    @Override
+    public void execute(String action, JSONArray data, String callbackId) {
+        RobotJsonData jsonData = new RobotJsonData(data);
+        unregisterForRobotMessages(mContext, jsonData, callbackId);
+    }
+
+    private void unregisterForRobotMessages(Context context, RobotJsonData jsonData, final String callbackId) {
+        LogHelper.logD(TAG, "unregisterForRobotMessages called");
+        PushNotificationMessageHandler.getInstance(context).removePushNotificationListener();
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+        pluginResult.setKeepCallback(false);
+        sendSuccessPluginResult(pluginResult, callbackId);
+    }
 }

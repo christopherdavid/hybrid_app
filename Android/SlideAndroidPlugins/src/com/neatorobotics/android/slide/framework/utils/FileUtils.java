@@ -4,28 +4,27 @@ import java.io.File;
 
 public class FileUtils {
 
-	public static boolean ensureFolderExists(String fileName)
-	{
-		File file = new File(fileName);
-		if (file.exists()) {
-			return true;
-		}
-		
-		if (file.isDirectory()) {
-			return file.mkdirs();
-		}
-		
-		File parentDir = file.getParentFile();
-		if(parentDir != null) {
-			return parentDir.mkdirs();
-		}
-		return false;
-	}
-	
-	public static void deleteFile(String fileName) {		
-		File file = new File(fileName);
-		if (file.exists()) {
-			file.delete();
-		}		
-	}
+    public static boolean ensureFolderExists(String fileName) {
+        File file = new File(fileName);
+        if (file.exists()) {
+            return true;
+        }
+
+        if (file.isDirectory()) {
+            return file.mkdirs();
+        }
+
+        File parentDir = file.getParentFile();
+        if (parentDir != null) {
+            return parentDir.mkdirs();
+        }
+        return false;
+    }
+
+    public static void deleteFile(String fileName) {
+        File file = new File(fileName);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
 }

@@ -7,14 +7,14 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 
 public class TcpUtils {
 
-	private static String TAG = TcpUtils.class.getSimpleName();
+    private static String TAG = TcpUtils.class.getSimpleName();
 
-	public static InetAddress getInetAddressFromIp(String IpAdress) {
-		try {
-			return InetAddress.getByName(IpAdress);
-		} catch (UnknownHostException e) {
-			LogHelper.log(TAG, "Error in getting Robot's Ip Address:" , e);
-		}	
-		return null;
-	}
+    public static InetAddress getInetAddressFromIp(String IpAdress) {
+        try {
+            return InetAddress.getByName(IpAdress);
+        } catch (UnknownHostException e) {
+            LogHelper.log(TAG, "Error in getting Robot's Ip Address:", e);
+        }
+        return null;
+    }
 }

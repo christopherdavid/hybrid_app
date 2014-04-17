@@ -16,35 +16,35 @@ import com.neatorobotics.android.slide.framework.webservice.robot.RobotOnlineSta
 
 public class RobotGetOnlineStatusRequest extends RobotManagerRequest {
 
-	@Override
-	public void execute(String action, JSONArray data, String callbackId) {
-		RobotJsonData jsonData = new RobotJsonData(data);
-		getRobotOnlineStatus(mContext, jsonData, callbackId);
-	}
-	
-	private void getRobotOnlineStatus(Context context, RobotJsonData jsonData, final String callbackId) {
-		LogHelper.logD(TAG, "getRobotOnlineStatus action initiated in Robot plugin");	
-		final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-		
-		RobotManager.getInstance(context).getRobotOnlineStatus(robotId, new RobotRequestListenerWrapper(callbackId) {
-			
-			@Override
-			public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
-				JSONObject resultJsonObj = null;
-				if (responseResult instanceof RobotOnlineStatusResult) {
-					resultJsonObj = getRobotOnlineStatusJsonObject(robotId, 
-								((RobotOnlineStatusResult)responseResult).result.online);
-					
-				}
-				return resultJsonObj;
-			}						
-		});
-	}
-	
-	protected JSONObject getRobotOnlineStatusJsonObject(String robotId, boolean online) throws JSONException {
-		JSONObject robotJsonObj = new JSONObject();			
-		robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
-		robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ONLINE_STATUS, online);				
-		return robotJsonObj;
-	}
+    @Override
+    public void execute(String action, JSONArray data, String callbackId) {
+        RobotJsonData jsonData = new RobotJsonData(data);
+        getRobotOnlineStatus(mContext, jsonData, callbackId);
+    }
+
+    private void getRobotOnlineStatus(Context context, RobotJsonData jsonData, final String callbackId) {
+        LogHelper.logD(TAG, "getRobotOnlineStatus action initiated in Robot plugin");
+        final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+
+        RobotManager.getInstance(context).getRobotOnlineStatus(robotId, new RobotRequestListenerWrapper(callbackId) {
+
+            @Override
+            public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+                JSONObject resultJsonObj = null;
+                if (responseResult instanceof RobotOnlineStatusResult) {
+                    resultJsonObj = getRobotOnlineStatusJsonObject(robotId,
+                            ((RobotOnlineStatusResult) responseResult).result.online);
+
+                }
+                return resultJsonObj;
+            }
+        });
+    }
+
+    protected JSONObject getRobotOnlineStatusJsonObject(String robotId, boolean online) throws JSONException {
+        JSONObject robotJsonObj = new JSONObject();
+        robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+        robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ONLINE_STATUS, online);
+        return robotJsonObj;
+    }
 }

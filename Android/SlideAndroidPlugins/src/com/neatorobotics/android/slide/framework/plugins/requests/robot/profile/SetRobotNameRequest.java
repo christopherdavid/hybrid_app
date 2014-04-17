@@ -15,38 +15,37 @@ import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResul
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 
 public class SetRobotNameRequest extends RobotManagerRequest {
-	@Override
-	public void execute(String action, JSONArray data, String callbackId) {
-		RobotJsonData jsonData = new RobotJsonData(data);
-		setRobotName(mContext, jsonData, callbackId);
-	}
-	
-	private void setRobotName(final Context context, RobotJsonData jsonData, final String callbackId) {
-		LogHelper.logD(TAG, "setRobotName2 action initiated in Robot plugin");	
-		final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-		final String robotName = jsonData.getString(JsonMapKeys.KEY_ROBOT_NAME);
-		
-		RobotManager.getInstance(context).setRobotName(robotId, robotName, new RobotRequestListenerWrapper(callbackId) {
-			
-			@Override
-			public void onReceived(NeatoWebserviceResult responseResult) {					
-				JSONObject robotJsonObj = getRobotDetailJsonObject(robotId, robotName);
-				PluginResult pluginResult = new  PluginResult(PluginResult.Status.OK, robotJsonObj);	
-				pluginResult.setKeepCallback(false);
-				sendSuccessPluginResult(pluginResult, callbackId);
-			}
-		});	
-	}
-	
-	protected JSONObject getRobotDetailJsonObject(String robotId, String robotName) {
-		JSONObject robotJsonObj = new JSONObject();
-		try {
-			robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
-			robotJsonObj.put(JsonMapKeys.KEY_ROBOT_NAME, robotName);				
-		}
-		catch (JSONException e) {
-			LogHelper.logD(TAG, "Exception in getRobotDetailJsonObject", e);
-		}
-		return robotJsonObj;
-	}
+    @Override
+    public void execute(String action, JSONArray data, String callbackId) {
+        RobotJsonData jsonData = new RobotJsonData(data);
+        setRobotName(mContext, jsonData, callbackId);
+    }
+
+    private void setRobotName(final Context context, RobotJsonData jsonData, final String callbackId) {
+        LogHelper.logD(TAG, "setRobotName2 action initiated in Robot plugin");
+        final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+        final String robotName = jsonData.getString(JsonMapKeys.KEY_ROBOT_NAME);
+
+        RobotManager.getInstance(context).setRobotName(robotId, robotName, new RobotRequestListenerWrapper(callbackId) {
+
+            @Override
+            public void onReceived(NeatoWebserviceResult responseResult) {
+                JSONObject robotJsonObj = getRobotDetailJsonObject(robotId, robotName);
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, robotJsonObj);
+                pluginResult.setKeepCallback(false);
+                sendSuccessPluginResult(pluginResult, callbackId);
+            }
+        });
+    }
+
+    protected JSONObject getRobotDetailJsonObject(String robotId, String robotName) {
+        JSONObject robotJsonObj = new JSONObject();
+        try {
+            robotJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+            robotJsonObj.put(JsonMapKeys.KEY_ROBOT_NAME, robotName);
+        } catch (JSONException e) {
+            LogHelper.logD(TAG, "Exception in getRobotDetailJsonObject", e);
+        }
+        return robotJsonObj;
+    }
 }

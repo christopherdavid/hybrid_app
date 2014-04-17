@@ -1,4 +1,5 @@
 package com.neatorobotics.android.slide.framework.service;
+
 import org.jivesoftware.smack.XMPPException;
 
 import android.app.Service;
@@ -38,412 +39,408 @@ import com.neatorobotics.android.slide.framework.xmpp.XMPPNotificationListener;
 import com.neatorobotics.android.slide.framework.xmpp.XMPPUtils;
 
 public class NeatoSmartAppService extends Service {
-	
-	private static final String TAG = NeatoSmartAppService.class.getSimpleName();
-	
-	public static final String EXTRA_RESULT_RECEIVER = "extra.result_receiver";
-	public static final String NEATO_RESULT_RECEIVER_ACTION = "com.neato.simulator.result_receiver.action";
-	
-	private Handler mHandler = new Handler();
-	private ResultReceiver mResultReceiver;
-	
-	private XMPPConnectionHelper mXMPPConnectionHelper;
-	private RobotPeerConnection mRobotPeerConnection;
-	
-	private boolean isDataChangedCommand(RequestPacket request) {
-		int commandId = request.getCommand();
-		return (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_PROFILE_DATA_CHANGED);
-	}
-	
-	private void processDataChangedRequest(String from, RequestPacket request) {
-		LogHelper.log(TAG, "Data changed on server for robot");
-		String robotId = request.getCommandParam(RobotCommandPacketConstants.KEY_ROBOT_ID);
-		
-		String causeAgentId = request.getCommandParam(RobotCommandPacketConstants.KEY_CAUSE_AGENT_ID);
-		if (!TextUtils.isEmpty(causeAgentId)) {
-			if (causeAgentId.equals(NeatoPrefs.getNeatoUserDeviceId(getApplicationContext()))) {
-				LogHelper.log(TAG, "Causing Agent Matched. Ignore Data changed notification");
-				return;
-			}
-		}
-		
-		if (TextUtils.isEmpty(robotId)) {
-			LogHelper.log(TAG, "Robot Id is empty in data changed command.");
-			robotId = NeatoPrefs.getManagedRobotSerialId(getApplicationContext());
-		}
-		
-		if (XMPPUtils.isRobotChatId(getApplicationContext(), from, robotId)) {
-			LogHelper.logD(TAG, "packet is received from robot chat id. Stop the command expiry timer if running.");
-			RobotCommandTimerHelper.getInstance(getApplicationContext()).stopCommandTimerIfRunning(robotId);
-		}
-		else {
-			LogHelper.logD(TAG, "packet is not received from robot chat id.");
-		}
-		
-		RobotDataManager.getServerData(getApplicationContext(), robotId);
-	}
-	
-	private void initializePeerHelperIfRequired()
-	{
-		if (mRobotPeerConnection == null) {
-			LogHelper.logD(TAG, "Using new Command structure");
-			mRobotPeerConnection = new RobotPeerConnection(this);
-			mRobotPeerConnection.setHandler(mHandler);
-			mRobotPeerConnection.setPeerDataListener(mRobotPeerDataListener);
-		}
-	}
-	
 
-	private INeatoRobotService mNeatoRobotService = new INeatoRobotService.Stub() {
+    private static final String TAG = NeatoSmartAppService.class.getSimpleName();
 
-		public void sendCommand(String robotId, RobotRequests requests, int mode) throws RemoteException {
-			LogHelper.logD(TAG, "sendCommand Called. Using new command structure with mode - " + mode);
-			RobotCommandPacketHeader header = RobotCommandPacketHeader.getRobotCommandHeader(RobotCommandPacketConstants.COMMAND_PACKET_SIGNATURE, RobotCommandPacketConstants.COMMAND_PACKET_VERSION);
-			if (mode == RobotPacketConstants.DISTRIBUTION_MODE_TYPE_PEER) {
-				if(isPeerConnectionExists(robotId)) {
-					LogHelper.logD(TAG, "SendCommand Called using TCP connection as transport");
-					requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_PEER);
-					RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header, requests);
-					mRobotPeerConnection.sendRobotCommand(robotId, robotCommandPacket);
-				} else {
-					LogHelper.logD(TAG, "peer connection does not exist: Request = " + requests);
-				}
-			} else if (mode == RobotPacketConstants.DISTRIBUTION_MODE_TYPE_XMPP) {
-				if(isXmppConnectionExists(robotId)) {
-					String chatId = XMPPUtils.getRobotChatId(NeatoSmartAppService.this, robotId);
-					LogHelper.logD(TAG, "SendCommand Called using XMPP connection as transport. Request:-" + requests);
-					requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_XMPP);
-					RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header, requests);
-					mXMPPConnectionHelper.sendRobotCommand(chatId, robotCommandPacket);
-				} else {
-					LogHelper.logD(TAG, "Xmpp connection does not exist: Request = " + requests);
-				}
-			}
-		}
-		
-		public void connectToRobot3(String robotId, String robotIpAddress) throws RemoteException {
-			LogHelper.log(TAG, "connectToRobot3 Called. robotId -" + robotId);
-			
-			initializePeerHelperIfRequired();
-			if (mRobotPeerConnection != null) {
-				LogHelper.logD(TAG, "Using new command structure");
-				mRobotPeerConnection.connectToRobot(robotId, robotIpAddress);
-			}
-		}
+    public static final String EXTRA_RESULT_RECEIVER = "extra.result_receiver";
+    public static final String NEATO_RESULT_RECEIVER_ACTION = "com.neato.simulator.result_receiver.action";
 
-		// cleanup all the things here. TO be called when we wish to stop the service
-		public void cleanup() {
-			LogHelper.log(TAG, "cleanup service called");
+    private Handler mHandler = new Handler();
+    private ResultReceiver mResultReceiver;
 
-			if (mRobotPeerConnection != null) {
-				mRobotPeerConnection.closeExistingPeerConnection();
-			}
-			
-			mRobotPeerConnection = null;
-			mRobotPeerDataListener = null;
-			mHandler = null;
-			mResultReceiver = null;
-			unregisterReceiver(mWifiStateChange);
-			mWifiStateChange = null;
-			mXMPPConnectionHelper.close();
-			mXMPPConnectionHelper =null;
-			
-			stopSelf();
-		}
+    private XMPPConnectionHelper mXMPPConnectionHelper;
+    private RobotPeerConnection mRobotPeerConnection;
 
-		public void closePeerConnection(String robotId)
-				throws RemoteException {
-			
-			if (mRobotPeerConnection != null) {
-				boolean isConnected = mRobotPeerConnection.isPeerRobotConnected(robotId);
-				if (isConnected) {
-					mRobotPeerConnection.closePeerRobotConnection(robotId);
-				} else {
-					// This should not be hit., Still catching the if at all.
-					LogHelper.logD(TAG, "Close peer connection when peer already closed.");
-					mRobotPeerDataListener.onDisconnect(robotId);
-				}
-			}
-		}
+    private boolean isDataChangedCommand(RequestPacket request) {
+        int commandId = request.getCommand();
+        return (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_PROFILE_DATA_CHANGED);
+    }
 
-		@Override
-		public void loginToXmpp() throws RemoteException {
-			LogHelper.log(TAG, "loginToXmpp called");
-			if(mXMPPConnectionHelper != null) {
-				LogHelper.log(TAG, "mXMPPConnectionHelper is not null");
-				Runnable task = new Runnable() {
+    private void processDataChangedRequest(String from, RequestPacket request) {
+        LogHelper.log(TAG, "Data changed on server for robot");
+        String robotId = request.getCommandParam(RobotCommandPacketConstants.KEY_ROBOT_ID);
 
-					@Override
-					public void run() {
-						loginToXmppServer();
-					}
-				};
-				TaskUtils.scheduleTask(task, 0);
-			}
-		}
-		
-		@Override
-		public boolean isRobotDirectConnected(String robotId) throws RemoteException {
-			if (mRobotPeerConnection != null) {
-				return mRobotPeerConnection.isConnectedAndPingRobot(robotId);
-			}
-			return false;
-		};
-		
-		@Override
-		public boolean isAnyPeerConnectionExists() throws RemoteException{
-			if (mRobotPeerConnection != null) {
-				return mRobotPeerConnection.isConnectedAndSendPingPacket();
-			}
-			return false;
-		}
+        String causeAgentId = request.getCommandParam(RobotCommandPacketConstants.KEY_CAUSE_AGENT_ID);
+        if (!TextUtils.isEmpty(causeAgentId)) {
+            if (causeAgentId.equals(NeatoPrefs.getNeatoUserDeviceId(getApplicationContext()))) {
+                LogHelper.log(TAG, "Causing Agent Matched. Ignore Data changed notification");
+                return;
+            }
+        }
 
+        if (TextUtils.isEmpty(robotId)) {
+            LogHelper.log(TAG, "Robot Id is empty in data changed command.");
+            robotId = NeatoPrefs.getManagedRobotSerialId(getApplicationContext());
+        }
 
-	};
+        if (XMPPUtils.isRobotChatId(getApplicationContext(), from, robotId)) {
+            LogHelper.logD(TAG, "packet is received from robot chat id. Stop the command expiry timer if running.");
+            RobotCommandTimerHelper.getInstance(getApplicationContext()).stopCommandTimerIfRunning(robotId);
+        } else {
+            LogHelper.logD(TAG, "packet is not received from robot chat id.");
+        }
 
-	private BroadcastReceiver mWifiStateChange = new BroadcastReceiver() {
+        RobotDataManager.getServerData(getApplicationContext(), robotId);
+    }
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
+    private void initializePeerHelperIfRequired() {
+        if (mRobotPeerConnection == null) {
+            LogHelper.logD(TAG, "Using new Command structure");
+            mRobotPeerConnection = new RobotPeerConnection(this);
+            mRobotPeerConnection.setHandler(mHandler);
+            mRobotPeerConnection.setPeerDataListener(mRobotPeerDataListener);
+        }
+    }
 
-			if(intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
-				NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-				if(networkInfo.isConnected()) {
-					// Wifi is connected
-					LogHelper.logD(TAG, "Connected to a network");
-					Runnable task = new Runnable() {
+    private INeatoRobotService mNeatoRobotService = new INeatoRobotService.Stub() {
 
-						@Override
-						public void run() {
-							loginToXmppServer();
-						}
-					};
-					TaskUtils.scheduleTask(task, 0);
-				}
-			} 
-			else if(intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-				NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-				if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI && !networkInfo.isConnected()) {
-					// Wifi is disconnected
-					LogHelper.logD(TAG, "Disconnecting from the network");
-					// There is no API to logout. XMPP will automatically break the connection
-				}
-			}
-		}
-	};
+        public void sendCommand(String robotId, RobotRequests requests, int mode) throws RemoteException {
+            LogHelper.logD(TAG, "sendCommand Called. Using new command structure with mode - " + mode);
+            RobotCommandPacketHeader header = RobotCommandPacketHeader.getRobotCommandHeader(
+                    RobotCommandPacketConstants.COMMAND_PACKET_SIGNATURE,
+                    RobotCommandPacketConstants.COMMAND_PACKET_VERSION);
+            if (mode == RobotPacketConstants.DISTRIBUTION_MODE_TYPE_PEER) {
+                if (isPeerConnectionExists(robotId)) {
+                    LogHelper.logD(TAG, "SendCommand Called using TCP connection as transport");
+                    requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_PEER);
+                    RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header,
+                            requests);
+                    mRobotPeerConnection.sendRobotCommand(robotId, robotCommandPacket);
+                } else {
+                    LogHelper.logD(TAG, "peer connection does not exist: Request = " + requests);
+                }
+            } else if (mode == RobotPacketConstants.DISTRIBUTION_MODE_TYPE_XMPP) {
+                if (isXmppConnectionExists(robotId)) {
+                    String chatId = XMPPUtils.getRobotChatId(NeatoSmartAppService.this, robotId);
+                    LogHelper.logD(TAG, "SendCommand Called using XMPP connection as transport. Request:-" + requests);
+                    requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_XMPP);
+                    RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header,
+                            requests);
+                    mXMPPConnectionHelper.sendRobotCommand(chatId, robotCommandPacket);
+                } else {
+                    LogHelper.logD(TAG, "Xmpp connection does not exist: Request = " + requests);
+                }
+            }
+        }
 
-	private BroadcastReceiver mResultReceiverBroadcast = new BroadcastReceiver() {
+        public void connectToRobot3(String robotId, String robotIpAddress) throws RemoteException {
+            LogHelper.log(TAG, "connectToRobot3 Called. robotId -" + robotId);
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			mResultReceiver = intent.getParcelableExtra(EXTRA_RESULT_RECEIVER);
-		}
-	};
-	
-	private String getFormattedServerInfo()
-	{
-		return String.format("%s (%s)", NeatoWebConstants.getServerUrl(), NeatoWebConstants.getServerName());
-	}
+            initializePeerHelperIfRequired();
+            if (mRobotPeerConnection != null) {
+                LogHelper.logD(TAG, "Using new command structure");
+                mRobotPeerConnection.connectToRobot(robotId, robotIpAddress);
+            }
+        }
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
+        // cleanup all the things here. TO be called when we wish to stop the
+        // service
+        public void cleanup() {
+            LogHelper.log(TAG, "cleanup service called");
 
-		AppUtils.logLibraryVersion();
-		NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
-		LogHelper.log(TAG, "Server information = " + getFormattedServerInfo());
-		
-		// Get XMPP started.
-		mXMPPConnectionHelper =  XMPPConnectionHelper.getInstance(this);
-		String xmppDomain = NeatoWebConstants.getXmppServerDomain();
-		mXMPPConnectionHelper.setServerInformation(xmppDomain, AppConstants.JABBER_SERVER_PORT, AppConstants.JABBER_WEB_SERVICE);
-		mXMPPConnectionHelper.setXmppNotificationListener(mXmppNotificationListener, mHandler);
-		
-		if (isConnectedToWifiNetwork()) {
-			Runnable task = new Runnable() {
+            if (mRobotPeerConnection != null) {
+                mRobotPeerConnection.closeExistingPeerConnection();
+            }
 
-				@Override
-				public void run() {
-					loginToXmppServer();
-				}
-			};
-			TaskUtils.scheduleTask(task, 0);
-		}
-		registerReceiver(mWifiStateChange, new IntentFilter( WifiManager.NETWORK_STATE_CHANGED_ACTION));
-		registerReceiver(mWifiStateChange, new IntentFilter( ConnectivityManager.CONNECTIVITY_ACTION));
-		registerReceiver(mResultReceiverBroadcast, new IntentFilter(NEATO_RESULT_RECEIVER_ACTION));
-	}
+            mRobotPeerConnection = null;
+            mRobotPeerDataListener = null;
+            mHandler = null;
+            mResultReceiver = null;
+            unregisterReceiver(mWifiStateChange);
+            mWifiStateChange = null;
+            mXMPPConnectionHelper.close();
+            mXMPPConnectionHelper = null;
 
-	@Override
-	public IBinder onBind(Intent intent) {
-		ResultReceiver resultReceiver = intent.getParcelableExtra(EXTRA_RESULT_RECEIVER);
-		if (resultReceiver != null) {
-			mResultReceiver = resultReceiver;
-		}
-		return mNeatoRobotService.asBinder();
-	}
+            stopSelf();
+        }
 
+        public void closePeerConnection(String robotId) throws RemoteException {
 
+            if (mRobotPeerConnection != null) {
+                boolean isConnected = mRobotPeerConnection.isPeerRobotConnected(robotId);
+                if (isConnected) {
+                    mRobotPeerConnection.closePeerRobotConnection(robotId);
+                } else {
+                    // This should not be hit., Still catching the if at all.
+                    LogHelper.logD(TAG, "Close peer connection when peer already closed.");
+                    mRobotPeerDataListener.onDisconnect(robotId);
+                }
+            }
+        }
 
-	@Override
-	public boolean onUnbind(Intent intent) {
-		mResultReceiver = null;
-		return super.onUnbind(intent);
-	}
-	
-	@Override
-	public void onDestroy() {
-		try {
-			if (mWifiStateChange != null) {
-				unregisterReceiver(mWifiStateChange);
-			}
-			unregisterReceiver(mResultReceiverBroadcast);
-		}
-		catch (Exception e) {
-			LogHelper.log(TAG, "Exception in unregisterReceiver", e);
-		}
-		super.onDestroy();
-	}
+        @Override
+        public void loginToXmpp() throws RemoteException {
+            LogHelper.log(TAG, "loginToXmpp called");
+            if (mXMPPConnectionHelper != null) {
+                LogHelper.log(TAG, "mXMPPConnectionHelper is not null");
+                Runnable task = new Runnable() {
 
+                    @Override
+                    public void run() {
+                        loginToXmppServer();
+                    }
+                };
+                TaskUtils.scheduleTask(task, 0);
+            }
+        }
 
-	//Check to see if the network connection to wifi is available
-	public boolean isConnectedToWifiNetwork() {
+        @Override
+        public boolean isRobotDirectConnected(String robotId) throws RemoteException {
+            if (mRobotPeerConnection != null) {
+                return mRobotPeerConnection.isConnectedAndPingRobot(robotId);
+            }
+            return false;
+        };
 
-		ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-		NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        @Override
+        public boolean isAnyPeerConnectionExists() throws RemoteException {
+            if (mRobotPeerConnection != null) {
+                return mRobotPeerConnection.isConnectedAndSendPingPacket();
+            }
+            return false;
+        }
 
-		if (mWifi.isConnected()) {
-			return true;
-		}
-		return false;
-	}
-	
-	private Object mXmppConnectionLock = new Object();
-	
-	private void loginToXmppServer() {
-		try {
-			synchronized (mXmppConnectionLock) {
-				if (UserHelper.isUserLoggedIn(getApplicationContext())) {
-					LogHelper.log(TAG, "loginToXmppServer called");
-					mXMPPConnectionHelper.close();
-					
-					LogHelper.logD(TAG, "closed existing connection. Now retring to connect");
-					mXMPPConnectionHelper.connect();
-					LogHelper.logD(TAG, "connected. Now loging in");
-					String userId = getUserChatId();
-					String password = getUserChatPassword();
-					LogHelper.log(TAG, "userId = " + userId);
-					mXMPPConnectionHelper.login(userId, password);
-				}
-			}
-		}
-		catch (XMPPException e) {
-			LogHelper.log(TAG, "Exception in connecting to XMPP server", e);
-		}
-	}
+    };
 
-	private String getUserChatId() {
-		String jabberUserId = UserHelper.getChatId(this);		
-		jabberUserId = XMPPUtils.removeJabberDomain(jabberUserId);
-		return jabberUserId;
-	}
-	
-	private String getUserChatPassword() {
-		String jabberUserPwd = UserHelper.getChatPwd(this);
-		return jabberUserPwd;
-	}
+    private BroadcastReceiver mWifiStateChange = new BroadcastReceiver() {
 
-	private void sendCommandUsingNewCommandStructure(String robotId, RobotRequests requests) {
-		
-		LogHelper.logD(TAG, "sendCommandUsingNewCommandStructure called");
-		RobotCommandPacketHeader header = RobotCommandPacketHeader.getRobotCommandHeader(RobotCommandPacketConstants.COMMAND_PACKET_SIGNATURE, RobotCommandPacketConstants.COMMAND_PACKET_VERSION);
-		if(isXmppConnectionExists(robotId)) {
-			String chatId = XMPPUtils.getRobotChatId(NeatoSmartAppService.this, robotId);
-			LogHelper.logD(TAG, "SendCommand Called using XMPP connection as transport. Request:-" + requests);
-			requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_XMPP);
-			RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header, requests);
-			mXMPPConnectionHelper.sendRobotCommand(chatId, robotCommandPacket);
-		} else {
-			LogHelper.logD(TAG, "Xmpp connection does not exist: Request = " + requests);
-		}
-	}
-	
-	private boolean isPeerConnectionExists(String robotId)
-	{
-		return ((mRobotPeerConnection!= null) && mRobotPeerConnection.isPeerRobotConnected(robotId));
-	}
-	
-	private boolean isXmppConnectionExists(String robotId)
-	{
-		return ((mXMPPConnectionHelper!= null) && mXMPPConnectionHelper.isConnected());
-	}
-	
-	private XMPPNotificationListener mXmppNotificationListener = new XMPPNotificationListener() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
 
-		@Override
-		public void onDataReceived(String from, RobotCommandPacket packet) {
-			LogHelper.log(TAG, "XMPP onDataReceived. New Packet Data = " + packet);
-			// If data changed command recevied, retrieve the changed data from server.
-			if (packet.isRequest()) {
-				RequestPacket request = packet.getRobotCommands().getCommand(0);
-				if (isDataChangedCommand(request)) {
-					processDataChangedRequest(from, request);
-					return;
-				}
-			}
-		}
-	};
-	
-	private RobotPeerDataListener mRobotPeerDataListener = new RobotPeerDataListener() {
+            if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
+                NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+                if (networkInfo.isConnected()) {
+                    // Wifi is connected
+                    LogHelper.logD(TAG, "Connected to a network");
+                    Runnable task = new Runnable() {
 
-		public void onConnect(String robotId) {			
-			if (mResultReceiver != null) {
-				Bundle bundle = new Bundle();
-				bundle.putString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID, robotId);
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_CONNECTED, bundle);
-			}
-		}
+                        @Override
+                        public void run() {
+                            loginToXmppServer();
+                        }
+                    };
+                    TaskUtils.scheduleTask(task, 0);
+                }
+            } else if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+                if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI && !networkInfo.isConnected()) {
+                    // Wifi is disconnected
+                    LogHelper.logD(TAG, "Disconnecting from the network");
+                    // There is no API to logout. XMPP will automatically break
+                    // the connection
+                }
+            }
+        }
+    };
 
-		public void onDisconnect(String robotId) {			
-			if (mResultReceiver != null) {
-				Bundle bundle = new Bundle();
-				bundle.putString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID, robotId);
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_DISCONNECTED, bundle);
-			}
-		}
+    private BroadcastReceiver mResultReceiverBroadcast = new BroadcastReceiver() {
 
-		@Override
-		public void errorInConnecting(String robotId) {
-			if (mResultReceiver != null) {
-				Bundle bundle = new Bundle();
-				bundle.putString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID, robotId);
-				mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_CONNECTION_ERROR, bundle);
-			}
-		}
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mResultReceiver = intent.getParcelableExtra(EXTRA_RESULT_RECEIVER);
+        }
+    };
 
-		@Override
-		public void onDataReceived(String robotId, RobotCommandPacket robotPacket) {
-			LogHelper.log(TAG, "onDataReceived. Packet = " + robotPacket);
-			
-			if (mResultReceiver == null) {
-				return;
-			}
+    private String getFormattedServerInfo() {
+        return String.format("%s (%s)", NeatoWebConstants.getServerUrl(), NeatoWebConstants.getServerName());
+    }
 
-			Bundle bundle = new Bundle();
-			bundle.putString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID, robotId);
-			bundle.putBoolean(NeatoRobotResultReceiverConstants.KEY_IS_REQUEST_PACKET, robotPacket.isRequest());
-						
-			if (robotPacket.isResponse()) {
-				LogHelper.log(TAG, "Command Response from Remote Control = " + robotPacket);
-				bundle.putParcelable(NeatoRobotResultReceiverConstants.KEY_REMOTE_RESPONSE_PACKET, robotPacket.getCommandResponse());
-			}
-			else {
-				LogHelper.log(TAG, "Command Requests from Remote Control = "+ robotPacket);
-				bundle.putParcelable(NeatoRobotResultReceiverConstants.KEY_REMOTE_REQUEST_PACKET, robotPacket.getRobotCommands());
-			}
-			mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_PACKET_RECEIVED_ON_PEER_CONNETION, bundle);
-		}
-	};	
-	
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        AppUtils.logLibraryVersion();
+        NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
+        LogHelper.log(TAG, "Server information = " + getFormattedServerInfo());
+
+        // Get XMPP started.
+        mXMPPConnectionHelper = XMPPConnectionHelper.getInstance(this);
+        String xmppDomain = NeatoWebConstants.getXmppServerDomain();
+        mXMPPConnectionHelper.setServerInformation(xmppDomain, AppConstants.JABBER_SERVER_PORT,
+                NeatoWebConstants.getXmppWebServer());
+        mXMPPConnectionHelper.setXmppNotificationListener(mXmppNotificationListener, mHandler);
+
+        if (isConnectedToWifiNetwork()) {
+            Runnable task = new Runnable() {
+
+                @Override
+                public void run() {
+                    loginToXmppServer();
+                }
+            };
+            TaskUtils.scheduleTask(task, 0);
+        }
+        registerReceiver(mWifiStateChange, new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
+        registerReceiver(mWifiStateChange, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        registerReceiver(mResultReceiverBroadcast, new IntentFilter(NEATO_RESULT_RECEIVER_ACTION));
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        ResultReceiver resultReceiver = intent.getParcelableExtra(EXTRA_RESULT_RECEIVER);
+        if (resultReceiver != null) {
+            mResultReceiver = resultReceiver;
+        }
+        return mNeatoRobotService.asBinder();
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        mResultReceiver = null;
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        try {
+            if (mWifiStateChange != null) {
+                unregisterReceiver(mWifiStateChange);
+            }
+            unregisterReceiver(mResultReceiverBroadcast);
+        } catch (Exception e) {
+            LogHelper.log(TAG, "Exception in unregisterReceiver", e);
+        }
+        super.onDestroy();
+    }
+
+    // Check to see if the network connection to wifi is available
+    public boolean isConnectedToWifiNetwork() {
+
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        if (mWifi.isConnected()) {
+            return true;
+        }
+        return false;
+    }
+
+    private Object mXmppConnectionLock = new Object();
+
+    private void loginToXmppServer() {
+        try {
+            synchronized (mXmppConnectionLock) {
+                if (UserHelper.isUserLoggedIn(getApplicationContext())) {
+                    LogHelper.log(TAG, "loginToXmppServer called");
+                    mXMPPConnectionHelper.close();
+
+                    LogHelper.logD(TAG, "closed existing connection. Now retring to connect");
+                    mXMPPConnectionHelper.connect();
+                    LogHelper.logD(TAG, "connected. Now loging in");
+                    String userId = getUserChatId();
+                    String password = getUserChatPassword();
+                    LogHelper.log(TAG, "userId = " + userId);
+                    mXMPPConnectionHelper.login(userId, password);
+                }
+            }
+        } catch (XMPPException e) {
+            LogHelper.log(TAG, "Exception in connecting to XMPP server", e);
+        }
+    }
+
+    private String getUserChatId() {
+        String jabberUserId = UserHelper.getChatId(this);
+        jabberUserId = XMPPUtils.removeJabberDomain(jabberUserId);
+        return jabberUserId;
+    }
+
+    private String getUserChatPassword() {
+        String jabberUserPwd = UserHelper.getChatPwd(this);
+        return jabberUserPwd;
+    }
+
+    private void sendCommandUsingNewCommandStructure(String robotId, RobotRequests requests) {
+
+        LogHelper.logD(TAG, "sendCommandUsingNewCommandStructure called");
+        RobotCommandPacketHeader header = RobotCommandPacketHeader.getRobotCommandHeader(
+                RobotCommandPacketConstants.COMMAND_PACKET_SIGNATURE,
+                RobotCommandPacketConstants.COMMAND_PACKET_VERSION);
+        if (isXmppConnectionExists(robotId)) {
+            String chatId = XMPPUtils.getRobotChatId(NeatoSmartAppService.this, robotId);
+            LogHelper.logD(TAG, "SendCommand Called using XMPP connection as transport. Request:-" + requests);
+            requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_XMPP);
+            RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header, requests);
+            mXMPPConnectionHelper.sendRobotCommand(chatId, robotCommandPacket);
+        } else {
+            LogHelper.logD(TAG, "Xmpp connection does not exist: Request = " + requests);
+        }
+    }
+
+    private boolean isPeerConnectionExists(String robotId) {
+        return ((mRobotPeerConnection != null) && mRobotPeerConnection.isPeerRobotConnected(robotId));
+    }
+
+    private boolean isXmppConnectionExists(String robotId) {
+        return ((mXMPPConnectionHelper != null) && mXMPPConnectionHelper.isConnected());
+    }
+
+    private XMPPNotificationListener mXmppNotificationListener = new XMPPNotificationListener() {
+
+        @Override
+        public void onDataReceived(String from, RobotCommandPacket packet) {
+            LogHelper.log(TAG, "XMPP onDataReceived. New Packet Data = " + packet);
+            // If data changed command recevied, retrieve the changed data from
+            // server.
+            if (packet.isRequest()) {
+                RequestPacket request = packet.getRobotCommands().getCommand(0);
+                if (isDataChangedCommand(request)) {
+                    processDataChangedRequest(from, request);
+                    return;
+                }
+            }
+        }
+    };
+
+    private RobotPeerDataListener mRobotPeerDataListener = new RobotPeerDataListener() {
+
+        public void onConnect(String robotId) {
+            if (mResultReceiver != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID, robotId);
+                mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_CONNECTED, bundle);
+            }
+        }
+
+        public void onDisconnect(String robotId) {
+            if (mResultReceiver != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID, robotId);
+                mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_DISCONNECTED, bundle);
+            }
+        }
+
+        @Override
+        public void errorInConnecting(String robotId) {
+            if (mResultReceiver != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID, robotId);
+                mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_CONNECTION_ERROR, bundle);
+            }
+        }
+
+        @Override
+        public void onDataReceived(String robotId, RobotCommandPacket robotPacket) {
+            LogHelper.log(TAG, "onDataReceived. Packet = " + robotPacket);
+
+            if (mResultReceiver == null) {
+                return;
+            }
+
+            Bundle bundle = new Bundle();
+            bundle.putString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID, robotId);
+            bundle.putBoolean(NeatoRobotResultReceiverConstants.KEY_IS_REQUEST_PACKET, robotPacket.isRequest());
+
+            if (robotPacket.isResponse()) {
+                LogHelper.log(TAG, "Command Response from Remote Control = " + robotPacket);
+                bundle.putParcelable(NeatoRobotResultReceiverConstants.KEY_REMOTE_RESPONSE_PACKET,
+                        robotPacket.getCommandResponse());
+            } else {
+                LogHelper.log(TAG, "Command Requests from Remote Control = " + robotPacket);
+                bundle.putParcelable(NeatoRobotResultReceiverConstants.KEY_REMOTE_REQUEST_PACKET,
+                        robotPacket.getRobotCommands());
+            }
+            mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_PACKET_RECEIVED_ON_PEER_CONNETION, bundle);
+        }
+    };
 
 }

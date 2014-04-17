@@ -15,7 +15,7 @@ import com.neatorobotics.android.slide.framework.database.NeatoDatabase.Schedule
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.Tables;
 import com.neatorobotics.android.slide.framework.database.NeatoDatabase.UserInfoColumns;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.robot.schedule2.ScheduleInfo2;
+import com.neatorobotics.android.slide.framework.robot.schedule.ScheduleInfo;
 import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
 import com.neatorobotics.android.slide.framework.utils.CryptoUtils;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
@@ -27,15 +27,15 @@ import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
  * 
  */
 public class DBHelper {
-	private static final String TAG = DBHelper.class.getSimpleName();
-	
-	private static DBHelper singleInstanceObject;
-	
-	private SQLiteDatabase mNeatoDB;
-	private Context mContext;
-	
-	private static final String UPPER_CASE_KEY = "UPPER";
-	
+    private static final String TAG = DBHelper.class.getSimpleName();
+
+    private static DBHelper singleInstanceObject;
+
+    private SQLiteDatabase mNeatoDB;
+    private Context mContext;
+
+    private static final String UPPER_CASE_KEY = "UPPER";
+
 	// Select query statements
 	private static final String SELECTION_USER_BY_USER_ID = Tables.TABLE_NAME_USER_INFO + "." + UserInfoColumns.COL_NAME_USER_ID + " = ?";
 	private static final String SELECTION_USER_BY_USER_EMAIL = UPPER_CASE_KEY + "(" + Tables.TABLE_NAME_USER_INFO + "." + UserInfoColumns.COL_NAME_USER_EMAIL + ")" + " = ?";
@@ -45,7 +45,6 @@ public class DBHelper {
 	private static final String SELECTION_SCHEDULE_INFO_BY_ID = Tables.TABLE_NAME_SCHEDULE_INFO + "." + ScheduleInfoColumns.COL_NAME_SCHEDULE_ID + " = ?";
 	private static final String SELECTION_ROBOT_SCHEDULE_BY_ID = UPPER_CASE_KEY + "(" + Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_ROBOT_ID  + ")" + " = ?";
 	private static final String SELECTION_ROBOT_BY_BASIC_SCHEDULE_ID = Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_BASIC_SCHEDULE_ID + " = ?";
-	private static final String SELECTION_ROBOT_BY_ADVANCED_SCHEDULE_ID = Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS + "." + ScheduleIdsColumns.COL_NAME_ADVANCED_SCHEDULE_ID + " = ?";
 	private static final String SELECTION_CLEANING_SETTINGS_BY_ROBOTID =  UPPER_CASE_KEY + "(" + Tables.TABLE_NAME_CLEANING_SETTINGS + "." + CleaningSettingsColumns.COL_NAME_ROBOT_ID + ")" + " = ?";
 	private static final String SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL = UPPER_CASE_KEY + "(" + Tables.TABLE_NAME_NOTIFICATION_SETTINGS + "." + NotificationSettingsColumns.COL_NAME_EMAIL + ")" + " = ?";
 	
@@ -73,688 +72,651 @@ public class DBHelper {
 			singleInstanceObject = new DBHelper(context);
 		}
 
-		return singleInstanceObject;
-	}	
+        return singleInstanceObject;
+    }
 
-	public void clearAllData() {
-		clearAllAssociatedRobots();
-		clearAllScheduleInfo();
-		clearAllScheduleIds();
-		clearAllCleaningSettings();
-		clearAllNotificationSettings();
-		clearAllRobotProfileParams();
-	}
-	
-	@Override
-	protected void finalize() throws Throwable {
-		if (mNeatoDB != null) {
-			mNeatoDB.close();
-			mNeatoDB = null;
-		}
-	}
-	
-	// User related functions ---------------------------------------------------------------------------
-	
-	public boolean saveUser(UserItem userItem) {
-		
-		if (isUserExist(userItem.id)) {
-			deleteUserById(userItem.id);
-		}
-		
-		ContentValues values = getContentValues(userItem);
-		
-		SQLiteDatabase db = getDatabase();
-		long rowId = db.insert(Tables.TABLE_NAME_USER_INFO, null, values);
-		
-		boolean saved = (rowId > 0) ? true : false;		
-		// Save associated robots info
-		if (saved && (userItem.getAssociateRobotCount() > 0)) {			
-			for(int index = 0; index < userItem.getAssociateRobotCount(); index++) {
-				saveRobot(userItem.getAssociateRobot(index));
-			}
-		}
-		
-		return saved;
-	}
-	
-	private boolean isUserExist(String userId) {
-		UserItem userItem = getUserById(userId);
-		
-		if (userItem != null) {
-			return true;
-		}
-		
-		return false;
-	}
-	
-	
-	public UserItem getUserById(String userId) {
-		UserItem userInfo = null;
-		String[] selectionArgs = new String[] {userId};
-		
-		SQLiteDatabase db = getDatabase();		
-		Cursor cursor = db.query(Tables.TABLE_NAME_USER_INFO, null, SELECTION_USER_BY_USER_ID, selectionArgs, null, null, null);
-		if (cursor.moveToFirst()) {
-			userInfo = convertToUserItem(cursor);
-		}
-		
-		cursor.close();
-		
-		return userInfo;
-	}
-	
-	public UserItem getUserByEmail(String email) {
-		UserItem userInfo = null;
-		String[] selectionArgs = new String[] {email.toUpperCase()};
-		
-		SQLiteDatabase db = getDatabase();		
-		Cursor cursor = db.query(Tables.TABLE_NAME_USER_INFO, null, SELECTION_USER_BY_USER_EMAIL, selectionArgs, null, null, null);
-		if (cursor.moveToFirst()) {
-			userInfo = convertToUserItem(cursor);
-		}
-		
-		cursor.close();
-		
-		return userInfo;
-	}
-	
-	public boolean deleteUserById(String userId) {
-		String[] selectionArgs = new String[] {userId};
-		
-		SQLiteDatabase db = getDatabase();		
-		int count = db.delete(Tables.TABLE_NAME_USER_INFO, SELECTION_USER_BY_USER_ID, selectionArgs);
-		
-		return (count > 0) ? true : false;
-	}
-	
-	public boolean deleteUserByEmail(String userEmail) {
-		String[] selectionArgs = new String[] {userEmail.toUpperCase()};
-		
-		SQLiteDatabase db = getDatabase();		
-		int count = db.delete(Tables.TABLE_NAME_USER_INFO, SELECTION_USER_BY_USER_EMAIL, selectionArgs);
-		
-		return (count > 0) ? true : false;
-	}
-	
-	private UserItem convertToUserItem(Cursor cursor) {
-		UserItem userItem = new UserItem();
-		
-		userItem.id = cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_ID));
-		userItem.name = cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_NAME));
-		userItem.email = cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_EMAIL));
-		userItem.chat_id = cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_CHAT_ID));		
-		
-		try {			
-			String decryptedPwd = CryptoUtils.decrypt(cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_CHAT_PWD)));
-			userItem.chat_pwd = decryptedPwd;			
-		}
-		catch (Exception ex) {
-			LogHelper.log(TAG, "Exception in password decryption");			
-		}
-		
-		return userItem;
-	}
-	
-	private ContentValues getContentValues(UserItem userItem) {
-		ContentValues values  = new ContentValues();
-		values.put(UserInfoColumns.COL_NAME_USER_ID, userItem.id);
-		values.put(UserInfoColumns.COL_NAME_USER_NAME, userItem.name);
-		values.put(UserInfoColumns.COL_NAME_USER_EMAIL, userItem.email);
-		values.put(UserInfoColumns.COL_NAME_USER_CHAT_ID, userItem.chat_id);
-		
-		try {			
-			String encryptedPwd = CryptoUtils.encrypt(userItem.chat_pwd);			
-			values.put(UserInfoColumns.COL_NAME_USER_CHAT_PWD, encryptedPwd);
-		}
-		catch (Exception ex) {
-			LogHelper.log(TAG, "Exception in password encryption");			
-		}
-		
-		return values;
-	}
-	
-	// Robot related functions ---------------------------------------------------------------------------
-	
-	public boolean saveRobot(RobotItem robotItem) {
-		if (isRobotExist(robotItem.serial_number)) {
-			deleteRobotBySerialId(robotItem.serial_number);
-		}
-		
-		ContentValues values = getContentValues(robotItem);
-		
-		SQLiteDatabase db = getDatabase();
-		long rowId = db.insert(Tables.TABLE_NAME_ROBOT_INFO, null, values);
-		
-		LogHelper.log(TAG, String.format("saveRobot SerialId [%s] - %d", robotItem.serial_number, rowId));
-		
-		boolean saved = (rowId > 0) ? true : false; 
-		
-		return saved;
-	}
-	
-	public void saveRobot(List<RobotItem> robotList) {
-		for (RobotItem robotItem : robotList) {
-			saveRobot(robotItem);
-		}
-	}
-	
-	private boolean isRobotExist(String serialId) {
-		RobotItem robotItem = getRobotBySerialId(serialId);
-		
-		if (robotItem != null) {
-			return true;
-		}
-		
-		return false;
-	}
-	
-	public RobotItem getRobotBySerialId(String serialId) {
-		RobotItem robotItem = null;
-		String[] selectionArgs = new String[] {serialId.toUpperCase()};
-		
-		SQLiteDatabase db = getDatabase();		
-		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_INFO, null, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs, null, null, null);
-		if (cursor.moveToFirst()) {
-			robotItem = convertToRobotItem(cursor);
-		}
-		
-		cursor.close();
-		
-		return robotItem;
-	}
-	
-	public RobotItem getDefaultRobot() {
-		RobotItem robotItem = null;		
-		
-		SQLiteDatabase db = getDatabase();		
-		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_INFO, null, null, null, null, null, null);
-		if (cursor.moveToFirst()) {
-			robotItem = convertToRobotItem(cursor);
-		}
-		
-		cursor.close();
-		
-		return robotItem;
-	}
-	
-	public List<RobotItem> getAllAssociatedRobots() {
-		List<RobotItem> robotList = new ArrayList<RobotItem>();
-		
-		SQLiteDatabase db = getDatabase();		
-		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_INFO, null, null, null, null, null, null);
-		if (cursor.moveToFirst()) {
-			do {
-				RobotItem robotItem = convertToRobotItem(cursor);
-				robotList.add(robotItem);
-			}while(cursor.moveToNext());
-		}
-		
-		cursor.close();
-		
-		return robotList;
-	}
-	
-	public RobotItem updateRobotNameBySerialId(String serialId, String name) {		
-		String[] selectionArgs = new String[] {serialId.toUpperCase()};
-		
-		ContentValues values = new ContentValues();
-		values.put(RobotInfoColumns.COL_NAME_ROBOT_NAME, name);
-		
-		SQLiteDatabase db = getDatabase();		
-		db.update(Tables.TABLE_NAME_ROBOT_INFO, values, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs);
-		RobotItem robotItem = getRobotBySerialId(serialId);		
-		
-		return robotItem;
-	}
-	
-	public boolean clearAllAssociatedRobots() {
-		SQLiteDatabase db = getDatabase();		
-		int count = db.delete(Tables.TABLE_NAME_ROBOT_INFO, null, null);
-		
-		LogHelper.log(TAG, String.format("clearAllAssociatedRobots - %d", count));
-		
-		return (count > 0) ? true : false;
-	}
-	
-	public boolean deleteRobotBySerialId(String serialId) {
-		String[] selectionArgs = new String[] {serialId.toUpperCase()};
-		
-		SQLiteDatabase db = getDatabase();		
-		int count = db.delete(Tables.TABLE_NAME_ROBOT_INFO, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs);
-		
-		LogHelper.log(TAG, String.format("deleteRobotBySerialId [%s] - %d", serialId, count));
-		
-		return (count > 0) ? true : false;
-	}
-	
-	private RobotItem convertToRobotItem(Cursor cursor) {
-		RobotItem robotItem = new RobotItem();
-		
-		robotItem.id = cursor.getString(cursor.getColumnIndex(RobotInfoColumns.COL_NAME_ROBOT_ID));
-		robotItem.serial_number = cursor.getString(cursor.getColumnIndex(RobotInfoColumns.COL_NAME_ROBOT_SERIAL_ID));
-		robotItem.name = cursor.getString(cursor.getColumnIndex(RobotInfoColumns.COL_NAME_ROBOT_NAME));
-		robotItem.chat_id = cursor.getString(cursor.getColumnIndex(RobotInfoColumns.COL_NAME_ROBOT_CHAT_ID));		
-		
-		return robotItem;
-	}
-	
-	private ContentValues getContentValues(RobotItem robotItem) {
-		ContentValues values  = new ContentValues();
-		values.put(RobotInfoColumns.COL_NAME_ROBOT_ID, robotItem.id);
-		values.put(RobotInfoColumns.COL_NAME_ROBOT_SERIAL_ID, robotItem.serial_number);
-		values.put(RobotInfoColumns.COL_NAME_ROBOT_NAME, robotItem.name);
-		values.put(RobotInfoColumns.COL_NAME_ROBOT_CHAT_ID, robotItem.chat_id);		
-		
-		return values;
-	}
-	
-	// Public helper method to return the ScheduleInfo based on the id
-	// from the database
-	public ScheduleInfo2 getScheduleInfoById(String id) {
-		ScheduleInfo2 scheduleInfo = null;
-		String[] selectionArgs = new String[] {id};
-		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(Tables.TABLE_NAME_SCHEDULE_INFO, null, SELECTION_SCHEDULE_INFO_BY_ID, selectionArgs, null, null, null);
-		if (cursor.moveToFirst()) {
-			scheduleInfo = convertToScheduleInfo(cursor);
-		}
-		cursor.close();
-		return scheduleInfo;
-	}
+    public void clearAllData() {
+        clearAllAssociatedRobots();
+        clearAllScheduleInfo();
+        clearAllScheduleIds();
+        clearAllCleaningSettings();
+        clearAllNotificationSettings();
+        clearAllRobotProfileParams();
+    }
 
-	private ScheduleInfo2 convertToScheduleInfo(Cursor cursor) {
-		ScheduleInfo2 scheduleInfo = new ScheduleInfo2();
-		scheduleInfo.setScheduleId(cursor.getString(cursor.getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_ID)));
-		scheduleInfo.setServerId(cursor.getString(cursor.getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_SERVER_ID)));
-		scheduleInfo.setDataVersion(cursor.getString(cursor.getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_VERSION)));		
-		scheduleInfo.setScheduleType(cursor.getString(cursor.getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_TYPE)));
-		scheduleInfo.setScheduleData(cursor.getString(cursor.getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_DATA)));
-		return scheduleInfo;
-	}
+    @Override
+    protected void finalize() throws Throwable {
+        if (mNeatoDB != null) {
+            mNeatoDB.close();
+            mNeatoDB = null;
+        }
+    }
 
-	// Public helper method to save the schedule information into the database
-	public ScheduleInfo2 saveScheduleInfo(String id, String serverId, String scheduleVersion, String scheduleType, String data) {	
-		LogHelper.logD(TAG, String.format("saveScheduleInfo - Input ScheduleId = %s ScheduleVersion = %s", serverId, scheduleVersion));
-		ScheduleInfo2 scheduleInfo = getScheduleInfoById(id);
-		if (scheduleInfo != null) {			
-			LogHelper.logD(TAG, String.format("saveScheduleInfo - Database ScheduleId = %s ScheduleVersion = %s ", 
-					scheduleInfo.getServerId(), scheduleInfo.getDataVersion()));		
-			scheduleInfo.setScheduleId(id);
-			scheduleInfo.setServerId(serverId);
-			scheduleInfo.setScheduleType(scheduleType);
-			scheduleInfo.setDataVersion(scheduleVersion);
-			scheduleInfo.setScheduleData(data);
-			updateScheduleInfo(scheduleInfo);
-		}
-		else {
-			LogHelper.logD(TAG, String.format("Insert schedule info -  ScheduleId = %s ScheduleVersion = %s ", 
-					serverId, scheduleVersion));
-			ContentValues values = getScheduleInfoContentValues(id, serverId, scheduleVersion, scheduleType, data);
-			SQLiteDatabase db = getDatabase();
-			long rowId = db.insert(Tables.TABLE_NAME_SCHEDULE_INFO, null, values);
-			if (rowId > 0) {
-				scheduleInfo = new ScheduleInfo2();
-				scheduleInfo.setScheduleId(id);
-				scheduleInfo.setServerId(serverId);
-				scheduleInfo.setScheduleType(scheduleType);  
-				scheduleInfo.setDataVersion(scheduleVersion);
-			}
-		}
-		return scheduleInfo;
-	}
-		
-	public boolean updateScheduleInfo(ScheduleInfo2 scheduleInfo) {
-		ContentValues values = getScheduleInfoContentValues(scheduleInfo);		
-		String[] selectionArgs = new String[] {scheduleInfo.getScheduleId()};
-		SQLiteDatabase db = getDatabase();
-		int count = db.update(Tables.TABLE_NAME_SCHEDULE_INFO, values, SELECTION_SCHEDULE_INFO_BY_ID, selectionArgs);
-		return (count > 0) ? true : false;
-	}
+    // User related functions
+    // ---------------------------------------------------------------------------
 
-	private ContentValues getScheduleInfoContentValues(String id, String serverId, String scheduleVersion, String scheduleType, String scheduleData) 
-	{
-		ContentValues values  = new ContentValues();
-		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_ID, id);
-		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_SERVER_ID, serverId);
-		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_VERSION, scheduleVersion);
-		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_TYPE, scheduleType);
-		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_DATA, scheduleData);
-		return values;
-	}
+    public boolean saveUser(UserItem userItem) {
 
-	private ContentValues getScheduleInfoContentValues(ScheduleInfo2 scheduleInfo) {
-		ContentValues values  = new ContentValues();
-		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_ID, scheduleInfo.getScheduleId());
-		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_SERVER_ID, scheduleInfo.getServerId());
-		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_VERSION, scheduleInfo.getDataVersion());
-		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_TYPE, scheduleInfo.getScheduleType());
-		values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_DATA, scheduleInfo.getScheduleData());
-		return values;
-	}
+        if (isUserExist(userItem.id)) {
+            deleteUserById(userItem.id);
+        }
 
-	public void clearAllScheduleInfo() {
-		SQLiteDatabase db = getDatabase();
-		int count = db.delete(Tables.TABLE_NAME_SCHEDULE_INFO, null, null);
-		LogHelper.logD(TAG, "clearAllScheduleInfo - " + count);
-	}
-	
-	public boolean isScheduleInfoExistsForRobot(String robotId) {
-		String[] selectionArgs = new String[] {robotId.toUpperCase()};
-		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
-		return cursor.moveToFirst();
-	} 
+        ContentValues values = getContentValues(userItem);
 
-	// Robot schedule IDs helper function
-	public String getAdvancedScheduleIdForRobot(String robotId) {
-		String scheduleId = null;
-		String[] selectionArgs = new String[] {robotId.toUpperCase()};
+        SQLiteDatabase db = getDatabase();
+        long rowId = db.insert(Tables.TABLE_NAME_USER_INFO, null, values);
 
-		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
-		if (cursor.moveToFirst()) {
-			scheduleId = getAdvancedScheduleId(cursor);
-		}
-		cursor.close();
-		return scheduleId;
-	}
+        boolean saved = (rowId > 0) ? true : false;
+        // Save associated robots info
+        if (saved && (userItem.getAssociateRobotCount() > 0)) {
+            for (int index = 0; index < userItem.getAssociateRobotCount(); index++) {
+                saveRobot(userItem.getAssociateRobot(index));
+            }
+        }
 
+        return saved;
+    }
 
-	public String getBasicScheduleIdForRobot(String robotId) {
-		String scheduleId = null;
-		String[] selectionArgs = new String[] {robotId.toUpperCase()};
+    private boolean isUserExist(String userId) {
+        UserItem userItem = getUserById(userId);
 
-		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs, null, null, null);
-		if (cursor.moveToFirst()) {
-			scheduleId = getBasicScheduleId(cursor);
-		}
-		cursor.close();
-		return scheduleId;
-	}
+        if (userItem != null) {
+            return true;
+        }
 
-	private String getAdvancedScheduleId(Cursor cursor) {
-		return (cursor.getString(cursor.getColumnIndex(ScheduleIdsColumns.COL_NAME_ADVANCED_SCHEDULE_ID)));
-	}
+        return false;
+    }
 
-	private String getBasicScheduleId(Cursor cursor) {
-		return (cursor.getString(cursor.getColumnIndex(ScheduleIdsColumns.COL_NAME_BASIC_SCHEDULE_ID)));
-	}
+    public UserItem getUserById(String userId) {
+        UserItem userInfo = null;
+        String[] selectionArgs = new String[] { userId };
 
-	private String getRobotId(Cursor cursor) {
-		return (cursor.getString(cursor.getColumnIndex(ScheduleIdsColumns.COL_NAME_ROBOT_ID)));
-	}
+        SQLiteDatabase db = getDatabase();
+        Cursor cursor = db.query(Tables.TABLE_NAME_USER_INFO, null, SELECTION_USER_BY_USER_ID, selectionArgs, null,
+                null, null);
+        if (cursor.moveToFirst()) {
+            userInfo = convertToUserItem(cursor);
+        }
 
-	public boolean updateBasicScheduleId(String robotId, String basicScheduleId) {
-		ContentValues values = getBasicContentValues(robotId, basicScheduleId);		
-		String[] selectionArgs = new String[] {robotId.toUpperCase()};
-		SQLiteDatabase db = getDatabase();
-		int count = db.update(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, values, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs);
-		return (count > 0) ? true : false;
-	}
+        cursor.close();
 
-	public boolean updateAdvancedScheduleId(String robotId, String advacnedScheduleId) {
-		ContentValues values = getAdvancedContentValues(robotId, advacnedScheduleId);		
-		String[] selectionArgs = new String[] {robotId.toUpperCase()};
-		SQLiteDatabase db = getDatabase();
-		int count = db.update(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, values, SELECTION_ROBOT_SCHEDULE_BY_ID, selectionArgs);
-		return (count > 0) ? true : false;
-	}
+        return userInfo;
+    }
 
-	public void saveAdvancedScheduleId(String robotId, String id) {	
-		if (isScheduleInfoExistsForRobot(robotId)) {			
-			updateAdvancedScheduleId(robotId, id);
-		}
-		else {
-			ContentValues values = getAdvancedContentValues(robotId, id);
-			SQLiteDatabase db = getDatabase();
-			db.insert(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, values);
-		}
-	}
+    public UserItem getUserByEmail(String email) {
+        UserItem userInfo = null;
+        String[] selectionArgs = new String[] { email.toUpperCase() };
 
-	public void saveBasicScheduleId(String robotId, String id) {	
-		if (isScheduleInfoExistsForRobot(robotId)) {			
-			updateBasicScheduleId(robotId, id);
-		}
-		else {
-			ContentValues values = getBasicContentValues(robotId, id);
-			SQLiteDatabase db = getDatabase();
-			db.insert(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, values);
-			LogHelper.logD(TAG, "Added Basic Schedule Id for the robot successfully");
-		}
-	}
+        SQLiteDatabase db = getDatabase();
+        Cursor cursor = db.query(Tables.TABLE_NAME_USER_INFO, null, SELECTION_USER_BY_USER_EMAIL, selectionArgs, null,
+                null, null);
+        if (cursor.moveToFirst()) {
+            userInfo = convertToUserItem(cursor);
+        }
 
-	public String getRobotIdForBasicSchedule(String id) {
-		String[] selectionArgs = new String[] {id};
-		String robotId = null;
-		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_BY_BASIC_SCHEDULE_ID, selectionArgs, null, null, null);
-		if (cursor.moveToFirst()) {
-			robotId = getRobotId(cursor);
-		}
-		cursor.close();
-		return robotId;
-	}
+        cursor.close();
 
-	public String getRobotIdForAdvancedSchedule(String id) {
-		String[] selectionArgs = new String[] {id};
-		String robotId = null;
-		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_BY_ADVANCED_SCHEDULE_ID, selectionArgs, null, null, null);
-		if (cursor.moveToFirst()) {
-			robotId = getRobotId(cursor);
-		}
-		cursor.close();
-		return robotId;
+        return userInfo;
+    }
 
-	}
-	private ContentValues getBasicContentValues(String robotId,  String id) {
-		ContentValues values  = new ContentValues();
-		values.put(ScheduleIdsColumns.COL_NAME_ROBOT_ID, robotId);
-		values.put(ScheduleIdsColumns.COL_NAME_BASIC_SCHEDULE_ID, id);
-		return values;
-	}
+    public boolean deleteUserById(String userId) {
+        String[] selectionArgs = new String[] { userId };
 
-	private ContentValues getAdvancedContentValues(String robotId, String id) {
-		ContentValues values  = new ContentValues();
-		values.put(ScheduleIdsColumns.COL_NAME_ROBOT_ID, robotId);
-		values.put(ScheduleIdsColumns.COL_NAME_ADVANCED_SCHEDULE_ID, id);
-		return values;
-	}
-	
-	public void clearAllScheduleIds() {
-		SQLiteDatabase db = getDatabase();
-		int count = db.delete(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, null);
-		LogHelper.logD(TAG, "clearAllScheduleIds - " + count);
-	}
-	
-	private CleaningSettings convertToCleaningSettingsObject(Cursor cursor) {
-		CleaningSettings cleaningSettings = new CleaningSettings();
+        SQLiteDatabase db = getDatabase();
+        int count = db.delete(Tables.TABLE_NAME_USER_INFO, SELECTION_USER_BY_USER_ID, selectionArgs);
 
-		cleaningSettings.setSpotAreaLength(cursor.getInt(cursor.getColumnIndex(CleaningSettingsColumns.COL_NAME_SPOT_AREA_LENGTH)));
-		cleaningSettings.setSpotAreaHeight(cursor.getInt(cursor.getColumnIndex(CleaningSettingsColumns.COL_NAME_SPOT_AREA_HEIGHT)));
-		cleaningSettings.setCleaningCategory(cursor.getInt(cursor.getColumnIndex(CleaningSettingsColumns.COL_NAME_CLEANING_CATEGORY)));
-		return cleaningSettings;
-	}
+        return (count > 0) ? true : false;
+    }
 
-	private ContentValues getContentValues(CleaningSettings cleaningSettings) {
-		ContentValues values  = new ContentValues();
+    public boolean deleteUserByEmail(String userEmail) {
+        String[] selectionArgs = new String[] { userEmail.toUpperCase() };
 
-		values.put(CleaningSettingsColumns.COL_NAME_SPOT_AREA_LENGTH, cleaningSettings.getSpotAreaLength());
-		values.put(CleaningSettingsColumns.COL_NAME_SPOT_AREA_HEIGHT, cleaningSettings.getSpotAreaHeight());
-		values.put(CleaningSettingsColumns.COL_NAME_CLEANING_CATEGORY, cleaningSettings.getCleaningCategory());
-		
-		return values;
-	}
+        SQLiteDatabase db = getDatabase();
+        int count = db.delete(Tables.TABLE_NAME_USER_INFO, SELECTION_USER_BY_USER_EMAIL, selectionArgs);
 
-	// Public helper method to return robot cleaning settings
-	public CleaningSettings getCleaningSettings(String robotId) {
-		CleaningSettings robotSettings = null;
+        return (count > 0) ? true : false;
+    }
 
-		String[] selectionArgs = new String[] {robotId.toUpperCase()};
+    private UserItem convertToUserItem(Cursor cursor) {
+        UserItem userItem = new UserItem();
 
-		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(Tables.TABLE_NAME_CLEANING_SETTINGS, null, SELECTION_CLEANING_SETTINGS_BY_ROBOTID,
-				selectionArgs, null, null, null);
-		if (cursor.moveToFirst()) {
-			robotSettings = convertToCleaningSettingsObject(cursor);
-		}
-		cursor.close();
+        userItem.id = cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_ID));
+        userItem.name = cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_NAME));
+        userItem.email = cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_EMAIL));
+        userItem.chat_id = cursor.getString(cursor.getColumnIndex(UserInfoColumns.COL_NAME_USER_CHAT_ID));
 
-		return robotSettings;
-	}
+        try {
+            String decryptedPwd = CryptoUtils.decrypt(cursor.getString(cursor
+                    .getColumnIndex(UserInfoColumns.COL_NAME_USER_CHAT_PWD)));
+            userItem.chat_pwd = decryptedPwd;
+        } catch (Exception ex) {
+            LogHelper.log(TAG, "Exception in password decryption");
+        }
 
-	// Public helper method to update cleaning settings
-	public boolean updateCleaningSettings(String robotId, CleaningSettings cleaningSettings) {
-		int count = 0;
+        return userItem;
+    }
 
-		String[] selectionArgs = new String[] {robotId.toUpperCase()};
+    private ContentValues getContentValues(UserItem userItem) {
+        ContentValues values = new ContentValues();
+        values.put(UserInfoColumns.COL_NAME_USER_ID, userItem.id);
+        values.put(UserInfoColumns.COL_NAME_USER_NAME, userItem.name);
+        values.put(UserInfoColumns.COL_NAME_USER_EMAIL, userItem.email);
+        values.put(UserInfoColumns.COL_NAME_USER_CHAT_ID, userItem.chat_id);
 
-		ContentValues values = getContentValues(cleaningSettings);
+        try {
+            String encryptedPwd = CryptoUtils.encrypt(userItem.chat_pwd);
+            values.put(UserInfoColumns.COL_NAME_USER_CHAT_PWD, encryptedPwd);
+        } catch (Exception ex) {
+            LogHelper.log(TAG, "Exception in password encryption");
+        }
 
-		SQLiteDatabase db = getDatabase();
+        return values;
+    }
 
-		Cursor cursor = db.query(Tables.TABLE_NAME_CLEANING_SETTINGS, null, SELECTION_CLEANING_SETTINGS_BY_ROBOTID, 
-				selectionArgs, null, null, null);
-		if (!cursor.moveToFirst()) {
-			// Entry does not exist add one
-			values.put(CleaningSettingsColumns.COL_NAME_ROBOT_ID, robotId);
-			count = (int) db.insert(Tables.TABLE_NAME_CLEANING_SETTINGS, null, values);
-		}
-		else {
-			count = db.update(Tables.TABLE_NAME_CLEANING_SETTINGS, values, SELECTION_CLEANING_SETTINGS_BY_ROBOTID, selectionArgs);
-		}
+    // Robot related functions
+    // ---------------------------------------------------------------------------
 
-		return (count > 0) ? true : false;
-	}
-	
-	public void clearAllCleaningSettings() {
-		SQLiteDatabase db = getDatabase();
-		int count = db.delete(Tables.TABLE_NAME_CLEANING_SETTINGS, null, null);
-		LogHelper.logD(TAG, "clearAllCleaningSettings - " + count);
-	}	
-	
-	// Public helper method to update notification settings JSON
-	public boolean saveNotificationSettingsJson(String email, String notificationSettingsJson) {
-		long count = 0;
+    public boolean saveRobot(RobotItem robotItem) {
+        if (isRobotExist(robotItem.serial_number)) {
+            deleteRobotBySerialId(robotItem.serial_number);
+        }
 
-		ContentValues values = getContentValues(email, notificationSettingsJson);
-		
-		String[] selectionArgs = new String[] {email.toUpperCase()};
-		SQLiteDatabase db = getDatabase();
+        ContentValues values = getContentValues(robotItem);
 
-		Cursor cursor = db.query(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, 
-				SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL, selectionArgs, null, null, null);
-		if (cursor.moveToFirst()) {			
-			// Entry exist update it
-			count = db.update(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, values, 
-					SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL, selectionArgs);
-		}
-		else {
-			// Entry does not exist add one
-			values.put(NotificationSettingsColumns.COL_NAME_EMAIL, email);
-			count = db.insert(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, values);
-		}
-		
-		cursor.close();
-		
-		return (count > 0) ? true : false;
-	}	
-	
-	// Public helper method to return robot notification settings JSON string
-	public String getNotificationSettingsJson(String email) {
-		String notificationsJson = "";
-		
-		SQLiteDatabase db = getDatabase();
-		String[] selectionArgs = new String[] {email.toUpperCase()};
-		Cursor cursor = db.query(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, 
-				SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL, selectionArgs, null, null, null);
-		
-		if (cursor.moveToFirst()) {
-			notificationsJson = cursor.getString(cursor.getColumnIndex(NotificationSettingsColumns.COL_NAME_NOTIFICATION_JSON));
-		}
-		cursor.close();
-		
-		return notificationsJson;
-	}
-	
-	public void clearAllNotificationSettings() {
-		SQLiteDatabase db = getDatabase();
-		int count = db.delete(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, null);
-		LogHelper.logD(TAG, "clearAllNotificationSettings - " + count);
-	}	
-	
-	private ContentValues getContentValues(String email, String settingsJson) {
-		ContentValues values  = new ContentValues();
+        SQLiteDatabase db = getDatabase();
+        long rowId = db.insert(Tables.TABLE_NAME_ROBOT_INFO, null, values);
 
-		LogHelper.logD(TAG, "Saving notificationSettings JSON- " + settingsJson);		
-		values.put(NotificationSettingsColumns.COL_NAME_NOTIFICATION_JSON, settingsJson);
+        LogHelper.log(TAG, String.format("saveRobot SerialId [%s] - %d", robotItem.serial_number, rowId));
 
-		return values;
-	}
-	
-	
-	// Public method to handle profile params : Table :TABLE_NAME_ROBOT_PROFILE_PARAMS
-	private void clearAllRobotProfileParams() {
-		SQLiteDatabase db = getDatabase();
-		int count = db.delete(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, null, null);
-		LogHelper.logD(TAG, "clearAllProfileParams - " + count);
-	}
-	
-	private ContentValues getProfileParamsContentValues(String robotId, String key, long timestamp) {
-		ContentValues values  = new ContentValues();
-		values.put(RobotProfileParameters.COL_NAME_ROBOT_ID, robotId);
-		values.put(RobotProfileParameters.COL_NAME_ROBOT_PARAM_KEY, key);
-		values.put(RobotProfileParameters.COL_NAME_ROBOT_PARAM_TIMESTAMP, timestamp);
-		return values;
-	}
-	
-	private boolean addProfileParam(String robotId, String key, long timestamp) {
-		LogHelper.logD(TAG, "AddprofileParam for the robot");
-		ContentValues values = getProfileParamsContentValues(robotId, key, timestamp);
-		SQLiteDatabase db = getDatabase();
-		long rowId = db.insert(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, null, values);
-		return (rowId > 0) ? true : false;
-	}
-	
-	private boolean updateProfileParam(String robotId, String key, long timestamp) {
-		LogHelper.logD(TAG, "updateProfileParam for the robot");
-		ContentValues values = getProfileParamsContentValues(robotId, key, timestamp);
-		String[] selectionArgs = new String[] {robotId, key};
-		SQLiteDatabase db = getDatabase();		
-		int count = db.update(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, values, SELECTION_ROBOT_PROFILE_PARAM_BY_ROBOTID_AND_KEY, selectionArgs);
-		
-		return (count > 0) ? true : false;
-	}
-	
-	private boolean deleteProfileParam(String robotId, String key) {
-		LogHelper.logD(TAG, "deleteProfileParam for the robot "+ robotId + " Key: " +key);
-		String[] selectionArgs = new String[] {robotId, key};
-		SQLiteDatabase db = getDatabase();		
-		int count = db.delete(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, SELECTION_ROBOT_PROFILE_PARAM_BY_ROBOTID_AND_KEY, selectionArgs);
-		return (count > 0) ? true : false;
-	}
-	
-	public long getProfileParamTimestamp(String robotId, String id) {
-		String[] selectionArgs = new String[] {robotId, id};
-		SQLiteDatabase db = getDatabase();
-		Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, null, SELECTION_ROBOT_PROFILE_PARAM_BY_ROBOTID_AND_KEY, selectionArgs, null, null, null);
-		if (cursor.moveToFirst()) {
-			return cursor.getLong(cursor.getColumnIndex(RobotProfileParameters.COL_NAME_ROBOT_PARAM_TIMESTAMP));
-		}
-		return -1;
-	}
-	
-	public boolean saveProfileParam(String robotId, String key, long timestamp) {
-		if (getProfileParamTimestamp(robotId, key) != -1) {
-			return updateProfileParam(robotId, key, timestamp);
-		}
-		else {
-			return addProfileParam(robotId, key, timestamp);
-		}
-	}
-	
-	public boolean deleteProfileParamIfExists(String robotId, String key) {
-			return deleteProfileParam(robotId, key);
-	}
+        boolean saved = (rowId > 0) ? true : false;
+
+        return saved;
+    }
+
+    public void saveRobot(List<RobotItem> robotList) {
+        for (RobotItem robotItem : robotList) {
+            saveRobot(robotItem);
+        }
+    }
+
+    private boolean isRobotExist(String serialId) {
+        RobotItem robotItem = getRobotBySerialId(serialId);
+
+        if (robotItem != null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public RobotItem getRobotBySerialId(String serialId) {
+        RobotItem robotItem = null;
+        String[] selectionArgs = new String[] { serialId.toUpperCase() };
+
+        SQLiteDatabase db = getDatabase();
+        Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_INFO, null, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs, null,
+                null, null);
+        if (cursor.moveToFirst()) {
+            robotItem = convertToRobotItem(cursor);
+        }
+
+        cursor.close();
+
+        return robotItem;
+    }
+
+    public RobotItem getDefaultRobot() {
+        RobotItem robotItem = null;
+
+        SQLiteDatabase db = getDatabase();
+        Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_INFO, null, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            robotItem = convertToRobotItem(cursor);
+        }
+
+        cursor.close();
+
+        return robotItem;
+    }
+
+    public List<RobotItem> getAllAssociatedRobots() {
+        List<RobotItem> robotList = new ArrayList<RobotItem>();
+
+        SQLiteDatabase db = getDatabase();
+        Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_INFO, null, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                RobotItem robotItem = convertToRobotItem(cursor);
+                robotList.add(robotItem);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return robotList;
+    }
+
+    public RobotItem updateRobotNameBySerialId(String serialId, String name) {
+        String[] selectionArgs = new String[] { serialId.toUpperCase() };
+
+        ContentValues values = new ContentValues();
+        values.put(RobotInfoColumns.COL_NAME_ROBOT_NAME, name);
+
+        SQLiteDatabase db = getDatabase();
+        db.update(Tables.TABLE_NAME_ROBOT_INFO, values, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs);
+        RobotItem robotItem = getRobotBySerialId(serialId);
+
+        return robotItem;
+    }
+
+    public boolean clearAllAssociatedRobots() {
+        SQLiteDatabase db = getDatabase();
+        int count = db.delete(Tables.TABLE_NAME_ROBOT_INFO, null, null);
+
+        LogHelper.log(TAG, String.format("clearAllAssociatedRobots - %d", count));
+
+        return (count > 0) ? true : false;
+    }
+
+    public boolean deleteRobotBySerialId(String serialId) {
+        String[] selectionArgs = new String[] { serialId.toUpperCase() };
+
+        SQLiteDatabase db = getDatabase();
+        int count = db.delete(Tables.TABLE_NAME_ROBOT_INFO, SELECTION_ROBOT_BY_SERIAL_ID, selectionArgs);
+
+        LogHelper.log(TAG, String.format("deleteRobotBySerialId [%s] - %d", serialId, count));
+
+        return (count > 0) ? true : false;
+    }
+
+    private RobotItem convertToRobotItem(Cursor cursor) {
+        RobotItem robotItem = new RobotItem();
+
+        robotItem.id = cursor.getString(cursor.getColumnIndex(RobotInfoColumns.COL_NAME_ROBOT_ID));
+        robotItem.serial_number = cursor.getString(cursor.getColumnIndex(RobotInfoColumns.COL_NAME_ROBOT_SERIAL_ID));
+        robotItem.name = cursor.getString(cursor.getColumnIndex(RobotInfoColumns.COL_NAME_ROBOT_NAME));
+        robotItem.chat_id = cursor.getString(cursor.getColumnIndex(RobotInfoColumns.COL_NAME_ROBOT_CHAT_ID));
+
+        return robotItem;
+    }
+
+    private ContentValues getContentValues(RobotItem robotItem) {
+        ContentValues values = new ContentValues();
+        values.put(RobotInfoColumns.COL_NAME_ROBOT_ID, robotItem.id);
+        values.put(RobotInfoColumns.COL_NAME_ROBOT_SERIAL_ID, robotItem.serial_number);
+        values.put(RobotInfoColumns.COL_NAME_ROBOT_NAME, robotItem.name);
+        values.put(RobotInfoColumns.COL_NAME_ROBOT_CHAT_ID, robotItem.chat_id);
+
+        return values;
+    }
+
+    // Public helper method to return the ScheduleInfo based on the id
+    // from the database
+    public ScheduleInfo getScheduleInfoById(String id) {
+        ScheduleInfo scheduleInfo = null;
+        String[] selectionArgs = new String[] { id };
+        SQLiteDatabase db = getDatabase();
+        Cursor cursor = db.query(Tables.TABLE_NAME_SCHEDULE_INFO, null, SELECTION_SCHEDULE_INFO_BY_ID, selectionArgs,
+                null, null, null);
+        if (cursor.moveToFirst()) {
+            scheduleInfo = convertToScheduleInfo(cursor);
+        }
+        cursor.close();
+        return scheduleInfo;
+    }
+
+    private ScheduleInfo convertToScheduleInfo(Cursor cursor) {
+        ScheduleInfo scheduleInfo = new ScheduleInfo();
+        scheduleInfo.setScheduleId(cursor.getString(cursor.getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_ID)));
+        scheduleInfo.setServerId(cursor.getString(cursor
+                .getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_SERVER_ID)));
+        scheduleInfo.setDataVersion(cursor.getString(cursor
+                .getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_VERSION)));
+        scheduleInfo
+                .setScheduleType(cursor.getString(cursor.getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_TYPE)));
+        scheduleInfo
+                .setScheduleData(cursor.getString(cursor.getColumnIndex(ScheduleInfoColumns.COL_NAME_SCHEDULE_DATA)));
+        return scheduleInfo;
+    }
+
+    // Public helper method to save the schedule information into the database
+    public ScheduleInfo saveScheduleInfo(String id, String serverId, String scheduleVersion, String scheduleType,
+            String data) {
+        LogHelper.logD(TAG, String.format("saveScheduleInfo - Input ScheduleId = %s ScheduleVersion = %s", serverId,
+                scheduleVersion));
+        ScheduleInfo scheduleInfo = getScheduleInfoById(id);
+        if (scheduleInfo != null) {
+            LogHelper.logD(
+                    TAG,
+                    String.format("saveScheduleInfo - Database ScheduleId = %s ScheduleVersion = %s ",
+                            scheduleInfo.getServerId(), scheduleInfo.getDataVersion()));
+            scheduleInfo.setScheduleId(id);
+            scheduleInfo.setServerId(serverId);
+            scheduleInfo.setScheduleType(scheduleType);
+            scheduleInfo.setDataVersion(scheduleVersion);
+            scheduleInfo.setScheduleData(data);
+            updateScheduleInfo(scheduleInfo);
+        } else {
+            LogHelper.logD(TAG, String.format("Insert schedule info -  ScheduleId = %s ScheduleVersion = %s ",
+                    serverId, scheduleVersion));
+            ContentValues values = getScheduleInfoContentValues(id, serverId, scheduleVersion, scheduleType, data);
+            SQLiteDatabase db = getDatabase();
+            long rowId = db.insert(Tables.TABLE_NAME_SCHEDULE_INFO, null, values);
+            if (rowId > 0) {
+                scheduleInfo = new ScheduleInfo();
+                scheduleInfo.setScheduleId(id);
+                scheduleInfo.setServerId(serverId);
+                scheduleInfo.setScheduleType(scheduleType);
+                scheduleInfo.setDataVersion(scheduleVersion);
+            }
+        }
+        return scheduleInfo;
+    }
+
+    public boolean updateScheduleInfo(ScheduleInfo scheduleInfo) {
+        ContentValues values = getScheduleInfoContentValues(scheduleInfo);
+        String[] selectionArgs = new String[] { scheduleInfo.getScheduleId() };
+        SQLiteDatabase db = getDatabase();
+        int count = db.update(Tables.TABLE_NAME_SCHEDULE_INFO, values, SELECTION_SCHEDULE_INFO_BY_ID, selectionArgs);
+        return (count > 0) ? true : false;
+    }
+
+    private ContentValues getScheduleInfoContentValues(String id, String serverId, String scheduleVersion,
+            String scheduleType, String scheduleData) {
+        ContentValues values = new ContentValues();
+        values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_ID, id);
+        values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_SERVER_ID, serverId);
+        values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_VERSION, scheduleVersion);
+        values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_TYPE, scheduleType);
+        values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_DATA, scheduleData);
+        return values;
+    }
+
+    private ContentValues getScheduleInfoContentValues(ScheduleInfo scheduleInfo) {
+        ContentValues values = new ContentValues();
+        values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_ID, scheduleInfo.getScheduleId());
+        values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_SERVER_ID, scheduleInfo.getServerId());
+        values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_VERSION, scheduleInfo.getDataVersion());
+        values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_TYPE, scheduleInfo.getScheduleType());
+        values.put(ScheduleInfoColumns.COL_NAME_SCHEDULE_DATA, scheduleInfo.getScheduleData());
+        return values;
+    }
+
+    public void clearAllScheduleInfo() {
+        SQLiteDatabase db = getDatabase();
+        int count = db.delete(Tables.TABLE_NAME_SCHEDULE_INFO, null, null);
+        LogHelper.logD(TAG, "clearAllScheduleInfo - " + count);
+    }
+
+    public boolean isScheduleInfoExistsForRobot(String robotId) {
+        String[] selectionArgs = new String[] { robotId.toUpperCase() };
+        SQLiteDatabase db = getDatabase();
+        Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID,
+                selectionArgs, null, null, null);
+        return cursor.moveToFirst();
+    }
+
+    // Robot schedule IDs helper function
+    public String getBasicScheduleIdForRobot(String robotId) {
+        String scheduleId = null;
+        String[] selectionArgs = new String[] { robotId.toUpperCase() };
+
+        SQLiteDatabase db = getDatabase();
+        Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_SCHEDULE_BY_ID,
+                selectionArgs, null, null, null);
+        if (cursor.moveToFirst()) {
+            scheduleId = getBasicScheduleId(cursor);
+        }
+        cursor.close();
+        return scheduleId;
+    }
+
+    private String getBasicScheduleId(Cursor cursor) {
+        return (cursor.getString(cursor.getColumnIndex(ScheduleIdsColumns.COL_NAME_BASIC_SCHEDULE_ID)));
+    }
+
+    private String getRobotId(Cursor cursor) {
+        return (cursor.getString(cursor.getColumnIndex(ScheduleIdsColumns.COL_NAME_ROBOT_ID)));
+    }
+
+    public boolean updateBasicScheduleId(String robotId, String basicScheduleId) {
+        ContentValues values = getBasicContentValues(robotId, basicScheduleId);
+        String[] selectionArgs = new String[] { robotId.toUpperCase() };
+        SQLiteDatabase db = getDatabase();
+        int count = db.update(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, values, SELECTION_ROBOT_SCHEDULE_BY_ID,
+                selectionArgs);
+        return (count > 0) ? true : false;
+    }
+
+    public void saveBasicScheduleId(String robotId, String id) {
+        if (isScheduleInfoExistsForRobot(robotId)) {
+            updateBasicScheduleId(robotId, id);
+        } else {
+            ContentValues values = getBasicContentValues(robotId, id);
+            SQLiteDatabase db = getDatabase();
+            db.insert(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, values);
+            LogHelper.logD(TAG, "Added Basic Schedule Id for the robot successfully");
+        }
+    }
+
+    public String getRobotIdForBasicSchedule(String id) {
+        String[] selectionArgs = new String[] { id };
+        String robotId = null;
+        SQLiteDatabase db = getDatabase();
+        Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, SELECTION_ROBOT_BY_BASIC_SCHEDULE_ID,
+                selectionArgs, null, null, null);
+        if (cursor.moveToFirst()) {
+            robotId = getRobotId(cursor);
+        }
+        cursor.close();
+        return robotId;
+    }
+
+    private ContentValues getBasicContentValues(String robotId, String id) {
+        ContentValues values = new ContentValues();
+        values.put(ScheduleIdsColumns.COL_NAME_ROBOT_ID, robotId);
+        values.put(ScheduleIdsColumns.COL_NAME_BASIC_SCHEDULE_ID, id);
+        return values;
+    }
+
+    public void clearAllScheduleIds() {
+        SQLiteDatabase db = getDatabase();
+        int count = db.delete(Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS, null, null);
+        LogHelper.logD(TAG, "clearAllScheduleIds - " + count);
+    }
+
+    private CleaningSettings convertToCleaningSettingsObject(Cursor cursor) {
+        CleaningSettings cleaningSettings = new CleaningSettings();
+
+        cleaningSettings.setSpotAreaLength(cursor.getInt(cursor
+                .getColumnIndex(CleaningSettingsColumns.COL_NAME_SPOT_AREA_LENGTH)));
+        cleaningSettings.setSpotAreaHeight(cursor.getInt(cursor
+                .getColumnIndex(CleaningSettingsColumns.COL_NAME_SPOT_AREA_HEIGHT)));
+        cleaningSettings.setCleaningCategory(cursor.getInt(cursor
+                .getColumnIndex(CleaningSettingsColumns.COL_NAME_CLEANING_CATEGORY)));
+        return cleaningSettings;
+    }
+
+    private ContentValues getContentValues(CleaningSettings cleaningSettings) {
+        ContentValues values = new ContentValues();
+
+        values.put(CleaningSettingsColumns.COL_NAME_SPOT_AREA_LENGTH, cleaningSettings.getSpotAreaLength());
+        values.put(CleaningSettingsColumns.COL_NAME_SPOT_AREA_HEIGHT, cleaningSettings.getSpotAreaHeight());
+        values.put(CleaningSettingsColumns.COL_NAME_CLEANING_CATEGORY, cleaningSettings.getCleaningCategory());
+
+        return values;
+    }
+
+    // Public helper method to return robot cleaning settings
+    public CleaningSettings getCleaningSettings(String robotId) {
+        CleaningSettings robotSettings = null;
+
+        String[] selectionArgs = new String[] { robotId.toUpperCase() };
+
+        SQLiteDatabase db = getDatabase();
+        Cursor cursor = db.query(Tables.TABLE_NAME_CLEANING_SETTINGS, null, SELECTION_CLEANING_SETTINGS_BY_ROBOTID,
+                selectionArgs, null, null, null);
+        if (cursor.moveToFirst()) {
+            robotSettings = convertToCleaningSettingsObject(cursor);
+        }
+        cursor.close();
+
+        return robotSettings;
+    }
+
+    // Public helper method to update cleaning settings
+    public boolean updateCleaningSettings(String robotId, CleaningSettings cleaningSettings) {
+        int count = 0;
+
+        String[] selectionArgs = new String[] { robotId.toUpperCase() };
+
+        ContentValues values = getContentValues(cleaningSettings);
+
+        SQLiteDatabase db = getDatabase();
+
+        Cursor cursor = db.query(Tables.TABLE_NAME_CLEANING_SETTINGS, null, SELECTION_CLEANING_SETTINGS_BY_ROBOTID,
+                selectionArgs, null, null, null);
+        if (!cursor.moveToFirst()) {
+            // Entry does not exist add one
+            values.put(CleaningSettingsColumns.COL_NAME_ROBOT_ID, robotId);
+            count = (int) db.insert(Tables.TABLE_NAME_CLEANING_SETTINGS, null, values);
+        } else {
+            count = db.update(Tables.TABLE_NAME_CLEANING_SETTINGS, values, SELECTION_CLEANING_SETTINGS_BY_ROBOTID,
+                    selectionArgs);
+        }
+
+        return (count > 0) ? true : false;
+    }
+
+    public void clearAllCleaningSettings() {
+        SQLiteDatabase db = getDatabase();
+        int count = db.delete(Tables.TABLE_NAME_CLEANING_SETTINGS, null, null);
+        LogHelper.logD(TAG, "clearAllCleaningSettings - " + count);
+    }
+
+    // Public helper method to update notification settings JSON
+    public boolean saveNotificationSettingsJson(String email, String notificationSettingsJson) {
+        long count = 0;
+
+        ContentValues values = getContentValues(email, notificationSettingsJson);
+
+        String[] selectionArgs = new String[] { email.toUpperCase() };
+        SQLiteDatabase db = getDatabase();
+
+        Cursor cursor = db.query(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null,
+                SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL, selectionArgs, null, null, null);
+        if (cursor.moveToFirst()) {
+            // Entry exist update it
+            count = db.update(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, values,
+                    SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL, selectionArgs);
+        } else {
+            // Entry does not exist add one
+            values.put(NotificationSettingsColumns.COL_NAME_EMAIL, email);
+            count = db.insert(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, values);
+        }
+
+        cursor.close();
+
+        return (count > 0) ? true : false;
+    }
+
+    // Public helper method to return robot notification settings JSON string
+    public String getNotificationSettingsJson(String email) {
+        String notificationsJson = "";
+
+        SQLiteDatabase db = getDatabase();
+        String[] selectionArgs = new String[] { email.toUpperCase() };
+        Cursor cursor = db.query(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null,
+                SELECTION_NOTIFICATION_SETTINGS_BY_EMAIL, selectionArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            notificationsJson = cursor.getString(cursor
+                    .getColumnIndex(NotificationSettingsColumns.COL_NAME_NOTIFICATION_JSON));
+        }
+        cursor.close();
+
+        return notificationsJson;
+    }
+
+    public void clearAllNotificationSettings() {
+        SQLiteDatabase db = getDatabase();
+        int count = db.delete(Tables.TABLE_NAME_NOTIFICATION_SETTINGS, null, null);
+        LogHelper.logD(TAG, "clearAllNotificationSettings - " + count);
+    }
+
+    private ContentValues getContentValues(String email, String settingsJson) {
+        ContentValues values = new ContentValues();
+
+        LogHelper.logD(TAG, "Saving notificationSettings JSON- " + settingsJson);
+        values.put(NotificationSettingsColumns.COL_NAME_NOTIFICATION_JSON, settingsJson);
+
+        return values;
+    }
+
+    // Public method to handle profile params : Table
+    // :TABLE_NAME_ROBOT_PROFILE_PARAMS
+    private void clearAllRobotProfileParams() {
+        SQLiteDatabase db = getDatabase();
+        int count = db.delete(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, null, null);
+        LogHelper.logD(TAG, "clearAllProfileParams - " + count);
+    }
+
+    private ContentValues getProfileParamsContentValues(String robotId, String key, long timestamp) {
+        ContentValues values = new ContentValues();
+        values.put(RobotProfileParameters.COL_NAME_ROBOT_ID, robotId);
+        values.put(RobotProfileParameters.COL_NAME_ROBOT_PARAM_KEY, key);
+        values.put(RobotProfileParameters.COL_NAME_ROBOT_PARAM_TIMESTAMP, timestamp);
+        return values;
+    }
+
+    private boolean addProfileParam(String robotId, String key, long timestamp) {
+        LogHelper.logD(TAG, "AddprofileParam for the robot");
+        ContentValues values = getProfileParamsContentValues(robotId, key, timestamp);
+        SQLiteDatabase db = getDatabase();
+        long rowId = db.insert(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, null, values);
+        return (rowId > 0) ? true : false;
+    }
+
+    private boolean updateProfileParam(String robotId, String key, long timestamp) {
+        LogHelper.logD(TAG, "updateProfileParam for the robot");
+        ContentValues values = getProfileParamsContentValues(robotId, key, timestamp);
+        String[] selectionArgs = new String[] { robotId, key };
+        SQLiteDatabase db = getDatabase();
+        int count = db.update(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, values,
+                SELECTION_ROBOT_PROFILE_PARAM_BY_ROBOTID_AND_KEY, selectionArgs);
+
+        return (count > 0) ? true : false;
+    }
+
+    private boolean deleteProfileParam(String robotId, String key) {
+        LogHelper.logD(TAG, "deleteProfileParam for the robot " + robotId + " Key: " + key);
+        String[] selectionArgs = new String[] { robotId, key };
+        SQLiteDatabase db = getDatabase();
+        int count = db.delete(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, SELECTION_ROBOT_PROFILE_PARAM_BY_ROBOTID_AND_KEY,
+                selectionArgs);
+        return (count > 0) ? true : false;
+    }
+
+    public long getProfileParamTimestamp(String robotId, String id) {
+        String[] selectionArgs = new String[] { robotId, id };
+        SQLiteDatabase db = getDatabase();
+        Cursor cursor = db.query(Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS, null,
+                SELECTION_ROBOT_PROFILE_PARAM_BY_ROBOTID_AND_KEY, selectionArgs, null, null, null);
+        if (cursor.moveToFirst()) {
+            return cursor.getLong(cursor.getColumnIndex(RobotProfileParameters.COL_NAME_ROBOT_PARAM_TIMESTAMP));
+        }
+        return -1;
+    }
+
+    public boolean saveProfileParam(String robotId, String key, long timestamp) {
+        if (getProfileParamTimestamp(robotId, key) != -1) {
+            return updateProfileParam(robotId, key, timestamp);
+        } else {
+            return addProfileParam(robotId, key, timestamp);
+        }
+    }
+
+    public boolean deleteProfileParamIfExists(String robotId, String key) {
+        return deleteProfileParam(robotId, key);
+    }
 }

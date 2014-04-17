@@ -21,45 +21,46 @@ import com.neatorobotics.android.slide.framework.service.RobotCommandServiceMana
 
 public class StartCleaningRequest extends RobotManagerRequest {
 
-	@Override
-	public void execute(String action, JSONArray data, String callbackId) {
-		RobotJsonData jsonData = new RobotJsonData(data);
-		sendStartCleaningCommand(mContext, jsonData, callbackId);
-	}
+    @Override
+    public void execute(String action, JSONArray data, String callbackId) {
+        RobotJsonData jsonData = new RobotJsonData(data);
+        sendStartCleaningCommand(mContext, jsonData, callbackId);
+    }
 
-	public void sendStartCleaningCommand(final Context context, RobotJsonData jsonData, final String callbackId) {
-		
-		String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-		JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
-		HashMap<String, String> commadParamsMap = CommandRequestUtils.getCommandParams(commandParams);
-		LogHelper.logD(TAG, "sendCommand2 - COMMAND_ROBOT_START");
-		int cleaningCategory = 0;
-		
-		if (!TextUtils.isEmpty(commadParamsMap.get(JsonMapKeys.KEY_CLEANING_CATEGORY))) {
-			cleaningCategory = Integer.valueOf(commadParamsMap.get(JsonMapKeys.KEY_CLEANING_CATEGORY));
-		}
-		
-		if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_MANUAL) {
-			boolean isDirectConnected = RobotCommandServiceManager.isRobotDirectConnected(context, robotId);
-			if (!isDirectConnected) {
-				LogHelper.log(TAG, "Manual cleaning cannot be started as direct connection does not exist");
-				sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, "Robot is not connected");
-				return;
-			}
-		}
-		
-		if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_SPOT) {
-			CleaningSettings cleaningSettings = RobotHelper.getCleaningSettings(context, robotId);
-			if (cleaningSettings == null) {
-				LogHelper.log(TAG, "Spot definition not set. Callback Id = " + callbackId);
-				sendError(callbackId, ErrorTypes.INVALID_PARAMETER, "Spot Definition Not Set");
-				return;
-			}
-			String spotAreaLength = String.valueOf(cleaningSettings.getSpotAreaLength());
-			String spotAreaHeight = String.valueOf(cleaningSettings.getSpotAreaHeight());
-			commadParamsMap.put(JsonMapKeys.KEY_SPOT_CLEANING_AREA_LENGTH, spotAreaLength);
-			commadParamsMap.put(JsonMapKeys.KEY_SPOT_CLEANING_AREA_HEIGHT, spotAreaHeight);
-		}
-		RobotDataManager.sendRobotCommand(context, robotId, RobotCommandPacketConstants.COMMAND_ROBOT_START, commadParamsMap  , new RobotSetProfileDataRequestListener(callbackId));
-	}
+    public void sendStartCleaningCommand(final Context context, RobotJsonData jsonData, final String callbackId) {
+
+        String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+        JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
+        HashMap<String, String> commadParamsMap = CommandRequestUtils.getCommandParams(commandParams);
+        LogHelper.logD(TAG, "sendCommand2 - COMMAND_ROBOT_START");
+        int cleaningCategory = 0;
+
+        if (!TextUtils.isEmpty(commadParamsMap.get(JsonMapKeys.KEY_CLEANING_CATEGORY))) {
+            cleaningCategory = Integer.valueOf(commadParamsMap.get(JsonMapKeys.KEY_CLEANING_CATEGORY));
+        }
+
+        if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_MANUAL) {
+            boolean isDirectConnected = RobotCommandServiceManager.isRobotDirectConnected(context, robotId);
+            if (!isDirectConnected) {
+                LogHelper.log(TAG, "Manual cleaning cannot be started as direct connection does not exist");
+                sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, "Robot is not connected");
+                return;
+            }
+        }
+
+        if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_SPOT) {
+            CleaningSettings cleaningSettings = RobotHelper.getCleaningSettings(context, robotId);
+            if (cleaningSettings == null) {
+                LogHelper.log(TAG, "Spot definition not set. Callback Id = " + callbackId);
+                sendError(callbackId, ErrorTypes.INVALID_PARAMETER, "Spot Definition Not Set");
+                return;
+            }
+            String spotAreaLength = String.valueOf(cleaningSettings.getSpotAreaLength());
+            String spotAreaHeight = String.valueOf(cleaningSettings.getSpotAreaHeight());
+            commadParamsMap.put(JsonMapKeys.KEY_SPOT_CLEANING_AREA_LENGTH, spotAreaLength);
+            commadParamsMap.put(JsonMapKeys.KEY_SPOT_CLEANING_AREA_HEIGHT, spotAreaHeight);
+        }
+        RobotDataManager.sendRobotCommand(context, robotId, RobotCommandPacketConstants.COMMAND_ROBOT_START,
+                commadParamsMap, new RobotSetProfileDataRequestListener(callbackId));
+    }
 }
