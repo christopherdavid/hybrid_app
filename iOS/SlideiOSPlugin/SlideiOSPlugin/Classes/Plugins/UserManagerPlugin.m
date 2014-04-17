@@ -737,6 +737,8 @@
                                  [data setValue:user.name forKey:KEY_USER_NAME];
                                  [data setValue:user.userId forKey:KEY_USER_ID];
                                  [data setValue:user.email forKey:KEY_EMAIL];
+                                 [data setValue:user.alternateEmail forKey:KEY_ALTERNATE_EMAIL];
+                                 [data setValue:[user userValidationStatus] forKey:NEATO_VALIDATION_STATUS];
                                  
                                  // Params
                                  NSMutableDictionary *extraParams = [[NSMutableDictionary alloc] init];
