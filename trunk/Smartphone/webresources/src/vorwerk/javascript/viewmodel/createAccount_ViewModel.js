@@ -85,6 +85,15 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
             return parent.config.emailRegEx.test(that.email());
         }
     }
+    
+    // viewmodel deinit, destroy objects and remove event listener
+    this.deinit = function() {
+        that.markInvalidEmail.dispose();
+        that.passwordValid.dispose();
+        that.isFilledOut.dispose();
+        that.isValid.dispose();
+        that.markInvalidPassword.dispose();
+    };
 
 });
 console.log('loaded file: createAccount_ViewModel.js');

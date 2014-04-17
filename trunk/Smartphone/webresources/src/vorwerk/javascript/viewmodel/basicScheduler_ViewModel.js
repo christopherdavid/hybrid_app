@@ -66,10 +66,12 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         that.blockedDays.length = 0;
     };
 
+    // viewmodel deinit, destroy objects and remove event listener
     this.deinit = function() {
         $('#schedulerTarget').off('updatedEvent');
         that.scheduler.destroy();
         subscribeOnline.dispose();
+        that.addEnabled.dispose();
     };
     
     this.isScheduleEnabledSuccess = function(result) {

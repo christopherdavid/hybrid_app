@@ -34,6 +34,13 @@ resourceHandler.registerFunction('loginUser_ViewModel.js', function(parent) {
 
         return !validationResult;
     }, this).extend({ throttle: 2000 });
+    
+    // viewmodel deinit, destroy objects and remove event listener
+    this.deinit = function() {
+        that.isFilledOut.dispose();
+        that.isEmailValid.dispose();
+        that.markEmailInvalid.dispose();
+    };
 
     this.passwordLost = function() {
         console.log("password lost, show dialog");

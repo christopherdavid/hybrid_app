@@ -120,8 +120,10 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
         that.conditions = {};
     };
 
+    // viewmodel deinit, destroy objects and remove event listener
     this.deinit = function() {
         $(window).off(".timeset");
+        that.isNextEnabled.dispose();
     };
     /* </enviroment functions> */
 

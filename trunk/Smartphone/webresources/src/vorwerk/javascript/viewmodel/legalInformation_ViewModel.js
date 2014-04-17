@@ -69,9 +69,11 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
         
     };
         
+    // viewmodel deinit, destroy objects and remove event listener
     this.deinit = function() {
         $(window).off(".legal");
         myScroll.destroy();
+        that.isValid.dispose();
     };
     
     this.back = function() {

@@ -11,6 +11,11 @@ resourceHandler.registerFunction('robotActivationId_ViewModel.js', function(pare
     this.isFilledOut = ko.computed(function() {
         return (that.robotId() != '');
     }, this);
+    
+    // viewmodel deinit, destroy objects and remove event listener
+    this.deinit = function() {
+        that.isFilledOut.dispose();
+    };
 
     this.next = function() {
         // send the robotId to the server for validation
