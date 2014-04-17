@@ -99,6 +99,8 @@ var ROBOT_STATE_ON_BASE     = 10009;
 // Manual Cleaning State Codes
 var ROBOT_STATE_MANUAL_CLEANING     = 10010;
 var ROBOT_STATE_MANUAL_PLAY_MODE    = 10011;
+// user is in the menu state.
+var ROBOT_USER_MENU_STATE = 10012;
 
 
 var PLUGIN_JSON_KEYS  =  (function() {
