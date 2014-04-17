@@ -50,12 +50,12 @@
     },
     "legalInformation": {
         "page": {
-            "change_notAccepted_message": "Please check the privacy policy and terms of use documents to change the country settings.",
-            "register_notAccepted_title": "Rechtliche Zustimmung fehlt",
+            "change_notAccepted_message": "Bitte akzeptiere die Datenschutzerklärung und die Nutzungsbedingungen um die Landeseinstellung zu verändern.",
+            "register_notAccepted_title": "Zustimmung fehlt",
             "legal_agreement": "Ich stimme zu",
             "title": "Zustimmungen",
             "tou_pp_agreement": "Um die App nutzen zu können, müssen sie den Nutzungsbedingungen und der Datenschutzerklärung zustimmen. TICK BOX Hiermit erkläre ich, dass ich die <a id='terms' href='#' class='highlightedText font_bold font_small'>Nutzungsbedinungen<\/a> und die <a id='privacy' href='#' class='highlightedText font_bold font_small'>Datenschutzerklärung<\/a> gelesen und zustimmend zur Kenntnis genommen habe.",
-            "change_notAccepted_title": "Rechtliche Zustimmung fehlt",
+            "change_notAccepted_title": "Zustimmung fehlt",
             "subscribe_header": "MARKETING INFORMATION",
             "edit_done_title": "Konto wurde angepasst.",
             "edit_done_message": "Das Nutzerkonto wurde erfolgreich aktualisiert.",
@@ -122,7 +122,7 @@
         "10010": "Manuelle Reinigung",
         "10005": "Reinigung gestoppt.",
         "10006": "Festgefahren.",
-        "10012": "In Use",
+        "10012": "Wird bereits benutzt.",
         "10003": "Ruhend.",
         "10004": "Läd auf.",
         "10009": "Angedockt.",
@@ -179,14 +179,14 @@
                 "1": "MANUELL"
             },
             "spot_size_title": "Spot Größe: ",
-            "offline_message": "The cleaning operation cannot be done when the robot is offline. Please switch-on/reboot the robot and try. "
+            "offline_message": "Der Roboter ist gerade offline. Bitte schalte ihn an und versuche es dann nochmal."
         },
         "navi": {"title": "Reinigung"}
     },
     "error": {
         "-21259": {
-            "message": "NAVIGATION_UndockingFailed",
-            "title": "Error"
+            "message": "Bitte den Weg freiräumen.",
+            "title": "Fehler"
         },
         "-182": {
             "message": "Der Roboter ist bereits mit diesem Nutzer registriert.",
@@ -197,36 +197,36 @@
             "title": "Error"
         },
         "-21257": {
-            "message": "BATTERY_InvalidSensor",
-            "title": "Error"
+            "message": "Akkufehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-21256": {
-            "message": "BATTERY_NoThermistor",
-            "title": "Error"
+            "message": "Akkufehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-21255": {
-            "message": "BATTERY_Unplugged",
-            "title": "Error"
+            "message": "Akkufehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-21254": {
-            "message": "BATTERY_UnderTemp",
-            "title": "Error"
+            "message": "Akkufehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-21253": {
-            "message": "BATTERY_LithiumAdapterFailure",
-            "title": "Error"
+            "message": "Akkufehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-21252": {
-            "message": "BATTERY_Mismatch",
-            "title": "Error"
+            "message": "Akkufehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-21251": {
-            "message": "BATTERY_UnderCurrent",
-            "title": "Error"
+            "message": "Akkufehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-21250": {
-            "message": "BATTERY_UnderVolt",
-            "title": "Error"
+            "message": "Akkufehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-515": {
             "message": "Du bist bereits mit einem anderen Roboter verbunden.",
@@ -261,20 +261,20 @@
             "title": "Serverfehler"
         },
         "-21249": {
-            "message": "BATTERY_OverVolt",
-            "title": "Error"
+            "message": "Akkufehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-21248": {
             "message": "Please press OKAY to continue. Battery issue xxxx.",
             "title": "Error"
         },
         "-21243": {
-            "message": "LDS_BAD_PACKETS",
-            "title": "Error"
+            "message": "Sensorfehler. Bitte Roboter neu booten.",
+            "title": "Fehler"
         },
         "-21242": {
-            "message": "LDS_MISSED_PACKETS",
-            "title": "Error"
+            "message": "Sensorfehler. Bitte Roboter neu booten.",
+            "title": "Fehler"
         },
         "-21245": {
             "message": "My Brush needs to be cleaned.",
@@ -285,44 +285,44 @@
             "title": "Error"
         },
         "-21241": {
-            "message": "LDS_DISCONNECTED",
-            "title": "Error"
+            "message": "Sensorfehler. Bitte Roboter neu booten.",
+            "title": "Fehler"
         },
         "-101": {
             "message": "Eingegebener Nutzername oder Passwort ist falsch.",
             "title": "Eingabefehler"
         },
         "-21240": {
-            "message": "LDS_JAMMED",
-            "title": "Error"
+            "message": "Sensorfehler. Bitte Roboter neu booten.",
+            "title": "Fehler"
         },
         "-21230": {
-            "message": "Please put my Dirt Bin back in.",
-            "title": "Error"
+            "message": "Bitte Staubbehälter einsetzen.",
+            "title": "Fehler"
         },
         "-21279": {
-            "message": "SCB_VALIDATION",
-            "title": "Error"
+            "message": "Interner Fehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-21233": {
-            "message": "Please return me to my base.",
-            "title": "Error"
+            "message": "Bitte bringe mich an die Basis zurück,",
+            "title": "Fehler"
         },
         "-21234": {
             "message": "Please contact Customer Support. Tests not complete.",
             "title": "Error"
         },
         "-21231": {
-            "message": "DUST_BIN_FULL",
-            "title": "Error"
+            "message": "Staubbehälter/Filter prüfen und ggf. säubern.",
+            "title": "Fehler"
         },
         "-21232": {
             "message": "Please wait while I cool down my battery.",
             "title": "Error"
         },
         "-21274": {
-            "message": "xxxx",
-            "title": "Error"
+            "message": "Interner Fehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-111": {
             "message": "Bitte einen Roboter Namen einfügen.",
@@ -333,8 +333,8 @@
             "title": "Error"
         },
         "-21273": {
-            "message": "A software update is available. Please visit web support.",
-            "title": "Error"
+            "message": "Ein Software Update ist verfügbar. Bitte Kundenservice kontaktieren.",
+            "title": "Fehler"
         },
         "-112": {
             "message": "E-Mail-Adresse ist nicht registriert.",
@@ -345,8 +345,8 @@
             "title": "Error"
         },
         "-21272": {
-            "message": "WDT",
-            "title": "Error"
+            "message": "Roboter reset. Bitte aufladen!",
+            "title": "Fehler"
         },
         "-21235": {
             "message": "My Bumper is stuck. Please free it.",
@@ -365,32 +365,32 @@
             "title": "Error"
         },
         "-21278": {
-            "message": "SCB_CHECKSUM",
-            "title": "Error"
+            "message": "Interner Fehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-21277": {
-            "message": "SCB_LENGTH_MISMATCH",
-            "title": "Error"
+            "message": "Interner Fehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-21276": {
-            "message": "SCB_SIGNATURE",
-            "title": "Error"
+            "message": "Interner Fehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-21239": {
             "message": "My Right Wheel is stuck. Please free it from debris.",
             "title": "Error"
         },
         "-21275": {
-            "message": "SCB_FLASH_READ",
-            "title": "Error"
+            "message": "Interner Fehler. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-110": {
             "message": "Dein altes Passwort ist nicht korrekt.",
             "title": "Eingabefehler"
         },
         "-21280": {
-            "message": "HARDWARE_FAILURE",
-            "title": "Error"
+            "message": "Hardwarefehler am Roboter. Bitte am Roboter bestätigen.",
+            "title": "Fehler"
         },
         "-154": {
             "message": "Ungültiger Verbindungscode. Bitte gültigen Code eingeben",
@@ -405,8 +405,8 @@
             "title": "Error"
         },
         "-21285": {
-            "message": "TILTED_ON_CLEANING_STARTUP",
-            "title": "Error"
+            "message": "Bitte beginne die Reinigung auf einer ebenen Fläche.",
+            "title": "Fehler"
         },
         "-21282": {
             "message": "Please clean my right drop sensor window.",
@@ -417,72 +417,72 @@
             "title": "Error"
         },
         "-21269": {
-            "message": "NAVIGATION_NoProgress",
-            "title": "Error"
+            "message": "Bitte den Weg freiräumen.",
+            "title": "Fehler"
         },
         "-21268": {
-            "message": "NAVIGATION_PathProblems",
-            "title": "Error"
+            "message": "Bitte den Weg freiräumen.",
+            "title": "Fehler"
         },
         "-21261": {
-            "message": "NAVIGATION_PinkyCommsFail",
-            "title": "Error"
+            "message": "Bitte den Weg freiräumen.",
+            "title": "Fehler"
         },
         "-21224": {
-            "message": "CHECK_BATTERY_SWITCH",
-            "title": "Error"
+            "message": "Bitte schalte den Roboter ein",
+            "title": "Fehler"
         },
         "-21260": {
-            "message": "NAVIGATION_Falling",
-            "title": "Error"
+            "message": "Bitte den Weg freiräumen.",
+            "title": "Fehler"
         },
         "-21225": {
-            "message": "Please unplug my Power Cable when you want me to clean.",
-            "title": "Error"
+            "message": "Bitte das Ladekabel entfernen damit ich reinigen kann.",
+            "title": "Fehler"
         },
         "-21263": {
-            "message": "NAVIGATION_BackDrop_LeftBump",
-            "title": "Error"
+            "message": "Bitte den Weg freiräumen.",
+            "title": "Fehler"
         },
         "-21226": {
-            "message": "Please unplug my USB Cable when you want me to clean.",
-            "title": "Error"
+            "message": "Bitte das USB-Kabel entfernen damit ich reinigen kann.",
+            "title": "Fehler"
         },
         "-21262": {
-            "message": "NAVIGATION_NoMotionCommands",
-            "title": "Error"
+            "message": "Bitte den Weg freiräumen.",
+            "title": "Fehler"
         },
         "-21227": {
-            "message": "SCHED_OFF",
-            "title": "Error"
+            "message": "Bitte zuerst den Zeitplan einschalten.",
+            "title": "Fehler"
         },
         "-509": {
             "message": "Diese E-Mail-Adresse wurde nicht bestätigt. Bitte die Bestätigungs-E-Mail beantworten, die an diese Adresse gesendet wurde. ",
             "title": "Bestätigungsfehler"
         },
         "-21265": {
-            "message": "NAVIGATION_BackDrop_WheelExtended",
-            "title": "Error"
+            "message": "Bitte den Weg freiräumen.",
+            "title": "Fehler"
         },
         "-21228": {
-            "message": "Please set my clock first.",
-            "title": "Error"
+            "message": "Bitte zuerst die Uhrzeit des Roboters einstellen.",
+            "title": "Fehler"
         },
         "-21264": {
-            "message": "NAVIGATION_BackDrop_FrontBump",
-            "title": "Error"
+            "message": "Bitte den Weg freiräumen.",
+            "title": "Fehler"
         },
         "-21229": {
-            "message": "Thank you for emptying my Dirt Bin and cleaning my Filter.",
-            "title": "Error"
+            "message": "Danke! Staubbehälter geleert und Filter gereinigt.",
+            "title": "Fehler"
         },
         "-21267": {
-            "message": "NAVIGATION_NoExitsToGo",
-            "title": "Error"
+            "message": "Bitte den Weg freiräumen.",
+            "title": "Fehler"
         },
         "-21266": {
-            "message": "NAVIGATION_RightDrop_LeftBump",
-            "title": "Error"
+            "message": "Bitte den Weg freiräumen.",
+            "title": "Fehler"
         },
         "-502": {
             "message": "Du benötigst eine Onlineverbindung um diese Anwendung benutzen zu können. Bitte schalte das mobile Netzwerk oder Wi-Fi in den Einstellungen an.",
@@ -493,8 +493,8 @@
             "title": "Unbekannter Fehler"
         },
         "-21270": {
-            "message": "WARNING",
-            "title": "Error"
+            "message": "ERROR_WARNING",
+            "title": "Fehler"
         },
         "-504": {
             "message": "Der Wochenplan konnte nicht synchronisiert werden.",
@@ -509,39 +509,39 @@
         "wakeup_unknown_robot": "Roboter wacht in einigen Sekunden auf. ",
         "getready_robot": "Roboter ist gleich startbereit.",
         "robot_added": "__robotName__ hinzufügen",
-        "20208": "Please wait while I check my surrounding.",
+        "20208": "Ermittle meine Position.",
         "intend_drive": "Bitte warten.",
-        "20209": "Thank you!",
+        "20209": "Danke!",
         "delete_robot_done": "Roboter __robotName__ wurde entfernt.",
         "fetch_robots": "Öffne die Roboter-Übersicht",
-        "20206": "My battery is low. I need to charge my battery before I can clean.",
-        "20207": "I had to reset. Please press OKAY to restart.",
-        "20204": "I'm returning to my starting location to charge.",
-        "20205": "Please empty my Dirt Bin and Filter if needed.",
-        "20220": "timer_set",
-        "20202": "Ich fahre zur Basisstation zurück zum Laden.",
-        "20221": "timer_removed",
+        "20206": "Batterie ist leer, aufladen nötig vor nächster Reinigung",
+        "20207": "Systemreset. Bitte am Roboter bestätigen.",
+        "20204": "Fertig! Ich fahre zur Startposition zurück um zu laden.",
+        "20205": "Staubbehälter/Filter prüfen und ggf. säubern.",
+        "20220": "Der Zeitplan wurde programmiert.",
+        "20202": "Ich fahre zur Basisstation zurück um zu laden.",
+        "20221": "Eintrag im Zeitplan wurde gelöscht.",
         "stop_robot": "Stoppe __robotName__",
-        "20203": "Finished! I'm returning to my starting location.",
-        "inuse": "__robotName__ is currentyl in use",
+        "20203": "Fertig! Ich fahre zur Startposition zurück.",
+        "inuse": "__robotName__ wird gerade genutzt.",
         "20200": "Fehler",
         "20201": "Fertig! Ich fahre zur Basisstation zurück.",
         "update_scheduler": "Terminkalender wird synchronisiert.",
-        "20222": "enable_timer",
-        "20223": "battery_chargbasecommerr",
+        "20222": "Bitte den Zeitplan aktivieren.",
+        "20223": "Akkufehler. Bitte Roboter neu starten.",
         "stop_drive": "Stoppe __robotName__",
         "wait_robot": "Roboter wacht in ca. __wakeUp__ Sekunden auf. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
-        "robot_offline": "__robotName__  is currently offline",
+        "robot_offline": "__robotName__  ist gerade offline",
         "wakeup_robot": "Roboter wacht in ca. __wakeUp__ Sekunden auf. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
         "20215": "USB Flash Drive was Removed.",
         "20216": "Software Update FAILED.",
-        "20217": "log_write_success",
+        "20217": "Logdatei wurde erfolgreich erstellt.",
         "20218": "Please set my clock first.",
-        "20219": "time_set",
+        "20219": "Am Roboter wurde die Uhr gestellt.",
         "toggle_eco": "ECO Modus ist __ecoMode__",
-        "20210": "My battery is low. Please charge me.",
+        "20210": "Mein Akku ist leer. Bitte aufladen.",
         "reset_password": "Passwort wird zurückgesetzt.",
-        "20211": "Please check the base is connected to power.",
+        "20211": "Lateproblem! Bitte Basis prüfen.",
         "send_to_base": "Sende __robotName__ zurück zur Basisstation-",
         "20212": "I need to charge. Please plug in my Charger.",
         "20213": "Read FAILED. Cannot read USB Flash Drive.",
@@ -556,9 +556,9 @@
         "navi": {"title": "Roboter Aktivierung."}
     },
     "validation": {
-        "error_title": "Email validation missing",
+        "error_title": "Fehler",
         "email": "Die E-Mail-Adresse ist ungültig.",
-        "error_message": "The email hasn't been validated yet. Please validate your email to complete the registration.",
+        "error_message": "Die Email-Adresse wurde noch nicht validiert. Klicke bitte auf den Link in der Email, die an Dich geschickt wurde.",
         "password": "Die Passwörter stimmen nicht überein."
     },
     "robotActivationName": {
@@ -644,14 +644,14 @@
         "getready": "Ich bin gleich bereit.",
         "wakeup": "Ich bin gleich bereit.",
         "cleaning_spot": "Ich reinige im Spot-Modus.",
-        "inuse": "I'm in use by someone else",
+        "inuse": "Ich werde schon benutzt.",
         "stopped_all": "Ich habe die Reinigung gestoppt.",
         "stopped_waited_manual": "Ich bin bereit für die manuelle Reinigung.",
         "resumed": "Ich habe die Reinigung fortgesetzt",
         "stopped_manual": "Ich habe die manuelle Reinigung gestoppt.",
         "paused_spot": "Ich habe die Spotreinigung unterbrochen.",
         "stopped_spot": "Ich habe die Spotreinigung gestoppt.",
-        "robot_offline": "I'm Offline",
+        "robot_offline": "Ich bin offline.",
         "inbase": "Ich verweile an meiner Basisstation",
         "cleaning": "Ich reinige.",
         "error": "Ich habe ein Problem.",
