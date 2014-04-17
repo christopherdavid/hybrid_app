@@ -5,31 +5,30 @@ import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCom
 
 public class XMPPNotificationListener {
 
-	private static final String TAG = XMPPNotificationListener.class
-			.getSimpleName();
+    private static final String TAG = XMPPNotificationListener.class.getSimpleName();
 
-	public void onConnectSucceeded() {
-		LogHelper.log(TAG, "XMPP Connection Succeeded");
-	}
+    public void onConnectSucceeded() {
+        LogHelper.log(TAG, "XMPP Connection Succeeded");
+    }
 
-	public void onLoginFailed() {
-		LogHelper.log(TAG, "XMPP Login failed");
-	}
+    public void onLoginFailed() {
+        LogHelper.log(TAG, "XMPP Login failed");
+    }
 
-	public void onLoginSucceeded() {
-		LogHelper.log(TAG, "XMPP Login succeeded");
-	}
+    public void onLoginSucceeded() {
+        LogHelper.log(TAG, "XMPP Login succeeded");
+    }
 
-	public void onConnectionReset() {
-		LogHelper.log(TAG, "XMPP Connection reset");
-	}
+    public void onConnectionReset() {
+        LogHelper.log(TAG, "XMPP Connection reset");
+    }
 
-	public void onDisconnect() {
-		LogHelper.log(TAG, "XMPP disconnected");
-	}
+    public void onDisconnect() {
+        LogHelper.log(TAG, "XMPP disconnected");
+    }
 
-	public void onDataReceived(String from, RobotCommandPacket packet) {
-		LogHelper.log(TAG, "onDataReceived ");
-	}
+    public void onDataReceived(String from, RobotCommandPacket packet) {
+        LogHelper.log(TAG, "onDataReceived ");
+    }
 
 }

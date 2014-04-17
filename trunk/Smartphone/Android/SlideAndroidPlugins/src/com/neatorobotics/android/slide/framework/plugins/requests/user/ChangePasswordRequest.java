@@ -12,18 +12,19 @@ import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
 
 public class ChangePasswordRequest extends UserManagerRequest {
 
-	@Override
-	public void execute(JSONArray data, String callbackId) {
-		UserJsonData jsonData = new UserJsonData(data);
-		changePassword(mContext, jsonData, callbackId);
-	}
-	
-	private void changePassword(Context context, UserJsonData jsonData, final String callbackId) {
-		String emailId = jsonData.getString(JsonMapKeys.KEY_EMAIL);
-		LogHelper.logD(TAG, "emailId = " + emailId);
-		String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
-		String currentPassword = jsonData.getString(JsonMapKeys.KEY_CURRENT_PASSWORD);
-		String newPassword = jsonData.getString(JsonMapKeys.KEY_NEW_PASSWORD);
-		UserManager.getInstance(context).changePassword(authToken, currentPassword, newPassword, new UserRequestListenerWrapper(callbackId));
-	}
+    @Override
+    public void execute(JSONArray data, String callbackId) {
+        UserJsonData jsonData = new UserJsonData(data);
+        changePassword(mContext, jsonData, callbackId);
+    }
+
+    private void changePassword(Context context, UserJsonData jsonData, final String callbackId) {
+        String emailId = jsonData.getString(JsonMapKeys.KEY_EMAIL);
+        LogHelper.logD(TAG, "emailId = " + emailId);
+        String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
+        String currentPassword = jsonData.getString(JsonMapKeys.KEY_CURRENT_PASSWORD);
+        String newPassword = jsonData.getString(JsonMapKeys.KEY_NEW_PASSWORD);
+        UserManager.getInstance(context).changePassword(authToken, currentPassword, newPassword,
+                new UserRequestListenerWrapper(callbackId));
+    }
 }

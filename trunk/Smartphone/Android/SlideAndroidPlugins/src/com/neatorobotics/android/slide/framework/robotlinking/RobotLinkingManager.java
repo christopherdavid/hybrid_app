@@ -12,31 +12,28 @@ import com.neatorobotics.android.slide.framework.webservice.user.RobotLinkResult
 import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
 
 public class RobotLinkingManager {
-	
-	private static final String TAG = RobotLinkingManager.class.getSimpleName();
-	
-	public static void linkRobot(final Context context, final String linkCode, final String emailId, final WebServiceBaseRequestListener listener) {		
-		Runnable task = new Runnable() {
-			public void run() {
-				try {
-					RobotLinkResult initiateLink = NeatoUserWebservicesHelper.initiateLinkToRobot(context, emailId, linkCode);
-					String robotId = initiateLink.result.serial_number;
-					RobotManager.getInstance(context).getRobotDetailAndSave(robotId);
-					listener.onReceived(initiateLink);
-				}
-				catch (UserUnauthorizedException ex) {
-					listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
-				}
-				catch (NeatoServerException ex) {
-					listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
-				}
-				catch (IOException ex) {
-					listener.onNetworkError(ex.getMessage());
-				}	
-			}
 
-		};
-		TaskUtils.scheduleTask(task, 0);
-	}
-	
+    public static void linkRobot(final Context context, final String linkCode, final String emailId,
+            final WebServiceBaseRequestListener listener) {
+        Runnable task = new Runnable() {
+            public void run() {
+                try {
+                    RobotLinkResult initiateLink = NeatoUserWebservicesHelper.initiateLinkToRobot(context, emailId,
+                            linkCode);
+                    String robotId = initiateLink.result.serial_number;
+                    RobotManager.getInstance(context).getRobotDetailAndSave(robotId);
+                    listener.onReceived(initiateLink);
+                } catch (UserUnauthorizedException ex) {
+                    listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
+                } catch (NeatoServerException ex) {
+                    listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
+                } catch (IOException ex) {
+                    listener.onNetworkError(ex.getMessage());
+                }
+            }
+
+        };
+        TaskUtils.scheduleTask(task, 0);
+    }
+
 }

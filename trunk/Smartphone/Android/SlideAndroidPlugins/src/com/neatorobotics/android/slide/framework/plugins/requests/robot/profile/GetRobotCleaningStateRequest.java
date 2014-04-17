@@ -18,35 +18,35 @@ import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.Ge
 
 public class GetRobotCleaningStateRequest extends RobotManagerRequest {
 
-	@Override
-	public void execute(String action, JSONArray data, String callbackId) {
-		RobotJsonData jsonData = new RobotJsonData(data);
-		getRobotCleaningState(mContext, jsonData, callbackId);
-	}
-	private void getRobotCleaningState(final Context context, RobotJsonData jsonData, final String callbackId) {
-		LogHelper.logD(TAG, "getRobotCleaningState is called");
-		final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-		RobotManager.getInstance(context).getRobotCleaningState(context, robotId, new RobotRequestListenerWrapper(callbackId) {
-			@Override
-			public JSONObject getResultObject(
-					NeatoWebserviceResult responseResult)
-					throws JSONException {
-				JSONObject jsonResult = new JSONObject();
-				if((responseResult != null) && (responseResult instanceof GetRobotProfileDetailsResult2)) {
-					GetRobotProfileDetailsResult2 result = (GetRobotProfileDetailsResult2) responseResult;
-					String currentState = RobotProfileDataUtils.getRobotCurrentState(context, result);
-					String state = RobotProfileDataUtils.getState(context, result);
-					if (!TextUtils.isEmpty(currentState)) {
-						jsonResult.put(JsonMapKeys.KEY_ROBOT_CURRENT_STATE, currentState);
-					}
-					if (!TextUtils.isEmpty(state)) {
-						jsonResult.put(JsonMapKeys.KEY_ROBOT_NEW_VIRTUAL_STATE, state);
-					}
-					jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
-				}
-				return jsonResult;
-			}
-		});
-	}
-	
+    @Override
+    public void execute(String action, JSONArray data, String callbackId) {
+        RobotJsonData jsonData = new RobotJsonData(data);
+        getRobotCleaningState(mContext, jsonData, callbackId);
+    }
+
+    private void getRobotCleaningState(final Context context, RobotJsonData jsonData, final String callbackId) {
+        LogHelper.logD(TAG, "getRobotCleaningState is called");
+        final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+        RobotManager.getInstance(context).getRobotCleaningState(context, robotId,
+                new RobotRequestListenerWrapper(callbackId) {
+                    @Override
+                    public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+                        JSONObject jsonResult = new JSONObject();
+                        if ((responseResult != null) && (responseResult instanceof GetRobotProfileDetailsResult2)) {
+                            GetRobotProfileDetailsResult2 result = (GetRobotProfileDetailsResult2) responseResult;
+                            String currentState = RobotProfileDataUtils.getRobotCurrentState(context, result);
+                            String state = RobotProfileDataUtils.getState(context, result);
+                            if (!TextUtils.isEmpty(currentState)) {
+                                jsonResult.put(JsonMapKeys.KEY_ROBOT_CURRENT_STATE, currentState);
+                            }
+                            if (!TextUtils.isEmpty(state)) {
+                                jsonResult.put(JsonMapKeys.KEY_ROBOT_NEW_VIRTUAL_STATE, state);
+                            }
+                            jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+                        }
+                        return jsonResult;
+                    }
+                });
+    }
+
 }

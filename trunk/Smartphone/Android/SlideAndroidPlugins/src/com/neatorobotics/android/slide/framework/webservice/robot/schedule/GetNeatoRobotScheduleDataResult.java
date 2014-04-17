@@ -6,44 +6,45 @@ import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResul
 
 public class GetNeatoRobotScheduleDataResult extends NeatoWebserviceResult {
 
-	public GetNeatoRobotScheduleDataResult(NeatoHttpResponse response) {
-		super(response);
-	}
-	public GetNeatoRobotScheduleDataResult(int response, int responseStatusCode, String message) {
-		super(response, responseStatusCode);
-		mMessage = message;
-	}
-	public static final int RESPONSE_STATUS_SUCCESS = 0;
+    public GetNeatoRobotScheduleDataResult(NeatoHttpResponse response) {
+        super(response);
+    }
 
-	@JsonProperty(value="status")
-	public int mStatus = -1; 
+    public GetNeatoRobotScheduleDataResult(int response, int responseStatusCode, String message) {
+        super(response, responseStatusCode);
+        mMessage = message;
+    }
 
-	@JsonProperty(value="message")
-	public String mMessage;	
+    public static final int RESPONSE_STATUS_SUCCESS = 0;
 
-	@JsonProperty(value="result")
-	public Result mResult;
+    @JsonProperty(value = "status")
+    public int mStatus = -1;
 
-	public GetNeatoRobotScheduleDataResult() {
-		super();
-	}
+    @JsonProperty(value = "message")
+    public String mMessage;
 
-	@Override
-	public boolean success() {
-		return ((mStatus == RESPONSE_STATUS_SUCCESS) && (mResult != null));
-	}
+    @JsonProperty(value = "result")
+    public Result mResult;
 
+    public GetNeatoRobotScheduleDataResult() {
+        super();
+    }
 
-	public static class Result {
+    @Override
+    public boolean success() {
+        return ((mStatus == RESPONSE_STATUS_SUCCESS) && (mResult != null));
+    }
 
-		@JsonProperty(value="schedule_type")
-		public String mSchedule_Type;	
+    public static class Result {
 
-		@JsonProperty(value="xml_data_url")
-		public String mXml_Data_Url;	
+        @JsonProperty(value = "schedule_type")
+        public String mSchedule_Type;
 
-		@JsonProperty(value="blob_data_url")
-		public String mBlob_Data_Url;
+        @JsonProperty(value = "xml_data_url")
+        public String mXml_Data_Url;
 
-	}
+        @JsonProperty(value = "blob_data_url")
+        public String mBlob_Data_Url;
+
+    }
 }

@@ -15,30 +15,30 @@ import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 
 public class RobotDriveRequest extends RobotManagerRequest {
-	
-	@Override
-	public void execute(String action, JSONArray data, String callbackId) {
-		RobotJsonData jsonData = new RobotJsonData(data);
-		driveRobot(mContext, jsonData, callbackId);
-	}
-	
-	private void driveRobot(Context context, RobotJsonData jsonData, final String callbackId) {
-		LogHelper.logD(TAG, "driveRobot action initiated in Robot plugin");	
-		String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-		String navigationControlId = jsonData.getString(JsonMapKeys.KEY_NAVIGATION_CONTROL_ID);
-		LogHelper.logD(TAG, "Params\n\tRobotId=" + robotId);
-		LogHelper.logD(TAG, "\n\tNavigation Control Id = " + navigationControlId);
-		
-		if (!RobotCommandServiceManager.isRobotDirectConnected(context, robotId)) {
-			LogHelper.logD(TAG, "Drive Robot action cannot complete as robot connection does not exist");	
-			String errMessage = context.getString(R.string.error_robot_not_directly_connected);
-			sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, errMessage);
-			return;
-		}
-		
-		RobotDriveHelper.getInstance(context).driveRobot(robotId, navigationControlId);
-		PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
-		pluginResult.setKeepCallback(false);
-		sendSuccessPluginResult(pluginResult, callbackId);
-	}
+
+    @Override
+    public void execute(String action, JSONArray data, String callbackId) {
+        RobotJsonData jsonData = new RobotJsonData(data);
+        driveRobot(mContext, jsonData, callbackId);
+    }
+
+    private void driveRobot(Context context, RobotJsonData jsonData, final String callbackId) {
+        LogHelper.logD(TAG, "driveRobot action initiated in Robot plugin");
+        String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+        String navigationControlId = jsonData.getString(JsonMapKeys.KEY_NAVIGATION_CONTROL_ID);
+        LogHelper.logD(TAG, "Params\n\tRobotId=" + robotId);
+        LogHelper.logD(TAG, "\n\tNavigation Control Id = " + navigationControlId);
+
+        if (!RobotCommandServiceManager.isRobotDirectConnected(context, robotId)) {
+            LogHelper.logD(TAG, "Drive Robot action cannot complete as robot connection does not exist");
+            String errMessage = context.getString(R.string.error_robot_not_directly_connected);
+            sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, errMessage);
+            return;
+        }
+
+        RobotDriveHelper.getInstance(context).driveRobot(robotId, navigationControlId);
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+        pluginResult.setKeepCallback(false);
+        sendSuccessPluginResult(pluginResult, callbackId);
+    }
 }

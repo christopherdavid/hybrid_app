@@ -74,6 +74,8 @@ var ROBOT_STATE_ON_BASE		= 10009;
 // Manual Cleaning State Codes
 var ROBOT_STATE_MANUAL_CLEANING		= 10010;
 var ROBOT_STATE_MANUAL_PLAY_MODE	= 10011;
+// user is in the menu state.
+var ROBOT_USER_MENU_STATE = 10012;
 
 
 var PLUGIN_JSON_KEYS  =  (function() {
@@ -233,9 +235,6 @@ var NOTIFICATIONS_GLOBAL_OPTION = "global";
 var NOTIFICATION_ROBOT_STUCK = "101";
 var NOTIFICATION_DIRT_BIN_FULL = "102";
 var NOTIFICATION_CLEANING_DONE = "103";
-var NOTIFICATION_DIRT_BIN_MISSING = "20219";
-var NOTIFICATION_PLUG_CABLE = "212";
-var NOTIFICATION_ROBOT_CANCEL = "22000";
 
 // List of Error Code values returned from the plugin.
 

@@ -16,48 +16,42 @@ import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
 
 public class GetRobotCleaningCategoryRequest extends RobotManagerRequest {
-	@Override
-	public void execute(String action, JSONArray data, String callbackId) {
-		RobotJsonData jsonData = new RobotJsonData(data);
-		getRobotCleaningCategory(mContext, jsonData, callbackId);
-	}
+    @Override
+    public void execute(String action, JSONArray data, String callbackId) {
+        RobotJsonData jsonData = new RobotJsonData(data);
+        getRobotCleaningCategory(mContext, jsonData, callbackId);
+    }
 
-	private void getRobotCleaningCategory(final Context context, RobotJsonData jsonData,
-			final String callbackId) {
-		LogHelper.logD(TAG, "getRobotCleaningCategory action initiated in Robot plugin");	
-		final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-		LogHelper.logD(TAG, "Params\nRobotId=" + robotId);
-		
-		
-		RobotManager.getInstance(context).getRobotCleaningStateDetails(context, robotId, new RobotRequestListenerWrapper(callbackId) {
-			@Override
-			public JSONObject getResultObject(
-					NeatoWebserviceResult responseResult)
-					throws JSONException {
-				JSONObject jsonResult = new JSONObject();
-				if((responseResult != null) && (responseResult instanceof GetRobotProfileDetailsResult2)) {
-					GetRobotProfileDetailsResult2 result = (GetRobotProfileDetailsResult2) responseResult;
-					int cleaningCategory = RobotProfileDataUtils.getRobotCleaningCategory(context, result);
-					jsonResult = getCleaningCategoryJsonObject(cleaningCategory, robotId);
-				}
-				return jsonResult;
-			}
-		});
-	}
+    private void getRobotCleaningCategory(final Context context, RobotJsonData jsonData, final String callbackId) {
+        LogHelper.logD(TAG, "getRobotCleaningCategory action initiated in Robot plugin");
+        final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+        LogHelper.logD(TAG, "Params\nRobotId=" + robotId);
 
-	private JSONObject getCleaningCategoryJsonObject(int cleaningCategory,
-			String robotId) {
-		JSONObject cleaningCategoryJsonObj = null;
-		try {
-			cleaningCategoryJsonObj = new JSONObject();
-			cleaningCategoryJsonObj.put(JsonMapKeys.KEY_CLEANING_CATEGORY,
-					cleaningCategory);
-			cleaningCategoryJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
-		} catch (JSONException e) {
-			LogHelper
-					.logD(TAG, "Exception in getCleaningCategoryJsonObject", e);
-		}
+        RobotManager.getInstance(context).getRobotCleaningStateDetails(context, robotId,
+                new RobotRequestListenerWrapper(callbackId) {
+                    @Override
+                    public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
+                        JSONObject jsonResult = new JSONObject();
+                        if ((responseResult != null) && (responseResult instanceof GetRobotProfileDetailsResult2)) {
+                            GetRobotProfileDetailsResult2 result = (GetRobotProfileDetailsResult2) responseResult;
+                            int cleaningCategory = RobotProfileDataUtils.getRobotCleaningCategory(context, result);
+                            jsonResult = getCleaningCategoryJsonObject(cleaningCategory, robotId);
+                        }
+                        return jsonResult;
+                    }
+                });
+    }
 
-		return cleaningCategoryJsonObj;
-	}
+    private JSONObject getCleaningCategoryJsonObject(int cleaningCategory, String robotId) {
+        JSONObject cleaningCategoryJsonObj = null;
+        try {
+            cleaningCategoryJsonObj = new JSONObject();
+            cleaningCategoryJsonObj.put(JsonMapKeys.KEY_CLEANING_CATEGORY, cleaningCategory);
+            cleaningCategoryJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
+        } catch (JSONException e) {
+            LogHelper.logD(TAG, "Exception in getCleaningCategoryJsonObject", e);
+        }
+
+        return cleaningCategoryJsonObj;
+    }
 }

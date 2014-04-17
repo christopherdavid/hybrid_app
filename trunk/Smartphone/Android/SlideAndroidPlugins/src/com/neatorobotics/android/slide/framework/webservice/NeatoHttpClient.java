@@ -1,6 +1,5 @@
 package com.neatorobotics.android.slide.framework.webservice;
 
-
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -37,147 +36,141 @@ import android.content.Context;
 import android.net.SSLCertificateSocketFactory;
 import android.net.SSLSessionCache;
 
-
-
 public class NeatoHttpClient {
-	private static final int SOCKET_TIMEOUT_MILLIS = 60 * 1000; // 60 seconds
-	private static final int CONNECTIION_TIMEOUT_MILLIS = 60 * 1000; // 60 seconds
-	
-	private static DefaultHttpClient mClient;
-	
-	// ALLOW_ALL_CERTIFICATE if set to true, accepts all the certificates
-	// **WARNING** - This should not be enabled in the production code
-	// Currently our neatosecure server uses the self signed certificate, we 
-	// have set ALLOW_ALL_CERTIFICATE flag to true to make it work over https
-	// However once we have the certificate from proper CA, then we should set ALLOW_ALL_CERTIFICATE
-	// to false
-	private static final boolean ALLOW_ALL_CERTIFICATE = true;
+    private static final int SOCKET_TIMEOUT_MILLIS = 60 * 1000; // 60 seconds
+    private static final int CONNECTIION_TIMEOUT_MILLIS = 60 * 1000; // 60
+                                                                     // seconds
 
-	private static class MySSLSocketFactory extends SSLSocketFactory {
-	    SSLContext sslContext = SSLContext.getInstance("TLS");
+    private static DefaultHttpClient mClient;
 
-	    public MySSLSocketFactory(KeyStore truststore) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, UnrecoverableKeyException {
-	        super(truststore);
+    // ALLOW_ALL_CERTIFICATE if set to true, accepts all the certificates
+    // **WARNING** - This should not be enabled in the production code
+    // Currently our neatosecure server uses the self signed certificate, we
+    // have set ALLOW_ALL_CERTIFICATE flag to true to make it work over https
+    // However once we have the certificate from proper CA, then we should set
+    // ALLOW_ALL_CERTIFICATE
+    // to false
+    private static final boolean ALLOW_ALL_CERTIFICATE = true;
 
-	        TrustManager tm = new X509TrustManager() {
-	        	@Override
-	            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-	            }
+    private static class MySSLSocketFactory extends SSLSocketFactory {
+        SSLContext sslContext = SSLContext.getInstance("TLS");
 
-	            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-	            }
+        public MySSLSocketFactory(KeyStore truststore) throws NoSuchAlgorithmException, KeyManagementException,
+                KeyStoreException, UnrecoverableKeyException {
+            super(truststore);
 
-	            public X509Certificate[] getAcceptedIssuers() {
-	                return null;
-	            }
-	        };
+            TrustManager tm = new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                }
 
-	        sslContext.init(null, new TrustManager[] { tm }, null);
-	    }
+                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                }
 
-	    @Override
-	    public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException, UnknownHostException {
-	        return sslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
-	    }
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+            };
 
-	    @Override
-	    public Socket createSocket() throws IOException {
-	        return sslContext.getSocketFactory().createSocket();
-	    }
-	}
-	
-	private static final synchronized HttpClient get (Context context) {
-		
-		 if (ALLOW_ALL_CERTIFICATE) {
-			 return getHttpClientAllowAllCerts(context);
-		 }
-		 else {
-			 return getHttpClient(context);
-		 }
-	}
-	
-	private static final synchronized HttpClient getHttpClient (Context context) {
-		if (mClient == null) {
-	        HttpParams params = new BasicHttpParams();
+            sslContext.init(null, new TrustManager[] { tm }, null);
+        }
 
-	        HttpConnectionParams.setStaleCheckingEnabled(params, false);
+        @Override
+        public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException,
+                UnknownHostException {
+            return sslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
+        }
 
-	        HttpConnectionParams.setConnectionTimeout(params, CONNECTIION_TIMEOUT_MILLIS);
-	        HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MILLIS);
-	        HttpConnectionParams.setSocketBufferSize(params, 8192);
-	        HttpClientParams.setRedirecting(params, false);
-	        SSLSessionCache sessionCache = (context != null) ? new SSLSessionCache(context) : null;
-	        HttpProtocolParams.setContentCharset(params, "UTF-8");
-	        SchemeRegistry schemeRegistry = new SchemeRegistry();
-	        schemeRegistry.register(new Scheme("http",
-	                PlainSocketFactory.getSocketFactory(), 80));
-	        schemeRegistry.register(new Scheme("https",
-	                SSLCertificateSocketFactory.getHttpSocketFactory(
-	                		SOCKET_TIMEOUT_MILLIS, sessionCache), 443));
+        @Override
+        public Socket createSocket() throws IOException {
+            return sslContext.getSocketFactory().createSocket();
+        }
+    }
 
-	        ClientConnectionManager manager =
-	                new ThreadSafeClientConnManager(params, schemeRegistry);
-	        
-	        mClient = new DefaultHttpClient(manager, params);
-		}
-		
-		return mClient;
-	}
-	
+    private static final synchronized HttpClient get(Context context) {
 
-	private static final synchronized HttpClient getHttpClientAllowAllCerts (Context context) {
-		if (mClient == null) {
-			try {
-				KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-		        trustStore.load(null, null);
-	
-		        SSLSocketFactory sf = new MySSLSocketFactory(trustStore);
-		        sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-	
-		        HttpParams params = new BasicHttpParams();
-	
-		        HttpConnectionParams.setStaleCheckingEnabled(params, false);
-	
-		        HttpConnectionParams.setConnectionTimeout(params, CONNECTIION_TIMEOUT_MILLIS);
-		        HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MILLIS);
-		        HttpConnectionParams.setSocketBufferSize(params, 8192);
-		        HttpClientParams.setRedirecting(params, false);
-		        HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		        HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-		        
-		        SchemeRegistry schemeRegistry = new SchemeRegistry();
-		        schemeRegistry.register(new Scheme("http",
-		                PlainSocketFactory.getSocketFactory(), 80));
-		        
-		        schemeRegistry.register(new Scheme("https",
-		        		sf, 443));
-	
-		        ClientConnectionManager manager =
-		                new ThreadSafeClientConnManager(params, schemeRegistry);
-		        
-		        mClient = new DefaultHttpClient(manager, params);
-			}
-			catch (Exception e) {
-				
-			}
-		}
-		return mClient;
-	}
+        if (ALLOW_ALL_CERTIFICATE) {
+            return getHttpClientAllowAllCerts(context);
+        } else {
+            return getHttpClient(context);
+        }
+    }
 
-	
+    private static final synchronized HttpClient getHttpClient(Context context) {
+        if (mClient == null) {
+            HttpParams params = new BasicHttpParams();
+
+            HttpConnectionParams.setStaleCheckingEnabled(params, false);
+
+            HttpConnectionParams.setConnectionTimeout(params, CONNECTIION_TIMEOUT_MILLIS);
+            HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MILLIS);
+            HttpConnectionParams.setSocketBufferSize(params, 8192);
+            HttpClientParams.setRedirecting(params, false);
+            SSLSessionCache sessionCache = (context != null) ? new SSLSessionCache(context) : null;
+            HttpProtocolParams.setContentCharset(params, "UTF-8");
+            SchemeRegistry schemeRegistry = new SchemeRegistry();
+            schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+            schemeRegistry.register(new Scheme("https", SSLCertificateSocketFactory.getHttpSocketFactory(
+                    SOCKET_TIMEOUT_MILLIS, sessionCache), 443));
+
+            ClientConnectionManager manager = new ThreadSafeClientConnManager(params, schemeRegistry);
+
+            mClient = new DefaultHttpClient(manager, params);
+        }
+
+        return mClient;
+    }
+
+    private static final synchronized HttpClient getHttpClientAllowAllCerts(Context context) {
+        if (mClient == null) {
+            try {
+                KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+                trustStore.load(null, null);
+
+                SSLSocketFactory sf = new MySSLSocketFactory(trustStore);
+                sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+                HttpParams params = new BasicHttpParams();
+
+                HttpConnectionParams.setStaleCheckingEnabled(params, false);
+
+                HttpConnectionParams.setConnectionTimeout(params, CONNECTIION_TIMEOUT_MILLIS);
+                HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MILLIS);
+                HttpConnectionParams.setSocketBufferSize(params, 8192);
+                HttpClientParams.setRedirecting(params, false);
+                HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+                HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+
+                SchemeRegistry schemeRegistry = new SchemeRegistry();
+                schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+
+                schemeRegistry.register(new Scheme("https", sf, 443));
+
+                ClientConnectionManager manager = new ThreadSafeClientConnManager(params, schemeRegistry);
+
+                mClient = new DefaultHttpClient(manager, params);
+            } catch (Exception e) {
+
+            }
+        }
+        return mClient;
+    }
+
     public static HttpResponse execute(Context context, HttpGet get) throws IOException {
         return get(context).execute(get);
     }
-    
+
     public static HttpResponse execute(Context context, HttpPost post) throws IOException {
         return get(context).execute(post);
     }
-    
-    public static String execute(Context context, HttpGet get, ResponseHandler<String> responseHandler) throws IOException {
+
+    public static String execute(Context context, HttpGet get, ResponseHandler<String> responseHandler)
+            throws IOException {
         return get(context).execute(get, responseHandler);
     }
-    
-    public static String execute(Context context, HttpPost post, ResponseHandler<String> responseHandler) throws IOException {
+
+    public static String execute(Context context, HttpPost post, ResponseHandler<String> responseHandler)
+            throws IOException {
         return get(context).execute(post, responseHandler);
-    }	
+    }
 }

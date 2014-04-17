@@ -16,27 +16,26 @@ import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotD
 
 public class RegisterDataChangeNotificationRequest extends RobotManagerRequest {
 
-	@Override
-	public void execute(String action, JSONArray data, String callbackId) {
-		RobotJsonData jsonData = new RobotJsonData(data);
-		registerRobotNotifications2(mContext, jsonData, callbackId);
-	}
+    @Override
+    public void execute(String action, JSONArray data, String callbackId) {
+        RobotJsonData jsonData = new RobotJsonData(data);
+        registerRobotNotifications2(mContext, jsonData, callbackId);
+    }
 
-	private void registerRobotNotifications2(Context context, RobotJsonData jsonData, final String callbackId) {
-		LogHelper.logD(TAG, "registerRobotNotifications2 action initiated in Robot plugin");
-		
-		RobotNotificationUtil.addRobotDataChangedListener(context, new RobotDataListener() {
-			@Override
-			public void onDataReceived(String robotId, int dataCode,
-					HashMap<String, String> data) {
-				JSONObject robotData = RobotNotificationUtil.getNotificationObject(robotId, dataCode, data);
-				if (robotData != null) {
-					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, robotData);
-					pluginResult.setKeepCallback(true);
-					sendSuccessPluginResult(pluginResult, callbackId);
-				}
-				
-			}
-		});
-	}
+    private void registerRobotNotifications2(Context context, RobotJsonData jsonData, final String callbackId) {
+        LogHelper.logD(TAG, "registerRobotNotifications2 action initiated in Robot plugin");
+
+        RobotNotificationUtil.addRobotDataChangedListener(context, new RobotDataListener() {
+            @Override
+            public void onDataReceived(String robotId, int dataCode, HashMap<String, String> data) {
+                JSONObject robotData = RobotNotificationUtil.getNotificationObject(robotId, dataCode, data);
+                if (robotData != null) {
+                    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, robotData);
+                    pluginResult.setKeepCallback(true);
+                    sendSuccessPluginResult(pluginResult, callbackId);
+                }
+
+            }
+        });
+    }
 }

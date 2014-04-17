@@ -16,17 +16,19 @@ import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
 
 public class ResumeCleaningRequest extends RobotManagerRequest {
 
-	@Override
-	public void execute(String action, JSONArray data, String callbackId) {
-		RobotJsonData jsonData = new RobotJsonData(data);
-		sendResumeCleaningCommand(mContext, jsonData, callbackId);
-	}
-	private void sendResumeCleaningCommand (final Context context, RobotJsonData jsonData, final String callbackId) {
-		String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
-		JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
-		HashMap<String, String> commadParamsMap = CommandRequestUtils.getCommandParams(commandParams);
-		LogHelper.logD(TAG, "sendCommand2 - COMMAND_RESUME");
-		RobotDataManager.sendRobotCommand(context, robotId, RobotCommandPacketConstants.COMMAND_RESUME_CLEANING, commadParamsMap  , new RobotSetProfileDataRequestListener(callbackId));
-	}
+    @Override
+    public void execute(String action, JSONArray data, String callbackId) {
+        RobotJsonData jsonData = new RobotJsonData(data);
+        sendResumeCleaningCommand(mContext, jsonData, callbackId);
+    }
+
+    private void sendResumeCleaningCommand(final Context context, RobotJsonData jsonData, final String callbackId) {
+        String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+        JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
+        HashMap<String, String> commadParamsMap = CommandRequestUtils.getCommandParams(commandParams);
+        LogHelper.logD(TAG, "sendCommand2 - COMMAND_RESUME");
+        RobotDataManager.sendRobotCommand(context, robotId, RobotCommandPacketConstants.COMMAND_RESUME_CLEANING,
+                commadParamsMap, new RobotSetProfileDataRequestListener(callbackId));
+    }
 
 }

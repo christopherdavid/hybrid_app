@@ -12,85 +12,79 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 
 public class TcpIpTransport implements Transport {
 
-	private static final String TAG = TcpIpTransport.class.getSimpleName();
-	private Socket mSocket;
-	private InputStream mInputStream;
-	private OutputStream mOutputStream;
+    private static final String TAG = TcpIpTransport.class.getSimpleName();
+    private Socket mSocket;
+    private InputStream mInputStream;
+    private OutputStream mOutputStream;
 
-	private TcpIpTransport(Socket socket)
-	{
-		mSocket = socket;
-		try {
-			mInputStream = socket.getInputStream();
-		}
-		catch (IOException e) {
-			LogHelper.log(TAG, "Exception to getInputStream", e);
-		}
-		try {
-			mOutputStream = socket.getOutputStream();
-		}
-		catch (IOException e) {
-			LogHelper.log(TAG, "Exception to getOutputStream", e);
-		}
-	}
-	
-	
-	public static Transport createTransport(InetAddress remoteAddress, int port)
-	{
-		try {
-			LogHelper.logD(TAG, "Create TCP Connection. Remote Address: " + remoteAddress.getHostAddress() + " Port: " + port);
-			Socket socket = new Socket(remoteAddress, port);
-			return new TcpIpTransport(socket);
-		} 
-		catch (IOException e) {
-			LogHelper.log(TAG, "Exception in createTransport", e);
-		}
-		return null;
-		
-	}
+    private TcpIpTransport(Socket socket) {
+        mSocket = socket;
+        try {
+            mInputStream = socket.getInputStream();
+        } catch (IOException e) {
+            LogHelper.log(TAG, "Exception to getInputStream", e);
+        }
+        try {
+            mOutputStream = socket.getOutputStream();
+        } catch (IOException e) {
+            LogHelper.log(TAG, "Exception to getOutputStream", e);
+        }
+    }
 
-	public void send(byte[] data) throws IOException {
-		if (mOutputStream != null) {
-			mOutputStream.write(data);
-		}
-	}
+    public static Transport createTransport(InetAddress remoteAddress, int port) {
+        try {
+            LogHelper.logD(TAG, "Create TCP Connection. Remote Address: " + remoteAddress.getHostAddress() + " Port: "
+                    + port);
+            Socket socket = new Socket(remoteAddress, port);
+            return new TcpIpTransport(socket);
+        } catch (IOException e) {
+            LogHelper.log(TAG, "Exception in createTransport", e);
+        }
+        return null;
 
-	public void read(byte[] data) throws IOException {
-		if (mInputStream != null) {
-			mInputStream.read(data);
-		}
-	}
+    }
 
-	public DatagramPacket readDatagram() throws IOException {
-		return null;
-	}
+    public void send(byte[] data) throws IOException {
+        if (mOutputStream != null) {
+            mOutputStream.write(data);
+        }
+    }
 
-	public void close() {
-		try {
-			if (mSocket != null) {
-				mSocket.close();
-				mSocket = null;
-			}
-		}
-		catch (IOException e) {
-			LogHelper.log(TAG, "Exception in close", e);
-		}
-	}
+    public void read(byte[] data) throws IOException {
+        if (mInputStream != null) {
+            mInputStream.read(data);
+        }
+    }
 
-	public InputStream getInputStream() {
-		return mInputStream;
-	}
+    public DatagramPacket readDatagram() throws IOException {
+        return null;
+    }
 
-	public int getVersion() {
-		return AppConstants.TCP_PACKET_VERSION;
-	}
+    public void close() {
+        try {
+            if (mSocket != null) {
+                mSocket.close();
+                mSocket = null;
+            }
+        } catch (IOException e) {
+            LogHelper.log(TAG, "Exception in close", e);
+        }
+    }
 
-	public boolean isConnected() {
-		if(mSocket != null && mSocket.isConnected()) {
-			return true;
-		} 
-		return false;
+    public InputStream getInputStream() {
+        return mInputStream;
+    }
 
-	}
+    public int getVersion() {
+        return AppConstants.TCP_PACKET_VERSION;
+    }
+
+    public boolean isConnected() {
+        if (mSocket != null && mSocket.isConnected()) {
+            return true;
+        }
+        return false;
+
+    }
 
 }

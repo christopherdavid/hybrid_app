@@ -2,16 +2,16 @@ package com.neatorobotics.android.slide.framework.webservice.user;
 
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 
-public class IsUserValidatedResult extends NeatoWebserviceResult {	
-	public Result result;
-	
-	@Override
-	public boolean success() {
-		return ((status == RESPONSE_STATUS_SUCCESS) && (result != null));
-	}
+public class IsUserValidatedResult extends NeatoWebserviceResult {
+    public Result result;
 
-	public static class Result {
-		public int validation_status;
-		public String message;		
-	}
+    @Override
+    public boolean success() {
+        return ((status == RESPONSE_STATUS_SUCCESS) && (result != null));
+    }
+
+    public static class Result {
+        public int validation_status;
+        public String message;
+    }
 }

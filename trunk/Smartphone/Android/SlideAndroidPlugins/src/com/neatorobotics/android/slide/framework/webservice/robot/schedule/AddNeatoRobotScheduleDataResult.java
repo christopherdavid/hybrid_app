@@ -4,52 +4,52 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.neatorobotics.android.slide.framework.webservice.NeatoHttpResponse;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 
-public class AddNeatoRobotScheduleDataResult extends NeatoWebserviceResult{
+public class AddNeatoRobotScheduleDataResult extends NeatoWebserviceResult {
 
-	public AddNeatoRobotScheduleDataResult(NeatoHttpResponse response) {
-		super(response);
-	}
-	public AddNeatoRobotScheduleDataResult(int response, int responseStatusCode, String message) {
-		super(response, responseStatusCode);
-		mMessage = message;
-	}
-	public static final int RESPONSE_STATUS_SUCCESS = 0;
+    public AddNeatoRobotScheduleDataResult(NeatoHttpResponse response) {
+        super(response);
+    }
 
-	@JsonProperty(value="status")
-	public int mStatus = -1; 
+    public AddNeatoRobotScheduleDataResult(int response, int responseStatusCode, String message) {
+        super(response, responseStatusCode);
+        mMessage = message;
+    }
 
-	@JsonProperty(value="message")
-	public String mMessage;	
+    public static final int RESPONSE_STATUS_SUCCESS = 0;
 
-	@JsonProperty(value="result")
-	public Result mResult;
+    @JsonProperty(value = "status")
+    public int mStatus = -1;
 
-	public AddNeatoRobotScheduleDataResult() {
-		super();
-	}
+    @JsonProperty(value = "message")
+    public String mMessage;
 
-	@Override
-	public boolean success() {
-		return ((mStatus == RESPONSE_STATUS_SUCCESS) && (mResult.mSuccess));
-	}
+    @JsonProperty(value = "result")
+    public Result mResult;
 
+    public AddNeatoRobotScheduleDataResult() {
+        super();
+    }
 
-	public class Result {
-		@JsonProperty(value="success")
-		public boolean mSuccess;	
+    @Override
+    public boolean success() {
+        return ((mStatus == RESPONSE_STATUS_SUCCESS) && (mResult.mSuccess));
+    }
 
-		@JsonProperty(value="schedule_type")
-		public String mSchedule_Type;	
+    public class Result {
+        @JsonProperty(value = "success")
+        public boolean mSuccess;
 
-		@JsonProperty(value="robot_schedule_id")
-		public String mRobot_Schedule_Id;	
+        @JsonProperty(value = "schedule_type")
+        public String mSchedule_Type;
 
-		@JsonProperty(value="xml_data_version")
-		public String mXml_Data_Version;	
+        @JsonProperty(value = "robot_schedule_id")
+        public String mRobot_Schedule_Id;
 
-		@JsonProperty(value="blob_data_version")
-		public String mBlob_Data_Version;
+        @JsonProperty(value = "xml_data_version")
+        public String mXml_Data_Version;
 
-	}
+        @JsonProperty(value = "blob_data_version")
+        public String mBlob_Data_Version;
+
+    }
 }
-
