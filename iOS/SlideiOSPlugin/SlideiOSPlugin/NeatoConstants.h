@@ -267,7 +267,7 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
     #define STAGING_SERVER @"Staging (Neato)"
     #define PROD_SERVER @"Production (Neato)"
     #define DEV_SERVER @"Development (Neato)"
-    #define XMPP_SERVER_ADDRESS @"neatorobotics.com"
+    #define XMPP_SERVER_ADDRESS @"staging-smartapp.neatorobotics.com"
 
     #ifdef ROBOT_SERVER_PROD
         // Will use API's at http://neato.rajatogo.com/wstest/
@@ -280,8 +280,8 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
         #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
 
     #else
-        // Will use API's at http://staging-smartapp.neatorobotics.com/wstest/
-        #define BASE_URL @"http://staging-smartapp.neatorobotics.com/api/rest/json"
+        // Will use API's at https://staging-smartapp.neatorobotics.com/wstest/
+        #define BASE_URL @"https://staging-smartapp.neatorobotics.com/api/rest/json"
         #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
     #endif
 

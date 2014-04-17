@@ -1171,6 +1171,9 @@
                                                                      completion ? completion(response, nil) : nil;
                                                                  }];
                      }
+                     else {
+                       completion ? completion(nil, nil) : nil;
+                     }
                  }];
 }
 

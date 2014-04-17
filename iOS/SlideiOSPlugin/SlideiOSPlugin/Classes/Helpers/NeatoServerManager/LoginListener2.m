@@ -166,6 +166,14 @@
     self.retained_self = nil;
 }
 
+- (void)didDisConnectFromXMPP {
+  NSError *error = [AppHelper nserrorWithDescription:@"Failed to connect over XMPP" code:UI_ERROR_TYPE_UNKNOWN];
+  self.completion ? self.completion(nil, error) : nil;
+  [self.delegate performSelector:@selector(loginFailedWithError:) withObject:error];
+  self.delegate = nil;
+  self.retained_self = nil;
+}
+
 #pragma mark - Private
 - (void)alreadyConnectedToXMPP {
     debugLog(@"XMPP connection already exists");
