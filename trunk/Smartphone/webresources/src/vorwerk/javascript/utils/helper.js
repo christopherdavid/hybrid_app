@@ -318,9 +318,6 @@ var robotUiStateHandler = {
         } else {
             // remove offline class
             $("body").removeClass("offline");
-            // Workaround for the remove class not refreshing the UI many times
-            $("body").attr('class',$("body").attr('class'));
-            console.log("Online is true and the CSS name is  " + $("body").attr('class')); 
             // update robot name
             curRobot().displayName(curRobot().robotName());
         }
