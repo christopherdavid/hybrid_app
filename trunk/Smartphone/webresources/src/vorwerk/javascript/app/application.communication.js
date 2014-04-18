@@ -279,8 +279,8 @@ function WorkflowCommunication(parent) {
                 }
             // new state online:
             } else {
-                that.updateRobotStateWithCode(robot, ROBOT_STATE_IDLE);
                 robot.visualOnline(true);
+                that.updateRobotStateWithCode(robot, ROBOT_STATE_IDLE);
             }
         }
     };
