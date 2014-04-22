@@ -83,8 +83,7 @@ visualState[ROBOT_STATE_RESUMED] = "resumed";
 visualState[ROBOT_STATE_ON_BASE] = "inbase";
 visualState[ROBOT_STATE_MANUAL_CLEANING] = "manual";
 visualState[ROBOT_STATE_MANUAL_PLAY_MODE] = "play";
-// TODO: replace with correct constant from neatosmartapphelper.js
-visualState[10012] = "inuse";
+visualState[ROBOT_USER_MENU_STATE] = "inuse";
 // UI states
 visualState[ROBOT_UI_STATE_ERROR] = "error";
 visualState[ROBOT_UI_STATE_WAIT] = "waiting";
