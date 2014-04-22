@@ -26,8 +26,10 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     // listener when robot category changes
     subscribeCategory = this.robot().cleaningCategory.subscribe(function(newValue) {
             console.log("cleaningCategory subscribe " + newValue);
-            if(newValue != this.visualSelectedCategory() && !that.robot().visualOnline()) {
+            if(newValue != this.visualSelectedCategory() && that.robot().visualOnline()) {
                 that.visualSelectedCategory(newValue);
+                // close all dialogs
+                parent.notification.forceCloseDialog();
             }
         }, this);
         
