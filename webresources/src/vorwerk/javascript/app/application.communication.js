@@ -280,7 +280,13 @@ function WorkflowCommunication(parent) {
             // new state online:
             } else {
                 robot.visualOnline(true);
-                that.updateRobotStateWithCode(robot, ROBOT_STATE_IDLE);
+                // set robot state to last internal state
+                if(robot.robotNewVirtualState() != ROBOT_STATE_UNKNOWN) {
+                    that.updateRobotStateWithCode(robot, robot.robotNewVirtualState());
+                } else {
+                    // robot state is unnokwn so we need to make a server request
+                    that.getRobotState(robot.robotId());
+                }
             }
         }
     };
