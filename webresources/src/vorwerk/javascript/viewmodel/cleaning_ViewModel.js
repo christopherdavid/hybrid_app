@@ -251,12 +251,13 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                     }
                 ]);
             } else {
-                that.robot().cleaningCategory(newValue);
                 // set stopped state to switch speech bubble text depending on category
                 robotUiStateHandler.setUiState(ROBOT_STATE_STOPPED);
                 if(newValue == CLEANING_CATEGORY_SPOT) {
                     // show spot popup
                     that.editSpotSize();
+                } else {
+                    that.robot().cleaningCategory(newValue);
                 }
             }
         } else { 
@@ -391,6 +392,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     this.popupOk = function() {
         $spotPopup.popup("close");
+        // set new category
+        that.robot().cleaningCategory(that.visualSelectedCategory());
         var newSize = convertSpotsize(that.newSpotSizeLength(), that.newSpotSizeHeight()); 
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.setSpotDefinition, [that.robot().robotId(), newSize.length, newSize.height],
         { type: notificationType.OPERATION, message: "Set new Spotsize: " + (that.newSpotSizeLength()*spotFactor) + "x" +  (that.newSpotSizeHeight()*spotFactor) , bHide: true });
@@ -405,6 +408,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     this.popupCancel = function() {
         $spotPopup.popup("close");
+        // reset selection
+        that.visualSelectedCategory(that.robot().cleaningCategory());
     };
     
     this.startBtnClick = function() {
