@@ -203,6 +203,7 @@ var robotUiStateHandler = {
     },
     
     setVirtualState:function(state) {
+        // console.log("setVirtualState " + state); 
         // check if timer for this state is already running
         if(this.statusTimer == null || this.current().robot() != state) { 
             // cancel old timer
@@ -277,6 +278,7 @@ var robotUiStateHandler = {
             this.current().messageText(message);
         } else if(state == ROBOT_UI_STATE_ROBOT_OFFLINE) {
             this.current().messageText($.i18n.t("visualState." + visualState[state]));
+            this.current().robot(ROBOT_UI_STATE_ROBOT_OFFLINE);
             // change robot name
             curRobot().displayName(curRobot().robotName() + " (" + $.i18n.t("common.offline") + ")");
             curRobot().visualOnline(false);

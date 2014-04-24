@@ -173,6 +173,16 @@ function WorkflowNotification(parent) {
                                 }]);
                             
                             break;
+                        // enable or disable scheduler
+                        case ROBOT_SCHEDULE_STATE_CHANGED:
+                            // convert to boolean no matter if result state is a string or boolean 
+                            var curState = result.robotData.scheduleState == 'false' ? !result.robotData.scheduleState : !!result.robotData.scheduleState; 
+                            that.handleStatusListener(ROBOT_SCHEDULE_STATE_CHANGED, curState);
+                            break;
+                        // schedule data updated
+                        case ROBOT_SCHEDULE_UPDATED:
+                            that.handleStatusListener(ROBOT_SCHEDULE_UPDATED, true);
+                            break;
                     }
             // loop over robots and update state
             } else {
@@ -230,6 +240,15 @@ function WorkflowNotification(parent) {
     this.registerForRobotMessages = function() {
         console.log("registerForRobotMessages");
         RobotPluginManager.registerForRobotMessages(that.successNotifyPushMessage, that.errorNotifyPushMessage);
+    };
+    
+    this.handleStatusListener = function(state, result) {
+        if(statusListener[state] && statusListener[state].length > 0) {
+            for(var i = 0; i < statusListener[state].length; i++) {
+                console.log("found call callback with result: " + result);
+                statusListener[state][i](result);
+            }
+        }
     };
     
     this.registerStatus = function(notficationId, callback) {
