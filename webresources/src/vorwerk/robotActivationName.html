@@ -15,7 +15,8 @@
         <fieldset>
             <p data-i18n="robotActivationName.page.id_accepted" data-bind="translate: language">Your ID was accepted...</p>
             <div class="line">
-                <input type="text" data-i18n="robotActivationName.page.robot_name" data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: robotName, valueUpdate: 'afterkeydown'"/>
+                <input type="text" data-i18n="robotActivationName.page.robot_name" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" 
+                    data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: robotName, valueUpdate: 'afterkeydown'"/>
             </div>
         </fieldset>
     </div>
