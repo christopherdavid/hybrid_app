@@ -124,7 +124,7 @@ function WorkflowNotification(parent) {
                         		var messageId = message.messageID;
                         		console.log("Alert Message ID :" + messageId);
                         		console.log("Current State :"+ curRobot().robotNewVirtualState());
-                        		if(messageId != NOTIFICATION_ROBOT_CANCEL){
+                        		if(messageId != 22000){
                         			var notificationText   =  $.i18n.t("communication."+ messageId);
                             		that.showLoadingArea(true,notificationType.HINT,notificationText);
                             	}
