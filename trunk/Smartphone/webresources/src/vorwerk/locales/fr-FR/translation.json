@@ -472,10 +472,6 @@
             "message": "Please clear my path.",
             "title": "Error"
         },
-        "-21229": {
-            "message": "Thank you for emptying my Dirt Bin and cleaning my Filter.",
-            "title": "Error"
-        },
         "-21267": {
             "message": "Please clear my path.",
             "title": "Error"
@@ -509,6 +505,7 @@
         "wakeup_unknown_robot": "Le Robot se réveillera dans quelques secondes",
         "getready_robot": "Le Robot se prépare",
         "robot_added": "En train d'ajouter __robotName__",
+        "20229": "Thank you for emptying my Dirt Bin and cleaning my Filter.",
         "20208": "Please wait while I check my surrounding.",
         "intend_drive": "Veuillez patienter",
         "20209": "Thank you!",
