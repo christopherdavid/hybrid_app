@@ -499,8 +499,8 @@
     
     NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
     helper.delegate = self;
-    NSString *serverType = [AppHelper getNotificationServerType];
-    NSString *appId = [AppHelper getApplicationId];
+    NSString *serverType = [AppHelper notificationServerType];
+    NSString *appId = [AppHelper applicationId];
     [helper registerPushNotificationForEmail:email deviceType:deviceType deviceToken:deviceToken notificationServerType:serverType applicationId:appId];
 }
 
@@ -1191,8 +1191,8 @@
     
     NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
     helper.delegate = self;
-    NSString *serverType = [AppHelper getNotificationServerType];
-    NSString *appId = [AppHelper getApplicationId];
+    NSString *serverType = [AppHelper notificationServerType];
+    NSString *appId = [AppHelper applicationId];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL]];
     [request setHTTPMethod:@"POST"];

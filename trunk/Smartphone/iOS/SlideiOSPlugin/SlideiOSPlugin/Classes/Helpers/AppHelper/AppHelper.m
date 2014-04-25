@@ -7,10 +7,6 @@
 // We need to identify the UID app and RSL test application
 // because we need to tell server which certificate to use for the push notification
 
-#define APPLICATION_TEST_APP_BUNDLE_ID   @"com.neato.plugin.testui"
-#define APPLICATION_ID_MAIN_APP          @"1"
-#define APPLICATION_ID_TEST_APP          @"2"
-
 @implementation AppHelper
 
 + (NSDictionary *)parseJSON:(NSData *)jsonData {
@@ -131,20 +127,14 @@
     return NO;
 }
 
-+ (NSString *)getCurrentServer {
-    #ifdef ROBOT_SERVER_PROD
-        return PROD_SERVER;
-    #elif SWITCH_TO_DEV_SERVER
-        return DEV_SERVER;
-    #else
-        return STAGING_SERVER;
-    #endif
++ (NSString *)currentServer {
+  return SERVER_TYPE;
 }
 
 + (void)traceAppInfo {
     debugLog(@"==================App info=====================");
     debugLog(@"Plugin version = %@", SLIDE_IOS_PLUGIN_VERSION);
-    debugLog(@"Server = %@", [self getCurrentServer]);
+    debugLog(@"Server = %@", [self currentServer]);
     debugLog(@"====================End========================");
 }
 
@@ -157,7 +147,7 @@
     debugLog(@"");
     NSMutableDictionary *appInfo = [[NSMutableDictionary alloc] init];
     [appInfo setValue:[self getMainAppVersion] forKey:NEATO_KEY_APP_VERSION];
-    [appInfo setValue:[self getCurrentServer] forKey:NEATO_KEY_SERVER_USED];
+    [appInfo setValue:[self currentServer] forKey:NEATO_KEY_SERVER_USED];
     [appInfo setValue:SLIDE_IOS_PLUGIN_VERSION forKey:NEATO_KEY_LIB_VERSION];
     return appInfo;
 }
@@ -220,20 +210,20 @@
     return (([status intValue] == NEATO_STATUS_ERROR) && serverError);
 }
 
-+ (NSString *)getApplicationId {
++ (NSString *)applicationId {
   NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+  // TODO: We need to pass the bundle Id. But since server is not setup to handle
+  // bundle id, we are passing 1
+  bundleIdentifier = @"1";
   debugLog(@"Bundle identifier = [%@]", bundleIdentifier);
-  if ([bundleIdentifier isEqualToString:APPLICATION_TEST_APP_BUNDLE_ID]) {
-    return APPLICATION_ID_TEST_APP;
-  }
-  
-  return APPLICATION_ID_MAIN_APP;
+  return bundleIdentifier;
 }
 
-+ (NSString *)getNotificationServerType {
++ (NSString *)notificationServerType {
    debugLog(@"NOTIFICATION_SERVER_TYPE = [%@]", NOTIFICATION_SERVER_TYPE);
   return NOTIFICATION_SERVER_TYPE;
 }
+
 
 + (NSString *)appInfo {
     NSDictionary *appInfo = @{ @"locale" : [[NSLocale currentLocale] localeIdentifier],

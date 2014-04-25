@@ -18,11 +18,8 @@
 #define NEATO_RESPONSE_STATUS @"status"
 #define NEATO_RESPONSE_MESSAGE @"message"
 #define NEATO_RESPONSE_RESULT @"result"
-#define NEATO_RESPONSE_ATLAS_ID @"atlas_id"
 #define NEATO_RESPONSE_XML_DATA_URL @"xml_data_url"
-#define NEATO_RESPONSE_ATLAS_VERSION @"version"
 #define NEATO_RESPONSE_SUCCESS @"success"
-#define NEATO_RESPONSE_ROBOT_ATLAS_ID @"robot_atlas_id"
 #define NEATO_ROBOT_ONLINE_STATUS @"online"
 #define NEATO_VALIDATION_STATUS @"validation_status"
 #define NEATO_PROFILE_DETAILS @"profile_details"
@@ -207,134 +204,198 @@
 // Request completion block
 typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *error);
 
-// To switch to Vorwerk's server, comment SERVER_TYPE_NEATO and SERVER_TYPE_RAJATOGO.
-#define SERVER_TYPE_NEATO 1
-// #define SERVER_TYPE_RAJATOGO 1
+#define ENABLE_DEBUGGING
+// To switch to Vorwerk's server, uncomment appropriate server type
+// #define SERVER_TYPE_NEATO_STAGING
+// #define SERVER_TYPE_NEATO_PROD
+// #define SERVER_TYPE_NEATO_DEV
+
+// #define SERVER_TYPE_VORWERK_STAGING
+// #define SERVER_TYPE_VORWERK_PROD
+// #define SERVER_TYPE_VORWERK_DEV
+
+#define SERVER_TYPE_RAJATOGO_STAGING
+// #define SERVER_TYPE_RAJATOGO_PROD
+// #define SERVER_TYPE_RAJATOGO_DEV
 
 
-// To switch to prod server, uncomment SWITCH_TO_PROD_SERVER variable
-// #define SWITCH_TO_PROD_SERVER 1
-#ifdef SWITCH_TO_PROD_SERVER
-// Switch for create user\robot related API's
-#define ROBOT_SERVER_PROD     1
-// Switch for robot's maps related API's
-#define ROBOT_MAPS_SERVER_PROD      1
-// Switch for robot's schedule related API's
-#define ROBOT_SCHEDULE_SERVER_PROD  1
-// Switch for robot's Atlas API
-#define ROBOT_ATLAS_SERVER_PROD  1
+// #define SERVER_TYPE_VORWERK_BETA
 
-#define NOTIFICATION_SERVER_TYPE  @"PROD"
+#ifdef ENABLE_DEBUGGING
+#define LOGGING_ENABLED
+#define ENABLE_DB_CREATION_IN_DOCUMENTS_DIR
+#endif
 
-#else
-// Logging would be 'ON' only in DEV mode.
-#define LOGGING_ENABLED             1
-#define ENABLE_DB_CREATION_IN_DOCUMENTS_DIR 1
-#define NOTIFICATION_SERVER_TYPE  @"DEV"
+#define NOTIFICATION_PROFILE_TYPE_DISTRIBUTION                  @"DIST"
+#define NOTIFICATION_PROFILE_TYPE_DEVELOPER                     @"DEV"
 
-// For internal testing we are going to use Dev server
-// Uncomment flag SWITCH_TO_DEV_SERVER to enable DEV server.
-// By default we would be using Staging server.
-// DO NOT check-in code with this flag enabled.
-// #define SWITCH_TO_DEV_SERVER 1
+
+#ifdef PROFILE_DISTRIBUTION
+#define NOTIFICATION_SERVER_TYPE  NOTIFICATION_PROFILE_TYPE_DISTRIBUTION
+#else 
+#define NOTIFICATION_SERVER_TYPE  NOTIFICATION_PROFILE_TYPE_DEVELOPER
+#endif
+
+#define SERVER_TYPE                 @"Staging (Neato)"
+#define XMPP_SERVER_ADDRESS         @"staging-smartapp.neatorobotics.com"
+// Will use API's at https://staging-smartapp.neatorobotics.com/wstest/
+#define BASE_URL @"https://staging-smartapp.neatorobotics.com/api/rest/json"
+#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+
+#ifdef SERVER_TYPE_VORWERK_BETA
+// First undefine existing constants
+#undef SERVER_TYPE
+#undef XMPP_SERVER_ADDRESS
+#undef BASE_URL
+#undef API_KEY
+
+#define SERVER_TYPE                 @"Beta Server (Vorwerk)"
+#define XMPP_SERVER_ADDRESS         @"server-01.fut.emea.vr200.ksecosys.net"
+// Will use API's at http://server-01.fut.emea.vr200.ksecosys.net/wstest/
+#define BASE_URL @"http://server-01.fut.emea.vr200.ksecosys.net/api/rest/json"
+#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
 
 #endif
 
+#ifdef SERVER_TYPE_NEATO_STAGING
+// First undefine existing constants
+#undef SERVER_TYPE
+#undef XMPP_SERVER_ADDRESS
+#undef BASE_URL
+#undef API_KEY
 
-#ifdef SERVER_TYPE_RAJATOGO
-    #define STAGING_SERVER @"Staging (RAJATOGO)"
-    #define PROD_SERVER @"Production (RAJATOGO)"
-    #define DEV_SERVER @"Development (RAJATOGO)"
-    #define XMPP_SERVER_ADDRESS @"rajatogo.com"
+#define SERVER_TYPE                 @"Staging (Neato)"
+#define XMPP_SERVER_ADDRESS         @"staging-smartapp.neatorobotics.com"
+// Will use API's at https://staging-smartapp.neatorobotics.com/wstest/
+#define BASE_URL @"https://staging-smartapp.neatorobotics.com/api/rest/json"
+#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+#endif
 
-    #ifdef ROBOT_SERVER_PROD
-        // Will use API's at http://neato.rajatogo.com/wstest/
-        #define BASE_URL @"http://neato.rajatogo.com/api/rest/json"
-        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+#ifdef SERVER_TYPE_NEATO_PROD
 
-    #elif SWITCH_TO_DEV_SERVER
-        // Will use API's at http://neatodev.rajatogo.com/wstest/
-        #define BASE_URL @"http://neatodev.rajatogo.com/api/rest/json"
-        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+// First undefine existing constants
+#undef SERVER_TYPE
+#undef XMPP_SERVER_ADDRESS
+#undef BASE_URL
+#undef API_KEY
 
-    #else
-        // Will use API's at http://neatostaging.rajatogo.com/wstest/
-        #define BASE_URL @"http://neatostaging.rajatogo.com/api/rest/json"
-        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
-    #endif
+#define SERVER_TYPE                 @"Production (Neato)"
+#define XMPP_SERVER_ADDRESS         @"rajatogo.com"
+// Will use API's at http://neato.rajatogo.com/wstest/
+#define BASE_URL @"http://neato.rajatogo.com/api/rest/json"
+#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+#endif
 
-#elif SERVER_TYPE_NEATO
-    #define STAGING_SERVER @"Staging (Neato)"
-    #define PROD_SERVER @"Production (Neato)"
-    #define DEV_SERVER @"Development (Neato)"
-    #define XMPP_SERVER_ADDRESS @"staging-smartapp.neatorobotics.com"
 
-    #ifdef ROBOT_SERVER_PROD
-        // Will use API's at http://neato.rajatogo.com/wstest/
-        #define BASE_URL @"http://neato.rajatogo.com/api/rest/json"
-        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+#ifdef SERVER_TYPE_NEATO_DEV
 
-    #elif SWITCH_TO_DEV_SERVER
-        // Will use API's at http://neatodev.rajatogo.com/wstest/
-        #define BASE_URL @"http://neatodev.rajatogo.com/api/rest/json"
-        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+// First undefine existing constants
+#undef SERVER_TYPE
+#undef XMPP_SERVER_ADDRESS
+#undef BASE_URL
+#undef API_KEY
 
-    #else
-        // Will use API's at https://staging-smartapp.neatorobotics.com/wstest/
-        #define BASE_URL @"https://staging-smartapp.neatorobotics.com/api/rest/json"
-        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
-    #endif
+#define SERVER_TYPE                 @"Development (Neato)"
+#define XMPP_SERVER_ADDRESS         @"rajatogo.com"
+// Will use API's at http://neatodev.rajatogo.com/wstest/
+#define BASE_URL @"http://neatodev.rajatogo.com/api/rest/json"
+#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+#endif
 
-#else
-    #define STAGING_SERVER @"Staging (Vorwerk)"
-    #define PROD_SERVER @"Production (Vorwerk)"
-    #define DEV_SERVER @"Development (Vorwerk)"
-    #define XMPP_SERVER_ADDRESS @"rajatogo.com"
+#ifdef SERVER_TYPE_VORWERK_STAGING
 
-    #ifdef ROBOT_SERVER_PROD
-        // Will use API's at http://neato.rajatogo.com/wstest/
-        #define BASE_URL @"http://neato.rajatogo.com/api/rest/json"
-        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+// First undefine existing constants
+#undef SERVER_TYPE
+#undef XMPP_SERVER_ADDRESS
+#undef BASE_URL
+#undef API_KEY
 
-    #elif SWITCH_TO_DEV_SERVER
-        // Will use API's at http://neatodev.rajatogo.com/wstest/
-        #define BASE_URL @"http://neatodev.rajatogo.com/api/rest/json"
-        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+#define SERVER_TYPE                 @"Staging (Vorwerk)"
+#define XMPP_SERVER_ADDRESS         @"rajatogo.com"
+// Will use API's at http://neatostaging.rajatogo.com/wstest/
+#define BASE_URL @"http://neatostaging.rajatogo.com/api/rest/json"
+#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+#endif
 
-    #else
-        // Will use API's at http://neatostaging.rajatogo.com/wstest/
-        #define BASE_URL @"http://neatostaging.rajatogo.com/api/rest/json"
-        #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
-    #endif
+#ifdef SERVER_TYPE_VORWERK_PROD
+
+// First undefine existing constants
+#undef SERVER_TYPE
+#undef XMPP_SERVER_ADDRESS
+#undef BASE_URL
+#undef API_KEY
+
+#define SERVER_TYPE                 @"Production (Vorwerk)"
+#define XMPP_SERVER_ADDRESS         @"rajatogo.com"
+// Will use API's at http://neato.rajatogo.com/wstest/
+#define BASE_URL @"http://neato.rajatogo.com/api/rest/json"
+#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+#endif
+
+#ifdef SERVER_TYPE_VORWERK_DEV
+
+// First undefine existing constants
+#undef SERVER_TYPE
+#undef XMPP_SERVER_ADDRESS
+#undef BASE_URL
+#undef API_KEY
+
+#define SERVER_TYPE                 @"Development (Vorwerk)"
+#define XMPP_SERVER_ADDRESS         @"rajatogo.com"
+// Will use API's at http://neatodev.rajatogo.com/wstest/
+#define BASE_URL @"http://neatodev.rajatogo.com/api/rest/json"
+#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+#endif
+
+
+#ifdef SERVER_TYPE_RAJATOGO_STAGING
+
+// First undefine existing constants
+#undef SERVER_TYPE
+#undef XMPP_SERVER_ADDRESS
+#undef BASE_URL
+#undef API_KEY
+
+#define SERVER_TYPE                 @"Staging (RAJATOGO)"
+#define XMPP_SERVER_ADDRESS         @"rajatogo.com"
+// Will use API's at http://neatostaging.rajatogo.com/wstest/
+#define BASE_URL @"http://neatostaging.rajatogo.com/api/rest/json"
+#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+#endif
+
+#ifdef SERVER_TYPE_RAJATOGO_PROD
+
+// First undefine existing constants
+#undef SERVER_TYPE
+#undef XMPP_SERVER_ADDRESS
+#undef BASE_URL
+#undef API_KEY
+
+#define SERVER_TYPE                 @"Production (RAJATOGO)"
+#define XMPP_SERVER_ADDRESS         @"staging-smartapp.neatorobotics.com"
+// Will use API's at http://neato.rajatogo.com/wstest/
+#define BASE_URL @"http://neato.rajatogo.com/api/rest/json"
+#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+#endif
+
+#ifdef SERVER_TYPE_RAJATOGO_DEV
+
+// First undefine existing constants
+#undef SERVER_TYPE
+#undef XMPP_SERVER_ADDRESS
+#undef BASE_URL
+#undef API_KEY
+
+#define SERVER_TYPE                 @"Development (RAJATOGO)"
+#define XMPP_SERVER_ADDRESS         @"rajatogo.com"
+// Will use API's at http://neatodev.rajatogo.com/wstest/
+#define BASE_URL @"http://neatodev.rajatogo.com/api/rest/json"
+#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
 #endif
 
 
 #define NETWORK_CONNECTION_FAILURE_MSG @"Request failed!Please check your network settings."
 
-#ifdef ROBOT_ATLAS_SERVER_PROD
-    #define NEATO_GET_ROBOT_ATLAS_DATA_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.get_atlas_data"
-    #define NEATO_GET_ATLAS_GRID_METADATA_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.get_atlas_grid_metadata"
-    #define NEATO_UPDATE_ATLAS_METADATA_URL @"http://neato.rajatogo.com/api/rest/json/?method=robot.update_atlas"
-#elif SWITCH_TO_DEV_SERVER
-    #define NEATO_GET_ROBOT_ATLAS_DATA_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.get_atlas_data"
-    #define NEATO_GET_ATLAS_GRID_METADATA_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.get_atlas_grid_metadata"
-    #define NEATO_UPDATE_ATLAS_METADATA_URL @"http://neatodev.rajatogo.com/api/rest/json?method=robot.update_atlas"
-#else
-    #define NEATO_GET_ROBOT_ATLAS_DATA_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.get_atlas_data"
-    #define NEATO_GET_ATLAS_GRID_METADATA_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.get_atlas_grid_metadata"
-    #define NEATO_UPDATE_ATLAS_METADATA_URL @"http://neatostaging.rajatogo.com/api/rest/json/?method=robot.update_atlas"
-#endif
-
-
-#ifdef ROBOT_MAPS_SERVER_PROD
-    // Will use API's at http://neato.rajatogo.com/wstest/robot_map.php
-    // TODO: Define all urls related to maps API here
-
-#else
-    // Will use API's at http://neatostaging.rajatogo.com/wstest/robot_map.php
-    // TODO: Define all urls related to maps API here
-
-#endif
 
 //URL Constants
 #define NEATO_CREATE_USER_URL @"method=user.create"
