@@ -5,6 +5,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import android.content.Context;
 import android.os.Handler;
@@ -33,6 +34,8 @@ public class RobotPeerConnection {
     private RobotPeerDataListener mRobotPeerDataListener;
     private RobotConnectionInfo mRobotConnectionInfo;
     private Object mRobotConnectionInfoLock = new Object();
+    private WriteDataThread mWriteDataThread;
+    private ReadDataThread mReadDataThread;
 
     public RobotPeerConnection(Context context) {
         mContext = context.getApplicationContext();
@@ -118,6 +121,7 @@ public class RobotPeerConnection {
                 RobotConnectionInfo robotConnectionInfo = createRobotConnectionInfo(robotId, ipAddress, transport);
                 setConnectionRobotInfo(robotConnectionInfo);
                 startReadDataThreadForRobot(robotConnectionInfo);
+                startWriteDataThreadForRobot(robotConnectionInfo);
                 break;
             } else {
                 closeExistingConnectionInternal();
@@ -137,20 +141,28 @@ public class RobotPeerConnection {
         if ((robotConnectionInfo != null) && (robotConnectionInfo.getTransport() != null)) {
             InputStream transportInputStream = robotConnectionInfo.getTransport().getInputStream();
             if (transportInputStream != null) {
-                ConnectThread readRobotMessages = new ConnectThread(robotConnectionInfo);
-                Thread t = new Thread(readRobotMessages);
-                t.start();
+                mReadDataThread = new ReadDataThread(robotConnectionInfo);
+                mReadDataThread.start();
             } else {
-                LogHelper.log(TAG, "Could not get input stream for the socket. Try again.");
+                LogHelper.log(TAG, "startReadDataThreadForRobot - Could not get input stream for the socket. Try again.");
             }
+        }
+    }
+
+    private void startWriteDataThreadForRobot(RobotConnectionInfo robotConnectionInfo) {
+        if ((robotConnectionInfo != null) && (robotConnectionInfo.getTransport() != null)) {            
+        	mWriteDataThread = new WriteDataThread(robotConnectionInfo.getTransport());           
+        	mWriteDataThread.start();
+        } else {
+            LogHelper.log(TAG, "startWriteDataThreadForRobot - Could not get RobotConnectionInfo for the robot. Try again.");
         }
     }
 
     public void closeExistingPeerConnection() {
         closeExistingConnectionInternal();
     }
-
-    private class ConnectThread implements Runnable {
+	
+    private class ReadDataThread extends Thread {
 
         private InputStream mIs;
         private RobotConnectionInfo connectionInfo;
@@ -160,18 +172,19 @@ public class RobotPeerConnection {
         // No need to send input stream. It can be very well retrieved from the
         // transport. This is just to make sure input streaM
         // exists for ther transport before making an attempt to connect.
-        public ConnectThread(RobotConnectionInfo robotConnectionInfo) {
+        public ReadDataThread(RobotConnectionInfo robotConnectionInfo) {
             connectionInfo = robotConnectionInfo;
         }
 
+        @Override
         public void run() {
-            try {
+            try {            	
                 mTransport = connectionInfo.getTransport();
                 mIs = mTransport.getInputStream();
                 mRobotId = connectionInfo.getRobotId();
                 notifyRobotConnected(mRobotId);
+                DataInputStream din = new DataInputStream(mIs);
                 while (true) {
-                    DataInputStream din = new DataInputStream(mIs);
                     RobotCommandPacket commandPacket = null;
                     try {
                         if (mTransport != null && mTransport.isConnected()) {
@@ -199,28 +212,79 @@ public class RobotPeerConnection {
                             LogHelper.log(TAG, "Peer is not connected");
                             break;
                         }
-                    } catch (EOFException e) {
-                        LogHelper.log(TAG, "Exception in ConnectedThread", e);
+                    }
+                    catch (EOFException e) {
+                        LogHelper.log(TAG, "EOFException in ReadDataThread", e);
                         break;
                     } catch (IOException e) {
-                        LogHelper.log(TAG, "Exception in ConnectedThread", e);
+                        LogHelper.log(TAG, "IOException in ReadDataThread", e);
                         break;
                     }
-
                     if (commandPacket != null) {
                         notifyPacketReceived(mRobotId, commandPacket);
                     } else {
                         LogHelper.log(TAG, "Null packet received");
                     }
                 }
-            } finally {
+            }
+            finally {
                 LogHelper.logD(TAG, "Connected Thread end");
                 notifyRobotDisconnected(mRobotId);
-                deleteConnectionInfo();
+                deleteConnectionInfo();                
             }
         }
+        
+        public void close() {      
+        	closeSilently(mIs);
+        }
     }
-
+	
+    private static void closeSilently(InputStream is) {
+    	if (is != null) {
+    		try {
+    			is.close();
+    		}
+    		catch (IOException e) {
+    			// ignore
+    		}
+    	}
+    }
+    
+	// Amit
+    private class WriteDataThread extends Thread {    	
+    	private final LinkedBlockingQueue<RobotCommandPacket> mMessageQueue;
+    	private final Transport mTransport;    	
+    	
+    	public WriteDataThread(Transport transport) {
+    		mTransport = transport;
+    		mMessageQueue = new LinkedBlockingQueue<RobotCommandPacket>();
+    	}
+    	
+    	public void sendPacket(RobotCommandPacket packet) {
+    		if(packet != null) {    			
+    			mMessageQueue.add(packet);
+    		}
+    	}
+    	
+		@Override
+		public void run() {
+			while (true) {
+				try {
+					RobotCommandPacket packet = mMessageQueue.take();					
+					RobotPeerConnectionUtils.sendRobotPacket(mTransport, packet);
+				}
+				catch (InterruptedException e) {
+					 LogHelper.log(TAG, "InterruptedException in WriteDataThread");
+					 break;
+				}				
+			}
+		}
+		
+		public void close() {			
+			interrupt();
+	    }
+    }
+    
     public void closePeerRobotConnection(final String robotId) {
         Runnable task = new Runnable() {
             public void run() {
@@ -243,6 +307,19 @@ public class RobotPeerConnection {
                     LogHelper.log(TAG, "closePeerConnection called");
                     String robot = robotConnection.getRobotId();
                     sendConnectionBreakPacket(robot);
+                    
+                    // Close write data thread
+                    if(mWriteDataThread != null) {
+                    	mWriteDataThread.close();
+                    }
+                    mWriteDataThread = null;
+                    
+                    // Close read data thread
+                    if(mReadDataThread != null) {
+                    	mReadDataThread.close();
+                    }
+                    mReadDataThread = null;
+                    
                     TaskUtils.sleep(TCP_BREAK_CONNECTION_WAIT_TIME);
                 }
                 transport.close();
@@ -332,10 +409,13 @@ public class RobotPeerConnection {
 
     public void sendRobotCommand(String robotId, RobotCommandPacket robotPacket) {
         RobotConnectionInfo robotConnectionInfo = getRobotConnectionInfo(robotId);
-        if (robotConnectionInfo != null) {
-            Transport transport = robotConnectionInfo.getTransport();
-            LogHelper.log(TAG, "Connection exist. Sending command.");
-            RobotPeerConnectionUtils.sendRobotPacketAsync(transport, robotPacket);
+        if ((robotConnectionInfo != null) && (robotConnectionInfo.getTransport() != null)) {            
+            LogHelper.log(TAG, "Connection exist. Sending command.");            
+            if(mWriteDataThread == null) {
+            	mWriteDataThread = new WriteDataThread(robotConnectionInfo.getTransport());
+            }            
+            
+            mWriteDataThread.sendPacket(robotPacket);
         } else {
             LogHelper.log(TAG, "Connection does not exist.");
         }
@@ -346,7 +426,7 @@ public class RobotPeerConnection {
         sendRobotCommand(robotId, packet);
     }
 
-    public void sendConnectionBreakPacket(String robotId) {
+    public void sendConnectionBreakPacket(String robotId) {    	
         RobotCommandPacket packet = RobotPeerConnectionUtils.getConnectionBreakPacket(mContext);
         sendRobotCommand(robotId, packet);
     }
