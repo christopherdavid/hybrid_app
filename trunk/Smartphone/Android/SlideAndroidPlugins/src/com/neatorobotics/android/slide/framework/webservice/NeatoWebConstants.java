@@ -16,7 +16,8 @@ public class NeatoWebConstants {
     public static final int WP_SERVER_ID = 1006;
     public static final int NEATO_SECURE_SERVER_ID = 1007;
     public static final int NEATOSTAGING_SERVER_ID = 1008;
-
+    public static final int VW_BETA_SERVER_ID = 1009;
+    
     public static final String QUERY_KEY_METHOD = "method";
     public static final String QUERY_KEY_APIKEY = "api_key";
     // Responses after a http requests
