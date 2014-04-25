@@ -22,7 +22,7 @@ public class RobotPeerConnection {
     private static final String TAG = RobotPeerConnection.class.getSimpleName();
 
     private static final int TCP_ROBOT_SERVER_PORT = AppConstants.TCP_ROBOT_SERVER_SOCKET_PORT;
-    private static final int TCP_RECONNECT_RETRY_COUNT = 3;
+    private static final int TCP_RECONNECT_RETRY_COUNT = 2;
     private static final int TCP_RETRY_TIME_GAP = 300; // 300 milli seconds.
 
     private static final int TCP_BREAK_CONNECTION_WAIT_TIME = 200; // 100 milli
