@@ -26,49 +26,24 @@ public class RobotPeerConnectionUtils {
     private static final String TAG = RobotPeerConnectionUtils.class.getSimpleName();
     private static final int PACKET_READ_CHUNK_SIZE = (4 * 1024);
 
-    protected static void sendRobotPacket(final Transport transport, final byte[] packet) {
+    protected static void sendRobotPacket(final Transport transport, final RobotCommandPacket robotPacket) {
         if (transport == null) {
             LogHelper.log(TAG, "Transport is null. Cannot send packet");
             return;
         }
-        if (packet == null) {
+        if (robotPacket == null) {
             LogHelper.log(TAG, "Packet is null");
             return;
         }
 
         try {
-            transport.send(packet);
+        	byte[] bytes = getRobotPacketBytes(robotPacket);
+            transport.send(bytes);
             LogHelper.log(TAG, "Packet is sent");
         } catch (IOException e) {
             LogHelper.log(TAG, "Exception in sendRobotPacket", e);
         }
 
-    }
-
-    protected static void sendRobotPacketAsync(final Transport transport, final RobotCommandPacket robotPacket) {
-        Runnable task = new Runnable() {
-
-            public void run() {
-                byte[] packet = getRobotPacketBytes(robotPacket);
-                if (transport == null) {
-                    LogHelper.log(TAG, "Transport is null. Cannot send packet");
-                    return;
-                }
-                if (packet == null) {
-                    LogHelper.log(TAG, "Packet is null");
-                    return;
-                }
-
-                try {
-                    transport.send(packet);
-                    LogHelper.log(TAG, "Packet is sent");
-                } catch (IOException e) {
-                    LogHelper.log(TAG, "Exception in sendRobotPacket", e);
-                }
-            }
-        };
-        Thread t = new Thread(task);
-        t.start();
     }
 
     private static byte[] getRobotPacketBytes(RobotCommandPacket robotPacket) {
