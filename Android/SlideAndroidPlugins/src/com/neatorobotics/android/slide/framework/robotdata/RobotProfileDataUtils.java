@@ -2,6 +2,8 @@ package com.neatorobotics.android.slide.framework.robotdata;
 
 import java.util.HashMap;
 
+import org.json.JSONException;
+
 import android.content.Context;
 import android.text.TextUtils;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
@@ -73,7 +75,13 @@ public class RobotProfileDataUtils {
         String cleaningStateDetails = details
                 .getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
         LogHelper.log(TAG, "# Current Robot State is " + cleaningStateDetails);
-        CleaningStateDetails stateDetails = JsonHelper.objectFromJson(cleaningStateDetails, CleaningStateDetails.class);
+        CleaningStateDetails stateDetails = null;
+        try {
+            stateDetails = new CleaningStateDetails(cleaningStateDetails);
+            LogHelper.log(TAG, "Robot State Details are " + stateDetails);
+        } catch (JSONException e) {
+            LogHelper.log(TAG, "Error in parsing robot state details", e);
+        }
         if (stateDetails != null) {
             return stateDetails.getCleaningCategory();
         }

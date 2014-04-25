@@ -44,7 +44,7 @@ public class NeatoRobotDataWebServicesAttributes {
 
             public static final String ROBOT_STATE_DETAILS = "robotStateDetails";
             public static final String ROBOT_CLEANING_CATEGORY = "robotCleaningCategory";
-
+            public static final String ROBOT_STATE_PARAMS = "robotStateParams";
             public static final String ROBOT_NOTIFICATION_MESSAGE_ID = "messageID ";
 
         }

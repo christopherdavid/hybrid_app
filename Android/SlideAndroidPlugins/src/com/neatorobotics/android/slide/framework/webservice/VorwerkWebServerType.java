@@ -11,6 +11,7 @@ public class VorwerkWebServerType extends WebServerType {
     private static final String SERVER_PRODUCTION = "Production (Vorwerk)";
     private static final String SERVER_WP = "WP (Vorwerk)";
     private static final String SERVER_NEATO_SECURE = "Secure Server (Vorwerk)";
+    private static final String SERVER_VORWERK_BETA = "Beta (Vorwerk)";
 
     final String PROD_BASE_JSON_URL = "http://neato.rajatogo.com/api/rest/json";
     final String PROD_API_KEY = "1e26686d806d82144a71ea9a99d1b3169adaad917";
@@ -54,6 +55,12 @@ public class VorwerkWebServerType extends WebServerType {
     final String VW_SECURE_SERVER_URL = "https://neatosecure.rajatogo.com";
     final String VW_SECURE_XMPP_WEBSERVER = "rajatogo";
 
+    final String VW_BETA_BASE_JSON_URL = "http://server-01.fut.emea.vr200.ksecosys.net/api/rest/json";
+    final String VW_BETA_API_KEY = "1e26686d806d82144a71ea9a99d1b3169adaad917";
+    final String VW_BETA_XMPP_SERVER_DOMAIN = "server-01.fut.emea.vr200.ksecosys.net";
+    final String VW_BETA_SERVER_URL = "http://server-01.fut.emea.vr200.ksecosys.net";
+    final String VW_BETA_XMPP_WEBSERVER = "server-01.fut.emea.vr200.ksecosys.net";
+
     @Override
     public String getBaseJsonUrl() {
         LogHelper.logD(TAG, "getBaseJsonUrl called");
@@ -72,6 +79,9 @@ public class VorwerkWebServerType extends WebServerType {
                 return WP_BASE_JSON_URL;
             case NeatoWebConstants.NEATO_SECURE_SERVER_ID:
                 return VW_SECURE_BASE_JSON_URL;
+            case NeatoWebConstants.VW_BETA_SERVER_ID:
+                return VW_BETA_BASE_JSON_URL;
+
         }
         return PROD_BASE_JSON_URL;
     }
@@ -102,6 +112,9 @@ public class VorwerkWebServerType extends WebServerType {
                 break;
             case NeatoWebConstants.NEATO_SECURE_SERVER_ID:
                 serverName = SERVER_NEATO_SECURE;
+                break;
+            case NeatoWebConstants.VW_BETA_SERVER_ID:
+                serverName = SERVER_VORWERK_BETA;
                 break;
         }
 
@@ -135,6 +148,9 @@ public class VorwerkWebServerType extends WebServerType {
             case NeatoWebConstants.NEATO_SECURE_SERVER_ID:
                 serverUrl = VW_SECURE_SERVER_URL;
                 break;
+            case NeatoWebConstants.VW_BETA_SERVER_ID:
+                serverUrl = VW_BETA_SERVER_URL;
+                break;
         }
 
         return serverUrl;
@@ -158,6 +174,8 @@ public class VorwerkWebServerType extends WebServerType {
                 return WP_API_KEY;
             case NeatoWebConstants.NEATO_SECURE_SERVER_ID:
                 return VW_SECURE_API_KEY;
+            case NeatoWebConstants.VW_BETA_SERVER_ID:
+                return VW_BETA_API_KEY;
         }
         return PROD_API_KEY;
     }
@@ -180,6 +198,8 @@ public class VorwerkWebServerType extends WebServerType {
                 return WP_XMPP_SERVER_DOMAIN;
             case NeatoWebConstants.NEATO_SECURE_SERVER_ID:
                 return VW_SECURE_XMPP_SERVER_DOMAIN;
+            case NeatoWebConstants.VW_BETA_SERVER_ID:
+                return VW_BETA_XMPP_SERVER_DOMAIN;
         }
         return PROD_XMPP_SERVER_DOMAIN;
     }
@@ -202,6 +222,8 @@ public class VorwerkWebServerType extends WebServerType {
                 return WP_XMPP_WEBSERVER;
             case NeatoWebConstants.NEATO_SECURE_SERVER_ID:
                 return VW_SECURE_XMPP_WEBSERVER;
+            case NeatoWebConstants.VW_BETA_SERVER_ID:
+                return VW_BETA_XMPP_WEBSERVER;
         }
         return PROD_XMPP_SERVER_DOMAIN;
     }

@@ -13,15 +13,15 @@ import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.Ne
  * Model class with all the state details. Please add methods as and when new
  * details are added. <br>
  */
-public class CleaningStateDetails {
+public class CleaningStateDetails extends JSONObject {
 
     private static final String TAG = CleaningStateDetails.class.getSimpleName();
 
-    public String robotCurrentState;
-    public String robotStateParams;
+    public CleaningStateDetails(String cleaningStateDetails) throws JSONException {
+        super(cleaningStateDetails);
+    }
 
     public int getCleaningCategory() {
-
         String category = getParam(ProfileAttributeValueKeys.ROBOT_CLEANING_CATEGORY);
         if (!TextUtils.isEmpty(category)) {
             return Integer.parseInt(category);
@@ -29,25 +29,23 @@ public class CleaningStateDetails {
         // TODO: Expose enum for cleaning modifiers. Currently returns 2 i.e.
         // All
         return RobotCommandPacketConstants.CLEANING_CATEGORY_ALL;
-
     }
 
-    private JSONObject getParams() {
-        if (!TextUtils.isEmpty(robotStateParams)) {
-            try {
-                return new JSONObject(robotStateParams);
-            } catch (JSONException e) {
-                LogHelper.log(TAG, "Exception in getParams", e);
-            }
+    private JSONObject getStateParams() {
+        JSONObject stateParams = new JSONObject();
+        try {
+            stateParams = getJSONObject(ProfileAttributeValueKeys.ROBOT_STATE_PARAMS);
+        } catch (JSONException e) {
+			LogHelper.log(TAG, "Exception in getStateParams", e);
         }
-        return new JSONObject();
+        return stateParams;
     }
 
     private String getParam(String paramKey) {
         try {
-            if (getParams() != null) {
-                String category;
-                category = getParams().getString(paramKey);
+			JSONObject stateParams = getStateParams();
+            if (stateParams != null) {
+                String category = stateParams.getString(paramKey);
                 return category;
             }
         } catch (JSONException e) {
