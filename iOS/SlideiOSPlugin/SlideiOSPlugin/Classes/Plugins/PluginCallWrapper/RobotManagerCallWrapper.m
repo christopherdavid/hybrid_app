@@ -4,8 +4,6 @@
 #import "RobotCommandManager.h"
 #import "FindNearByRobotsHelper.h"
 #import "GetRobotIPHelper.h"
-#import "RobotAtlasManager.h"
-#import "AtlasGridManager.h"
 #import "DeviceConnectionManager.h"
 #import "RobotCommandHelper.h"
 #import "NeatoRobotHelper.h"
@@ -77,101 +75,6 @@
     [NeatoRobotManager sendStartCleaningTo:robotId delegate:self];
 }
 
--(void) getRobotAtlasMetadataForRobotId:(NSString *) robotId callbackId:(NSString *) callbackId
-{
-    debugLog(@"");
-    self.retained_self = self;
-    self.callbackId = callbackId;
-    
-    RobotAtlasManager *atlasManager = [[RobotAtlasManager alloc] init];
-    [atlasManager getAtlasMetadataForRobotWithId:robotId delegate:self];
-    
-}
-
--(void) updateRobotAtlasData:(NeatoRobotAtlas *) robotAtlas callbackId:(NSString *) callbackId
-{
-    debugLog(@"");
-    self.retained_self = self;
-    self.callbackId = callbackId;
-    
-    RobotAtlasManager *atlasManager = [[RobotAtlasManager alloc] init];
-    [atlasManager updateRobotAtlasData:robotAtlas delegate:self];
-}
-
--(void) atlasMetadataUpdated:(NeatoRobotAtlas *) robotAtlas
-{
-    if ([self.delegate respondsToSelector:@selector(atlasMetadataUpdated:callbackId:)])
-    {
-        [self.delegate atlasMetadataUpdated:robotAtlas callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
--(void) failedToUpdateAtlasMetadataWithError:(NSError *) error
-{
-    if ([self.delegate respondsToSelector:@selector(failedToUpdateAtlasMetadataWithError:callbackId:)])
-    {
-        [self.delegate failedToUpdateAtlasMetadataWithError:error callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
--(void) getAtlasGridMetadata:(NSString *) robotId gridId:(NSString *) gridId  callbackId:(NSString *) callbackId
-{
-    debugLog(@"");
-    self.retained_self = self;
-    self.callbackId = callbackId;
-    
-    AtlasGridManager *atlasGridMan = [[AtlasGridManager alloc] init];
-    atlasGridMan.delegate = self;
-    [atlasGridMan getAtlasGridMetadata:robotId gridId:gridId];
-}
-
--(void) gotAtlasGridMetadata:(AtlasGridMetadata *) atlasGridMetadata
-{
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(gotAtlasGridMetadata:callbackId:)])
-    {
-        [self.delegate gotAtlasGridMetadata:atlasGridMetadata callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
--(void) getAtlasGridMetadataFailed:(NSError *) error
-{
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(getAtlasGridMetadataFailed:callbackId:)])
-    {
-        [self.delegate getAtlasGridMetadataFailed:error callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
--(void) getAtlasDataFailed:(NSError *) error
-{
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(getAtlasDataFailed:callbackId:)])
-    {
-        [self.delegate getAtlasDataFailed:error callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
--(void) gotAtlasData:(NeatoRobotAtlas *) robotAtlas
-{
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(gotAtlasData:callbackId:)])
-    {
-        [self.delegate gotAtlasData:robotAtlas callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
 
 -(void) sendCommandToRobot:(NSString *) robotId commandId:(NSString *) commandId callbackId:(NSString *) callbackId
 {

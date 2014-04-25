@@ -29,14 +29,6 @@
 		E13DF3881802D97B00792C0E /* GetRobotDetailsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E13DF3831802D97B00792C0E /* GetRobotDetailsHelper.m */; };
 		E13DF3891802D97B00792C0E /* LinkRobotHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E13DF3851802D97B00792C0E /* LinkRobotHelper.m */; };
 		E13DF38A1802D97B00792C0E /* ServerRequestResponseHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E13DF3871802D97B00792C0E /* ServerRequestResponseHelper.m */; };
-		E15FC46616A9B68F0000AB67 /* AtlasGridManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC44916A9B68F0000AB67 /* AtlasGridManager.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
-		E15FC46716A9B68F0000AB67 /* AtlasGridMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC44B16A9B68F0000AB67 /* AtlasGridMetadata.m */; };
-		E15FC46816A9B68F0000AB67 /* AtlasServerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC44D16A9B68F0000AB67 /* AtlasServerHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
-		E15FC46916A9B68F0000AB67 /* GetAtlasDataListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC44F16A9B68F0000AB67 /* GetAtlasDataListener.m */; };
-		E15FC46A16A9B68F0000AB67 /* GetAtlasMetadataListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45116A9B68F0000AB67 /* GetAtlasMetadataListener.m */; };
-		E15FC46B16A9B68F0000AB67 /* NeatoRobotAtlas.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45316A9B68F0000AB67 /* NeatoRobotAtlas.m */; };
-		E15FC46C16A9B68F0000AB67 /* RobotAtlasManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45516A9B68F0000AB67 /* RobotAtlasManager.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
-		E15FC46D16A9B68F0000AB67 /* UpdateAtlasMetadataListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45716A9B68F0000AB67 /* UpdateAtlasMetadataListener.m */; };
 		E15FC46E16A9B68F0000AB67 /* DelegateWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45A16A9B68F0000AB67 /* DelegateWrapper.m */; };
 		E15FC46F16A9B68F0000AB67 /* DelegationTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45C16A9B68F0000AB67 /* DelegationTracker.m */; };
 		E15FC47016A9B68F0000AB67 /* FileDownloadHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC45E16A9B68F0000AB67 /* FileDownloadHelper.m */; };
@@ -257,22 +249,6 @@
 		E13DF3851802D97B00792C0E /* LinkRobotHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkRobotHelper.m; sourceTree = "<group>"; };
 		E13DF3861802D97B00792C0E /* ServerRequestResponseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerRequestResponseHelper.h; sourceTree = "<group>"; };
 		E13DF3871802D97B00792C0E /* ServerRequestResponseHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerRequestResponseHelper.m; sourceTree = "<group>"; };
-		E15FC44816A9B68F0000AB67 /* AtlasGridManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtlasGridManager.h; sourceTree = "<group>"; };
-		E15FC44916A9B68F0000AB67 /* AtlasGridManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AtlasGridManager.m; sourceTree = "<group>"; };
-		E15FC44A16A9B68F0000AB67 /* AtlasGridMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtlasGridMetadata.h; sourceTree = "<group>"; };
-		E15FC44B16A9B68F0000AB67 /* AtlasGridMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AtlasGridMetadata.m; sourceTree = "<group>"; };
-		E15FC44C16A9B68F0000AB67 /* AtlasServerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtlasServerHelper.h; sourceTree = "<group>"; };
-		E15FC44D16A9B68F0000AB67 /* AtlasServerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AtlasServerHelper.m; sourceTree = "<group>"; };
-		E15FC44E16A9B68F0000AB67 /* GetAtlasDataListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetAtlasDataListener.h; sourceTree = "<group>"; };
-		E15FC44F16A9B68F0000AB67 /* GetAtlasDataListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAtlasDataListener.m; sourceTree = "<group>"; };
-		E15FC45016A9B68F0000AB67 /* GetAtlasMetadataListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetAtlasMetadataListener.h; sourceTree = "<group>"; };
-		E15FC45116A9B68F0000AB67 /* GetAtlasMetadataListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAtlasMetadataListener.m; sourceTree = "<group>"; };
-		E15FC45216A9B68F0000AB67 /* NeatoRobotAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoRobotAtlas.h; sourceTree = "<group>"; };
-		E15FC45316A9B68F0000AB67 /* NeatoRobotAtlas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoRobotAtlas.m; sourceTree = "<group>"; };
-		E15FC45416A9B68F0000AB67 /* RobotAtlasManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotAtlasManager.h; sourceTree = "<group>"; };
-		E15FC45516A9B68F0000AB67 /* RobotAtlasManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotAtlasManager.m; sourceTree = "<group>"; };
-		E15FC45616A9B68F0000AB67 /* UpdateAtlasMetadataListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateAtlasMetadataListener.h; sourceTree = "<group>"; };
-		E15FC45716A9B68F0000AB67 /* UpdateAtlasMetadataListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateAtlasMetadataListener.m; sourceTree = "<group>"; };
 		E15FC45916A9B68F0000AB67 /* DelegateWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DelegateWrapper.h; sourceTree = "<group>"; };
 		E15FC45A16A9B68F0000AB67 /* DelegateWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DelegateWrapper.m; sourceTree = "<group>"; };
 		E15FC45B16A9B68F0000AB67 /* DelegationTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DelegationTracker.h; sourceTree = "<group>"; };
@@ -729,7 +705,6 @@
 				E199356816EE14A1008BB353 /* ScheduleDBHelper */,
 				E199356C16EE14A2008BB353 /* SchedulePluginResults */,
 				E1639FD916D4EC1B0016C236 /* ConnectionManager */,
-				E15FC44716A9B68F0000AB67 /* AtlasHelper */,
 				E15FC45816A9B68F0000AB67 /* FileDownloadHelper */,
 				E15FC46316A9B68F0000AB67 /* NSURLConnectionHelper */,
 				E168BBC0169D461800BA6AD3 /* DBHelper */,
@@ -767,29 +742,6 @@
 				E13DF3871802D97B00792C0E /* ServerRequestResponseHelper.m */,
 			);
 			path = ServerRequestHelpers;
-			sourceTree = "<group>";
-		};
-		E15FC44716A9B68F0000AB67 /* AtlasHelper */ = {
-			isa = PBXGroup;
-			children = (
-				E15FC44816A9B68F0000AB67 /* AtlasGridManager.h */,
-				E15FC44916A9B68F0000AB67 /* AtlasGridManager.m */,
-				E15FC44A16A9B68F0000AB67 /* AtlasGridMetadata.h */,
-				E15FC44B16A9B68F0000AB67 /* AtlasGridMetadata.m */,
-				E15FC44C16A9B68F0000AB67 /* AtlasServerHelper.h */,
-				E15FC44D16A9B68F0000AB67 /* AtlasServerHelper.m */,
-				E15FC44E16A9B68F0000AB67 /* GetAtlasDataListener.h */,
-				E15FC44F16A9B68F0000AB67 /* GetAtlasDataListener.m */,
-				E15FC45016A9B68F0000AB67 /* GetAtlasMetadataListener.h */,
-				E15FC45116A9B68F0000AB67 /* GetAtlasMetadataListener.m */,
-				E15FC45216A9B68F0000AB67 /* NeatoRobotAtlas.h */,
-				E15FC45316A9B68F0000AB67 /* NeatoRobotAtlas.m */,
-				E15FC45416A9B68F0000AB67 /* RobotAtlasManager.h */,
-				E15FC45516A9B68F0000AB67 /* RobotAtlasManager.m */,
-				E15FC45616A9B68F0000AB67 /* UpdateAtlasMetadataListener.h */,
-				E15FC45716A9B68F0000AB67 /* UpdateAtlasMetadataListener.m */,
-			);
-			path = AtlasHelper;
 			sourceTree = "<group>";
 		};
 		E15FC45816A9B68F0000AB67 /* FileDownloadHelper */ = {
@@ -1648,15 +1600,7 @@
 				E168BBD3169D461800BA6AD3 /* XMPPConnection.m in Sources */,
 				E168BBD4169D461800BA6AD3 /* XMPPConnectionHelper.m in Sources */,
 				E168BBD5169D461800BA6AD3 /* XMPPHelper.m in Sources */,
-				E15FC46616A9B68F0000AB67 /* AtlasGridManager.m in Sources */,
-				E15FC46716A9B68F0000AB67 /* AtlasGridMetadata.m in Sources */,
 				E13DF3891802D97B00792C0E /* LinkRobotHelper.m in Sources */,
-				E15FC46816A9B68F0000AB67 /* AtlasServerHelper.m in Sources */,
-				E15FC46916A9B68F0000AB67 /* GetAtlasDataListener.m in Sources */,
-				E15FC46A16A9B68F0000AB67 /* GetAtlasMetadataListener.m in Sources */,
-				E15FC46B16A9B68F0000AB67 /* NeatoRobotAtlas.m in Sources */,
-				E15FC46C16A9B68F0000AB67 /* RobotAtlasManager.m in Sources */,
-				E15FC46D16A9B68F0000AB67 /* UpdateAtlasMetadataListener.m in Sources */,
 				E15FC46E16A9B68F0000AB67 /* DelegateWrapper.m in Sources */,
 				E15FC46F16A9B68F0000AB67 /* DelegationTracker.m in Sources */,
 				E15FC47016A9B68F0000AB67 /* FileDownloadHelper.m in Sources */,

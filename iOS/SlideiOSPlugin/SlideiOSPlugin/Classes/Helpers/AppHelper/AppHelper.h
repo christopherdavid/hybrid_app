@@ -14,7 +14,7 @@
 + (bool)isStringNilOrEmpty:(NSString *)input;
 + (NSString *)generateUniqueString;
 + (void)traceAppInfo;
-+ (NSString *)getCurrentServer;
++ (NSString *)currentServer;
 + (NSString *)getMainAppVersion;
 + (NSDictionary *)getAppDebugInfo;
 + (NSTimeInterval)currentTimeStamp;
@@ -26,8 +26,8 @@
 + (NSString *)deviceSystemVersion;
 + (NSString *)deviceModelName;
 + (BOOL)hasServerRequestFailedForResponse:(NSDictionary *)serverResponse;
-+ (NSString *)getApplicationId;
-+ (NSString *)getNotificationServerType;
++ (NSString *)applicationId;
++ (NSString *)notificationServerType;
 + (NSString *)appInfo;
 + (NSString *)crittercismAppId;
 @end

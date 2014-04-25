@@ -5,6 +5,7 @@
 #import "PushNotificationHelper.h"
 #import "XMPPConnectionHelper.h"
 #import "NeatoDataStore.h"
+#import "NeatoConstants.h"
 
 // Frameworks
 #import "Crittercism.h"
@@ -24,6 +25,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     debugLog(@"didFinishLaunchingWithOptions called");
+  
+  debugLog(@"Server Type ====>>> %@", SERVER_TYPE);
+  debugLog(@"XMPP Server %@", XMPP_SERVER_ADDRESS);
     // Create core data stack from main thread
     [NeatoDataStore sharedNeatoDataStore];
     [self enableCrittercism];

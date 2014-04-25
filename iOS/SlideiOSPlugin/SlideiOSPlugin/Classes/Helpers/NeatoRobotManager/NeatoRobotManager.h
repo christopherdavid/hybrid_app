@@ -1,8 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "NeatoRobot.h"
 #import "TCPConnectionHelper.h"
-#import "NeatoRobotAtlas.h"
-#import "AtlasGridMetadata.h"
 
 @interface NeatoRobotManager : NSObject
 

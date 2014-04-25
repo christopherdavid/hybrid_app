@@ -17,9 +17,6 @@
 - (void)getRobotMap:(CDVInvokedUrlCommand *)command;
 - (void)setMapOverlayData:(CDVInvokedUrlCommand *)command;
 - (void)disconnectDirectConnection:(CDVInvokedUrlCommand *)command;
-- (void)getRobotAtlasMetadata:(CDVInvokedUrlCommand *)command;
-- (void)getAtlasGridData:(CDVInvokedUrlCommand *)command;
-- (void)updateRobotAtlasMetadata:(CDVInvokedUrlCommand *)command;
 - (void)getRobotDetail:(CDVInvokedUrlCommand *)command;
 - (void)setRobotName2:(CDVInvokedUrlCommand *)command;
 - (void)getRobotOnlineStatus:(CDVInvokedUrlCommand *)command;
