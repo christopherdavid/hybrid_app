@@ -967,4 +967,9 @@
     self.delegate = nil;
 }
 
+- (void)failedToFormTCPConnectionForRobotId:(NSString *)robotId {
+    debugLog(@"");
+    // Empty
+}
+
 @end

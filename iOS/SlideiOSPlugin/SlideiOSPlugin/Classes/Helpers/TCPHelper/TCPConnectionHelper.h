@@ -10,6 +10,7 @@
 - (void)commandSentOverTCP;
 - (void)receivedDataOverTCP:(NSData *)data;
 - (void)failedToSendCommandOverTCP;
+- (void)failedToFormTCPConnectionForRobotId:(NSString *)robotId;
 
 
 @end

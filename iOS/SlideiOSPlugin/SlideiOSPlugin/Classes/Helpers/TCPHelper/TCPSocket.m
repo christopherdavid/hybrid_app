@@ -1,6 +1,8 @@
 #import "TCPSocket.h"
 #import "LogHelper.h"
 
+#define TCP_SOCKET_CONNECTION_TIMEOUT  15
+
 static TCPSocket *sharedInstance = nil;
 
 @interface TCPSocket()
@@ -56,7 +58,7 @@ static TCPSocket *sharedInstance = nil;
     }
     debugLog(@"Connecting to IP : %@, over Port : %d forRobotId: %@", host, port, robotId);
     NSError *error = nil;
-    bool didConnect = [self.tcpScoket connectToHost:host onPort:port error:&error];
+    bool didConnect = [self.tcpScoket connectToHost:host onPort:port withTimeout:TCP_SOCKET_CONNECTION_TIMEOUT error:&error];
     if (didConnect && error == nil) {
         // If TCP is successfully connected save robotId.
          self.connectedRobotId = robotId;

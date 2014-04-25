@@ -122,6 +122,17 @@
     self.delegate = nil;
 }
 
+- (void)failedToFormTCPConnectionForRobotId:(NSString *)robotId {
+    debugLog(@"");
+    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+    [data setObject:[NSString stringWithFormat:@"%d", ROBOT_STATE_STOPPED] forKey:ERROR_DRIVE_RESPONSE_CODE];
+    [[XMPPRobotDataChangeManager sharedXmppDataChangeManager] notifyDataChangeForRobotId:robotId
+                                                                             withKeyCode:[NSNumber numberWithInt:ROBOT_ERROR_IN_CONNECTING]
+                                                                                 andData:data];
+    self.retainedSelf = nil;
+    self.delegate = nil;
+}
+
 // Device connection manager callbacks.
 - (void)connectedOverTCP2:(NSString*)host toRobotWithId:(NSString *)robotId {
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];

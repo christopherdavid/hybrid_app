@@ -188,6 +188,10 @@ static TCPConnectionHelper *sharedInstance = nil;
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
     debugLog(@"");
+    if (err && err.code == GCDAsyncSocketConnectTimeoutError) {
+        [self failedToConnectToSocket:sock withTimeoutError:err];
+        return;
+    }
     @synchronized(self) {
         NeatoRobot *connectedRobot = [NeatoRobotHelper getRobotForId:[[TCPSocket getSharedTCPSocket] connectedRobotId]];
         connectedRobot.robotId = [[TCPSocket getSharedTCPSocket] connectedRobotId];
@@ -240,6 +244,20 @@ static TCPConnectionHelper *sharedInstance = nil;
 
 - (BOOL)isRobotConnectedOverTCP:(NSString *)robotId {
     return [[TCPSocket getSharedTCPSocket] isConnectedToRobotWithId:robotId];
+}
+
+- (void)failedToConnectToSocket:(GCDAsyncSocket *)sock withTimeoutError:(NSError *)err {
+    debugLog(@"Failed to connect to TCP with error = %@", err);
+    @synchronized(self) {
+        NeatoRobot *connectedRobot = [NeatoRobotHelper getRobotForId:[[TCPSocket getSharedTCPSocket] connectedRobotId]];
+        connectedRobot.robotId = [[TCPSocket getSharedTCPSocket] connectedRobotId];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(failedToFormTCPConnectionForRobotId:)]) {
+                [self.delegate failedToFormTCPConnectionForRobotId:connectedRobot.robotId];
+            }
+            self.delegate = nil;
+        });
+    }
 }
 
 @end
