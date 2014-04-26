@@ -29,7 +29,7 @@
                  </fieldset>
                         
                   <div class="line">
-                      <input type="checkbox" name="checkbox_agreement" id="checkbox_agreement" class="custom" value="true" data-bind="checked: isAgreed, jqRadioChecked: isAgreed" data-theme="b" />
+                      <input type="checkbox" name="checkbox_agreement" id="checkbox_agreement" class="custom" value="true" data-bind="checked: isAgreed, jqRadioChecked: isAgreed, jqRadioEnable: isAgreedEnabled()" data-theme="b" />
                       <label for="checkbox_agreement" data-inline="true" data-i18n="legalInformation.page.legal_agreement" 
                            data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[Leagal Agreement]</label>
                   </div>
