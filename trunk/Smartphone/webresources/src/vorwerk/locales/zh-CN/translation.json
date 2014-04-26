@@ -54,13 +54,13 @@
             "register_notAccepted_title": "无有效法律协仪",
             "legal_agreement": "我同意",
             "title": "法律协议",
-            "tou_pp_agreement": "为了能够使用应用程序，您必须同意使用条件和数据保护声明. TICK BOX 我特此声明，我已阅读并了解同意  <a id='terms' href='#' class='highlightedText font_bold font_small'>使用条件<\/a> 及其 <a id='privacy' href='#' class='highlightedText font_bold font_small'>数据保护声明<\/a>.",
+            "tou_pp_agreement": "为了能够使用应用程序，您必须同意使用条件和数据保护声明. <br /> <br />我特此声明，我已阅读并了解同意  <a id='terms' href='#' class='highlightedText font_bold font_small'>使用条件<\/a> 及其 <a id='privacy' href='#' class='highlightedText font_bold font_small'>数据保护声明<\/a>.",
             "change_notAccepted_title": "无有效法律协仪",
             "subscribe_header": "MARKETING INFORMATION",
             "edit_done_title": "账户更改",
             "edit_done_message": "用户账户已被成功更新",
             "tou_pp_header": "法律信息",
-            "subscribe_agreement": "作为用户，我们会使您始终了解更新和产品信息的最新情况，并尽力确保您数据资料的安全。我们不会将这些数据资料转交给福维克集团以外的企业。TICK BOX 我同意福维克国际有限公司将我的电子邮箱地址用于向我发送信息和广告(例如，更新、提示、特价优惠)。此同意声明可随时在 \u201c设置\u201d菜单项中撤销。详情请参阅数据保护声明\u201d",
+            "subscribe_agreement": "作为用户，我们会使您始终了解更新和产品信息的最新情况，并尽力确保您数据资料的安全。我们不会将这些数据资料转交给福维克集团以外的企业。<br /> <br />我同意福维克国际有限公司将我的电子邮箱地址用于向我发送信息和广告(例如，更新、提示、特价优惠)。此同意声明可随时在 \u201c设置\u201d菜单项中撤销。详情请参阅数据保护声明\u201d",
             "register_notAccepted_message": "请仔细阅读隐私条款及使用条款来完成本次注册。"
         },
         "navi": {"title": "注册"}
