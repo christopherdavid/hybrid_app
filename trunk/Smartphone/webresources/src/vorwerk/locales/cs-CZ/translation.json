@@ -54,13 +54,13 @@
             "register_notAccepted_title": "Chybí souhlas s právními podmínkami",
             "legal_agreement": "Souhlasím",
             "title": "Souhlas",
-            "tou_pp_agreement": "Abyste mohli aplikaci používat, musíte souhlasit s podmínkami používání a s prohlášením o ochraně osobních údajů.  TICK BOX Tímto prohlašuji, že jsem četl/a a se souhlasem vzal/a na vědomí <a id='terms' href='#' class='highlightedText font_bold font_small'>podmínky používání<\/a> a <a id='privacy' href='#' class='highlightedText font_bold font_small'>prohlášení o ochraně osobních údajů<\/a>.",
+            "tou_pp_agreement": "Abyste mohli aplikaci používat, musíte souhlasit s podmínkami používání a s prohlášením o ochraně osobních údajů.  <br /><br /> Tímto prohlašuji, že jsem četl/a a se souhlasem vzal/a na vědomí <a id='terms' href='#' class='highlightedText font_bold font_small'>podmínky používání<\/a> a <a id='privacy' href='#' class='highlightedText font_bold font_small'>prohlášení o ochraně osobních údajů<\/a>.",
             "change_notAccepted_title": "Chybí souhlas s právními podmínkami",
             "subscribe_header": "Marketingová infromace",
             "edit_done_title": "Účet byl změněn",
             "edit_done_message": "Uživatelský účet byl úspěšně změněn",
             "tou_pp_header": "Právní podmínky",
-            "subscribe_agreement": "Chtěli bychom Vás jakožto zákazníka průběžně informovat o nových aktualizacích a o výrobcích a budeme usilovat o bezpečnost Vašich údajů. Nebudeme je předávat dále podnikům mimo koncern Vorwerk. TICK BOX Jsem srozuměn/a s tím, aby mi na moji e-mailovou adresu zasílal Vorwerk International Strecker & Co. informace a reklamy (např. aktualizace, upozornění, speciální nabídky). Tento souhlas můžete kdykoli odvolat pod bodem nabídky \u201eNastavení\". Další detaily naleznete v prohlášení o ochraně osobních údajů.",
+            "subscribe_agreement": "Chtěli bychom Vás jakožto zákazníka průběžně informovat o nových aktualizacích a o výrobcích a budeme usilovat o bezpečnost Vašich údajů. Nebudeme je předávat dále podnikům mimo koncern Vorwerk. <br /><br /> Jsem srozuměn/a s tím, aby mi na moji e-mailovou adresu zasílal Vorwerk International Strecker & Co. informace a reklamy (např. aktualizace, upozornění, speciální nabídky). Tento souhlas můžete kdykoli odvolat pod bodem nabídky \u201eNastavení\". Další detaily naleznete v prohlášení o ochraně osobních údajů.",
             "register_notAccepted_message": "Zkontrolujte si prosím pro dokončení registrace podmínky ochrany osobních údajů a podmínky použití dokumentace"
         },
         "navi": {"title": "Registrace"}
@@ -472,10 +472,6 @@
             "message": "Please clear my path.",
             "title": "Error"
         },
-        "-21229": {
-            "message": "Thank you for emptying my Dirt Bin and cleaning my Filter.",
-            "title": "Error"
-        },
         "-21267": {
             "message": "Please clear my path.",
             "title": "Error"
@@ -509,6 +505,7 @@
         "wakeup_unknown_robot": "Robot bude připraven za několik vteřin",
         "getready_robot": "Robot bude hned připraven.",
         "robot_added": "Přidávám robota __robotName__\u2026",
+        "20229": "Thank you for emptying my Dirt Bin and cleaning my Filter.",
         "20208": "Please wait while I check my surrounding.",
         "intend_drive": "Čekej prosím\u2026",
         "20209": "Thank you!",

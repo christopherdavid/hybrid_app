@@ -116,7 +116,8 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "robotNameValid",
                     "value" : true
                 }]
-            }]
+            }],
+            clearHistory : true
         },
         "loginUser" : {
             navrules : [{

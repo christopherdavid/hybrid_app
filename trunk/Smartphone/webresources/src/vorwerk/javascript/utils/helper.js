@@ -203,6 +203,7 @@ var robotUiStateHandler = {
     },
     
     setVirtualState:function(state) {
+        // console.log("setVirtualState " + state); 
         // check if timer for this state is already running
         if(this.statusTimer == null || this.current().robot() != state) { 
             // cancel old timer
@@ -277,6 +278,7 @@ var robotUiStateHandler = {
             this.current().messageText(message);
         } else if(state == ROBOT_UI_STATE_ROBOT_OFFLINE) {
             this.current().messageText($.i18n.t("visualState." + visualState[state]));
+            this.current().robot(ROBOT_UI_STATE_ROBOT_OFFLINE);
             // change robot name
             curRobot().displayName(curRobot().robotName() + " (" + $.i18n.t("common.offline") + ")");
             curRobot().visualOnline(false);
@@ -284,8 +286,7 @@ var robotUiStateHandler = {
             //TODO: add check if current view cleaning and don't show notification there
             var translatedText = $.i18n.t("communication." + visualState[state], {robotName:curRobot().robotName()});
             app.notification.showLoadingArea(true,notificationType.HINT,translatedText);
-        // TODO: replace with correct constant from neatosmartapphelper.js 
-        } else if(state == 10012) {
+        } else if(state == ROBOT_USER_MENU_STATE) {
             this.current().messageText($.i18n.t("visualState." + visualState[state]));
             // change robot name
             curRobot().displayName(curRobot().robotName() + " (" + $.i18n.t("robotStateCodes.10012") + ")");
@@ -343,8 +344,7 @@ var robotUiStateHandler = {
         } else if(state == ROBOT_STATE_MANUAL_CLEANING) {
            // this.current().startButton(visualState[ROBOT_STATE_CLEANING]);
             this.current().startButton(visualState[ROBOT_STATE_MANUAL_CLEANING]);
-        // TODO: replace with correct constant from neatosmartapphelper.js 
-        } else if(state == ROBOT_UI_STATE_ROBOT_OFFLINE || state == 10012) {
+        } else if(state == ROBOT_UI_STATE_ROBOT_OFFLINE || state == ROBOT_USER_MENU_STATE) {
             this.current().startButton(visualState[ROBOT_UI_STATE_ROBOT_OFFLINE]);
         } else {
             this.current().startButton(visualState[ROBOT_STATE_STOPPED]);

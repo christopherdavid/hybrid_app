@@ -59,29 +59,53 @@ function WorkflowNotification(parent) {
             
             // first check if notification is for current selected robot (due performance reason)
             if(curRobot().robotId && curRobot().robotId() == result.robotId) {
-                console.log("notification for current robot");
-                
-                // if there is a notification set robot back to online
-                if(result.robotDataKeyId != ROBOT_ONLINE_STATUS_CHANGED) {
-                    curRobot().robotOnline(true);
-                    curRobot().visualOnline(true);
-                }
+                console.log("notification for current robot");                
                 
                 switch(result.robotDataKeyId) {
                         case ROBOT_CURRENT_STATE_CHANGED:
                         case ROBOT_STATE_UPDATE:
                             var curState = result.robotData.robotCurrentState || result.robotData.robotStateUpdate;
-                            // update state
-                            parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
+                            // if there is a notification set robot back to online
+                            curRobot().robotOnline(true);
+                            curRobot().visualOnline(true);
+                            
+                            if(curState == ROBOT_STATE_CLEANING) {
+                                // getRobotCleaningCategory
+                                var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotCleaningCategory, [curRobot().robotId()], { type: notificationType.NONE });
+                                tDeffer.done(function(result) {
+                                    // need to add a check if it's a valid category (in some cases got 0 from server)
+                                    if(result.cleaningCatageory == CLEANING_CATEGORY_MANUAL || result.cleaningCatageory == CLEANING_CATEGORY_ALL
+                                        || result.cleaningCatageory == CLEANING_CATEGORY_SPOT) {
+                                            curRobot().cleaningCategory(result.cleaningCatageory);
+                                    } else {
+                                        // set All as fallback
+                                        curRobot().cleaningCategory(CLEANING_CATEGORY_ALL);
+                                    }
+                                    // update state
+                                    parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
+                                });
+                            } else {
+                                // update state
+                                parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
+                            }
                             break;
                         case ROBOT_NAME_UPDATE:
                             //update name
                             if(result.robotData.robotName) {
                                 curRobot().robotName(result.robotData.robotName);
-                                curRobot().displayName(result.robotData.robotName);
+                                if(robotUiStateHandler.current().ui() == ROBOT_UI_STATE_ROBOT_OFFLINE) {
+                                    curRobot().displayName(result.robotData.robotName + " (" + $.i18n.t("common.offline") + ")");
+                                } else if(robotUiStateHandler.current().ui() == ROBOT_USER_MENU_STATE) {
+                                    curRobot().displayName(result.robotData.robotName + " (" + $.i18n.t("robotStateCodes.10012") + ")");
+                                } else {
+                                    curRobot().displayName(result.robotData.robotName);
+                                }
                             }
                             break;
                         case ROBOT_CONNECTED:
+                        	// if there is a notification set robot back to online
+                            curRobot().robotOnline(true);
+                            curRobot().visualOnline(true);
                         	that.startManualMode();
                         	break;
                         case ROBOT_ONLINE_STATUS_CHANGED:
@@ -100,7 +124,7 @@ function WorkflowNotification(parent) {
                         		var messageId = message.messageID;
                         		console.log("Alert Message ID :" + messageId);
                         		console.log("Current State :"+ curRobot().robotNewVirtualState());
-                        		if(messageId != NOTIFICATION_ROBOT_CANCEL){
+                        		if(messageId != 22000){
                         			var notificationText   =  $.i18n.t("communication."+ messageId);
                             		that.showLoadingArea(true,notificationType.HINT,notificationText);
                             	}
@@ -128,6 +152,9 @@ function WorkflowNotification(parent) {
                         case ROBOT_DISCONNECTED:
                             var curState = result.robotData.errorDriveResponseCode;
                             curRobot().connectionState(result.robotDataKeyId);
+                            // if there is a notification set robot back to online
+                            curRobot().robotOnline(true);
+                            curRobot().visualOnline(true);
                             parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
                             break;
                         case ROBOT_NOT_CONNECTED:
@@ -138,10 +165,23 @@ function WorkflowNotification(parent) {
                             that.showDialog(dialogType.ERROR, dialogHeader, dialogText, 
                                 [{"label":$.i18n.t("common.ok"), "callback":function(e){
                                         that.closeDialog();
+                                        // if there is a notification set robot back to online
+                                        curRobot().robotOnline(true);
+                                        curRobot().visualOnline(true);
                                         parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
                                     }
                                 }]);
                             
+                            break;
+                        // enable or disable scheduler
+                        case ROBOT_SCHEDULE_STATE_CHANGED:
+                            // convert to boolean no matter if result state is a string or boolean 
+                            var curState = result.robotData.scheduleState == 'false' ? !result.robotData.scheduleState : !!result.robotData.scheduleState; 
+                            that.handleStatusListener(ROBOT_SCHEDULE_STATE_CHANGED, curState);
+                            break;
+                        // schedule data updated
+                        case ROBOT_SCHEDULE_UPDATED:
+                            that.handleStatusListener(ROBOT_SCHEDULE_UPDATED, true);
                             break;
                     }
             // loop over robots and update state
@@ -149,16 +189,14 @@ function WorkflowNotification(parent) {
                 // find robote with robotId in global binding object
                 $.each(tempRobots(), function(index, item){
                     if(item.robotId() == result.robotId) {
-                        // if there is a notification set robot back to online
-                        if(result.robotDataKeyId != ROBOT_ONLINE_STATUS_CHANGED) {
-                            item.robotOnline(true);
-                            item.visualOnline(true);
-                        }
-                
+                        
                         switch(result.robotDataKeyId) {
                             case ROBOT_CURRENT_STATE_CHANGED:
                             case ROBOT_STATE_UPDATE:
                                 var curState = result.robotData.robotCurrentState || result.robotData.robotStateUpdate;
+                                // if there is a notification set robot back to online
+                                item.robotOnline(true);
+                                item.visualOnline(true);
                                 // update state
                                 parent.communicationWrapper.updateRobotStateWithCode(item, curState);
                                 break;
@@ -179,6 +217,9 @@ function WorkflowNotification(parent) {
                             case ROBOT_DISCONNECTED:
                             case ROBOT_NOT_CONNECTED:
                                 var curState = result.robotData.errorDriveResponseCode;
+                                // if there is a notification set robot back to online
+                                item.robotOnline(true);
+                                item.visualOnline(true);
                                 parent.communicationWrapper.updateRobotStateWithCode(item, curState);
                                 item.connectionState(result.robotDataKeyId);
                                 break;
@@ -199,6 +240,15 @@ function WorkflowNotification(parent) {
     this.registerForRobotMessages = function() {
         console.log("registerForRobotMessages");
         RobotPluginManager.registerForRobotMessages(that.successNotifyPushMessage, that.errorNotifyPushMessage);
+    };
+    
+    this.handleStatusListener = function(state, result) {
+        if(statusListener[state] && statusListener[state].length > 0) {
+            for(var i = 0; i < statusListener[state].length; i++) {
+                console.log("found call callback with result: " + result);
+                statusListener[state][i](result);
+            }
+        }
     };
     
     this.registerStatus = function(notficationId, callback) {
@@ -261,6 +311,9 @@ function WorkflowNotification(parent) {
                 var tempRobots = parent.communicationWrapper.getDataValue("robotList");
                 $.each(tempRobots(), function(index, item){
                     if(item.robotId() == result.robotId) {
+                        // if there is a notification set robot back to online
+                        item.robotOnline(true);
+                        item.visualOnline(true);
                         parent.communicationWrapper.updateRobotStateWithCode(item, ROBOT_STATE_STOPPED);
                         return false;
                     }
@@ -279,6 +332,9 @@ function WorkflowNotification(parent) {
                    var tempRobots = parent.communicationWrapper.getDataValue("robotList");
                     $.each(tempRobots(), function(index, item){
                     if(item.robotId() == result.robotId) {
+                        // if there is a notification set robot back to online
+                        item.robotOnline(true);
+                        item.visualOnline(true);
                         parent.communicationWrapper.updateRobotStateWithCode(item, ROBOT_STATE_STOPPED);
                         return false;
                     }
@@ -577,6 +633,9 @@ function WorkflowNotification(parent) {
             
             switch(error.errorCode) {
                 case ERROR_ROBOT_NOT_PEER_CONNECTED:
+                    // if there is a notification set robot back to online
+                    curRobot().robotOnline(true);
+                    curRobot().visualOnline(true);
                     parent.communicationWrapper.updateRobotStateWithCode(curRobot(), ROBOT_STATE_STOPPED);
                     break;
                 case ROBOT_ALREADY_CONNECTED:
