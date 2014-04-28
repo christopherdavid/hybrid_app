@@ -54,13 +54,13 @@
             "register_notAccepted_title": "Zustimmung fehlt",
             "legal_agreement": "Ich stimme zu",
             "title": "Zustimmungen",
-            "tou_pp_agreement": "Um die App nutzen zu können, müssen sie den Nutzungsbedingungen und der Datenschutzerklärung zustimmen. TICK BOX Hiermit erkläre ich, dass ich die <a id='terms' href='#' class='highlightedText font_bold font_small'>Nutzungsbedinungen<\/a> und die <a id='privacy' href='#' class='highlightedText font_bold font_small'>Datenschutzerklärung<\/a> gelesen und zustimmend zur Kenntnis genommen habe.",
+            "tou_pp_agreement": "Um die App nutzen zu können, müssen sie den Nutzungsbedingungen und der Datenschutzerklärung zustimmen. <br /><br />  Hiermit erkläre ich, dass ich die <a id='terms' href='#' class='highlightedText font_bold font_small'>Nutzungsbedinungen<\/a> und die <a id='privacy' href='#' class='highlightedText font_bold font_small'>Datenschutzerklärung<\/a> gelesen und zustimmend zur Kenntnis genommen habe.",
             "change_notAccepted_title": "Zustimmung fehlt",
             "subscribe_header": "MARKETING INFORMATION",
             "edit_done_title": "Konto wurde angepasst.",
             "edit_done_message": "Das Nutzerkonto wurde erfolgreich aktualisiert.",
             "tou_pp_header": "Rechtliche Hinweise",
-            "subscribe_agreement": "Wir würden Sie als Kunden gerne über neue Updates und Produktinformationen auf dem Laufenden halten und sind um die Sicherheit Ihrer Daten bemüht. Diese werden von uns nicht an Unternehmen außerhalb der Vorwerk-Gruppe weitergegeben. TICK BOX Ich bin damit einverstanden, dass meine E-Mail- Adresse von der Vorwerk International Strecker & Co. für an mich gerichtete Informationen und Werbung (z.B. Updates, Hinweise, Sonderangebote) genutzt wird. Diese Einwilligung kann jederzeit unter dem Menüpunkt \u201eEinstellungen\u201c widerrufen werden. Weitere Details finden Sie in der Datenschutzerklärung.",
+            "subscribe_agreement": "Wir würden Sie als Kunden gerne über neue Updates und Produktinformationen auf dem Laufenden halten und sind um die Sicherheit Ihrer Daten bemüht. Diese werden von uns nicht an Unternehmen außerhalb der Vorwerk-Gruppe weitergegeben. <br /><br />  Ich bin damit einverstanden, dass meine E-Mail- Adresse von der Vorwerk International Strecker & Co. für an mich gerichtete Informationen und Werbung (z.B. Updates, Hinweise, Sonderangebote) genutzt wird. Diese Einwilligung kann jederzeit unter dem Menüpunkt \u201eEinstellungen\u201c widerrufen werden. Weitere Details finden Sie in der Datenschutzerklärung.",
             "register_notAccepted_message": "Du musst der Datenschutzerklärung und den Nutzungsbedingungen zustimmen, um die Registrierung abzuschließen. "
         },
         "navi": {"title": "Registrierung"}
@@ -193,8 +193,8 @@
             "title": "Eingabefehler"
         },
         "-21258": {
-            "message": "Please clear my path.",
-            "title": "Error"
+            "message": "Bitte den Weg freiräumen.",
+            "title": "Fehler"
         },
         "-21257": {
             "message": "Akkufehler. Bitte am Roboter bestätigen.",
@@ -249,12 +249,12 @@
             "title": "Eingabefehler"
         },
         "-21247": {
-            "message": "Please check my Filter and Dirt Bin.",
-            "title": "Error"
+            "message": "Staubbehälter/Filter prüfen und ggf. säubern.",
+            "title": "Fehler"
         },
         "-21246": {
-            "message": "My fan is stuck. Please press OKAY to restart.",
-            "title": "Error"
+            "message": "Gebläse ist blockiert. Bitte den Roboter neu starten!",
+            "title": "Fehler"
         },
         "-108": {
             "message": "Beim Erstellen des Nutzerkontos ist ein Fehler aufgetreten. Bitte Vorgang wiederholen.",
@@ -265,8 +265,8 @@
             "title": "Fehler"
         },
         "-21248": {
-            "message": "Please press OKAY to continue. Battery issue xxxx.",
-            "title": "Error"
+            "message": "Batteriefehler. Bitte den Roboter neu starten!",
+            "title": "Fehler"
         },
         "-21243": {
             "message": "Sensorfehler. Bitte Roboter neu booten.",
@@ -277,12 +277,12 @@
             "title": "Fehler"
         },
         "-21245": {
-            "message": "My Brush needs to be cleaned.",
-            "title": "Error"
+            "message": "Bürste ist überlastet. Bitte Fremdkörper entfernen.",
+            "title": "Fehler"
         },
         "-21244": {
-            "message": "Please clean my brush.",
-            "title": "Error"
+            "message": "Bürste ist blockiert. Bitte Fremdkörper entfernen.",
+            "title": "Fehler"
         },
         "-21241": {
             "message": "Sensorfehler. Bitte Roboter neu booten.",
@@ -309,16 +309,16 @@
             "title": "Fehler"
         },
         "-21234": {
-            "message": "Please contact Customer Support. Tests not complete.",
-            "title": "Error"
+            "message": "Bitte Kundenservice kontaktieren (Tests nicht abgeschlossen)",
+            "title": "Fehler"
         },
         "-21231": {
             "message": "Staubbehälter/Filter prüfen und ggf. säubern.",
             "title": "Fehler"
         },
         "-21232": {
-            "message": "Please wait while I cool down my battery.",
-            "title": "Error"
+            "message": "Bitte warte, mein Akku muss abkühlen.",
+            "title": "Fehler"
         },
         "-21274": {
             "message": "Interner Fehler. Bitte am Roboter bestätigen.",
@@ -329,8 +329,8 @@
             "title": "Eingabefehler"
         },
         "-21237": {
-            "message": "I can't charge. Try moving the base station to a new location.",
-            "title": "Error"
+            "message": "Ich kann nicht laden. Bitte Basis umstellen!",
+            "title": "Fehler"
         },
         "-21273": {
             "message": "Ein Software Update ist verfügbar. Bitte Kundenservice kontaktieren.",
@@ -341,28 +341,28 @@
             "title": "Eingabefehler"
         },
         "-21238": {
-            "message": "My Left Wheel is stuck. Please free it from debris.",
-            "title": "Error"
+            "message": "Das linke Rad ist blockiert. Bitte prüfen.",
+            "title": "Fehler"
         },
         "-21272": {
             "message": "Roboter reset. Bitte aufladen!",
             "title": "Fehler"
         },
         "-21235": {
-            "message": "My Bumper is stuck. Please free it.",
-            "title": "Error"
+            "message": "Bumper klemmt. Bitte am Roboter prüfen.",
+            "title": "Fehler"
         },
         "-21271": {
-            "message": "I can't shut down while I'm connected to power.",
-            "title": "Error"
+            "message": "Aussschalten nicht möglich!",
+            "title": "Fehler"
         },
         "-114": {
             "message": "Diese Roboter ID ist nicht registriert.",
             "title": "Eingabefehler"
         },
         "-21236": {
-            "message": "Please put me down on the floor.",
-            "title": "Error"
+            "message": "Bitte das Gerät auf den Boden setzen!",
+            "title": "Fehler"
         },
         "-21278": {
             "message": "Interner Fehler. Bitte am Roboter bestätigen.",
@@ -377,8 +377,8 @@
             "title": "Fehler"
         },
         "-21239": {
-            "message": "My Right Wheel is stuck. Please free it from debris.",
-            "title": "Error"
+            "message": "Das rechte Rad ist blockiert. Bitte prüfen.",
+            "title": "Fehler"
         },
         "-21275": {
             "message": "Interner Fehler. Bitte am Roboter bestätigen.",
@@ -397,24 +397,24 @@
             "title": "Eingabefehler"
         },
         "-21281": {
-            "message": "Please dust me off so that I can see.",
-            "title": "Error"
+            "message": "Gerät ist verschmutzt, bitte reinigen",
+            "title": "Fehler"
         },
         "-21284": {
-            "message": "I can't see!",
-            "title": "Error"
+            "message": "Sicht verdeckt!",
+            "title": "Fehler"
         },
         "-21285": {
             "message": "Bitte beginne die Reinigung auf einer ebenen Fläche.",
             "title": "Fehler"
         },
         "-21282": {
-            "message": "Please clean my right drop sensor window.",
-            "title": "Error"
+            "message": "Gerät ist verschmutzt, bitte reinigen",
+            "title": "Fehler"
         },
         "-21283": {
-            "message": "Please clean my left drop sensor window.",
-            "title": "Error"
+            "message": "Gerät ist verschmutzt, bitte reinigen",
+            "title": "Fehler"
         },
         "-21269": {
             "message": "Bitte den Weg freiräumen.",
@@ -472,10 +472,6 @@
             "message": "Bitte den Weg freiräumen.",
             "title": "Fehler"
         },
-        "-21229": {
-            "message": "Danke! Staubbehälter geleert und Filter gereinigt.",
-            "title": "Fehler"
-        },
         "-21267": {
             "message": "Bitte den Weg freiräumen.",
             "title": "Fehler"
@@ -509,6 +505,7 @@
         "wakeup_unknown_robot": "Roboter wacht in einigen Sekunden auf. ",
         "getready_robot": "Roboter ist gleich startbereit.",
         "robot_added": "__robotName__ hinzufügen",
+        "20229": "Danke! Staubbehälter geleert und Filter gereinigt.",
         "20208": "Ermittle meine Position.",
         "intend_drive": "Bitte warten.",
         "20209": "Danke!",
@@ -533,20 +530,20 @@
         "wait_robot": "Roboter wacht in ca. __wakeUp__ Sekunden auf. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
         "robot_offline": "__robotName__  ist gerade offline",
         "wakeup_robot": "Roboter wacht in ca. __wakeUp__ Sekunden auf. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
-        "20215": "USB Flash Drive was Removed.",
-        "20216": "Software Update FAILED.",
+        "20215": "Fehler: Der USB-Stick wurde entfernt.",
+        "20216": "Fehler beim Softwareupdate!",
         "20217": "Logdatei wurde erfolgreich erstellt.",
-        "20218": "Please set my clock first.",
+        "20218": "Bitte stelle zunächst die Uhr des Roboters!",
         "20219": "Am Roboter wurde die Uhr gestellt.",
         "toggle_eco": "ECO Modus ist __ecoMode__",
         "20210": "Mein Akku ist leer. Bitte aufladen.",
         "reset_password": "Passwort wird zurückgesetzt.",
         "20211": "Lateproblem! Bitte Basis prüfen.",
         "send_to_base": "Sende __robotName__ zurück zur Basisstation-",
-        "20212": "I need to charge. Please plug in my Charger.",
-        "20213": "Read FAILED. Cannot read USB Flash Drive.",
+        "20212": "Ich muss meinen Akku laden. Bitte stecke die Basis ein!",
+        "20213": "Lesefehler: Kann den USB-Stick nicht lesen.",
         "reset_password_done": "Das Passwort wurde zurückgesetzt.",
-        "20214": "Copy FAILED.  USB Flash Drive is Full."
+        "20214": "Fehler beim Kopieren: Der USB-Stick ist voll."
     },
     "robotActivationId": {
         "page": {

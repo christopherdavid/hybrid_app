@@ -14,17 +14,12 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
     // viewmodel deinit, destroy objects and remove event listener
     this.deinit = function() {
         that.isFilledOut.dispose();
-    }
+    };
     
     this.robotDetailSuccess = function(result) {
         // temporary store robot details
         tempRobot = result;//{robotId:"robotId", robotName:"robotName"}
         that.robotName(tempRobot.robotName);
-    };
-
-    this.back = function() {
-        that.conditions['back'] = true;
-        parent.flowNavigator.previous();
     };
 
     this.isFilledOut = ko.computed(function() {
