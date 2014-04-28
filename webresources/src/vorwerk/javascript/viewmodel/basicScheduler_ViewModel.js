@@ -56,20 +56,8 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         $('#schedulerTarget').on('newEvent', that.newEvent);
         $('#schedulerTarget').on('selectEvent', that.selectEvent);
         that.isScheduleOnline(that.robot().visualOnline());
-        
-         // register to schedule changed event
-        parent.notification.registerStatus(ROBOT_SCHEDULE_STATE_CHANGED, function(scheduleState) {
-            initScheduleCheckDone = false;
-            that.isScheduleEnabledSuccess({isScheduleEnabled:scheduleState});
-        });
-        
-        //register to schedule updated event
-        parent.notification.registerStatus(ROBOT_SCHEDULE_UPDATED, function(scheduleState) {
-            if(that.isScheduleEnabled()) {
-                that.loadScheduler();
-            }
-        });
-        
+        console.log("getScheduleEvents for robot with id: " + that.robot().robotId());
+        that.loadScheduler();
     };
 
     this.reload = function() {
@@ -91,32 +79,19 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         that.useSchedule(result.isScheduleEnabled == true ? 'on' : 'off');
         that.isScheduleEnabled(result.isScheduleEnabled);
         initScheduleCheckDone = true;
-        // enabled load data
-        if(result.isScheduleEnabled) {
-            that.loadScheduler();
-        }
     };
     
     this.useSchedule.subscribe(function(newValue) {
-        var onoff = newValue == 'on' ? true : false;
-        console.log("useSchedule: " + onoff + " that.isScheduleEnabled() " + that.isScheduleEnabled());
-        if(initScheduleCheckDone && that.isScheduleEnabled() != newValue) {
-            //console.log("useSchedule=" + onoff);
+        if(initScheduleCheckDone) {
+            var onoff = newValue == 'on' ? true : false;
+            console.log("useSchedule=" + onoff);
             that.isScheduleEnabled(onoff);
             var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.enableSchedule, [that.robot().robotId(), SCHEDULE_TYPE_BASIC, onoff]);
-            // enabled load data
-            if(onoff) {
-                that.loadScheduler();
-            }
         }
     });
     
    
     this.loadScheduler = function() {
-        // clear all event data
-        that.blockedDays.length = 0;
-        that.scheduler.clear();
-        console.log("getScheduleEvents for robot with id: " + that.robot().robotId());
         //RobotPluginManager.getScheduleEvents(robotId, scheduleType, callbackSuccess, callbackError)
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getScheduleEvents, [that.robot().robotId(), 0]);
         tDeffer.done(that.getScheduleEventsSuccess);

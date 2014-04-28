@@ -58,14 +58,11 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
             }
             // The agreement will be selected if the user come from the user settings screen
             that.isAgreed("true");
-            
             if(that.bundle) {
                 if(that.bundle.country == "") {
                     that.bundle.country(user.extra_param.countryCode);
                 } else if(that.bundle.country == user.extra_param.countryCode) {
-                   if(user.extra_param.optIn){
-                    	that.selectedSubscribe(user.extra_param.optIn.toString());
-                    }
+                    that.selectedSubscribe(user.extra_param.optIn);
                 }
             }
             	
@@ -118,10 +115,6 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
 			
 			parent.notification.showDialog(dialogType.ERROR, translatedTitle, translatedText, [{"label":$.i18n.t("common.ok"), "callback":function(e){ parent.notification.closeDialog(); }}]);
         }    
-    };
-    
-    this.isAgreedEnabled = function() {
-    	return !that.isAgreed();
     };
     
 	/*

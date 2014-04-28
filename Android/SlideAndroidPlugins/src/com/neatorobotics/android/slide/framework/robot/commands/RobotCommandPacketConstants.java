@@ -26,6 +26,7 @@ public class RobotCommandPacketConstants {
     public static final String NOTIFICATION_ID_GENERIC = "999";
 
     // Cleaning Category
+    public static final int CLEANING_CATEGORY_INVALID = -1;
     public static final int CLEANING_CATEGORY_MANUAL = 1;
     public static final int CLEANING_CATEGORY_ALL = 2;
     public static final int CLEANING_CATEGORY_SPOT = 3;

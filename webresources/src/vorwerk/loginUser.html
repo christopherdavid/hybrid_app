@@ -20,13 +20,13 @@
         <fieldset>
             <h3 data-i18n="loginUser.page.title" data-bind="translate: language">[welcome]</h3>
             <div class="line">
-                <input type="email" data-i18n="loginUser.page.email" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                <input type="email" data-i18n="loginUser.page.email" 
                     data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'input', jqmInputCSS: {invalid: markEmailInvalid()}"/>
             </div>
             <div class="line">
-                <input type="password" data-i18n="loginUser.page.password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                <input type="password" data-i18n="loginUser.page.password" 
                     data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'input', jqmInputVisible:!showPassword()"/>
-                <input type="text" data-i18n="loginUser.page.password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                <input type="text" data-i18n="loginUser.page.password" 
                     data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'input', jqmInputVisible: showPassword()"/>
             </div>
             <div class="line ">
@@ -54,7 +54,7 @@
             <fieldset>
                 <p data-i18n="loginUser.page.description" data-bind="translate: language">[desription]</p>
                 <div class="line">
-                    <input type="email" data-i18n="loginUser.page.email" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                    <input type="email" data-i18n="loginUser.page.email"
                         data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'input'"/>
                 </div>
             </fieldset>

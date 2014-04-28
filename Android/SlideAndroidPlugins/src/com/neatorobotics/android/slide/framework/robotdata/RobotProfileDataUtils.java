@@ -75,12 +75,18 @@ public class RobotProfileDataUtils {
         String cleaningStateDetails = details
                 .getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
         LogHelper.log(TAG, "# Current Robot State is " + cleaningStateDetails);
+        
+        if (TextUtils.isEmpty(cleaningStateDetails)) {
+        	// if cleaningStateDetails is empty, we just return -1 (invalid category)
+        	 LogHelper.logD(TAG, "# Current Robot State is empty");
+        	return -1;
+        }
         CleaningStateDetails stateDetails = null;
         try {
             stateDetails = new CleaningStateDetails(cleaningStateDetails);
             LogHelper.log(TAG, "Robot State Details are " + stateDetails);
         } catch (JSONException e) {
-            LogHelper.log(TAG, "Error in parsing robot state details", e);
+            // LogHelper.log(TAG, "Error in parsing robot state details", e);
         }
         if (stateDetails != null) {
             return stateDetails.getCleaningCategory();

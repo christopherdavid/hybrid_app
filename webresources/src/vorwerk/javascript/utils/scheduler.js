@@ -123,29 +123,6 @@ function Scheduler($root, scheduleType, enabled) {
         $(window).off(".scheduler");
     };
     
-    // remove all events and eventhandler
-    this.clear = function() {
-        // if element is already dragged trigger mouseup to stop it
-        if(draggedElement != null) {
-            var oEvent = draggedElement.data('reference');
-            var $column = columns[jQuery.inArray((oEvent.scheduleEventData.day), weekIndex)];
-            draggedElement.trigger( 'mouseup' );
-            $column.toggleClass("dragging",false);
-        }
-        
-        that.selectedEvents.removeAll();
-        that.updatedEvents.removeAll();
-        that.tasks.length = 0;
-        $('.dayLabel').removeClass("hasEvent");
-        
-        $('.event').each(function(index, element) {
-            // remove eventhandler
-            $(this).find("div").off();
-            // remove dom
-            $(this).remove();
-        });
-        
-    };
     this.offline = function() {
         isEnabled = false;
         $.each(that.tasks, function(index, element) {

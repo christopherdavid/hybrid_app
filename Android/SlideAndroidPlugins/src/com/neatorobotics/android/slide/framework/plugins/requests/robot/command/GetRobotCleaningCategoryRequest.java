@@ -7,9 +7,11 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
+import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileDataUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
@@ -35,9 +37,21 @@ public class GetRobotCleaningCategoryRequest extends RobotManagerRequest {
                         if ((responseResult != null) && (responseResult instanceof GetRobotProfileDetailsResult2)) {
                             GetRobotProfileDetailsResult2 result = (GetRobotProfileDetailsResult2) responseResult;
                             int cleaningCategory = RobotProfileDataUtils.getRobotCleaningCategory(context, result);
+                            if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_INVALID) {
+                            	sendError(callbackId, ErrorTypes.ERROR_TYPE_NO_CLEANING_STATE_SET, "No Current Cleaning State set by the robot");
+                            	return null;
+                            }
                             jsonResult = getCleaningCategoryJsonObject(cleaningCategory, robotId);
+                            if (jsonResult == null) { // If something goes wrong, we send Unknown Error to the JS layer
+        	                    LogHelper.logD(TAG, "Unknown Error");
+        	                    sendError(callbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
+                        	}
                         }
                         return jsonResult;
+                    }
+                    
+                    protected boolean shouldNotifyUnknownErrorIfResultIsNull() {
+                    	return false;
                     }
                 });
     }
