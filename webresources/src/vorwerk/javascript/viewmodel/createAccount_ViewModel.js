@@ -51,7 +51,7 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
 			userlogin: 	false,
             email:		that.email(),
             password: 	that.password()
-        }
+        };
 		
         parent.flowNavigator.next( userBundle );
     };

@@ -170,7 +170,7 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     };
     
      this.renderedCountries = function(element, data) {
-        console.log("renderedCountries")
+        console.log("renderedCountries");
         if(!countriesRendered) {
             // check if selected country is complete and control could be initialized
             if($(element).parent().children().length == that.countries().length) {

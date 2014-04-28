@@ -83,12 +83,12 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     }, this);
     
     this.isStopEnabled = ko.computed(function() {
-         return (!that.waitingForRobot() && (that.currentUiState().robot() == ROBOT_STATE_CLEANING || 
+        return ((!that.waitingForRobot() && (that.currentUiState().robot() == ROBOT_STATE_CLEANING || 
                                              that.currentUiState().robot() == ROBOT_STATE_PAUSED   || 
                                              that.currentUiState().robot() == ROBOT_STATE_RESUMED  ||
                                              that.currentUiState().robot() == ROBOT_STATE_STUCK    ||
-                                             that.currentUiState().robot() == ROBOT_STATE_MANUAL_CLEANING ||
-                                             (that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.currentUiState().robot() == ROBOT_STATE_STOPPED)  ));
+                                             that.currentUiState().robot() == ROBOT_STATE_MANUAL_CLEANING)) 
+                || (that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.currentUiState().ui() == ROBOT_UI_STATE_CONNECTING) );
     }, this);
     
     this.isEcoEnabled = ko.computed(function() {
@@ -232,13 +232,14 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                             var tDeffer = that.stopRobot();
                             
                             tDeffer.done(function(result) {
-                                console.log("robot stopped");
-                                that.robot().cleaningCategory(newValue);
+                                console.log("robot stopped");                                
                                 // set stopped state to switch speech bubble text depending on category
                                 robotUiStateHandler.setUiState(ROBOT_STATE_STOPPED);
                                 if(newValue == CLEANING_CATEGORY_SPOT) {
                                     // show spot popup
                                     that.editSpotSize();
+                                } else {
+                                    that.robot().cleaningCategory(newValue);
                                 }
                             });
                         }
@@ -251,13 +252,22 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                     }
                 ]);
             } else {
-                // set stopped state to switch speech bubble text depending on category
-                robotUiStateHandler.setUiState(ROBOT_STATE_STOPPED);
+                // set state to switch speech bubble text depending on category
                 if(newValue == CLEANING_CATEGORY_SPOT) {
                     // show spot popup
                     that.editSpotSize();
+                } else if(newValue == CLEANING_CATEGORY_MANUAL) {
+                    that.robot().cleaningCategory(newValue);
+                    if(that.robot().robotNewVirtualState() == ROBOT_STATE_IDLE || that.robot().robotNewVirtualState() == ROBOT_STATE_STOPPED) {
+                        robotUiStateHandler.setUiState(ROBOT_UI_STATE_STOPPED_WAITED_MANUAL);
+                    }
                 } else {
                     that.robot().cleaningCategory(newValue);
+                    if(that.robot().robotNewVirtualState() == ROBOT_STATE_IDLE) {
+                        robotUiStateHandler.setVirtualState(ROBOT_STATE_IDLE);
+                    } else if(that.robot().robotNewVirtualState() == ROBOT_STATE_STOPPED) {
+                        robotUiStateHandler.setUiState(ROBOT_UI_STATE_STOPPED_WAITED_ALL);
+                    }
                 }
             }
         } else { 
@@ -306,7 +316,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     this.remoteReleased = function(event, button) {
         //robotUiStateHandler.setUiState(ROBOT_UI_STATE_CLEANING_MANUAL);
-        robotUiStateHandler.setUiState(ROBOT_STATE_MANUAL_CLEANING);
+        //robotUiStateHandler.setUiState(ROBOT_STATE_MANUAL_CLEANING);
+        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.driveRobot, [that.robot().robotId(), 7], { type: notificationType.NONE });
     };
     
     // viewmodel reload 
@@ -455,7 +466,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         // robot is connected to server
         } else
         */
-         {
+         //{
             if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() != ROBOT_STATE_MANUAL_CLEANING) {
                 robotUiStateHandler.setUiState(ROBOT_UI_STATE_CONNECTING);
               /* window.setTimeout(function(){
@@ -478,7 +489,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                 // started cleaning
                 parent.communicationWrapper.updateRobotStateWithCode(that.robot(), ROBOT_STATE_CLEANING);
             }
-        }
+        //}
     };
     
     this.startManualMode = function(){
@@ -545,7 +556,11 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         
         } else if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.currentUiState().ui() == ROBOT_UI_STATE_CONNECTING) {
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.cancelIntendToDrive, [that.robot().robotId()], 
-                      { type: notificationType.OPERATION, message: $.i18n.t('communication.stop_drive',{'robotName':that.robot().robotName()})});
+                      //{ type: notificationType.OPERATION, message: $.i18n.t('communication.stop_drive',{'robotName':that.robot().robotName()})}
+                      { type: notificationType.NONE, message: ""});
+            tDeffer.done(function(result){
+                robotUiStateHandler.setUiState(ROBOT_UI_STATE_STOPPED_WAITED_MANUAL);     
+            });
         } 
         //else {
             // Send command that the robot should stop

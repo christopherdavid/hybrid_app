@@ -595,10 +595,10 @@ function WorkflowNotification(parent) {
     };
     
     this.startManualMode = function(){
-    var curRobot = parent.communicationWrapper.getDataValue("selectedRobot");
-      var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [curRobot().robotId(),
+        var curRobot = parent.communicationWrapper.getDataValue("selectedRobot");
+        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [curRobot().robotId(),
                       1, 1, 1]);
-      tDeffer.done(that.startManualModeSuccess);
+        tDeffer.done(that.startManualModeSuccess);
     };
     
     this.startManualModeSuccess = function(result) {
@@ -640,6 +640,10 @@ function WorkflowNotification(parent) {
                     break;
                 case ROBOT_ALREADY_CONNECTED:
                     curRobot().robotNewVirtualState(ROBOT_STATE_MANUAL_CLEANING);
+                    break;
+                case ERROR_NO_CLEANING_STATE_SET:
+                    // don't show error message
+                    bShowDialog = false;
                     break;
             }
         } else if (error && error.errorMessage) {
