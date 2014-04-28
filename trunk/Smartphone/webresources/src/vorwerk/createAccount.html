@@ -20,20 +20,20 @@
         <fieldset>
             <h3 data-i18n="createAccount.page.title" data-bind="translate: language">welcome</h3>
             <div class="line">
-                <input type="email" data-i18n="createAccount.page.email" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                <input type="email" data-i18n="createAccount.page.email" 
                     data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'input', jqmInputCSS: {invalid: markInvalidEmail()}"/>
             </div>
             <div class="line">
-                <input type="password" data-i18n="createAccount.page.password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                <input type="password" data-i18n="createAccount.page.password" 
                     data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'input', jqmInputVisible:!showPassword()"/>
-                <input type="text" data-i18n="createAccount.page.password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                <input type="text" data-i18n="createAccount.page.password" 
                     data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password, valueUpdate: 'input',  jqmInputVisible:showPassword()"/>
             </div>
             <div class="line">
-                <input type="password" data-i18n="createAccount.page.password_verify" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                <input type="password" data-i18n="createAccount.page.password_verify" 
                     data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'input', jqmInputCSS: {invalid: markInvalidPassword()},  jqmInputVisible:!showPassword(), event:{ input: verifyPassword}"/>
                 
-                <input type="text" data-i18n="createAccount.page.password_verify" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                <input type="text" data-i18n="createAccount.page.password_verify" 
                     data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: password_verify, valueUpdate: 'input', jqmInputCSS: {invalid: markInvalidPassword()},  jqmInputVisible:showPassword(), event:{ input: verifyPassword}"/>
             </div>
             <div class="line">

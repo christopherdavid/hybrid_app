@@ -82,13 +82,19 @@ public abstract class RobotManagerRequest {
                     PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, resultObj);
                     sendSuccessPluginResult(pluginResult, mCallbackId);
                 } else {
-                    LogHelper.logD(TAG, "Unknown Error");
-                    sendError(mCallbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
+                	if (shouldNotifyUnknownErrorIfResultIsNull()) {
+	                    LogHelper.logD(TAG, "Unknown Error");
+	                    sendError(mCallbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
+                	}
                 }
             } catch (JSONException ex) {
                 LogHelper.logD(TAG, "JSON Error");
                 sendError(mCallbackId, ErrorTypes.JSON_PARSING_ERROR, ex.getMessage());
             }
+        }
+        
+        protected boolean shouldNotifyUnknownErrorIfResultIsNull() {
+        	return true;
         }
 
         public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {

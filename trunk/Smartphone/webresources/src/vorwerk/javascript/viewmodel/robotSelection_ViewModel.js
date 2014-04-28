@@ -118,11 +118,7 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         that.robot(data);
         // subscribe to robot
         robotUiStateHandler.subscribeToRobot(parent.communicationWrapper.getDataValue("selectedRobot"));
-        if(!that.robot().robotOnline()) {
-            robotUiStateHandler.setUiState(ROBOT_UI_STATE_ROBOT_OFFLINE);
-        } else {
-            parent.communicationWrapper.updateRobotStateWithCode(that.robot(), data.robotNewVirtualState());
-        }
+        parent.communicationWrapper.updateRobotStateWithCode(that.robot(), data.robotNewVirtualState());
         
         if (that.bundle == robotScreenCaller.CHANGE) {
             parent.flowNavigator.previous();

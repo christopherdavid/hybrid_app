@@ -17,10 +17,8 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     this.hasDelete = ko.observable(false);
     
     this.isNextEnabled = ko.computed(function() {
-        return (that.selectedCleaningDays().length > 0 && that.robot().visualOnline() && that.editingAllowed());
+        return (that.selectedCleaningDays().length > 0 && that.robot().visualOnline());
     }, this);
-    
-    this.editingAllowed = ko.observable(true);
     
     /* <enviroment functions> */
     this.init = function() {
@@ -110,16 +108,6 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
         });
         $(document).one("pageshow.timeset", function(e) {
             that.updateLayout();
-        });
-        
-         // register to schedule changed event
-        parent.notification.registerStatus(ROBOT_SCHEDULE_STATE_CHANGED, function(scheduleState) {
-            that.editingAllowed(false);
-        });
-        
-        //register to schedule updated event
-        parent.notification.registerStatus(ROBOT_SCHEDULE_UPDATED, function(scheduleState) {
-            that.editingAllowed(false);
         });
     };
 

@@ -21,6 +21,8 @@ public class ErrorTypes {
     public static final int ERROR_TYPE_WIFI_NOT_CONNECTED = -516;
     public static final int ERROR_TYPE_NO_INTERNET_CONNECTION = -517;
 
+    public static final int ERROR_TYPE_NO_CLEANING_STATE_SET = -518;
+
     /**
      * Authentication of the user failed. - This will occur when the email
      * and/or the password is incorrect while Logging-in. - This will occur if

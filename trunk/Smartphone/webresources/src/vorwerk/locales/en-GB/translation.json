@@ -54,13 +54,13 @@
             "register_notAccepted_title": "Missing Legal Agreement",
             "legal_agreement": "I Agree",
             "title": "AGREEMENTS",
-            "tou_pp_agreement": "In order to use the App, you must agree to the Terms of Use and the Data Protection Statement. <br /><br /> I hereby declare that I have read and agree to the <a id='terms' href='#' class='highlightedText font_bold font_small'>Terms of Use<\/a> and <a id='privacy' href='#' class='highlightedText font_bold font_small'>Data Protection Statement<\/a>.",
+            "tou_pp_agreement": "In order to use the App, you must agree to the Terms of Use and the Data Protection Statement. TICK BOX I hereby declare that I have read and agree to the <a id='terms' href='#' class='highlightedText font_bold font_small'>Terms of Use<\/a> and <a id='privacy' href='#' class='highlightedText font_bold font_small'>Data Protection Statement<\/a>.",
             "change_notAccepted_title": "Missing Legal Agreement",
             "subscribe_header": "MARKETING INFORMATION",
             "edit_done_title": "Account Modified",
             "edit_done_message": "The user account has been updated successfully",
             "tou_pp_header": "LEGAL INFORMATION",
-            "subscribe_agreement": "As our customer, we would like to keep you informed of new updates and product information, and we take the greatest care to keep your data secure. This data will not be communicated to companies outside of the Vorwerk Group. <br /><br /> I agree that my email address may be used by Vorwerk International Strecker & Co. for information and advertising that is addressed to me personally (e.g. updates, notices, special offers). This consent may be revoked at any time under the menu item \"Settings\". Further details can be found in the Data Protection Statement.",
+            "subscribe_agreement": "As our customer, we would like to keep you informed of new updates and product information, and we take the greatest care to keep your data secure. This data will not be communicated to companies outside of the Vorwerk Group. TICK BOX I agree that my email address may be used by Vorwerk International Strecker & Co. for information and advertising that is addressed to me personally (e.g. updates, notices, special offers). This consent may be revoked at any time under the menu item \"Settings\". Further details can be found in the Data Protection Statement.",
             "register_notAccepted_message": "Please check the privacy policy and terms of use documents to complete the registration."
         },
         "navi": {"title": "Registration"}
@@ -472,6 +472,10 @@
             "message": "Please clear my path.",
             "title": "Error"
         },
+        "-21229": {
+            "message": "Thank you for emptying my Dirt Bin and cleaning my Filter.",
+            "title": "Error"
+        },
         "-21267": {
             "message": "Please clear my path.",
             "title": "Error"
@@ -505,7 +509,6 @@
         "wakeup_unknown_robot": "Robot wakes up in some seconds.",
         "getready_robot": "Robot is getting ready.",
         "robot_added": "Adding __robotName__ ...",
-        "20229": "Thank you for emptying my Dirt Bin and cleaning my Filter.",
         "20208": "Please wait while I check my surrounding.",
         "intend_drive": "Please wait...",
         "20209": "Thank you!",

@@ -85,26 +85,26 @@
                 <p data-i18n="userSettings.page.password"
                     data-bind="translate: language">[password]</p>
                 <div class="line">
-                    <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                    <input type="password"
                         data-i18n="userSettings.page.old_password" 
                         data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'input', jqmInputVisible: !showPassword()"/>
-                    <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                    <input type="text"
                         data-i18n="userSettings.page.old_password" 
                         data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: oldPassword, valueUpdate: 'input', jqmInputVisible: showPassword()"/>
                 </div>
                 <div class="line">
-                    <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                    <input type="password"
                         data-i18n="userSettings.page.new_password" 
                         data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'input', jqmInputVisible: !showPassword()"/>
-                    <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                    <input type="text"
                         data-i18n="userSettings.page.new_password" 
                         data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPassword, valueUpdate: 'input', jqmInputVisible: showPassword()"/>
                 </div>
                 <div class="line">
-                    <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                    <input type="password"
                         data-i18n="userSettings.page.new_password_verify" 
                         data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'input', jqmInputVisible: !showPassword(), jqmInputCSS: {invalid: markInvalidPassword()}, event:{ input: verifyPassword}"/>
-                    <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+                    <input type="text"
                         data-i18n="userSettings.page.new_password_verify" 
                         data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'input', jqmInputVisible: showPassword(), jqmInputCSS: {invalid: markInvalidPassword()}, event:{ input: verifyPassword}"/>
                 </div>
