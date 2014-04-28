@@ -132,7 +132,7 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
     };
 
     this.updateMessage = function() {
-        var translationKey = "robotSelection.page.no_robot"
+        var translationKey = "robotSelection.page.no_robot";
         if (that.robots().length > 0) {
             translationKey = "robotSelection.page.select_robot";
         }

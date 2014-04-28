@@ -410,6 +410,11 @@ var ROBOT_NO_INTEND_TO_DRIVE_REQUEST_FOUND = -514;
  */
 var DIFFERENT_ROBOT_CONNECTION_EXISTS = -515;
 
+/**
+ * This error code is returned when 
+ * - robot has set the current cleaning state as empty
+ */
+var ERROR_NO_CLEANING_STATE_SET = -518;
 
 
 if(!window.plugins) {
@@ -3633,7 +3638,7 @@ var PluginManagerHelper =  (function() {
 		 *  - startTime
 		 *  - cleaningMode
 		 *  Returns: Basic Schedule JSON object
-		 *  {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
+		 *  {'day':day, 'startTime': startTime, ï¿½cleaningModeï¿½:cleaningMode}
 		 */
 		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {

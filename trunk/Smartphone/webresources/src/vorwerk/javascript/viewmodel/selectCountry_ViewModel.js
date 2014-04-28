@@ -50,7 +50,6 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
             this.countryScreenTitle($.i18n.t("userSettings.page.country"));
             appCountry = user.extra_param.countryCode;
         } else {
-            $('.ui-btn-left .btn-with-image').hide();
             appCountry = parent.language().split("-")[1];
         }
         
