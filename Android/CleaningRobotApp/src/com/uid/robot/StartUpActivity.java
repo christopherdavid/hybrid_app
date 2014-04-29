@@ -6,6 +6,9 @@ import java.util.GregorianCalendar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 /**
  * startup is the first activity which checks the expired date (1.9.2014)
@@ -27,6 +30,16 @@ public class StartUpActivity extends Activity {
         if(now.after(endDate)) {
         	// expired
         	setContentView(R.layout.activity_startup);
+        	Button exitButton = (Button) findViewById( R.id.button1 );
+    		
+        	exitButton.setOnClickListener( new OnClickListener() { 
+    			
+    			@Override
+    			public void onClick(View v) {
+    				System.exit(0);
+    			}
+    		});
+        	
         } else {
         	startActivity(new Intent(StartUpActivity.this, CleaningRobotAppActivity.class));
         	finish();
