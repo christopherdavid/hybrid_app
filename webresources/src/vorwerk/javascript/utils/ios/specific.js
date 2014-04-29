@@ -12,6 +12,16 @@ function initDeviceConfig() {
     app.config.device = DEVICETYPE.iOS;
 }
 
+/** 
+ * Fixed header jumps around when iOS keyboard disappears
+ * https://github.com/jquery/jquery-mobile/issues/5532  
+ */
+$(document).on('blur', 'input, textarea', function() {
+    setTimeout(function() {
+        window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
+    }, 0);
+});
+
 /**
  * Rotation handling in iOS
  *  
