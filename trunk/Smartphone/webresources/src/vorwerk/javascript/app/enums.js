@@ -54,6 +54,9 @@ var ROBOT_UI_STATE_AWAKE    = 20005;
 var ROBOT_UI_STATE_DISABLED = 20006;
 var ROBOT_UI_STATE_CONNECTING = 20007;
 var ROBOT_UI_STATE_ROBOT_OFFLINE = 20008;
+var ROBOT_UI_STATE_SEND_TO_BASE = 20009;
+var ROBOT_UI_STATE_RETURN_TO_BASE = 20010;
+var ROBOT_UI_STATE_RETURN_TO_START = 20011;
 // new ui states which were shown after a specified timeout (e.g. 10s) out when robot has stopped
 var ROBOT_UI_STATE_STOPPED_MANUAL = 20021;
 var ROBOT_UI_STATE_STOPPED_ALL = 20022;
@@ -92,6 +95,9 @@ visualState[ROBOT_UI_STATE_GETREADY] = "getready";
 visualState[ROBOT_UI_STATE_AWAKE] = "awake";
 visualState[ROBOT_UI_STATE_DISABLED] = "disabled"; 
 visualState[ROBOT_UI_STATE_CONNECTING] = "connecting";
+visualState[ROBOT_UI_STATE_SEND_TO_BASE] = "drive_to_base";
+visualState[ROBOT_UI_STATE_RETURN_TO_BASE] = "found_base";
+visualState[ROBOT_UI_STATE_RETURN_TO_START] = "found_start";
 
 visualState[ROBOT_UI_STATE_STOPPED_MANUAL] = "stopped_manual";
 visualState[ROBOT_UI_STATE_STOPPED_ALL] = "stopped_all";

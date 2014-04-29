@@ -561,6 +561,12 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             tDeffer.done(function(result){
                 robotUiStateHandler.setUiState(ROBOT_UI_STATE_STOPPED_WAITED_MANUAL);     
             });
+            tDeffer.fail(function(error, notificationOptions, errorHandled){
+                if(error && error.errorCode && error.errorCode == "-501") {
+                    errorHandled.resolve();
+                    robotUiStateHandler.setUiState(ROBOT_UI_STATE_STOPPED_WAITED_MANUAL);
+                }
+            });
         } 
         //else {
             // Send command that the robot should stop
