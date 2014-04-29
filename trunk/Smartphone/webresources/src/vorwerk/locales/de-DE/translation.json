@@ -87,7 +87,7 @@
             "title": "Ich habe ein Verbindungsproblem."
         },
         "no_wifi": {
-            "message": "Bitte WLAN-Verbindung herstellen.",
+            "message": "Bitte WLAN-Verbindung herstellen.<br />Drücke OK um es erneut zu versuchen.",
             "title": "Ich habe ein Verbindungsproblem."
         },
         "103": {
@@ -103,7 +103,7 @@
             "title": "Ich habe mich festgefahren."
         },
         "no_connection": {
-            "message": "Eine Netzwerk Verbindung wird benötigt. Bitte mobiles Netzwerk oder WLAN aktivieren.",
+            "message": "Eine Netzwerk Verbindung wird benötigt. Bitte mobiles Netzwerk oder WLAN aktivieren. <br />Drücke OK um es erneut zu versuchen.",
             "title": "Ich habe ein Verbindungsproblem."
         }
     },
