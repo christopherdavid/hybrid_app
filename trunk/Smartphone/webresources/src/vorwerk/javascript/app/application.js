@@ -18,7 +18,7 @@ function Application() {
         firstScreen : "start",
         pageTransition : "none",
         pageReverseDirection: false,
-        version:"0.6.13.14",
+        version:"0.6.13.15",
         pluginVersion:"0.6.2.21",
         serverName:"Raja Staging",
         fallbackLanguage:"en-GB",
