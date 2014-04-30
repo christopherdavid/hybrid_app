@@ -72,11 +72,11 @@ function WorkflowNotification(parent) {
                             if(curState == ROBOT_STATE_CLEANING) {
                                 // getRobotCleaningCategory
                                 var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotCleaningCategory, [curRobot().robotId()], { type: notificationType.NONE });
-                                tDeffer.done(function(result) {
+                                tDeffer.done(function(categoryResult) {
                                     // need to add a check if it's a valid category (in some cases got 0 from server)
-                                    if(result.cleaningCatageory == CLEANING_CATEGORY_MANUAL || result.cleaningCatageory == CLEANING_CATEGORY_ALL
-                                        || result.cleaningCatageory == CLEANING_CATEGORY_SPOT) {
-                                            curRobot().cleaningCategory(result.cleaningCatageory);
+                                    if(categoryResult.cleaningCategory == CLEANING_CATEGORY_MANUAL || categoryResult.cleaningCategory == CLEANING_CATEGORY_ALL
+                                        || categoryResult.cleaningCategory == CLEANING_CATEGORY_SPOT) {
+                                            curRobot().cleaningCategory(categoryResult.cleaningCategory);
                                     } else {
                                         // set All as fallback
                                         curRobot().cleaningCategory(CLEANING_CATEGORY_ALL);
