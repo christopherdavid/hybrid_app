@@ -87,8 +87,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                                              that.currentUiState().robot() == ROBOT_STATE_PAUSED   || 
                                              that.currentUiState().robot() == ROBOT_STATE_RESUMED  ||
                                              that.currentUiState().robot() == ROBOT_STATE_STUCK    ||
-                                             that.currentUiState().robot() == ROBOT_STATE_MANUAL_CLEANING)) 
-                || (that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.currentUiState().ui() == ROBOT_UI_STATE_CONNECTING) );
+                                             that.currentUiState().robot() == ROBOT_STATE_MANUAL_CLEANING)));
     }, this);
     
     this.isEcoEnabled = ko.computed(function() {
@@ -562,17 +561,18 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                 robotUiStateHandler.setUiState(ROBOT_UI_STATE_STOPPED_WAITED_MANUAL);     
             });
             tDeffer.fail(function(error, notificationOptions, errorHandled){
+                console.log("cancelIntendToDrive fail. " + JSON.stringify(error));
                 if(error && error.errorCode && error.errorCode == "-501") {
                     errorHandled.resolve();
                     robotUiStateHandler.setUiState(ROBOT_UI_STATE_STOPPED_WAITED_MANUAL);
                 }
             });
-        } 
-        //else {
-            // Send command that the robot should stop
-            tDefferStop = parent.communicationWrapper.exec(RobotPluginManager.stopCleaning, [that.robot().robotId()], 
-                      { type: notificationType.OPERATION, message: $.i18n.t('communication.stop_robot',{'robotName':that.robot().robotName()})});
-        //}
+        }
+            
+        // Send command that the robot should stop
+        tDefferStop = parent.communicationWrapper.exec(RobotPluginManager.stopCleaning, [that.robot().robotId()], 
+                  { type: notificationType.OPERATION, message: $.i18n.t('communication.stop_robot',{'robotName':that.robot().robotName()})});
+        
         
         tDefferStop.done(that.successStopRobot);
         return tDefferStop; 
