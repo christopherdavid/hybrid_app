@@ -168,7 +168,11 @@ function WorkflowNotification(parent) {
                                         // if there is a notification set robot back to online
                                         curRobot().robotOnline(true);
                                         curRobot().visualOnline(true);
-                                        parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
+                                        if(curRobot().robotNewVirtualState() != curState) {
+                                            parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
+                                        } else {
+                                            robotUiStateHandler.setUiState(ROBOT_UI_STATE_STOPPED_WAITED_MANUAL);
+                                        }
                                     }
                                 }]);
                             
