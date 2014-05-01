@@ -215,7 +215,7 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 // #define SERVER_TYPE_VORWERK_STAGING
 // #define SERVER_TYPE_VORWERK_DEV
 
-#define SERVER_TYPE_RAJATOGO_STAGING
+// #define SERVER_TYPE_RAJATOGO_STAGING
 // #define SERVER_TYPE_RAJATOGO_DEV
 
 
@@ -236,10 +236,10 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 #define NOTIFICATION_SERVER_TYPE  NOTIFICATION_PROFILE_TYPE_DEVELOPER
 #endif
 
-#define SERVER_TYPE                 @"Staging (Neato)"
-#define XMPP_SERVER_ADDRESS         @"staging-smartapp.neatorobotics.com"
-// Will use API's at https://staging-smartapp.neatorobotics.com/wstest/
-#define BASE_URL @"https://staging-smartapp.neatorobotics.com/api/rest/json"
+#define SERVER_TYPE                 @"Staging (RAJATOGO)"
+#define XMPP_SERVER_ADDRESS         @"rajatogo.com"
+// Will use API's at http://neatostaging.rajatogo.com/wstest/
+#define BASE_URL @"http://neatostaging.rajatogo.com/api/rest/json"
 #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
 
 #ifdef SERVER_TYPE_VORWERK_BETA

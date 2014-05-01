@@ -1,0 +1,14 @@
+Vorwerk certificate password
+
+DEV
+signing: v0rw3rk!@#
+push: v0rw3rk!@#
+
+DIST
+signing: v0rw3rk!@#
+push: v0rw3rk!@#
+
+
+APS Certificate password on Server (Generated PEM file)
+vorwerk123
+

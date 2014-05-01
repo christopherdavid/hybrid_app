@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="ipa" name="Vorwerk">
+<property name="BUNDLE_ID" value="com.vorwerk-robot.vr200beta"/>
+<property name="BUILD_NUM" value="0.6.66"/>
+<target name="archive" depends="clean">
+    <exec executable="xcodebuild">
+        <arg value="-workspace"/>
+        <arg value="CleaningRobotApp.xcworkspace"/>
+        <arg value="-scheme"/>
+        <arg value="CleaningRobotApp"/>
+        <arg value="archive"/>
+        <arg value="-archivePath"/>
+        <arg value="CleaningRobotApp_Vorwerk_Dev"/>
+	<arg value="BUNDLE_ID=${BUNDLE_ID}"/>
+	<arg value="BUILD_NO=${BUILD_NUM}"/>
+	<arg value="GCC_PREPROCESSOR_DEFINITIONS=SERVER_TYPE_VORWERK_STAGING ENABLE_DEBUGGING" />
+        <arg value="PROVISIONING_PROFILE=05B968C5-BA1E-457C-960A-60AD6A78130E"/>
+    </exec>
+</target>
+<target name="ipa" depends="archive">
+    <exec executable="xcodebuild">
+        <arg value="-exportArchive"/>
+        <arg value="-exportFormat"/>
+        <arg value="IPA"/>
+        <arg value="-archivePath"/>
+        <arg value="CleaningRobotApp_Vorwerk_Dev.xcarchive"/>
+        <arg value="-exportPath"/>
+        <arg value="CleaningRobotApp_Vorwerk_Dev.ipa"/>
+        <arg value="-exportProvisioningProfile"/>
+        <arg value="Vorwerk_Beta_DEV"/>
+    </exec>
+</target>
+
+<target name="clean">
+    <exec executable="xcodebuild">
+        <arg value="-workspace"/>
+        <arg value="CleaningRobotApp.xcworkspace"/>
+        <arg value="-configuration"/>
+        <arg value="Release"/>
+        <arg value="-scheme"/>
+        <arg value="CleaningRobotApp"/>
+        <arg value="clean"/>
+    </exec>
+	<delete file="CleaningRobotApp_Vorwerk_Dev.ipa" />
+	<delete dir="CleaningRobotApp_Vorwerk_Dev.xcarchive" failonerror="false"/>
+</target>
+</project>
+
+
