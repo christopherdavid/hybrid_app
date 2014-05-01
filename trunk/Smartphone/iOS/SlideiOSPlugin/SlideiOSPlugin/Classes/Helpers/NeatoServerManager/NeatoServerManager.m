@@ -966,7 +966,7 @@
                      // Get cleaning category by parsing data from string robot state params
                      NSData *jsonData = [value dataUsingEncoding:NSUTF8StringEncoding];
                      if (!jsonData) {
-                         completion ? completion(nil, error) : nil;
+                         completion ? completion(nil, nil) : nil;
                          return;
                      }
                      NSDictionary *robotStateParams = [[AppHelper parseJSON:jsonData] objectForKey:NEATO_RESPONSE_ROBOT_STATE_PARAMS];

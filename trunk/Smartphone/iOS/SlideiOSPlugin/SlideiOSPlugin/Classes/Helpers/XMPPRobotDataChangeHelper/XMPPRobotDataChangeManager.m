@@ -422,30 +422,40 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 }
 
 - (void)notifyNotificationMessageForProfile:(NSDictionary *)robotProfile {
-  debugLog(@"");
-  NSString *notificationMessage = [[robotProfile objectForKey:KEY_ROBOT_NOTIFICATION_MESSAGE] objectForKey:KEY_VALUE];
-
-  NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-  [data setObject:notificationMessage forKey:KEY_ROBOT_NOTIFICATION];
-  [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE] withKeyCode:[NSNumber numberWithInt:ROBOT_NOTIFICATION_CODE] andData:data];
+    debugLog(@"");
+    NSString *notificationMessage = [[robotProfile objectForKey:KEY_ROBOT_NOTIFICATION_MESSAGE] objectForKey:KEY_VALUE];
+	if (notificationMessage) {
+        NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+        [data setObject:notificationMessage forKey:KEY_ROBOT_NOTIFICATION];
+        [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE] withKeyCode:[NSNumber numberWithInt:ROBOT_NOTIFICATION_CODE] andData:data];
+    }
 }
 
 - (void)notifyErrorMessageForProfile:(NSDictionary *)robotProfile {
-  debugLog(@"");
-  NSString *errorMessage = [[robotProfile objectForKey:KEY_ROBOT_ERROR_MESSAGE] objectForKey:KEY_VALUE];
-
-  NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-  [data setObject:errorMessage forKey:KEY_ROBOT_ERROR];
-  [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE] withKeyCode:[NSNumber numberWithInt:ROBOT_ERROR_CODE] andData:data];
+    debugLog(@"");
+    NSString *errorMessage = [[robotProfile objectForKey:KEY_ROBOT_ERROR_MESSAGE] objectForKey:KEY_VALUE];
+	if (errorMessage) {
+        NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+        [data setObject:errorMessage forKey:KEY_ROBOT_ERROR];
+        [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE] withKeyCode:[NSNumber numberWithInt:ROBOT_ERROR_CODE] andData:data];
+    }
 }
 
 - (void)notifyRobotOnlineStatusChangeForProfile:(NSDictionary *)robotProfile {
-  debugLog(@"");
-  NSString *robotOnlineStatus = [[robotProfile objectForKey:KEY_ROBOT_ONLINE_STATUS_DATA] objectForKey:KEY_VALUE];
+    debugLog(@"");
+    NSString *robotOnlineStatus = [[robotProfile objectForKey:KEY_ROBOT_ONLINE_STATUS_DATA] objectForKey:KEY_VALUE];
+	if (robotOnlineStatus) {
+        NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+        [data setObject:robotOnlineStatus forKey:NEATO_ROBOT_ONLINE_STATUS];
+        [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE] withKeyCode:[NSNumber numberWithInt:ROBOT_ONLINE_STATUS_CHANGED_CODE] andData:data];
+    }
+}
 
-  NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-  [data setObject:robotOnlineStatus forKey:NEATO_ROBOT_ONLINE_STATUS];
-  [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE] withKeyCode:[NSNumber numberWithInt:ROBOT_ONLINE_STATUS_CHANGED_CODE] andData:data];
+- (void)robotStateAtServerForRobotId:(NSString *)robotId {
+    // Get robot profile details and notify UI if needed.
+    NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
+    serverManager.delegate = self;
+    [serverManager profileDetails2ForRobotWithId:robotId];
 }
 
 @end

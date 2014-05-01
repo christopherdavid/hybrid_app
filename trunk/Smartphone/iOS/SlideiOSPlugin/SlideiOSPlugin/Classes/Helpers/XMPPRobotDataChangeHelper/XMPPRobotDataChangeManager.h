@@ -21,4 +21,5 @@
 // Call this method to notify UI about any change in data for a robot.
 - (void)notifyDataChangeForRobotId:(NSString *)robotId withKeyCode:(NSNumber *)key andData:(NSDictionary *)data;
 
+- (void)robotStateAtServerForRobotId:(NSString *)robotId;
 @end

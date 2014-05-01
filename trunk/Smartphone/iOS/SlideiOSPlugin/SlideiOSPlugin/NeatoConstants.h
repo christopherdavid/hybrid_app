@@ -90,6 +90,7 @@
 #define COMMAND_TURN_WIFI_ONOFF             117
 #define COMMAND_DRIVE_ROBOT                 115
 #define COMMAND_TURN_MOTOR_ONOFF            116
+#define COMMAND_INTEND_TO_DRIVE             119
 
 // Cleaning API params
 #define KEY_CLEANING_CATEGORY @"cleaningCategory"
@@ -110,7 +111,7 @@
 #define NOTIFICATION_FLAG_TRUE 1
 
 // Command expiry constants
-#define COMMAND_EXPIRY_TIME 180
+#define COMMAND_EXPIRY_TIME 90
 
 // Notification constants
 #define NOTIFICATION_XMPP_DATA_CHANGE @"com.neato.plugin.xmppchange.robotDataChanged"
@@ -156,6 +157,7 @@
 #define KEY_ROBOT_NOTIFICATION @"robotNotification"
 #define KEY_ROBOT_ERROR @"robotError"
 #define KEY_ROBOT_ONLINE_STATUS_DATA @"robotOnlineStatus"
+#define KEY_FAILED_COMMAND_ID @"failedCommandId"
 
 //Key Codes for profile data changes.
 #define ROBOT_CURRENT_STATE_CHANGED_CODE 4001
@@ -169,6 +171,7 @@
 #define ROBOT_NOTIFICATION_CODE 4013
 #define ROBOT_ERROR_CODE 4014
 #define ROBOT_ONLINE_STATUS_CHANGED_CODE 4015
+#define ROBOT_COMMAND_FAILED  4016
 
 // Robot states
 #define ROBOT_STATE_CLEANING 10002
@@ -207,15 +210,12 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 #define ENABLE_DEBUGGING
 // To switch to Vorwerk's server, uncomment appropriate server type
 // #define SERVER_TYPE_NEATO_STAGING
-// #define SERVER_TYPE_NEATO_PROD
 // #define SERVER_TYPE_NEATO_DEV
 
 // #define SERVER_TYPE_VORWERK_STAGING
-// #define SERVER_TYPE_VORWERK_PROD
 // #define SERVER_TYPE_VORWERK_DEV
 
 #define SERVER_TYPE_RAJATOGO_STAGING
-// #define SERVER_TYPE_RAJATOGO_PROD
 // #define SERVER_TYPE_RAJATOGO_DEV
 
 
@@ -271,21 +271,6 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
 #endif
 
-#ifdef SERVER_TYPE_NEATO_PROD
-
-// First undefine existing constants
-#undef SERVER_TYPE
-#undef XMPP_SERVER_ADDRESS
-#undef BASE_URL
-#undef API_KEY
-
-#define SERVER_TYPE                 @"Production (Neato)"
-#define XMPP_SERVER_ADDRESS         @"rajatogo.com"
-// Will use API's at http://neato.rajatogo.com/wstest/
-#define BASE_URL @"http://neato.rajatogo.com/api/rest/json"
-#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
-#endif
-
 
 #ifdef SERVER_TYPE_NEATO_DEV
 
@@ -317,20 +302,6 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
 #endif
 
-#ifdef SERVER_TYPE_VORWERK_PROD
-
-// First undefine existing constants
-#undef SERVER_TYPE
-#undef XMPP_SERVER_ADDRESS
-#undef BASE_URL
-#undef API_KEY
-
-#define SERVER_TYPE                 @"Production (Vorwerk)"
-#define XMPP_SERVER_ADDRESS         @"rajatogo.com"
-// Will use API's at http://neato.rajatogo.com/wstest/
-#define BASE_URL @"http://neato.rajatogo.com/api/rest/json"
-#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
-#endif
 
 #ifdef SERVER_TYPE_VORWERK_DEV
 
@@ -363,20 +334,7 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
 #endif
 
-#ifdef SERVER_TYPE_RAJATOGO_PROD
 
-// First undefine existing constants
-#undef SERVER_TYPE
-#undef XMPP_SERVER_ADDRESS
-#undef BASE_URL
-#undef API_KEY
-
-#define SERVER_TYPE                 @"Production (RAJATOGO)"
-#define XMPP_SERVER_ADDRESS         @"staging-smartapp.neatorobotics.com"
-// Will use API's at http://neato.rajatogo.com/wstest/
-#define BASE_URL @"http://neato.rajatogo.com/api/rest/json"
-#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
-#endif
 
 #ifdef SERVER_TYPE_RAJATOGO_DEV
 
@@ -387,7 +345,7 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 #undef API_KEY
 
 #define SERVER_TYPE                 @"Development (RAJATOGO)"
-#define XMPP_SERVER_ADDRESS         @"rajatogo.com"
+#define XMPP_SERVER_ADDRESS         @"neatodev.rajatogo.com"
 // Will use API's at http://neatodev.rajatogo.com/wstest/
 #define BASE_URL @"http://neatodev.rajatogo.com/api/rest/json"
 #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
@@ -442,4 +400,7 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 // Crittercism App IDs
 #define CRITTERCISM_DEBUG_APP_ID @"5332916c40ec922f32000006" // using c_neato@rajatogo.com login
 #define CRITTERCISM_RELEASE_APP_ID @"533277c3a6d3d77683000001" // using Neato account for crittercism
+
+// Generic constants
+#define KEY_LAST_USED_ROBOT_ID @"lastUsedRobotId"
 

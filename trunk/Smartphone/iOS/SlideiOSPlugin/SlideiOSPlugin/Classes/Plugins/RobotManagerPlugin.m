@@ -460,6 +460,9 @@
     debugLog(@"received parameters : %@",parameters);
     NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
     NSString *scheduleType = [parameters stringForKey:KEY_SCHEDULE_TYPE];
+  
+    [AppHelper saveLastUsedRobotId:robotId];
+    
     RobotManagerCallWrapper *call = [[RobotManagerCallWrapper alloc] init];
     call.delegate = self;
     [call scheduleEventsForRobotWithId:robotId ofScheduleType:scheduleType callbackId:callbackId];
@@ -1120,6 +1123,8 @@
     debugLog(@"received parameters %@",parameters);
     NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
     
+    // Save robotId of robot, selected by the user(JS layer).
+    [AppHelper saveLastUsedRobotId:robotId];
     __weak typeof(self) weakSelf = self;
     NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
     [serverManager cleaningCategoryForRobot:robotId
@@ -1130,18 +1135,18 @@
                                              return;
                                          }
                                          
-                                         NSMutableDictionary *resultData = [[NSMutableDictionary alloc] init];
                                          NSNumber *cleaningCategory = [result objectForKey:NEATO_RESPONSE_CLEANING_CATEGORY];
                                          if (result && cleaningCategory) {
+                                             NSMutableDictionary *resultData = [[NSMutableDictionary alloc] init];
                                              [resultData setObject:cleaningCategory forKey:KEY_CLEANING_CATEGORY];
                                              [resultData setObject:robotId forKey:KEY_ROBOT_ID];
+                                             [weakSelf sendSuccessResultAsDictionary:resultData forCallbackId:callbackId];
                                          } else {
-                                             // If the response does not contain cleaning category, sending CLEANING_CATEGORY_ALL by default.
-                                             [resultData setObject:[NSNumber numberWithInteger:CLEANING_CATEGORY_ALL] forKey:KEY_CLEANING_CATEGORY];
-                                             [resultData setObject:robotId forKey:KEY_ROBOT_ID];
+                                             // If the response does not contain cleaning category, send error to UI.
+                                             NSError *uiError = [AppHelper nserrorWithDescription:@"No Current Cleaning State set by the robot"
+                                                                                             code:UI_ERROR_TYPE_NO_CLEANING_STATE_SET];
+                                             [weakSelf sendError:uiError forCallbackId:command.callbackId];
                                          }
-                                         
-                                         [weakSelf sendSuccessResultAsDictionary:resultData forCallbackId:callbackId];
                                      });
                                  }];
 }

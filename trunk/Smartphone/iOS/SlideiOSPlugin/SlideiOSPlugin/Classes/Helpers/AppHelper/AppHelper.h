@@ -30,4 +30,7 @@
 + (NSString *)notificationServerType;
 + (NSString *)appInfo;
 + (NSString *)crittercismAppId;
++ (void)saveLastUsedRobotId:(NSString *)robotId;
++ (NSString *)lastUsedRobotId;
++ (void)removeLastUsedRobotId;
 @end

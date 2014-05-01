@@ -212,9 +212,6 @@
 
 + (NSString *)applicationId {
   NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
-  // TODO: We need to pass the bundle Id. But since server is not setup to handle
-  // bundle id, we are passing 1
-  bundleIdentifier = @"1";
   debugLog(@"Bundle identifier = [%@]", bundleIdentifier);
   return bundleIdentifier;
 }
@@ -247,6 +244,20 @@
 #else
   return CRITTERCISM_RELEASE_APP_ID;
 #endif
+}
+
++ (void)saveLastUsedRobotId:(NSString *)robotId {
+    if (robotId) {
+        [[NSUserDefaults standardUserDefaults] setObject:robotId forKey:KEY_LAST_USED_ROBOT_ID];
+    }
+}
+
++ (NSString *)lastUsedRobotId {
+    return [[NSUserDefaults standardUserDefaults] objectForKey:KEY_LAST_USED_ROBOT_ID];
+}
+
++ (void)removeLastUsedRobotId {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:KEY_LAST_USED_ROBOT_ID];
 }
 
 @end

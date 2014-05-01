@@ -53,6 +53,7 @@
         case COMMAND_STOP_ROBOT:
         case COMMAND_PAUSE_CLEANING:
         case COMMAND_RESUME_CLEANING:
+        case COMMAND_SEND_TO_BASE:
             return YES;
         default:
             return NO;
@@ -223,7 +224,7 @@
     debugLog(@"");
     // Start a timer if the command is expirable and if a timer is not already in progress
     if ([self isExpirableCommand:[command.commandId integerValue]] && ![[NeatoCommandExpiryHelper expirableCommandHelper] isTimerRunningForRobotId:command.robotId]) {
-        [[NeatoCommandExpiryHelper expirableCommandHelper] startCommandTimerForRobotId:command.robotId];
+ 		[[NeatoCommandExpiryHelper expirableCommandHelper] startCommandTimerForRobotId:command.robotId withCommandId:command.commandId];
     }
     // Save timestamp returned from server in DB.
     ProfileDetail *profileDetail = [[ProfileDetail alloc] init];

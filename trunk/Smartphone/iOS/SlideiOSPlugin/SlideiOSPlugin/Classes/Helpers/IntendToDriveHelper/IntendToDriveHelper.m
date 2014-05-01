@@ -10,6 +10,7 @@
 #import "LogHelper.h"
 #import "NeatoCommandExpiryHelper.h"
 #import "NeatoErrorCodes.h"
+#import "NeatoConstants.h"
 
 // Default time is 2 minutes.
 #define DEFAULT_ROBOT_DRIVE_WIFI_ON_TIME 2 * 60 * 1000
@@ -35,6 +36,7 @@
         serverManager.delegate = self;
         NeatoRobotCommand *robotCommand = [[NeatoRobotCommand alloc] init];
         robotCommand.robotId = robotId;
+        robotCommand.commandId = [NSString stringWithFormat:@"%d", COMMAND_INTEND_TO_DRIVE];
         robotCommand.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
         [robotCommand.profileDict setValue:[self intendToDriveProfileParamsStringWithWifiOnTime:DEFAULT_ROBOT_DRIVE_WIFI_ON_TIME] forKey:KEY_INTEND_TO_DRIVE];
         [serverManager sendCommand:robotCommand];
@@ -97,7 +99,7 @@
     [NeatoRobotHelper updateProfileDetail:profileDetail forRobotWithId:command.robotId];
     // Start a timer if the command is expirable and if a timer is not already in progress.
     if (![[NeatoCommandExpiryHelper expirableCommandHelper] isTimerRunningForRobotId:command.robotId]) {
-        [[NeatoCommandExpiryHelper expirableCommandHelper] startCommandTimerForRobotId:command.robotId];
+		[[NeatoCommandExpiryHelper expirableCommandHelper] startCommandTimerForRobotId:command.robotId withCommandId:command.commandId];
     }
     // Send back success.
     if ([self.delegate respondsToSelector:@selector(intentToDriveRequestSuccededWithResult:)]) {
