@@ -12,12 +12,14 @@
 
 // Helper
 #import "AppHelper.h"
+#import "XMPPRobotDataChangeManager.h"
 
 #define DEVICE_TYPE_IPHONE      2
 
 @interface AppBaseDelegate() <UserManagerProtocol, CrittercismDelegate>
 @property(nonatomic, strong) UserManagerCallWrapper *userManager;
 @property(nonatomic, strong)XMPPConnectionHelper *xmppHelper;
+@property (nonatomic) BOOL shouldFetchRobotStateFromServer;
 @end
 
 @implementation AppBaseDelegate
@@ -31,7 +33,8 @@
     // Create core data stack from main thread
     [NeatoDataStore sharedNeatoDataStore];
     [self enableCrittercism];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectOverXMPPIfRequired) name:UIApplicationWillEnterForegroundNotification object:nil];
+
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleApplicationWillEnterForegroundNotification) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disconnectXMPPConnection) name:UIApplicationDidEnterBackgroundNotification object:nil];
 
   [self connectOverXMPPIfRequired];
@@ -149,6 +152,14 @@
 
 - (void)didConnectOverXMPP {
     debugLog(@"didConnectOverXMPP called");
+    // XMPP connection succeeded. Now its time to get the latest robot state from the
+    // server
+    NSString *lastUsedRobotId = [AppHelper lastUsedRobotId];
+    if (self.shouldFetchRobotStateFromServer && lastUsedRobotId) {
+        // Reset to NO
+        self.shouldFetchRobotStateFromServer = NO;
+        [[XMPPRobotDataChangeManager sharedXmppDataChangeManager] robotStateAtServerForRobotId:lastUsedRobotId];;
+    }
 }
 
 - (void)xmppLoginfailedWithError:(NSError *)error; {
@@ -176,6 +187,15 @@
 
 - (void)crittercismDidCrashOnLastLoad {
   debugLog(@"App did crash on last launch.");
+}
+
+#pragma mark - Notification handler
+
+- (void)handleApplicationWillEnterForegroundNotification {
+  if ([self.userManager isUserLoggedIn]) {
+    self.shouldFetchRobotStateFromServer = YES;
+    [self connectOverXMPPIfRequired];
+  }
 }
 
 @end

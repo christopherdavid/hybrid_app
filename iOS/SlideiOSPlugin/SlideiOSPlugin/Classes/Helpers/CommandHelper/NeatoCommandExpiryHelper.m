@@ -2,11 +2,13 @@
 #import "LogHelper.h"
 #import "NeatoServerManager.h"
 #import "NeatoUserHelper.h"
+#import "XMPPRobotDataChangeManager.h"
 
 static NeatoCommandExpiryHelper *sharedInstance = nil;
 
 @interface NeatoCommandExpiryHelper()
 @property (nonatomic, strong) NSMutableDictionary *runningCommandExpiryTimers;
+@property (nonatomic, strong) NSMutableDictionary *expirableCommandIds;
 @end
 @implementation NeatoCommandExpiryHelper
 
@@ -27,12 +29,22 @@ static NeatoCommandExpiryHelper *sharedInstance = nil;
     return _runningCommandExpiryTimers;
 }
 
-- (void)startCommandTimerForRobotId:(NSString *)robotId {
+- (NSMutableDictionary *)expirableCommandIds {
+    if (!_expirableCommandIds) {
+        _expirableCommandIds = [[NSMutableDictionary alloc] init];
+    }
+    return _expirableCommandIds;
+}
+
+- (void)startCommandTimerForRobotId:(NSString *)robotId withCommandId:(NSString *)commandId {
     debugLog(@"");
     @synchronized (self) {
         if(![self isTimerRunningForRobotId:[robotId lowercaseString]]) {
             NSTimer *commandExpiryTimer = [NSTimer scheduledTimerWithTimeInterval:COMMAND_EXPIRY_TIME target:self selector:@selector(commandTimerExpiredForRobot:) userInfo:[robotId lowercaseString] repeats:NO];
             [self.runningCommandExpiryTimers setValue:commandExpiryTimer forKey:[robotId lowercaseString]];
+            if (commandId) {
+                [self.expirableCommandIds setObject:commandId forKey:[robotId lowercaseString]];
+            }
         }
         else {
             debugLog(@"Command timer already running for robot with id = %@", robotId);
@@ -66,9 +78,11 @@ static NeatoCommandExpiryHelper *sharedInstance = nil;
 }
 
 - (void)commandTimerExpiredForRobot:(NSTimer *)commandTimer {
+    debugLog(@"");
     @synchronized (self) {
         [self.runningCommandExpiryTimers removeObjectForKey:commandTimer.userInfo];
         [self resetStateForRobotWithId:commandTimer.userInfo];
+        [self notifyCommandFailureWithRobotId:commandTimer.userInfo];
     }
 }
 
@@ -97,6 +111,16 @@ static NeatoCommandExpiryHelper *sharedInstance = nil;
 // Notify user?
 - (void)command:(NeatoRobotCommand *)command sentWithResult:(NSDictionary *)result {
     debugLog(@"Command cleared with result:%@", result);
+}
+
+- (void)notifyCommandFailureWithRobotId:(NSString *)robotId {
+    debugLog(@"");
+    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+    NSString *failedCommandId = [self.expirableCommandIds objectForKey:[robotId lowercaseString]];
+    failedCommandId ? [data setObject:failedCommandId forKey:KEY_FAILED_COMMAND_ID] : nil;
+    [[XMPPRobotDataChangeManager sharedXmppDataChangeManager] notifyDataChangeForRobotId:robotId
+                                                                             withKeyCode:[NSNumber numberWithInteger:ROBOT_COMMAND_FAILED]
+                                                                                 andData:data];
 }
 
 @end
