@@ -1,0 +1,52 @@
+Building Vorwerk Application using shell script
+
+Raja Software
+04/30/2014
+
+
+
+Certificate Path in SVN
+-----------------------
+
+Developer
+--------
+Certificate: 			<ROOT>/trunk/Smartphone/iOS/certs/Vorwerk/Beta/DEV/vorwerk_dev.p12
+Provisioning Profile	<ROOT>/trunk/Smartphone/iOS/certs/Vorwerk/Beta/DEV/Vorwerk_Beta_DEV.mobileprovision
+
+Distribution
+------------
+Certificate: 			<ROOT>/trunk/Smartphone/iOS/certs/Vorwerk/Beta/DEV/vorwerk_beta_dist.p12
+Provisioning Profile	<ROOT>/trunk/Smartphone/iOS/certs/Vorwerk/Beta/DEV/Vorwerk_Beta_PROD.mobileprovision
+
+
+Below instructions are to build the Vorwerk developer build but same steps can be used to sign using the distribution certificate as well
+
+Install Certificate
+-------------------
+- Install the certificate on your Mac machine. 
+	- Double click on  "vorwerk_dev.p12", It will ask you for the password, please enter "v0rw3rk!@#"
+- Install provisioning profile
+    - Double click on Vorwerk_Beta_DEV.mobileprovision
+
+Build Instructions
+-------------------
+
+- cd to "build" directory
+- Ensure "build_cleaning_robot.sh" is executable. If not please run the following command
+  $chmod a+x build_cleaning_robot.sh
+- Now run the following command to build the Vorwerk Developer build
+$./build_cleaning_robot.sh -b dev -p vorwerk
+
+
+If everything is setup correctly, it should build and generate the "CleaningRobotApp_Vorwerk_Dev.ipa" file in the parent directory of "build" folder
+
+Whenever you add new devices in provisioning profile, you need to install the new provisioning profile and also update the respective ant build xml
+e.g.; For Vorwerk Dev its "build_vorwerk_dev.xml" and update with the new UUID of the provisioning profile
+
+You can see the "UUID" of the provisioning profile by open the provisioning profile in text editor.
+
+We will update the build script shortly to automatically take the UUID from provisioning profile. (You would need to provide the provisioning profile path)
+
+
+End
+
