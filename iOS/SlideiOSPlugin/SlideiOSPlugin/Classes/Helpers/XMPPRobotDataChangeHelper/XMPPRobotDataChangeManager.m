@@ -111,13 +111,13 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
     if (robotNameChanged) {
         [self notifyRobotNameChangeForProfile:robotProfile];
     }
-    // Check if robot cleaning state has changed.
+    // If any one of virtual_state/currrent_state/current_state_details changes,
+    // We notify UI with current_state and current_state_details data.
     BOOL robotCleaningCommandChanged = [self hasRobotCleaningStateChangedForProfile:robotProfile];
-    // Check if robot current state has changed.
     BOOL robotCurrentStateChanged = [self hasRobotCurrentStateChangedForProfile:robotProfile];
-    //  Notify only when one of the virtual or current state has changed.
-    if (robotCleaningCommandChanged || robotCurrentStateChanged) {
-        [self notifyCleaningStateChangedForProfile:robotProfile];
+    BOOL robotCurrentStateDetailsChanged = [self hasRobotCurrentStateDetailsChangedForProfile:robotProfile];
+    if (robotCleaningCommandChanged || robotCurrentStateDetailsChanged || robotCurrentStateChanged) {
+        [self notifyRobotCurrentStateDetailsChangeForProfile:robotProfile];
     }
     // Check if schedule state has changed.
     BOOL robotScheduleStateChanged = [self hasRobotScheduleStateChangedForProfile:robotProfile];
@@ -194,6 +194,10 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 
 - (BOOL)hasRobotOnlineStatusChangedForProfile:(NSDictionary *)robotProfile {
   return [self updateDataTimestampIfChangedForKey:KEY_ROBOT_ONLINE_STATUS_DATA withProfile:robotProfile];
+}
+
+- (BOOL)hasRobotCurrentStateDetailsChangedForProfile:(NSDictionary *)robotProfile {
+    return [self updateDataTimestampIfChangedForKey:KEY_ROBOT_CURRENT_STATE_DETAILS withProfile:robotProfile];
 }
 
 // This method returns YES in two cases :
@@ -456,6 +460,20 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
     NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
     serverManager.delegate = self;
     [serverManager profileDetails2ForRobotWithId:robotId];
+}
+
+- (void)notifyRobotCurrentStateDetailsChangeForProfile:(NSDictionary *)robotProfile {
+    debugLog(@"");
+    NSString *robotCurrentStateDetailsJsonString = [[robotProfile objectForKey:KEY_ROBOT_CURRENT_STATE_DETAILS] objectForKey:KEY_VALUE];
+    NSInteger robotCurrentState = [XMPPRobotCleaningStateHelper robotCurrentStateFromRobotProfile:robotProfile];
+    
+    NSMutableDictionary *dataDict = [[NSMutableDictionary alloc] init];
+    [dataDict setValue:robotCurrentStateDetailsJsonString forKey:KEY_ROBOT_CURRENT_STATE_DETAILS];
+    [dataDict setValue:[NSString stringWithFormat:@"%d", robotCurrentState] forKey:KEY_ROBOT_CURRENT_STATE];
+    
+    [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE]
+                         withKeyCode:[NSNumber numberWithInt:ROBOT_CURRENT_STATE_CHANGED_CODE]
+                             andData:dataDict];
 }
 
 @end

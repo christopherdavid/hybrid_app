@@ -173,14 +173,6 @@
 #define ROBOT_ONLINE_STATUS_CHANGED_CODE 4015
 #define ROBOT_COMMAND_FAILED  4016
 
-// Robot states
-#define ROBOT_STATE_CLEANING 10002
-#define ROBOT_STATE_STOPPED 10005
-#define ROBOT_STATE_PAUSED 10007
-#define ROBOT_STATE_RESUMED 10008
-#define ROBOT_STATE_ON_BASE	10009
-#define ROBOT_STATE_INVALID	19999
-
 #define KEY_ROBOT_ID @"robotId"
 #define KEY_ROBOT_DATA_ID @"robotDataKeyId"
 #define KEY_ROBOT_DATA @"robotData"
@@ -404,3 +396,13 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 // Generic constants
 #define KEY_LAST_USED_ROBOT_ID @"lastUsedRobotId"
 
+// App UI state constants
+#define ROBOT_STATE_INVALID                 0
+#define ROBOT_STATE_IDLE                    1
+#define ROBOT_STATE_USER_MENU               2
+#define ROBOT_STATE_CLEANING                3
+#define ROBOT_STATE_SUSPENDED_CLEANING      4
+#define ROBOT_STATE_PAUSED                  5
+#define ROBOT_STATE_MANUAL_CLEANING         6
+#define ROBOT_STATE_IDLE_CHARGING           7
+#define ROBOT_STATE_RETURNING               8

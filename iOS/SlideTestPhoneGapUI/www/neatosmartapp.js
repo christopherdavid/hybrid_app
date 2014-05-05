@@ -977,22 +977,22 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 		},
 		
-    getRobotCurrentCleaningDetails : function(){
+    getRobotCurrentStateDetails : function(){
       var robotId = localStorage.getItem('robotId');
       if ((robotId == null) || (robotId.length == 0)) {
         alert("Please associate a Robot");
         return;
       }
-      RobotPluginManager.getRobotCurrentCleaningDetails(robotId, neatoSmartApp.getcleaningDetailsSuccess,
-                                                                       neatoSmartApp.getcleaningDetailsError);
+      RobotPluginManager.getRobotCurrentStateDetails(robotId, neatoSmartApp.getcleaningDetailsSuccess,
+                                                                       neatoSmartApp.getCurrentStateDetailsError);
       },
                      
-      getcleaningDetailsSuccess: function(result) {
+      getCurrentStateDetailsSuccess: function(result) {
         neatoSmartApp.setResponseText(result);
         neatoSmartApp.hideProgressBar();
       },
                      
-      getcleaningDetailsError: function(error) {
+      getCurrentStateDetailsError: function(error) {
         neatoSmartApp.setResponseText(error);
         neatoSmartApp.hideProgressBar();
       },
@@ -2138,7 +2138,7 @@ var neatoSmartApp = (function() {
 			var dataKeyCode =  (result['robotDataKeyId']);
 			var robotId = (result['robotId']);
 			var data = result['robotData'];
-			var message = "";
+			var message = JSON.stringify(data, null, 4);
 			
 			var currentRobotId = localStorage.getItem('robotId');
 			if (dataKeyCode == ROBOT_CURRENT_STATE_CHANGED) {
@@ -2148,7 +2148,13 @@ var neatoSmartApp = (function() {
 					localStorage.setItem('robotCurrentState', currentState);
 					document.querySelector('#currentRobotState').innerHTML ="Actual State: " + neatoSmartApp.getStateFromCode(currentState);
 					var state = localStorage.getItem('robotStateUpdate');
-					neatoSmartApp.updateRobotStateInformation(currentState, state);
+                     if(state == ROBOT_STATE_STOPPED) {
+                     localStorage.setItem('isRobotStarted', "false");
+                     }
+                     if(state == ROBOT_STATE_CLEANING) {
+                     localStorage.setItem('isRobotStarted', "true");
+                     }
+					neatoSmartApp.updateRobotStateInformation(currentState, currentState);
 				}
 				message = "Robot Current State Changed";
 			}
@@ -2222,7 +2228,7 @@ var neatoSmartApp = (function() {
 		toggleStartStop: function() {
 			var currentState = localStorage.getItem('robotCurrentState');
 			document.querySelector('#currentRobotState').innerHTML ="Actual State: " + neatoSmartApp.getStateFromCode(currentState);
-			var state = localStorage.getItem('robotStateUpdate');
+			var state = localStorage.getItem('robotCurrentState');
 			document.querySelector('#robotState').innerHTML ="State: " + neatoSmartApp.getStateFromCode(state);
 		},
 		
@@ -3039,7 +3045,7 @@ var neatoSmartApp = (function() {
 
 			document.querySelector('#btnSetSpotDefinition').addEventListener('click', neatoSmartApp.setSpotDefinition, true);
 			document.querySelector('#btnGetSpotDefinition').addEventListener('click', neatoSmartApp.getSpotDefinition, true);
-      document.querySelector('#btnGetCleaningDetails').addEventListener('click', neatoSmartApp.getRobotCurrentCleaningDetails, true);
+      document.querySelector('#btnGetCleaningDetails').addEventListener('click', neatoSmartApp.getRobotCurrentStateDetails, true);
 
 
 			
@@ -3058,7 +3064,7 @@ var neatoSmartApp = (function() {
 
 			document.querySelector('#btnSetSpotDefinition').removeEventListener('click', neatoSmartApp.setSpotDefinition, true);
 			document.querySelector('#btnGetSpotDefinition').removeEventListener('click', neatoSmartApp.getSpotDefinition, true);
-      document.querySelector('#btnGetCleaningDetails').removeEventListener('click', neatoSmartApp.getRobotCurrentCleaningDetails, true);
+      document.querySelector('#btnGetCleaningDetails').removeEventListener('click', neatoSmartApp.getRobotCurrentStateDetails, true);
 
 
 		},

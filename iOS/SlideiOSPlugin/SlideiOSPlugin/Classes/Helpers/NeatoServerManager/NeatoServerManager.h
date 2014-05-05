@@ -88,7 +88,7 @@
  Robot
  */
 - (void)cleaningCategoryForRobot:(NSString *)serialNumber completion:(RequestCompletionBlockDictionary)completion;
-- (void)currentCleaningStateDetailsForRobot:(NSString *)robotId completion:(RequestCompletionBlockDictionary)completion;
+- (void)profileDetailsForRobot:(NSString *)robotId completion:(RequestCompletionBlockDictionary)completion;
 
 - (void)loginNativeUser:(NSString *)email password:(NSString *)password;
 - (void)loginFacebookUser:(NSString *)externalSocialId;

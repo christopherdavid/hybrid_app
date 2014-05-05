@@ -1260,34 +1260,25 @@
     }];
 }
 
-- (void)currentCleaningStateDetailsForRobot:(NSString *)robotId completion:(RequestCompletionBlockDictionary)completion {
-  debugLog(@"");
-  
-  NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ROBOT_PROFILE_DETAILS_2_URL]];
-  [request setHTTPMethod:@"POST"];
-  [request setHTTPBody:[[NSString stringWithFormat:GET_ROBOT_DETAILS_POST_STRING ,API_KEY, robotId] dataUsingEncoding:NSUTF8StringEncoding]];
-  
-  NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
-  [serverHelper dataForRequest:request
-               completionBlock:^(id response, NSError *error) {
-                 if (error) {
-                   completion ? completion(nil, error) : nil;
-                   return;
-                 }
-                 // Getting profile details from response
-                 NSDictionary *profileDetails = [response objectForKey:NEATO_RESPONSE_PROFILE_DETAILS];
-                 debugLog(@"RobotProfileDetails received from server : %@", profileDetails);
-                 
-                 // Update the timestamp in DB.
-                 XMPPRobotDataChangeManager *xmppDataChangeManager = [XMPPRobotDataChangeManager sharedXmppDataChangeManager];
-                 [xmppDataChangeManager updateDataTimestampIfChangedForKey:KEY_ROBOT_CURRENT_STATE_DETAILS withProfile:profileDetails];
-                 
-                 // Send the data back to UI layer.
-                 NSString *robotCurrentCleaningStateDetails = [[profileDetails valueForKey:KEY_ROBOT_CURRENT_STATE_DETAILS] valueForKey:KEY_VALUE];
-                 NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-                 [data setValue:robotCurrentCleaningStateDetails forKey:NEATO_RESPONSE_CURRENT_STATE_DETAILS];
-                 completion ? completion(data, nil) : nil;
-               }];
+- (void)profileDetailsForRobot:(NSString *)robotId completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ROBOT_PROFILE_DETAILS_2_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:GET_ROBOT_DETAILS_POST_STRING ,API_KEY, robotId] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     if (error) {
+                         completion ? completion(nil, error) : nil;
+                         return;
+                     }
+                     // Getting profile details from response
+                     NSDictionary *profileDetails = [response objectForKey:NEATO_RESPONSE_PROFILE_DETAILS];
+                     debugLog(@"RobotProfileDetails received from server : %@", profileDetails);
+                     completion ? completion(profileDetails, nil) : nil;
+                 }];
 }
 
 #pragma mark - Private
