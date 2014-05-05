@@ -6,6 +6,7 @@ import java.util.Observer;
 import org.apache.cordova.DroidGap;
 
 import android.os.Bundle;
+import android.os.RemoteException;
 
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.NeatoServiceManager;
@@ -15,6 +16,7 @@ import com.neatorobotics.android.slide.framework.gcm.PushNotificationMessageHand
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
+import com.neatorobotics.android.slide.framework.service.INeatoRobotService;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
@@ -76,8 +78,25 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
         ApplicationConfig.getInstance(getApplicationContext()).activityResumed();
         if (UserHelper.isUserLoggedIn(this)) {
             showIfPendingPushNotification();
+            syncWithServer();
+
         }
         mIsActivityResumedFromSleep = true;
+    }
+
+    private void syncWithServer() {
+        try {
+            // Make sure the xmpp is logged in
+            INeatoRobotService neatoService = ApplicationConfig.getInstance(this).getRobotService();
+            if (neatoService != null) {
+                LogHelper.log(TAG, "Making sure that the XMPP is logged in");
+                neatoService.loginToXmppIfRequired();
+            }
+        } catch (RemoteException e) {
+            LogHelper.log(TAG, "Remote exception in onResume", e);
+        }
+        String robotId = NeatoPrefs.getLastConnectedNeatoRobotId(this);
+        LogHelper.logD(TAG, "RobotId of last connected robot: " + robotId);
     }
 
     /**

@@ -13,7 +13,10 @@ public class RobotCommandPacketConstants {
     public static final int COMMAND_DRIVE_ROBOT = 115;
     public static final int COMMAND_TURN_MOTOR_ONOFF = 116;
     public static final int COMMAND_TURN_WIFI_ONOFF = 117;
-
+    
+    public static final int COMMAND_SCHEDULE_UPDATED = 118;
+    public static final int COMMAND_INTEND_TO_DRIVE = 119;
+    
     public static final int COMMAND_ROBOT_PROFILE_DATA_CHANGED = 5001;
     public static final int COMMAND_ROBOT_CONNECTION_PING = 5003;
     public static final int COMMAND_ROBOT_CONNECTION_BREAK = 9999;

@@ -6,6 +6,7 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.schedule.SchedulerConstants;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeValueKeys;
 
 public class RobotProfileConstants {
 
@@ -27,6 +28,10 @@ public class RobotProfileConstants {
             case RobotCommandPacketConstants.COMMAND_RESUME_CLEANING:
             case RobotCommandPacketConstants.COMMAND_SEND_BASE:
                 return ProfileAttributeKeys.ROBOT_CLEANING_COMMAND;
+            case RobotCommandPacketConstants.COMMAND_INTEND_TO_DRIVE:
+                return ProfileAttributeKeys.INTEND_TO_DRIVE;
+            case RobotCommandPacketConstants.COMMAND_SCHEDULE_UPDATED:
+                return ProfileAttributeKeys.ROBOT_SCHEDULE_UPDATED;
             case RobotCommandPacketConstants.COMMAND_TURN_WIFI_ONOFF:
                 return ProfileAttributeKeys.ROBOT_TURN_WIFI_ONOFF;
             default:

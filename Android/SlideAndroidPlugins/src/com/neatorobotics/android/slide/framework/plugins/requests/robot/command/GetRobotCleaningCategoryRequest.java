@@ -11,6 +11,7 @@ import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
+import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileDataUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
@@ -28,7 +29,7 @@ public class GetRobotCleaningCategoryRequest extends RobotManagerRequest {
         LogHelper.logD(TAG, "getRobotCleaningCategory action initiated in Robot plugin");
         final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
         LogHelper.logD(TAG, "Params\nRobotId=" + robotId);
-
+        NeatoPrefs.saveLastConnectedNeatoRobotId(mContext, robotId);
         RobotManager.getInstance(context).getRobotCleaningStateDetails(context, robotId,
                 new RobotRequestListenerWrapper(callbackId) {
                     @Override

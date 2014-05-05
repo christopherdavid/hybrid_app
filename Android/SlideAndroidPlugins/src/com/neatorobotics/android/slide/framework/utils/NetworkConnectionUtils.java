@@ -37,7 +37,7 @@ public class NetworkConnectionUtils {
             return false;
         }
 
-        return (networkInfo.isAvailable()) && (networkInfo.isConnected());
+        return (networkInfo.isAvailable()) && (networkInfo.isConnectedOrConnecting());
     }
 
 }

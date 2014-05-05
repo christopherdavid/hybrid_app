@@ -32,6 +32,7 @@ import com.neatorobotics.android.slide.framework.tcp.RobotPeerConnection;
 import com.neatorobotics.android.slide.framework.tcp.RobotPeerDataListener;
 import com.neatorobotics.android.slide.framework.timedmode.RobotCommandTimerHelper;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
+import com.neatorobotics.android.slide.framework.utils.NetworkConnectionUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
 import com.neatorobotics.android.slide.framework.xmpp.XMPPConnectionHelper;
@@ -73,8 +74,9 @@ public class NeatoSmartAppService extends Service {
             robotId = NeatoPrefs.getManagedRobotSerialId(getApplicationContext());
         }
 
-        if (XMPPUtils.isRobotChatId(getApplicationContext(), from, robotId)) {
-            LogHelper.logD(TAG, "packet is received from robot chat id. Stop the command expiry timer if running.");
+        if (causeAgentId.equalsIgnoreCase(robotId)) {
+            LogHelper.logD(TAG,
+                    "packet is received from robot cause agent id. Stop the command expiry timer if running.");
             RobotCommandTimerHelper.getInstance(getApplicationContext()).stopCommandTimerIfRunning(robotId);
         } else {
             LogHelper.logD(TAG, "packet is not received from robot chat id.");
@@ -200,6 +202,21 @@ public class NeatoSmartAppService extends Service {
             return false;
         }
 
+        @Override
+        public void loginToXmppIfRequired() throws RemoteException {
+            LogHelper.log(TAG, "loginToXmppIfRequired called");
+            if (mXMPPConnectionHelper != null) {
+                Runnable task = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        loginToXmppServerIfNotConnected();
+                    }
+                };
+                TaskUtils.scheduleTask(task, 0);
+            }
+        }
+
     };
 
     private BroadcastReceiver mWifiStateChange = new BroadcastReceiver() {
@@ -207,10 +224,9 @@ public class NeatoSmartAppService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
-                NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-                if (networkInfo.isConnected()) {
-                    // Wifi is connected
+            if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                if (NetworkConnectionUtils.hasNetworkConnection(getApplicationContext())) {
+                    // network is connected
                     LogHelper.logD(TAG, "Connected to a network");
                     Runnable task = new Runnable() {
 
@@ -220,14 +236,9 @@ public class NeatoSmartAppService extends Service {
                         }
                     };
                     TaskUtils.scheduleTask(task, 0);
-                }
-            } else if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-                NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-                if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI && !networkInfo.isConnected()) {
+                } else {
                     // Wifi is disconnected
                     LogHelper.logD(TAG, "Disconnecting from the network");
-                    // There is no API to logout. XMPP will automatically break
-                    // the connection
                 }
             }
         }
@@ -260,7 +271,7 @@ public class NeatoSmartAppService extends Service {
                 NeatoWebConstants.getXmppWebServer());
         mXMPPConnectionHelper.setXmppNotificationListener(mXmppNotificationListener, mHandler);
 
-        if (isConnectedToWifiNetwork()) {
+        if (NetworkConnectionUtils.hasNetworkConnection(getApplicationContext())) {
             Runnable task = new Runnable() {
 
                 @Override
@@ -303,18 +314,6 @@ public class NeatoSmartAppService extends Service {
         super.onDestroy();
     }
 
-    // Check to see if the network connection to wifi is available
-    public boolean isConnectedToWifiNetwork() {
-
-        ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        if (mWifi.isConnected()) {
-            return true;
-        }
-        return false;
-    }
-
     private Object mXmppConnectionLock = new Object();
 
     private void loginToXmppServer() {
@@ -330,6 +329,21 @@ public class NeatoSmartAppService extends Service {
                     String userId = getUserChatId();
                     String password = getUserChatPassword();
                     LogHelper.log(TAG, "userId = " + userId);
+                    mXMPPConnectionHelper.login(userId, password);
+                }
+            }
+        } catch (XMPPException e) {
+            LogHelper.log(TAG, "Exception in connecting to XMPP server", e);
+        }
+    }
+
+    private void loginToXmppServerIfNotConnected() {
+        try {
+            synchronized (mXmppConnectionLock) {
+                String userId = getUserChatId();
+                String password = getUserChatPassword();
+                if (!mXMPPConnectionHelper.isConnected()) {
+                    LogHelper.log(TAG, "XMPP is not connected, trying now");
                     mXMPPConnectionHelper.login(userId, password);
                 }
             }

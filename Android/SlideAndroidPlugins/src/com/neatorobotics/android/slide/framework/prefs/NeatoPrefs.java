@@ -1,5 +1,7 @@
 package com.neatorobotics.android.slide.framework.prefs;
 
+import com.neatorobotics.android.slide.framework.logger.LogHelper;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -11,6 +13,7 @@ public class NeatoPrefs {
     private static final String KEY_NEATO_USER_AUTH_TOKEN = "neato_user_auth_token";
     private static final String MANAGED_ROBOT_SERIAL_ID = "managed_robot_serial_id";
     private static final String NEATO_USER_DEVICE_ID = "cause_agent_id";
+    private static final String LAST_CONNECTED_NEATO_ROBOT_ID = "last_connected_robot_id";
 
     public static boolean savePreferenceBooleanValue(Context context, String preferenceName, boolean preferenceValue) {
         SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
@@ -104,5 +107,16 @@ public class NeatoPrefs {
     public static void clearNeatoUserDeviceId(Context context) {
         savePreference(context, NEATO_USER_DEVICE_ID, "");
     }
+    
+    public static void saveLastConnectedNeatoRobotId(Context context, String robotId) {
+        savePreference(context, LAST_CONNECTED_NEATO_ROBOT_ID, robotId);
+    }
 
+    public static String getLastConnectedNeatoRobotId(Context context) {
+        return getPreferenceStrValue(context, LAST_CONNECTED_NEATO_ROBOT_ID);
+    }
+    
+    public static void clearLastConnectedNeatoRobotId(Context context) {
+        savePreference(context, LAST_CONNECTED_NEATO_ROBOT_ID, "");
+    }
 }

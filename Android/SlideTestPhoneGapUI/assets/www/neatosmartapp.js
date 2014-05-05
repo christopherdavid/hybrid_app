@@ -2136,7 +2136,8 @@ var neatoSmartApp = (function() {
 			var dataKeyCode =  (result['robotDataKeyId']);
 			var robotId = (result['robotId']);
 			var data = result['robotData'];
-			var message = "";
+			
+			var message = JSON.stringify(data, null, 4);;
 			
 			var currentRobotId = localStorage.getItem('robotId');
 			if (dataKeyCode == ROBOT_CURRENT_STATE_CHANGED) {

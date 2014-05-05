@@ -15,6 +15,7 @@ import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
 import com.neatorobotics.android.slide.framework.pluginhelper.ScheduleJsonDataHelper;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
+import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.schedule.ScheduleEvent;
 import com.neatorobotics.android.slide.framework.robot.schedule.SchedulerConstants;
 import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
@@ -123,6 +124,7 @@ public class RobotScheduleRequest extends RobotManagerRequest {
             LogHelper.log(TAG, "getScheduleEvents");
             final int scheduleType = jsonData.getInt(JsonMapKeys.KEY_SCHEDULE_TYPE);
             final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+            NeatoPrefs.saveLastConnectedNeatoRobotId(context, robotId);
             RobotSchedulerManager.getInstance(context).getScheduleByType(robotId, scheduleType,
                     new ScheduleRequestListenerWrapper(callbackId));
         }

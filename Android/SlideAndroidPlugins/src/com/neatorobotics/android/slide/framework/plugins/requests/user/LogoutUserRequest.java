@@ -29,6 +29,7 @@ public class LogoutUserRequest extends UserManagerRequest {
 
             @Override
             public void run() {
+                NeatoPrefs.clearLastConnectedNeatoRobotId(mContext);
                 String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
                 if (TextUtils.isEmpty(authToken)) {
                     PluginResult logoutPluginResult = new PluginResult(PluginResult.Status.ERROR);
