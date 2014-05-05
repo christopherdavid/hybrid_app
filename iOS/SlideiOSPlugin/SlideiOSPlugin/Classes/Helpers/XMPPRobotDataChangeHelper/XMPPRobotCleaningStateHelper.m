@@ -64,7 +64,7 @@
     NSInteger actualState = ROBOT_STATE_INVALID;
     NSInteger virtualState = [self robotVirtualStateFromRobotProfile:robotProfile];
     NSInteger currentState = [self robotCurrentStateFromRobotProfile:robotProfile];
-    if (virtualState != ROBOT_STATE_INVALID) {
+    if ((virtualState != ROBOT_STATE_INVALID) && [XMPPRobotCleaningStateHelper shouldPreferVirtualStateOverCurrentStateForProfile:robotProfile]) {
         actualState = virtualState;
     }
     else if (currentState != ROBOT_STATE_INVALID) {
@@ -72,6 +72,20 @@
     }
     debugLog(@"Actual state of robot is %d", actualState);
     return actualState;
+}
+
++ (BOOL)shouldPreferVirtualStateOverCurrentStateForProfile:(NSDictionary *)robotProfile {
+    debugLog(@"");
+    // To avoid inconsistency in setting robot state,
+    // notify state change only when virtual state's(cleaning command) timestamp is greater than current state timestamp.
+    NSDictionary *cleaningCommandDict = [robotProfile objectForKey:KEY_ROBOT_CLEANING_COMMAND];
+    NSDictionary *robotCurrentStateDict = [robotProfile objectForKey:KEY_ROBOT_CURRENT_STATE];
+    if (cleaningCommandDict && robotCurrentStateDict) {
+        NSNumber *cleaningCommandTimeStamp = [cleaningCommandDict objectForKey:KEY_TIMESTAMP];
+        NSNumber *robotCurrentStateTimeStamp = [robotCurrentStateDict objectForKey:KEY_TIMESTAMP];
+        return (cleaningCommandTimeStamp.longLongValue > robotCurrentStateTimeStamp.longLongValue);
+    }
+    return NO;
 }
 
 @end

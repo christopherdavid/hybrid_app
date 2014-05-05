@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="ipa" name="Vorwerk">
+<property environment="env"/>
 <property name="BUNDLE_ID" value="com.vorwerk-robot.vr200beta"/>
 <property name="BUILD_NUM" value="0.6.66"/>
 <target name="archive" depends="clean">
@@ -14,7 +15,7 @@
 	<arg value="BUNDLE_ID=${BUNDLE_ID}"/>
 	<arg value="BUILD_NO=${BUILD_NUM}"/>
 	<arg value="GCC_PREPROCESSOR_DEFINITIONS=SERVER_TYPE_VORWERK_BETA ENABLE_DEBUGGING PROFILE_DISTRIBUTION" />
-        <arg value="PROVISIONING_PROFILE=1C3C74CD-D0AE-4D6C-97D5-A8F2243AACD5"/>
+        <arg value="PROVISIONING_PROFILE=070663B2-92F8-4E32-8979-A23B63F12D18"/>
     </exec>
 </target>
 <target name="ipa" depends="archive">
@@ -27,7 +28,7 @@
         <arg value="-exportPath"/>
         <arg value="CleaningRobotApp_Vorwerk_Beta.ipa"/>
         <arg value="-exportProvisioningProfile"/>
-        <arg value="Vorwerk_Beta_PROD"/>
+        <arg value="vorwerk_enterprise_dist"/>
     </exec>
 </target>
 
