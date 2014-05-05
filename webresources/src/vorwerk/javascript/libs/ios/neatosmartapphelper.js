@@ -61,22 +61,17 @@ var ROBOT_MESSAGE_ERROR = 4014;
 
 var ROBOT_ONLINE_STATUS_CHANGED = 4015;
 
+var ROBOT_COMMAND_FAILED = 4016;
 
 // Robot state codes
-var ROBOT_STATE_UNKNOWN 	= 10001;
-var ROBOT_STATE_CLEANING 	= 10002;
-var ROBOT_STATE_IDLE 		= 10003;
-var ROBOT_STATE_CHARGING 	= 10004;
-var ROBOT_STATE_STOPPED 	= 10005;
-var ROBOT_STATE_STUCK 		= 10006;
-var ROBOT_STATE_PAUSED 		= 10007;
-var ROBOT_STATE_RESUMED		= 10008;
-var ROBOT_STATE_ON_BASE		= 10009;
-// Manual Cleaning State Codes
-var ROBOT_STATE_MANUAL_CLEANING		= 10010;
-var ROBOT_STATE_MANUAL_PLAY_MODE	= 10011;
-// user is in the menu state.
-var ROBOT_USER_MENU_STATE = 10012;
+var ROBOT_STATE_UNKNOWN 			= 0;
+var ROBOT_STATE_IDLE 				= 1;
+var ROBOT_USER_MENU_STATE 			= 2;
+var ROBOT_STATE_CLEANING 			= 3;
+var ROBOT_STATE_SUSPENDED_CLEANING 	= 4;
+var ROBOT_STATE_PAUSED 				= 5;
+var ROBOT_STATE_MANUAL_CLEANING		= 6;
+var ROBOT_STATE_RETURNING 			= 7;
 
 
 var PLUGIN_JSON_KEYS  =  (function() {
@@ -176,7 +171,8 @@ var ACTION_TYPE_GET_ROBOT_CLEANING_STATE					= "getRobotCleaningState";
 // Debug method
 var ACTION_TYPE_DEBUG_GET_CONFIG_DETAILS 		= "debugGetConfigDetails";
 var ACTION_TYPE_GET_ROBOT_CLEANING_CATEGORY	= "getRobotCleaningCategory";
-var ACTION_TYPE_GET_ROBOT_CURRENT_CLEANING_DETAILS	= "getRobotCurrentCleaningDetails";
+var ACTION_TYPE_GET_ROBOT_CURRENT_STATE	= "getRobotCurrentState";
+var ACTION_TYPE_GET_ROBOT_CURRENT_STATE_DETAILS	= "getRobotCurrentStateDetails";
 
 //List of keys to send data:
 
@@ -341,7 +337,7 @@ var ERROR_INVALID_SCHEDULE_TYPE = -133;
  * Invalid linking code.
  * - This will occur if the user enters an invalid linking code.
  */
- var ERROR_INVALID_LINKING_CODE = -154;
+var ERROR_INVALID_LINKING_CODE = -154;
 
 /**
  * No schedule exists for given robot.
@@ -358,7 +354,6 @@ var ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS = -182;
  * Robot already has some other user associated with it.
  */
 var ERROR_ROBOT_HAS_ASSOCIATED_USER = -192;
-
 
 /**
  * Unknown error has occured. Please try again.
@@ -411,7 +406,7 @@ var ROBOT_NO_INTEND_TO_DRIVE_REQUEST_FOUND = -514;
 var DIFFERENT_ROBOT_CONNECTION_EXISTS = -515;
 
 /**
- * This error code is returned when 
+ * This error code is returned when
  * - robot has set the current cleaning state as empty
  */
 var ERROR_NO_CLEANING_STATE_SET = -518;
@@ -1024,7 +1019,7 @@ UserMgr.prototype.getNotificationSettings = function(email, callbackSuccess, cal
  * robot is stuck
  * <p>
  * The API calls Neato Smart App Service
- * 
+ * @deprecated
  * @param robotId			the serial number of the robot
  * @param callbackSuccess 	success callback for this API
  * @param callbackError 	error callback for this API
@@ -1041,6 +1036,7 @@ RobotMgr.prototype.registerNotifications = function(robotId, callbackSuccess, ca
  * unregisters for all notifications for the robot i.e. robot needs cleaning,
  * cleaning is done, and robot is stuck
  * <p>
+ * @deprecated
  * This API calls Neato Smart App Service.
  * 
  * @param robotId			the serial number of the robot
@@ -1734,10 +1730,10 @@ RobotMgr.prototype.getSpotDefinition = function(robotId, callbackSuccess, callba
 			ACTION_TYPE_GET_SPOT_DEFINITION, [commandParams]);
 };
 
-RobotMgr.prototype.getRobotCurrentCleaningDetails = function(robotId, callbackSuccess, callbackError) {
+RobotMgr.prototype.getRobotCurrentStateDetails = function(robotId, callbackSuccess, callbackError) {
 	var commandParams = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
-               ACTION_TYPE_GET_ROBOT_CURRENT_CLEANING_DETAILS, [commandParams]);
+               ACTION_TYPE_GET_ROBOT_CURRENT_STATE_DETAILS, [commandParams]);
 };
 
 /**
@@ -2039,6 +2035,7 @@ RobotMgr.prototype.unregisterForRobotMessages = function(callbackSuccess, callba
 
 
 /**
+* @deprecated use getRobotCurrentState instead.
  * This API gets the current state of the robot
  *  on success this API returns a JSON Object
  * <br>{robotCurrentState:"robotCurrentState", robotNewVirtualState: <robotNewVirtualState>, robotId:"robotId"}
@@ -2059,6 +2056,27 @@ RobotMgr.prototype.getRobotCleaningState = function(robotId, callbackSuccess, ca
 };
 
 /**
+ * This API gets the current state of the robot
+ *  on success this API returns a JSON Object
+ * <br>{robotCurrentState:"robotCurrentState", robotNewVirtualState: <robotNewVirtualState>, robotId:"robotId"}
+ * <br>robotCurrentState is an integer value of the current actual state of the robot
+ * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI.
+ * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
+ * <br>robotId is the serial number of the robot
+ * <p>
+ * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+ * @param robotId 			the serial number of the robot
+ * @param callbackSuccess 	success callback for this API
+ * @param callbackError 	error callback for this API
+ */
+RobotMgr.prototype.getRobotCurrentState = function(robotId, callbackSuccess, callbackError) {
+	var params = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+                 ACTION_TYPE_GET_ROBOT_CURRENT_STATE, [params]);
+};
+
+/**
+* @deprecated use getRobotCurrentStateDetails instead.
  * This API gets the current state of the robot
  *  on success this API returns a JSON Object
  * <br>{cleaningCatageory: <1-Maual,2-All,3-Spot>,robotId:"robotId"}
@@ -2837,8 +2855,8 @@ var RobotPluginManager = (function() {
 			window.plugins.neatoPluginLayer.robotMgr.getSpotDefinition(robotId, callbackSuccess, callbackError);
 		},
 
-    getRobotCurrentCleaningDetails: function(robotId, callbackSuccess, callbackError) {
-      window.plugins.neatoPluginLayer.robotMgr.getRobotCurrentCleaningDetails(robotId, callbackSuccess, callbackError);
+    getRobotCurrentStateDetails: function(robotId, callbackSuccess, callbackError) {
+      window.plugins.neatoPluginLayer.robotMgr.getRobotCurrentStateDetails(robotId, callbackSuccess, callbackError);
     },
 
 		/**
@@ -3496,6 +3514,8 @@ var RobotPluginManager = (function() {
 		},
 		
 		/**
+         * @deprecated use getRobotCurrentState instead.
+		 *
 		 * This API gets the current state of the robot
 		 *  on success this API returns a JSON Object
 		 * <br>{robotCurrentState:"robotCurrentState", robotNewVirtualState: <robotNewVirtualState>, robotId:"robotId"}
@@ -3514,7 +3534,25 @@ var RobotPluginManager = (function() {
 			window.plugins.neatoPluginLayer.robotMgr.getRobotCleaningState(robotId, callbackSuccess, callbackError);
 		},
 		
+        /**
+        * This API gets the current state of the robot
+        *  on success this API returns a JSON Object
+        * <br>{robotCurrentState:"robotCurrentState", robotId:"robotId"}
+        * <br>robotCurrentState is an integer value of the current actual state of the robot
+        * <br>robotId is the serial number of the robot
+        * <p>
+        * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+        * @param robotId 			the serial number of the robot
+        * @param callbackSuccess 	success callback for this API
+        * @param callbackError 	error callback for this API
+        */
+                          
+        getRobotCurrentState: function(robotId, callbackSuccess, callbackError) {
+        window.plugins.neatoPluginLayer.robotMgr.getRobotCurrentState(robotId, callbackSuccess, callbackError);
+        },
+                          
 		/**
+         * @deprecated use getRobotCurrentStateDetails instead.
 		 * This API gets the current state of the robot
 		 *  on success this API returns a JSON Object
 		 * <br>{cleaningCategory: <1-Maual,2-All,3-Spot>,robotId:"robotId"}
@@ -3638,7 +3676,7 @@ var PluginManagerHelper =  (function() {
 		 *  - startTime
 		 *  - cleaningMode
 		 *  Returns: Basic Schedule JSON object
-		 *  {'day':day, 'startTime': startTime, ï¿½cleaningModeï¿½:cleaningMode}
+		 *  {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
 		 */
 		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {

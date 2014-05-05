@@ -221,7 +221,7 @@ function WorkflowCommunication(parent) {
     // this requests the robot state for each roboter 
     this.getRobotState = function(robotId) {
         // request cleaning state
-        var tDeffer = that.exec(RobotPluginManager.getRobotCleaningState, [robotId], { type: notificationType.NONE }, true);
+        var tDeffer = that.exec(RobotPluginManager.getRobotCurrentState, [robotId], { type: notificationType.NONE }, true);
         tDeffer.done(that.successGetRobotState);
     };
     
@@ -263,7 +263,7 @@ function WorkflowCommunication(parent) {
     
     this.updateRobotOnlineState = function(robot, online) {
         var curRobot = that.getDataValue("selectedRobot");
-        var state =  $.i18n.t("common.offline");
+        var state =  $.i18n.t("robotStateCodes." + visualState[ROBOT_UI_STATE_ROBOT_OFFLINE]);
         var stateChanged = robot.robotOnline() != online; // 0:offline  1:online
         
         console.log("updateRobotOnlineState: "  + online + " for robot: " + robot.robotId() + " stateChanged " + stateChanged);
@@ -295,9 +295,9 @@ function WorkflowCommunication(parent) {
         // make sure virtualState is an integer
         virtualState = parseInt(virtualState, 10);
         // update state, make sure it's an valid state code and robot is online
-        if(virtualState >= 10001 && virtualState <= 10012 && robot.robotNewVirtualState && robot.robotOnline()) {
+        if(virtualState >= 1 && virtualState <= 8 && robot.robotNewVirtualState && robot.robotOnline()) {
             var curRobot = that.getDataValue("selectedRobot");
-            var state = $.i18n.t("robotStateCodes." + virtualState);
+            var state = $.i18n.t("robotStateCodes." + visualState[virtualState]);
             var stateChanged = robot.robotNewVirtualState() != virtualState;
             console.log("updateRobotStateWithCode: "  + virtualState + " text: " + state + " for robot: " + robot.robotId());
             // update robot object
@@ -307,7 +307,7 @@ function WorkflowCommunication(parent) {
                 // make sure currentState is an integer
                 currentState = parseInt(currentState, 10);
                 // make sure it's an valid state code
-                if(currentState >= 10001 && currentState <= 10012) {
+                if(currentState >= 1 && currentState <= 8) {
                     robot.robotCurrentState(currentState);
                 }
             }
@@ -327,5 +327,21 @@ function WorkflowCommunication(parent) {
             
         }
     };
+    
+    this.parseStateParameters = function(robot, parameters) {
+        console.log("parseStateParameters for robot " + robot.robotId() + " parameters: " + JSON.stringify(parameters));
+        if(typeof parameters.RobotIsDocked != "undefined") {
+            robot.robotIsDocked(parseInt(parameters.RobotIsDocked, 10));
+        }
+        if(typeof parameters.ClockIsSet != "undefined") {
+            robot.clockIsSet(parseInt(parameters.ClockIsSet, 10));
+        }
+        if(typeof parameters.DockHasBeenSeen != "undefined") {
+            robot.dockHasBeenSeen(parseInt(parameters.DockHasBeenSeen, 10));
+        }
+        if(typeof parameters.IsCharging != "undefined") {
+            robot.isCharging(parseInt(parameters.IsCharging, 10));
+        }
+     };
 }
 

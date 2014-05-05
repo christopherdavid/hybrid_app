@@ -6,17 +6,17 @@
     "common": {
         "change": "Změnit",
         "no": "Ne",
-        "next": "Další",
         "menu": {
             "schedule": "Plánovací kalendář",
             "cleaning": "Úklid",
             "settings": "Nastavení"
         },
+        "next": "Další",
         "edit": "Upravit",
         "cancel": "Zrušit",
         "cleaningMode": {
-            "2": "Všechny místnosti",
-            "1": "EKO"
+            "normal": "Všechny místnosti",
+            "eco": "EKO"
         },
         "countries": {
             "JP": "Japonsko",
@@ -31,7 +31,6 @@
             "IT": "Itálie",
             "CN": "Čína"
         },
-        "offline": "offline",
         "yes": "Ano",
         "logout": "Odhlásit",
         "off": "Vypnout",
@@ -86,9 +85,17 @@
             "message": "Musíme být připojení ke stejné síti Wi-Fi.",
             "title": "Chyba spojení"
         },
+        "no_clock": {
+            "message": "Before using app scheduling please set the clock on the robot display",
+            "title": "It's time\u2026"
+        },
         "no_wifi": {
             "message": "Pro použití této funkce potřebuji Wi-Fi připojení. Zapněte prosím v nastavení Wi-Fi.",
             "title": "Chyba spojení"
+        },
+        "waiting_timeout": {
+            "message": "Robot didn't received the command.",
+            "title": "Timeout"
         },
         "103": {
             "message": "<span class='font_bold'>__robotName__<\/span>: Hotovo, vracím se zpět do dobíjecí základny.",
@@ -117,17 +124,18 @@
         "navi": {"title": "Funkce plánování"}
     },
     "robotStateCodes": {
-        "10001": "Neznámý stav",
-        "10002": "Úklid začal",
-        "10010": "Manuální úklid",
-        "10005": "Úklid skončil",
-        "10006": "Uvízlý",
-        "10012": "In Use",
-        "10003": "V klidu",
-        "10004": "Nabíjení",
-        "10009": "V dobíjecí základně",
-        "10007": "Úklid přerušen",
-        "10008": "Pokračování úklidu"
+        "manual": "Manuální úklid",
+        "suspend": "Suspended Cleaning",
+        "inbase": "V dobíjecí základně",
+        "robot_offline": "offline",
+        "returning": "Returning",
+        "idle": "V klidu",
+        "cleaning": "Úklid začal",
+        "menu": "In Use",
+        "charging": "Nabíjení",
+        "paused": "Úklid přerušen",
+        "unknown": "Neznámý stav",
+        "stucked": "Uvízlý"
     },
     "dialogs": {
         "EVENT_DELETE": {
@@ -503,15 +511,16 @@
     },
     "communication": {
         "wakeup_unknown_robot": "Robot bude připraven za několik vteřin",
+        "send_to_start": "Sending __robotName__ back to startposition...",
         "getready_robot": "Robot bude hned připraven.",
         "robot_added": "Přidávám robota __robotName__\u2026",
         "20229": "Thank you for emptying my Dirt Bin and cleaning my Filter.",
         "20208": "Please wait while I check my surrounding.",
         "intend_drive": "Čekej prosím\u2026",
         "20209": "Thank you!",
+        "20206": "My battery is low. I need to charge my battery before I can clean.",
         "delete_robot_done": "Robot __robotName__ byl odstraněn.",
         "fetch_robots": "Otevírám nabídku robotů\u2026",
-        "20206": "My battery is low. I need to charge my battery before I can clean.",
         "20207": "I had to reset. Please press OKAY to restart.",
         "20204": "I'm returning to my starting location to charge.",
         "20205": "Please empty my Dirt Bin and Filter if needed.",
@@ -520,7 +529,6 @@
         "20221": "Schedule setting was removed.",
         "stop_robot": "Zastavuji __robotName__",
         "20203": "Finished! I'm returning to my starting location.",
-        "inuse": "__robotName__ is currentyl in use",
         "20200": "Chyba: Upozornění",
         "20201": "Hotovo! Vracím se na základnu.",
         "update_scheduler": "Plánovací kalendář byl synchronizován.",
@@ -530,6 +538,7 @@
         "wait_robot": "Robot bude připraven za __wakeUp__ vteřin",
         "robot_offline": "__robotName__  is currently offline",
         "wakeup_robot": "Robot bude připraven za __wakeUp__ vteřin",
+        "menu": "__robotName__ is currentyl in use",
         "20215": "USB Flash Drive was Removed.",
         "20216": "Software Update FAILED.",
         "20217": "Logfile was created successfully!",
@@ -634,40 +643,31 @@
         "navi": {"title": "Vytvořit uživatelský účet"}
     },
     "visualState": {
-        "connecting": "Připojuji se k serveru\u2026",
-        "cleaning_tap_manual": "Uklízím",
-        "stucked": "Pomoc! Uvízl jsem.",
-        "stopped_waited_spot": "Jesem připraven zahájit úklid SPOT",
-        "getready": "Pracuji\u2026",
-        "wakeup": "Pracuji\u2026",
-        "cleaning_spot": "Uklízím v režimu SPOT",
-        "inuse": "I'm in use by someone else",
-        "stopped_all": "Zastavil jsem úklid.",
-        "stopped_waited_manual": "Jesem připraven zahájit úklid v režimu Manuál",
-        "resumed": "Pokračuji v úklidu.",
-        "stopped_manual": "Zastavil jsem úklid v režimu Manuál",
-        "paused_spot": "Přerušil jsem úklid SPOT",
-        "stopped_spot": "Zastavil jsem úklid SPOT",
+        "suspend": "I'm suspended cleaning till im fully recharged.",
+        "returning": "I'm returning",
         "robot_offline": "I'm Offline",
         "inbase": "Odpočívám v dobíjecí základně.",
+        "idle_spot": "Jesem připraven zahájit úklid SPOT",
+        "connecting": "Připojuji se k serveru\u2026",
         "cleaning": "Uklízím",
         "error": "Mám problém.",
-        "wakeup_unknown": "Za pár vteřin budu připraven\u2026",
-        "waiting": "Budu připraven asi za __wakeUp__ vteřin",
-        "done": "Ukončil jsem úklid.",
+        "drive_to_base": "I'm returning to my base",
+        "waiting": "Receiving command",
+        "drive_to_start": "I'm returning to my startposition",
+        "menu": "I'm in use by someone else",
         "paused_manual": "Přerušil jsem úklid v režimu Manuál",
-        "play": "Zahájil jsem úklid.",
-        "paused": "Přerušil jsem úklid.",
         "charging": "Nabíjím se.",
+        "paused": "Přerušil jsem úklid.",
         "unknown": "Připojuji se k serveru.",
-        "awake": "Jsem připraven.",
+        "stucked": "Pomoc! Uvízl jsem.",
         "paused_all": "Přerušil jsem úklid.",
-        "waiting_unknown": "Za pár vteřin budu připraven.",
+        "idle_all": "Jsem připraven začít.",
         "manual": "Řiď mne pomocí dálkového ovládání",
         "cleaning_manual": "Ovládej mě pomocí dálkového ovládání",
         "idle": "Jsem připraven začít.",
-        "stopped_waited_all": "Jsem připraven",
-        "stopped": "Zastavil jsem úklid.",
+        "idle_manual": "Jesem připraven zahájit úklid v režimu Manuál",
+        "cleaning_spot": "Uklízím v režimu SPOT",
+        "paused_spot": "Přerušil jsem úklid SPOT",
         "cleaning_all": "Uklízím"
     },
     "confirm": {"close_app": "Chcet applikaci skutečně ukončit?"},

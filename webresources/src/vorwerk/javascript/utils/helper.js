@@ -186,8 +186,9 @@ var robotUiStateHandler = {
     subscription: null,
     subscriptionOnline:null,
     current:null,
-    statusTimer:null,
-    statusTimout:10000,
+    waitTimer:null,
+    waitTimeout:60000,
+    waitDeffer:null,
     
     subscribeToRobot:function(refRobot) {
         this.current().robot(refRobot().robotNewVirtualState());
@@ -203,62 +204,45 @@ var robotUiStateHandler = {
     },
     
     setVirtualState:function(state) {
-        // console.log("setVirtualState " + state); 
-        // check if timer for this state is already running
-        if(this.statusTimer == null || this.current().robot() != state) { 
-            // cancel old timer
-            window.clearTimeout(this.statusTimer);
-            
-            // console.log("robotUiStateHandler robotNewVirtualState.subscribe " + newValue + " visualState " + visualState[newValue]);
-            var newUiState = state;
-            if(state == ROBOT_STATE_PAUSED || state == ROBOT_STATE_STOPPED || state == ROBOT_STATE_CLEANING) {
-                var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
-                // create new state number
-                var newState = 20000;
-                
-                // add 1-3 depending on the category
-                newState += parseInt(curRobot().cleaningCategory(),10);
-                
-                // add the state block (stop 20, pause 30) 
-                switch (state) {
-                    case ROBOT_STATE_STOPPED:
-                        // for stopoed we need to change the current message and add a timer for another message
-                        // ROBOT_UI_STATE_PAUSED_MANUAL starts at 20021
-                        newUiState = newState + 20;
-                        // ROBOT_UI_STATE_PAUSED_WAITED_MANUAL starts at 20031
-                        newState += 30;
-                        // start timer
-                        this.statusTimer = window.setTimeout(function() {robotUiStateHandler.setUiState(newState);}, this.statusTimout);
-                        break;
-                    case ROBOT_STATE_PAUSED:
-                        // ROBOT_UI_STATE_PAUSED_MANUAL starts at 20041
-                        newState += 40;
-                        // change ui state
-                        newUiState = newState;
-                        break;
-                    case ROBOT_STATE_CLEANING:
-                        // ROBOT_UI_STATE_CLEANING_MANUAL starts at 20051
-                        newState += 50;
-                        // change ui state
-                        newUiState = newState;
-                        break;
-                }
-            }
-            this.current().robot(state);
-            this.current().ui(newUiState);
-            this.updateStates(newUiState);
+        console.log("setVirtualState " + state + " currentRobot state " + this.current().robot()); 
+        var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
+        var newUiState = state;
+        
+        if(state == ROBOT_STATE_PAUSED || state == ROBOT_STATE_IDLE || state == ROBOT_STATE_CLEANING) {
+            // create new UI state depending on category
+            newUiState = "2" + curRobot().cleaningCategory() + "00" + state;
         }
+        
+        if(state == ROBOT_STATE_IDLE) {
+            if(curRobot().isCharging() == 1) {
+                newUiState = ROBOT_UI_STATE_CHARGING;
+            } else if(curRobot().robotIsDocked() == 1) {
+                newUiState = ROBOT_UI_STATE_ON_BASE;
+            }
+        }
+        
+        if(state == ROBOT_STATE_RETURNING) {
+            if(curRobot().dockHasBeenSeen() == 1) {
+                newUiState = ROBOT_UI_STATE_RETURN_TO_BASE;
+            } else {
+                newUiState = ROBOT_UI_STATE_RETURN_TO_START;
+            }
+        }
+                
+        
+        console.log("newUiState " + newUiState + ": " + visualState[newUiState]);
+        this.current().robot(state);
+        this.current().ui(newUiState);
+        this.updateStates(newUiState);
     },
     
     disposeFromRobot:function() {
         subscription.dispose();
         subscriptionOnline.dispose();
     },
-    // robotNewVirtualState register to robot state
+
     // ui state of the app
     setUiState: function(state) {
-        // cancel old timer
-        window.clearTimeout(this.statusTimer);
         if(visualState[state]) {
             this.current().ui(state);
             this.updateStates(state);
@@ -268,19 +252,14 @@ var robotUiStateHandler = {
         var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
         this.current().messageIcon(visualState[state]);
         
-        if(state == ROBOT_UI_STATE_WAIT) {
-            this.current().messageText($.i18n.t("visualState.waiting_unknown"));
-        } else if(state == ROBOT_UI_STATE_WAKEUP) {
-            this.current().messageText($.i18n.t("visualState.wakeup_unknown"));
-        } else if(state == ROBOT_UI_STATE_STOPPED_SPOT || state == ROBOT_UI_STATE_STOPPED_WAITED_SPOT || state == ROBOT_UI_STATE_PAUSED_SPOT || state == ROBOT_UI_STATE_CLEANING_SPOT) {
+        if(state == ROBOT_UI_STATE_IDLE_SPOT || state == ROBOT_UI_STATE_PAUSED_SPOT || state == ROBOT_UI_STATE_CLEANING_SPOT) {
             var message = $.i18n.t("visualState." + visualState[state]);
             message += " " + curRobot().spotCleaningAreaLength() + "x" + curRobot().spotCleaningAreaHeight() + " " + $.i18n.t("pattern.spotUnit");
             this.current().messageText(message);
         } else if(state == ROBOT_UI_STATE_ROBOT_OFFLINE) {
             this.current().messageText($.i18n.t("visualState." + visualState[state]));
-            this.current().robot(ROBOT_UI_STATE_ROBOT_OFFLINE);
             // change robot name
-            curRobot().displayName(curRobot().robotName() + " (" + $.i18n.t("common.offline") + ")");
+            curRobot().displayName(curRobot().robotName() + " (" + $.i18n.t("robotStateCodes." + visualState[state]) + ")");
             curRobot().visualOnline(false);
             // show notification
             //TODO: add check if current view cleaning and don't show notification there
@@ -289,7 +268,7 @@ var robotUiStateHandler = {
         } else if(state == ROBOT_USER_MENU_STATE) {
             this.current().messageText($.i18n.t("visualState." + visualState[state]));
             // change robot name
-            curRobot().displayName(curRobot().robotName() + " (" + $.i18n.t("robotStateCodes.10012") + ")");
+            curRobot().displayName(curRobot().robotName() + " (" + $.i18n.t("robotStateCodes." + visualState[state]) + ")");
             curRobot().visualOnline(false);
             // show notification
             //TODO: add check if current view cleaning and don't show notification there 
@@ -326,111 +305,69 @@ var robotUiStateHandler = {
     
     
     setStartButtonState:function(state) {
-        // start button only has 4 state:
+        // start button only has 5 states:
         // - cleaning
         // - paused
         // - waiting
         // - stopped
+        // - offline
         
-        if(state == ROBOT_STATE_CLEANING || state == ROBOT_STATE_RESUMED || state == ROBOT_UI_STATE_CLEANING_ALL 
-            || state == ROBOT_UI_STATE_CLEANING_MANUAL || state == ROBOT_UI_STATE_CLEANING_SPOT || state == ROBOT_UI_STATE_CLEANING_TAP_MANUAL) {
+        if(state == ROBOT_STATE_CLEANING || state == ROBOT_UI_STATE_CLEANING_ALL || state == ROBOT_UI_STATE_CLEANING_MANUAL || state == ROBOT_UI_STATE_CLEANING_SPOT) {
             this.current().startButton(visualState[ROBOT_STATE_CLEANING]);
         } else if(state == ROBOT_STATE_PAUSED || state == ROBOT_UI_STATE_PAUSED_ALL || state == ROBOT_UI_STATE_PAUSED_MANUAL || state == ROBOT_UI_STATE_PAUSED_SPOT) {
             this.current().startButton(visualState[ROBOT_STATE_PAUSED]);
-        } else if(state == ROBOT_UI_STATE_WAIT) {
-            this.current().startButton(visualState[state]);
-        } else if(state == ROBOT_UI_STATE_CONNECTING || state == ROBOT_UI_STATE_WAKEUP || state == ROBOT_UI_STATE_GETREADY) {
+        } else if(state == ROBOT_UI_STATE_CONNECTING || state == ROBOT_UI_STATE_WAIT) {
             this.current().startButton(visualState[ROBOT_UI_STATE_WAIT]);
         } else if(state == ROBOT_STATE_MANUAL_CLEANING) {
-           // this.current().startButton(visualState[ROBOT_STATE_CLEANING]);
             this.current().startButton(visualState[ROBOT_STATE_MANUAL_CLEANING]);
         } else if(state == ROBOT_UI_STATE_ROBOT_OFFLINE || state == ROBOT_USER_MENU_STATE) {
             this.current().startButton(visualState[ROBOT_UI_STATE_ROBOT_OFFLINE]);
         } else {
-            this.current().startButton(visualState[ROBOT_STATE_STOPPED]);
+            this.current().startButton(visualState[ROBOT_STATE_IDLE]);
+        }
+    },
+    
+    startWaitTimer:function() {
+        console.log("startWaitTimer");
+        this.cancelWaitTimer();
+        this.waitDeffer = $.Deferred();
+        var oldState = this.current().ui();
+        robotUiStateHandler.setUiState(ROBOT_UI_STATE_WAIT);
+        
+        // start timer
+        this.waitTimer = window.setTimeout(function() {
+            // show timeout message
+            var dialogHeader =  $.i18n.t("messages.waiting_timeout.title");
+            var dialogText =  $.i18n.t("messages.waiting_timeout.message");
+            app.notification.showDialog(dialogType.WARNING, dialogHeader, dialogText);
+            // switch back to old state
+            robotUiStateHandler.setUiState(oldState);
+            robotUiStateHandler.rejectWaitDeffer();
+        }, this.waitTimeout);
+        
+        return this.waitDeffer.promise();
+    },
+    
+    cancelWaitTimer:function() {
+        // cancel old timer and resolve deffer
+        window.clearTimeout(this.waitTimer);
+        if(this.waitDeffer) {
+            this.waitDeffer.resolve({"state":"resolved"});
+            this.waitDeffer = null;
+        }
+    },
+    
+    rejectWaitTimer:function() {
+        // cancel old timer and resolve deffer
+        window.clearTimeout(this.waitTimer);
+        this.rejectWaitDeffer();
+    },
+    
+    rejectWaitDeffer:function() {
+        if(this.waitDeffer) {
+            this.waitDeffer.reject({"state":"rejected"});
+            this.waitDeffer = null;
         }
     }
 };
-function createWaitMessageLoop(delayWakeUp, delayGetReady, robotId, lastGuid) {
-    console.log("createWaitMessageLoop delayWakeUp: "+ delayWakeUp + " robotId: " + robotId);
-    var callGuid = guid();
-    var sWakeUpTime = delayWakeUp + 2;
-    //  sWakeUp = "Waking Up in about " + (delayWakeUp + 2) + " seconds";
-    var visibleTime = delayWakeUp > 10 ? 10 : delayWakeUp;
-    var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
-    // check if robot is still selected and robot state hasn't changed otherwise stop recursion
-    if(curRobot().robotId && curRobot().robotId() == robotId && robotUiStateHandler.current().ui() == ROBOT_UI_STATE_WAKEUP) {
-        // call createWaitMessageLoop recursive till end
-        if(delayWakeUp > 0) {
-            window.setTimeout(function(){
-                createWaitMessageLoop((delayWakeUp-10),delayGetReady, robotId, callGuid);
-            }, visibleTime*1000);
-        }
-        
-        // close last message            
-        if(typeof lastGuid != "undefined") {
-            app.notification.showLoadingArea(false, notificationType.WAKEUP, "", lastGuid);
-        }
-        
-        // update state in robotUiStateHandler
-        if(delayWakeUp > 0) {
-            robotUiStateHandler.updateMessage($.i18n.t("visualState.waiting", {"wakeUp":sWakeUpTime}));
-        } else {
-            robotUiStateHandler.setUiState(ROBOT_UI_STATE_GETREADY);
-        }
-        
-        // show notification bar in other views
-        if(app.viewModel.screenId != "cleaning") {
-            if(delayWakeUp > 0 && visibleTime <= 10) {
-                app.notification.showLoadingArea(true, notificationType.WAKEUP, $.i18n.t("communication.wakeup_robot", {"wakeUp":sWakeUpTime}), callGuid);
-            } else if(delayWakeUp <= 0) {
-                app.notification.showLoadingArea(true, notificationType.WAKEUP, $.i18n.t("communication.getready_robot"), callGuid);
-                window.setTimeout(function(){
-                    app.notification.showLoadingArea(false, notificationType.GETREADY, "", callGuid);
-                }, delayGetReady*1000);
-            }
-        }
-    } else {
-        if(typeof lastGuid != "undefined") {
-            // close message
-            app.notification.showLoadingArea(false, notificationType.WAKEUP, "", lastGuid);
-        }
-   }
-}
-function handleTimedMode(expectedTimeToExecute, robotId) {
-    console.log("handleTimedMode");
-    // calulate timing for animations
-    var delayWakeUp = 1;
-    var delayGetReady = 1;
-    var callGuidW = guid(), callGuidR = guid();
-    var maxVisibleReadyMsg = 6;
-    var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
-    if(curRobot().robotId && curRobot().robotId() == robotId) {
-        // set ui state
-        robotUiStateHandler.setUiState(ROBOT_UI_STATE_WAKEUP);
-        // each animation is at least 2s visible cause of notification bar settings
-        if(expectedTimeToExecute - 4 > 0) {
-            // 1/3 but max of maxVisibleReadyMsg
-            delayGetReady = Math.min(Math.floor((expectedTimeToExecute - 4)/3) , maxVisibleReadyMsg);
-            delayWakeUp = (expectedTimeToExecute - 2 - delayGetReady);
-            createWaitMessageLoop(delayWakeUp, delayGetReady, robotId);
-        } else {
-            // show message only for cleaning view as status message 
-            if(app.viewModel.screenId == "cleaning") {
-                window.setTimeout(function(){
-                    robotUiStateHandler.setUiState(ROBOT_UI_STATE_GETREADY);
-                }, delayWakeUp * 1000);
-            // otherwise global in notification bar
-            } else {
-                app.notification.showLoadingArea(true, notificationType.WAKEUP, $.i18n.t("communication.wakeup_unknown_robot"), callGuidW);
-                window.setTimeout(function(){
-                    app.notification.showLoadingArea(false, notificationType.WAKEUP, "", callGuidW);
-                }, delayWakeUp * 1000);
-                app.notification.showLoadingArea(true, notificationType.GETREADY, $.i18n.t("communication.getready_robot"), callGuidR);
-                window.setTimeout(function(){
-                    app.notification.showLoadingArea(false, notificationType.WAKEUP, "", callGuidR);
-                }, delayGetReady);
-            }
-        }
-    }
-}
+

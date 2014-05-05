@@ -46,10 +46,6 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             });
         }
         
-        // check if scheduler is enabled
-        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.isScheduleEnabled, [that.robot().robotId(), SCHEDULE_TYPE_BASIC]);
-        tDeffer.done(that.isScheduleEnabledSuccess);
-        
         // added visual online state as isEnabled parameter for scheduler 
         that.scheduler = new Scheduler($('#schedulerTarget'), 0, that.robot().visualOnline());
         $('#schedulerTarget').on('updatedEvent', that.updateEvent);
@@ -57,18 +53,31 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         $('#schedulerTarget').on('selectEvent', that.selectEvent);
         that.isScheduleOnline(that.robot().visualOnline());
         
-         // register to schedule changed event
-        parent.notification.registerStatus(ROBOT_SCHEDULE_STATE_CHANGED, function(scheduleState) {
-            initScheduleCheckDone = false;
-            that.isScheduleEnabledSuccess({isScheduleEnabled:scheduleState});
-        });
-        
-        //register to schedule updated event
-        parent.notification.registerStatus(ROBOT_SCHEDULE_UPDATED, function(scheduleState) {
-            if(that.isScheduleEnabled()) {
-                that.loadScheduler();
-            }
-        });
+        if(that.robot().clockIsSet() == 1) {
+            // check if scheduler is enabled
+            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.isScheduleEnabled, [that.robot().robotId(), SCHEDULE_TYPE_BASIC]);
+            tDeffer.done(that.isScheduleEnabledSuccess);
+            
+             // register to schedule changed event
+            parent.notification.registerStatus(ROBOT_SCHEDULE_STATE_CHANGED, function(scheduleState) {
+                initScheduleCheckDone = false;
+                that.isScheduleEnabledSuccess({isScheduleEnabled:scheduleState});
+            });
+            
+            //register to schedule updated event
+            parent.notification.registerStatus(ROBOT_SCHEDULE_UPDATED, function(scheduleState) {
+                if(that.isScheduleEnabled()) {
+                    that.loadScheduler();
+                }
+            });
+        } else {
+            // set scheduler offline
+            isTimeSet = false;
+            that.scheduler.offline();
+            that.isScheduleOnline(false);
+            
+            parent.notification.showDialog(dialogType.WARNING, $.i18n.t('messages.no_clock.title'), $.i18n.t('messages.no_clock.message'));
+        }
         
     };
 
@@ -169,12 +178,6 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
                     tDeffer.done(that.createScheduleEventsSuccess);
                     tDeffer.fail(that.createScheduleEventsError);
                     break;
-                case -21228:
-                    // set scheduler offline
-                    isTimeSet = false;
-                    that.scheduler.offline();
-                    that.isScheduleOnline(false);
-                break; 
             }
             
         }
@@ -200,8 +203,8 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         // }
         
         // check if mode is eco or all and set eco as fallback
-        if(result.scheduleEventData.cleaningMode != 0 && result.scheduleEventData.cleaningMode != 1) {
-            result.scheduleEventData.cleaningMode = 1;
+        if(result.scheduleEventData.cleaningMode != CLEANING_MODE_ECO && result.scheduleEventData.cleaningMode != CLEANING_MODE_NORMAL) {
+            result.scheduleEventData.cleaningMode = CLEANING_MODE_ECO;
         }
 
         // add the day to the day blocked list
@@ -253,7 +256,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
             var localTime = localizeTime(item.scheduleEventData.startTime);
             sContext += $.i18n.t("common.day." + item.scheduleEventData.day);
             sContext += " " + localTime.time + " " + localTime.marker + ",";
-            sContext += $.i18n.t("common.cleaningMode." + item.scheduleEventData.cleaningMode);
+            sContext += $.i18n.t("common.cleaningMode." + keyString[item.scheduleEventData.cleaningMode]);
             contextBuffer[jQuery.inArray((item.scheduleEventData.day), weekIndex)] = sContext;
         });
         

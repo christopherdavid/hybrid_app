@@ -19,7 +19,7 @@ function getRobotStruct() {
         robotId:"",
         robotName:"",
         displayName:"",
-        // has to be filled initially with RobotPluginManager.getRobotCleaningState
+        // has to be filled initially with RobotPluginManager.getRobotCurrentState
         robotCurrentState:defaultState,
         robotNewVirtualState:defaultState,
         // has to be filled initially with RobotPluginManager.getSpotDefinition
@@ -27,12 +27,16 @@ function getRobotStruct() {
         spotCleaningAreaHeight:"",
         // has to be filled initially with RobotPluginManager.getRobotCleaningCategory
         cleaningCategory:CLEANING_CATEGORY_ALL,
-        cleaningMode:"1",
+        cleaningMode:CLEANING_MODE_ECO,
         cleaningModifier:"1",
-        stateString:$.i18n.t("robotStateCodes." + defaultState),
+        stateString:$.i18n.t("robotStateCodes." + visualState[defaultState]),
         connectionState:"",
         robotOnline:null,
-        visualOnline:null
+        visualOnline:null,
+        robotIsDocked:0,
+        clockIsSet:0,
+        dockHasBeenSeen:0,
+        isCharging:0
     };
 };
 

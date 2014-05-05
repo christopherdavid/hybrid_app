@@ -6,17 +6,17 @@
     "common": {
         "change": "Cambia",
         "no": "no",
-        "next": "Prossimo",
         "menu": {
             "schedule": "Programmazione",
             "cleaning": "Pulizia",
             "settings": "Impostazioni"
         },
+        "next": "Prossimo",
         "edit": "Modifica",
         "cancel": "Cancella",
         "cleaningMode": {
-            "2": "CASA",
-            "1": "ECO"
+            "normal": "CASA",
+            "eco": "ECO"
         },
         "countries": {
             "JP": "Giappone",
@@ -31,7 +31,6 @@
             "IT": "Italia",
             "CN": "Cina"
         },
-        "offline": "offline",
         "yes": "yes",
         "logout": "Logout",
         "off": "Off",
@@ -86,9 +85,17 @@
             "message": "Dobbiamo essere nella stessa rete Wi-Fi per un corretto funzionamento.",
             "title": "Problemi di connessione."
         },
+        "no_clock": {
+            "message": "Before using app scheduling please set the clock on the robot display",
+            "title": "It's time\u2026"
+        },
         "no_wifi": {
             "message": "Hai bisogno di una connessione Wi-Fi per utilizzare questa funzione. Per favore attiva il Wi-Fi nelle impostazioni.",
             "title": "Problemi di connessione."
+        },
+        "waiting_timeout": {
+            "message": "Robot didn't received the command.",
+            "title": "Timeout"
         },
         "103": {
             "message": "<span class='font_bold'>__robotName__<\/span>: Ho finito e sto tornando alla base!",
@@ -117,17 +124,18 @@
         "navi": {"title": "Programmazione"}
     },
     "robotStateCodes": {
-        "10001": "Stato sconosciuto",
-        "10002": "Pulizia attivata",
-        "10010": "Pulizia Manuale",
-        "10005": "Pulizia interrotta",
-        "10006": "Bloccato",
-        "10012": "In Use",
-        "10003": "Inattivo",
-        "10004": "In ricarica",
-        "10009": "Alla base",
-        "10007": "Pulizia in pausa",
-        "10008": "Pulizia ripresa"
+        "manual": "Pulizia Manuale",
+        "suspend": "Suspended Cleaning",
+        "inbase": "Alla base",
+        "robot_offline": "offline",
+        "returning": "Returning",
+        "idle": "Inattivo",
+        "cleaning": "Pulizia attivata",
+        "menu": "In Use",
+        "charging": "In ricarica",
+        "paused": "Pulizia in pausa",
+        "unknown": "Stato sconosciuto",
+        "stucked": "Bloccato"
     },
     "dialogs": {
         "EVENT_DELETE": {
@@ -503,15 +511,16 @@
     },
     "communication": {
         "wakeup_unknown_robot": "Il Robot si attiva in pochi secondi.",
+        "send_to_start": "Sending __robotName__ back to startposition...",
         "getready_robot": "Il Robot si sta preparando.",
         "robot_added": "Aggiungi __robotName__",
         "20229": "Thank you for emptying my Dirt Bin and cleaning my Filter.",
         "20208": "Please wait while I check my surrounding.",
         "intend_drive": "Attendi per favore.",
         "20209": "Thank you!",
+        "20206": "My battery is low. I need to charge my battery before I can clean.",
         "delete_robot_done": "Il Robot __robotName__ è stato cancellato.",
         "fetch_robots": "Accedendo alla lista Robot\u2026",
-        "20206": "My battery is low. I need to charge my battery before I can clean.",
         "20207": "I had to reset. Please press OKAY to restart.",
         "20204": "I'm returning to my starting location to charge.",
         "20205": "Please empty my Dirt Bin and Filter if needed.",
@@ -520,7 +529,6 @@
         "20221": "Schedule setting was removed.",
         "stop_robot": "Interrompi __robotName__",
         "20203": "Finished! I'm returning to my starting location.",
-        "inuse": "__robotName__ is currentyl in use",
         "20200": "Errore",
         "20201": "Fine ! Sto ritornando alla base.",
         "update_scheduler": "Sincronizzando la tua programmazione\u2026",
@@ -530,6 +538,7 @@
         "wait_robot": "Il Robot si attiva in __wakeUp__ secondi.",
         "robot_offline": "__robotName__  is currently offline",
         "wakeup_robot": "Il Robot si attiva in circa  __wakeUp__ secondi.",
+        "menu": "__robotName__ is currentyl in use",
         "20215": "USB Flash Drive was Removed.",
         "20216": "Software Update FAILED.",
         "20217": "Logfile was created successfully!",
@@ -634,40 +643,31 @@
         "navi": {"title": "Crea il Tuo Account"}
     },
     "visualState": {
-        "connecting": "Sto cercando il mio server.",
-        "cleaning_tap_manual": "Sto pulendo con modalità manuale",
-        "stucked": "Aiutami sono bloccato!",
-        "stopped_waited_spot": "Sono pronto per la pulizia spot",
-        "getready": "Mi sto preparando.",
-        "wakeup": "Mi sto preparando.",
-        "cleaning_spot": "Sto pulendo con modalità spot",
-        "inuse": "I'm in use by someone else",
-        "stopped_all": "Ho interrotto la pulizia.",
-        "stopped_waited_manual": "Sono pronto per la pulizia manuale ",
-        "resumed": "Ho ripreso la pulizia.",
-        "stopped_manual": "Ho interrotto la pulizia manuale",
-        "paused_spot": "Pulizia Spot in pausa",
-        "stopped_spot": "Ho interrotto la pulizia spot",
+        "suspend": "I'm suspended cleaning till im fully recharged.",
+        "returning": "I'm returning",
         "robot_offline": "I'm Offline",
         "inbase": "Rimango alla base.",
+        "idle_spot": "Sono pronto per la pulizia spot",
+        "connecting": "Sto cercando il mio server.",
         "cleaning": "Sto pulendo.",
         "error": "Ho un problema.",
-        "wakeup_unknown": "Mi attiverò in pochi secondi. ",
-        "waiting": "Mi attivo in circa  __wakeUp__ secondi.",
-        "done": "Ho finito la pulizia.",
+        "drive_to_base": "I'm returning to my base",
+        "waiting": "Receiving command",
+        "drive_to_start": "I'm returning to my startposition",
+        "menu": "I'm in use by someone else",
         "paused_manual": "Pulizia manuale in pausa",
-        "play": "Ho iniziato la pulizia.",
-        "paused": "Ho messo in pausa la pulizia.",
         "charging": "Mi sto ricaricando.",
+        "paused": "Ho messo in pausa la pulizia.",
         "unknown": "Sto cercando il mio server.",
-        "awake": "Sono pronto a cominciare.",
+        "stucked": "Aiutami sono bloccato!",
         "paused_all": "Pulizia in pausa",
-        "waiting_unknown": "Mi attiverò in pochi secondi. ",
+        "idle_all": "Sono pronto ad iniziare.",
         "manual": "Guidami con la tua app!",
         "cleaning_manual": "Guidami con la App",
         "idle": "Sono pronto ad iniziare.",
-        "stopped_waited_all": "Sono pronto a cominciare",
-        "stopped": "Ho interrotto la pulizia.",
+        "idle_manual": "Sono pronto per la pulizia manuale ",
+        "cleaning_spot": "Sto pulendo con modalità spot",
+        "paused_spot": "Pulizia Spot in pausa",
         "cleaning_all": "Sto pulendo"
     },
     "confirm": {"close_app": "Sei sicuro di voler chiudere l'applicazione?"},
