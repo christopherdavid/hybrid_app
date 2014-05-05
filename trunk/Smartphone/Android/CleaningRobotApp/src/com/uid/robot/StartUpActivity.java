@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import com.vorwerkrobot.vr200beta.R;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;

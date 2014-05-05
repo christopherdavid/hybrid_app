@@ -1,7 +1,5 @@
 package com.neatorobotics.android.slide.framework.prefs;
 
-import com.neatorobotics.android.slide.framework.logger.LogHelper;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;

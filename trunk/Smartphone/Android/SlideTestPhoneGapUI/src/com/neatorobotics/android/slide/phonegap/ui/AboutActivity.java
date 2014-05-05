@@ -54,9 +54,9 @@ public class AboutActivity extends Activity {
 	}
 	
 	private void showServerInfo() {
-		String serverName = NeatoWebConstants.getServerName();
+		String serverName = NeatoWebConstants.getServerName(this);
 		
-		String serverUrl = NeatoWebConstants.getServerUrl();
+		String serverUrl = NeatoWebConstants.getServerUrl(this);
 		if (!TextUtils.isEmpty(serverName)) {
 			TextView txtInfo = (TextView)findViewById(R.id.txt_about_server);
 			txtInfo.setText(Html.fromHtml(String.format("<u><i>%s (%s)</i></u>", serverUrl, serverName)));			

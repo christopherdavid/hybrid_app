@@ -10,7 +10,7 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotClearDataRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetRobotCleaningCategoryRequest;
-import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetRobotCleaningDetailsRequest;
+import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetRobotCurrentStateDetailsRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetSpotDefinationRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.PauseCleaningRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.ResumeCleaningRequest;
@@ -31,6 +31,7 @@ import com.neatorobotics.android.slide.framework.plugins.requests.robot.notifica
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.notification.UnRegisterForPushMessagesRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.EnableScheduleRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.GetRobotCleaningStateRequest;
+import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.GetRobotCurrentStateRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.GetRobotDetailRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.IsRobotScheduleEnabledRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.RobotGetOnlineStatusRequest;
@@ -54,6 +55,8 @@ public class RobotManagerPlugin extends Plugin {
     private RobotManagerRequest mIsRobotScheduleEnabledRequest = new IsRobotScheduleEnabledRequest();
     private RobotManagerRequest mEnabledScheduleRequest = new EnableScheduleRequest();
     private RobotManagerRequest mGetRobotCleaningStateRequest = new GetRobotCleaningStateRequest();
+    
+    private RobotManagerRequest mGetRobotCurrentStateRequest = new GetRobotCurrentStateRequest();
 
     // Notification
     private RobotManagerRequest mRegisterForPushMessagesRequest = new RegisterForPushMessagesRequest();
@@ -71,7 +74,7 @@ public class RobotManagerPlugin extends Plugin {
     private RobotManagerRequest mSetSpotDefinationRequest = new SetSpotDefinationRequest();
     private RobotManagerRequest mGetSpotDefinationRequest = new GetSpotDefinationRequest();
     private RobotManagerRequest mGetRobotCleaningCategoryRequest = new GetRobotCleaningCategoryRequest();
-    private RobotManagerRequest mGetRobotCleaningDetails = new GetRobotCleaningDetailsRequest();
+    private RobotManagerRequest mGetRobotCurrentStateDetails = new GetRobotCurrentStateDetailsRequest();
 
     // Manual Commands
     private RobotManagerRequest mCancelIntendToDriveRequest = new CancelIntendToDriveRequest();
@@ -101,6 +104,7 @@ public class RobotManagerPlugin extends Plugin {
             ACTION_COMMAND_MAP.put(ActionTypes.SET_SPOT_DEFINITION, mSetSpotDefinationRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.GET_SPOT_DEFINITION, mGetSpotDefinationRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_CLEANING_STATE, mGetRobotCleaningStateRequest);
+            ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_CURRENT_STATE, mGetRobotCurrentStateRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_CLEANING_CATEGORY, mGetRobotCleaningCategoryRequest);
 
             ACTION_COMMAND_MAP.put(ActionTypes.REGISTER_FOR_ROBOT_MESSAGES, mRegisterForPushMessagesRequest);
@@ -134,7 +138,7 @@ public class RobotManagerPlugin extends Plugin {
             ACTION_COMMAND_MAP.put(ActionTypes.UPDATE_SCHEDULE, mRobotScheduleRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.CREATE_SCHEDULE, mRobotScheduleRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.CLEAR_ROBOT_DATA, mRobotClearDataRequest);
-            ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_CLEANING_DETAILS, mGetRobotCleaningDetails);
+            ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_CURRENT_STATE_DETAILS, mGetRobotCurrentStateDetails);
 
             Set<String> keys = ACTION_COMMAND_MAP.keySet();
             for (String key : keys) {
@@ -216,7 +220,8 @@ public class RobotManagerPlugin extends Plugin {
         public static final String CANCEL_INTEND_TO_DRIVE = "cancelIntendToDrive";
         public static final String IS_ROBOT_PEER_CONNECTED = "isRobotPeerConnected";
         public static final String CLEAR_ROBOT_DATA = "clearRobotData";
-        public static final String GET_ROBOT_CLEANING_DETAILS = "getRobotCurrentCleaningDetails";
+        public static final String GET_ROBOT_CURRENT_STATE = "getRobotCurrentState";
+        public static final String GET_ROBOT_CURRENT_STATE_DETAILS = "getRobotCurrentStateDetails";
     }
 
 }

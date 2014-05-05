@@ -3,10 +3,7 @@ package com.neatorobotics.android.slide.framework.plugins.requests.robot.profile
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.content.Context;
-import android.text.TextUtils;
-
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
@@ -16,17 +13,17 @@ import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResul
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
 
-public class GetRobotCleaningStateRequest extends RobotManagerRequest {
+public class GetRobotCurrentStateRequest extends RobotManagerRequest {
 
     @Override
     public void execute(String action, JSONArray data, String callbackId) {
-    	LogHelper.log(TAG, "**** TODO: Deprecated GetRobotCleaningStateRequest ****");
         RobotJsonData jsonData = new RobotJsonData(data);
-        getRobotCleaningState(mContext, jsonData, callbackId);
+        getRobotCurrentState(mContext, jsonData, callbackId);
     }
 
-    private void getRobotCleaningState(final Context context, RobotJsonData jsonData, final String callbackId) {
-        LogHelper.logD(TAG, "getRobotCleaningState is called");
+    private void getRobotCurrentState(final Context context, RobotJsonData jsonData, final String callbackId) {
+
+        LogHelper.logD(TAG, "getRobotCurrentState is called");
         final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
         RobotManager.getInstance(context).getRobotCleaningState(context, robotId,
                 new RobotRequestListenerWrapper(callbackId) {
@@ -35,14 +32,11 @@ public class GetRobotCleaningStateRequest extends RobotManagerRequest {
                         JSONObject jsonResult = new JSONObject();
                         if ((responseResult != null) && (responseResult instanceof GetRobotProfileDetailsResult2)) {
                             GetRobotProfileDetailsResult2 result = (GetRobotProfileDetailsResult2) responseResult;
+                            String virtualState = RobotProfileDataUtils.getState(context, result);
+                            jsonResult.put(JsonMapKeys.KEY_ROBOT_NEW_VIRTUAL_STATE, virtualState);
                             String currentState = RobotProfileDataUtils.getRobotCurrentState(context, result);
-                            String state = RobotProfileDataUtils.getState(context, result);
-                            if (!TextUtils.isEmpty(currentState)) {
-                                jsonResult.put(JsonMapKeys.KEY_ROBOT_CURRENT_STATE, currentState);
-                            }
-                            if (!TextUtils.isEmpty(state)) {
-                                jsonResult.put(JsonMapKeys.KEY_ROBOT_NEW_VIRTUAL_STATE, state);
-                            }
+
+                            jsonResult.put(JsonMapKeys.KEY_ROBOT_CURRENT_STATE, currentState);
                             jsonResult.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
                         }
                         return jsonResult;

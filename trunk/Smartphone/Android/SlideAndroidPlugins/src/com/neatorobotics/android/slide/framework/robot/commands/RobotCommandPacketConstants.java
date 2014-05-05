@@ -52,18 +52,11 @@ public class RobotCommandPacketConstants {
     public static final String KEY_LINK_CODE = "linkCode";
 
     // Robot states
-    public static final int ROBOT_STATE_UNKNOWN = 10001;
-    public static final int ROBOT_STATE_CLEANING = 10002;
-    public static final int ROBOT_STATE_IDLE = 10003;
-    public static final int ROBOT_STATE_CHARGING = 10004;
-    public static final int ROBOT_STATE_STOPPED = 10005;
-    public static final int ROBOT_STATE_STUCK = 10006;
-    public static final int ROBOT_STATE_PAUSED = 10007;
-    public static final int ROBOT_STATE_RESUMED = 10008;
-    public static final int ROBOT_STATE_ON_BASE = 10009;
-    // Robot Driving State Codes.
-    public static final int ROBOT_STATE_MANUAL_CLEANING = 10010;
-    public static final int ROBOT_STATE_MANUAL_PLAY_MODE = 10011;
+    public static final int ROBOT_STATE_CLEANING = 3;
+    public static final int ROBOT_STATE_IDLE = 1;
+    public static final int ROBOT_STATE_PAUSED = 5;
+    public static final int ROBOT_STATE_IDLE_CHARGING = 7;
+    public static final int ROBOT_STATE_MANUAL_CLEANING = 6;
     public static final int ROBOT_STATE_INVALID = 19999;
 
     // Codes for data changed on server
@@ -75,13 +68,13 @@ public class RobotCommandPacketConstants {
         if (commandId == COMMAND_ROBOT_START) {
             return ROBOT_STATE_CLEANING;
         } else if (commandId == COMMAND_ROBOT_STOP) {
-            return ROBOT_STATE_STOPPED;
+            return ROBOT_STATE_IDLE;
         } else if (commandId == COMMAND_PAUSE_CLEANING) {
             return ROBOT_STATE_PAUSED;
         } else if (commandId == COMMAND_RESUME_CLEANING) {
-            return ROBOT_STATE_RESUMED;
+            return ROBOT_STATE_CLEANING;
         } else if (commandId == COMMAND_SEND_BASE) {
-            return ROBOT_STATE_ON_BASE;
+            return ROBOT_STATE_IDLE_CHARGING;
         }
         return ROBOT_STATE_INVALID;
     }

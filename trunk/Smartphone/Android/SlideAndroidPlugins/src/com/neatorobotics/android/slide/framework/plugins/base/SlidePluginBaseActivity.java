@@ -19,7 +19,6 @@ import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.service.INeatoRobotService;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
-import com.neatorobotics.android.slide.framework.webservice.NeatoWebConstants;
 import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
 
 public class SlidePluginBaseActivity extends DroidGap implements Observer {
@@ -42,7 +41,6 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
         super.onCreate(savedInstanceState);
         AppUtils.logLibraryVersion();
 
-        NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
         CrittercismHelper.initializeCrittercism(this);
         NeatoServiceManager serviceManager = NeatoServiceManager.getInstance(getApplicationContext());
         if (UserHelper.isUserLoggedIn(this)) {

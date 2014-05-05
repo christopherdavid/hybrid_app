@@ -1,23 +1,11 @@
 package com.neatorobotics.android.slide.framework.webservice;
 
+import com.neatorobotics.android.slide.framework.R;
+
+import android.content.Context;
+
 public class NeatoWebConstants {
 
-    // Uncomment to switch to Neato server
-    private static final int SERVER_TYPE = WebServerTypeFactory.SERVER_TYPE_NEATO;
-    // Uncomment to switch to Vorwerk server
-    // private static final int SERVER_TYPE =
-    // WebServerTypeFactory.SERVER_TYPE_VORWERK;
-
-    public static final int PROD_SERVER_ID = 1001;
-    public static final int STAGING_SERVER_ID = 1002;
-    public static final int DEV_SERVER_ID = 1003;
-    public static final int DEMO_SERVER_ID = 1004;
-    public static final int DEMO2_SERVER_ID = 1005;
-    public static final int WP_SERVER_ID = 1006;
-    public static final int NEATO_SECURE_SERVER_ID = 1007;
-    public static final int NEATOSTAGING_SERVER_ID = 1008;
-    public static final int VW_BETA_SERVER_ID = 1009;
-    
     public static final String QUERY_KEY_METHOD = "method";
     public static final String QUERY_KEY_APIKEY = "api_key";
     // Responses after a http requests
@@ -27,41 +15,31 @@ public class NeatoWebConstants {
     public static final int RESPONSE_SERVER_ERROR = 101;
     public static final int RESPONSE_SUCCESS = 0;
 
-    private static WebServerType webServerType;
-
-    static {
-        webServerType = WebServerTypeFactory.getWebServerConfig(SERVER_TYPE);
+    public static String getBaseJsonUrl(Context context) {
+        return context.getString(R.string.base_server_url);
     }
 
-    public static void initializeServerType(int serverType) {
-        webServerType = WebServerTypeFactory.getWebServerConfig(serverType);
+    public static String getServerName(Context context) {
+        return context.getString(R.string.server_name);
     }
 
-    public static String getBaseJsonUrl() {
-        return webServerType.getBaseJsonUrl();
+    public static String getServerUrl(Context context) {
+        return context.getString(R.string.server_url);
     }
 
-    public static void setServerEnvironment(int environment) {
-        webServerType.setServerEnvironment(environment);
+    public static String getApiKey(Context context) {
+        return context.getString(R.string.api_key);
     }
 
-    public static String getServerName() {
-        return webServerType.getServerName();
+    public static String getXmppServerDomain(Context context) {
+        return context.getString(R.string.xmpp_server_domain);
     }
 
-    public static String getServerUrl() {
-        return webServerType.getServerUrl();
-    }
-
-    public static String getApiKey() {
-        return webServerType.getApiKey();
-    }
-
-    public static String getXmppServerDomain() {
-        return webServerType.getXmppServerDomain();
+    public static String getXmppWebServer(Context context) {
+        return context.getString(R.string.xmpp_webserver_url);
     }
     
-    public static String getXmppWebServer() {
-        return webServerType.getXmppWebServer();
+    public static String getCrittercismAppId(Context context) {
+        return context.getString(R.string.xmpp_webserver_url);
     }
 }

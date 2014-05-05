@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="server_name">Staging (Neato)</string>
+    <string name="api_key">1e26686d806d82144a71ea9a99d1b3169adaad917</string>
+    <string name="base_server_url">http://neatostaging.rajatogo.com/api/rest/json</string>
+    <string name="xmpp_server_domain">rajatogo.com</string>
+    <string name="server_url">http://neatostaging.rajatogo.com</string>
+    <string name="xmpp_webserver_url">rajatogo</string>
+    <string name="crittercism_app_id">5332917e40ec923484000006</string>
+
+</resources>
