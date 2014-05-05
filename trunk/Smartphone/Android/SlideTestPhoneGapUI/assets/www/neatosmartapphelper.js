@@ -61,6 +61,10 @@ var ROBOT_MESSAGE_ERROR = 4014;
 
 var ROBOT_ONLINE_STATUS_CHANGED = 4015;
 
+var ROBOT_COMMAND_FAILED = 4016;
+
+
+
 // Robot state codes
 var ROBOT_STATE_UNKNOWN 	= 10001;
 var ROBOT_STATE_CLEANING 	= 10002;
@@ -203,6 +207,7 @@ var COMMAND_ROBOT_STOP = 102;
 var COMMAND_SEND_BASE = 104;
 var COMMAND_PAUSE_CLEANING = 107;
 var COMMAND_RESUME_CLEANING = 114;
+var COMMAND_INTEND_TO_DRIVE = 119;
 
 // NOTE: Cleaning type is now referred as cleaning category with new
 // names as listed below.

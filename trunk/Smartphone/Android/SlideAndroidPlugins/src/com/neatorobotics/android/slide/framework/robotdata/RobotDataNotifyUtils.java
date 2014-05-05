@@ -194,9 +194,10 @@ public class RobotDataNotifyUtils {
 
     private static void notifyStateChange(Context context, String robotId, GetRobotProfileDetailsResult2 details) {
 
-        String virtualState = RobotProfileDataUtils.getRobotVirtualState(context, details);
         String currentState = RobotProfileDataUtils.getRobotCurrentState(context, details);
-        String state = RobotProfileDataUtils.getState(virtualState, currentState);
+
+        String state = RobotProfileDataUtils.getState(context, details);
+
         if (!TextUtils.isEmpty(currentState)) {
             HashMap<String, String> stateData = new HashMap<String, String>();
             stateData.put(JsonMapKeys.KEY_ROBOT_CURRENT_STATE, currentState);

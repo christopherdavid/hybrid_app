@@ -23,5 +23,7 @@ public class RobotNotificationConstants {
     public static final int ROBOT_NOTIFICATION = 4013;
     public static final int ROBOT_ERROR = 4014;
     public static final int ROBOT_ONLINE_STATUS = 4015;
+    
+    public static final int ROBOT_COMMAND_FAILED = 4016;
 
 }

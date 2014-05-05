@@ -121,7 +121,10 @@ public class JsonMapKeys {
 
     // Drive Robot
     public static final String ERROR_DRIVE_RESPONSE_CODE = "errorDriveResponseCode";
-
+    
+    // Robot Error In sending Message - Id
+    public static final String FAILED_COMMAND_ID = "failedCommandId";
+    
     // Linking robot
     public static final String KEY_LINKING_CODE = "linkCode";
 }

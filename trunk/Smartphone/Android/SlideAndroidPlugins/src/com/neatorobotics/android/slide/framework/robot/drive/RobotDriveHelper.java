@@ -58,7 +58,7 @@ public class RobotDriveHelper {
             // with
             // the wifi_on time and cause agent id.
             String driveDetail = getDriveRequestParams(DEFAULT_ROBOT_DRIVE_WIFI_ON_TIME);
-            RobotDataManager.setRobotProfileParam(mContext, robotId, ProfileAttributeKeys.INTEND_TO_DRIVE, driveDetail,
+            RobotDataManager.setRobotProfileParam(mContext, robotId, RobotCommandPacketConstants.COMMAND_INTEND_TO_DRIVE, driveDetail,
                     listener);
         } else {
             // Drive denied. Send error result

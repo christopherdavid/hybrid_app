@@ -28,7 +28,7 @@ public class CleaningStateDetails extends JSONObject {
         }
         // TODO: Expose enum for cleaning modifiers. Currently returns 2 i.e.
         // All
-        return RobotCommandPacketConstants.CLEANING_CATEGORY_ALL;
+        return RobotCommandPacketConstants.CLEANING_CATEGORY_INVALID;
     }
 
     private JSONObject getStateParams() {

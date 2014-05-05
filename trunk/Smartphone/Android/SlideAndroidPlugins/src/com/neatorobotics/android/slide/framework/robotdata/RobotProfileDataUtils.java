@@ -7,7 +7,6 @@ import org.json.JSONException;
 import android.content.Context;
 import android.text.TextUtils;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
-import com.neatorobotics.android.slide.framework.json.JsonHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.model.CleaningStateDetails;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
@@ -72,14 +71,16 @@ public class RobotProfileDataUtils {
     }
 
     public static int getRobotCleaningCategory(Context context, GetRobotProfileDetailsResult2 details) {
+
         String cleaningStateDetails = details
                 .getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
         LogHelper.log(TAG, "# Current Robot State is " + cleaningStateDetails);
-        
+
         if (TextUtils.isEmpty(cleaningStateDetails)) {
-        	// if cleaningStateDetails is empty, we just return -1 (invalid category)
-        	 LogHelper.logD(TAG, "# Current Robot State is empty");
-        	return -1;
+            // if cleaningStateDetails is empty, we just return -1 (invalid
+            // category)
+            LogHelper.logD(TAG, "# Current Robot State is empty");
+            return RobotCommandPacketConstants.CLEANING_CATEGORY_INVALID;
         }
         CleaningStateDetails stateDetails = null;
         try {
@@ -91,7 +92,7 @@ public class RobotProfileDataUtils {
         if (stateDetails != null) {
             return stateDetails.getCleaningCategory();
         }
-        return RobotCommandPacketConstants.CLEANING_CATEGORY_ALL;
+        return RobotCommandPacketConstants.CLEANING_CATEGORY_INVALID;
     }
 
     public static boolean isScheduleUpdated(Context context, GetRobotProfileDetailsResult2 details) {
@@ -138,10 +139,24 @@ public class RobotProfileDataUtils {
         return null;
     }
 
-    public static String getState(String virtualState, String currentState) {
+    public static String getState(Context context, GetRobotProfileDetailsResult2 details) {
         String actualState = null;
+
+        String virtualState = getRobotVirtualState(context, details);
+        String currentState = getRobotCurrentState(context, details);
+
+        // if virtual state is empty, return the current state.
+        if (TextUtils.isEmpty(virtualState)) {
+            actualState = currentState;
+            return actualState;
+        }
+
+        long timestampCurrentState = details.getProfileParameterTimeStamp(ProfileAttributeKeys.ROBOT_CURRENT_STATE);
+        long timestampVirtualState = details.getProfileParameterTimeStamp(ProfileAttributeKeys.ROBOT_CLEANING_COMMAND);
+
         try {
             // If manually controlled always return the current state.
+            // TODO: Check if this is still applicable.
             if (isRobotManuallyControlled(Integer.valueOf(currentState))) {
                 actualState = currentState;
                 return actualState;
@@ -150,9 +165,11 @@ public class RobotProfileDataUtils {
             LogHelper.log(TAG, "Current state is not valid");
         }
 
-        if (!TextUtils.isEmpty(virtualState)) {
+        // return vitrual state if timestamp is greater than current state.
+        if (timestampVirtualState > timestampCurrentState) {
             actualState = virtualState;
-        } else if (!TextUtils.isEmpty(currentState)) {
+        } else {
+            LogHelper.log(TAG, "The current state has higher timestamp than the virtual, so ignoring virtual state");
             actualState = currentState;
         }
         return actualState;
@@ -160,12 +177,6 @@ public class RobotProfileDataUtils {
 
     private static boolean isRobotManuallyControlled(int currentState) {
         return ((currentState == RobotCommandPacketConstants.ROBOT_STATE_MANUAL_PLAY_MODE) || (currentState == RobotCommandPacketConstants.ROBOT_STATE_MANUAL_CLEANING));
-    }
-
-    public static String getState(Context context, GetRobotProfileDetailsResult2 details) {
-        String virtualState = getRobotVirtualState(context, details);
-        String currentState = getRobotCurrentState(context, details);
-        return getState(virtualState, currentState);
     }
 
     private static boolean isDataChanged(Context context, GetRobotProfileDetailsResult2 details, String robotId,

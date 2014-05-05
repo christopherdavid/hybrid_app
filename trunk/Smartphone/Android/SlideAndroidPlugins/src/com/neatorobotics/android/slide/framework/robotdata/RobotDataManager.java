@@ -9,6 +9,7 @@ import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
+import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacketUtils;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper;
@@ -34,10 +35,12 @@ public class RobotDataManager {
     public static void sendRobotCommand(Context context, String robotId, int commandId,
             HashMap<String, String> commandParams, WebServiceBaseRequestListener listener) {
         LogHelper.logD(TAG, "Send command action initiated sendRobotCommand - RobotSerialId = " + robotId);
+
         String robotPacketInXmlFormat = RobotCommandPacketUtils.getRobotCommandPacketXml(context, commandId,
                 commandParams, RobotPacketConstants.DISTRIBUTION_MODE_TYPE_TIME_MODE_SERVER);
-        String keyType = RobotProfileConstants.getProfileKeyTypeForCommand(commandId);
-        setRobotProfileParam(context, robotId, keyType, robotPacketInXmlFormat, listener);
+
+        setRobotProfileParam(context, robotId, commandId, robotPacketInXmlFormat, listener);
+
         // TODO: Find another place for this.
         // Ideally should be retrieved from the server.
         if (commandParams.get(JsonMapKeys.KEY_CLEANING_CATEGORY) != null) {
@@ -50,28 +53,33 @@ public class RobotDataManager {
     // Public static helper method to set the schedule status to updated
     public static void sendRobotScheduleUpdated(Context context, String robotId, WebServiceBaseRequestListener listener) {
         LogHelper.logD(TAG, "Send command action initiated sendRobotScheduleUpdated - RobotSerialId = " + robotId);
-        setRobotProfileParam(context, robotId, ProfileAttributeKeys.ROBOT_SCHEDULE_UPDATED, String.valueOf(true),
-                listener);
+        setRobotProfileParam(context, robotId, RobotCommandPacketConstants.COMMAND_SCHEDULE_UPDATED,
+                String.valueOf(true), listener);
     }
 
-    public static void setRobotProfileParam(final Context context, final String robotId, final String key,
+    public static void setRobotProfileParam(final Context context, final String robotId, final int keyUniqueId,
             final String value, final WebServiceBaseRequestListener listener) {
-        LogHelper.logD(TAG, "setRobotProfileParam called");
-        LogHelper.logD(TAG, "Robot Id = " + robotId + " Key: " + key + "Value: " + value);
 
         Runnable task = new Runnable() {
             public void run() {
                 try {
+
+                    String key = RobotProfileConstants.getProfileKeyTypeForCommand(keyUniqueId);
+
+                    LogHelper.logD(TAG, "SetRobotProfileParam called for Robot Id = " + robotId + " Key: " + key
+                            + "Value: " + value);
                     HashMap<String, String> profileParams = new HashMap<String, String>();
                     profileParams.put(key, value);
                     SetRobotProfileDetailsResult3 result = NeatoRobotDataWebservicesHelper
                             .setRobotProfileDetailsRequest3(context, robotId, profileParams);
+
                     long timestamp = result.extra_params.timestamp;
                     RobotHelper.saveProfileParam(context, robotId, key, timestamp);
 
                     // Do not start timer for every set profile data change.
+
                     if (RobotProfileConstants.isTimerExpirableForProfileKey(key)) {
-                        RobotCommandTimerHelper.getInstance(context).startCommandExpiryTimer(robotId);
+                        RobotCommandTimerHelper.getInstance(context).startCommandExpiryTimer(robotId, keyUniqueId);
                     }
 
                     listener.onReceived(result);
@@ -110,22 +118,26 @@ public class RobotDataManager {
         TaskUtils.scheduleTask(task, 0);
     }
 
-    private static void robotCommandExpiryResetData(final Context context, final String robotId) {
+    private static void robotCommandExpiryResetData(final Context context, final String robotId,
+            final WebServiceBaseRequestListener listener) {
         Runnable task = new Runnable() {
             public void run() {
                 try {
                     // Reset cleaningCommand so that robot does not fetch it.
                     // Also to update the UI of other smartapps.
                     // TODO: Reset other values too when support added.
-                    RobotDriveHelper.getInstance(context).notifyDriveFailedAsRobotOffline(robotId);
+                    // TODO: Remove
                     NeatoRobotDataWebservicesHelper.resetRobotProfileValue(context, robotId,
                             ProfileAttributeKeys.ROBOT_CLEANING_COMMAND, ProfileAttributeKeys.INTEND_TO_DRIVE);
+
                     // Get the current profile parameters to reflect in the UI
                     GetRobotProfileDetailsResult2 details = NeatoRobotDataWebservicesHelper
                             .getRobotProfileDetailsRequest2(context, robotId, EMPTY_STRING);
+
                     if (details.success()) {
                         RobotDataNotifyUtils.notifyProfileDataIfChanged(context, robotId, details);
                     }
+                    listener.onReceived(details);
                 } catch (UserUnauthorizedException e) {
                     LogHelper.log(TAG, "UserUnauthorizedException in getServerData", e);
                 } catch (NeatoServerException e) {
@@ -138,8 +150,9 @@ public class RobotDataManager {
         TaskUtils.scheduleTask(task, 0);
     }
 
-    public static void onCommandExpired(final Context context, final String robotId) {
-        robotCommandExpiryResetData(context, robotId);
+    public static void onCommandExpired(final Context context, final String robotId,
+            final WebServiceBaseRequestListener listener) {
+        robotCommandExpiryResetData(context, robotId, listener);
     }
 
     public static void deleteProfileDetailKey(final Context context, final String robotId, final String key,
