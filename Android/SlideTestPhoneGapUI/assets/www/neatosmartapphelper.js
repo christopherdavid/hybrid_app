@@ -70,23 +70,22 @@ var ROBOT_STATE_UNKNOWN 			= 0;
 var ROBOT_STATE_IDLE 				= 1;
 var ROBOT_USER_MENU_STATE 			= 2;
 var ROBOT_STATE_CLEANING 			= 3;
-var ROBOT_STATE_SUSPENDED_CLEANING 		= 4;
+var ROBOT_STATE_SUSPENDED_CLEANING 	= 4;
 var ROBOT_STATE_PAUSED 				= 5;
-var ROBOT_STATE_MANUAL_CLEANING			= 6;
-var ROBOT_STATE_IDLE_CHARGING 			= 7;
-var ROBOT_STATE_RETURNING 			= 8;
+var ROBOT_STATE_MANUAL_CLEANING		= 6;
+var ROBOT_STATE_RETURNING 			= 7;
 
 /**
  *  ROBOT_STATE_CHARGING is not very intuitive.
  *
- * @deprecated use ROBOT_STATE_IDLE_CHARGING instead.  
+ * @deprecated use ROBOT_STATE_IDLE instead.
  */
-var ROBOT_STATE_CHARGING 			= 7;
+var ROBOT_STATE_CHARGING 			= 1;
 
 /**
  * 	There is no state called STOPPED.
  *
- * @deprecated use ROBOT_STATE_RETURNING instead.  
+ * @deprecated use ROBOT_STATE_RETURNING instead.
  */
 var ROBOT_STATE_STOPPED 			= 1;
 
@@ -96,9 +95,9 @@ var ROBOT_STATE_STOPPED 			= 1;
  *
  * @deprecated DO NOT USE THESE STATES
  */
-var ROBOT_STATE_STUCK       			= 8;
+var ROBOT_STATE_STUCK       			= 7;
 var ROBOT_STATE_RESUMED     			= 3;
-var ROBOT_STATE_ON_BASE     			= 7;
+var ROBOT_STATE_ON_BASE     			= 1;
 var ROBOT_STATE_MANUAL_PLAY_MODE		= 6;
 
 
