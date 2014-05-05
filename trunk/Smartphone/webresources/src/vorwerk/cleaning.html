@@ -12,7 +12,7 @@
                 <span data-bind="text: robot().displayName">[robot name]</span>
             </div>
         </h1>
-        <!--TODO: remove test data
+        <!--TODO: remove test data 
         <div class="ui-btn-right">
             <a data-role="button" data-theme="b" data-mini="false" data-inline="true" href="#testPopup" data-rel="popup">Test</a>
         </div>
@@ -171,7 +171,7 @@
             </ul>
         </div>
     </div>
-    <!-- TODO: remove testdata 
+    <!-- TODO: remove testdata
     <div id="testPopup" data-history="false" data-role="popup" data-dismissible="true" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport dialogType_1">
         <div data-role="header" data-theme="b" class="ui-header ui-bar-b">
              <h1 class="ui-title dialogPopupTitle" role="heading" aria-level="1">State tests</h1>
@@ -181,8 +181,13 @@
             <ul data-role="listview" data-theme="a" data-inset="true" class="single"> 
                 <li data-role="list-divider">robot states from API</li>
                 <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_UNKNOWN)">
-                        <h3>ROBOT_STATE_UNKNOWN</h3>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_IDLE)">
+                        <h3>ROBOT_STATE_IDLE</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_USER_MENU_STATE)">
+                        <h3>ROBOT_USER_MENU_STATE</h3>
                     </a>
                 </li>
                 <li>
@@ -191,23 +196,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_IDLE)">
-                        <h3>ROBOT_STATE_IDLE</h3>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_CHARGING)">
-                        <h3>ROBOT_STATE_CHARGING</h3>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_STOPPED)">
-                        <h3>ROBOT_STATE_STOPPED</h3>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_STUCK)">
-                        <h3>ROBOT_STATE_STUCK</h3>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_SUSPENDED_CLEANING)">
+                        <h3>ROBOT_STATE_SUSPENDED_CLEANING</h3>
                     </a>
                 </li>
                 <li>
@@ -216,59 +206,30 @@
                     </a>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_RESUMED)">
-                        <h3>ROBOT_STATE_RESUMED</h3>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_ON_BASE)">
-                        <h3>ROBOT_STATE_ON_BASE</h3>
-                    </a>
-                </li>
-                <li>
                     <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_MANUAL_CLEANING)">
                         <h3>ROBOT_STATE_MANUAL_CLEANING</h3>
                     </a>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_MANUAL_PLAY_MODE)">
-                        <h3>ROBOT_STATE_MANUAL_PLAY_MODE</h3>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_RETURNING)">
+                        <h3>ROBOT_STATE_RETURNING</h3>
+                    </a>
+                </li>
+                <li data-role="list-divider">off/online</li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, 11)">
+                        <h3>Online</h3>
                     </a>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, 10012)">
-                        <h3>10012</h3>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, 12)">
+                        <h3>Offline</h3>
                     </a>
                 </li>
                 <li data-role="list-divider">UI states</li>
                 <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_ERROR)">
-                        <h3>ROBOT_UI_STATE_ERROR</h3>
-                    </a>
-                </li>
-                <li>
                     <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_WAIT)">
                         <h3>ROBOT_UI_STATE_WAIT</h3>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_WAKEUP)">
-                        <h3>ROBOT_UI_STATE_WAKEUP</h3>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_GETREADY)">
-                        <h3>ROBOT_UI_STATE_GETREADY</h3>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_AWAKE)">
-                        <h3>ROBOT_UI_STATE_AWAKE</h3>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_DISABLED)">
-                        <h3>ROBOT_UI_STATE_DISABLED</h3>
                     </a>
                 </li>
                 <li>
@@ -281,8 +242,40 @@
                         <h3>ROBOT_UI_STATE_ROBOT_OFFLINE</h3>
                     </a>
                 </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_ERROR)">
+                        <h3>ROBOT_UI_STATE_ERROR</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_CHARGING)">
+                        <h3>ROBOT_UI_STATE_CHARGING</h3>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_RETURN_TO_BASE)">
+                        <h3>ROBOT_UI_STATE_RETURN_TO_BASE</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_RETURN_TO_START)">
+                        <h3>ROBOT_UI_STATE_RETURN_TO_START</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_ON_BASE)">
+                        <h3>ROBOT_UI_STATE_ON_BASE</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_UI_STATE_STUCKED)">
+                        <h3>ROBOT_UI_STATE_STUCKED</h3>
+                    </a>
+                </li>
             </ul>
         </div>
-    </div>-->
+    </div>
+    -->
 
 </div><!-- /page -->

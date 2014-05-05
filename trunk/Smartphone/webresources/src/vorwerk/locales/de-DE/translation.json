@@ -6,17 +6,17 @@
     "common": {
         "change": "ändern",
         "no": "nein",
-        "next": "Weiter",
         "menu": {
             "schedule": "Terminkalender",
             "cleaning": "Reinigung",
             "settings": "Einstellungen"
         },
+        "next": "Weiter",
         "edit": "Bearbeiten",
         "cancel": "zurück",
         "cleaningMode": {
-            "2": "ALLE RÄUME",
-            "1": "ECO"
+            "normal": "ALLE RÄUME",
+            "eco": "ECO"
         },
         "countries": {
             "JP": "Japan",
@@ -31,7 +31,6 @@
             "IT": "Italien",
             "CN": "China"
         },
-        "offline": "offline",
         "yes": "ja",
         "logout": "Logout",
         "off": "aus",
@@ -86,9 +85,17 @@
             "message": "Zum manuellen Ansteuern müssen wir uns im selben WLAN-Bereich befinden.",
             "title": "Ich habe ein Verbindungsproblem."
         },
+        "no_clock": {
+            "message": "Bitte zuerst die Uhrzeit des Roboters einstellen um den Kalender zu nutzen.",
+            "title": "It's time\u2026"
+        },
         "no_wifi": {
             "message": "Bitte WLAN-Verbindung herstellen.<br />Drücke OK um es erneut zu versuchen.",
             "title": "Ich habe ein Verbindungsproblem."
+        },
+        "waiting_timeout": {
+            "message": "Robot didn't received the command.",
+            "title": "Timeout"
         },
         "103": {
             "message": "<span class='font_bold'>__robotName__<\/span>: Fertig! Ich fahre zur Basisstation zurück!",
@@ -117,17 +124,18 @@
         "navi": {"title": "Timer Funktion"}
     },
     "robotStateCodes": {
-        "10001": "Status unbekannt.",
-        "10002": "Reingung gestartet.",
-        "10010": "Manuelle Reinigung",
-        "10005": "Reinigung gestoppt.",
-        "10006": "Festgefahren.",
-        "10012": "Wird bereits benutzt.",
-        "10003": "Ruhend.",
-        "10004": "Läd auf.",
-        "10009": "Angedockt.",
-        "10007": "Reinigung unterbrochen.",
-        "10008": "Reinigung fortgesetzt."
+        "manual": "Manuelle Reinigung",
+        "suspend": "Reinigung verschoben",
+        "inbase": "Angedockt.",
+        "robot_offline": "offline",
+        "returning": "Fahre zurück",
+        "idle": "Ruhend.",
+        "cleaning": "Reingung gestartet.",
+        "menu": "Wird bereits benutzt.",
+        "charging": "Läd auf.",
+        "paused": "Reinigung unterbrochen.",
+        "unknown": "Status unbekannt.",
+        "stucked": "Festgefahren."
     },
     "dialogs": {
         "EVENT_DELETE": {
@@ -503,15 +511,16 @@
     },
     "communication": {
         "wakeup_unknown_robot": "Roboter wacht in einigen Sekunden auf. ",
+        "send_to_start": "Sende __robotName__ zurück zur Startposition.",
         "getready_robot": "Roboter ist gleich startbereit.",
         "robot_added": "__robotName__ hinzufügen",
         "20229": "Danke! Staubbehälter geleert und Filter gereinigt.",
         "20208": "Ermittle meine Position.",
         "intend_drive": "Bitte warten.",
         "20209": "Danke!",
+        "20206": "Batterie ist leer, aufladen nötig vor nächster Reinigung",
         "delete_robot_done": "Roboter __robotName__ wurde entfernt.",
         "fetch_robots": "Öffne die Roboter-Übersicht",
-        "20206": "Batterie ist leer, aufladen nötig vor nächster Reinigung",
         "20207": "Systemreset. Bitte am Roboter bestätigen.",
         "20204": "Fertig! Ich fahre zur Startposition zurück um zu laden.",
         "20205": "Staubbehälter/Filter prüfen und ggf. säubern.",
@@ -520,7 +529,6 @@
         "20221": "Eintrag im Zeitplan wurde gelöscht.",
         "stop_robot": "Stoppe __robotName__",
         "20203": "Fertig! Ich fahre zur Startposition zurück.",
-        "inuse": "__robotName__ wird gerade genutzt.",
         "20200": "Fehler",
         "20201": "Fertig! Ich fahre zur Basisstation zurück.",
         "update_scheduler": "Terminkalender wird synchronisiert.",
@@ -530,6 +538,7 @@
         "wait_robot": "Roboter wacht in ca. __wakeUp__ Sekunden auf. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
         "robot_offline": "__robotName__  ist gerade offline",
         "wakeup_robot": "Roboter wacht in ca. __wakeUp__ Sekunden auf. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
+        "menu": "__robotName__ wird gerade genutzt.",
         "20215": "Fehler: Der USB-Stick wurde entfernt.",
         "20216": "Fehler beim Softwareupdate!",
         "20217": "Logdatei wurde erfolgreich erstellt.",
@@ -634,40 +643,31 @@
         "navi": {"title": "Benutzerkonto erstellen"}
     },
     "visualState": {
-        "connecting": "Ich suche nach meinem Server.",
-        "cleaning_tap_manual": "Ich reinige.",
-        "stucked": "Hilfe, ich klemme fest!",
-        "stopped_waited_spot": "Ich bin bereit für die Spotreinigung.",
-        "getready": "Ich bin gleich bereit.",
-        "wakeup": "Ich bin gleich bereit.",
-        "cleaning_spot": "Ich reinige im Spot-Modus.",
-        "inuse": "Ich werde schon benutzt.",
-        "stopped_all": "Ich habe die Reinigung gestoppt.",
-        "stopped_waited_manual": "Ich bin bereit für die manuelle Reinigung.",
-        "resumed": "Ich habe die Reinigung fortgesetzt",
-        "stopped_manual": "Ich habe die manuelle Reinigung gestoppt.",
-        "paused_spot": "Ich habe die Spotreinigung unterbrochen.",
-        "stopped_spot": "Ich habe die Spotreinigung gestoppt.",
+        "suspend": "Ich habe die Reinigung verschoben, bis ich wieder aufgeladen bin.",
+        "returning": "Ich fahre zurück",
         "robot_offline": "Ich bin offline.",
         "inbase": "Ich verweile an meiner Basisstation",
+        "idle_spot": "Ich bin bereit für die Spotreinigung.",
+        "connecting": "Ich suche nach meinem Server.",
         "cleaning": "Ich reinige.",
         "error": "Ich habe ein Problem.",
-        "wakeup_unknown": "Ich wache in ein paar Sekunden auf. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
-        "waiting": "Ich werde in __wakeUp__ Sekunden aufwachen. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
-        "done": "Ich bin fertig mit Reinigen.",
+        "drive_to_base": "Ich fahre zur Basisstation zurück",
+        "waiting": "Empfange Kommando",
+        "drive_to_start": "Ich fahre zur Startposition zurück",
+        "menu": "Ich werde schon benutzt.",
         "paused_manual": "Ich habe die manuelle Reinigung unterbrochen.",
-        "play": "Ich habe die Reinigung gestartet.",
-        "paused": "Ich habe die Reinigung unterbrochen.",
         "charging": "Ich lade meinen Akku auf.",
+        "paused": "Ich habe die Reinigung unterbrochen.",
         "unknown": "Ich suche nach meinem Server.",
-        "awake": "Ich bin bereit.",
+        "stucked": "Hilfe, ich klemme fest!",
         "paused_all": "Ich habe die Reinigung unterbrochen.",
-        "waiting_unknown": "Ich wache in ein paar Sekunden auf. Durch Drücken des grünen Knopfes kann dies verkürzt werden.",
+        "idle_all": "Ich bin bereit.",
         "manual": "Steuere mich per App Fernbedienung!",
         "cleaning_manual": "Steuere mich per App Fernbedienung!",
         "idle": "Ich bin bereit.",
-        "stopped_waited_all": "Ich bin bereit.",
-        "stopped": "Ich habe die Reinigung gestoppt.",
+        "idle_manual": "Ich bin bereit für die manuelle Reinigung.",
+        "cleaning_spot": "Ich reinige im Spot-Modus.",
+        "paused_spot": "Ich habe die Spotreinigung unterbrochen.",
         "cleaning_all": "Ich reinige."
     },
     "confirm": {"close_app": "Möchtest du die App wirklich schliessen?"},

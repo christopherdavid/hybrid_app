@@ -85,8 +85,21 @@ var ROBOT_MESSAGE_NOTIFICATION = 4013;
 var ROBOT_MESSAGE_ERROR = 4014;
 
 var ROBOT_ONLINE_STATUS_CHANGED = 4015;
+var ROBOT_COMMAND_FAILED = 4016;
+
+
 
 // Robot state codes
+var ROBOT_STATE_UNKNOWN             = 0;
+var ROBOT_STATE_IDLE                = 1;
+var ROBOT_USER_MENU_STATE           = 2;
+var ROBOT_STATE_CLEANING            = 3;
+var ROBOT_STATE_SUSPENDED_CLEANING  = 4;
+var ROBOT_STATE_PAUSED              = 5;
+var ROBOT_STATE_MANUAL_CLEANING     = 6;
+var ROBOT_STATE_RETURNING           = 7;
+
+/*
 var ROBOT_STATE_UNKNOWN     = 10001;
 var ROBOT_STATE_CLEANING    = 10002;
 var ROBOT_STATE_IDLE        = 10003;
@@ -101,7 +114,7 @@ var ROBOT_STATE_MANUAL_CLEANING     = 10010;
 var ROBOT_STATE_MANUAL_PLAY_MODE    = 10011;
 // user is in the menu state.
 var ROBOT_USER_MENU_STATE = 10012;
-
+*/
 
 var PLUGIN_JSON_KEYS  =  (function() {
     var keys = {
@@ -243,8 +256,8 @@ var CLEANING_CATEGORY_ALL = 2;
 var CLEANING_CATEGORY_SPOT = 3;
 
 // Cleaning Mode
-var CLEANING_MODE_ECO = 1;
-var CLEANING_MODE_NORMAL = 2;
+var CLEANING_MODE_ECO = 2;
+var CLEANING_MODE_NORMAL = 1;
 
 // Navigation Control Ids
 var NAVIGATION_CONTROL_1 = 1;
@@ -808,7 +821,7 @@ var RobotPluginManager = ( function() {
          * @param callbackError     error callback for the API
          */     
         sendCommandToRobot2: function(robotId, commandId, commandParams, callbackSuccess, callbackError) {
-            var stateCode = ROBOT_STATE_ON_BASE;
+            var stateCode = ROBOT_STATE_IDLE;
             var delay = 1000;
             switch(robotId) {
                 case "mapdemo123":
@@ -834,9 +847,42 @@ var RobotPluginManager = ( function() {
             
         },
         
+        /**
+         * This API gets the current state of the robot
+         *  on success this API returns a JSON Object
+         * <br>{robotCurrentState:"robotCurrentState", robotId:"robotId"}
+         * <br>robotCurrentState is an integer value of the current actual state of the robot
+         * <br>robotId is the serial number of the robot
+         * <p>
+         * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
+         * @param robotId           the serial number of the robot
+         * @param callbackSuccess   success callback for this API
+         * @param callbackError     error callback for this API
+         */
+
+        getRobotCurrentStateDetails: function(robotId, callbackSuccess, callbackError) {
+            //window.plugins.neatoPluginLayer.robotMgr.getRobotCurrentState(robotId, callbackSuccess, callbackError);
+            window.setTimeout(function() {
+                callbackSuccess({"robotId":robotId,
+                "robotCurrentStateDetails":{                
+                "robotCurrentState": "1", 
+                    "robotStateParams": {
+                     "CrntErrorCode": 22000,
+                     "RobotIsDocked": 0,
+                     "ClockIsSet": 0,
+                     "DockHasBeenSeen": 0,
+                     "IsCharging": 1,
+                     "robotCleaningCategory": 0,
+                     "robotCleaningMode": 1,
+                     "robotCleaningModifier": 0,
+                     "robotSpotCleaningAreaLength":0,
+                     "robotSpotCleaningAreaHeight":0
+                     }}})
+             }, 100);
+        },
         
-        getRobotCleaningState: function(robotId, callbackSuccess, callbackError) {
-            var stateCode = ROBOT_STATE_ON_BASE;
+        getRobotCurrentState: function(robotId, callbackSuccess, callbackError) {
+            var stateCode = ROBOT_STATE_IDLE;
             var delay = 1000;
             switch(robotId) {
                 case "mapdemo123": // Map Demo
@@ -868,7 +914,7 @@ var RobotPluginManager = ( function() {
             
              window.setTimeout(function() {
                 callbackSuccess({
-                    "online":false,
+                    "online":true,
                     "robotId": robotId
                 });
             }, 100);
@@ -1229,7 +1275,7 @@ var RobotPluginManager = ( function() {
                                 {   
                                     'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
                                     'scheduleEventId':'76d784e0-78a2-45e0-a67a-3f404eecafc8', 
-                                    'scheduleEventData': {'startTime':'0:00','day':1, 'cleaningMode':'2'}
+                                    'scheduleEventData': {'startTime':'0:00','day':1, 'cleaningMode':CLEANING_MODE_NORMAL}
                                 }
                             );
                         }, 500);
@@ -1240,7 +1286,7 @@ var RobotPluginManager = ( function() {
                                 {   
                                     'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
                                     'scheduleEventId':'5d31a4e8-5eca-41b8-87bc-fa10a13c4152', 
-                                    'scheduleEventData': {'startTime':'5:30','day':2, 'cleaningMode':'1'}
+                                    'scheduleEventData': {'startTime':'5:30','day':2, 'cleaningMode':CLEANING_MODE_ECO}
                                 }
                             );
                         }, 200);
@@ -1251,7 +1297,7 @@ var RobotPluginManager = ( function() {
                                 {   
                                     'scheduleId': '955fe88b-061f-4cc0-9f2b-c4baa73b156a',
                                     'scheduleEventId':'5d31a4e8-5eca-41b8-87bc-fa10a13c4151', 
-                                    'scheduleEventData': {'startTime':'1:30','day':0, 'cleaningMode':'1'}
+                                    'scheduleEventData': {'startTime':'1:30','day':0, 'cleaningMode':CLEANING_MODE_ECO}
                                 }
                             );
                         }, 300);

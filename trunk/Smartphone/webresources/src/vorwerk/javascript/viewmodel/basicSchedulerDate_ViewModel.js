@@ -12,7 +12,10 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     this.selectedCleaningDays = ko.observableArray([]);
     this.blockedDays = ko.observableArray([]);
     // set eco as default
-    this.cleaningMode = ko.observable(1);
+    this.cleaningMode = ko.observable(CLEANING_MODE_ECO);
+    this.ecoMode = ko.computed(function() {
+        return that.cleaningMode() == CLEANING_MODE_ECO;
+    });
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
     this.hasDelete = ko.observable(false);
     
@@ -96,11 +99,11 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
                     that.cleaningMode(eventMode);
                 } else {
                     // set eco as default
-                    that.cleaningMode(1);
+                    that.cleaningMode(CLEANING_MODE_ECO);
                 }
             } else {
                 // set eco as default
-                that.cleaningMode(1);
+                that.cleaningMode(CLEANING_MODE_ECO);
             }
         }
         
@@ -123,10 +126,6 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
         });
     };
 
-    this.toggleEcoMode = function() {
-        that.cleaningMode(that.cleaningMode()==2?1:2);
-    };
-    
     this.reload = function() {
         // remove conditions
         that.conditions = {};
@@ -136,6 +135,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     this.deinit = function() {
         $(window).off(".timeset");
         that.isNextEnabled.dispose();
+        that.ecoMode.dispose();
     };
     /* </enviroment functions> */
 
@@ -269,7 +269,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     }
     
     this.toggleEcoMode = function() {
-        that.cleaningMode(that.cleaningMode() == "1" ? "2" : "1");
+        that.cleaningMode(that.cleaningMode() == CLEANING_MODE_ECO ? CLEANING_MODE_NORMAL : CLEANING_MODE_ECO);
     };
     
     this.del = function() {
@@ -279,7 +279,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
             var localTime = localizeTime(item.scheduleEventData.startTime);
             sContext += $.i18n.t("common.day." + item.scheduleEventData.day);
             sContext += " " + localTime.time + " " + localTime.marker + ",";
-            sContext += $.i18n.t("common.cleaningMode." + (item.scheduleEventData.cleaningMode == "1" ? 1 : 2));
+            sContext += $.i18n.t("common.cleaningMode." + keyString[(item.scheduleEventData.cleaningMode == CLEANING_MODE_ECO ? CLEANING_MODE_ECO : CLEANING_MODE_NORMAL)]);
             
             // show delete warning message 
             parent.notification.showDialog(dialogType.WARNING,$.i18n.t('dialogs.EVENT_DELETE.title'), $.i18n.t('dialogs.EVENT_DELETE.message') +"</br>"+ sContext, 

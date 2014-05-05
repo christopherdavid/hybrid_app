@@ -6,17 +6,17 @@
     "common": {
         "change": "Cambiar",
         "no": "no",
-        "next": "Siguiente",
         "menu": {
             "schedule": "Programar",
             "cleaning": "Limpieza",
             "settings": "Ajustes"
         },
+        "next": "Siguiente",
         "edit": "Editar",
         "cancel": "Cancelar",
         "cleaningMode": {
-            "2": "Normal",
-            "1": "ECO"
+            "normal": "Normal",
+            "eco": "ECO"
         },
         "countries": {
             "JP": "Japón",
@@ -31,7 +31,6 @@
             "IT": "Italia",
             "CN": "China"
         },
-        "offline": "offline",
         "yes": "Sí",
         "logout": "Salir",
         "off": "Apagado",
@@ -60,7 +59,7 @@
             "edit_done_title": "Cuenta modificada",
             "edit_done_message": "La cuenta de usuario ha sido actualizada correctamente",
             "tou_pp_header": "Información legal",
-            "subscribe_agreement": "Nuestro propósito es mantenerle al tanto de las últimas novedades y de la información sobre productos y nos esforzamos por mantener la seguridad de sus datos. No transmitimos sus datos a empresas no pertenecientes al grupo Vorwerk. <br /> Acepto que Vorwerk International Strecker & Co. utilice mi dirección de correo electrónico para enviarme información y publicidad (como últimas noticias, notificaciones u ofertas especiales). Este consentimiento se puede revocar en cualquier momento en la opción de menú \"Ajustes\". Para obtener más información, consulte la Política de privacidad.",
+            "subscribe_agreement": "Nuestro propósito es mantenerle al tanto de las últimas novedades y de la información sobre productos y nos esforzamos por mantener la seguridad de sus datos. No transmitimos sus datos a empresas no pertenecientes al grupo Vorwerk. <br /> <br />Acepto que Vorwerk International Strecker & Co. utilice mi dirección de correo electrónico para enviarme información y publicidad (como últimas noticias, notificaciones u ofertas especiales). Este consentimiento se puede revocar en cualquier momento en la opción de menú \"Ajustes\". Para obtener más información, consulte la Política de privacidad.",
             "register_notAccepted_message": "Por favor revise los documentos de la política de privacidad y las condiciones de uso para completar el registro"
         },
         "navi": {"title": "Registro."}
@@ -86,9 +85,17 @@
             "message": "Es necesario estar conectados a la misma red para un correcto funcionamiento.",
             "title": "Problemas de conectividad."
         },
+        "no_clock": {
+            "message": "Before using app scheduling please set the clock on the robot display",
+            "title": "It's time\u2026"
+        },
         "no_wifi": {
             "message": "Necesita una conexión WIFI para utilizar esta función. Por favor, active el WIFI en Ajustes.",
             "title": "Problemas de conectividad."
+        },
+        "waiting_timeout": {
+            "message": "Robot didn't received the command.",
+            "title": "Timeout"
         },
         "103": {
             "message": "<span class='font_bold'>__robotName__<\/span>: ¡He terminado y regreso a mi base!",
@@ -117,17 +124,18 @@
         "navi": {"title": "Programando."}
     },
     "robotStateCodes": {
-        "10001": "Estado desconocido.",
-        "10002": "Limpieza iniciada.",
-        "10010": "Limpieza manual",
-        "10005": "Limpieza detenida.",
-        "10006": "Atascado.",
-        "10012": "In Use",
-        "10003": "Inactivo.",
-        "10004": "Cargando.",
-        "10009": "En la base.",
-        "10007": "Limpieza en pausa.",
-        "10008": "Limpieza reanudada."
+        "manual": "Limpieza manual",
+        "suspend": "Suspended Cleaning",
+        "inbase": "En la base.",
+        "robot_offline": "offline",
+        "returning": "Returning",
+        "idle": "Inactivo.",
+        "cleaning": "Limpieza iniciada.",
+        "menu": "In Use",
+        "charging": "Cargando.",
+        "paused": "Limpieza en pausa.",
+        "unknown": "Estado desconocido.",
+        "stucked": "Atascado."
     },
     "dialogs": {
         "EVENT_DELETE": {
@@ -503,15 +511,16 @@
     },
     "communication": {
         "wakeup_unknown_robot": "El robot estará listo en unos segundos.",
+        "send_to_start": "Sending __robotName__ back to startposition...",
         "getready_robot": "El robot se está preparando.",
         "robot_added": "Añadiendo __robotName__",
         "20229": "Thank you for emptying my Dirt Bin and cleaning my Filter.",
         "20208": "Please wait while I check my surrounding.",
         "intend_drive": "Por favor, espere.",
         "20209": "Thank you!",
+        "20206": "My battery is low. I need to charge my battery before I can clean.",
         "delete_robot_done": "El robot __robotName__ ha sido borrado.",
         "fetch_robots": "Accediendo al listado del robot",
-        "20206": "My battery is low. I need to charge my battery before I can clean.",
         "20207": "I had to reset. Please press OKAY to restart.",
         "20204": "I'm returning to my starting location to charge.",
         "20205": "Please empty my Dirt Bin and Filter if needed.",
@@ -520,7 +529,6 @@
         "20221": "Schedule setting was removed.",
         "stop_robot": "Parando __robotName__",
         "20203": "Finished! I'm returning to my starting location.",
-        "inuse": "__robotName__ is currentyl in use",
         "20200": "Error",
         "20201": "¡He terminado! Regreso a la base.",
         "update_scheduler": "Sincronizando calendario.",
@@ -530,6 +538,7 @@
         "wait_robot": "El robot estará listo en __wakeUp__ segundos.",
         "robot_offline": "__robotName__  is currently offline",
         "wakeup_robot": "El robot estará listo en __wakeUp__ segundos.",
+        "menu": "__robotName__ is currentyl in use",
         "20215": "USB Flash Drive was Removed.",
         "20216": "Software Update FAILED.",
         "20217": "Logfile was created successfully!",
@@ -634,40 +643,31 @@
         "navi": {"title": "Crear una cuenta de usuario."}
     },
     "visualState": {
-        "connecting": "Intentando conectar al servidor\u2026",
-        "cleaning_tap_manual": "Estoy limpiando",
-        "stucked": "¡Ayuda! Estoy atascado.",
-        "stopped_waited_spot": "Estoy listo para empezar en local",
-        "getready": "Preparándome\u2026",
-        "wakeup": "Preparándome\u2026",
-        "cleaning_spot": "Estoy limpiando en local",
-        "inuse": "I'm in use by someone else",
-        "stopped_all": "He parado de limpiar",
-        "stopped_waited_manual": "Estoy listo para empezar en manual",
-        "resumed": "Limpieza reanudada",
-        "stopped_manual": "He parado de limpiar en manual",
-        "paused_spot": "He pausado la limpieza local",
-        "stopped_spot": "He parado de limpiar en local",
+        "suspend": "I'm suspended cleaning till im fully recharged.",
+        "returning": "I'm returning",
         "robot_offline": "I'm Offline",
         "inbase": "Estoy conectado a la base.",
+        "idle_spot": "Estoy listo para empezar en local",
+        "connecting": "Intentando conectar al servidor\u2026",
         "cleaning": "Limpieza en curso.",
         "error": "Creo que existe un problema",
-        "wakeup_unknown": "Estaré listo en unos segundos\u2026",
-        "waiting": "Estaré activo en __wakeUp__ segundos.",
-        "done": "He terminado de limpiar.",
+        "drive_to_base": "I'm returning to my base",
+        "waiting": "Receiving command",
+        "drive_to_start": "I'm returning to my startposition",
+        "menu": "I'm in use by someone else",
         "paused_manual": "He pausado la limpieza manual",
-        "play": "He comenzado la limpieza",
-        "paused": "Limpieza en pausa.",
         "charging": "Me estoy cargando.",
+        "paused": "Limpieza en pausa.",
         "unknown": "Estoy buscando mi servidor.",
-        "awake": "Estoy listo para empezar.",
+        "stucked": "¡Ayuda! Estoy atascado.",
         "paused_all": "He pausado la limpieza",
-        "waiting_unknown": "Estaré activo en unos segundos.",
+        "idle_all": "Estoy listo para empezar.",
         "manual": "Manéjame con tu aplicación móvil",
         "cleaning_manual": "Manéjame con tu aplicación móvil",
         "idle": "Estoy listo para empezar.",
-        "stopped_waited_all": "Estoy listo para empezar",
-        "stopped": "He parado de limpiar",
+        "idle_manual": "Estoy listo para empezar en manual",
+        "cleaning_spot": "Estoy limpiando en local",
+        "paused_spot": "He pausado la limpieza local",
         "cleaning_all": "Estoy limpiando"
     },
     "confirm": {"close_app": "¿Desea cerrar la aplicación?"},

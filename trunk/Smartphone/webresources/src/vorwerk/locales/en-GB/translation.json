@@ -6,17 +6,17 @@
     "common": {
         "change": "change",
         "no": "no",
-        "next": "Next",
         "menu": {
             "schedule": "Schedule",
             "cleaning": "Cleaning",
             "settings": "Settings"
         },
+        "next": "Next",
         "edit": "Edit",
         "cancel": "Cancel",
         "cleaningMode": {
-            "2": "ALL ROOMS",
-            "1": "ECO"
+            "normal": "ALL ROOMS",
+            "eco": "ECO"
         },
         "countries": {
             "JP": "Japan",
@@ -31,7 +31,6 @@
             "IT": "Italy",
             "CN": "China"
         },
-        "offline": "offline",
         "yes": "yes",
         "logout": "Logout",
         "off": "off",
@@ -86,9 +85,17 @@
             "message": "We have to be in the same Wi-Fi network to operate properly.",
             "title": "Connectivity Problems"
         },
+        "no_clock": {
+            "message": "Before using app scheduling please set the clock on the robot display",
+            "title": "It's time\u2026"
+        },
         "no_wifi": {
             "message": "You need a Wi-Fi connection to use this feature. Please turn on Wi-Fi in Device Settings.<br />Press OK to retry.",
             "title": "Connectivity Problems"
+        },
+        "waiting_timeout": {
+            "message": "Robot didn't received the command.",
+            "title": "Timeout"
         },
         "103": {
             "message": "<span class='font_bold'>__robotName__<\/span>: I'm finished and returning to my base!",
@@ -117,17 +124,18 @@
         "navi": {"title": "Scheduling"}
     },
     "robotStateCodes": {
-        "10001": "State Unknown",
-        "10002": "Started Cleaning",
-        "10010": "Manual Cleaning",
-        "10005": "Stopped Cleaning",
-        "10006": "Stuck",
-        "10012": "In Use",
-        "10003": "Idle",
-        "10004": "Charging",
-        "10009": "At Base",
-        "10007": "Paused Cleaning",
-        "10008": "Resumed Cleaning"
+        "manual": "Manual Cleaning",
+        "suspend": "Suspended Cleaning",
+        "inbase": "At Base",
+        "robot_offline": "offline",
+        "returning": "Returning",
+        "idle": "Idle",
+        "cleaning": "Started Cleaning",
+        "menu": "In Use",
+        "charging": "Charging",
+        "paused": "Paused Cleaning",
+        "unknown": "State Unknown",
+        "stucked": "Stuck"
     },
     "dialogs": {
         "EVENT_DELETE": {
@@ -503,15 +511,16 @@
     },
     "communication": {
         "wakeup_unknown_robot": "Robot wakes up in some seconds.",
+        "send_to_start": "Sending __robotName__ back to startposition...",
         "getready_robot": "Robot is getting ready.",
         "robot_added": "Adding __robotName__ ...",
         "20229": "Thank you for emptying my Dirt Bin and cleaning my Filter.",
         "20208": "Please wait while I check my surrounding.",
         "intend_drive": "Please wait...",
         "20209": "Thank you!",
+        "20206": "My battery is low. I need to charge my battery before I can clean.",
         "delete_robot_done": "Robot __robotName__ has been removed.",
         "fetch_robots": "Accessing your robot list ...",
-        "20206": "My battery is low. I need to charge my battery before I can clean.",
         "20207": "I had to reset. Please press OKAY to restart.",
         "20204": "I'm returning to my starting location to charge.",
         "20205": "Please empty my Dirt Bin and Filter if needed.",
@@ -520,7 +529,6 @@
         "20221": "Schedule setting was removed.",
         "stop_robot": "Stopping __robotName__ ...",
         "20203": "Finished! I'm returning to my starting location.",
-        "inuse": "__robotName__ is currentyl in use",
         "20200": "Error: Invalid Alert",
         "20201": "Finished! I'm returning to my base station.",
         "update_scheduler": "Synchronizing your scheduler ...",
@@ -530,6 +538,7 @@
         "wait_robot": "Robot wakes up in about __wakeUp__ seconds.",
         "robot_offline": "__robotName__  is currently offline",
         "wakeup_robot": "Robot wakes up in about __wakeUp__ seconds.",
+        "menu": "__robotName__ is currentyl in use",
         "20215": "USB Flash Drive was Removed.",
         "20216": "Software Update FAILED.",
         "20217": "Logfile was created successfully!",
@@ -634,40 +643,31 @@
         "navi": {"title": "Create User Account"}
     },
     "visualState": {
-        "connecting": "Trying to connect to server\u2026",
-        "cleaning_tap_manual": "I'm manual cleaning",
-        "stucked": "Help me! I'm stuck.",
-        "stopped_waited_spot": "I\u2019m ready to re-start spot",
-        "getready": "Working\u2026",
-        "wakeup": "Working\u2026",
-        "cleaning_spot": "I'm cleaning spot",
-        "inuse": "I'm in use by someone else",
-        "stopped_all": "I've stopped cleaning",
-        "stopped_waited_manual": "I\u2019m ready to start manual cleaning",
-        "resumed": "Resuming Cleaning.",
-        "stopped_manual": "I've stopped manual cleaning",
-        "paused_spot": "I've paused cleaning spot",
-        "stopped_spot": "I've stopped cleaning spot",
+        "suspend": "I'm suspended cleaning till im fully recharged.",
+        "returning": "I'm returning",
         "robot_offline": "I'm Offline",
         "inbase": "I\u2019m having a rest at my base.",
+        "idle_spot": "I\u2019m ready to start spot",
+        "connecting": "Trying to connect to server\u2026",
         "cleaning": "I'm cleaning.",
         "error": "I guess I have a problem.",
-        "wakeup_unknown": "Ready in a few seconds\u2026",
-        "waiting": "I'll wake up in about __wakeUp__ seconds.",
-        "done": "I'm done with cleaning.",
+        "drive_to_base": "I'm returning to my base",
+        "waiting": "Receiving command",
+        "drive_to_start": "I'm returning to my startposition",
+        "menu": "I'm in use by someone else",
         "paused_manual": "I've paused manual cleaning",
-        "play": "I've started cleaning.",
-        "paused": "Cleaning paused.",
         "charging": "I'm charging.",
+        "paused": "Cleaning paused.",
         "unknown": "I'm looking for my server.",
-        "awake": "I'm ready to start.",
+        "stucked": "Help me! I'm stuck.",
         "paused_all": "I've paused cleaning",
-        "waiting_unknown": "I'll wake up in some seconds.",
+        "idle_all": "I'm ready to start.",
         "manual": "Drive me with your app Remote!",
         "cleaning_manual": "Drive me with your app Remote!",
         "idle": "I'm ready to start.",
-        "stopped_waited_all": "I\u2019m ready to re-start",
-        "stopped": "I've stopped cleaning.",
+        "idle_manual": "I\u2019m ready to start manual cleaning",
+        "cleaning_spot": "I'm cleaning spot",
+        "paused_spot": "I've paused cleaning spot",
         "cleaning_all": "I'm cleaning"
     },
     "confirm": {"close_app": "Do you really want to close the application?"},

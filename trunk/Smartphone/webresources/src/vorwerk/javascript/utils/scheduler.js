@@ -25,7 +25,7 @@ function Scheduler($root, scheduleType, enabled) {
         return +value;
         });
     var dayNameLength = parseInt($.i18n.t("pattern.dayNameLength"),10);
-    var labelEco = $.i18n.t("common.cleaningMode.1");
+    var labelEco = $.i18n.t("common.cleaningMode." + keyString[CLEANING_MODE_ECO]);
     
     var columns = new Array(7);
     // better use a variable instead of read and convert webkit-transform value using a matrix 
@@ -237,7 +237,7 @@ function Scheduler($root, scheduleType, enabled) {
             $task.data('reference', oEvent);
             var $taskInner = $('<div/>', {
                 'class' : clazz + 'Inner mode-'+ oEvent.scheduleEventData.cleaningMode,
-                'text' : oEvent.scheduleEventData.cleaningMode == 1 ? labelEco : ""
+                'text' : oEvent.scheduleEventData.cleaningMode == CLEANING_MODE_ECO ? labelEco : ""
             });
             
             $task.css('top', MIN_IN_PX * startTimeInMin);
