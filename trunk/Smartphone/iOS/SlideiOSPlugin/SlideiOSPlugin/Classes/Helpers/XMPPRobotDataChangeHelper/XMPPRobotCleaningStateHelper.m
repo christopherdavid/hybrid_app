@@ -16,7 +16,7 @@
         return ROBOT_STATE_CLEANING;
     }
     else if (commandId == COMMAND_STOP_ROBOT) {
-        return ROBOT_STATE_SUSPENDED_CLEANING;
+        return ROBOT_STATE_IDLE;
     }
     else if (commandId == COMMAND_PAUSE_CLEANING) {
         return ROBOT_STATE_PAUSED;

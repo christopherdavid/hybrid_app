@@ -404,5 +404,4 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 #define ROBOT_STATE_SUSPENDED_CLEANING      4
 #define ROBOT_STATE_PAUSED                  5
 #define ROBOT_STATE_MANUAL_CLEANING         6
-#define ROBOT_STATE_IDLE_CHARGING           7
-#define ROBOT_STATE_RETURNING               8
+#define ROBOT_STATE_RETURNING               7
