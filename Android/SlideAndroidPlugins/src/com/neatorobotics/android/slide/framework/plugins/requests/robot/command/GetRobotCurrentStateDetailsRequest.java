@@ -15,15 +15,15 @@ import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
 
-public class GetRobotCleaningDetailsRequest extends RobotManagerRequest {
+public class GetRobotCurrentStateDetailsRequest extends RobotManagerRequest {
     @Override
     public void execute(String action, JSONArray data, String callbackId) {
         RobotJsonData jsonData = new RobotJsonData(data);
-        getRobotCleaningDetails(mContext, jsonData, callbackId);
+        getRobotCurrentStateDetails(mContext, jsonData, callbackId);
     }
 
-    private void getRobotCleaningDetails(final Context context, RobotJsonData jsonData, final String callbackId) {
-        LogHelper.logD(TAG, "getRobotCleaningDetails action initiated in Robot plugin");
+    private void getRobotCurrentStateDetails(final Context context, RobotJsonData jsonData, final String callbackId) {
+        LogHelper.logD(TAG, "getRobotCurrentStateDetails action initiated in Robot plugin");
         final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
         LogHelper.logD(TAG, "Params\nRobotId=" + robotId);
 
@@ -34,24 +34,25 @@ public class GetRobotCleaningDetailsRequest extends RobotManagerRequest {
                         JSONObject jsonResult = new JSONObject();
                         if ((responseResult != null) && (responseResult instanceof GetRobotProfileDetailsResult2)) {
                             GetRobotProfileDetailsResult2 result = (GetRobotProfileDetailsResult2) responseResult;
-                            jsonResult = getCleaningDetailsJsonObject(result);
+                            jsonResult = getCurrentStateDetailsJsonObject(robotId, result);
                         }
                         return jsonResult;
                     }
                 });
     }
 
-    private JSONObject getCleaningDetailsJsonObject(GetRobotProfileDetailsResult2 result) {
+    private JSONObject getCurrentStateDetailsJsonObject(String robotId, GetRobotProfileDetailsResult2 result) {
         JSONObject cleaningDetailsJsonObj = null;
         try {
             cleaningDetailsJsonObj = new JSONObject();
-            String cleaningStateDetails = result
+            String currentStateDetails = result
                     .getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
-            LogHelper.logD(TAG, "getRobotCleaningDetails " + cleaningStateDetails);
-            cleaningDetailsJsonObj.put(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS, cleaningStateDetails);
+            LogHelper.logD(TAG, "getRobotCurrentStateDetails " + currentStateDetails);
+            cleaningDetailsJsonObj.put(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS, currentStateDetails);
+            cleaningDetailsJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
 
         } catch (JSONException e) {
-            LogHelper.logD(TAG, "Exception in getCleaningDetailsJsonObject", e);
+            LogHelper.logD(TAG, "Exception in getCurrentStateDetailsJsonObject", e);
         }
 
         return cleaningDetailsJsonObj;

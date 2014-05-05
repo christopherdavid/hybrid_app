@@ -18,6 +18,7 @@ import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeysEnum;
 
 public class RobotDataNotifyUtils {
@@ -56,6 +57,7 @@ public class RobotDataNotifyUtils {
         switch (key) {
             case ROBOT_CURRENT_STATE:
             case ROBOT_CLEANING_COMMAND:
+            case ROBOT_CURRENT_STATE_DETAILS:
                 notifyStateChange(context, robotId, details);
                 break;
             case ROBOT_NAME:
@@ -195,25 +197,27 @@ public class RobotDataNotifyUtils {
     private static void notifyStateChange(Context context, String robotId, GetRobotProfileDetailsResult2 details) {
 
         String currentState = RobotProfileDataUtils.getRobotCurrentState(context, details);
+        String currentStateDetails = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
+
+        HashMap<String, String> stateData = new HashMap<String, String>();
+        stateData.put(ProfileAttributeKeys.ROBOT_CURRENT_STATE, currentState);
+        stateData.put(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS, currentStateDetails);
+        
+        RobotNotificationUtil.notifyDataChanged(context, robotId,
+                RobotNotificationConstants.ROBOT_CURRENT_STATE_CHANGED, stateData);
 
         String state = RobotProfileDataUtils.getState(context, details);
-
-        if (!TextUtils.isEmpty(currentState)) {
-            HashMap<String, String> stateData = new HashMap<String, String>();
-            stateData.put(JsonMapKeys.KEY_ROBOT_CURRENT_STATE, currentState);
-            RobotNotificationUtil.notifyDataChanged(context, robotId,
-                    RobotNotificationConstants.ROBOT_CURRENT_STATE_CHANGED, stateData);
-            LogHelper.log(TAG, "Current state Received from Web server: " + currentState);
-        }
-
         if (!TextUtils.isEmpty(state)) {
-            HashMap<String, String> stateData = new HashMap<String, String>();
+            HashMap<String, String> virtualStateData = new HashMap<String, String>();
             stateData.put(JsonMapKeys.KEY_ROBOT_STATE_UPDATE, String.valueOf(state));
             RobotNotificationUtil.notifyDataChanged(context, robotId, RobotNotificationConstants.ROBOT_STATE_UPDATE,
-                    stateData);
-        } else {
+                    virtualStateData);
+         } else {
             LogHelper.logD(TAG, "No State for robotId: " + robotId);
-        }
+         }
+
+        LogHelper.log(TAG, "Current state Received from Web server: " + currentStateDetails);
+
     }
 
     private static void notifyRobotIsOnlineStatusChanged(Context context, String robotId,

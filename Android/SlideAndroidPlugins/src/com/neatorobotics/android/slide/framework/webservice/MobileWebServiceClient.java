@@ -30,7 +30,7 @@ public class MobileWebServiceClient {
 
     private static InputStream executeHttpPostAndReturnStream(Context context, String methodName,
             Map<String, String> postParams) throws IOException, UserUnauthorizedException {
-        String url = getUrlFromMethodName(methodName);
+        String url = getUrlFromMethodName(context, methodName);
         LogHelper.logD(TAG, "Executing URL = " + url);
 
         if (!NetworkConnectionUtils.hasNetworkConnection(context)) {
@@ -39,7 +39,7 @@ public class MobileWebServiceClient {
             throw exception;
         }
 
-        postParams.put(NeatoWebConstants.QUERY_KEY_APIKEY, NeatoWebConstants.getApiKey());
+        postParams.put(NeatoWebConstants.QUERY_KEY_APIKEY, NeatoWebConstants.getApiKey(context));
         HttpPost postHttpRequest = new HttpPost(url);
 
         postHttpRequest.addHeader("Accept-Language", AppUtils.getCurrentLocale(context));
@@ -97,9 +97,9 @@ public class MobileWebServiceClient {
         return response;
     }
 
-    private static String getUrlFromMethodName(String methodName) {
+    private static String getUrlFromMethodName(Context context, String methodName) {
 
-        String baseUrl = NeatoWebConstants.getBaseJsonUrl();
+        String baseUrl = NeatoWebConstants.getBaseJsonUrl(context);
         LogHelper.logD(TAG, "Url Used:  " + baseUrl);
         String methodParamKey = NeatoWebConstants.QUERY_KEY_METHOD;
         String methodParamString = String.format("%s=%s", methodParamKey, encodeText(methodName));

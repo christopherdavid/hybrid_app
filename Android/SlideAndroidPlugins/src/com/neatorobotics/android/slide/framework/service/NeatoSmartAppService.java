@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -253,7 +252,7 @@ public class NeatoSmartAppService extends Service {
     };
 
     private String getFormattedServerInfo() {
-        return String.format("%s (%s)", NeatoWebConstants.getServerUrl(), NeatoWebConstants.getServerName());
+        return String.format("%s (%s)", NeatoWebConstants.getServerUrl(this), NeatoWebConstants.getServerName(this));
     }
 
     @Override
@@ -261,14 +260,13 @@ public class NeatoSmartAppService extends Service {
         super.onCreate();
 
         AppUtils.logLibraryVersion();
-        NeatoWebConstants.setServerEnvironment(NeatoWebConstants.STAGING_SERVER_ID);
         LogHelper.log(TAG, "Server information = " + getFormattedServerInfo());
 
         // Get XMPP started.
         mXMPPConnectionHelper = XMPPConnectionHelper.getInstance(this);
-        String xmppDomain = NeatoWebConstants.getXmppServerDomain();
+        String xmppDomain = NeatoWebConstants.getXmppServerDomain(this);
         mXMPPConnectionHelper.setServerInformation(xmppDomain, AppConstants.JABBER_SERVER_PORT,
-                NeatoWebConstants.getXmppWebServer());
+                NeatoWebConstants.getXmppWebServer(this));
         mXMPPConnectionHelper.setXmppNotificationListener(mXmppNotificationListener, mHandler);
 
         if (NetworkConnectionUtils.hasNetworkConnection(getApplicationContext())) {

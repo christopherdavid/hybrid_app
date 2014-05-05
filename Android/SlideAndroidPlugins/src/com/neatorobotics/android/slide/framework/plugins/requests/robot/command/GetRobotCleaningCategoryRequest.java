@@ -21,6 +21,7 @@ import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.Ge
 public class GetRobotCleaningCategoryRequest extends RobotManagerRequest {
     @Override
     public void execute(String action, JSONArray data, String callbackId) {
+    	LogHelper.log(TAG, "**** TODO: Deprecated GetRobotCleaningCategoryRequest ****");
         RobotJsonData jsonData = new RobotJsonData(data);
         getRobotCleaningCategory(mContext, jsonData, callbackId);
     }
@@ -37,7 +38,7 @@ public class GetRobotCleaningCategoryRequest extends RobotManagerRequest {
                         JSONObject jsonResult = new JSONObject();
                         if ((responseResult != null) && (responseResult instanceof GetRobotProfileDetailsResult2)) {
                             GetRobotProfileDetailsResult2 result = (GetRobotProfileDetailsResult2) responseResult;
-                            int cleaningCategory = RobotProfileDataUtils.getRobotCleaningCategory(context, result);
+                            int cleaningCategory = RobotProfileDataUtils.getRobotCurrentCleaningCategoryFromStateDetails(context, result);
                             if (cleaningCategory == RobotCommandPacketConstants.CLEANING_CATEGORY_INVALID) {
                             	sendError(callbackId, ErrorTypes.ERROR_TYPE_NO_CLEANING_STATE_SET, "No Current Cleaning State set by the robot");
                             	return null;

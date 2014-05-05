@@ -3,12 +3,12 @@ package com.neatorobotics.android.slide.framework.robotdata;
 import java.util.HashMap;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.text.TextUtils;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.model.CleaningStateDetails;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacketUtils;
 import com.neatorobotics.android.slide.framework.robot.drive.RobotAvailabilityToDriveStatus;
@@ -18,6 +18,7 @@ import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.Ge
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeysEnum;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeValueKeys;
 
 public class RobotProfileDataUtils {
 
@@ -55,10 +56,53 @@ public class RobotProfileDataUtils {
         return Integer.parseInt(robotIsOnlineStatus);
     }
 
+    /**
+     * Get state from the current state key and if that is empty get from the
+     * current state details.
+     */
     public static String getRobotCurrentState(Context context, GetRobotProfileDetailsResult2 details) {
         String currentState = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE);
+        if (TextUtils.isEmpty(currentState)) {
+            LogHelper.logD(TAG, "ROBOT_CURRENT_STATE is empty, get state from state details");
+            currentState = getRobotCurrentStateFromStateDetails(context, details);
+        }
         LogHelper.logD(TAG, "getServerData, retrieved ROBOT_CURRENT_STATE");
         return currentState;
+    }
+
+    /**
+     * Get current state from the current state details
+     */
+    private static String getRobotCurrentStateFromStateDetails(Context context, GetRobotProfileDetailsResult2 details) {
+        String currentStateDetails = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
+        LogHelper.logD(TAG, "getServerData, retrieved ROBOT_CURRENT_STATE_DETAILS ======>>>> " + currentStateDetails);
+        if (TextUtils.isEmpty(currentStateDetails)) {
+            return "";
+        }
+        try {
+            JSONObject currentStateDetailsJson = new JSONObject(currentStateDetails);
+            return currentStateDetailsJson.getString(ProfileAttributeKeys.ROBOT_CURRENT_STATE);
+        } catch (JSONException e) {
+            LogHelper
+                    .logD(TAG, "Exception in parsing ROBOT_CURRENT_STATE_DETAILS ======>>>> " + currentStateDetails, e);
+        }
+        return "";
+    }
+
+    public static int getRobotCurrentCleaningCategoryFromStateDetails(Context context,
+            GetRobotProfileDetailsResult2 details) {
+        String currentStateDetails = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
+        LogHelper.logD(TAG, "getServerData, retrieved ROBOT_CURRENT_STATE_DETAILS ======>>>> " + currentStateDetails);
+        if (TextUtils.isEmpty(currentStateDetails)) {
+            return RobotCommandPacketConstants.CLEANING_CATEGORY_INVALID;
+        }
+        try {
+            JSONObject currentStateDetailsJson = new JSONObject(currentStateDetails);
+            return currentStateDetailsJson.getInt(ProfileAttributeValueKeys.ROBOT_CLEANING_CATEGORY);
+        } catch (JSONException e) {
+            // ignore
+        }
+        return RobotCommandPacketConstants.CLEANING_CATEGORY_INVALID;
     }
 
     public static String getScheduleState(Context context, int scheduleType, GetRobotProfileDetailsResult2 details) {
@@ -68,31 +112,6 @@ public class RobotProfileDataUtils {
             LogHelper.logD(TAG, "getBasicScheduleState, retrived ROBOT_SCHEDULE");
         }
         return scheduleState;
-    }
-
-    public static int getRobotCleaningCategory(Context context, GetRobotProfileDetailsResult2 details) {
-
-        String cleaningStateDetails = details
-                .getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
-        LogHelper.log(TAG, "# Current Robot State is " + cleaningStateDetails);
-
-        if (TextUtils.isEmpty(cleaningStateDetails)) {
-            // if cleaningStateDetails is empty, we just return -1 (invalid
-            // category)
-            LogHelper.logD(TAG, "# Current Robot State is empty");
-            return RobotCommandPacketConstants.CLEANING_CATEGORY_INVALID;
-        }
-        CleaningStateDetails stateDetails = null;
-        try {
-            stateDetails = new CleaningStateDetails(cleaningStateDetails);
-            LogHelper.log(TAG, "Robot State Details are " + stateDetails);
-        } catch (JSONException e) {
-            // LogHelper.log(TAG, "Error in parsing robot state details", e);
-        }
-        if (stateDetails != null) {
-            return stateDetails.getCleaningCategory();
-        }
-        return RobotCommandPacketConstants.CLEANING_CATEGORY_INVALID;
     }
 
     public static boolean isScheduleUpdated(Context context, GetRobotProfileDetailsResult2 details) {
@@ -140,10 +159,19 @@ public class RobotProfileDataUtils {
     }
 
     public static String getState(Context context, GetRobotProfileDetailsResult2 details) {
-        String actualState = null;
+        String actualState = "";
 
         String virtualState = getRobotVirtualState(context, details);
-        String currentState = getRobotCurrentState(context, details);
+        String currentState = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE);
+        
+        long timestampCurrentState = details.getProfileParameterTimeStamp(ProfileAttributeKeys.ROBOT_CURRENT_STATE);
+        // current state is null, get from current state details
+        if (TextUtils.isEmpty(currentState)) {
+            LogHelper.logD(TAG, "ROBOT_CURRENT_STATE is empty, get state from state details");
+            currentState = getRobotCurrentStateFromStateDetails(context, details);
+            timestampCurrentState = details
+                    .getProfileParameterTimeStamp(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
+        }
 
         // if virtual state is empty, return the current state.
         if (TextUtils.isEmpty(virtualState)) {
@@ -151,9 +179,7 @@ public class RobotProfileDataUtils {
             return actualState;
         }
 
-        long timestampCurrentState = details.getProfileParameterTimeStamp(ProfileAttributeKeys.ROBOT_CURRENT_STATE);
         long timestampVirtualState = details.getProfileParameterTimeStamp(ProfileAttributeKeys.ROBOT_CLEANING_COMMAND);
-
         try {
             // If manually controlled always return the current state.
             // TODO: Check if this is still applicable.
@@ -165,7 +191,7 @@ public class RobotProfileDataUtils {
             LogHelper.log(TAG, "Current state is not valid");
         }
 
-        // return vitrual state if timestamp is greater than current state.
+        // return virtual state if timestamp is greater than current state.
         if (timestampVirtualState > timestampCurrentState) {
             actualState = virtualState;
         } else {
@@ -176,7 +202,7 @@ public class RobotProfileDataUtils {
     }
 
     private static boolean isRobotManuallyControlled(int currentState) {
-        return ((currentState == RobotCommandPacketConstants.ROBOT_STATE_MANUAL_PLAY_MODE) || (currentState == RobotCommandPacketConstants.ROBOT_STATE_MANUAL_CLEANING));
+        return ((currentState == RobotCommandPacketConstants.ROBOT_STATE_MANUAL_CLEANING));
     }
 
     private static boolean isDataChanged(Context context, GetRobotProfileDetailsResult2 details, String robotId,
@@ -250,13 +276,27 @@ public class RobotProfileDataUtils {
     // notification layer if multiple of them exist.
     private static HashMap<ProfileAttributeKeysEnum, RobotProfileValueChangedStatus> removeDuplicateKeysFromMapBeforeNotification(
             HashMap<ProfileAttributeKeysEnum, RobotProfileValueChangedStatus> changedProfileKeys) {
-        boolean isRobotCleaningCommandChanged = changedProfileKeys
-                .containsKey(ProfileAttributeKeysEnum.ROBOT_CLEANING_COMMAND);
+
         boolean isRobotCurrentStateChanged = changedProfileKeys
                 .containsKey(ProfileAttributeKeysEnum.ROBOT_CURRENT_STATE);
+        boolean isRobotCurrentStateDetailsChanged = changedProfileKeys
+                .containsKey(ProfileAttributeKeysEnum.ROBOT_CURRENT_STATE_DETAILS);
+
+        boolean isRobotCleaningCommandChanged = changedProfileKeys
+                .containsKey(ProfileAttributeKeysEnum.ROBOT_CLEANING_COMMAND);
+
         if (isRobotCleaningCommandChanged && isRobotCurrentStateChanged) {
             changedProfileKeys.remove(ProfileAttributeKeysEnum.ROBOT_CURRENT_STATE);
         }
+
+        if (isRobotCleaningCommandChanged && isRobotCurrentStateDetailsChanged) {
+            changedProfileKeys.remove(ProfileAttributeKeysEnum.ROBOT_CLEANING_COMMAND);
+        }
+
+        if (isRobotCurrentStateChanged && isRobotCurrentStateDetailsChanged) {
+            changedProfileKeys.remove(ProfileAttributeKeysEnum.ROBOT_CURRENT_STATE);
+        }
+
         return changedProfileKeys;
     }
 

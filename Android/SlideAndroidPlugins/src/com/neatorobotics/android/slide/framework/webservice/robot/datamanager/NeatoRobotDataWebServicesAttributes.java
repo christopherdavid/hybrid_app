@@ -51,6 +51,7 @@ public class NeatoRobotDataWebServicesAttributes {
 
 		public static enum ProfileAttributeKeysEnum {
 			 ROBOT_CURRENT_STATE,
+			 ROBOT_CURRENT_STATE_DETAILS,
 			 ROBOT_CLEANING_COMMAND,
 			 ROBOT_NAME,
 			 ROBOT_ENABLE_BASIC_SCHEDULE,
@@ -69,6 +70,8 @@ public class NeatoRobotDataWebServicesAttributes {
 			switch(key) {
 				case ROBOT_CURRENT_STATE:
 					return ProfileAttributeKeys.ROBOT_CURRENT_STATE;
+				case ROBOT_CURRENT_STATE_DETAILS:
+					return ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS;
 				case ROBOT_CLEANING_COMMAND:
 					return ProfileAttributeKeys.ROBOT_CLEANING_COMMAND;
 				case ROBOT_NAME:

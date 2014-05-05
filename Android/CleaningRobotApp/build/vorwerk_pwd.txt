@@ -1,0 +1,4 @@
+Certificate Name: vorwerk-kobold-key.keystore 
+Alias: kobold
+Certificate Pwd: v0rw3rk!@#
+Alias Pwd: v0rw3rk!@#

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.uid.robot"
+    package="com.vorwerkrobot.vr200beta"
     android:installLocation="preferExternal"
     android:versionCode="1"
-    android:versionName="0.6.13.12" >
+    android:versionName="0.6.6.0" >
 
     <uses-sdk android:minSdkVersion="10"
         android:targetSdkVersion="17" />
@@ -15,9 +15,9 @@
         android:resizeable="true"
         android:smallScreens="true" />
     <!-- GCM changes begin  -->
-    <permission android:name="com.uid.robot.permission.C2D_MESSAGE" 
+    <permission android:name="com.vorwerkrobot.vr200beta.permission.C2D_MESSAGE" 
                 android:protectionLevel="signature" />
-    <uses-permission android:name="com.uid.robot.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.vorwerkrobot.vr200beta.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- GCM changes end  -->
@@ -39,14 +39,14 @@
         android:allowBackup="false"
         android:theme="@style/Theme.Transparent">
          <activity
-            android:name=".StartUpActivity"
+            android:name="com.uid.robot.StartUpActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CleaningRobotAppActivity"
+        <activity android:name="com.uid.robot.CleaningRobotAppActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <!-- 
         <activity
@@ -70,7 +70,7 @@
             <intent-filter >
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-                <category android:name="com.uid.robot" />
+                <category android:name="com.vorwerkrobot.vr200beta" />
             </intent-filter>
         </receiver>
         <service android:name="com.neatorobotics.android.slide.framework.gcm.PushNotificationIntentService" />
