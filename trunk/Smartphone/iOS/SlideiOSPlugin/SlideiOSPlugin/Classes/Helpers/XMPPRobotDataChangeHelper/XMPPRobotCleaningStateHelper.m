@@ -16,16 +16,16 @@
         return ROBOT_STATE_CLEANING;
     }
     else if (commandId == COMMAND_STOP_ROBOT) {
-        return ROBOT_STATE_STOPPED;
+        return ROBOT_STATE_SUSPENDED_CLEANING;
     }
     else if (commandId == COMMAND_PAUSE_CLEANING) {
         return ROBOT_STATE_PAUSED;
     }
     else if (commandId == COMMAND_RESUME_CLEANING) {
-        return ROBOT_STATE_RESUMED;
+        return ROBOT_STATE_CLEANING;
     }
     else if (commandId == COMMAND_SEND_TO_BASE) {
-        return ROBOT_STATE_ON_BASE;
+        return ROBOT_STATE_RETURNING;
     }
     return ROBOT_STATE_INVALID;
 }
@@ -81,8 +81,8 @@
     NSDictionary *cleaningCommandDict = [robotProfile objectForKey:KEY_ROBOT_CLEANING_COMMAND];
     NSDictionary *robotCurrentStateDict = [robotProfile objectForKey:KEY_ROBOT_CURRENT_STATE];
     if (cleaningCommandDict && robotCurrentStateDict) {
-        NSNumber *cleaningCommandTimeStamp = [cleaningCommandDict objectForKey:KEY_TIMESTAMP];
-        NSNumber *robotCurrentStateTimeStamp = [robotCurrentStateDict objectForKey:KEY_TIMESTAMP];
+        NSString *cleaningCommandTimeStamp = [cleaningCommandDict objectForKey:KEY_TIMESTAMP];
+        NSString *robotCurrentStateTimeStamp = [robotCurrentStateDict objectForKey:KEY_TIMESTAMP];
         return (cleaningCommandTimeStamp.longLongValue > robotCurrentStateTimeStamp.longLongValue);
     }
     return NO;

@@ -125,7 +125,7 @@
 - (void)failedToFormTCPConnectionForRobotId:(NSString *)robotId {
     debugLog(@"");
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-    [data setObject:[NSString stringWithFormat:@"%d", ROBOT_STATE_STOPPED] forKey:ERROR_DRIVE_RESPONSE_CODE];
+    [data setObject:[NSString stringWithFormat:@"%d", ROBOT_STATE_SUSPENDED_CLEANING] forKey:ERROR_DRIVE_RESPONSE_CODE];
     [[XMPPRobotDataChangeManager sharedXmppDataChangeManager] notifyDataChangeForRobotId:robotId
                                                                              withKeyCode:[NSNumber numberWithInt:ROBOT_ERROR_IN_CONNECTING]
                                                                                  andData:data];

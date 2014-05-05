@@ -1159,7 +1159,7 @@
   return _serverManager;
 }
 
-- (void)getRobotCurrentCleaningDetails:(CDVInvokedUrlCommand *)command {
+- (void)getRobotCurrentStateDetails:(CDVInvokedUrlCommand *)command {
   debugLog(@"");
   NSString *callbackId = command.callbackId;
   NSDictionary *parameters = [command.arguments objectAtIndex:0];
@@ -1168,15 +1168,59 @@
   NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
 
   __weak typeof(self) weakSelf = self;
-  [self.serverManager currentCleaningStateDetailsForRobot:robotId
-                     completion:^(NSDictionary *result, NSError *error) {
-                         if (error) {
-                             debugLog(@"Failed to get cleaning details with error = %@, info = %@", [error localizedDescription], [error userInfo]);
-                             [weakSelf sendError:error forCallbackId:callbackId];
-                             return;
-                         }
-                         [weakSelf sendSuccessResultAsDictionary:result forCallbackId:callbackId];
-                     }];
+  [self.serverManager profileDetailsForRobot:robotId
+                                  completion:^(NSDictionary *result, NSError *error) {
+                                      if (error) {
+                                          debugLog(@"Failed to get robot current state details with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                                          [weakSelf sendError:error forCallbackId:callbackId];
+                                          return;
+                                      }
+                                      NSDictionary *profileDetails = result;
+                                      // Update the timestamp in DB.
+                                      XMPPRobotDataChangeManager *xmppDataChangeManager = [XMPPRobotDataChangeManager sharedXmppDataChangeManager];
+                                      [xmppDataChangeManager updateDataTimestampIfChangedForKey:KEY_ROBOT_CURRENT_STATE_DETAILS withProfile:profileDetails];
+                                      
+                                      // Send the data back to UI layer.
+                                      NSString *robotCurrentStateDetailsJsonString = [[profileDetails valueForKey:KEY_ROBOT_CURRENT_STATE_DETAILS] valueForKey:KEY_VALUE];
+                                      NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+                                      [data setValue:robotCurrentStateDetailsJsonString forKey:NEATO_RESPONSE_CURRENT_STATE_DETAILS];
+                                      [data setValue:robotId forKey:KEY_ROBOT_ID];
+                                      
+                                      [weakSelf sendSuccessResultAsDictionary:data forCallbackId:callbackId];
+                                  }];
+}
+
+- (void)getRobotCurrentState:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.serverManager profileDetailsForRobot:robotId
+                                    completion:^(NSDictionary *result, NSError *error) {
+                                        if (error) {
+                                            debugLog(@"Failed to get robot current state with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                                            [weakSelf sendError:error forCallbackId:callbackId];
+                                            return;
+                                        }
+                                        NSDictionary *profileDetails = result;
+                                        // Update the timestamp in DB.
+                                        XMPPRobotDataChangeManager *xmppDataChangeManager = [XMPPRobotDataChangeManager sharedXmppDataChangeManager];
+                                        [xmppDataChangeManager updateDataTimestampIfChangedForKey:KEY_ROBOT_CURRENT_STATE withProfile:profileDetails];
+                                        
+                                        // Send the data back to UI layer.
+                                        NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+                                        NSInteger robotCurrentState = [XMPPRobotCleaningStateHelper robotCurrentStateFromRobotProfile:profileDetails];
+                                        NSInteger robotActualState = [XMPPRobotCleaningStateHelper robotActualStateFromRobotProfile:profileDetails];
+                                        [data setValue:[NSNumber numberWithInteger:robotActualState] forKey:KEY_ROBOT_NEW_VIRTUAL_STATE];
+                                        [data setValue:[NSNumber numberWithInteger:robotCurrentState] forKey:KEY_ROBOT_CURRENT_STATE];
+                                        [data setValue:robotId forKey:KEY_ROBOT_ID];
+                                        
+                                        [weakSelf sendSuccessResultAsDictionary:data forCallbackId:callbackId];
+                                    }];
+  
 }
 
 @end
