@@ -55,7 +55,7 @@ public class RobotCommandPacketConstants {
     public static final int ROBOT_STATE_CLEANING = 3;
     public static final int ROBOT_STATE_IDLE = 1;
     public static final int ROBOT_STATE_PAUSED = 5;
-    public static final int ROBOT_STATE_IDLE_CHARGING = 7;
+    public static final int ROBOT_STATE_RETURNING = 7;
     public static final int ROBOT_STATE_MANUAL_CLEANING = 6;
     public static final int ROBOT_STATE_INVALID = 19999;
 
@@ -74,7 +74,7 @@ public class RobotCommandPacketConstants {
         } else if (commandId == COMMAND_RESUME_CLEANING) {
             return ROBOT_STATE_CLEANING;
         } else if (commandId == COMMAND_SEND_BASE) {
-            return ROBOT_STATE_IDLE_CHARGING;
+            return ROBOT_STATE_RETURNING;
         }
         return ROBOT_STATE_INVALID;
     }
