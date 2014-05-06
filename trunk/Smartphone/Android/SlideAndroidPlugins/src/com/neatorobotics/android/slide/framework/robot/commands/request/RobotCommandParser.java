@@ -270,30 +270,7 @@ public class RobotCommandParser {
             } else if (nodeName.equalsIgnoreCase(RobotPacketConstants.XML_TAG_COMMAND_TIMESTAMP)) {
                 String s = new String(ch, start, length);
                 timeStamp = s;
-            } else if (nodeName.equalsIgnoreCase(RobotPacketConstants.XML_TAG_REQUEST_ID)) {
-                String s = new String(ch, start, length);
-                requestId = s;
-
-            } else if (nodeName.equalsIgnoreCase(RobotPacketConstants.XML_TAG_DISTRIBUTION_MODE)) {
-                String s = new String(ch, start, length);
-                if (s.length() > 0) {
-                    distributionMode = Integer.parseInt(s);
-                }
-            } else if (nodeName.equalsIgnoreCase(RobotPacketConstants.XML_TAG_RETRY_COUNT)) {
-                String s = new String(ch, start, length);
-                if (s.length() > 0) {
-                    retryCount = Integer.parseInt(s);
-                }
-
-            } else if (nodeName.equalsIgnoreCase(RobotPacketConstants.XML_TAG_REPLY_REQUIRED)) {
-                String s = new String(ch, start, length);
-                if (s.length() > 0) {
-                    replyRequired = s.equalsIgnoreCase("true") ? true : false;
-                }
-            } else if (nodeName.equalsIgnoreCase(RobotPacketConstants.XML_TAG_REPLY_TO)) {
-                String s = new String(ch, start, length);
-                replyTo = s;
-            }
+            } 
         }
 
         public void endElement(String uri, String localName, String qName) throws SAXException {
@@ -356,11 +333,6 @@ public class RobotCommandParser {
                 String s = new String(ch, start, length);
                 if (s.length() > 0) {
                     status = Integer.parseInt(s);
-                }
-            } else if (node.equalsIgnoreCase(RobotPacketConstants.XML_TAG_REQUEST_ID)) {
-                String s = new String(ch, start, length);
-                if (s.length() > 0) {
-                    requestId = s;
                 }
             }
 

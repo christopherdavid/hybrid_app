@@ -109,7 +109,6 @@ public class RobotCommandBuilder {
             XmlSerializer serializer = Xml.newSerializer();
             serializer.setOutput(sw);
             serializer.startTag("", RobotPacketConstants.XML_TAG_RESPONSE);
-            addXmlNode(serializer, RobotPacketConstants.XML_TAG_REQUEST_ID, response.getRequestId());
             addXmlNode(serializer, RobotPacketConstants.XML_TAG_STATUS, response.getStatus());
 
             serializer.startTag("", RobotPacketConstants.XML_TAG_PARAMS_DATA);
@@ -157,12 +156,7 @@ public class RobotCommandBuilder {
             serializer.setOutput(sw);
             serializer.startTag("", RobotPacketConstants.XML_TAG_COMMAND);
             addXmlNode(serializer, RobotPacketConstants.XML_TAG_COMMAND_ID, robotCommand.getCommand());
-            addXmlNode(serializer, RobotPacketConstants.XML_TAG_REQUEST_ID, robotCommand.getRequestId());
             addXmlNode(serializer, RobotPacketConstants.XML_TAG_COMMAND_TIMESTAMP, robotCommand.getTimestamp());
-            addXmlNode(serializer, RobotPacketConstants.XML_TAG_RETRY_COUNT, robotCommand.getRetryCount());
-            addXmlNode(serializer, RobotPacketConstants.XML_TAG_REPLY_REQUIRED, robotCommand.isResponseNeeded());
-            addXmlNode(serializer, RobotPacketConstants.XML_TAG_DISTRIBUTION_MODE, robotCommand.getDistributionMode());
-            addXmlNode(serializer, RobotPacketConstants.XML_TAG_REPLY_TO, robotCommand.getReplyToAddress());
 
             serializer.startTag("", RobotPacketConstants.XML_TAG_PARAMS_DATA);
 
@@ -197,10 +191,4 @@ public class RobotCommandBuilder {
         serializer.endTag("", nodeName);
     }
 
-    private void addXmlNode(XmlSerializer serializer, String nodeName, boolean value) throws IllegalArgumentException,
-            IllegalStateException, IOException {
-        serializer.startTag("", nodeName);
-        serializer.text(String.valueOf(value));
-        serializer.endTag("", nodeName);
-    }
 }
