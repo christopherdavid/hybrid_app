@@ -9,7 +9,6 @@ import org.json.JSONArray;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotClearDataRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
-import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetRobotCleaningCategoryRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetRobotCurrentStateDetailsRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetSpotDefinationRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.PauseCleaningRequest;
@@ -30,7 +29,6 @@ import com.neatorobotics.android.slide.framework.plugins.requests.robot.notifica
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.notification.UnRegisterDataChangeNotificationRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.notification.UnRegisterForPushMessagesRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.EnableScheduleRequest;
-import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.GetRobotCleaningStateRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.GetRobotCurrentStateRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.GetRobotDetailRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.IsRobotScheduleEnabledRequest;
@@ -54,7 +52,6 @@ public class RobotManagerPlugin extends Plugin {
     private RobotManagerRequest mRobotGetVirtualOnlineStatusRequest = new RobotGetVirtualOnlineStatusRequest();
     private RobotManagerRequest mIsRobotScheduleEnabledRequest = new IsRobotScheduleEnabledRequest();
     private RobotManagerRequest mEnabledScheduleRequest = new EnableScheduleRequest();
-    private RobotManagerRequest mGetRobotCleaningStateRequest = new GetRobotCleaningStateRequest();
     
     private RobotManagerRequest mGetRobotCurrentStateRequest = new GetRobotCurrentStateRequest();
 
@@ -73,7 +70,6 @@ public class RobotManagerPlugin extends Plugin {
     private RobotManagerRequest mSendRobotCommandRequest = new SendRobotCommandRequest();
     private RobotManagerRequest mSetSpotDefinationRequest = new SetSpotDefinationRequest();
     private RobotManagerRequest mGetSpotDefinationRequest = new GetSpotDefinationRequest();
-    private RobotManagerRequest mGetRobotCleaningCategoryRequest = new GetRobotCleaningCategoryRequest();
     private RobotManagerRequest mGetRobotCurrentStateDetails = new GetRobotCurrentStateDetailsRequest();
 
     // Manual Commands
@@ -103,10 +99,7 @@ public class RobotManagerPlugin extends Plugin {
             ACTION_COMMAND_MAP.put(ActionTypes.ENABLE_SCHEDULE, mEnabledScheduleRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.SET_SPOT_DEFINITION, mSetSpotDefinationRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.GET_SPOT_DEFINITION, mGetSpotDefinationRequest);
-            ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_CLEANING_STATE, mGetRobotCleaningStateRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_CURRENT_STATE, mGetRobotCurrentStateRequest);
-            ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_CLEANING_CATEGORY, mGetRobotCleaningCategoryRequest);
-
             ACTION_COMMAND_MAP.put(ActionTypes.REGISTER_FOR_ROBOT_MESSAGES, mRegisterForPushMessagesRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.UNREGISTER_FOR_ROBOT_MESSAGES, mUnRegisterForPushMessagesRequest);
 
@@ -213,8 +206,6 @@ public class RobotManagerPlugin extends Plugin {
         public static final String UNREGISTER_FOR_ROBOT_MESSAGES = "unregisterForRobotMessages";
         public static final String REGISTER_ROBOT_NOTIFICATIONS2 = "registerRobotNotifications2";
         public static final String UNREGISTER_ROBOT_NOTIFICATIONS2 = "unregisterRobotNotifications2";
-        public static final String GET_ROBOT_CLEANING_STATE = "getRobotCleaningState";
-        public static final String GET_ROBOT_CLEANING_CATEGORY = "getRobotCleaningCategory";
         public static final String INTEND_TO_DRIVE = "intendToDrive";
         public static final String STOP_ROBOT_DRIVE = "stopRobotDrive";
         public static final String CANCEL_INTEND_TO_DRIVE = "cancelIntendToDrive";

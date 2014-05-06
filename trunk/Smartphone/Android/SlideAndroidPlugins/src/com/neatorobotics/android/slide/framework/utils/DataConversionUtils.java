@@ -9,7 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.text.TextUtils;
+
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
 
 public class DataConversionUtils {
 
@@ -76,7 +79,33 @@ public class DataConversionUtils {
             jObject = new JSONObject();
             return jObject;
         }
+
         jObject = new JSONObject(hash);
+
+        // TODO: This is a workaround for now, but this fix should be changed.
+        // The JS layer wants the current details value as a JSONObject.
+        // So currently we are converting it here. But the ideal way is to get
+        // it from the service layer itself.
+        // As that will require much more changes, adding it here.
+        JSONObject jsonRobotCurrentStateDetails = null;
+        // Checking whether the hashmap has the key ROBOT_CURRENT_STATE_DETAILS
+        if (hash.containsKey(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS)) {
+            String robotCurrentStateDetails = hash.get(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
+            if (!TextUtils.isEmpty(robotCurrentStateDetails)) {
+                try {
+                    
+                    jsonRobotCurrentStateDetails = new JSONObject(robotCurrentStateDetails);
+                    if (jsonRobotCurrentStateDetails != null) {
+	                    // Remove the string value
+						hash.remove(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
+						// Add the JSONObject
+                        jObject.put(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS, jsonRobotCurrentStateDetails);
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+        }
         return jObject;
     }
 

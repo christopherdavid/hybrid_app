@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
@@ -45,10 +46,19 @@ public class GetRobotCurrentStateDetailsRequest extends RobotManagerRequest {
         JSONObject cleaningDetailsJsonObj = null;
         try {
             cleaningDetailsJsonObj = new JSONObject();
+			JSONObject jsonCleaningStateDetails = new JSONObject();
             String currentStateDetails = result
                     .getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
             LogHelper.logD(TAG, "getRobotCurrentStateDetails " + currentStateDetails);
-            cleaningDetailsJsonObj.put(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS, currentStateDetails);
+            try {
+            	if (!TextUtils.isEmpty(currentStateDetails)) {
+	            	jsonCleaningStateDetails = new JSONObject(currentStateDetails);
+            	}
+            }
+            catch (Exception e) {
+            	LogHelper.logD(TAG, "Exception in JSON parsing", e);
+            }
+			cleaningDetailsJsonObj.put(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS, jsonCleaningStateDetails);
             cleaningDetailsJsonObj.put(JsonMapKeys.KEY_ROBOT_ID, robotId);
 
         } catch (JSONException e) {
