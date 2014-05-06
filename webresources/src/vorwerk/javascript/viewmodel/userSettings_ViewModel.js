@@ -20,50 +20,37 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     this.countries = ko.observableArray([]);
     var countriesRendered = false;
     
-    this.isPasswordVerified = ko.observable(true);
-    
-    this.verifyPassword = function() {
-        if(that.newPasswordRepeat() != that.newPassword()) {
-            that.isPasswordVerified(false);
-        }
-    };
-
-    
-    this.passwordValid = ko.computed(function() {
-        return !isPasswordValid();
-    }, this);
-    
-    this.okEnabled = ko.computed(function() {
-        return isOkButtonEnabled();
-    }, this);
-    
-    function isOkButtonEnabled() {
-        return that.newPassword().length != '' &&  that.oldPassword().length != '' && isPasswordValid();
-    }
-    
-    
-    function isPasswordValid() {
+    this.isPasswordValid = ko.computed(function() {
         if (that.newPasswordRepeat() == '') {
             return true;
         } else {
-            if(that.newPasswordRepeat() == that.newPassword()) {
-                that.isPasswordVerified(true);
-            }
             return (that.newPasswordRepeat() == that.newPassword());
         }
-    }
-
-    // mark password input as invalid after some delay after user stops typing, if passwords don't concur
-    this.markInvalidPassword = ko.computed(function() {
-        var validationResult = that.isPasswordVerified();
-
-        if(!validationResult) {
+    }, this);
+    
+    this.isThrottledPasswordValid = ko.computed(function() {
+        if(!that.isPasswordValid()) {
             parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.password"));
         }
-
-        return !validationResult;
+        return that.isPasswordValid();
     }, this).extend({ throttle: 2000 });
-
+    
+    // mark password input as invalid after some delay after user stops typing, if passwords don't concur
+    this.markPasswordInvalid = ko.computed(function() {
+        if(that.newPasswordRepeat() == ""){
+            return false;
+        } else if(that.newPasswordRepeat().length > 0 && that.isPasswordValid()) {
+            return false;
+        } else if(typeof that.isThrottledPasswordValid() != "undefined" && that.isThrottledPasswordValid()) {
+            return false;
+        }
+        return true;
+    }, this);
+    
+    
+    this.okEnabled = ko.computed(function() {
+        return that.newPassword().length != '' &&  that.oldPassword().length != '' && that.isPasswordValid();
+    }, this);
     
     this.init = function() {
         var user = parent.communicationWrapper.getDataValue("user");
@@ -81,9 +68,12 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     
     // viewmodel deinit, destroy objects and remove event listener
     this.deinit = function() {
-        that.passwordValid.dispose();
+        that.isPasswordValid.dispose();
+        that.isThrottledPasswordValid.dispose();
+        that.markPasswordInvalid.dispose();
         that.okEnabled.dispose();
-        that.markInvalidPassword.dispose();
+        that.countries([]);
+        countriesRendered = false;
     };
     
     this.changeCountry = function() {
@@ -181,11 +171,6 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
                 countriesRendered = true;
             }
         }
-    };
-    
-    this.deinit = function() {
-        that.countries([]);
-        countriesRendered = false;
     };
     
 });

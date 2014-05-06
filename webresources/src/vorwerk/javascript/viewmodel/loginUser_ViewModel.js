@@ -23,22 +23,32 @@ resourceHandler.registerFunction('loginUser_ViewModel.js', function(parent) {
             return parent.config.emailRegEx.test(that.email());
         }
     },this);
+    
+    this.isThrottledEmailValid = ko.computed(function() {
+        if(!that.isEmailValid()) {
+            parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.email"));
+        }
+        return that.isEmailValid();
+    }, this).extend({ throttle: 2000 });
 
     // mark email input as invalid after some delay after user stops typing if input is not valid
     this.markEmailInvalid = ko.computed(function() {
-        var validationResult = that.isEmailValid();
-
-        if(!validationResult) {
-            parent.notification.showLoadingArea(true, notificationType.HINT, $.i18n.t("validation.email"));
+        if(that.email() == ""){
+            return false;
+        } else if(that.email().length > 0 && that.isEmailValid()) {
+            return false;
+        } else if(typeof that.isThrottledEmailValid() != "undefined" && that.isThrottledEmailValid()) {
+            return false;
         }
-
-        return !validationResult;
-    }, this).extend({ throttle: 2000 });
+        return true;
+    }, this);
+    
     
     // viewmodel deinit, destroy objects and remove event listener
     this.deinit = function() {
         that.isFilledOut.dispose();
         that.isEmailValid.dispose();
+        that.isThrottledEmailValid.dispose();
         that.markEmailInvalid.dispose();
     };
 

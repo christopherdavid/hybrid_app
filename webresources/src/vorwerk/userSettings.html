@@ -103,10 +103,10 @@
                 <div class="line">
                     <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
                         data-i18n="userSettings.page.new_password_verify" 
-                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'input', jqmInputVisible: !showPassword(), jqmInputCSS: {invalid: markInvalidPassword()}, event:{ input: verifyPassword}"/>
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'input', jqmInputVisible: !showPassword(), jqmInputCSS: {invalid: markPasswordInvalid()}"/>
                     <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
                         data-i18n="userSettings.page.new_password_verify" 
-                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'input', jqmInputVisible: showPassword(), jqmInputCSS: {invalid: markInvalidPassword()}, event:{ input: verifyPassword}"/>
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: newPasswordRepeat, valueUpdate: 'input', jqmInputVisible: showPassword(), jqmInputCSS: {invalid: markPasswordInvalid()}"/>
                 </div>
                 <div class="line">
                     <input type="checkbox" name="togglePassword" id="togglePassword" data-theme="b" class="custom" data-bind="checked: showPassword" />
