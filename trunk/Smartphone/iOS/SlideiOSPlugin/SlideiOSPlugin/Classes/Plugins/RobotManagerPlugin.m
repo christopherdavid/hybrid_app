@@ -1179,11 +1179,18 @@
                                       // Update the timestamp in DB.
                                       XMPPRobotDataChangeManager *xmppDataChangeManager = [XMPPRobotDataChangeManager sharedXmppDataChangeManager];
                                       [xmppDataChangeManager updateDataTimestampIfChangedForKey:KEY_ROBOT_CURRENT_STATE_DETAILS withProfile:profileDetails];
-                                      
+
                                       // Send the data back to UI layer.
                                       NSString *robotCurrentStateDetailsJsonString = [[profileDetails valueForKey:KEY_ROBOT_CURRENT_STATE_DETAILS] valueForKey:KEY_VALUE];
+                                      NSData *jsonData = [robotCurrentStateDetailsJsonString dataUsingEncoding:NSUTF8StringEncoding];
+                                      NSDictionary *robotCurrentStateDetailsDict = [AppHelper parseJSON:jsonData];
+                                      
+                                      // If there's no current state details set on server, send empty dict to UI.
+                                      if (!robotCurrentStateDetailsDict) {
+                                          robotCurrentStateDetailsDict = [[NSDictionary alloc] init];
+                                      }
                                       NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-                                      [data setValue:robotCurrentStateDetailsJsonString forKey:NEATO_RESPONSE_CURRENT_STATE_DETAILS];
+                                      [data setValue:robotCurrentStateDetailsDict forKey:NEATO_RESPONSE_CURRENT_STATE_DETAILS];
                                       [data setValue:robotId forKey:KEY_ROBOT_ID];
                                       
                                       [weakSelf sendSuccessResultAsDictionary:data forCallbackId:callbackId];
