@@ -55,7 +55,7 @@
                 <p data-i18n="loginUser.page.description" data-bind="translate: language">[desription]</p>
                 <div class="line">
                     <input type="email" data-i18n="loginUser.page.email" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
-                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'input'"/>
+                        data-bind="translate:{obs:language(), target: textTarget.PLACEHOLDER}, value: email, valueUpdate: 'input', jqmInputCSS: {invalid: markEmailInvalid()}"/>
                 </div>
             </fieldset>
             
