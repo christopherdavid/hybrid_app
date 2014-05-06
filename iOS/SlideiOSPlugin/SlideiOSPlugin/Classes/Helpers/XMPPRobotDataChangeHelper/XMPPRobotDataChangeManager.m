@@ -464,11 +464,18 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 
 - (void)notifyRobotCurrentStateDetailsChangeForProfile:(NSDictionary *)robotProfile {
     debugLog(@"");
-    NSString *robotCurrentStateDetailsJsonString = [[robotProfile objectForKey:KEY_ROBOT_CURRENT_STATE_DETAILS] objectForKey:KEY_VALUE];
     NSInteger robotCurrentState = [XMPPRobotCleaningStateHelper robotCurrentStateFromRobotProfile:robotProfile];
+    NSString *robotCurrentStateDetailsJsonString = [[robotProfile objectForKey:KEY_ROBOT_CURRENT_STATE_DETAILS] objectForKey:KEY_VALUE];
     
+    NSData *jsonData = [robotCurrentStateDetailsJsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *robotCurrentStateDetailsDict = [AppHelper parseJSON:jsonData];
+    
+    // If there's no current state details set on server, send empty dict to UI.
+    if (!robotCurrentStateDetailsDict) {
+        robotCurrentStateDetailsDict = [[NSDictionary alloc] init];
+    }
     NSMutableDictionary *dataDict = [[NSMutableDictionary alloc] init];
-    [dataDict setValue:robotCurrentStateDetailsJsonString forKey:KEY_ROBOT_CURRENT_STATE_DETAILS];
+    [dataDict setValue:robotCurrentStateDetailsDict forKey:KEY_ROBOT_CURRENT_STATE_DETAILS];
     [dataDict setValue:[NSString stringWithFormat:@"%d", robotCurrentState] forKey:KEY_ROBOT_CURRENT_STATE];
     
     [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE]
