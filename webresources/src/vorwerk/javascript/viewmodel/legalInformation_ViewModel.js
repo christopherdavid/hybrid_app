@@ -121,7 +121,7 @@ resourceHandler.registerFunction('legalInformation_ViewModel.js', function(paren
     };
     
     this.isAgreedEnabled = function() {
-    	return !that.isAgreed();
+    	return ! (that.isAgreed() && that.isLegalinfoEdit());
     };
     
 	/*
