@@ -221,9 +221,9 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.successGetRobotCurrentStateDetails = function(result) {
         // need to add a check if it's a valid category (in some cases got 0 from server)
         if(result.robotCurrentStateDetails && result.robotCurrentStateDetails.robotStateParams) {
-            if(result.robotCurrentStateDetails.robotStateParams.cleaningCatageory == CLEANING_CATEGORY_MANUAL || result.robotCurrentStateDetails.cleaningCatageory == CLEANING_CATEGORY_ALL
-                || result.robotCurrentStateDetails.robotStateParams.cleaningCatageory == CLEANING_CATEGORY_SPOT) {
-                    that.robot().cleaningCategory(result.robotCurrentStateDetails.cleaningCatageory);
+            if(result.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_MANUAL || result.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_ALL
+                || result.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_SPOT) {
+                    that.robot().cleaningCategory(result.robotCurrentStateDetails.robotStateParams.robotCleaningCategory);
             } else {
                 // set All as fallback
                 that.robot().cleaningCategory(CLEANING_CATEGORY_ALL);
