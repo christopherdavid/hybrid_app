@@ -541,7 +541,7 @@ var neatoSmartApp = (function() {
 		},
 		
 		sendToBaseSuccess: function(result) {
-			localStorage.setItem('robotStateUpdate', ROBOT_STATE_ON_BASE);
+			localStorage.setItem('robotStateUpdate', ROBOT_STATE_IDLE);
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.toggleStartStop();
 			neatoSmartApp.setResponseText(result);
@@ -560,8 +560,7 @@ var neatoSmartApp = (function() {
 			}
 			
 			neatoSmartApp.showProgressBar();
-			RobotPluginManager.getRobotCleaningState(robotId, neatoSmartApp.getRobotStateSuccess, neatoSmartApp.getRobotStateError);
-			// RobotPluginManager.sendCommandToRobot2(robotId, COMMAND_GET_ROBOT_STATE, {}, neatoSmartApp.getRobotStateSuccess, neatoSmartApp.getRobotStateError);			
+			RobotPluginManager.getRobotCurrentState(robotId, neatoSmartApp.getRobotStateSuccess, neatoSmartApp.getRobotStateError);
 		},
 		
 		getRobotStateSuccess: function(result) {
@@ -834,7 +833,7 @@ var neatoSmartApp = (function() {
 			var robotStarted = localStorage.getItem('isRobotStarted');
 
 			if (robotStarted == "true") {
-				localStorage.setItem('robotStateUpdate', ROBOT_STATE_STOPPED);
+				localStorage.setItem('robotStateUpdate', ROBOT_STATE_IDLE);
 				localStorage.setItem('isRobotStarted', "false");
 				document.querySelector('#btnSendStartStopCleanCommand3').value = "Start Cleaning";
 				localStorage.setItem('isCleaningPaused', "false");
@@ -889,7 +888,7 @@ var neatoSmartApp = (function() {
 			
 			var cleaningPaused = localStorage.getItem('isCleaningPaused');
 			if (cleaningPaused == "true") {
-				localStorage.setItem('robotStateUpdate', ROBOT_STATE_RESUMED);
+				localStorage.setItem('robotStateUpdate', ROBOT_STATE_CLEANING);
 				localStorage.setItem('isCleaningPaused', "false");
 				document.querySelector('#btnPauseResumeCleaningCommand3').value = "Pause Cleaning";
 			}
@@ -955,27 +954,6 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(error);
 			neatoSmartApp.hideProgressBar();
 		},
-		
-		getRobotCleaningCategory : function(){
-		var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
-			}
-			RobotPluginManager.getRobotCleaningCategory(robotId, neatoSmartApp.getcleaningCategorySuccess, 
-					neatoSmartApp.getcleaningCategoryError);
-		},
-		
-		getcleaningCategorySuccess: function(result) {
-			neatoSmartApp.setResponseText(result);
-			neatoSmartApp.hideProgressBar();
-		},
-		
-		getcleaningCategoryError: function(error) {
-			neatoSmartApp.setResponseText(error);
-			neatoSmartApp.hideProgressBar();
-		},
-		
 		
 		getRobotCurrentStateDetails : function(){
 			var robotId = localStorage.getItem('robotId');
@@ -2118,7 +2096,7 @@ var neatoSmartApp = (function() {
 		
 		updateRobotStateInformation : function(currentState, state) {
 			var updateState = localStorage.getItem('robotStateUpdate');
-			if(state == ROBOT_STATE_STOPPED) {
+			if(state == ROBOT_STATE_IDLE) {
 				document.querySelector('#btnSendStartStopCleanCommand3').value = "Start Cleaning";
 			}
 			if(state == ROBOT_STATE_CLEANING) {
@@ -2147,7 +2125,7 @@ var neatoSmartApp = (function() {
 					localStorage.setItem('robotStateUpdate', currentState);
 					document.querySelector('#currentRobotState').innerHTML ="Actual State: " + neatoSmartApp.getStateFromCode(currentState);
 					var state = localStorage.getItem('robotStateUpdate');
-					if(state == ROBOT_STATE_STOPPED) {
+					if(state == ROBOT_STATE_IDLE) {
 						localStorage.setItem('isRobotStarted', "false");
 					}
 					if(state == ROBOT_STATE_CLEANING) {
@@ -2163,7 +2141,7 @@ var neatoSmartApp = (function() {
 					var state = data['robotStateUpdate'];
 					localStorage.setItem('robotStateUpdate', state);
 					var currentState = localStorage.getItem('robotCurrentState');
-					if(state == ROBOT_STATE_STOPPED) {
+					if(state == ROBOT_STATE_IDLE) {
 						localStorage.setItem('isRobotStarted', "false");
 						neatoSmartApp.updateRobotStateInformation(currentState, state);
 					}
@@ -2233,23 +2211,14 @@ var neatoSmartApp = (function() {
 			if (stateCode == ROBOT_STATE_CLEANING) {
 				return "Started Cleaning";
 			}
-			else if (stateCode == ROBOT_STATE_STOPPED) {
+			else if (stateCode == ROBOT_STATE_IDLE) {
 				return "Stopped Cleaning";
 			}
 			else if (stateCode == ROBOT_STATE_PAUSED) {
 				return "Paused Cleaning";
 			}
-			else if (stateCode == ROBOT_STATE_RESUMED) {
-				return "Resumed Cleaning";
-			}
-			else if (stateCode == ROBOT_STATE_ON_BASE) {
-				return "On Base";
-			}
 			else if (stateCode == ROBOT_STATE_MANUAL_CLEANING) {
 				return "Started Manual Cleaning";
-			}
-			else if (stateCode == ROBOT_STATE_MANUAL_PLAY_MODE) {
-				return "Manual Play Mode";
 			}
 			return "Not Available"
 		},
@@ -2854,7 +2823,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnPauseResumeCleaningCommand3').addEventListener('click', neatoSmartApp.pauseResumeCleaning3, true);
 			document.querySelector('#btnGoToSpotDefinitionAPIPage').addEventListener('click', neatoSmartApp.goToSpotDefinitionPage , true);
 			document.querySelector('#btnNavigateRobot').addEventListener('click', neatoSmartApp.navigateRobot, true);
-			document.querySelector('#btnCleaningCategoryAPIPage').addEventListener('click', neatoSmartApp.getRobotCleaningCategory, true);
+			document.querySelector('#btnCleaningCategoryAPIPage').addEventListener('click', neatoSmartApp.getRobotCurrentStateDetails, true);
 			neatoSmartApp.populateCleaningCategoryList();
 			neatoSmartApp.populateCleaningModeList();
 			neatoSmartApp.populateNavigationControlList();
@@ -2885,7 +2854,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnPauseResumeCleaningCommand3').removeEventListener('click', neatoSmartApp.pauseResumeCleaning3, true);
 			document.querySelector('#btnGoToSpotDefinitionAPIPage').removeEventListener('click', neatoSmartApp.goToSpotDefinitionPage , true);
 			document.querySelector('#btnNavigateRobot').removeEventListener('click', neatoSmartApp.navigateRobot, true);
-			document.querySelector('#btnCleaningCategoryAPIPage').removeEventListener('click', neatoSmartApp.getRobotCleaningCategory, true);
+			document.querySelector('#btnCleaningCategoryAPIPage').removeEventListener('click', neatoSmartApp.getRobotCurrentStateDetails, true);
 
 			// remove click handlers for the radio buttons
 			var radioCtrlCleaningModifier1x = document.querySelector('input[type="radio"][id="radioCleaningModifier1x"]');
