@@ -87,7 +87,7 @@
         },
         "no_clock": {
             "message": "Before using app scheduling please set the clock on the robot display",
-            "title": "It's time\u2026"
+            "title": "Set Time"
         },
         "no_wifi": {
             "message": "Pro použití této funkce potřebuji Wi-Fi připojení. Zapněte prosím v nastavení Wi-Fi.",

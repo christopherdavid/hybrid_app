@@ -67,7 +67,7 @@
     "settings": {
         "page": {
             "about_desc": "Version Info anzeigen.",
-            "user_settings_desc": "Passwort ändern.",
+            "user_settings_desc": "Passwort ändern. Logout",
             "user_settings": "Benutzereinstellungen",
             "robot_management": "Roboter Management",
             "link": "Vorwerk",
@@ -87,7 +87,7 @@
         },
         "no_clock": {
             "message": "Bitte zuerst die Uhrzeit des Roboters einstellen um den Kalender zu nutzen.",
-            "title": "It's time\u2026"
+            "title": "Uhrzeit setzen"
         },
         "no_wifi": {
             "message": "Bitte WLAN-Verbindung herstellen.<br />Drücke OK um es erneut zu versuchen.",

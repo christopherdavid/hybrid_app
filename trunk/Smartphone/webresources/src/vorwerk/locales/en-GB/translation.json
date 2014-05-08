@@ -67,7 +67,7 @@
     "settings": {
         "page": {
             "about_desc": "Show version type.",
-            "user_settings_desc": "Change your password.",
+            "user_settings_desc": "Change your password. Logout",
             "user_settings": "User Settings",
             "robot_management": "Robot Management",
             "link": "Vorwerk",
@@ -87,7 +87,7 @@
         },
         "no_clock": {
             "message": "Before using app scheduling please set the clock on the robot display",
-            "title": "It's time\u2026"
+            "title": "Set Time"
         },
         "no_wifi": {
             "message": "You need a Wi-Fi connection to use this feature. Please turn on Wi-Fi in Device Settings.<br />Press OK to retry.",
