@@ -87,7 +87,7 @@
         },
         "no_clock": {
             "message": "Before using app scheduling please set the clock on the robot display",
-            "title": "It's time\u2026"
+            "title": "Set Time"
         },
         "no_wifi": {
             "message": "你需要WIFI连接来使用该功能，请在设置内打开WIFI",
