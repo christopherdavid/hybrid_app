@@ -538,7 +538,7 @@
         "wait_robot": "Il Robot si attiva in __wakeUp__ secondi.",
         "robot_offline": "__robotName__  is currently offline",
         "wakeup_robot": "Il Robot si attiva in circa  __wakeUp__ secondi.",
-        "menu": "__robotName__ is currentyl in use",
+        "menu": "__robotName__ is currently in use",
         "20215": "USB Flash Drive was Removed.",
         "20216": "Software Update FAILED.",
         "20217": "Logfile was created successfully!",

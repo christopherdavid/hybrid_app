@@ -538,7 +538,7 @@
         "wait_robot": "Robot bude připraven za __wakeUp__ vteřin",
         "robot_offline": "__robotName__  is currently offline",
         "wakeup_robot": "Robot bude připraven za __wakeUp__ vteřin",
-        "menu": "__robotName__ is currentyl in use",
+        "menu": "__robotName__ is currently in use",
         "20215": "USB Flash Drive was Removed.",
         "20216": "Software Update FAILED.",
         "20217": "Logfile was created successfully!",
