@@ -167,15 +167,13 @@ function WorkflowNotification(parent) {
                         	}
                         break;
                         case ROBOT_DISCONNECTED:
-                            var curState = result.robotData.errorDriveResponseCode;
                             curRobot().connectionState(result.robotDataKeyId);
                             // if there is a notification set robot back to online
                             curRobot().robotOnline(true);
                             curRobot().visualOnline(true);
-                            parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
+                            robotUiStateHandler.setVirtualState(ROBOT_STATE_IDLE);
                             break;
                         case ROBOT_NOT_CONNECTED:
-                            var curState = result.robotData.errorDriveResponseCode;
                             curRobot().connectionState(result.robotDataKeyId);
                             var dialogHeader =  $.i18n.t("messages.not_same_network.title");
                             var dialogText   =  $.i18n.t("messages.not_same_network.message");
@@ -185,11 +183,7 @@ function WorkflowNotification(parent) {
                                         // if there is a notification set robot back to online
                                         curRobot().robotOnline(true);
                                         curRobot().visualOnline(true);
-                                        if(curRobot().robotNewVirtualState() != curState) {
-                                            parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
-                                        } else {
-                                            robotUiStateHandler.setUiState(ROBOT_UI_STATE_STOPPED_WAITED_MANUAL);
-                                        }
+                                        robotUiStateHandler.setVirtualState(ROBOT_STATE_IDLE);
                                     }
                                 }]);
                             
@@ -241,11 +235,10 @@ function WorkflowNotification(parent) {
                             case ROBOT_CONNECTED:
                             case ROBOT_DISCONNECTED:
                             case ROBOT_NOT_CONNECTED:
-                                var curState = result.robotData.errorDriveResponseCode;
                                 // if there is a notification set robot back to online
                                 item.robotOnline(true);
                                 item.visualOnline(true);
-                                parent.communicationWrapper.updateRobotStateWithCode(item, curState);
+                                parent.communicationWrapper.updateRobotStateWithCode(item, ROBOT_STATE_IDLE);
                                 item.connectionState(result.robotDataKeyId);
                                 break;
                         }
