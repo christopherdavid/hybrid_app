@@ -25,7 +25,7 @@ function getRobotStruct() {
         // has to be filled initially with RobotPluginManager.getSpotDefinition
         spotCleaningAreaLength:"",
         spotCleaningAreaHeight:"",
-        // has to be filled initially with RobotPluginManager.getRobotCleaningCategory
+        // has to be filled initially with RobotPluginManager.getRobotCurrentStateDetails
         cleaningCategory:CLEANING_CATEGORY_ALL,
         cleaningMode:CLEANING_MODE_ECO,
         cleaningModifier:"1",
@@ -36,7 +36,8 @@ function getRobotStruct() {
         robotIsDocked:0,
         clockIsSet:0,
         dockHasBeenSeen:0,
-        isCharging:0
+        isCharging:0,
+        crntErrorCode:0
     };
 };
 

@@ -64,42 +64,52 @@ function WorkflowNotification(parent) {
                 // parse robotStateParams
                 if(result.robotData.robotCurrentStateDetails && result.robotData.robotCurrentStateDetails.robotStateParams) {
                     parent.communicationWrapper.parseStateParameters(curRobot(), result.robotData.robotCurrentStateDetails.robotStateParams);
-                }                
+                }
                 
                 switch(result.robotDataKeyId) {
                         case ROBOT_CURRENT_STATE_CHANGED:
                         case ROBOT_STATE_UPDATE:
-                            var curState = result.robotData.robotCurrentState || result.robotData.robotStateUpdate;
-                            // if there is a notification set robot back to online
-                            curRobot().robotOnline(true);
-                            curRobot().visualOnline(true);
-                            robotUiStateHandler.cancelWaitTimer();
+                            var curState = result.robotData.robotCurrentState || result.robotData.robotStateUpdate || null;
+                            // check if state really changed 
+                            if(curState && curState != curRobot().robotNewVirtualState()) {
+                                // if there is a notification set robot back to online
+                                curRobot().robotOnline(true);
+                                curRobot().visualOnline(true);
                             
-                            if(curState == ROBOT_STATE_CLEANING) {
-                                // getRobotCurrentStateDetails
-                                var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotCurrentStateDetails, [curRobot().robotId()], { type: notificationType.NONE });
-                                tDeffer.done(function(categoryResult) {
-                                    // need to add a check if it's a valid category (in some cases got 0 from server)
-                                    if(categoryResult.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_MANUAL || categoryResult.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_ALL
-                                        || categoryResult.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_SPOT) {
-                                            curRobot().cleaningCategory(categoryResult.robotCurrentStateDetails.robotStateParams.robotCleaningCategory);
-                                    } else {
+                                // state changed resolve wait deffer 
+                                robotUiStateHandler.resolveWaitDeffer();
+                            
+                                if(curState == ROBOT_STATE_CLEANING) {
+                                    // getRobotCurrentStateDetails
+                                    var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotCurrentStateDetails, [curRobot().robotId()], { type: notificationType.NONE });
+                                    tDeffer.done(function(categoryResult) {
+                                        // need to add a check if it's a valid category (in some cases got 0 from server)
+                                        if(categoryResult.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_MANUAL || categoryResult.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_ALL
+                                            || categoryResult.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_SPOT) {
+                                                curRobot().cleaningCategory(categoryResult.robotCurrentStateDetails.robotStateParams.robotCleaningCategory);
+                                        } else {
+                                            // set All as fallback
+                                            curRobot().cleaningCategory(CLEANING_CATEGORY_ALL);
+                                        }
+                                        // update state
+                                        parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
+                                    });
+                                    
+                                    tDeffer.fail(function(categoryError) {
                                         // set All as fallback
                                         curRobot().cleaningCategory(CLEANING_CATEGORY_ALL);
-                                    }
+                                        // update state
+                                        parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
+                                    });
+                                } else {
                                     // update state
                                     parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
-                                });
-                                
-                                tDeffer.fail(function(categoryError) {
-                                    // set All as fallback
-                                    curRobot().cleaningCategory(CLEANING_CATEGORY_ALL);
-                                    // update state
-                                    parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
-                                });
+                                }
                             } else {
-                                // update state
-                                parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
+                                // refresh states if UI is not connecting nor waiting nor offline
+                                if(curRobot().robotOnline() && robotUiStateHandler.current().ui() != ROBOT_UI_STATE_CONNECTING && robotUiStateHandler.current().ui() != ROBOT_UI_STATE_WAIT) {
+                                    robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
+                                }
                             }
                             break;
                         case ROBOT_NAME_UPDATE:
@@ -120,7 +130,7 @@ function WorkflowNotification(parent) {
                             curRobot().robotOnline(true);
                             curRobot().visualOnline(true);
                         	
-                            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [curRobot().robotId(), CLEANING_CATEGORY_MANUAL, 1, 1]);
+                            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [curRobot().robotId(), CLEANING_CATEGORY_MANUAL, 1, 1], { type: notificationType.NONE, message: ""});
                             tDeffer.done(function(result){
                                 console.log("startManualModeSuccess" + JSON.stringify(result));
                             });
@@ -129,7 +139,7 @@ function WorkflowNotification(parent) {
                         	// attention: also been called periodically even if state didn't change
                         	var onlineStatus = result.robotData.online;
 							console.log("Current Online Status data:" + JSON.stringify(result.robotData));
-							robotUiStateHandler.rejectWaitTimer();
+							robotUiStateHandler.rejectWaitDeffer();
                         	parent.communicationWrapper.updateRobotOnlineState(curRobot(), onlineStatus);
                         	break;
                         case ROBOT_MESSAGE_NOTIFICATION:
@@ -197,6 +207,27 @@ function WorkflowNotification(parent) {
                         // schedule data updated
                         case ROBOT_SCHEDULE_UPDATED:
                             that.handleStatusListener(ROBOT_SCHEDULE_UPDATED, true);
+                            break;
+                        case ROBOT_COMMAND_FAILED:
+                            console.log("ROBOT_COMMAND_FAILED "  + curRobot().crntErrorCode());
+                            // show timeout message
+                            var dialogHeader =  $.i18n.t("messages.waiting_timeout.title");
+                            var dialogText =  $.i18n.t("messages.waiting_timeout.message");
+                            var dialogTypeId = dialogType.WARNING;
+                            // refresh states
+                            robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
+                            robotUiStateHandler.rejectWaitDeffer();
+                            // command failed, show last error code or timeout message 
+                            if(curRobot().crntErrorCode() != 0 && curRobot().crntErrorCode() != 22000) {
+                                var testTitle =  $.i18n.t("error.-" + curRobot().crntErrorCode() +".title");
+                                // check if translation has been found for errorCode
+                                if(testTitle.indexOf(curRobot().crntErrorCode()) == -1) {
+                                    dialogTypeId = dialogType.ERROR;
+                                    dialogHeader = testTitle;
+                                    dialogText   =  $.i18n.t("error.-" + curRobot().crntErrorCode() +".message");
+                                }
+                            }
+                            that.showDialog(dialogTypeId, dialogHeader, dialogText); 
                             break;
                     }
             // loop over robots and update state

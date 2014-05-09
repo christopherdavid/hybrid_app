@@ -36,7 +36,7 @@
       #statusIcon {
         height:@cleaning_status_icon_height;
         width:@cleaning_status_icon_width;
-        background-image:url(../../img/icons/robot_status_3240x630.png);
+        background-image:url(../../img/icons/robot_status_3240x720.png);
         background-repeat:no-repeat;
         background-size:@cleaning_status_icon_image_size;
 
@@ -59,8 +59,11 @@
         &[data-status='robot_offline'] {
           background-position-y:-@cleaning_status_icon_height*5;
         }
-        &[data-status='inuse'] {
+        &[data-status='menu'] {
           background-position-y:-@cleaning_status_icon_height*6;
+        }
+        &[data-status='waiting'], &[data-status='connecting']  {
+          background-position-y:-@cleaning_status_icon_height*7;
         }
       }
       #statusText {
