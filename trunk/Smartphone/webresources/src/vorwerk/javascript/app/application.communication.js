@@ -181,7 +181,9 @@ function WorkflowCommunication(parent) {
       that.getDataValue("selectedRobot")({});
       that.dataValues["scheduleId"] = null;
       that.dataValues["user"] = null;
-      that.saveToLocalStorage('username', null); 
+      that.saveToLocalStorage('username', null);
+      // remove offline class
+      $("body").removeClass("offline"); 
     };
     
     this.setDataValue = function(key, dataValue){
