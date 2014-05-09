@@ -329,38 +329,20 @@ var robotUiStateHandler = {
     
     startWaitTimer:function() {
         console.log("startWaitTimer");
-        this.cancelWaitTimer();
+        this.resolveWaitDeffer();
         this.waitDeffer = $.Deferred();
-        var oldState = this.current().ui();
         robotUiStateHandler.setUiState(ROBOT_UI_STATE_WAIT);
-        
-        // start timer
-        this.waitTimer = window.setTimeout(function() {
-            // show timeout message
-            var dialogHeader =  $.i18n.t("messages.waiting_timeout.title");
-            var dialogText =  $.i18n.t("messages.waiting_timeout.message");
-            app.notification.showDialog(dialogType.WARNING, dialogHeader, dialogText);
-            // switch back to old state
-            robotUiStateHandler.setUiState(oldState);
-            robotUiStateHandler.rejectWaitDeffer();
-        }, this.waitTimeout);
         
         return this.waitDeffer.promise();
     },
     
-    cancelWaitTimer:function() {
+    resolveWaitDeffer:function() {
         // cancel old timer and resolve deffer
-        window.clearTimeout(this.waitTimer);
+        //window.clearTimeout(this.waitTimer);
         if(this.waitDeffer) {
             this.waitDeffer.resolve({"state":"resolved"});
             this.waitDeffer = null;
         }
-    },
-    
-    rejectWaitTimer:function() {
-        // cancel old timer and resolve deffer
-        window.clearTimeout(this.waitTimer);
-        this.rejectWaitDeffer();
     },
     
     rejectWaitDeffer:function() {

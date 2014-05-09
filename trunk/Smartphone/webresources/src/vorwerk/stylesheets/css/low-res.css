@@ -1412,12 +1412,45 @@ label {
   -o-animation-play-state: running;
   animation-play-state: running;
 }
-#statusIcon[data-status='inuse'] {
-  -moz-animation-name: inuseFrames;
-  -webkit-animation-name: inuseFrames;
-  -ms-animation-name: inuseFrames;
-  -o-animation-name: inuseFrames;
-  animation-name: inuseFrames;
+#statusIcon[data-status='menu'] {
+  -moz-animation-name: menuFrames;
+  -webkit-animation-name: menuFrames;
+  -ms-animation-name: menuFrames;
+  -o-animation-name: menuFrames;
+  animation-name: menuFrames;
+  -moz-animation-duration: 2s;
+  -webkit-animation-duration: 2s;
+  -ms-animation-duration: 2s;
+  -o-animation-duration: 2s;
+  animation-duration: 2s;
+  -moz-animation-timing-function: steps(1, end);
+  -webkit-animation-timing-function: steps(1, end);
+  -ms-animation-timing-function: steps(1, end);
+  -o-animation-timing-function: steps(1, end);
+  animation-timing-function: steps(1, end);
+  -moz-animation-delay: 0.2s;
+  -webkit-animation-delay: 0.2s;
+  -ms-animation-delay: 0.2s;
+  -o-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  -ms-animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -moz-animation-play-state: running;
+  -webkit-animation-play-state: running;
+  -ms-animation-play-state: running;
+  -o-animation-play-state: running;
+  animation-play-state: running;
+}
+#statusIcon[data-status='waiting'],
+#statusIcon[data-status='connecting'] {
+  -moz-animation-name: waitingFrames;
+  -webkit-animation-name: waitingFrames;
+  -ms-animation-name: waitingFrames;
+  -o-animation-name: waitingFrames;
+  animation-name: waitingFrames;
   -moz-animation-duration: 2s;
   -webkit-animation-duration: 2s;
   -ms-animation-duration: 2s;
@@ -2934,7 +2967,7 @@ label {
     background-position-x: -720px;
   }
 }
-@-moz-keyframes inuseFrames {
+@-moz-keyframes menuFrames {
   0% {
     background-position-x: 0;
   }
@@ -2987,7 +3020,7 @@ label {
     background-position-x: -720px;
   }
 }
-@-webkit-keyframes inuseFrames {
+@-webkit-keyframes menuFrames {
   0% {
     background-position-x: 0;
   }
@@ -3040,7 +3073,7 @@ label {
     background-position-x: -720px;
   }
 }
-@-ms-keyframes inuseFrames {
+@-ms-keyframes menuFrames {
   0% {
     background-position-x: 0;
   }
@@ -3093,7 +3126,7 @@ label {
     background-position-x: -720px;
   }
 }
-@-o-keyframes inuseFrames {
+@-o-keyframes menuFrames {
   0% {
     background-position-x: 0;
   }
@@ -3146,7 +3179,7 @@ label {
     background-position-x: -720px;
   }
 }
-@keyframes inuseFrames {
+@keyframes menuFrames {
   0% {
     background-position-x: 0;
   }
@@ -3197,6 +3230,316 @@ label {
   }
   100% {
     background-position-x: -720px;
+  }
+}
+@-moz-keyframes waitingFrames {
+  0% {
+    background-position-x: 0;
+  }
+  5% {
+    background-position-x: -45px;
+  }
+  10% {
+    background-position-x: -90px;
+  }
+  15% {
+    background-position-x: -135px;
+  }
+  20% {
+    background-position-x: -180px;
+  }
+  25% {
+    background-position-x: -225px;
+  }
+  30% {
+    background-position-x: -270px;
+  }
+  35% {
+    background-position-x: -315px;
+  }
+  40% {
+    background-position-x: -360px;
+  }
+  45% {
+    background-position-x: -405px;
+  }
+  50% {
+    background-position-x: -450px;
+  }
+  55% {
+    background-position-x: -495px;
+  }
+  60% {
+    background-position-x: -540px;
+  }
+  65% {
+    background-position-x: -585px;
+  }
+  70% {
+    background-position-x: -630px;
+  }
+  75% {
+    background-position-x: -675px;
+  }
+  80% {
+    background-position-x: -720px;
+  }
+  85% {
+    background-position-x: -765px;
+  }
+  90% {
+    background-position-x: -810px;
+  }
+  100% {
+    background-position-x: -855px;
+  }
+}
+@-webkit-keyframes waitingFrames {
+  0% {
+    background-position-x: 0;
+  }
+  5% {
+    background-position-x: -45px;
+  }
+  10% {
+    background-position-x: -90px;
+  }
+  15% {
+    background-position-x: -135px;
+  }
+  20% {
+    background-position-x: -180px;
+  }
+  25% {
+    background-position-x: -225px;
+  }
+  30% {
+    background-position-x: -270px;
+  }
+  35% {
+    background-position-x: -315px;
+  }
+  40% {
+    background-position-x: -360px;
+  }
+  45% {
+    background-position-x: -405px;
+  }
+  50% {
+    background-position-x: -450px;
+  }
+  55% {
+    background-position-x: -495px;
+  }
+  60% {
+    background-position-x: -540px;
+  }
+  65% {
+    background-position-x: -585px;
+  }
+  70% {
+    background-position-x: -630px;
+  }
+  75% {
+    background-position-x: -675px;
+  }
+  80% {
+    background-position-x: -720px;
+  }
+  85% {
+    background-position-x: -765px;
+  }
+  90% {
+    background-position-x: -810px;
+  }
+  100% {
+    background-position-x: -855px;
+  }
+}
+@-ms-keyframes waitingFrames {
+  0% {
+    background-position-x: 0;
+  }
+  5% {
+    background-position-x: -45px;
+  }
+  10% {
+    background-position-x: -90px;
+  }
+  15% {
+    background-position-x: -135px;
+  }
+  20% {
+    background-position-x: -180px;
+  }
+  25% {
+    background-position-x: -225px;
+  }
+  30% {
+    background-position-x: -270px;
+  }
+  35% {
+    background-position-x: -315px;
+  }
+  40% {
+    background-position-x: -360px;
+  }
+  45% {
+    background-position-x: -405px;
+  }
+  50% {
+    background-position-x: -450px;
+  }
+  55% {
+    background-position-x: -495px;
+  }
+  60% {
+    background-position-x: -540px;
+  }
+  65% {
+    background-position-x: -585px;
+  }
+  70% {
+    background-position-x: -630px;
+  }
+  75% {
+    background-position-x: -675px;
+  }
+  80% {
+    background-position-x: -720px;
+  }
+  85% {
+    background-position-x: -765px;
+  }
+  90% {
+    background-position-x: -810px;
+  }
+  100% {
+    background-position-x: -855px;
+  }
+}
+@-o-keyframes waitingFrames {
+  0% {
+    background-position-x: 0;
+  }
+  5% {
+    background-position-x: -45px;
+  }
+  10% {
+    background-position-x: -90px;
+  }
+  15% {
+    background-position-x: -135px;
+  }
+  20% {
+    background-position-x: -180px;
+  }
+  25% {
+    background-position-x: -225px;
+  }
+  30% {
+    background-position-x: -270px;
+  }
+  35% {
+    background-position-x: -315px;
+  }
+  40% {
+    background-position-x: -360px;
+  }
+  45% {
+    background-position-x: -405px;
+  }
+  50% {
+    background-position-x: -450px;
+  }
+  55% {
+    background-position-x: -495px;
+  }
+  60% {
+    background-position-x: -540px;
+  }
+  65% {
+    background-position-x: -585px;
+  }
+  70% {
+    background-position-x: -630px;
+  }
+  75% {
+    background-position-x: -675px;
+  }
+  80% {
+    background-position-x: -720px;
+  }
+  85% {
+    background-position-x: -765px;
+  }
+  90% {
+    background-position-x: -810px;
+  }
+  100% {
+    background-position-x: -855px;
+  }
+}
+@keyframes waitingFrames {
+  0% {
+    background-position-x: 0;
+  }
+  5% {
+    background-position-x: -45px;
+  }
+  10% {
+    background-position-x: -90px;
+  }
+  15% {
+    background-position-x: -135px;
+  }
+  20% {
+    background-position-x: -180px;
+  }
+  25% {
+    background-position-x: -225px;
+  }
+  30% {
+    background-position-x: -270px;
+  }
+  35% {
+    background-position-x: -315px;
+  }
+  40% {
+    background-position-x: -360px;
+  }
+  45% {
+    background-position-x: -405px;
+  }
+  50% {
+    background-position-x: -450px;
+  }
+  55% {
+    background-position-x: -495px;
+  }
+  60% {
+    background-position-x: -540px;
+  }
+  65% {
+    background-position-x: -585px;
+  }
+  70% {
+    background-position-x: -630px;
+  }
+  75% {
+    background-position-x: -675px;
+  }
+  80% {
+    background-position-x: -720px;
+  }
+  85% {
+    background-position-x: -765px;
+  }
+  90% {
+    background-position-x: -810px;
+  }
+  100% {
+    background-position-x: -855px;
   }
 }
 /*
@@ -4585,9 +4928,9 @@ label {
 .line-grid-container .first-line #statusLine #statusIcon {
   height: 45px;
   width: 45px;
-  background-image: url(../../img/icons/robot_status_3240x630.png);
+  background-image: url(../../img/icons/robot_status_3240x720.png);
   background-repeat: no-repeat;
-  background-size: 1620px 315px;
+  background-size: 1620px 360px;
 }
 .line-grid-container .first-line #statusLine #statusIcon[data-status='awake'] {
   background-position-y: 0;
@@ -4612,8 +4955,12 @@ label {
 .line-grid-container .first-line #statusLine #statusIcon[data-status='robot_offline'] {
   background-position-y: -225px;
 }
-.line-grid-container .first-line #statusLine #statusIcon[data-status='inuse'] {
+.line-grid-container .first-line #statusLine #statusIcon[data-status='menu'] {
   background-position-y: -270px;
+}
+.line-grid-container .first-line #statusLine #statusIcon[data-status='waiting'],
+.line-grid-container .first-line #statusLine #statusIcon[data-status='connecting'] {
+  background-position-y: -315px;
 }
 .line-grid-container .first-line #statusLine #statusText {
   position: absolute;

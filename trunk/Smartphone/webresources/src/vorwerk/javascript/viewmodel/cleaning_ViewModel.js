@@ -129,7 +129,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getSpotDefinition, [that.robot().robotId()]);
         tDeffer.done(that.successGetSpotDefinition);
         
-        // getRobotCleaningCategory
+        // getRobotCurrentStateDetails
         var tDeffer2 = parent.communicationWrapper.exec(RobotPluginManager.getRobotCurrentStateDetails, [that.robot().robotId()]);
         tDeffer2.done(that.successGetRobotCurrentStateDetails);
         
@@ -492,7 +492,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         
         // in case the command has been sent successfully we still have to wait for the robots response
         tDeferStop.done(function(result){
-            var wDefer = robotUiStateHandler.startWaitTimer(stopChecked);
+            var wDefer = robotUiStateHandler.startWaitTimer();
             wDefer.fail(function(error){
                 stopChecked.reject({"state":"rejected"});
             });

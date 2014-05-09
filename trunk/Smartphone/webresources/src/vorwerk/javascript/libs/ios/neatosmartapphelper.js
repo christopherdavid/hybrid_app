@@ -63,6 +63,8 @@ var ROBOT_ONLINE_STATUS_CHANGED = 4015;
 
 var ROBOT_COMMAND_FAILED = 4016;
 
+
+
 // Robot state codes
 var ROBOT_STATE_UNKNOWN 			= 0;
 var ROBOT_STATE_IDLE 				= 1;
@@ -72,7 +74,6 @@ var ROBOT_STATE_SUSPENDED_CLEANING 	= 4;
 var ROBOT_STATE_PAUSED 				= 5;
 var ROBOT_STATE_MANUAL_CLEANING		= 6;
 var ROBOT_STATE_RETURNING 			= 7;
-
 
 var PLUGIN_JSON_KEYS  =  (function() {
     var keys = {
@@ -166,11 +167,7 @@ var ACTION_TYPE_GET_SCHEDULE_DATA 				= "getScheduleData";
 var ACTION_TYPE_CREATE_SCHEDULE 				= "createSchedule";
 var ACTION_TYPE_IS_SCHEDULE_ENABLED 			= "isScheduleEnabled";
 var ACTION_TYPE_ENABLE_SCHEDULE				= "enableSchedule";
-var ACTION_TYPE_GET_ROBOT_CLEANING_STATE					= "getRobotCleaningState";
 
-// Debug method
-var ACTION_TYPE_DEBUG_GET_CONFIG_DETAILS 		= "debugGetConfigDetails";
-var ACTION_TYPE_GET_ROBOT_CLEANING_CATEGORY	= "getRobotCleaningCategory";
 var ACTION_TYPE_GET_ROBOT_CURRENT_STATE	= "getRobotCurrentState";
 var ACTION_TYPE_GET_ROBOT_CURRENT_STATE_DETAILS	= "getRobotCurrentStateDetails";
 
@@ -200,17 +197,10 @@ var KEY_END_TIME = "endTime";
 //COMMAND IDS:
 var COMMAND_ROBOT_START = 101;
 var COMMAND_ROBOT_STOP = 102;
-var COMMAND_ROBOT_JABBER_DETAILS = 103;
 var COMMAND_SEND_BASE = 104;
-var COMMAND_GET_ROBOT_STATE = 105;
-var COMMAND_SEND_ROBOT_STATE = 106;
 var COMMAND_PAUSE_CLEANING = 107;
-var COMMAND_ENABLE_SCHEDULE = 108;
-var COMMAND_DATA_CHANGED_ON_SERVER = 109;
-var COMMAND_SET_ROBOT_TIME = 110;
-var COMMAND_REGISTER_NOTIFICATIONS = 111;
-var COMMAND_UNREGISTER_NOTIFICATIONS = 112;
 var COMMAND_RESUME_CLEANING = 114;
+var COMMAND_INTEND_TO_DRIVE = 119;
 
 // NOTE: Cleaning type is now referred as cleaning category with new
 // names as listed below.
@@ -355,6 +345,7 @@ var ERROR_ROBOT_USER_ASSOCIATION_ALREADY_EXISTS = -182;
  */
 var ERROR_ROBOT_HAS_ASSOCIATED_USER = -192;
 
+
 /**
  * Unknown error has occured. Please try again.
  */
@@ -405,8 +396,9 @@ var ROBOT_NO_INTEND_TO_DRIVE_REQUEST_FOUND = -514;
  */
 var DIFFERENT_ROBOT_CONNECTION_EXISTS = -515;
 
+
 /**
- * This error code is returned when
+ * This error code is returned when 
  * - robot has set the current cleaning state as empty
  */
 var ERROR_NO_CLEANING_STATE_SET = -518;
@@ -906,13 +898,6 @@ UserMgr.prototype.disassociateAllRobots = function(email, callbackSuccess, callb
 	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_DISASSOCAITE_ALL_ROBOTS, [disassociateAllRobotsArray]);
 };
-
-// Debug method.
-UserMgr.prototype.debugGetConfigurationDetails = function(callbackSuccess, callbackError) {
-	cordova.exec(callbackSuccess, callbackError, USER_MANAGEMENT_PLUGIN,
-                 ACTION_TYPE_DEBUG_GET_CONFIG_DETAILS, []);
-};
-
 
 /**
  * This API is used to switch on/off global and individual push notification settings
@@ -1730,10 +1715,12 @@ RobotMgr.prototype.getSpotDefinition = function(robotId, callbackSuccess, callba
 			ACTION_TYPE_GET_SPOT_DEFINITION, [commandParams]);
 };
 
+
+
 RobotMgr.prototype.getRobotCurrentStateDetails = function(robotId, callbackSuccess, callbackError) {
 	var commandParams = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
-               ACTION_TYPE_GET_ROBOT_CURRENT_STATE_DETAILS, [commandParams]);
+			ACTION_TYPE_GET_ROBOT_CURRENT_STATE_DETAILS, [commandParams]);
 };
 
 /**
@@ -2034,33 +2021,13 @@ RobotMgr.prototype.unregisterForRobotMessages = function(callbackSuccess, callba
 };
 
 
-/**
-* @deprecated use getRobotCurrentState instead.
- * This API gets the current state of the robot
- *  on success this API returns a JSON Object
- * <br>{robotCurrentState:"robotCurrentState", robotNewVirtualState: <robotNewVirtualState>, robotId:"robotId"}
- * <br>robotCurrentState is an integer value of the current actual state of the robot
- * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
- * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
- * <br>robotId is the serial number of the robot
- * <p>
- * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
- * @param robotId 			the serial number of the robot
- * @param callbackSuccess 	success callback for this API
- * @param callbackError 	error callback for this API
- */
-RobotMgr.prototype.getRobotCleaningState = function(robotId, callbackSuccess, callbackError) {
-	var params = {'robotId':robotId};
-	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
-			ACTION_TYPE_GET_ROBOT_CLEANING_STATE, [params]);
-};
 
 /**
  * This API gets the current state of the robot
  *  on success this API returns a JSON Object
  * <br>{robotCurrentState:"robotCurrentState", robotNewVirtualState: <robotNewVirtualState>, robotId:"robotId"}
  * <br>robotCurrentState is an integer value of the current actual state of the robot
- * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI.
+ * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
  * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
  * <br>robotId is the serial number of the robot
  * <p>
@@ -2072,29 +2039,9 @@ RobotMgr.prototype.getRobotCleaningState = function(robotId, callbackSuccess, ca
 RobotMgr.prototype.getRobotCurrentState = function(robotId, callbackSuccess, callbackError) {
 	var params = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
-                 ACTION_TYPE_GET_ROBOT_CURRENT_STATE, [params]);
+			ACTION_TYPE_GET_ROBOT_CURRENT_STATE, [params]);
 };
 
-/**
-* @deprecated use getRobotCurrentStateDetails instead.
- * This API gets the current state of the robot
- *  on success this API returns a JSON Object
- * <br>{cleaningCatageory: <1-Maual,2-All,3-Spot>,robotId:"robotId"}
- * <br>robotCurrentState is an integer value of the current actual state of the robot
- * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
- * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
- * <br>robotId is the serial number of the robot
- * <p>
- * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
- * @param robotId 			the serial number of the robot
- * @param callbackSuccess 	success callback for this API
- * @param callbackError 	error callback for this API
- */
-RobotMgr.prototype.getRobotCleaningCategory = function(robotId, callbackSuccess, callbackError) {
-	var params = {'robotId':robotId};
-	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
-			ACTION_TYPE_GET_ROBOT_CLEANING_CATEGORY, [params]);
-};
 
 
 /**
@@ -2509,12 +2456,6 @@ var UserPluginManager = (function() {
 			window.plugins.neatoPluginLayer.userMgr.disassociateAllRobots(email, callbackSuccess, callbackError);
 		},
 		
-        // Debug method. May not be exposed in the finished product
-        debugGetConfigurationDetails: function(callbackSuccess, callbackError) {
-            window.plugins.neatoPluginLayer.userMgr.debugGetConfigurationDetails(callbackSuccess, callbackError);
-        },
-
-		
 		/**
 		 * This API changes the user's password.
 		 * <p>
@@ -2855,10 +2796,12 @@ var RobotPluginManager = (function() {
 			window.plugins.neatoPluginLayer.robotMgr.getSpotDefinition(robotId, callbackSuccess, callbackError);
 		},
 
-    getRobotCurrentStateDetails: function(robotId, callbackSuccess, callbackError) {
-      window.plugins.neatoPluginLayer.robotMgr.getRobotCurrentStateDetails(robotId, callbackSuccess, callbackError);
-    },
-
+		
+		
+		getRobotCurrentStateDetails: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotCurrentStateDetails(robotId, callbackSuccess, callbackError);
+		},
+		
 		/**
 		 * This API sends drive command to the robot. This API calls Neato Smart App Service.
 		 * <p>
@@ -3513,15 +3456,12 @@ var RobotPluginManager = (function() {
 			window.plugins.neatoPluginLayer.robotMgr.enableSchedule(robotId, scheduleType, enable, callbackSuccess, callbackError);
 		},
 		
+
 		/**
-         * @deprecated use getRobotCurrentState instead.
-		 *
 		 * This API gets the current state of the robot
 		 *  on success this API returns a JSON Object
-		 * <br>{robotCurrentState:"robotCurrentState", robotNewVirtualState: <robotNewVirtualState>, robotId:"robotId"}
+		 * <br>{robotCurrentState:"robotCurrentState", robotId:"robotId"}
 		 * <br>robotCurrentState is an integer value of the current actual state of the robot
-		 * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
-		 * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
 		 * <br>robotId is the serial number of the robot
 		 * <p>
 		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
@@ -3529,47 +3469,11 @@ var RobotPluginManager = (function() {
 		 * @param callbackSuccess 	success callback for this API
 		 * @param callbackError 	error callback for this API
 		 */
-		
-		getRobotCleaningState: function(robotId, callbackSuccess, callbackError) {
-			window.plugins.neatoPluginLayer.robotMgr.getRobotCleaningState(robotId, callbackSuccess, callbackError);
+
+		getRobotCurrentState: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotCurrentState(robotId, callbackSuccess, callbackError);
 		},
 		
-        /**
-        * This API gets the current state of the robot
-        *  on success this API returns a JSON Object
-        * <br>{robotCurrentState:"robotCurrentState", robotId:"robotId"}
-        * <br>robotCurrentState is an integer value of the current actual state of the robot
-        * <br>robotId is the serial number of the robot
-        * <p>
-        * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
-        * @param robotId 			the serial number of the robot
-        * @param callbackSuccess 	success callback for this API
-        * @param callbackError 	error callback for this API
-        */
-                          
-        getRobotCurrentState: function(robotId, callbackSuccess, callbackError) {
-        window.plugins.neatoPluginLayer.robotMgr.getRobotCurrentState(robotId, callbackSuccess, callbackError);
-        },
-                          
-		/**
-         * @deprecated use getRobotCurrentStateDetails instead.
-		 * This API gets the current state of the robot
-		 *  on success this API returns a JSON Object
-		 * <br>{cleaningCategory: <1-Maual,2-All,3-Spot>,robotId:"robotId"}
-		 * <br>robotCurrentState is an integer value of the current actual state of the robot
-		 * <br>robotNewVirtualState is an integer value of the cleaning state of the robot to be displayed to the UI. 
-		 * <br>when robot wakes up, it checks the robotNewVirtualState and later sets its current state to robotNewVirtualState
-		 * <br>robotId is the serial number of the robot
-		 * <p>
-		 * on error this API returns a JSON Object {errorCode:"errorCode", errMessage:"errMessage"}
-		 * @param robotId 			the serial number of the robot
-		 * @param callbackSuccess 	success callback for this API
-		 * @param callbackError 	error callback for this API
-		 */
-		
-		getRobotCleaningCategory: function(robotId, callbackSuccess, callbackError) {
-			window.plugins.neatoPluginLayer.robotMgr.getRobotCleaningCategory(robotId, callbackSuccess, callbackError);
-		},
 		
 		/**
 		 * This API checks whether there  exists a direct-peer connection from the smartapp to robot.
@@ -3676,7 +3580,7 @@ var PluginManagerHelper =  (function() {
 		 *  - startTime
 		 *  - cleaningMode
 		 *  Returns: Basic Schedule JSON object
-		 *  {'day':day, 'startTime': startTime, ‘cleaningMode’:cleaningMode}
+		 *  {'day':day, 'startTime': startTime, 'cleaningMode':cleaningMode}
 		 */
 		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {

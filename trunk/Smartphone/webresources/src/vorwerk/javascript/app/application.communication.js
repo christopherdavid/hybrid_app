@@ -342,6 +342,9 @@ function WorkflowCommunication(parent) {
         if(typeof parameters.IsCharging != "undefined") {
             robot.isCharging(parseInt(parameters.IsCharging, 10));
         }
+        if(typeof parameters.CrntErrorCode != "undefined") {
+            robot.crntErrorCode(parseInt(parameters.CrntErrorCode, 10));
+        }
      };
 }
 
