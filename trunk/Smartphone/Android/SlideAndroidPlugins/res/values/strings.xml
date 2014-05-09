@@ -6,9 +6,9 @@
     <string name="title_activity_slide_plugin_base">SlidePluginBaseActivity</string>
     <string name="notification_text_dirt_bag_full">Dirt bag full</string>
     <string name="notification_text_robot_stuck">I\'m stuck</string>
-    <string name="notification_text_robot_state">See Robot Information</string>
-    <string name="notification_text_title">Robot Alert</string>    
-    <string name="notification_text_generic_message">You have a message from your robot.</string>  
     <string name="notification_text_cleaning_done">Cleaning complete.</string>
+    <string name="notification_text_generic_message">You have a message from your robot.</string>
+    <string name="notification_text_title">Robot Alert</string>
     <string name="error_robot_not_directly_connected">Robot not directly connected.</string>
+
 </resources>

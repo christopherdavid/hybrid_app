@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="notification_text_dirt_bag_full">SE:Dirt bag full</string>
+    <string name="notification_text_robot_stuck">SE: I\'m stuck</string>
+    <string name="notification_text_cleaning_done">SE: Cleaning complete.</string>
+    <string name="notification_text_generic_message">SE: You have a message from your robot.</string>
+    <string name="notification_text_title">SE: Robot Alert</string>
+
+</resources>

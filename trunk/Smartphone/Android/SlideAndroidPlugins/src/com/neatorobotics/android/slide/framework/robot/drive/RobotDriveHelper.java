@@ -201,15 +201,9 @@ public class RobotDriveHelper {
         @SuppressWarnings("unused")
         public static final int RESPONSE_CODE_ROBOT_CONNECTED_TO_OTHER_USER = 10001;
         // Received when robot wait for connection is timed-out.
-        @SuppressWarnings("unused")
-        public static final int RESPONSE_CODE_ROBOT_CONNECTION_TIMEOUT = 10002;
         public static final int RESPONSE_CODE_ROBOT_OFFLINE = 10003;
         // Received when robot new connection is established.
-        @SuppressWarnings("unused")
-        public static final int RESPONSE_CODE_ROBOT_NEW_CONNECTION_ESTABLISHED = 10004;
         public static final int RESPONSE_CODE_ERROR_IN_CONNECTION = 10005;
-        @SuppressWarnings("unused")
-        public static final int RESPONSE_CODE_ROBOT_PEER_SERVER_STOP = 10006;
     }
 
     // Method gives the drive request json value to be set in the profile

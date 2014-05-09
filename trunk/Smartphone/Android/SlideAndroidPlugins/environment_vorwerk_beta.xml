@@ -3,9 +3,9 @@
 
     <string name="server_name">Beta (Vorwerk)</string>
     <string name="api_key">1e26686d806d82144a71ea9a99d1b3169adaad917</string>
-    <string name="base_server_url">http://server-01.fut.emea.vr200.ksecosys.net/api/rest/json</string>
+    <string name="base_server_url">https://server-01.fut.emea.vr200.ksecosys.net/api/rest/json</string>
     <string name="xmpp_server_domain">server-01.fut.emea.vr200.ksecosys.net</string>
-    <string name="server_url">http://server-01.fut.emea.vr200.ksecosys.net</string>
+    <string name="server_url">https://server-01.fut.emea.vr200.ksecosys.net</string>
     <string name="xmpp_webserver_url">server-01.fut.emea.vr200.ksecosys.net</string>
     <string name="crittercism_app_id">5310ec6e7c37643414000003</string>
 
