@@ -3,6 +3,9 @@ resourceHandler.registerFunction('terms_ViewModel.js', function(parent) {
     var that = this, termsScroll;
     this.conditions = {};
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
+     this.isRobotVisible = ko.computed(function(){
+        return (typeof(that.robot().robotName) != 'undefined');
+    },this);
     
     this.init = function() {
        termsScroll = new iScroll('legalWrapperTerms',{

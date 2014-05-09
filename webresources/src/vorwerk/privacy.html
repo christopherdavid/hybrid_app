@@ -6,10 +6,10 @@
                 data-bind="click:back"></a>
         </div>
         <h1>
-            <div class="screenTitle">
+            <div class="screenTitle" data-bind="css:{noRobot:!isRobotVisible()}">
                 <span data-i18n="privacyPolicy.page.title" data-bind="translate: language">[navi title]</span> 
             </div>
-            <div class="robotName">
+            <div class="robotName" data-bind="visible: isRobotVisible()" class="robotName">
                 <span data-bind="text: robot().displayName">[robot name]</span>
             </div>
         </h1>

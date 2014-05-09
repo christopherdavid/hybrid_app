@@ -18,7 +18,7 @@ function Application() {
         firstScreen : "start",
         pageTransition : "none",
         pageReverseDirection: false,
-        version:"0.7.0.5",
+        version:"0.7.0.6",
         pluginVersion:"0.6.2.36",
         serverName:"Vorwerk (Beta) Staging",
         fallbackLanguage:"en-GB",
@@ -27,6 +27,7 @@ function Application() {
         device:"",
         emailRegEx: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
     };
+   
     this.scheduler;
     this.orientation = {
         landscape: true,

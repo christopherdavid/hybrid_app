@@ -3,6 +3,10 @@ resourceHandler.registerFunction('privacy_ViewModel.js', function(parent) {
     var that = this, privacyScroll;
     this.conditions = {};
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
+     this.isRobotVisible = ko.computed(function(){
+        return (typeof(that.robot().robotName) != 'undefined');
+    },this);
+    
     this.init = function() {
     
       privacyScroll = new iScroll('legalWrapperPrivacy',{
