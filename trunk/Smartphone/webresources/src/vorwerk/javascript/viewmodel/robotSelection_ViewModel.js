@@ -12,8 +12,6 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         return (typeof(that.robot().robotName) != 'undefined');
     },this);
     
-    this.isLogoutVisible = ko.observable(false);
-    
     this.selectedRobot = ko.observable();
     
     var userName = parent.communicationWrapper.getFromLocalStorage('username');
@@ -41,9 +39,6 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         // Update the back button depending on the screen that opened this view
         that.updateButtons();
         
-        if(that.bundle && (that.bundle == robotScreenCaller.REGISTER || that.bundle == robotScreenCaller.LOGIN || that.bundle == robotScreenCaller.DELETE)) {
-            that.isLogoutVisible(true);
-        }
         if (that.robots().length == 0){
             that.getRobotList();
         } else {
