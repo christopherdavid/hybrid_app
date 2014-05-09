@@ -20,7 +20,7 @@ import android.content.Context;
 public class RobotCommandTimerHelper {
 
     private static final String TAG = RobotCommandTimerHelper.class.getSimpleName();
-    private static final long DEFAULT_COMMAND_EXPIRY_TIMEOUT = 1 * 90 * 1000;
+    private static final long DEFAULT_COMMAND_EXPIRY_TIMEOUT = 1 * 60 * 1000;
     private static final Object INSTANCE_LOCK = new Object();
     private TreeMap<String, CommandTimer> mTimerMap;
     private Context mContext;
