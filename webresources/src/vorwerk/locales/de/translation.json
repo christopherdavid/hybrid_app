@@ -627,7 +627,7 @@
             "no_robot": "Du hast noch keinen Roboter registriert.<br>Bitte Roboter durch anwählen von <span class='font_bold'>+<\/span> hinzufügen.",
             "edit_title": "Registrierung"
         },
-        "navi": {"title": "Roboter Auswahl DE"}
+        "navi": {"title": "Roboter Auswahl"}
     },
     "createAccount": {
         "page": {
