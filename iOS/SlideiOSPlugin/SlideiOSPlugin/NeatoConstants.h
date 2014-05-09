@@ -111,7 +111,7 @@
 #define NOTIFICATION_FLAG_TRUE 1
 
 // Command expiry constants
-#define COMMAND_EXPIRY_TIME 90
+#define COMMAND_EXPIRY_TIME 60
 
 // Notification constants
 #define NOTIFICATION_XMPP_DATA_CHANGE @"com.neato.plugin.xmppchange.robotDataChanged"
@@ -244,7 +244,7 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 #define SERVER_TYPE                 @"Beta Server (Vorwerk)"
 #define XMPP_SERVER_ADDRESS         @"server-01.fut.emea.vr200.ksecosys.net"
 // Will use API's at http://server-01.fut.emea.vr200.ksecosys.net/wstest/
-#define BASE_URL @"http://server-01.fut.emea.vr200.ksecosys.net/api/rest/json"
+#define BASE_URL @"https://server-01.fut.emea.vr200.ksecosys.net/api/rest/json"
 #define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
 
 #endif

@@ -24,3 +24,8 @@
 "timed recording complete" = "programmierte Aufnahme beendet";
 // accessibility hint for display of recorded elapsed time
 "recorded time in minutes and seconds" = "aufgenommene Zeit in Minuten und Sekunden";
+
+"MSG_STUCK_NOTIFICATION_ID" = "de-I\'m Stuck";
+"MSG_DIRT_BAG_FULL_NOTIFICATION_ID" = "de-Dirt bag full";
+"MSG_CLEANING_DONE_NOTIFICATION_ID" = "de-Cleaning Complete";
+"MSG_GENERIC_NOTIFICATION_ID" = "de-You have a message from your Robot";
