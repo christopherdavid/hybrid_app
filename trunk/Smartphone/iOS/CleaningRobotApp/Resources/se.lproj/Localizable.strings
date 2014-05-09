@@ -24,3 +24,8 @@
 "timed recording complete" = "inspelning har avslutad";
 // accessibility hint for display of recorded elapsed time
 "recorded time in minutes and seconds" = "inspelad tid in minuter och sekund";
+
+"MSG_STUCK_NOTIFICATION_ID" = "se-I\'m Stuck";
+"MSG_DIRT_BAG_FULL_NOTIFICATION_ID" = "se-Dirt bag full";
+"MSG_CLEANING_DONE_NOTIFICATION_ID" = "se-Cleaning Complete";
+"MSG_GENERIC_NOTIFICATION_ID" = "se-You have a message from your Robot";
