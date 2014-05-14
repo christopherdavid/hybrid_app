@@ -498,10 +498,10 @@
 
     #spotSizeContainer {
       position: relative;
-      width:@spot_grid_cell_width*3;
-      height:@spot_grid_cell_height*5;
+      width:@spot_grid_cell_width*2.5;
+      height:@spot_grid_cell_height*4;
       left:@spot_grid_space + @spot_grid_cell_width*3 - @spot_resize_icon_width/2;
-      top:@spot_grid_space - @spot_resize_icon_height/2;
+      top:@spot_grid_space - @spot_resize_icon_height/2 + @spot_grid_cell_height;
 
       #spotResizer {
         width: @spot_resize_icon_width;
