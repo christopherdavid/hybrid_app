@@ -5341,10 +5341,10 @@ label {
 }
 #spotContainer #spotGridContainer #spotSizeContainer {
   position: relative;
-  width: 144px;
-  height: 240px;
+  width: 120px;
+  height: 192px;
   left: 131px;
-  top: -13px;
+  top: 35px;
 }
 #spotContainer #spotGridContainer #spotSizeContainer #spotResizer {
   width: 30px;

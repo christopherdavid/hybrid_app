@@ -7,8 +7,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             cellHeight:deviceSize.getResolution() == "high" ? 78 : 48,
             maxWidth:deviceSize.getResolution() == "high" ? 396 : 244,
             gridSpace:deviceSize.getResolution() == "high" ? 3 : 2,
-            maxCol:5,
-            maxRow:5
+            maxCol:4,
+            maxRow:4
         },
         spotFactor = parseInt($.i18n.t("pattern.spotFactor"),10),
         spotUnit = $.i18n.t("pattern.spotUnit"),
