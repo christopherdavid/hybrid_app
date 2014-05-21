@@ -556,8 +556,8 @@
     },
     "robotActivationId": {
         "page": {
-            "robotId": "Robot Link Code",
-            "wifisetup": "Please enter the Robot Link Code.<br />You will find it on the robot display under: <span class='font_bold highlightedText'>Settings / Link SmartDevice<\/span>"
+            "robotId": "Identification code",
+            "wifisetup": "Please enter the Identification code.<br />You will find it on the robot display under: <span class='font_bold highlightedText'>Settings / Link SmartDevice<\/span>"
         },
         "navi": {"title": "Robot activation"}
     },

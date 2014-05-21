@@ -871,7 +871,7 @@ var RobotPluginManager = ( function() {
                      "RobotIsDocked": 0,
                      "ClockIsSet": 0,
                      "DockHasBeenSeen": 0,
-                     "IsCharging": 1,
+                     "IsCharging": 0,
                      "robotCleaningCategory": 0,
                      "robotCleaningMode": 1,
                      "robotCleaningModifier": 0,
