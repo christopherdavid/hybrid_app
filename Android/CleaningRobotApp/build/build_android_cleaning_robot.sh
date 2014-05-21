@@ -50,18 +50,28 @@ SERVER_ENVIRONMENT_FILE="environment_vorwerk_beta.xml"
 
 shopt -s nocasematch
 if [[ $PRODUCT_TYPE == "neato" ]]; then
+    echo "Building Neato..."
     # createAndroidNeato has some issues and does not build. So for now using createAndroidVorwerk
 	TARGET_RESOURCE_TYPE="createAndroidVorwerk"
 	TARGET_ANT_PROPERTIES_BUILD_FILE=$NEATO_ANT_PROPERTIES_BUILD_FILE
         PRODUCT_SUFFIX="_Neato"
         SERVER_ENVIRONMENT_FILE="environment_neato_staging.xml" 
-else
-	if [[ $PRODUCT_TYPE == "vorwerk" ]]; then
+elif [[ $PRODUCT_TYPE == "vorwerk" ]]; then
+      echo "Building Vorwerk..."
+	if [[ $BUILD_TYPE == "beta" ]]; then
 		TARGET_RESOURCE_TYPE="createAndroidVorwerk"
 		TARGET_ANT_PROPERTIES_BUILD_FILE=$VORWERK_ANT_PROPERTIES_BUILD_FILE
-	        PRODUCT_SUFFIX="_Vorwerk"
-                SERVER_ENVIRONMENT_FILE="environment_vorwerk_beta.xml"
+	    PRODUCT_SUFFIX="_Vorwerk"
+        SERVER_ENVIRONMENT_FILE="environment_vorwerk_beta.xml"
 	fi
+elif [[ $PRODUCT_TYPE == "rajatogo" ]]; then 
+  echo "Building Rajatogo..."
+
+	        if [[ $BUILD_TYPE == "demo" ]]; then
+			  		APK_SUFFIX="_demo"
+                	PRODUCT_SUFFIX="_rajatogo"
+                  SERVER_ENVIRONMENT_FILE="environment_rajatogo_demo2.xml"
+                fi
 fi
 
 # first delete the existing server environement file and copy the new server environment
