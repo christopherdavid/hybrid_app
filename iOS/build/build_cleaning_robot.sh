@@ -39,6 +39,7 @@ VORWERK_BETA_BUILD_FILE="build_vorwerk_beta.xml"
 VORWERK_DEV_BUILD_FILE="build_vorwerk_dev.xml"
 NEATO_BETA_BUILD_FILE="build_neato_beta.xml"
 NEATO_DEV_BUILD_FILE="build_neato_dev.xml"
+RAJATOGO_DEMO_BUILD_FILE="build_rajatogo_demo.xml"
 CLEANING_ROBOT_APP_PINFO="CleaningRobotApp-Info.plist"
 CLEANING_ROBOT_APP_PINFO_BACKUP="CleaningRobotApp-Info_back.plist"
 TARGET_BUILD_FILE=$VORWERK_DEV_BUILD_FILE
@@ -52,14 +53,17 @@ if [[ $PRODUCT_TYPE == "neato" ]]; then
 	elif [[ $BUILD_TYPE == "dev" ]]; then
 		TARGET_BUILD_FILE=$NEATO_DEV_BUILD_FILE
 	fi
-else
-	if [[ $PRODUCT_TYPE == "vorwerk" ]]; then
+elif [[ $PRODUCT_TYPE == "vorwerk" ]]; then
 		TARGET_RESOURCE_TYPE="createiOSVorwerk"
 		if [[ $BUILD_TYPE == "beta" ]]; then
 			TARGET_BUILD_FILE=$VORWERK_BETA_BUILD_FILE
 		elif [[ $BUILD_TYPE == "dev" ]]; then
 			TARGET_BUILD_FILE=$VORWERK_DEV_BUILD_FILE
 		fi
+elif [[ $PRODUCT_TYPE == "rajatogo" ]]; then
+	if [[ $BUILD_TYPE == "demo" ]]; then
+		echo "Building Rajatogo demo..."
+		TARGET_BUILD_FILE=$RAJATOGO_DEMO_BUILD_FILE
 	fi
 fi
 
