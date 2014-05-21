@@ -27,7 +27,7 @@ function getRobotStruct() {
         spotCleaningAreaHeight:"",
         // has to be filled initially with RobotPluginManager.getRobotCurrentStateDetails
         cleaningCategory:CLEANING_CATEGORY_ALL,
-        cleaningMode:CLEANING_MODE_ECO,
+        cleaningMode:CLEANING_MODE_NORMAL,
         cleaningModifier:"1",
         stateString:$.i18n.t("robotStateCodes." + visualState[defaultState]),
         connectionState:"",
