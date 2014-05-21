@@ -12,7 +12,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     this.selectedCleaningDays = ko.observableArray([]);
     this.blockedDays = ko.observableArray([]);
     // set eco as default
-    this.cleaningMode = ko.observable(CLEANING_MODE_ECO);
+    this.cleaningMode = ko.observable(CLEANING_MODE_NORMAL);
     this.ecoMode = ko.computed(function() {
         return that.cleaningMode() == CLEANING_MODE_ECO;
     });

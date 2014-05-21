@@ -45,8 +45,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             }
         }, this);
     
-    // set cleaning mode "eco" as default
-    this.ecoMode = ko.observable(true);
+    // set cleaning mode "non-eco" as default
+    this.ecoMode = ko.observable(false);
     
     this.cleaningMode = ko.observableArray([{
             id : CLEANING_MODE_ECO,

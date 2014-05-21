@@ -19,7 +19,7 @@ function Application() {
         pageTransition : "none",
         pageReverseDirection: false,
         version:"0.7.2.0_UK",
-        pluginVersion:"0.6.2.36",
+        pluginVersion:"0.6.2.41",
         serverName:"Vorwerk (Beta UK) Staging",
         fallbackLanguage:"en-GB",
         policyDocumentURL:"http://server-01.fut.emea.vr200.ksecosys.net/",
