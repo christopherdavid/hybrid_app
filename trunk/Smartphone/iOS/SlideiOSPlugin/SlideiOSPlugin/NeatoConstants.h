@@ -249,6 +249,22 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 
 #endif
 
+#ifdef SERVER_TYPE_RAJATOGO_DEMO
+// First undefine existing constants
+#undef SERVER_TYPE
+#undef XMPP_SERVER_ADDRESS
+#undef BASE_URL
+#undef API_KEY
+
+#define SERVER_TYPE                 @"Demo2 Server (Rajatogo)"
+#define XMPP_SERVER_ADDRESS         @"neatodemo2.rajatogo.com"
+// Will use API's at https://neatodemo2.rajatogo.com/wstest/
+#define BASE_URL @"https://neatodemo2.rajatogo.com/api/rest/json"
+#define API_KEY @"1e26686d806d82144a71ea9a99d1b3169adaad917"
+
+#endif
+
+
 #ifdef SERVER_TYPE_NEATO_STAGING
 // First undefine existing constants
 #undef SERVER_TYPE
