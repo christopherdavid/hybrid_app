@@ -94,7 +94,7 @@
             "title": "网络连接故障"
         },
         "waiting_timeout": {
-            "message": "Robot didn't received the command.",
+            "message": "Robot didn't receive the command.",
             "title": "Timeout"
         },
         "103": {
@@ -643,7 +643,7 @@
         "navi": {"title": "创建用户账号"}
     },
     "visualState": {
-        "suspend": "I'm suspended cleaning till im fully recharged.",
+        "suspend": "I'm in suspended cleaning mode untill I'm fully recharged.",
         "returning": "I'm returning",
         "robot_offline": "I'm Offline",
         "inbase": "我正在基座休息中。",

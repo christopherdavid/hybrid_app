@@ -15,7 +15,7 @@
         "edit": "Edit",
         "cancel": "Cancel",
         "cleaningMode": {
-            "normal": "ALL ROOMS",
+            "normal": "Normal",
             "eco": "ECO"
         },
         "countries": {
@@ -94,7 +94,7 @@
             "title": "Connectivity Problems"
         },
         "waiting_timeout": {
-            "message": "Robot didn't received the command.",
+            "message": "Robot didn't receive the command.",
             "title": "Timeout"
         },
         "103": {
@@ -643,7 +643,7 @@
         "navi": {"title": "Create User Account"}
     },
     "visualState": {
-        "suspend": "I'm suspended cleaning till im fully recharged.",
+        "suspend": "I'm in suspended cleaning mode untill I'm fully recharged.",
         "returning": "I'm returning",
         "robot_offline": "I'm Offline",
         "inbase": "I\u2019m having a rest at my base.",
