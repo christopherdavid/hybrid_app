@@ -63,7 +63,14 @@ var ROBOT_ONLINE_STATUS_CHANGED = 4015;
 
 var ROBOT_COMMAND_FAILED = 4016;
 
+// Received as the error code in ROBOT_NOT_CONNECTED notification when the robot is already driven manually by some other user.
+var RESPONSE_CODE_ROBOT_CONNECTED_TO_OTHER_USER = 10001;
 
+// Received as the error code in ROBOT_NOT_CONNECTED if robot is offline and cannot be connected.
+var RESPONSE_CODE_ROBOT_OFFLINE = 10003;
+
+// Received as the error code in ROBOT_NOT_CONNECTED when the robot is not in the same wifi.
+var RESPONSE_CODE_ERROR_IN_CONNECTION = 10005;
 
 // Robot state codes
 var ROBOT_STATE_UNKNOWN 			= 0;

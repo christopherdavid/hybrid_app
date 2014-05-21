@@ -556,8 +556,8 @@
     },
     "robotActivationId": {
         "page": {
-            "robotId": "Registrierungs-ID",
-            "wifisetup": "Bitte die Registrierungs-ID eingeben.<\/br> Sie wird angezeigt im Roboter Menü unter <span class='font_bold highlightedText'>Wifi Setup / Registrierung<\/span>"
+            "robotId": "Verbindungscode",
+            "wifisetup": "Bitte den Verbindungscode eingeben.<\/br> Dieser wird angezeigt im Roboter Menü unter <span class='font_bold highlightedText'>Einstellungen / Verbind. SmartDevice<\/span>"
         },
         "navi": {"title": "Roboter Aktivierung."}
     },
