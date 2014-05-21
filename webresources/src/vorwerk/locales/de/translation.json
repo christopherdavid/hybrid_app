@@ -94,7 +94,7 @@
             "title": "Ich habe ein Verbindungsproblem."
         },
         "waiting_timeout": {
-            "message": "Robot didn't received the command.",
+            "message": "Robot didn't receive the command.",
             "title": "Timeout"
         },
         "103": {
