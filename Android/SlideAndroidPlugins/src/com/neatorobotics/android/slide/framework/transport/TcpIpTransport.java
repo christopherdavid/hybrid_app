@@ -51,6 +51,7 @@ public class TcpIpTransport implements Transport {
     public void send(byte[] data) throws IOException {
         if (mOutputStream != null) {
             mOutputStream.write(data);
+            mOutputStream.flush();
         }
     }
 
