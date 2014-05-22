@@ -202,9 +202,9 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         // 'scheduleEventData': {'startTime':'10:30','day':1, 'cleaningMode':'1'}
         // }
         
-        // check if mode is eco or all and set eco as fallback
+        // check if mode is eco or all and set normal as fallback
         if(result.scheduleEventData.cleaningMode != CLEANING_MODE_ECO && result.scheduleEventData.cleaningMode != CLEANING_MODE_NORMAL) {
-            result.scheduleEventData.cleaningMode = CLEANING_MODE_ECO;
+            result.scheduleEventData.cleaningMode = CLEANING_MODE_NORMAL;
         }
 
         // add the day to the day blocked list

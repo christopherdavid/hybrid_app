@@ -5026,6 +5026,7 @@ label {
   border-radius: 41px;
   width: 80px;
   height: 80px;
+  z-index: 100;
 }
 .line-grid-container .first-line .control-line .control-button-bar .ui-btn .ui-btn-inner,
 .line-grid-container .first-line .control-line .control-button-bar-top .ui-btn .ui-btn-inner {
