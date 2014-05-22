@@ -11,7 +11,7 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
     this.cleaningDays = ko.observableArray([]);
     this.selectedCleaningDays = ko.observableArray([]);
     this.blockedDays = ko.observableArray([]);
-    // set eco as default
+    // set normal as default
     this.cleaningMode = ko.observable(CLEANING_MODE_NORMAL);
     this.ecoMode = ko.computed(function() {
         return that.cleaningMode() == CLEANING_MODE_ECO;
@@ -98,12 +98,12 @@ resourceHandler.registerFunction('basicSchedulerDate_ViewModel.js', function(par
                 if(!eventDiffers) {
                     that.cleaningMode(eventMode);
                 } else {
-                    // set eco as default
-                    that.cleaningMode(CLEANING_MODE_ECO);
+                    // set normal as default
+                    that.cleaningMode(CLEANING_MODE_NORMAL);
                 }
             } else {
-                // set eco as default
-                that.cleaningMode(CLEANING_MODE_ECO);
+                // set normal as default
+                that.cleaningMode(CLEANING_MODE_NORMAL);
             }
         }
         
