@@ -227,8 +227,9 @@
     neatoUser.alternateEmail = [parameters objectForKey:KEY_ALTERNATE_EMAIL];
     NSDictionary *extraParams = [parameters objectForKey:KEY_EXTRA_PARAM];
     neatoUser.userCountryCode = [extraParams objectForKey:@"country_code"];
-    neatoUser.optIn = [AppHelper boolValueFromString:[extraParams objectForKey:@"opt_in"]];
-      
+    NSNumber *optIn = [extraParams objectForKey:@"opt_in"];
+    neatoUser.optIn = optIn.boolValue;
+  
     __weak typeof(self) weakSelf = self;
     // Logout current user (if any) before creating new one.
     if ([NeatoUserHelper getNeatoUser]) {
@@ -480,7 +481,8 @@
     NeatoUser *neatoUser = [[NeatoUser alloc] init];
     neatoUser.email = [parameters objectForKey:KEY_EMAIL];
     neatoUser.userCountryCode = [parameters objectForKey:@"country_code"] ? [parameters objectForKey:@"country_code"] : nil;
-    neatoUser.optIn = [AppHelper boolValueFromString:[parameters objectForKey:@"opt_in"]];
+    NSNumber *optIn = [parameters objectForKey:@"opt_in"];
+    neatoUser.optIn = optIn.boolValue;
     
     __weak typeof(self) weakSelf = self;
     [self.serverManager setUserAccountDetails:neatoUser
