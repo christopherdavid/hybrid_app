@@ -51,7 +51,7 @@ public class SettingsManager {
             public void run() {
                 CleaningSettings cleaningSettings = RobotHelper.getCleaningSettings(mContext, robotId);
                 if (cleaningSettings == null) {
-                    cleaningSettings = new CleaningSettings();
+                    cleaningSettings = CleaningSettings.getDefaultCleaningSettings();
                 }
                 // update values
                 cleaningSettings.setSpotAreaLength(spotAreaLength);
@@ -77,7 +77,7 @@ public class SettingsManager {
             public void run() {
                 CleaningSettings cleaningSettings = RobotHelper.getCleaningSettings(mContext, robotId);
                 if (cleaningSettings == null) {
-                    cleaningSettings = new CleaningSettings();
+                    cleaningSettings = CleaningSettings.getDefaultCleaningSettings();
                 }
                 // update values
                 cleaningSettings.setCleaningCategory(cleaningCategory);

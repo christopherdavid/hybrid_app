@@ -1,5 +1,7 @@
 package com.neatorobotics.android.slide.framework.robot.settings;
 
+import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
+
 public class CleaningSettings {
     private int mSpotAreaLength;
     private int mSpotAreaHeight;
@@ -27,5 +29,12 @@ public class CleaningSettings {
 
     public void setCleaningCategory(int CleaningCategory) {
         mCleaningCategory = CleaningCategory;
+    }
+
+    public static CleaningSettings getDefaultCleaningSettings() {
+        CleaningSettings cleaningSettings = new CleaningSettings();
+        cleaningSettings.setSpotAreaLength(RobotCommandPacketConstants.DEFAULT_SPOT_CLEANING_LENGTH);
+        cleaningSettings.setSpotAreaHeight(RobotCommandPacketConstants.DEFAULT_SPOT_CLEANING_HEIGHT);
+        return cleaningSettings;
     }
 }
