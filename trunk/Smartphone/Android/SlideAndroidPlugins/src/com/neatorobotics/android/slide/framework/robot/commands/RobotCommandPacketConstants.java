@@ -39,8 +39,8 @@ public class RobotCommandPacketConstants {
     public static final int MOTOR_TYPE_BRUSH = 102;
 
     // Default Spot cleaning values
-    public static final int DEFAULT_SPOT_CLEANING_LENGTH = 5;
-    public static final int DEFAULT_SPOT_CLEANING_HEIGHT = 3;
+    public static final int DEFAULT_SPOT_CLEANING_LENGTH = 100;
+    public static final int DEFAULT_SPOT_CLEANING_HEIGHT = 100;
 
     public static final String KEY_ROBOT_ID = "robotId";
     public static final String KEY_COMMAND_PARAMS_TAG = "params";
