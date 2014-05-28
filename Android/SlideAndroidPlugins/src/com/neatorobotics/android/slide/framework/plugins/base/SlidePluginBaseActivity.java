@@ -77,7 +77,6 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
         if (UserHelper.isUserLoggedIn(this)) {
             showIfPendingPushNotification();
             syncWithServer();
-
         }
         mIsActivityResumedFromSleep = true;
     }
@@ -85,6 +84,10 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
     private void syncWithServer() {
         try {
             // Make sure the xmpp is logged in
+        	if (!mIsActivityResumedFromSleep) {
+        		LogHelper.log(TAG, "Activity is not resuming from sleep. So service initialization will handle xmpp login.");
+        		return;
+        	}
             INeatoRobotService neatoService = ApplicationConfig.getInstance(this).getRobotService();
             if (neatoService != null) {
                 LogHelper.log(TAG, "Making sure that the XMPP is logged in");

@@ -231,7 +231,7 @@ public class NeatoSmartAppService extends Service {
 
                         @Override
                         public void run() {
-                            loginToXmppServer();
+                        	loginToXmppServer();
                         }
                     };
                     TaskUtils.scheduleTask(task, 0);
@@ -314,39 +314,49 @@ public class NeatoSmartAppService extends Service {
 
     private Object mXmppConnectionLock = new Object();
 
+    private static final int MAX_XMPP_RETRY_CONNECT_COUNT = 3;
     private void loginToXmppServer() {
-        try {
-            synchronized (mXmppConnectionLock) {
-                if (UserHelper.isUserLoggedIn(getApplicationContext())) {
-                    LogHelper.log(TAG, "loginToXmppServer called");
-                    mXMPPConnectionHelper.close();
-
-                    LogHelper.logD(TAG, "closed existing connection. Now retring to connect");
-                    mXMPPConnectionHelper.connect();
-                    LogHelper.logD(TAG, "connected. Now loging in");
-                    String userId = getUserChatId();
-                    String password = getUserChatPassword();
-                    LogHelper.log(TAG, "userId = " + userId);
-                    mXMPPConnectionHelper.login(userId, password);
-                }
+        synchronized (mXmppConnectionLock) {
+            if (UserHelper.isUserLoggedIn(getApplicationContext())) {
+            	int retryCount = 0;
+                LogHelper.log(TAG, "loginToXmppServer called");
+            	do {
+	            	try {
+	            		LogHelper.log(TAG, "**********************Start*******************************");
+	                    LogHelper.log(TAG, "trying to connect over XMPP. Retry count = " + (retryCount + 1));
+	                    mXMPPConnectionHelper.close();
+	                    LogHelper.logD(TAG, "closed existing connection. Now retring to connect");
+	                    mXMPPConnectionHelper.connect();
+	                    LogHelper.logD(TAG, "connected. Now loging in");
+	                    String userId = getUserChatId();
+	                    String password = getUserChatPassword();
+	                    LogHelper.log(TAG, "userId = " + userId);
+	                    mXMPPConnectionHelper.login(userId, password);
+	                    LogHelper.log(TAG, "***********************End******************************");
+	                    break;
+	            	}
+	            	catch (XMPPException e) {
+	            		retryCount++;
+	            		if (retryCount >= MAX_XMPP_RETRY_CONNECT_COUNT) {
+	            			LogHelper.log(TAG, "***************ERROR**************************************");
+		            		LogHelper.log(TAG, "Exception in connecting to XMPP server", e);
+	            		}
+	            		else {
+	            			LogHelper.logD(TAG, "Failed to connect to XMPP. Retrying again. Retry count = " + retryCount);
+	            			TaskUtils.sleep(500);
+	            		}
+	             	}
+            	}while (retryCount < MAX_XMPP_RETRY_CONNECT_COUNT);
             }
-        } catch (XMPPException e) {
-            LogHelper.log(TAG, "Exception in connecting to XMPP server", e);
         }
     }
 
     private void loginToXmppServerIfNotConnected() {
-        try {
-            synchronized (mXmppConnectionLock) {
-                String userId = getUserChatId();
-                String password = getUserChatPassword();
-                if (!mXMPPConnectionHelper.isConnected()) {
-                    LogHelper.log(TAG, "XMPP is not connected, trying now");
-                    mXMPPConnectionHelper.login(userId, password);
-                }
+        synchronized (mXmppConnectionLock) {
+            if (!mXMPPConnectionHelper.isConnected()) {
+                LogHelper.log(TAG, "XMPP is not connected, trying now");
+                loginToXmppServer();
             }
-        } catch (XMPPException e) {
-            LogHelper.log(TAG, "Exception in connecting to XMPP server", e);
         }
     }
 
