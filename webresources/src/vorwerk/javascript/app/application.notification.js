@@ -71,7 +71,8 @@ function WorkflowNotification(parent) {
                         case ROBOT_STATE_UPDATE:
                             var curState = result.robotData.robotCurrentState || result.robotData.robotStateUpdate || null;
                             // check if state really changed 
-                            if(curState && curState != curRobot().robotNewVirtualState()) {
+                            console.log("Current State :"+ curRobot().robotNewVirtualState());
+                            if(curState && (curState != curRobot().robotNewVirtualState() || (curRobot().robotNewVirtualState() != ROBOT_STATE_IDLE))) {
                                 // if there is a notification set robot back to online
                                 curRobot().robotOnline(true);
                                 curRobot().visualOnline(true);
@@ -109,8 +110,11 @@ function WorkflowNotification(parent) {
                                 // refresh states if UI is not connecting nor waiting nor offline
                                 if(curRobot().robotOnline() && robotUiStateHandler.current().ui() != ROBOT_UI_STATE_CONNECTING && robotUiStateHandler.current().ui() != ROBOT_UI_STATE_WAIT) {
                                     robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
+                                    robotUiStateHandler.resolveWaitDeffer();
                                 }
+                                
                             }
+                            
                             break;
                         case ROBOT_NAME_UPDATE:
                             //update name
@@ -151,11 +155,26 @@ function WorkflowNotification(parent) {
                         		message =  $.parseJSON(message);
                         		var messageId = message.messageID;
                         		console.log("Alert Message ID :" + messageId);
-                        		console.log("Current State :"+ curRobot().robotNewVirtualState());
                         		if(messageId != 22000){
                         			var notificationText   =  $.i18n.t("communication."+ messageId);
-                            		that.showLoadingArea(true,notificationType.HINT,notificationText);
-                            	}	
+	                        		if(messageId == 20206) // Low Battery alert
+	                            	{
+	                            		var lowBattery_title = $.i18n.t("robotStateCodes.suspend");
+	                            		that.showDialog(dialogType.ERROR, lowBattery_title, notificationText, 
+		                                [{"label":$.i18n.t("common.ok"), "callback":function(e){
+		                                        that.closeDialog();
+		                                        robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
+	                            				 robotUiStateHandler.resolveWaitDeffer();
+		                                    }
+		                                }]);
+	                            		
+	                            		
+	                            	}	else {
+                        				
+                            			that.showLoadingArea(true,notificationType.HINT,notificationText);
+                            		}
+                            	}
+                            		
                         	}
                         break;
                         case ROBOT_MESSAGE_ERROR:
@@ -172,6 +191,8 @@ function WorkflowNotification(parent) {
                             	that.showDialog(dialogType.ERROR, dialogHeader, dialogText, 
 	                                [{"label":$.i18n.t("common.ok"), "callback":function(e){
 	                                        that.closeDialog();
+	                                        robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
+                            				robotUiStateHandler.rejectWaitDeffer();
 	                                    }
 	                                }]);
                         	}
@@ -218,7 +239,7 @@ function WorkflowNotification(parent) {
                             robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
                             robotUiStateHandler.rejectWaitDeffer();
                             // command failed, show last error code or timeout message 
-                            if(curRobot().crntErrorCode() != 0 && curRobot().crntErrorCode() != 22000) {
+                            if(curRobot().crntErrorCode() != 0 && curRobot().crntErrorCode() != 22000  && curRobot().crntErrorCode() != 21236) {
                                 var testTitle =  $.i18n.t("error.-" + curRobot().crntErrorCode() +".title");
                                 // check if translation has been found for errorCode
                                 if(testTitle.indexOf(curRobot().crntErrorCode()) == -1) {
