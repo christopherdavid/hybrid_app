@@ -1164,9 +1164,10 @@
   NSString *callbackId = command.callbackId;
   NSDictionary *parameters = [command.arguments objectAtIndex:0];
   debugLog(@"received parameters : %@", parameters);
-  
   NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
 
+  // Save robotId of robot, selected by the user(JS layer).
+  [AppHelper saveLastUsedRobotId:robotId];
   __weak typeof(self) weakSelf = self;
   [self.serverManager profileDetailsForRobot:robotId
                                   completion:^(NSDictionary *result, NSError *error) {
