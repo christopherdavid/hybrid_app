@@ -174,6 +174,13 @@ function WorkflowNotification(parent) {
                             			that.showLoadingArea(true,notificationType.HINT,notificationText);
                             		}
                             	}
+                            	else if(messageId == 22000)
+                            	{
+                            		console.log("Clear Message ID :" + messageId);
+                            		robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
+	                            	robotUiStateHandler.resolveWaitDeffer();
+                            		that.forceCloseDialog();
+                            	}
                             		
                         	}
                         break;
