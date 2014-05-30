@@ -71,8 +71,10 @@ function WorkflowNotification(parent) {
                         case ROBOT_STATE_UPDATE:
                             var curState = result.robotData.robotCurrentState || result.robotData.robotStateUpdate || null;
                             // check if state really changed 
-                            console.log("Current State :"+ curRobot().robotNewVirtualState());
-                            if(curState && (curState != curRobot().robotNewVirtualState() || (curRobot().robotNewVirtualState() != ROBOT_STATE_IDLE))) {
+                            console.log("New Virt State :"+ curRobot().robotNewVirtualState());
+                            console.log("Current State :"+ curState);
+                            //|| (curRobot().robotNewVirtualState() != ROBOT_STATE_IDLE)
+                            if(curState && (curState != curRobot().robotNewVirtualState())) {
                                 // if there is a notification set robot back to online
                                 curRobot().robotOnline(true);
                                 curRobot().visualOnline(true);
@@ -94,6 +96,7 @@ function WorkflowNotification(parent) {
                                         }
                                         // update state
                                         parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
+                                        
                                     });
                                     
                                     tDeffer.fail(function(categoryError) {
@@ -103,6 +106,7 @@ function WorkflowNotification(parent) {
                                         parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
                                     });
                                 } else {
+                                    
                                     // update state
                                     parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
                                 }
@@ -111,7 +115,14 @@ function WorkflowNotification(parent) {
                                 if(curRobot().robotOnline() && robotUiStateHandler.current().ui() != ROBOT_UI_STATE_CONNECTING && robotUiStateHandler.current().ui() != ROBOT_UI_STATE_WAIT) {
                                     robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
                                     robotUiStateHandler.resolveWaitDeffer();
+                                    // Clear Error message if any
+                                    if( curRobot().crntErrorCode() == 22000)
+		                            {
+		                            	console.log("Clear Message ID :" +  curRobot().crntErrorCode());
+		                            	that.forceCloseDialog();
+		                            }
                                 }
+                                
                                 
                             }
                             
@@ -558,8 +569,14 @@ function WorkflowNotification(parent) {
     this.forceCloseDialog = function() {
         if(that.curHandledDialog != null) {
             // clear dialog stack and close current dialog
-            that.dialogStack.length = 0;
-            $(that.curHandledDialog.id).popup("close");
+           console.log("Popup ID : "+ that.curHandledDialog.id);
+           that.dialogStack.length = 0;
+            if(that.curHandledDialog.id != "#spotSize"){
+            	$(that.curHandledDialog.id).popup("close");
+            }
+            else {
+            	$("#dialogPopup").popup("close");
+            }
         } 
     };
     

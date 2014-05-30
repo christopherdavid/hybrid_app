@@ -18,7 +18,7 @@ function Application() {
         firstScreen : "start",
         pageTransition : "none",
         pageReverseDirection: false,
-        version:"0.7.2.3",
+        version:"0.7.2.5",
         pluginVersion:"0.6.5.02",
         serverName:"Vorwerk (Beta UK) Staging",
         fallbackLanguage:"en",
