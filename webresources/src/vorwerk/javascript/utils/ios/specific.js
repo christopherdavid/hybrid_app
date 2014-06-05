@@ -43,8 +43,8 @@ function shouldRotateToOrientation (rotation) {
 
 var OrientationPlugin = function() {};
              
-OrientationPlugin.prototype.setAllowed = function(options) {
-    PhoneGap.exec(null, null, "Orientation", "setAllowed", options);
+OrientationPlugin.prototype.forceOrientation = function(options) {
+    PhoneGap.exec(null, null, "Orientation", "forceOrientation", [null]);
 };
     
 OrientationPlugin.install = function() {
@@ -62,11 +62,5 @@ PhoneGap.addConstructor(OrientationPlugin.install);
 
 
 var forceRotation = function (orientation) {
-    if(orientation == "fullSensor"){
-        window.plugins.orientation.setAllowed([{pp:true, pd:true, ll:true, lr:true}]);
-    } else if(orientation == "portrait"){
-        window.plugins.orientation.setAllowed([{pp:true, pd:true, ll:false, lr:false}]);
-    } else if(orientation == "landscape"){
-        window.plugins.orientation.setAllowed([{pp:false, pd:false, ll:true, lr:true}]);
-    }  
+    OrientationPlugin.prototype.forceOrientation(orientation);
 };
