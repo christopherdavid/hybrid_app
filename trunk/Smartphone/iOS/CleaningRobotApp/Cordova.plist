@@ -68,6 +68,8 @@
 		<string>CDVBattery</string>
 		<key>Globalization</key>
 		<string>Globalization</string>
+		<key>Orientation</key>
+		<string>Orientation</string>
 		<key>RobotManagement</key>
 		<string>RobotManagerPlugin</string>
 		<key>UserManagement</key>
