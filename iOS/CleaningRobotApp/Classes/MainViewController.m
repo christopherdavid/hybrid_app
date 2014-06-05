@@ -147,7 +147,7 @@
     
      if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
      {
-         self.webView.frame =  CGRectMake(0,20,self.webView.frame.size.width,self.webView.frame.size.height - 5);
+         self.webView.frame =  CGRectMake(0,20,self.webView.frame.size.width,self.webView.frame.size.height - 20);
      }
     
 	 return [super webViewDidFinishLoad:theWebView];
