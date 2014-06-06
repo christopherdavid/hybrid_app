@@ -70,9 +70,9 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
         // added check if remote is enabled to avoid an event loop on error 
         if(that.remoteButtonDown && that.isRemoteEnabled()) {
             remote.triggerHandler("remotePressed", that.remoteButtonDown);
-            this.pressedTimer = window.setTimeout(function() {that.pressing();}, this.pressedIntervall);
+            that.pressedTimer = window.setTimeout(function() {that.pressing();}, that.pressedIntervall);
         } else {
-            remote.triggerHandler("remoteReleased", that.remoteButtonDown);
+            remote.triggerHandler("remoteReleased");
         }
     };
 
@@ -82,12 +82,6 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
          */
         eventArea.on("vmousedown", function(event) {
             if (!event.isDefaultPrevented()) {
-                /*
-                if (posX == null || posY == null) {
-                    that.updatePosition();
-                }
-                */
-                
                 // FIX to get more than two move events:
                 // Google Chrome will fire a touchcancel event about 200 milliseconds after touchstart if it thinks the user is panning/scrolling and you do not call event.preventDefault().
                 event.preventDefault();
@@ -114,20 +108,37 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
             }
         });
         
-        
-        eventArea.on("vmouseout", function(event) {
-            if (!event.isDefaultPrevented()) {
-                // console.log("vmouseout px " + event.pageX + " py " + event.pageY);                
-                // Reset start Btn state
-                that.updateBtnState(startBtn, false);
-
+        $(document).on("vmouseup.startArea", function(event) {
+            //console.log("document vmouseup");
+            // handle vmouseup in document if a remote button is pressed
+            if(that.eventMouseDown && that.remoteButtonDown) {
                 that.remoteButtonDown = null;
-                window.clearTimeout(this.pressedTimer);
-                
+                window.clearTimeout(that.pressedTimer);
+                remote.triggerHandler("remoteReleased");
                 that.eventMouseDown = false;
 
                 // Check which remote button has been pressed and update the state
                 if(that.isRemoteEnabled()) {
+                    for (var i = remoteCells.length - 1; i >= 0; i--) {
+                        that.updateRemoteBtnState(remoteCells[i], false);
+                    }
+                }
+            }             
+        });
+        
+        eventArea.on("vmouseout", function(event) {
+            if (!event.isDefaultPrevented()) {
+                //console.log("eventArea vmouseup");
+                // console.log("vmouseout px " + event.pageX + " py " + event.pageY);                
+                // Reset start Btn state
+                that.updateBtnState(startBtn, false);
+                that.remoteButtonDown = null;
+                window.clearTimeout(that.pressedTimer);
+                that.eventMouseDown = false;
+
+                // Check which remote button has been pressed and update the state
+                if(that.isRemoteEnabled()) {
+                    remote.triggerHandler("remoteReleased");
                     for (var i = remoteCells.length - 1; i >= 0; i--) {
                         that.updateRemoteBtnState(remoteCells[i], false);
                     }
@@ -137,11 +148,6 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
 
         eventArea.on("vmouseup", function(event) {
             if (!event.isDefaultPrevented()) {
-                /*
-                if (posX == null || posY == null) {
-                    that.updatePosition();
-                }
-                */
                 event.preventDefault();
                 event.stopPropagation();
                 event.stopImmediatePropagation();
@@ -162,7 +168,8 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
                 if(that.remoteButtonDown) {
                     that.updateRemoteBtnState(that.remoteButtonDown, false);
                     that.remoteButtonDown = null;
-                    window.clearTimeout(this.pressedTimer);
+                    window.clearTimeout(that.pressedTimer);
+                    remote.triggerHandler("remoteReleased");
                 }
             }
         });
@@ -177,7 +184,8 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
                         if (!rectContainsPoint(event.pageX, event.pageY, that.remoteButtonDown)) {
                             that.updateRemoteBtnState(that.remoteButtonDown, false);
                             that.remoteButtonDown = null;
-                            window.clearTimeout(this.pressedTimer);
+                            window.clearTimeout(that.pressedTimer);
+                            remote.triggerHandler("remoteReleased");
                         }
                     } else if(that.remoteButtonDown == null && that.eventMouseDown) {
                         // Check which remote button has been pressed and update the state
