@@ -77,6 +77,11 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
     };
 
     this.init = function() {
+        // prevent the default behavior of standard touch events
+        eventArea.on('taphold.startarea', function(e) {
+                                  e.preventDefault();
+                                  }, false);
+        
         /**
          * bind to event handlers
          */
@@ -86,7 +91,8 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
                 // Google Chrome will fire a touchcancel event about 200 milliseconds after touchstart if it thinks the user is panning/scrolling and you do not call event.preventDefault().
                 event.preventDefault();
                
-                // console.log("vmousedown px " + event.pageX + " py " + event.pageY);                
+                // console.log("vmousedown px " + event.pageX + " py " + event.pageY);
+                
                 if (containsPoint((event.pageX - posX), (event.pageY - posY), centerX, centerY, radius)) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -109,7 +115,7 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
         });
         
         $(document).on("vmouseup.startArea", function(event) {
-            //console.log("document vmouseup");
+            console.log("document vmouseup");
             // handle vmouseup in document if a remote button is pressed
             if(that.eventMouseDown && that.remoteButtonDown) {
                 that.remoteButtonDown = null;
@@ -128,17 +134,23 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
         
         eventArea.on("vmouseout", function(event) {
             if (!event.isDefaultPrevented()) {
-                //console.log("eventArea vmouseup");
-                // console.log("vmouseout px " + event.pageX + " py " + event.pageY);                
+                console.log("eventArea vmouseout");
+                // console.log("vmouseout px " + event.pageX + " py " + event.pageY);
+                
                 // Reset start Btn state
                 that.updateBtnState(startBtn, false);
-                that.remoteButtonDown = null;
+                
                 window.clearTimeout(that.pressedTimer);
                 that.eventMouseDown = false;
+                
+                if(that.remoteButtonDown) {
+                    that.remoteButtonDown = null;
+                    remote.triggerHandler("remoteReleased");
+                }
+                     
 
                 // Check which remote button has been pressed and update the state
                 if(that.isRemoteEnabled()) {
-                    remote.triggerHandler("remoteReleased");
                     for (var i = remoteCells.length - 1; i >= 0; i--) {
                         that.updateRemoteBtnState(remoteCells[i], false);
                     }
@@ -148,7 +160,8 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
 
         eventArea.on("vmouseup", function(event) {
             if (!event.isDefaultPrevented()) {
-                event.preventDefault();
+                console.log("eventArea vmouseup");
+                     event.preventDefault();
                 event.stopPropagation();
                 event.stopImmediatePropagation();
 
@@ -177,7 +190,8 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
         eventArea.on("vmousemove", function(event) {
             if (!event.isDefaultPrevented()) {
                 // console.log("vmousemove px " + event.pageX + " py " + event.pageY);
-                // console.log(that.remoteButtonDown)
+                // console.log(that.remoteButtonDown)
+
                 if(that.isRemoteEnabled()) {
                     if(that.remoteButtonDown) {
                         // check if button is still pressed
