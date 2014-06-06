@@ -329,12 +329,13 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         }
         if(navigationControlId > 0) {
             // Send robot drive direction
-            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.driveRobot, [that.robot().robotId(), navigationControlId], { type: notificationType.NONE });
             console.log("drive robot direction: " + navigationControlId);
+            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.driveRobot, [that.robot().robotId(), navigationControlId], { type: notificationType.NONE });
         }
     };
     
-    this.remoteReleased = function(event, button) {
+    this.remoteReleased = function(event) {
+        console.log("remoteReleased");
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.driveRobot, [that.robot().robotId(), 7], { type: notificationType.NONE });
     };
     
