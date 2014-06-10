@@ -78,13 +78,11 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
 
     this.init = function() {
         // prevent the default behavior of standard touch events
-        eventArea.on('taphold.startarea', function(e) {
-                                  e.preventDefault();
-                                  }, false);
         
         /**
          * bind to event handlers
          */
+        
         eventArea.on("vmousedown", function(event) {
             if (!event.isDefaultPrevented()) {
                 // FIX to get more than two move events:
@@ -106,7 +104,6 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
                         if (rectContainsPoint(event.pageX, event.pageY, remoteCells[i])) {
                             that.eventMouseDown = true;
                             that.updateRemoteBtnState(remoteCells[i], true);
-                            //remote.triggerHandler("remotePressed", [remoteCells[i]]);
                             break;
                         }
                     }
@@ -115,7 +112,7 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
         });
         
         $(document).on("vmouseup.startArea", function(event) {
-            console.log("document vmouseup");
+            //console.log("document vmouseup");
             // handle vmouseup in document if a remote button is pressed
             if(that.eventMouseDown && that.remoteButtonDown) {
                 that.remoteButtonDown = null;
@@ -134,7 +131,7 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
         
         eventArea.on("vmouseout", function(event) {
             if (!event.isDefaultPrevented()) {
-                console.log("eventArea vmouseout");
+                //console.log("eventArea vmouseout");
                 // console.log("vmouseout px " + event.pageX + " py " + event.pageY);
                 
                 // Reset start Btn state
@@ -158,27 +155,30 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
             }
         });
 
-        eventArea.on("vmouseup", function(event) {
+        eventArea.on("touchend", function(event) {
             if (!event.isDefaultPrevented()) {
-                console.log("eventArea vmouseup");
-                     event.preventDefault();
+                //console.log("eventArea touchend");
+                event.preventDefault();
                 event.stopPropagation();
                 event.stopImmediatePropagation();
-
-                if (containsPoint((event.pageX - posX), (event.pageY - posY), centerX, centerY, radius)) {
-
-                    // Trigger start Button
-                    if (that.startBtnDown) {
-                        startBtn.triggerHandler("startClick");
-                    }
+                var touches = event.originalEvent.changedTouches;
+                
+                // if start button is pressed, check if should be released
+                if (that.startBtnDown) {
+                     for(var i=0; i < touches.length; i++) {
+                        if (containsPoint((touches[i].pageX - posX), (touches[i].pageY - posY), centerX, centerY, radius)) {
+                            startBtn.triggerHandler("startClick");
+                            break;
+                        }
+                     }
+                     // Reset the button states
+                     that.updateBtnState(startBtn, false);
                 }
-
-                // Reset the button states
-                that.updateBtnState(startBtn, false);
                 
                 that.eventMouseDown = false;
                 
                 if(that.remoteButtonDown) {
+                    
                     that.updateRemoteBtnState(that.remoteButtonDown, false);
                     that.remoteButtonDown = null;
                     window.clearTimeout(that.pressedTimer);
@@ -186,7 +186,6 @@ function StartAreaControl(startArea, startContainer,eventArea, startBtn, remote,
                 }
             }
         });
-        
         eventArea.on("vmousemove", function(event) {
             if (!event.isDefaultPrevented()) {
                 // console.log("vmousemove px " + event.pageX + " py " + event.pageY);
