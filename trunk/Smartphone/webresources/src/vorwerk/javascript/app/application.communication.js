@@ -299,7 +299,17 @@ function WorkflowCommunication(parent) {
         // update state, make sure it's an valid state code and robot is online
         if(virtualState >= 1 && virtualState <= 8 && robot.robotNewVirtualState && robot.robotOnline()) {
             var curRobot = that.getDataValue("selectedRobot");
-            var state = $.i18n.t("robotStateCodes." + visualState[virtualState]);
+            var state = "";
+            // To fix the state discription more clear in the robot selection screen #526
+            if(virtualState == ROBOT_STATE_RETURNING) {
+	            if(robot.dockHasBeenSeen() == 1) {
+	                state = $.i18n.t("robotStateCodes." + visualState[ROBOT_UI_STATE_RETURNING2BASE]);
+	            } else {
+	            	state = $.i18n.t("robotStateCodes." + visualState[ROBOT_UI_STATE_RETURNING2START]);
+	            }
+        	} else {
+            	state = $.i18n.t("robotStateCodes." + visualState[virtualState]);
+            }
             var stateChanged = robot.robotNewVirtualState() != virtualState;
             console.log("updateRobotStateWithCode: "  + virtualState + " text: " + state + " for robot: " + robot.robotId());
             // update robot object

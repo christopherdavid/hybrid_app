@@ -60,6 +60,8 @@ var ROBOT_UI_STATE_RETURN_TO_START = 20006;
 var ROBOT_UI_STATE_CHARGING = 20007;
 var ROBOT_UI_STATE_ERROR    = 20008;
 var ROBOT_UI_STATE_STUCKED = 20009;
+var ROBOT_UI_STATE_RETURNING2BASE = 20010;
+var ROBOT_UI_STATE_RETURNING2START = 20011;
 
 // new ui states depending on category
 var ROBOT_UI_STATE_IDLE_MANUAL      = "2" + CLEANING_CATEGORY_MANUAL + "00" + ROBOT_STATE_IDLE;
@@ -83,7 +85,6 @@ visualState[ROBOT_STATE_CLEANING] = "cleaning";
 visualState[ROBOT_STATE_SUSPENDED_CLEANING] = "suspend";
 visualState[ROBOT_STATE_PAUSED] = "paused";
 visualState[ROBOT_STATE_MANUAL_CLEANING] = "manual";
-visualState[ROBOT_STATE_RETURNING] = "returning";
 
 // UI states
 visualState[ROBOT_UI_STATE_WAIT] = "waiting";
@@ -108,3 +109,5 @@ visualState[ROBOT_UI_STATE_CLEANING_MANUAL] = "cleaning_manual";
 visualState[ROBOT_UI_STATE_CLEANING_ALL] = "cleaning_all";
 visualState[ROBOT_UI_STATE_CLEANING_SPOT] = "cleaning_spot";
 
+visualState[ROBOT_UI_STATE_RETURNING2BASE] = "returning2base";
+visualState[ROBOT_UI_STATE_RETURNING2START] = "returning2start";
