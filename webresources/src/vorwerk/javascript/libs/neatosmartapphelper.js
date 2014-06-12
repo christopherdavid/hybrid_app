@@ -825,7 +825,7 @@ var RobotPluginManager = ( function() {
             var delay = 1000;
             switch(robotId) {
                 case "mapdemo123":
-                    stateCode = ROBOT_STATE_CLEANING
+                    stateCode = ROBOT_STATE_RETURNING 
                     delay = 3000;
                     break;
                 case "rr1234":
@@ -886,7 +886,7 @@ var RobotPluginManager = ( function() {
             var delay = 1000;
             switch(robotId) {
                 case "mapdemo123": // Map Demo
-                    stateCode = ROBOT_STATE_CLEANING
+                    stateCode = ROBOT_STATE_RETURNING 
                     delay = 3000;
                     break;
                 case "rr1234": // Nexus One
