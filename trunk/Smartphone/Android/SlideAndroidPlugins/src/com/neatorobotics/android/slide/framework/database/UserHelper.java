@@ -3,11 +3,13 @@ package com.neatorobotics.android.slide.framework.database;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
+import com.neatorobotics.android.slide.framework.webservice.user.UserValidationHelper;
 
 public class UserHelper {
-    // private static final String LOCAL_TAG = "UserHelper";
+    private static final String TAG = UserHelper.class.getSimpleName();
 
     public static boolean saveUserDetails(Context context, UserItem userItem) {
         boolean result = false;
@@ -24,6 +26,7 @@ public class UserHelper {
         if (result) {
             NeatoPrefs.saveUserEmailId(context, userItem.email);
             NeatoPrefs.saveNeatoUserAuthToken(context, authKey);
+            NeatoPrefs.saveNeatoUserValidationStatus(context, userItem.validation_status);
         }
 
         return result;
@@ -31,11 +34,9 @@ public class UserHelper {
 
     public static UserItem getLoggedInUserDetails(Context context) {
         UserItem userDetails = null;
-
         if (isUserLoggedIn(context)) {
             userDetails = DBHelper.getInstance(context).getUserByEmail(NeatoPrefs.getUserEmailId(context));
         }
-
         return userDetails;
     }
 
@@ -66,13 +67,11 @@ public class UserHelper {
     }
 
     public static void logout(Context context) {
-        if (isUserLoggedIn(context)) {
-            String email = NeatoPrefs.getUserEmailId(context);
-            DBHelper dbHelper = DBHelper.getInstance(context);
-            dbHelper.deleteUserByEmail(email);
-            dbHelper.clearAllData();
-            NeatoPrefs.clearPreferences(context);
-        }
+        String email = NeatoPrefs.getUserEmailId(context);
+        DBHelper dbHelper = DBHelper.getInstance(context);
+        dbHelper.deleteUserByEmail(email);
+        dbHelper.clearAllData();
+        NeatoPrefs.clearPreferences(context);
     }
 
     public static boolean isUserLoggedIn(Context context) {
@@ -80,10 +79,15 @@ public class UserHelper {
         if (!TextUtils.isEmpty(emailId)) {
             String authToken = NeatoPrefs.getNeatoUserAuthToken(context);
             if (!TextUtils.isEmpty(authToken)) {
-                return true;
+                int validationStatus = NeatoPrefs.getNeatoUserValidationStatus(context,
+                        UserValidationHelper.VALIDATION_STATUS_UNKNOWN);
+				
+                if (validationStatus == UserValidationHelper.USER_VALIDATION_STATUS_VALIDATED) {
+                    return true;
+                }
+				LogHelper.log(TAG, "User email is NOT validated");
             }
         }
-
         return false;
     }
 }

@@ -4,11 +4,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.UserJsonData;
-import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
@@ -84,8 +82,6 @@ public class CreateUserRequest extends UserManagerRequest {
                             }
                             userDetails.put(JsonMapKeys.KEY_EXTRA_PARAMS, jsonParam);
 
-                            PushNotificationUtils.registerForPushNotification(context);
-                            AppUtils.createNeatoUserDeviceIdIfNotExists(context);
                         }
 
                         return userDetails;
@@ -120,9 +116,6 @@ public class CreateUserRequest extends UserManagerRequest {
                             int validationCode = UserValidationHelper
                                     .getUserValidationStatus(userItem.validation_status);
                             userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
-
-                            PushNotificationUtils.registerForPushNotification(context);
-                            AppUtils.createNeatoUserDeviceIdIfNotExists(context);
                         }
 
                         return userDetails;
@@ -153,9 +146,6 @@ public class CreateUserRequest extends UserManagerRequest {
                     userDetails.put(JsonMapKeys.KEY_USER_ID, userItem.id);
                     int validationCode = UserValidationHelper.getUserValidationStatus(userItem.validation_status);
                     userDetails.put(JsonMapKeys.KEY_VALIDATION_STATUS, validationCode);
-
-                    PushNotificationUtils.registerForPushNotification(context);
-                    AppUtils.createNeatoUserDeviceIdIfNotExists(context);
                 }
 
                 return userDetails;

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.RemoteException;
 
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
+import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiver;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
@@ -153,12 +154,15 @@ public class RobotCommandServiceManager {
         return isConnected;
     }
 
-    public static void loginToXmpp(Context context) {
+    public static void initiateXmppConnection(Context context) {
+        if (!UserHelper.isUserLoggedIn(context)) {
+        	LogHelper.logD(TAG, "Not initiating xmpp login, user is not logged in.");
+            return;
+        }
         INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-
         if (neatoService != null) {
             try {
-                LogHelper.logD(TAG, "Service exists. Login to XMPP.");
+                LogHelper.logD(TAG, "Login to XMPP.");
                 neatoService.loginToXmpp();
             } catch (RemoteException e) {
                 LogHelper.logD(TAG, "Could not initiate XMPP login conneciton action");
@@ -168,7 +172,25 @@ public class RobotCommandServiceManager {
         }
     }
 
-    public static void cleanUp(Context context) {
+    public static void loginXmppIfRequired(Context context) {
+        if (!UserHelper.isUserLoggedIn(context)) {
+			LogHelper.logD(TAG, "Not initiating xmpp login, user is not logged in.");
+            return;
+        }
+        INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
+        if (neatoService != null) {
+            try {
+                LogHelper.logD(TAG, "Service exists. Login to XMPP.");
+                neatoService.loginToXmppIfRequired();
+            } catch (RemoteException e) {
+                LogHelper.logD(TAG, "Could not initiate XMPP login conneciton action");
+            }
+        } else {
+            LogHelper.logD(TAG, "Service is not started!");
+        }
+    }
+
+    public static void cleanUpServiceConnections(Context context) {
         LogHelper.logD(TAG, "cleanUp called");
         INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
         if (neatoService != null) {
@@ -181,4 +203,5 @@ public class RobotCommandServiceManager {
             LogHelper.logD(TAG, "Service is not started!");
         }
     }
+
 }

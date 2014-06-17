@@ -2,15 +2,15 @@ package com.neatorobotics.android.slide.framework.webservice.user;
 
 public class UserValidationHelper {
     // User validation status code on server.
-    private static final int USER_VALIDATION_STATUS_VALIDATED = 0;
-    private static final int USER_VALIDATION_STATUS_VALIDATION_IN_GRACEPERIOD = -1;
-    private static final int USER_VALIDATION_STATUS_NOT_VALIDATED = -2;
+    public static final int USER_VALIDATION_STATUS_VALIDATED = 0;
+    public static final int USER_VALIDATION_STATUS_VALIDATION_IN_GRACEPERIOD = -1;
+    public static final int USER_VALIDATION_STATUS_NOT_VALIDATED = -2;
 
     // We convert the user validation server status code to internal status code
-    private static final int VALIDATION_STATUS_UNKNOWN = -99;
-    private static final int VALIDATION_STATUS_VALIDATED = 0;
-    private static final int VALIDATION_STATUS_PENDING = -1;
-    private static final int VALIDATION_STATUS_NOT_VALIDATED = -2;
+    public static final int VALIDATION_STATUS_UNKNOWN = -99;
+    public static final int VALIDATION_STATUS_VALIDATED = 0;
+    public static final int VALIDATION_STATUS_PENDING = -1;
+    public static final int VALIDATION_STATUS_NOT_VALIDATED = -2;
 
     // Public static helper method to get the internal user validation code
     public static int getUserValidationStatus(int serverStatusCode) {

@@ -44,44 +44,44 @@ public class NeatoServiceManager {
         public void onServiceDisconnected(ComponentName name) {
             LogHelper.logD(TAG, "onServiceDisconnected called");
             LogHelper.logD(TAG, "component Name = " + name);
+            mServiceBound = false;
             mNeatoRobotService = null;
             ApplicationConfig.getInstance(mContext).setRobotService(null);
         }
 
         public void onServiceConnected(ComponentName name, IBinder service) {
             LogHelper.log(TAG, "onServiceConnected called");
+            mServiceBound = true;
             mNeatoRobotService = INeatoRobotService.Stub.asInterface(service);
             ApplicationConfig.getInstance(mContext).setRobotService(mNeatoRobotService);
-
             Intent resultReceiverIntent = new Intent(NeatoSmartAppService.NEATO_RESULT_RECEIVER_ACTION);
             resultReceiverIntent.putExtra(NeatoSmartAppService.EXTRA_RESULT_RECEIVER, mResultReciever);
             mContext.sendBroadcast(resultReceiverIntent);
+            // Login to XMPP:
+            RobotCommandServiceManager.initiateXmppConnection(mContext);
         }
     };
 
-    public void initialize() {
-        LogHelper.logD(TAG, "Initialise Neato Service");
+    public void bindNeatoService() {
+        LogHelper.logD(TAG, "Initialise Neato Service from service manager");
         AppUtils.logApplicationVersion(mContext);
+        
         mResultReciever = new NeatoRobotResultReceiver(mHandler);
         ApplicationConfig.getInstance(mContext).setRobotResultReceiver((NeatoRobotResultReceiver) mResultReciever);
+        
         Intent serviceIntent = new Intent(mContext, NeatoSmartAppService.class);
         mContext.startService(serviceIntent);
         Intent bindServiceIntent = new Intent(mContext, NeatoSmartAppService.class);
         bindServiceIntent.putExtra(NeatoSmartAppService.EXTRA_RESULT_RECEIVER, mResultReciever);
-        if (!mServiceBound) {
-            mServiceBound = mContext.bindService(bindServiceIntent, mNeatoRobotServiceConnection,
-                    Context.BIND_AUTO_CREATE);
-        }
+        
+        mContext.bindService(bindServiceIntent, mNeatoRobotServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    public void uninitialize() {
+    public void unBindNeatoService() {
         if (mServiceBound) {
+            RobotCommandServiceManager.cleanUpServiceConnections(mContext);
             mContext.unbindService(mNeatoRobotServiceConnection);
             mServiceBound = false;
-            // For now we are stopping the service as soon as the App goes off.
-            Intent serviceIntent = new Intent(mContext, NeatoSmartAppService.class);
-            RobotCommandServiceManager.cleanUp(mContext);
-            mContext.stopService(serviceIntent);
         }
     }
 

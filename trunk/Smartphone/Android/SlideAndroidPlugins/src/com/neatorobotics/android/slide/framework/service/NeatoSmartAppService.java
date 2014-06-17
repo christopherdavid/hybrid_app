@@ -14,11 +14,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.ResultReceiver;
-import android.text.TextUtils;
 import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiverConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RequestPacket;
@@ -26,10 +24,8 @@ import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCom
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacketHeader;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotRequests;
-import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
 import com.neatorobotics.android.slide.framework.tcp.RobotPeerConnection;
 import com.neatorobotics.android.slide.framework.tcp.RobotPeerDataListener;
-import com.neatorobotics.android.slide.framework.timedmode.RobotCommandTimerHelper;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.NetworkConnectionUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
@@ -45,52 +41,27 @@ public class NeatoSmartAppService extends Service {
     public static final String EXTRA_RESULT_RECEIVER = "extra.result_receiver";
     public static final String NEATO_RESULT_RECEIVER_ACTION = "com.neato.simulator.result_receiver.action";
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler;
     private ResultReceiver mResultReceiver;
 
     private XMPPConnectionHelper mXMPPConnectionHelper;
     private RobotPeerConnection mRobotPeerConnection;
 
-    private boolean isDataChangedCommand(RequestPacket request) {
-        int commandId = request.getCommand();
-        return (commandId == RobotCommandPacketConstants.COMMAND_ROBOT_PROFILE_DATA_CHANGED);
-    }
-
-    private void processDataChangedRequest(String from, RequestPacket request) {
-        LogHelper.log(TAG, "Data changed on server for robot");
-        String robotId = request.getCommandParam(RobotCommandPacketConstants.KEY_ROBOT_ID);
-
-        String causeAgentId = request.getCommandParam(RobotCommandPacketConstants.KEY_CAUSE_AGENT_ID);
-        if (!TextUtils.isEmpty(causeAgentId)) {
-            if (causeAgentId.equals(NeatoPrefs.getNeatoUserDeviceId(getApplicationContext()))) {
-                LogHelper.log(TAG, "Causing Agent Matched. Ignore Data changed notification");
-                return;
-            }
-        }
-
-        if (TextUtils.isEmpty(robotId)) {
-            LogHelper.log(TAG, "Robot Id is empty in data changed command.");
-            robotId = NeatoPrefs.getManagedRobotSerialId(getApplicationContext());
-        }
-
-        if (causeAgentId.equalsIgnoreCase(robotId)) {
-            LogHelper.logD(TAG,
-                    "packet is received from robot cause agent id. Stop the command expiry timer if running.");
-            RobotCommandTimerHelper.getInstance(getApplicationContext()).stopCommandTimerIfRunning(robotId);
-        } else {
-            LogHelper.logD(TAG, "packet is not received from robot chat id.");
-        }
-
-        RobotDataManager.getServerData(getApplicationContext(), robotId);
-    }
-
     private void initializePeerHelperIfRequired() {
         if (mRobotPeerConnection == null) {
             LogHelper.logD(TAG, "Using new Command structure");
             mRobotPeerConnection = new RobotPeerConnection(this);
-            mRobotPeerConnection.setHandler(mHandler);
-            mRobotPeerConnection.setPeerDataListener(mRobotPeerDataListener);
         }
+        mRobotPeerConnection.setHandler(mHandler);
+        mRobotPeerConnection.setPeerDataListener(mRobotPeerDataListener);
+    }
+
+    private void initXmppHelperIfRequired() {
+        mXMPPConnectionHelper = XMPPConnectionHelper.getInstance(this);
+        String xmppDomain = NeatoWebConstants.getXmppServerDomain(this);
+        mXMPPConnectionHelper.setServerInformation(xmppDomain, AppConstants.JABBER_SERVER_PORT,
+                NeatoWebConstants.getXmppWebServer(this));
+        mXMPPConnectionHelper.setXmppNotificationListener(mXmppNotificationListener, mHandler);
     }
 
     private INeatoRobotService mNeatoRobotService = new INeatoRobotService.Stub() {
@@ -138,21 +109,12 @@ public class NeatoSmartAppService extends Service {
         // service
         public void cleanup() {
             LogHelper.log(TAG, "cleanup service called");
-
             if (mRobotPeerConnection != null) {
                 mRobotPeerConnection.closeExistingPeerConnection();
             }
-
-            mRobotPeerConnection = null;
-            mRobotPeerDataListener = null;
-            mHandler = null;
-            mResultReceiver = null;
-            unregisterReceiver(mWifiStateChange);
-            mWifiStateChange = null;
-            mXMPPConnectionHelper.close();
-            mXMPPConnectionHelper = null;
-
-            stopSelf();
+            if (mXMPPConnectionHelper != null) {
+                mXMPPConnectionHelper.close();
+            }
         }
 
         public void closePeerConnection(String robotId) throws RemoteException {
@@ -172,17 +134,15 @@ public class NeatoSmartAppService extends Service {
         @Override
         public void loginToXmpp() throws RemoteException {
             LogHelper.log(TAG, "loginToXmpp called");
-            if (mXMPPConnectionHelper != null) {
-                LogHelper.log(TAG, "mXMPPConnectionHelper is not null");
-                Runnable task = new Runnable() {
+            Runnable task = new Runnable() {
 
-                    @Override
-                    public void run() {
-                        loginToXmppServer();
-                    }
-                };
-                TaskUtils.scheduleTask(task, 0);
-            }
+                @Override
+                public void run() {
+                    initXmppHelperIfRequired();
+                    loginToXmppServer();
+                }
+            };
+            TaskUtils.scheduleTask(task, 0);
         }
 
         @Override
@@ -204,16 +164,15 @@ public class NeatoSmartAppService extends Service {
         @Override
         public void loginToXmppIfRequired() throws RemoteException {
             LogHelper.log(TAG, "loginToXmppIfRequired called");
-            if (mXMPPConnectionHelper != null) {
-                Runnable task = new Runnable() {
+            Runnable task = new Runnable() {
 
-                    @Override
-                    public void run() {
-                        loginToXmppServerIfNotConnected();
-                    }
-                };
-                TaskUtils.scheduleTask(task, 0);
-            }
+                @Override
+                public void run() {
+                    initXmppHelperIfRequired();
+                    loginToXmppServerIfNotConnected();
+                }
+            };
+            TaskUtils.scheduleTask(task, 0);
         }
 
     };
@@ -222,7 +181,10 @@ public class NeatoSmartAppService extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            if (isInitialStickyBroadcast()) {
+                LogHelper.log(TAG, "Initial sticky broadcast. not logging in xmpp");
+                return;
+            }
             if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
                 if (NetworkConnectionUtils.hasNetworkConnection(getApplicationContext())) {
                     // network is connected
@@ -231,7 +193,8 @@ public class NeatoSmartAppService extends Service {
 
                         @Override
                         public void run() {
-                        	loginToXmppServer();
+                            initXmppHelperIfRequired();
+                            loginToXmppServer();
                         }
                     };
                     TaskUtils.scheduleTask(task, 0);
@@ -258,27 +221,12 @@ public class NeatoSmartAppService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        LogHelper.log(TAG, "**** Creating NeatoSmartAppService ****");
         AppUtils.logLibraryVersion();
         LogHelper.log(TAG, "Server information = " + getFormattedServerInfo());
-
+        mHandler = new Handler();
         // Get XMPP started.
-        mXMPPConnectionHelper = XMPPConnectionHelper.getInstance(this);
-        String xmppDomain = NeatoWebConstants.getXmppServerDomain(this);
-        mXMPPConnectionHelper.setServerInformation(xmppDomain, AppConstants.JABBER_SERVER_PORT,
-                NeatoWebConstants.getXmppWebServer(this));
-        mXMPPConnectionHelper.setXmppNotificationListener(mXmppNotificationListener, mHandler);
-
-        if (NetworkConnectionUtils.hasNetworkConnection(getApplicationContext())) {
-            Runnable task = new Runnable() {
-
-                @Override
-                public void run() {
-                    loginToXmppServer();
-                }
-            };
-            TaskUtils.scheduleTask(task, 0);
-        }
+        initXmppHelperIfRequired();
         registerReceiver(mWifiStateChange, new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
         registerReceiver(mWifiStateChange, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         registerReceiver(mResultReceiverBroadcast, new IntentFilter(NEATO_RESULT_RECEIVER_ACTION));
@@ -302,9 +250,7 @@ public class NeatoSmartAppService extends Service {
     @Override
     public void onDestroy() {
         try {
-            if (mWifiStateChange != null) {
-                unregisterReceiver(mWifiStateChange);
-            }
+            unregisterReceiver(mWifiStateChange);
             unregisterReceiver(mResultReceiverBroadcast);
         } catch (Exception e) {
             LogHelper.log(TAG, "Exception in unregisterReceiver", e);
@@ -313,40 +259,39 @@ public class NeatoSmartAppService extends Service {
     }
 
     private Object mXmppConnectionLock = new Object();
-
     private static final int MAX_XMPP_RETRY_CONNECT_COUNT = 3;
+
     private void loginToXmppServer() {
         synchronized (mXmppConnectionLock) {
             if (UserHelper.isUserLoggedIn(getApplicationContext())) {
-            	int retryCount = 0;
+                int retryCount = 0;
                 LogHelper.log(TAG, "loginToXmppServer called");
-            	do {
-	            	try {
-	            		LogHelper.log(TAG, "**********************Start*******************************");
-	                    LogHelper.log(TAG, "trying to connect over XMPP. Retry count = " + (retryCount + 1));
-	                    mXMPPConnectionHelper.close();
-	                    LogHelper.logD(TAG, "closed existing connection. Now retring to connect");
-	                    mXMPPConnectionHelper.connect();
-	                    LogHelper.logD(TAG, "connected. Now loging in");
-	                    String userId = getUserChatId();
-	                    String password = getUserChatPassword();
-	                    LogHelper.log(TAG, "userId = " + userId);
-	                    mXMPPConnectionHelper.login(userId, password);
-	                    LogHelper.log(TAG, "***********************End******************************");
-	                    break;
-	            	}
-	            	catch (XMPPException e) {
-	            		retryCount++;
-	            		if (retryCount >= MAX_XMPP_RETRY_CONNECT_COUNT) {
-	            			LogHelper.log(TAG, "***************ERROR**************************************");
-		            		LogHelper.log(TAG, "Exception in connecting to XMPP server", e);
-	            		}
-	            		else {
-	            			LogHelper.logD(TAG, "Failed to connect to XMPP. Retrying again. Retry count = " + retryCount);
-	            			TaskUtils.sleep(500);
-	            		}
-	             	}
-            	}while (retryCount < MAX_XMPP_RETRY_CONNECT_COUNT);
+                do {
+                    try {
+                        LogHelper.log(TAG, "**********************Start*******************************");
+                        LogHelper.log(TAG, "trying to connect over XMPP. Retry count = " + (retryCount + 1));
+                        mXMPPConnectionHelper.close();
+                        LogHelper.logD(TAG, "closed existing connection. Now retring to connect");
+                        mXMPPConnectionHelper.connect();
+                        LogHelper.logD(TAG, "connected. Now loging in");
+                        String userId = getUserChatId();
+                        String password = getUserChatPassword();
+                        LogHelper.log(TAG, "userId = " + userId);
+                        mXMPPConnectionHelper.login(userId, password);
+                        LogHelper.log(TAG, "***********************End******************************");
+                        break;
+                    } catch (XMPPException e) {
+                        retryCount++;
+                        if (retryCount >= MAX_XMPP_RETRY_CONNECT_COUNT) {
+                            LogHelper.log(TAG, "***************ERROR**************************************");
+                            LogHelper.log(TAG, "Exception in connecting to XMPP server", e);
+                        } else {
+                            LogHelper.logD(TAG, "Failed to connect to XMPP. Retrying again. Retry count = "
+                                    + retryCount);
+                            TaskUtils.sleep(500);
+                        }
+                    }
+                } while (retryCount < MAX_XMPP_RETRY_CONNECT_COUNT);
             }
         }
     }
@@ -356,6 +301,9 @@ public class NeatoSmartAppService extends Service {
             if (!mXMPPConnectionHelper.isConnected()) {
                 LogHelper.log(TAG, "XMPP is not connected, trying now");
                 loginToXmppServer();
+            }
+            else {
+                LogHelper.log(TAG, "XMPP is already connected");
             }
         }
     }
@@ -369,23 +317,6 @@ public class NeatoSmartAppService extends Service {
     private String getUserChatPassword() {
         String jabberUserPwd = UserHelper.getChatPwd(this);
         return jabberUserPwd;
-    }
-
-    private void sendCommandUsingNewCommandStructure(String robotId, RobotRequests requests) {
-
-        LogHelper.logD(TAG, "sendCommandUsingNewCommandStructure called");
-        RobotCommandPacketHeader header = RobotCommandPacketHeader.getRobotCommandHeader(
-                RobotCommandPacketConstants.COMMAND_PACKET_SIGNATURE,
-                RobotCommandPacketConstants.COMMAND_PACKET_VERSION);
-        if (isXmppConnectionExists(robotId)) {
-            String chatId = XMPPUtils.getRobotChatId(NeatoSmartAppService.this, robotId);
-            LogHelper.logD(TAG, "SendCommand Called using XMPP connection as transport. Request:-" + requests);
-            requests.setDistributionMode(RobotPacketConstants.DISTRIBUTION_MODE_TYPE_XMPP);
-            RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header, requests);
-            mXMPPConnectionHelper.sendRobotCommand(chatId, robotCommandPacket);
-        } else {
-            LogHelper.logD(TAG, "Xmpp connection does not exist: Request = " + requests);
-        }
     }
 
     private boolean isPeerConnectionExists(String robotId) {
@@ -405,8 +336,8 @@ public class NeatoSmartAppService extends Service {
             // server.
             if (packet.isRequest()) {
                 RequestPacket request = packet.getRobotCommands().getCommand(0);
-                if (isDataChangedCommand(request)) {
-                    processDataChangedRequest(from, request);
+                if (ServiceCommandHandler.isDataChangedCommand(request)) {
+                    ServiceCommandHandler.processDataChangedRequest(getApplicationContext(), from, request);
                     return;
                 }
             }
