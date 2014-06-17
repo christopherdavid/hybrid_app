@@ -79,6 +79,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     this.isStopEnabled = ko.computed(function() {
         return (!that.waitingForRobot() && (that.currentUiState().robot() == ROBOT_STATE_CLEANING || 
                                              that.currentUiState().robot() == ROBOT_STATE_PAUSED   || 
+                                             that.currentUiState().robot() == ROBOT_STATE_DOCK_PAUSED   ||
                                              that.currentUiState().robot() == ROBOT_STATE_MANUAL_CLEANING));
     }, this);
     

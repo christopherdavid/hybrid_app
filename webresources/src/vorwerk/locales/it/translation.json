@@ -5,7 +5,7 @@
     },
     "common": {
         "change": "Cambia",
-        "no": "no",
+        "no": "No",
         "menu": {
             "schedule": "Programmazione",
             "cleaning": "Pulizia",
@@ -31,7 +31,7 @@
             "IT": "Italia",
             "CN": "Cina"
         },
-        "yes": "yes",
+        "yes": "Yes",
         "logout": "Logout",
         "off": "Off",
         "delete": "Rimuovi",
@@ -125,19 +125,20 @@
         "navi": {"title": "Programmazione"}
     },
     "robotStateCodes": {
-        "returning2base": "Returning to base",
-        "manual": "Pulizia Manuale",
         "suspend": "Suspended Cleaning",
+        "robot_offline": "Offline",
         "inbase": "Alla base",
-        "robot_offline": "offline",
-        "idle": "Inattivo",
         "cleaning": "Pulizia attivata",
         "menu": "In Use",
-        "charging": "In ricarica",
         "paused": "Pulizia in pausa",
-        "returning2start": "Returning to starting position",
+        "charging": "In ricarica",
         "unknown": "Stato sconosciuto",
-        "stucked": "Bloccato"
+        "stucked": "Bloccato",
+        "manual": "Pulizia Manuale",
+        "returning2base": "Returning to base",
+        "idle": "Inattivo",
+        "returning2start": "Returning to starting position",
+        "dockpaused": "Dock Paused"
     },
     "dialogs": {
         "EVENT_DELETE": {
@@ -263,7 +264,7 @@
             "title": "Error"
         },
         "-21246": {
-            "message": "My fan is stuck. Please press OKAY to restart.",
+            "message": "My vacuum is stuck. ",
             "title": "Error"
         },
         "-108": {
@@ -647,7 +648,7 @@
     "visualState": {
         "suspend": "I'm in suspended cleaning mode untill I'm fully recharged.",
         "returning": "I'm returning",
-        "robot_offline": "I'm Offline",
+        "robot_offline": "I'm Offline.",
         "inbase": "Rimango alla base.",
         "idle_spot": "Sono pronto per la pulizia spot",
         "connecting": "Sto cercando il mio server.",
@@ -670,7 +671,8 @@
         "idle_manual": "Sono pronto per la pulizia manuale ",
         "cleaning_spot": "Sto pulendo con modalità spot",
         "paused_spot": "Pulizia Spot in pausa",
-        "cleaning_all": "Sto pulendo"
+        "cleaning_all": "Sto pulendo",
+        "paused_dock": "I've paused docking"
     },
     "confirm": {"close_app": "Sei sicuro di voler chiudere l'applicazione?"},
     "userSettings": {

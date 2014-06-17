@@ -5,7 +5,7 @@
     },
     "common": {
         "change": "Cambiar",
-        "no": "no",
+        "no": "No",
         "menu": {
             "schedule": "Programar",
             "cleaning": "Limpieza",
@@ -36,7 +36,7 @@
         "off": "Apagado",
         "delete": "Borrar",
         "on": "Encendido",
-        "ok": "OK",
+        "ok": "Ok",
         "day": {
             "3": "Miércoles",
             "2": "Martes",
@@ -125,19 +125,20 @@
         "navi": {"title": "Programando."}
     },
     "robotStateCodes": {
-        "returning2base": "Returning to base",
-        "manual": "Limpieza manual",
         "suspend": "Suspended Cleaning",
+        "robot_offline": "Offline",
         "inbase": "En la base.",
-        "robot_offline": "offline",
-        "idle": "Inactivo.",
         "cleaning": "Limpieza iniciada.",
         "menu": "In Use",
-        "charging": "Cargando.",
         "paused": "Limpieza en pausa.",
-        "returning2start": "Returning to starting position",
+        "charging": "Cargando.",
         "unknown": "Estado desconocido.",
-        "stucked": "Atascado."
+        "stucked": "Atascado.",
+        "manual": "Limpieza manual",
+        "returning2base": "Returning to base",
+        "idle": "Inactivo.",
+        "returning2start": "Returning to starting position",
+        "dockpaused": "Dock Paused"
     },
     "dialogs": {
         "EVENT_DELETE": {
@@ -263,7 +264,7 @@
             "title": "Error"
         },
         "-21246": {
-            "message": "My fan is stuck. Please press OKAY to restart.",
+            "message": "My vacuum is stuck. ",
             "title": "Error"
         },
         "-108": {
@@ -647,7 +648,7 @@
     "visualState": {
         "suspend": "I'm in suspended cleaning mode untill I'm fully recharged.",
         "returning": "I'm returning",
-        "robot_offline": "I'm Offline",
+        "robot_offline": "I'm Offline.",
         "inbase": "Estoy conectado a la base.",
         "idle_spot": "Estoy listo para empezar en local",
         "connecting": "Intentando conectar al servidor\u2026",
@@ -670,7 +671,8 @@
         "idle_manual": "Estoy listo para empezar en manual",
         "cleaning_spot": "Estoy limpiando en local",
         "paused_spot": "He pausado la limpieza local",
-        "cleaning_all": "Estoy limpiando"
+        "cleaning_all": "Estoy limpiando",
+        "paused_dock": "I've paused docking"
     },
     "confirm": {"close_app": "¿Desea cerrar la aplicación?"},
     "userSettings": {

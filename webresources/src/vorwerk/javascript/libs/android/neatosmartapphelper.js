@@ -81,6 +81,7 @@ var ROBOT_STATE_SUSPENDED_CLEANING 	= 4;
 var ROBOT_STATE_PAUSED 				= 5;
 var ROBOT_STATE_MANUAL_CLEANING		= 6;
 var ROBOT_STATE_RETURNING 			= 7;
+var ROBOT_STATE_DOCK_PAUSED         = 8;
 
 var PLUGIN_JSON_KEYS  =  (function() {
     var keys = {

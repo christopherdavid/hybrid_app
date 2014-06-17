@@ -5,7 +5,7 @@
     },
     "common": {
         "change": "变更",
-        "no": "no",
+        "no": "No",
         "menu": {
             "schedule": "日程表",
             "cleaning": "清扫中",
@@ -31,12 +31,12 @@
             "IT": "意大利",
             "CN": "中国"
         },
-        "yes": "yes",
+        "yes": "Yes",
         "logout": "登出",
         "off": "关闭",
         "delete": "删除",
         "on": "打开",
-        "ok": "OK",
+        "ok": "Ok",
         "day": {
             "3": "周三",
             "2": "周二",
@@ -125,19 +125,20 @@
         "navi": {"title": "规划中"}
     },
     "robotStateCodes": {
-        "returning2base": "Returning to base",
-        "manual": "手动清扫",
         "suspend": "Suspended Cleaning",
+        "robot_offline": "Offline",
         "inbase": "在基座",
-        "robot_offline": "offline",
-        "idle": "待机",
         "cleaning": "开始清扫",
         "menu": "In Use",
-        "charging": "充电",
         "paused": "暂停清扫",
-        "returning2start": "Returning to starting position",
+        "charging": "充电",
         "unknown": "未知状态",
-        "stucked": "被卡住"
+        "stucked": "被卡住",
+        "manual": "手动清扫",
+        "returning2base": "Returning to base",
+        "idle": "待机",
+        "returning2start": "Returning to starting position",
+        "dockpaused": "Dock Paused"
     },
     "dialogs": {
         "EVENT_DELETE": {
@@ -263,7 +264,7 @@
             "title": "Error"
         },
         "-21246": {
-            "message": "My fan is stuck. Please press OKAY to restart.",
+            "message": "My vacuum is stuck. ",
             "title": "Error"
         },
         "-108": {
@@ -670,7 +671,8 @@
         "idle_manual": "我准备就绪可以手动清扫。",
         "cleaning_spot": "我正在定点清扫。",
         "paused_spot": "我已暂停定点清扫。",
-        "cleaning_all": "我正在全部清扫。"
+        "cleaning_all": "我正在全部清扫。",
+        "paused_dock": "I've paused docking"
     },
     "confirm": {"close_app": "是否确定关闭该程序？"},
     "userSettings": {

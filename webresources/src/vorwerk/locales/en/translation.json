@@ -4,8 +4,8 @@
         "navi": {"title": "Privacy Policy"}
     },
     "common": {
-        "change": "change",
-        "no": "no",
+        "change": "Change",
+        "no": "No",
         "menu": {
             "schedule": "Schedule",
             "cleaning": "Cleaning",
@@ -31,12 +31,12 @@
             "IT": "Italy",
             "CN": "China"
         },
-        "yes": "yes",
+        "yes": "Yes",
         "logout": "Logout",
-        "off": "off",
-        "delete": "delete",
-        "on": "on",
-        "ok": "OK",
+        "off": "Off",
+        "delete": "Delete",
+        "on": "On",
+        "ok": "Ok",
         "day": {
             "3": "Wednesday",
             "2": "Tuesday",
@@ -56,8 +56,8 @@
             "tou_pp_agreement": "In order to use the App, you must agree to the Terms of Use and the Data Protection Statement. <br /><br /> I hereby declare that I have read and agree to the <a id='terms' href='#' class='highlightedText font_bold font_small'>Terms of Use<\/a> and <a id='privacy' href='#' class='highlightedText font_bold font_small'>Data Protection Statement<\/a>.",
             "change_notAccepted_title": "Missing Legal Agreement",
             "subscribe_header": "MARKETING INFORMATION",
-            "edit_done_title": "Account Modified",
-            "edit_done_message": "The user account has been updated successfully",
+            "edit_done_title": "Account Modified.",
+            "edit_done_message": "The user account has been updated successfully.",
             "tou_pp_header": "LEGAL INFORMATION",
             "subscribe_agreement": "As our customer, we would like to keep you informed of new updates and product information, and we take the greatest care to keep your data secure. This data will not be communicated to companies outside of the Vorwerk Group. <br /><br /> I agree that my email address may be used by Vorwerk International Strecker & Co. for information and advertising that is addressed to me personally (e.g. updates, notices, special offers). This consent may be revoked at any time under the menu item \"Settings\". Further details can be found in the Data Protection Statement.",
             "register_notAccepted_message": "Please check the privacy policy and terms of use documents to complete the registration."
@@ -84,7 +84,7 @@
     "messages": {
         "not_same_network": {
             "message": "We have to be in the same Wi-Fi network to operate properly.",
-            "title": "Connectivity Problems"
+            "title": "Connectivity Problems."
         },
         "no_clock": {
             "message": "Before using app scheduling please set the clock on the robot display",
@@ -92,7 +92,7 @@
         },
         "no_wifi": {
             "message": "You need a Wi-Fi connection to use this feature. Please turn on Wi-Fi in Device Settings.<br />Press OK to retry.",
-            "title": "Connectivity Problems"
+            "title": "Connectivity Problems."
         },
         "waiting_timeout": {
             "message": "Robot didn't receive the command.",
@@ -112,7 +112,7 @@
         },
         "no_connection": {
             "message": "You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Device Settings. <br />Press OK to retry.",
-            "title": "Connectivity Problems"
+            "title": "Connectivity Problems."
         }
     },
     "basicSchedulerDate": {
@@ -125,19 +125,20 @@
         "navi": {"title": "Scheduling"}
     },
     "robotStateCodes": {
-        "returning2base": "Returning to base",
-        "manual": "Manual Cleaning",
         "suspend": "Suspended Cleaning",
+        "robot_offline": "Offline",
         "inbase": "At Base",
-        "robot_offline": "offline",
-        "idle": "Idle",
         "cleaning": "Started Cleaning",
         "menu": "In Use",
-        "charging": "Charging",
         "paused": "Paused Cleaning",
-        "returning2start": "Returning to starting position",
+        "charging": "Charging",
         "unknown": "State Unknown",
-        "stucked": "Stuck"
+        "stucked": "Stuck",
+        "manual": "Manual Cleaning",
+        "returning2base": "Returning to base",
+        "idle": "Idle",
+        "returning2start": "Returning to starting position",
+        "dockpaused": "Dock Paused"
     },
     "dialogs": {
         "EVENT_DELETE": {
@@ -263,7 +264,7 @@
             "title": "Error"
         },
         "-21246": {
-            "message": "My fan is stuck. Please press OKAY to restart.",
+            "message": "My vacuum is stuck. ",
             "title": "Error"
         },
         "-108": {
@@ -561,7 +562,7 @@
             "robotId": "Identification code",
             "wifisetup": "Please enter the Identification code.<br />You will find it on the robot display under: <span class='font_bold highlightedText'>Settings / Link SmartDevice<\/span>"
         },
-        "navi": {"title": "Robot activation"}
+        "navi": {"title": "Robot activation."}
     },
     "validation": {
         "error_title": "Email validation missing",
@@ -574,7 +575,7 @@
             "robot_name": "Robot name",
             "id_accepted": "Your Robot Link Code was accepted!<br /><\/br />If you want, you can now personalize your robot's name. You can always rename your robot's name in the settings menu."
         },
-        "navi": {"title": "Robot activation"}
+        "navi": {"title": "Robot activation."}
     },
     "basicScheduler": {
         "page": {"cleaning_options": {
@@ -587,10 +588,10 @@
         "page": {
             "robot_need_cleaning": "Robot needs to be cleaned",
             "notify_when": "Notify me when...",
-            "robot_stuck": "Robot is stuck",
+            "robot_stuck": "Robot is stuck.",
             "notify_with": "Notify me with...",
             "push_on_phone": "via Push Notification",
-            "cleaning_done": "Cleaning is done"
+            "cleaning_done": "Cleaning is done."
         },
         "navi": {"title": "General Settings"}
     },
@@ -637,7 +638,7 @@
             "email": "Email Address",
             "password_show": "Show password",
             "registration_done_message": "<div class='mailAnimation'><\/div>A confirmation mail was sent to<br/><span class='highlightedText'>__email__<\/span><br /><br />Please confirm your account within 48 hours.<br />After confirmation you can login and connect to your robot.",
-            "registration_done_title": "Account created",
+            "registration_done_title": "Account created.",
             "password_verify": "Password verification",
             "password": "Password",
             "country": "Select Country"
@@ -646,31 +647,32 @@
     },
     "visualState": {
         "suspend": "I'm in suspended cleaning mode untill I'm fully recharged.",
-        "returning": "I'm returning",
-        "robot_offline": "I'm Offline",
+        "returning": "I'm returning.",
+        "robot_offline": "I'm Offline.",
         "inbase": "I\u2019m having a rest at my base.",
-        "idle_spot": "I\u2019m ready to start spot",
+        "idle_spot": "I\u2019m ready to start spot.",
         "connecting": "Trying to connect to server\u2026",
         "cleaning": "I'm cleaning.",
         "error": "I guess I have a problem.",
         "drive_to_base": "I'm returning to my base",
         "waiting": "Receiving command",
         "drive_to_start": "I'm returning to my starting position",
-        "menu": "I'm in use by someone else",
-        "paused_manual": "I've paused manual cleaning",
+        "menu": "I'm in use by someone else.",
+        "paused_manual": "I've paused manual cleaning.",
         "charging": "I'm charging.",
         "paused": "Cleaning paused.",
         "unknown": "I'm looking for my server.",
         "stucked": "Help me! I'm stuck.",
-        "paused_all": "I've paused cleaning",
+        "paused_all": "I've paused cleaning.",
         "idle_all": "I'm ready to start.",
         "manual": "Drive me with your app Remote!",
         "cleaning_manual": "Drive me with your app Remote!",
         "idle": "I'm ready to start.",
         "idle_manual": "I\u2019m ready to start manual cleaning",
-        "cleaning_spot": "I'm cleaning spot",
-        "paused_spot": "I've paused cleaning spot",
-        "cleaning_all": "I'm cleaning"
+        "cleaning_spot": "I'm cleaning spot.",
+        "paused_spot": "I've paused cleaning spot.",
+        "cleaning_all": "I'm cleaning.",
+        "paused_dock": "I've paused docking."
     },
     "confirm": {"close_app": "Do you really want to close the application?"},
     "userSettings": {

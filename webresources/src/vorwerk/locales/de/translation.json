@@ -5,7 +5,7 @@
     },
     "common": {
         "change": "ändern",
-        "no": "nein",
+        "no": "Nein",
         "menu": {
             "schedule": "Terminkalender",
             "cleaning": "Reinigung",
@@ -13,7 +13,7 @@
         },
         "next": "Weiter",
         "edit": "Bearbeiten",
-        "cancel": "zurück",
+        "cancel": "Zurück",
         "cleaningMode": {
             "normal": "ALLE RÄUME",
             "eco": "ECO"
@@ -31,12 +31,12 @@
             "IT": "Italien",
             "CN": "China"
         },
-        "yes": "ja",
+        "yes": "Ja",
         "logout": "Logout",
-        "off": "aus",
-        "delete": "entfernen",
-        "on": "ein",
-        "ok": "ok",
+        "off": "Aus",
+        "delete": "Entfernen",
+        "on": "Ein",
+        "ok": "Ok",
         "day": {
             "3": "Mittwoch",
             "2": "Dienstag",
@@ -125,19 +125,20 @@
         "navi": {"title": "Timer Funktion"}
     },
     "robotStateCodes": {
-        "returning2base": "Fahre zurück",
-        "manual": "Manuelle Reinigung",
         "suspend": "Reinigung verschoben",
-        "inbase": "Angedockt.",
-        "robot_offline": "offline",
-        "idle": "Ruhend.",
-        "cleaning": "Reingung gestartet.",
-        "menu": "Wird bereits benutzt.",
-        "charging": "Läd auf.",
-        "paused": "Reinigung unterbrochen.",
+        "robot_offline": "Offline",
+        "inbase": "Angedockt",
+        "cleaning": "Reingung gestartet",
+        "menu": "Wird bereits benutzt",
+        "paused": "Reinigung unterbrochen",
+        "charging": "Läd auf",
+        "unknown": "Status unbekannt",
+        "stucked": "Festgefahren",
+        "manual": "Manuelle Reinigung",
+        "returning2base": "Fahre zurück",
+        "idle": "Ruhend",
         "returning2start": "Fahre zurück",
-        "unknown": "Status unbekannt.",
-        "stucked": "Festgefahren."
+        "dockpaused": "Dock Pause"
     },
     "dialogs": {
         "EVENT_DELETE": {
@@ -263,7 +264,7 @@
             "title": "Fehler"
         },
         "-21246": {
-            "message": "Gebläse ist blockiert. Bitte den Roboter neu starten!",
+            "message": "Gebläse ist blockiert.",
             "title": "Fehler"
         },
         "-108": {
@@ -646,16 +647,16 @@
     },
     "visualState": {
         "suspend": "Ich habe die Reinigung verschoben, bis ich wieder aufgeladen bin.",
-        "returning": "Ich fahre zurück",
+        "returning": "Ich fahre zurück.",
         "robot_offline": "Ich bin offline.",
-        "inbase": "Ich verweile an meiner Basisstation",
+        "inbase": "Ich verweile an meiner Basisstation.",
         "idle_spot": "Ich bin bereit für die Spotreinigung.",
         "connecting": "Ich suche nach meinem Server.",
         "cleaning": "Ich reinige.",
         "error": "Ich habe ein Problem.",
         "drive_to_base": "Ich fahre zur Basisstation zurück",
         "waiting": "Empfange Kommando",
-        "drive_to_start": "Ich fahre zur starting position zurück",
+        "drive_to_start": "Ich fahre zur starting position zurück.",
         "menu": "Ich werde schon benutzt.",
         "paused_manual": "Ich habe die manuelle Reinigung unterbrochen.",
         "charging": "Ich lade meinen Akku auf.",
@@ -670,7 +671,8 @@
         "idle_manual": "Ich bin bereit für die manuelle Reinigung.",
         "cleaning_spot": "Ich reinige im Spot-Modus.",
         "paused_spot": "Ich habe die Spotreinigung unterbrochen.",
-        "cleaning_all": "Ich reinige."
+        "cleaning_all": "Ich reinige.",
+        "paused_dock": "Ich habe die docking."
     },
     "confirm": {"close_app": "Möchtest du die App wirklich schliessen?"},
     "userSettings": {
