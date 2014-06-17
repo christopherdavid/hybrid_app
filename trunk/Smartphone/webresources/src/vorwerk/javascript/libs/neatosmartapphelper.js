@@ -98,6 +98,7 @@ var ROBOT_STATE_SUSPENDED_CLEANING  = 4;
 var ROBOT_STATE_PAUSED              = 5;
 var ROBOT_STATE_MANUAL_CLEANING     = 6;
 var ROBOT_STATE_RETURNING           = 7;
+var ROBOT_STATE_DOCK_PAUSED         = 8;
 
 /*
 var ROBOT_STATE_UNKNOWN     = 10001;
@@ -825,7 +826,7 @@ var RobotPluginManager = ( function() {
             var delay = 1000;
             switch(robotId) {
                 case "mapdemo123":
-                    stateCode = ROBOT_STATE_RETURNING 
+                    stateCode = ROBOT_STATE_DOCK_PAUSED 
                     delay = 3000;
                     break;
                 case "rr1234":
@@ -886,7 +887,7 @@ var RobotPluginManager = ( function() {
             var delay = 1000;
             switch(robotId) {
                 case "mapdemo123": // Map Demo
-                    stateCode = ROBOT_STATE_RETURNING 
+                    stateCode = ROBOT_STATE_DOCK_PAUSED 
                     delay = 3000;
                     break;
                 case "rr1234": // Nexus One

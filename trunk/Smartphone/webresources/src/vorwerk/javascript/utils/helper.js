@@ -228,7 +228,10 @@ var robotUiStateHandler = {
                 newUiState = ROBOT_UI_STATE_RETURN_TO_START;
             }
         }
-                
+        
+        if(state == ROBOT_STATE_DOCK_PAUSED) {
+            newUiState = ROBOT_UI_STATE_DOCK_PAUSED;
+        }        
         
         console.log("newUiState " + newUiState + ": " + visualState[newUiState]);
         this.current().robot(state);
@@ -312,11 +315,11 @@ var robotUiStateHandler = {
         // - stopped
         // - offline
         
-        if(state == ROBOT_STATE_CLEANING || state == ROBOT_UI_STATE_CLEANING_ALL || state == ROBOT_UI_STATE_CLEANING_MANUAL || state == ROBOT_UI_STATE_CLEANING_SPOT) {
+        if(state == ROBOT_STATE_CLEANING || state == ROBOT_UI_STATE_CLEANING_ALL || state == ROBOT_UI_STATE_CLEANING_MANUAL || state == ROBOT_UI_STATE_CLEANING_SPOT || state == ROBOT_UI_STATE_RETURN_TO_BASE || state == ROBOT_UI_STATE_RETURN_TO_START) {
             this.current().startButton(visualState[ROBOT_STATE_CLEANING]);
-        } else if(state == ROBOT_STATE_PAUSED || state == ROBOT_UI_STATE_PAUSED_ALL || state == ROBOT_UI_STATE_PAUSED_MANUAL || state == ROBOT_UI_STATE_PAUSED_SPOT) {
+        } else if(state == ROBOT_STATE_PAUSED || state == ROBOT_UI_STATE_PAUSED_ALL || state == ROBOT_UI_STATE_PAUSED_MANUAL || state == ROBOT_UI_STATE_PAUSED_SPOT || state == ROBOT_UI_STATE_DOCK_PAUSED || state == ROBOT_STATE_DOCK_PAUSED) {
             this.current().startButton(visualState[ROBOT_STATE_PAUSED]);
-        } else if(state == ROBOT_UI_STATE_CONNECTING || state == ROBOT_UI_STATE_WAIT) {
+        } else if(state == ROBOT_UI_STATE_CONNECTING || state == ROBOT_UI_STATE_WAIT || state == ROBOT_STATE_SUSPENDED_CLEANING) {
             this.current().startButton(visualState[ROBOT_UI_STATE_WAIT]);
         } else if(state == ROBOT_STATE_MANUAL_CLEANING) {
             this.current().startButton(visualState[ROBOT_STATE_MANUAL_CLEANING]);

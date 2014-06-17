@@ -62,6 +62,7 @@ var ROBOT_UI_STATE_ERROR    = 20008;
 var ROBOT_UI_STATE_STUCKED = 20009;
 var ROBOT_UI_STATE_RETURNING2BASE = 20010;
 var ROBOT_UI_STATE_RETURNING2START = 20011;
+var ROBOT_UI_STATE_DOCK_PAUSED = 20012;
 
 // new ui states depending on category
 var ROBOT_UI_STATE_IDLE_MANUAL      = "2" + CLEANING_CATEGORY_MANUAL + "00" + ROBOT_STATE_IDLE;
@@ -76,7 +77,6 @@ var ROBOT_UI_STATE_IDLE_SPOT        = "2" + CLEANING_CATEGORY_SPOT + "00" + ROBO
 var ROBOT_UI_STATE_CLEANING_SPOT    = "2" + CLEANING_CATEGORY_SPOT + "00" + ROBOT_STATE_CLEANING;
 var ROBOT_UI_STATE_PAUSED_SPOT      = "2" + CLEANING_CATEGORY_SPOT + "00" + ROBOT_STATE_PAUSED;
 
-
 var visualState = {};
 visualState[ROBOT_STATE_UNKNOWN] = "unknown";
 visualState[ROBOT_STATE_IDLE] = "idle";
@@ -85,6 +85,7 @@ visualState[ROBOT_STATE_CLEANING] = "cleaning";
 visualState[ROBOT_STATE_SUSPENDED_CLEANING] = "suspend";
 visualState[ROBOT_STATE_PAUSED] = "paused";
 visualState[ROBOT_STATE_MANUAL_CLEANING] = "manual";
+visualState[ROBOT_STATE_DOCK_PAUSED] = "dockpaused";
 
 // UI states
 visualState[ROBOT_UI_STATE_WAIT] = "waiting";
@@ -104,6 +105,7 @@ visualState[ROBOT_UI_STATE_IDLE_SPOT] = "idle_spot";
 visualState[ROBOT_UI_STATE_PAUSED_MANUAL] = "paused_manual";
 visualState[ROBOT_UI_STATE_PAUSED_ALL] = "paused_all";
 visualState[ROBOT_UI_STATE_PAUSED_SPOT] = "paused_spot";
+visualState[ROBOT_UI_STATE_DOCK_PAUSED] = "paused_dock";
 
 visualState[ROBOT_UI_STATE_CLEANING_MANUAL] = "cleaning_manual";
 visualState[ROBOT_UI_STATE_CLEANING_ALL] = "cleaning_all";

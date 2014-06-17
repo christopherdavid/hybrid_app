@@ -36,7 +36,7 @@
         "off": "Vypnout",
         "delete": "Smazat",
         "on": "Zapnout",
-        "ok": "OK",
+        "ok": "Ok",
         "day": {
             "3": "Středa",
             "2": "Úterý",
@@ -125,19 +125,20 @@
         "navi": {"title": "Funkce plánování"}
     },
     "robotStateCodes": {
-        "returning2base": "Returning to base",
-        "manual": "Manuální úklid",
         "suspend": "Suspended Cleaning",
+        "robot_offline": "Offline",
         "inbase": "V dobíjecí základně",
-        "robot_offline": "offline",
-        "idle": "V klidu",
         "cleaning": "Úklid začal",
         "menu": "In Use",
-        "charging": "Nabíjení",
         "paused": "Úklid přerušen",
-        "returning2start": "Returning to starting position",
+        "charging": "Nabíjení",
         "unknown": "Neznámý stav",
-        "stucked": "Uvízlý"
+        "stucked": "Uvízlý",
+        "manual": "Manuální úklid",
+        "returning2base": "Returning to base",
+        "idle": "V klidu",
+        "returning2start": "Returning to starting position",
+        "dockpaused": "Dock Paused"
     },
     "dialogs": {
         "EVENT_DELETE": {
@@ -263,7 +264,7 @@
             "title": "Error"
         },
         "-21246": {
-            "message": "My fan is stuck. Please press OKAY to restart.",
+            "message": "My vacuum is stuck. ",
             "title": "Error"
         },
         "-108": {
@@ -647,7 +648,7 @@
     "visualState": {
         "suspend": "I'm in suspended cleaning mode untill I'm fully recharged.",
         "returning": "I'm returning",
-        "robot_offline": "I'm Offline",
+        "robot_offline": "I'm Offline.",
         "inbase": "Odpočívám v dobíjecí základně.",
         "idle_spot": "Jesem připraven zahájit úklid SPOT",
         "connecting": "Připojuji se k serveru\u2026",
@@ -670,7 +671,8 @@
         "idle_manual": "Jesem připraven zahájit úklid v režimu Manuál",
         "cleaning_spot": "Uklízím v režimu SPOT",
         "paused_spot": "Přerušil jsem úklid SPOT",
-        "cleaning_all": "Uklízím"
+        "cleaning_all": "Uklízím",
+        "paused_dock": "I've paused docking"
     },
     "confirm": {"close_app": "Chcet applikaci skutečně ukončit?"},
     "userSettings": {

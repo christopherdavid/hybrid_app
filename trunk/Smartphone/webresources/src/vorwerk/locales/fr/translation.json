@@ -5,7 +5,7 @@
     },
     "common": {
         "change": "Changer",
-        "no": "no",
+        "no": "No",
         "menu": {
             "schedule": "Programme",
             "cleaning": "Nettoyage",
@@ -31,12 +31,12 @@
             "IT": "Italie",
             "CN": "Chine"
         },
-        "yes": "yes",
+        "yes": "Yes",
         "logout": "Déconnexion",
         "off": "Arrêt",
         "delete": "Supprimer ",
         "on": "Marche",
-        "ok": "OK",
+        "ok": "Ok",
         "day": {
             "3": "Mercredi",
             "2": "Mardi",
@@ -125,19 +125,20 @@
         "navi": {"title": "Programmation"}
     },
     "robotStateCodes": {
-        "returning2base": "Returning to base",
-        "manual": "Nettoyage manuel",
         "suspend": "Suspended Cleaning",
+        "robot_offline": "Offline",
         "inbase": "Sur sa station de charge",
-        "robot_offline": "offline",
-        "idle": "A l'arrêt",
         "cleaning": "Commencer nettoyage",
         "menu": "In Use",
-        "charging": "En charge",
         "paused": "Nettoyage interrompu",
-        "returning2start": "Returning to starting position",
+        "charging": "En charge",
         "unknown": "Etat inconnu",
-        "stucked": "Coincé"
+        "stucked": "Coincé",
+        "manual": "Nettoyage manuel",
+        "returning2base": "Returning to base",
+        "idle": "A l'arrêt",
+        "returning2start": "Returning to starting position",
+        "dockpaused": "Dock Paused"
     },
     "dialogs": {
         "EVENT_DELETE": {
@@ -263,7 +264,7 @@
             "title": "Error"
         },
         "-21246": {
-            "message": "My fan is stuck. Please press OKAY to restart.",
+            "message": "My vacuum is stuck. ",
             "title": "Error"
         },
         "-108": {
@@ -647,7 +648,7 @@
     "visualState": {
         "suspend": "I'm in suspended cleaning mode untill I'm fully recharged.",
         "returning": "I'm returning",
-        "robot_offline": "I'm Offline",
+        "robot_offline": "I'm Offline.",
         "inbase": "Je me repose à ma station de charge",
         "idle_spot": "Je suis prêt à re-démarrer le nettoyage ciblé",
         "connecting": "Je recherche mon serveur",
@@ -670,7 +671,8 @@
         "idle_manual": "Je suis prêt à re-démarrer le nettoyage manuel",
         "cleaning_spot": "Je nettoie en mode Nettoayge ciblé",
         "paused_spot": "Je mets en pause le nettoyage ciblé",
-        "cleaning_all": "Je nettoie"
+        "cleaning_all": "Je nettoie",
+        "paused_dock": "I've paused docking"
     },
     "confirm": {"close_app": "Souhaitez-vous réellement arrêter l'application ?"},
     "userSettings": {
