@@ -983,7 +983,15 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (BasicScheduleEventEntity *)createBasicScheduleEventWithData:(NSString *)data withScheduleEventId:(NSString *)scheduleEventId {
-  BasicScheduleEventEntity *basicScheduleEventsEntity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_BASIC_SCHEDULE_EVENT inManagedObjectContext:self.managedObjectContext];
+  BasicScheduleEventEntity *basicScheduleEventsEntity;
+  id response = [self basicScheduleEventEntityWithId:scheduleEventId];
+  if (!response || [response isKindOfClass:[NSError class]]) {
+    basicScheduleEventsEntity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_BASIC_SCHEDULE_EVENT inManagedObjectContext:self.managedObjectContext];
+  }
+  else {
+    basicScheduleEventsEntity = (BasicScheduleEventEntity *)response;
+  }
+
   basicScheduleEventsEntity.scheduleEventId = scheduleEventId;
   basicScheduleEventsEntity.parameterStr = data;
   return basicScheduleEventsEntity;
@@ -999,7 +1007,7 @@ static NeatoDataStore *sharedInstance;
     return nil;
   }
   if([basicScheduleEventEntities count] > 1) {
-    debugLog(@"!!ERROR!!! there cannot be more than one scheduleEntity for a scheduleId");
+    debugLog(@"!!ERROR!!! there cannot be more than one BasicScheduleEventEntity for a scheduleId");
     return nil;
   }
   if([basicScheduleEventEntities count] == 0) {
@@ -1089,7 +1097,7 @@ static NeatoDataStore *sharedInstance;
       return schedule;
     }
     else {
-      return [AppHelper nserrorWithDescription:@"Error in Database" code:200];
+      return [AppHelper nserrorWithDescription:@"Error in Database" code:UI_ERROR_DB_ERROR];
     }
   }
   else {

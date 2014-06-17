@@ -59,13 +59,24 @@
     NSArray *resultArray = (NSArray *)data;
     NSDictionary *serverSchedule = [resultArray objectAtIndex:0];
     Schedule *schedule = [ScheduleJsonHelper scheduleFromDictionary:serverSchedule];
-    // Save schedule in DB.
-    [ScheduleDBHelper saveSchedule:schedule ofType:self.scheduleType forRobotWithId:self.robotId];
-    // Notify caller
-    if ([self.delegate respondsToSelector:@selector(gotScheduleEventsForSchedule:ofType:forRobotWithId:)]) {
-        [self.delegate gotScheduleEventsForSchedule:schedule ofType:[ScheduleUtils scheduleIntFromString:self.scheduleType] forRobotWithId:self.robotId];
-        self.delegate = nil;
-        self.retainedSelf = nil;
+    
+    // Check if schedule is nil or not, as there could be a parsing error.
+    if (schedule) {
+        // Save schedule in DB.
+        [ScheduleDBHelper saveSchedule:schedule ofType:self.scheduleType forRobotWithId:self.robotId];
+        // Notify caller
+        if ([self.delegate respondsToSelector:@selector(gotScheduleEventsForSchedule:ofType:forRobotWithId:)]) {
+            [self.delegate gotScheduleEventsForSchedule:schedule ofType:[ScheduleUtils scheduleIntFromString:self.scheduleType] forRobotWithId:self.robotId];
+            self.delegate = nil;
+            self.retainedSelf = nil;
+        }
+    }
+    else {
+        if ([self.delegate respondsToSelector:@selector(failedToGetScheduleEventsWithError:)]) {
+            [self.delegate performSelector:@selector(failedToGetScheduleEventsWithError:) withObject:[AppHelper nserrorWithDescription:@"Failed to parse server response!" code:UI_JSON_PARSING_ERROR]];
+            self.delegate = nil;
+            self.retainedSelf = nil;
+        }
     }
 }
 
