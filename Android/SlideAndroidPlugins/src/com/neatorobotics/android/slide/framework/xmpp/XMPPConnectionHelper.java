@@ -55,9 +55,15 @@ public class XMPPConnectionHelper {
         synchronized (mObjectCreateLock) {
             if (sXMPPConnectionHelper == null) {
                 sXMPPConnectionHelper = new XMPPConnectionHelper(context);
+            } else {
+                sXMPPConnectionHelper.setContext(context);
             }
         }
         return sXMPPConnectionHelper;
+    }
+
+    public void setContext(Context context) {
+        mContext = context;
     }
 
     public void setServerInformation(String ipAddress, int port, String webServiceName) {
@@ -111,7 +117,7 @@ public class XMPPConnectionHelper {
     }
 
     private void logout() {
-        LogHelper.logD(TAG, "logout called");
+        LogHelper.logD(TAG, "xmpp logout called");
         synchronized (mConnectionObjectLock) {
             if (mConnection != null) {
                 mConnection.removePacketListener(mPacketListener);

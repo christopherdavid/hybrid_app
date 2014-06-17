@@ -6,7 +6,6 @@ import java.util.Observer;
 import org.apache.cordova.DroidGap;
 
 import android.os.Bundle;
-import android.os.RemoteException;
 
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.NeatoServiceManager;
@@ -16,7 +15,7 @@ import com.neatorobotics.android.slide.framework.gcm.PushNotificationMessageHand
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
-import com.neatorobotics.android.slide.framework.service.INeatoRobotService;
+import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
@@ -40,16 +39,17 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
         LogHelper.logD(TAG, "onCreate called");
         super.onCreate(savedInstanceState);
         AppUtils.logLibraryVersion();
-
         CrittercismHelper.initializeCrittercism(this);
         NeatoServiceManager serviceManager = NeatoServiceManager.getInstance(getApplicationContext());
+        serviceManager.bindNeatoService();
+        
         if (UserHelper.isUserLoggedIn(this)) {
-            serviceManager.initialize();
             String authToken = NeatoPrefs.getNeatoUserAuthToken(this);
-            AppUtils.createNeatoUserDeviceIdIfNotExists(this);
             UserManager.getInstance(this).setUserAttributesOnServer(authToken, DeviceUtils.getUserAttributes(this));
+            AppUtils.createNeatoUserDeviceIdIfNotExists(this);
             PushNotificationUtils.registerForPushNotification(this);
         }
+
         mIsActivityResumedFromSleep = false;
     }
 
@@ -57,7 +57,7 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
     public void onDestroy() {
         NeatoServiceManager serviceManager = NeatoServiceManager.getInstance(getApplicationContext());
         if (serviceManager != null) {
-            serviceManager.uninitialize();
+            serviceManager.unBindNeatoService();
         }
         super.onDestroy();
     }
@@ -82,20 +82,13 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
     }
 
     private void syncWithServer() {
-        try {
-            // Make sure the xmpp is logged in
-        	if (!mIsActivityResumedFromSleep) {
-        		LogHelper.log(TAG, "Activity is not resuming from sleep. So service initialization will handle xmpp login.");
-        		return;
-        	}
-            INeatoRobotService neatoService = ApplicationConfig.getInstance(this).getRobotService();
-            if (neatoService != null) {
-                LogHelper.log(TAG, "Making sure that the XMPP is logged in");
-                neatoService.loginToXmppIfRequired();
-            }
-        } catch (RemoteException e) {
-            LogHelper.log(TAG, "Remote exception in onResume", e);
+        // Make sure the xmpp is logged in
+        if (!mIsActivityResumedFromSleep) {
+            LogHelper
+                    .log(TAG, "Activity is not resuming from sleep. So service initialization will handle xmpp login.");
+            return;
         }
+        RobotCommandServiceManager.loginXmppIfRequired(getApplicationContext());
         String robotId = NeatoPrefs.getLastConnectedNeatoRobotId(this);
         LogHelper.logD(TAG, "RobotId of last connected robot: " + robotId);
     }
@@ -129,9 +122,11 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
         LogHelper.logD(TAG, "onUpdate Called");
         if (serviceManager != null) {
             if (UserHelper.isUserLoggedIn(this)) {
-                serviceManager.initialize();
+                RobotCommandServiceManager.initiateXmppConnection(this);
+                PushNotificationUtils.registerForPushNotification(this);
+                AppUtils.createNeatoUserDeviceIdIfNotExists(this);
             } else {
-                serviceManager.uninitialize();
+                RobotCommandServiceManager.cleanUpServiceConnections(this);
             }
         }
     }

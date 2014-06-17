@@ -4,11 +4,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.content.Context;
-import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.UserJsonData;
-import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.user.UserItem;
 import com.neatorobotics.android.slide.framework.webservice.user.UserManager;
@@ -53,8 +51,6 @@ public class LoginUserRequest extends UserManagerRequest {
                         LogHelper.log(TAG, "Extra parameters in the User item is null");
                     }
                     userDetails.put(JsonMapKeys.KEY_EXTRA_PARAMS, jsonParam);
-                    PushNotificationUtils.registerForPushNotification(context);
-                    AppUtils.createNeatoUserDeviceIdIfNotExists(context);
                 }
 
                 return userDetails;

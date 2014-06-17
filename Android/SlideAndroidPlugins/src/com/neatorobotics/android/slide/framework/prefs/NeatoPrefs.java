@@ -9,23 +9,23 @@ public class NeatoPrefs {
 
     private static final String USER_EMAIL_ID_KEY = "user_email_id";
     private static final String KEY_NEATO_USER_AUTH_TOKEN = "neato_user_auth_token";
+    private static final String USER_VALIDATION_STATUS = "user_validation_status";
+
     private static final String MANAGED_ROBOT_SERIAL_ID = "managed_robot_serial_id";
     private static final String NEATO_USER_DEVICE_ID = "cause_agent_id";
     private static final String LAST_CONNECTED_NEATO_ROBOT_ID = "last_connected_robot_id";
 
-    public static boolean savePreferenceBooleanValue(Context context, String preferenceName, boolean preferenceValue) {
+    public static boolean savePreferenceIntValue(Context context, String preferenceName, int preferance) {
         SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
         Editor preferencesEditor = preferences.edit();
-        preferencesEditor.putBoolean(preferenceName, preferenceValue);
+        preferencesEditor.putInt(preferenceName, preferance);
         boolean result = preferencesEditor.commit();
-
         return result;
     }
 
-    @SuppressWarnings("unused")
-    private static boolean getPreferenceBooleanValue(Context context, String preferenceName, boolean defaultValue) {
+    private static int getPreferenceIntValue(Context context, String preferenceName, int defaultValue) {
         SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
-        boolean preferenceValue = preferences.getBoolean(preferenceName, defaultValue);
+        int preferenceValue = preferences.getInt(preferenceName, defaultValue);
         return preferenceValue;
     }
 
@@ -69,17 +69,20 @@ public class NeatoPrefs {
         savePreference(context, USER_EMAIL_ID_KEY, emailId);
     }
 
-    public static void clearUserEmailAndAuthToken(Context context) {
-        savePreference(context, USER_EMAIL_ID_KEY, "");
-        savePreference(context, KEY_NEATO_USER_AUTH_TOKEN, "");
-    }
-
     public static boolean saveNeatoUserAuthToken(Context context, String authToken) {
         return savePreference(context, NeatoPrefs.KEY_NEATO_USER_AUTH_TOKEN, authToken);
     }
 
     public static String getNeatoUserAuthToken(Context context) {
         return getPreferenceStrValue(context, NeatoPrefs.KEY_NEATO_USER_AUTH_TOKEN);
+    }
+
+    public static boolean saveNeatoUserValidationStatus(Context context, int validationStatus) {
+        return savePreferenceIntValue(context, NeatoPrefs.USER_VALIDATION_STATUS, validationStatus);
+    }
+
+    public static int getNeatoUserValidationStatus(Context context, int defaultValue) {
+        return getPreferenceIntValue(context, NeatoPrefs.USER_VALIDATION_STATUS, defaultValue);
     }
 
     public static boolean saveManagedRobotSerialId(Context context, String serialId) {
@@ -105,7 +108,7 @@ public class NeatoPrefs {
     public static void clearNeatoUserDeviceId(Context context) {
         savePreference(context, NEATO_USER_DEVICE_ID, "");
     }
-    
+
     public static void saveLastConnectedNeatoRobotId(Context context, String robotId) {
         savePreference(context, LAST_CONNECTED_NEATO_ROBOT_ID, robotId);
     }
@@ -113,7 +116,7 @@ public class NeatoPrefs {
     public static String getLastConnectedNeatoRobotId(Context context) {
         return getPreferenceStrValue(context, LAST_CONNECTED_NEATO_ROBOT_ID);
     }
-    
+
     public static void clearLastConnectedNeatoRobotId(Context context) {
         savePreference(context, LAST_CONNECTED_NEATO_ROBOT_ID, "");
     }

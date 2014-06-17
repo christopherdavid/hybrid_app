@@ -10,6 +10,7 @@ import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
+import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.utils.UserAttributes;
@@ -53,7 +54,19 @@ public class UserManager extends Observable {
                 try {
                     IsUserValidatedResult validateUserResult = NeatoUserWebservicesHelper.isUserValidatedRequest(
                             mContext, email);
-                    LogHelper.logD(TAG, "validation status value is " + validateUserResult.result.validation_status);
+
+                    int validationStatus = validateUserResult.result.validation_status;
+                    LogHelper.logD(TAG, "validation status value is " + validationStatus);
+					// Login to neato if this passes.
+					// Currently this API is called just after create user call.
+                    String currentUser = NeatoPrefs.getUserEmailId(mContext);
+                    if (currentUser.equalsIgnoreCase(email)) {
+                        NeatoPrefs.saveNeatoUserValidationStatus(mContext, validationStatus);
+                        if (UserHelper.isUserLoggedIn(mContext)) {
+                            LogHelper.log(TAG, "The user is validated. So login to XMPP");
+                            notifyUserState();
+                        }
+                    }
                     listener.onReceived(validateUserResult);
                 } catch (UserUnauthorizedException e) {
                     listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
@@ -120,8 +133,7 @@ public class UserManager extends Observable {
                     setUserAttributesOnServer(loginResult.getAuthToken(), DeviceUtils.getUserAttributes(mContext));
                     listener.onReceived(userDetailsResult);
 
-                    setChanged();
-                    notifyObservers();
+                    notifyUserState();
                 } catch (UserUnauthorizedException ex) {
                     listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
                 } catch (NeatoServerException ex) {
@@ -130,9 +142,15 @@ public class UserManager extends Observable {
                     listener.onNetworkError(ex.getMessage());
                 }
             }
+
         };
         TaskUtils.scheduleTask(task, 0);
 
+    }
+
+    private void notifyUserState() {
+        setChanged();
+        notifyObservers();
     }
 
     public void createUser(final String username, final String email, final String password,
@@ -150,8 +168,6 @@ public class UserManager extends Observable {
                     setUserAttributesOnServer(createUserResult.result.user_handle,
                             DeviceUtils.getUserAttributes(mContext));
                     listener.onReceived(userDetailsResult);
-                    setChanged();
-                    notifyObservers();
                 } catch (UserUnauthorizedException ex) {
                     listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
                 } catch (NeatoServerException ex) {
@@ -181,8 +197,6 @@ public class UserManager extends Observable {
                     setUserAttributesOnServer(createUserResult.result.user_handle,
                             DeviceUtils.getUserAttributes(mContext));
                     listener.onReceived(userDetailsResult);
-                    setChanged();
-                    notifyObservers();
                 } catch (UserUnauthorizedException e) {
                     listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
                 } catch (NeatoServerException e) {
@@ -212,8 +226,6 @@ public class UserManager extends Observable {
                     setUserAttributesOnServer(createUserResult.result.user_handle,
                             DeviceUtils.getUserAttributes(mContext));
                     listener.onReceived(userDetailsResult);
-                    setChanged();
-                    notifyObservers();
                 } catch (UserUnauthorizedException e) {
                     listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
                 } catch (NeatoServerException e) {
@@ -414,7 +426,6 @@ public class UserManager extends Observable {
 
     public void logoutUser() {
         UserHelper.logout(mContext);
-        setChanged();
-        notifyObservers();
+        notifyUserState();
     }
 }
