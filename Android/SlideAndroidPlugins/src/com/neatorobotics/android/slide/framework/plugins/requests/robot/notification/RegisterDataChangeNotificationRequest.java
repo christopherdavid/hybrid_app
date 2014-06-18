@@ -1,7 +1,5 @@
 package com.neatorobotics.android.slide.framework.plugins.requests.robot.notification;
 
-import java.util.HashMap;
-
 import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,7 +25,7 @@ public class RegisterDataChangeNotificationRequest extends RobotManagerRequest {
 
         RobotNotificationUtil.addRobotDataChangedListener(context, new RobotDataListener() {
             @Override
-            public void onDataReceived(String robotId, int dataCode, HashMap<String, String> data) {
+            public void onDataReceived(String robotId, int dataCode, JSONObject data) {
                 JSONObject robotData = RobotNotificationUtil.getNotificationObject(robotId, dataCode, data);
                 if (robotData != null) {
                     PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, robotData);

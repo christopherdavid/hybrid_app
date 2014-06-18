@@ -1,7 +1,9 @@
 package com.neatorobotics.android.slide.framework.webservice.robot;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+
 import android.content.Context;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
@@ -218,6 +220,47 @@ public class RobotManager {
             }
         };
 
+        TaskUtils.scheduleTask(task, 0);
+    }
+
+    // TODO: Change all the other methods calling
+    // NeatoRobotDataWebservicesHelper.getRobotProfileDetailsRequest2 to call
+    // this method internally.
+    /**
+     * This method gets the profile details result. It also passed keys'
+     * time-stamp in the database.
+     * 
+     * @param robotId
+     * @param keys
+     * @param listener
+     */
+    public void getRobotProfileDetails(final String robotId, final ArrayList<String> keys,
+            final WebServiceBaseRequestListener listener) {
+        LogHelper.logD(TAG, "getRobotKeyDetails called for RobotID = " + robotId);
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    GetRobotProfileDetailsResult2 result = NeatoRobotDataWebservicesHelper
+                            .getRobotProfileDetailsRequest2(mContext, robotId, "");
+                    
+                    // TODO: Check for empty key set.
+                    for (String key : keys) {
+                        if (result.contains(key)) {
+                            RobotProfileDataUtils.updateDataTimestampIfChanged(mContext, result, robotId, key);
+                        }
+                    }
+
+                    listener.onReceived(result);
+                } catch (UserUnauthorizedException ex) {
+                    listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
+                } catch (NeatoServerException ex) {
+                    listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
+                } catch (IOException ex) {
+                    listener.onNetworkError(ex.getMessage());
+                }
+            }
+        };
         TaskUtils.scheduleTask(task, 0);
     }
 

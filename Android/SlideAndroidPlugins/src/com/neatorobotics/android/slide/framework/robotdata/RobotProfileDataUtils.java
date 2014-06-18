@@ -1,6 +1,7 @@
 package com.neatorobotics.android.slide.framework.robotdata;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,9 +15,8 @@ import com.neatorobotics.android.slide.framework.robot.drive.RobotAvailabilityTo
 import com.neatorobotics.android.slide.framework.robot.schedule.SchedulerConstants;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants.RobotProfileValueChangedStatus;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
-import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3;
+import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2.ProfileKeyDetails;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
-import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeysEnum;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeValueKeys;
 
 public class RobotProfileDataUtils {
@@ -159,7 +159,7 @@ public class RobotProfileDataUtils {
     // It also updates the database accordingly.
     public static RobotProfileValueChangedStatus updateDataTimestampIfChanged(Context context,
             GetRobotProfileDetailsResult2 details, String robotId, String key) {
-
+        
         // Check if the key is available in the details.
         if (details.contains(key)) {
             // Check to see if it is changed
@@ -186,45 +186,46 @@ public class RobotProfileDataUtils {
     // different from what are in the database.
     // This will return an HashMap<ProfileAttributeKeysEnum,
     // RobotProfileKeyChangedStatus> with the profile keys.
-    public static HashMap<ProfileAttributeKeysEnum, RobotProfileValueChangedStatus> getChangedProfileKeysMap(
-            Context context, GetRobotProfileDetailsResult2 details, String robotId) {
-        HashMap<ProfileAttributeKeysEnum, RobotProfileValueChangedStatus> profileKeys = new HashMap<ProfileAttributeKeysEnum, RobotProfileValueChangedStatus>();
+    public static HashMap<String, RobotProfileValueChangedStatus> getChangedProfileKeysMap(Context context,
+            GetRobotProfileDetailsResult2 details, String robotId) {
+        HashMap<String, RobotProfileValueChangedStatus> changedProfileKeys = new HashMap<String, RobotProfileValueChangedStatus>();
+
         if ((details != null) && (details.result != null) && ((details.result.profile_details != null))) {
             // We need to know what values have been deleted from the profile
             // parameters also.
             // This is because we want to delete those from the database as well
             // and in some cases notify the user too.
-            for (ProfileAttributeKeysEnum key : ProfileAttributeKeysEnum.values()) {
-                String profileKey = SetRobotProfileDetails3.getProfileKey(key);
-                if (profileKey != null) {
+            HashMap<String, ProfileKeyDetails> profileDetails = details.result.profile_details;
+            Set<String> robotProfileKeys = profileDetails.keySet();
+            for (String key : robotProfileKeys) {
+                if (key != null) {
                     RobotProfileValueChangedStatus profileKeyValueUpdated = RobotProfileDataUtils
-                            .updateDataTimestampIfChanged(context, details, robotId, profileKey);
+                            .updateDataTimestampIfChanged(context, details, robotId, key);
                     if (profileKeyValueUpdated != RobotProfileValueChangedStatus.ROBOT_VALUE_NOT_CHANGED) {
-                        profileKeys.put(key, profileKeyValueUpdated);
+                        changedProfileKeys.put(key, profileKeyValueUpdated);
                     }
                 } else {
                     LogHelper.logD(TAG, "Profile-value is not present for the ProfileAttributeKeysEnum key");
                 }
             }
         }
-        return removeDuplicateKeysFromMapBeforeNotification(profileKeys);
+        return removeDuplicateKeysFromMapBeforeNotification(changedProfileKeys);
     }
 
     // Some profile keys are mutually dependent. So send only 1 of them to the
     // notification layer if multiple of them exist.
-    private static HashMap<ProfileAttributeKeysEnum, RobotProfileValueChangedStatus> removeDuplicateKeysFromMapBeforeNotification(
-            HashMap<ProfileAttributeKeysEnum, RobotProfileValueChangedStatus> changedProfileKeys) {
+    private static HashMap<String, RobotProfileValueChangedStatus> removeDuplicateKeysFromMapBeforeNotification(
+            HashMap<String, RobotProfileValueChangedStatus> changedProfileKeys) {
 
-        boolean isRobotCurrentStateChanged = changedProfileKeys
-                .containsKey(ProfileAttributeKeysEnum.ROBOT_CURRENT_STATE);
+        boolean isRobotCurrentStateChanged = changedProfileKeys.containsKey(ProfileAttributeKeys.ROBOT_CURRENT_STATE);
         boolean isRobotCurrentStateDetailsChanged = changedProfileKeys
-                .containsKey(ProfileAttributeKeysEnum.ROBOT_CURRENT_STATE_DETAILS);
+                .containsKey(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
 
         if (isRobotCurrentStateChanged && isRobotCurrentStateDetailsChanged) {
-            changedProfileKeys.remove(ProfileAttributeKeysEnum.ROBOT_CURRENT_STATE);
+            changedProfileKeys.remove(ProfileAttributeKeys.ROBOT_CURRENT_STATE);
         }
 
         return changedProfileKeys;
     }
-
+    
 }

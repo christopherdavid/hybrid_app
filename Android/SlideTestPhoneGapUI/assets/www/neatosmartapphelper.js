@@ -180,6 +180,9 @@ var ACTION_TYPE_ENABLE_SCHEDULE				= "enableSchedule";
 var ACTION_TYPE_GET_ROBOT_CURRENT_STATE	= "getRobotCurrentState";
 var ACTION_TYPE_GET_ROBOT_CURRENT_STATE_DETAILS	= "getRobotCurrentStateDetails";
 
+var ACTION_TYPE_GET_ROBOT_DATA	= "getRobotData";
+var ACTION_TYPE_DIRECT_CONNECT_TO_ROBOT	= "directConnectToRobot";
+
 //List of keys to send data:
 
 var KEY_EMAIL = 'email';
@@ -411,6 +414,12 @@ var DIFFERENT_ROBOT_CONNECTION_EXISTS = -515;
  * - robot has set the current cleaning state as empty
  */
 var ERROR_NO_CLEANING_STATE_SET = -518;
+
+/**
+ * This error code is returned when 
+ * - robot has not set any Network Information
+ */
+var ERROR_TYPE_NETWORK_INFO_NOT_SET = -519;
 
 
 if(!window.plugins) {
@@ -1731,6 +1740,14 @@ RobotMgr.prototype.getRobotCurrentStateDetails = function(robotId, callbackSucce
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_GET_ROBOT_CURRENT_STATE_DETAILS, [commandParams]);
 };
+
+RobotMgr.prototype.getRobotData = function(robotId, keyArray, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId, 'robotProfileKeys': keyArray};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ROBOT_DATA, [commandParams]);
+};
+
+
 /**
  * This API checks whether there  exists a direct-peer connection from the smartapp to robot.
  * If a robotId is passed, then it returns whether it is directly connected to the smartapp.
@@ -1788,6 +1805,20 @@ RobotMgr.prototype.intendToDrive = function(robotId, callbackSuccess, callbackEr
 	var commandParams = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_INTEND_TO_DRIVE_ROBOT, [commandParams]);
+};
+
+/**
+ * This API initiates a TCP connection between the SmartApp and the robot.
+ * <p>
+ * 
+ * @param robotId 				the serial number of the robot
+ * @param callbackSuccess 		success callback for the API
+ * @param callbackError 		error callback for the API
+ */
+RobotMgr.prototype.directConnectToRobot = function(robotId, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_DIRECT_CONNECT_TO_ROBOT, [commandParams]);
 };
 
 /**
@@ -2809,6 +2840,11 @@ var RobotPluginManager = (function() {
 		getRobotCurrentStateDetails: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getRobotCurrentStateDetails(robotId, callbackSuccess, callbackError);
 		},
+		
+		getRobotData: function(robotId, keyArray, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotData(robotId, keyArray, callbackSuccess, callbackError);
+		},
+		
 		/**
 		 * This API sends drive command to the robot. This API calls Neato Smart App Service.
 		 * <p>
@@ -3513,6 +3549,18 @@ var RobotPluginManager = (function() {
 		 */
 		intendToDrive: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.intendToDrive(robotId, callbackSuccess, callbackError);
+		},
+		
+		/**
+		 * This API initiates a TCP connection between robot and SmartApp.
+		 * <p>
+		 * 
+		 * @param robotId 				the serial number of the robot
+		 * @param callbackSuccess 		success callback for the API
+		 * @param callbackError 		error callback for the API
+		 */
+		directConnectToRobot: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.directConnectToRobot(robotId, callbackSuccess, callbackError);
 		},
 		
 		/**

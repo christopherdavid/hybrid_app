@@ -50,6 +50,8 @@ public class RobotCommandPacketConstants {
     public static final String KEY_CAUSE_AGENT_ID = "causeAgentId";
     public static final String KEY_EMAIL_ID = "emailId";
     public static final String KEY_LINK_CODE = "linkCode";
+    public static final String KEY_NAVIGATION_CONTROL_ID = "navigationControlId";
+    public static final String KEY_SECURE_PASS_KEY = "securepasskey";
 
     // Robot states
     public static final int ROBOT_STATE_CLEANING = 3;

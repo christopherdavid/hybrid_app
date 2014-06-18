@@ -22,6 +22,7 @@ public class ErrorTypes {
     public static final int ERROR_TYPE_NO_INTERNET_CONNECTION = -517;
 
     public static final int ERROR_TYPE_NO_CLEANING_STATE_SET = -518;
+    public static final int ERROR_TYPE_NETWORK_INFO_NOT_SET = -519;
 
     /**
      * Authentication of the user failed. - This will occur when the email

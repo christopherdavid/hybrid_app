@@ -31,8 +31,6 @@ public class RobotProfileConstants {
                 return ProfileAttributeKeys.INTEND_TO_DRIVE;
             case RobotCommandPacketConstants.COMMAND_SCHEDULE_UPDATED:
                 return ProfileAttributeKeys.ROBOT_SCHEDULE_UPDATED;
-            case RobotCommandPacketConstants.COMMAND_TURN_WIFI_ONOFF:
-                return ProfileAttributeKeys.ROBOT_TURN_WIFI_ONOFF;
             default:
                 return null;
         }

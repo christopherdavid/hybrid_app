@@ -10,6 +10,7 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotClearDataRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetRobotCurrentStateDetailsRequest;
+import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetRobotDataRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetSpotDefinationRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.PauseCleaningRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.ResumeCleaningRequest;
@@ -19,6 +20,7 @@ import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.StopCleaningRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.TurnWifiOnOffRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.manual.CancelIntendToDriveRequest;
+import com.neatorobotics.android.slide.framework.plugins.requests.robot.manual.ConnectRobotRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.manual.IntendToDriveRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.manual.IsRobotPeerConnectedRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.manual.RobotDriveRequest;
@@ -71,10 +73,11 @@ public class RobotManagerPlugin extends Plugin {
     private RobotManagerRequest mSetSpotDefinationRequest = new SetSpotDefinationRequest();
     private RobotManagerRequest mGetSpotDefinationRequest = new GetSpotDefinationRequest();
     private RobotManagerRequest mGetRobotCurrentStateDetails = new GetRobotCurrentStateDetailsRequest();
-
+    private RobotManagerRequest mGetRobotDataRequest = new GetRobotDataRequest();
     // Manual Commands
     private RobotManagerRequest mCancelIntendToDriveRequest = new CancelIntendToDriveRequest();
     private RobotManagerRequest mIntendToDriveRequest = new IntendToDriveRequest();
+    private RobotManagerRequest mConnectRobotRequest = new ConnectRobotRequest();
     private RobotManagerRequest mIsRobotPeerConnectedRequest = new IsRobotPeerConnectedRequest();
     private RobotManagerRequest mRobotDriveRequest = new RobotDriveRequest();
     private RobotManagerRequest mStopRobotDriveRequest = new StopRobotDriveRequest();
@@ -116,6 +119,7 @@ public class RobotManagerPlugin extends Plugin {
             ACTION_COMMAND_MAP.put(ActionTypes.TURN_MOTOR_ON_OFF, mTurnMotorOnOffRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.TURN_MOTOR_ON_OFF2, mTurnMotorOnOffRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.INTEND_TO_DRIVE, mIntendToDriveRequest);
+            ACTION_COMMAND_MAP.put(ActionTypes.DIRECT_CONNECT_TO_ROBOT, mConnectRobotRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.CANCEL_INTEND_TO_DRIVE, mCancelIntendToDriveRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.STOP_ROBOT_DRIVE, mStopRobotDriveRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.IS_ROBOT_PEER_CONNECTED, mIsRobotPeerConnectedRequest);
@@ -132,6 +136,7 @@ public class RobotManagerPlugin extends Plugin {
             ACTION_COMMAND_MAP.put(ActionTypes.CREATE_SCHEDULE, mRobotScheduleRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.CLEAR_ROBOT_DATA, mRobotClearDataRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_CURRENT_STATE_DETAILS, mGetRobotCurrentStateDetails);
+            ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_DATA, mGetRobotDataRequest);
 
             Set<String> keys = ACTION_COMMAND_MAP.keySet();
             for (String key : keys) {
@@ -207,12 +212,15 @@ public class RobotManagerPlugin extends Plugin {
         public static final String REGISTER_ROBOT_NOTIFICATIONS2 = "registerRobotNotifications2";
         public static final String UNREGISTER_ROBOT_NOTIFICATIONS2 = "unregisterRobotNotifications2";
         public static final String INTEND_TO_DRIVE = "intendToDrive";
+        public static final String DIRECT_CONNECT_TO_ROBOT = "directConnectToRobot";
         public static final String STOP_ROBOT_DRIVE = "stopRobotDrive";
         public static final String CANCEL_INTEND_TO_DRIVE = "cancelIntendToDrive";
         public static final String IS_ROBOT_PEER_CONNECTED = "isRobotPeerConnected";
         public static final String CLEAR_ROBOT_DATA = "clearRobotData";
         public static final String GET_ROBOT_CURRENT_STATE = "getRobotCurrentState";
         public static final String GET_ROBOT_CURRENT_STATE_DETAILS = "getRobotCurrentStateDetails";
+        public static final String GET_ROBOT_DATA = "getRobotData";
+
     }
 
 }
