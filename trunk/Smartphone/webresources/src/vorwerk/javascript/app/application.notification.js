@@ -116,7 +116,7 @@ function WorkflowNotification(parent) {
                                     robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
                                     robotUiStateHandler.resolveWaitDeffer();
                                     // Clear Error message if any
-                                    if( curRobot().crntErrorCode() == 22000)
+                                    if( curRobot().crntErrorCode() == ROBOT_UI_ERRORALERT_CLEAR)
 		                            {
 		                            	console.log("Clear Message ID :" +  curRobot().crntErrorCode());
 		                            	that.forceCloseDialog();
@@ -166,26 +166,11 @@ function WorkflowNotification(parent) {
                         		message =  $.parseJSON(message);
                         		var messageId = message.messageID;
                         		console.log("Alert Message ID :" + messageId);
-                        		if(messageId != 22000){
+                        		if(messageId != ROBOT_UI_ERRORALERT_CLEAR){
                         			var notificationText   =  $.i18n.t("communication."+ messageId);
-	                        		if(messageId == 20206) // Low Battery alert
-	                            	{
-	                            		var lowBattery_title = $.i18n.t("robotStateCodes.suspend");
-	                            		that.showDialog(dialogType.ERROR, lowBattery_title, notificationText, 
-		                                [{"label":$.i18n.t("common.ok"), "callback":function(e){
-		                                        that.closeDialog();
-		                                        robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
-	                            				 robotUiStateHandler.resolveWaitDeffer();
-		                                    }
-		                                }]);
-	                            		
-	                            		
-	                            	}	else {
-                        				
-                            			that.showLoadingArea(true,notificationType.HINT,notificationText);
-                            		}
+	                        		that.showLoadingArea(true,notificationType.HINT,notificationText);
                             	}
-                            	else if(messageId == 22000)
+                            	else if(messageId == ROBOT_UI_ERRORALERT_CLEAR)
                             	{
                             		console.log("Clear Message ID :" + messageId);
                             		robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
@@ -257,7 +242,7 @@ function WorkflowNotification(parent) {
                             robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
                             robotUiStateHandler.rejectWaitDeffer();
                             // command failed, show last error code or timeout message 
-                            if(curRobot().crntErrorCode() != 0 && curRobot().crntErrorCode() != 22000  && curRobot().crntErrorCode() != 21236) {
+                            if(curRobot().crntErrorCode() != 0 && curRobot().crntErrorCode() != ROBOT_UI_ERRORALERT_CLEAR  && curRobot().crntErrorCode() != 21236) {
                                 var testTitle =  $.i18n.t("error.-" + curRobot().crntErrorCode() +".title");
                                 // check if translation has been found for errorCode
                                 if(testTitle.indexOf(curRobot().crntErrorCode()) == -1) {
