@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
-import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacketUtils;
 import com.neatorobotics.android.slide.framework.robot.drive.RobotAvailabilityToDriveStatus;
 import com.neatorobotics.android.slide.framework.robot.schedule.SchedulerConstants;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants.RobotProfileValueChangedStatus;
@@ -23,24 +22,6 @@ import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.Ne
 public class RobotProfileDataUtils {
 
     private static final String TAG = RobotProfileDataUtils.class.getSimpleName();
-
-    public static String getRobotVirtualState(Context context, GetRobotProfileDetailsResult2 details) {
-        String virtualState = null;
-        if (details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_CLEANING_COMMAND) != null) {
-            LogHelper.logD(TAG, "getRobotVirtualState, retrieved ROBOT_CLEANING_COMMAND changed");
-            String cleaningCommand = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_CLEANING_COMMAND);
-            if (!TextUtils.isEmpty(cleaningCommand)) {
-                LogHelper.logD(TAG, "getRobotVirtualState, retrieved ROBOT_CLEANING_COMMAND changed: "
-                        + cleaningCommand);
-                int commandId = RobotCommandPacketUtils.getRobotIdFromCommand(cleaningCommand);
-                int state = RobotCommandPacketConstants.getRobotStateFromId(commandId);
-                if (state != RobotCommandPacketConstants.ROBOT_STATE_INVALID) {
-                    virtualState = String.valueOf(state);
-                }
-            }
-        }
-        return virtualState;
-    }
 
     public static boolean contains(GetRobotProfileDetailsResult2 details, String key) {
         return details.contains(key);
@@ -159,50 +140,7 @@ public class RobotProfileDataUtils {
     }
 
     public static String getState(Context context, GetRobotProfileDetailsResult2 details) {
-        String actualState = "";
-
-        String virtualState = getRobotVirtualState(context, details);
-        String currentState = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE);
-        
-        long timestampCurrentState = details.getProfileParameterTimeStamp(ProfileAttributeKeys.ROBOT_CURRENT_STATE);
-        // current state is null, get from current state details
-        if (TextUtils.isEmpty(currentState)) {
-            LogHelper.logD(TAG, "ROBOT_CURRENT_STATE is empty, get state from state details");
-            currentState = getRobotCurrentStateFromStateDetails(context, details);
-            timestampCurrentState = details
-                    .getProfileParameterTimeStamp(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
-        }
-
-        // if virtual state is empty, return the current state.
-        if (TextUtils.isEmpty(virtualState)) {
-            actualState = currentState;
-            return actualState;
-        }
-
-        long timestampVirtualState = details.getProfileParameterTimeStamp(ProfileAttributeKeys.ROBOT_CLEANING_COMMAND);
-        try {
-            // If manually controlled always return the current state.
-            // TODO: Check if this is still applicable.
-            if (isRobotManuallyControlled(Integer.valueOf(currentState))) {
-                actualState = currentState;
-                return actualState;
-            }
-        } catch (NumberFormatException e) {
-            LogHelper.log(TAG, "Current state is not valid");
-        }
-
-        // return virtual state if timestamp is greater than current state.
-        if (timestampVirtualState > timestampCurrentState) {
-            actualState = virtualState;
-        } else {
-            LogHelper.log(TAG, "The current state has higher timestamp than the virtual, so ignoring virtual state");
-            actualState = currentState;
-        }
-        return actualState;
-    }
-
-    private static boolean isRobotManuallyControlled(int currentState) {
-        return ((currentState == RobotCommandPacketConstants.ROBOT_STATE_MANUAL_CLEANING));
+        return getRobotCurrentState(context, details);
     }
 
     private static boolean isDataChanged(Context context, GetRobotProfileDetailsResult2 details, String robotId,
@@ -281,17 +219,6 @@ public class RobotProfileDataUtils {
                 .containsKey(ProfileAttributeKeysEnum.ROBOT_CURRENT_STATE);
         boolean isRobotCurrentStateDetailsChanged = changedProfileKeys
                 .containsKey(ProfileAttributeKeysEnum.ROBOT_CURRENT_STATE_DETAILS);
-
-        boolean isRobotCleaningCommandChanged = changedProfileKeys
-                .containsKey(ProfileAttributeKeysEnum.ROBOT_CLEANING_COMMAND);
-
-        if (isRobotCleaningCommandChanged && isRobotCurrentStateChanged) {
-            changedProfileKeys.remove(ProfileAttributeKeysEnum.ROBOT_CURRENT_STATE);
-        }
-
-        if (isRobotCleaningCommandChanged && isRobotCurrentStateDetailsChanged) {
-            changedProfileKeys.remove(ProfileAttributeKeysEnum.ROBOT_CLEANING_COMMAND);
-        }
 
         if (isRobotCurrentStateChanged && isRobotCurrentStateDetailsChanged) {
             changedProfileKeys.remove(ProfileAttributeKeysEnum.ROBOT_CURRENT_STATE);

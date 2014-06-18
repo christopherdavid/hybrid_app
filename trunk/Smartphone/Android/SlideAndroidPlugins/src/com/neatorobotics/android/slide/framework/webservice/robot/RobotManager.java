@@ -180,8 +180,6 @@ public class RobotManager {
                             .getRobotProfileDetailsRequest2(mContext, robotId, "");
 
                     RobotProfileDataUtils.updateDataTimestampIfChanged(context, result, robotId,
-                            ProfileAttributeKeys.ROBOT_CLEANING_COMMAND);
-                    RobotProfileDataUtils.updateDataTimestampIfChanged(context, result, robotId,
                             ProfileAttributeKeys.ROBOT_CURRENT_STATE);
                     listener.onReceived(result);
                 } catch (UserUnauthorizedException ex) {

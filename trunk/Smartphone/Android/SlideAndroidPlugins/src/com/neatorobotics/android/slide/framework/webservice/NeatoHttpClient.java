@@ -13,6 +13,7 @@ import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
@@ -21,17 +22,22 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.params.ConnPerRoute;
+import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
+
 import android.content.Context;
 import android.net.SSLCertificateSocketFactory;
 import android.net.SSLSessionCache;
@@ -40,6 +46,8 @@ public class NeatoHttpClient {
     private static final int SOCKET_TIMEOUT_MILLIS = 60 * 1000; // 60 seconds
     private static final int CONNECTIION_TIMEOUT_MILLIS = 60 * 1000; // 60
                                                                      // seconds
+    private static final int MAX_RETRY_COUNT = 3;
+    private static final int MAX_CONNECTIONS_PER_ROUTE = 5;
 
     private static DefaultHttpClient mClient;
 
@@ -112,10 +120,17 @@ public class NeatoHttpClient {
             schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
             schemeRegistry.register(new Scheme("https", SSLCertificateSocketFactory.getHttpSocketFactory(
                     SOCKET_TIMEOUT_MILLIS, sessionCache), 443));
+            ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRoute() {
+                @Override
+                public int getMaxForRoute(HttpRoute httproute) {
+                    return MAX_CONNECTIONS_PER_ROUTE;
+                }
+            });
+            HttpProtocolParams.setUseExpectContinue(params, false);
 
             ClientConnectionManager manager = new ThreadSafeClientConnManager(params, schemeRegistry);
-
             mClient = new DefaultHttpClient(manager, params);
+            mClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(MAX_RETRY_COUNT, true));
         }
 
         return mClient;
@@ -137,18 +152,25 @@ public class NeatoHttpClient {
                 HttpConnectionParams.setConnectionTimeout(params, CONNECTIION_TIMEOUT_MILLIS);
                 HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MILLIS);
                 HttpConnectionParams.setSocketBufferSize(params, 8192);
+
                 HttpClientParams.setRedirecting(params, false);
                 HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
                 HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
 
                 SchemeRegistry schemeRegistry = new SchemeRegistry();
                 schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-
                 schemeRegistry.register(new Scheme("https", sf, 443));
+                ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRoute() {
+                    @Override
+                    public int getMaxForRoute(HttpRoute httproute) {
+                        return MAX_CONNECTIONS_PER_ROUTE;
+                    }
+                });
+                HttpProtocolParams.setUseExpectContinue(params, false);
 
                 ClientConnectionManager manager = new ThreadSafeClientConnManager(params, schemeRegistry);
-
                 mClient = new DefaultHttpClient(manager, params);
+                mClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(MAX_RETRY_COUNT, true));
             } catch (Exception e) {
 
             }
@@ -173,4 +195,5 @@ public class NeatoHttpClient {
             throws IOException {
         return get(context).execute(post, responseHandler);
     }
+
 }
