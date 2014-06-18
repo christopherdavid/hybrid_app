@@ -56,7 +56,6 @@ public class RobotDataNotifyUtils {
         fetchRobotInformationIfRequired(context, robotId);
         switch (key) {
             case ROBOT_CURRENT_STATE:
-            case ROBOT_CLEANING_COMMAND:
             case ROBOT_CURRENT_STATE_DETAILS:
                 notifyStateChange(context, robotId, details);
                 break;
@@ -149,7 +148,7 @@ public class RobotDataNotifyUtils {
         data.put(JsonMapKeys.KEY_ROBOT_NOTIFICATION, notification);
         RobotNotificationUtil.notifyDataChanged(context, robotId, RobotNotificationConstants.ROBOT_NOTIFICATION, data);
     }
-
+    
     private static void notifyRobotError(Context context, String robotId, String error) {
         if (TextUtils.isEmpty(error)) {
             return;
@@ -202,7 +201,7 @@ public class RobotDataNotifyUtils {
         HashMap<String, String> stateData = new HashMap<String, String>();
         stateData.put(ProfileAttributeKeys.ROBOT_CURRENT_STATE, currentState);
         stateData.put(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS, currentStateDetails);
-        
+
         RobotNotificationUtil.notifyDataChanged(context, robotId,
                 RobotNotificationConstants.ROBOT_CURRENT_STATE_CHANGED, stateData);
 
@@ -212,9 +211,9 @@ public class RobotDataNotifyUtils {
             stateData.put(JsonMapKeys.KEY_ROBOT_STATE_UPDATE, String.valueOf(state));
             RobotNotificationUtil.notifyDataChanged(context, robotId, RobotNotificationConstants.ROBOT_STATE_UPDATE,
                     virtualStateData);
-         } else {
+        } else {
             LogHelper.logD(TAG, "No State for robotId: " + robotId);
-         }
+        }
 
         LogHelper.log(TAG, "Current state Received from Web server: " + currentStateDetails);
 

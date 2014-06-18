@@ -63,19 +63,4 @@ public class RobotCommandPacketConstants {
     public static final int KEY_ROBOT_SCHEDULE_CHANGED = 20001;
     public static final int KEY_ROBOT_DETAILS_CHANGED = 20004;
 
-    // Helper method to get the state of the robot depending on the commandId.
-    public static int getRobotStateFromId(int commandId) {
-        if (commandId == COMMAND_ROBOT_START) {
-            return ROBOT_STATE_CLEANING;
-        } else if (commandId == COMMAND_ROBOT_STOP) {
-            return ROBOT_STATE_IDLE;
-        } else if (commandId == COMMAND_PAUSE_CLEANING) {
-            return ROBOT_STATE_PAUSED;
-        } else if (commandId == COMMAND_RESUME_CLEANING) {
-            return ROBOT_STATE_CLEANING;
-        } else if (commandId == COMMAND_SEND_BASE) {
-            return ROBOT_STATE_RETURNING;
-        }
-        return ROBOT_STATE_INVALID;
-    }
 }
