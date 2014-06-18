@@ -279,6 +279,10 @@
             "message": "Batteriefehler. Bitte den Roboter neu starten!",
             "title": "Fehler"
         },
+        "-21206": {
+            "message": "Batterie ist leer, aufladen nötig vor nächster Reinigung",
+            "title": "Fehler"
+        },
         "-21243": {
             "message": "Sensorfehler. Bitte Roboter neu booten.",
             "title": "Fehler"
@@ -521,7 +525,6 @@
         "20208": "Ermittle meine Position.",
         "intend_drive": "Bitte warten.",
         "20209": "Danke!",
-        "20206": "Batterie ist leer, aufladen nötig vor nächster Reinigung",
         "delete_robot_done": "Roboter __robotName__ wurde entfernt.",
         "fetch_robots": "Öffne die Roboter-Übersicht",
         "20207": "Systemreset. Bitte am Roboter bestätigen.",

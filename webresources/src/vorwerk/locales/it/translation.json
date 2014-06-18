@@ -279,6 +279,10 @@
             "message": "Please press OKAY to continue. Battery issue xxxx.",
             "title": "Error"
         },
+        "-21206": {
+            "message": "My battery is low. I need to charge my battery before I can clean.",
+            "title": "Error"
+        },
         "-21243": {
             "message": "Sensor error. Please reboot robot.",
             "title": "Error"
@@ -521,7 +525,6 @@
         "20208": "Please wait while I check my surrounding.",
         "intend_drive": "Attendi per favore.",
         "20209": "Thank you!",
-        "20206": "My battery is low. I need to charge my battery before I can clean.",
         "delete_robot_done": "Il Robot __robotName__ è stato cancellato.",
         "fetch_robots": "Accedendo alla lista Robot\u2026",
         "20207": "I had to reset. Please press OKAY to restart.",
