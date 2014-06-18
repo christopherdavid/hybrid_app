@@ -1,6 +1,7 @@
 package com.neatorobotics.android.slide.framework.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -26,5 +27,16 @@ public class JsonHelper {
             LogHelper.log(TAG, "Unable to parse the response into the given object" + e.getMessage());
         }
         return null;
+    }
+
+    public static <T> T objectFromJson(final String json, final TypeReference<T> type) {
+        T data = null;
+
+        try {
+            data = sResultMapper.readValue(json, type);
+        } catch (Exception e) {
+            LogHelper.log(TAG, "Unable to convert JSON into object: Exception in objectFromJson - ", e);
+        }
+        return data;
     }
 }

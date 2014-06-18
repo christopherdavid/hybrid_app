@@ -14,6 +14,8 @@ public class NeatoPrefs {
     private static final String MANAGED_ROBOT_SERIAL_ID = "managed_robot_serial_id";
     private static final String NEATO_USER_DEVICE_ID = "cause_agent_id";
     private static final String LAST_CONNECTED_NEATO_ROBOT_ID = "last_connected_robot_id";
+    
+    private static final String ROBOT_SECURE_DRIVE_KEY = "robot_secure_drive_key";
 
     public static boolean savePreferenceIntValue(Context context, String preferenceName, int preferance) {
         SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
@@ -120,4 +122,17 @@ public class NeatoPrefs {
     public static void clearLastConnectedNeatoRobotId(Context context) {
         savePreference(context, LAST_CONNECTED_NEATO_ROBOT_ID, "");
     }
+    
+    public static String getDriveSecureKey(Context context) {
+        return getPreferenceStrValue(context, ROBOT_SECURE_DRIVE_KEY);
+    }
+
+    public static void saveDriveSecureKey(Context context, String secureKey) {
+        savePreference(context, ROBOT_SECURE_DRIVE_KEY, secureKey);
+    }
+
+    public static void clearDriveSecureKey(Context context) {
+        savePreference(context, ROBOT_SECURE_DRIVE_KEY, "");
+    }
+    
 }

@@ -1,5 +1,6 @@
 package com.neatorobotics.android.slide.framework.robot.drive;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -17,6 +18,7 @@ import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPack
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
 import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
+import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeKeys;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3.ProfileAttributeValueKeys;
 import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
@@ -58,8 +60,8 @@ public class RobotDriveHelper {
             // with
             // the wifi_on time and cause agent id.
             String driveDetail = getDriveRequestParams(DEFAULT_ROBOT_DRIVE_WIFI_ON_TIME);
-            RobotDataManager.setRobotProfileParam(mContext, robotId, RobotCommandPacketConstants.COMMAND_INTEND_TO_DRIVE, driveDetail,
-                    listener);
+            RobotDataManager.setRobotProfileParam(mContext, robotId,
+                    RobotCommandPacketConstants.COMMAND_INTEND_TO_DRIVE, driveDetail, listener);
         } else {
             // Drive denied. Send error result
             LogHelper.logD(TAG, "setRobotDriveRequest - denied" + driveStatus.getErrorMessage());
@@ -67,6 +69,13 @@ public class RobotDriveHelper {
             listener.onServerError(driveStatus.getErrorCode(), driveStatus.getErrorMessage());
             return;
         }
+    }
+
+    public void getRobotNetworkInfo(String robotId, WebServiceBaseRequestListener listener) {
+        LogHelper.logD(TAG, "getNetInfoAndConnect - RobotSerialId = " + robotId);
+        ArrayList<String> keys = new ArrayList<String>();
+        keys.add(ProfileAttributeKeys.ROBOT_NETWORK_INFO);
+        RobotManager.getInstance(mContext).getRobotProfileDetails(robotId, keys, listener);
     }
 
     public void cancelRobotDriveRequest(String robotId, WebServiceBaseRequestListener listener) {
@@ -92,7 +101,8 @@ public class RobotDriveHelper {
 
     public void driveRobot(String robotId, String navigationControlId) {
         HashMap<String, String> commandParams = new HashMap<String, String>();
-        commandParams.put(JsonMapKeys.KEY_NAVIGATION_CONTROL_ID, navigationControlId);
+        commandParams.put(RobotCommandPacketConstants.KEY_NAVIGATION_CONTROL_ID, navigationControlId);
+        commandParams.put(RobotCommandPacketConstants.KEY_SECURE_PASS_KEY, NeatoPrefs.getDriveSecureKey(mContext));
         LogHelper.logD(TAG, "Direct connection exists. Send drive command.");
         RobotCommandServiceManager.sendCommandToPeer(mContext, robotId,
                 RobotCommandPacketConstants.COMMAND_DRIVE_ROBOT, commandParams);

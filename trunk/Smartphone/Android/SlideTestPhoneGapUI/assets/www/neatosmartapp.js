@@ -1814,6 +1814,26 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 		},
 		
+		getRobotData: function() {
+			neatoSmartApp.showProgressBar();
+			var robotId = localStorage.getItem('robotId');
+			if ((robotId == null) || (robotId.length == 0)) {
+				alert("Please associate a Robot");
+				return;
+			}
+			// To get the current state details and the notification queued if any
+			//RobotPluginManager.getRobotData(robotId, ['robotCurrentStateDetails', 'robotNotificationMsg'], neatoSmartApp.getRobotDataSuccess, neatoSmartApp.getRobotDataErr);
+			RobotPluginManager.getRobotData(robotId, [], neatoSmartApp.getRobotDataSuccess, neatoSmartApp.getRobotDataErr);
+		},
+		
+		getRobotDataSuccess: function(result) {
+			neatoSmartApp.setResponseText(result);
+			neatoSmartApp.hideProgressBar();
+		},
+		getRobotDataErr: function(error) {
+			neatoSmartApp.hideProgressBar();
+		},
+		
 		setRobotName: function() {
 			neatoSmartApp.showProgressBar();
 			var robotName = document.querySelector('#robotName').value;
@@ -2241,6 +2261,21 @@ var neatoSmartApp = (function() {
 
 			// TODO: add appropriate success callbacks.
 			RobotPluginManager.intendToDrive(robotId, neatoSmartApp.driveRobotSuccess, 
+					neatoSmartApp.driveRobotError);	
+		},
+		
+		directConnect: function() {
+			neatoSmartApp.setResponseText(null);
+			var robotId = localStorage.getItem('robotId');
+			
+			if ((robotId == null) || (robotId.length == 0)) {
+				alert("Please associate a Robot");
+				return;
+			}
+			
+			neatoSmartApp.showProgressBar();
+			// TODO: add appropriate success callbacks.
+			RobotPluginManager.directConnectToRobot(robotId, neatoSmartApp.driveRobotSuccess, 
 					neatoSmartApp.driveRobotError);	
 		},
 		
@@ -2740,7 +2775,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnValidateUser').addEventListener('click', neatoSmartApp.isUserValidated, true);
 			document.querySelector('#btnUnregisterPushMessage').addEventListener('click', neatoSmartApp.unregisterForRobotMessages, true);
 			document.querySelector('#btnIsRobotOnlineVirtual').addEventListener('click', neatoSmartApp.getRobotVirtualOnlineStatus, true);
-			
+			document.querySelector('#btnGetRobotProfileData').addEventListener('click', neatoSmartApp.getRobotData , true);
 			var directConn = localStorage.getItem('isPeerConnection');
 			// Initialize "Turn Motor On/Off" button text 
 			var motorON = localStorage.getItem('isMotorON');
@@ -2779,6 +2814,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnValidateUser').removeEventListener('click', neatoSmartApp.isUserValidated, true);
 			document.querySelector('#btnUnregisterPushMessage').removeEventListener('click', neatoSmartApp.unregisterForRobotMessages, true);
 			document.querySelector('#btnIsRobotOnlineVirtual').removeEventListener('click', neatoSmartApp.getRobotVirtualOnlineStatus, true);
+			document.querySelector('#btnGetRobotProfileData').removeEventListener('click', neatoSmartApp.getRobotData , true);
 		},
 		
 		populateCleaningCategoryList: function () {
@@ -2899,6 +2935,7 @@ var neatoSmartApp = (function() {
 
 			document.querySelector('#btnDriveRobot').addEventListener('click', neatoSmartApp.driveRobot, true);
 			document.querySelector('#btnIntendToDrive').addEventListener('click', neatoSmartApp.intendToDrive, true);
+			document.querySelector('#btnDirectConnect').addEventListener('click', neatoSmartApp.directConnect, true);
 			document.querySelector('#btnIsPeerConnected').addEventListener('click', neatoSmartApp.validatePeerConnection, true);
 			document.querySelector('#btnStopRobotDrive').addEventListener('click', neatoSmartApp.stopRobotDrive, true);
 			document.querySelector('#btnCancelIntendToDrive').addEventListener('click', neatoSmartApp.cancelIntendToDrive, true);
@@ -2918,6 +2955,7 @@ var neatoSmartApp = (function() {
 			document.querySelector('#driveAPIs').setAttribute('aria-hidden', 'true');
 			
 			document.querySelector('#btnDriveRobot').removeEventListener('click', neatoSmartApp.driveRobot, true);
+			document.querySelector('#btnDirectConnect').removeEventListener('click', neatoSmartApp.directConnect, true);
 			document.querySelector('#btnIntendToDrive').removeEventListener('click', neatoSmartApp.intendToDrive, true);
 			document.querySelector('#btnIsPeerConnected').removeEventListener('click', neatoSmartApp.validatePeerConnection, true);
 			document.querySelector('#btnStopRobotDrive').removeEventListener('click', neatoSmartApp.stopRobotDrive, true);

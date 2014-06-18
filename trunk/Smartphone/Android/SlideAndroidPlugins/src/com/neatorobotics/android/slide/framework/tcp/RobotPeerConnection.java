@@ -422,13 +422,13 @@ public class RobotPeerConnection {
     }
 
     public void sendConnectionPingPacket(String robotId) {
-        RobotCommandPacket packet = RobotPeerConnectionUtils.getConnectionPingPacket(mContext);
-        sendRobotCommand(robotId, packet);
+        //RobotCommandPacket packet = RobotPeerConnectionUtils.getConnectionPingPacket(mContext);
+        //sendRobotCommand(robotId, packet);
     }
 
     public void sendConnectionBreakPacket(String robotId) {    	
-        RobotCommandPacket packet = RobotPeerConnectionUtils.getConnectionBreakPacket(mContext);
-        sendRobotCommand(robotId, packet);
+        //RobotCommandPacket packet = RobotPeerConnectionUtils.getConnectionBreakPacket(mContext);
+        //sendRobotCommand(robotId, packet);
     }
 
     private int readInt(DataInputStream din) throws IOException {

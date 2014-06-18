@@ -39,6 +39,8 @@ public class JsonMapKeys {
     public static final String KEY_ROBOT_NAME = "robotName";
     public static final String KEY_ROBOT_ONLINE_STATUS = "online";
 
+    public static final String KEY_ROBOT_PROFILE_KEYS = "robotProfileKeys";
+    public static final String KEY_ROBOT_PROFILE_DATA = "robotProfileData";
     // Cleaning API params
     public static final String KEY_CLEANING_CATEGORY = "cleaningCategory";
     public static final String KEY_SPOT_CLEANING_AREA_LENGTH = "spotCleaningAreaLength";

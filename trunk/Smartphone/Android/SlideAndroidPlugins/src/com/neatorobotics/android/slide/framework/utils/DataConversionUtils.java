@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -93,12 +94,12 @@ public class DataConversionUtils {
             String robotCurrentStateDetails = hash.get(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
             if (!TextUtils.isEmpty(robotCurrentStateDetails)) {
                 try {
-                    
+
                     jsonRobotCurrentStateDetails = new JSONObject(robotCurrentStateDetails);
                     if (jsonRobotCurrentStateDetails != null) {
-	                    // Remove the string value
-						hash.remove(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
-						// Add the JSONObject
+                        // Remove the string value
+                        hash.remove(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
+                        // Add the JSONObject
                         jObject.put(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS, jsonRobotCurrentStateDetails);
                     }
                 } catch (Exception e) {
@@ -118,4 +119,50 @@ public class DataConversionUtils {
         }
         return array;
     }
+
+    public static ArrayList<String> toStringArray(JSONArray array) {
+        ArrayList<String> stringArray = new ArrayList<String>();
+        if (array != null) {
+            for (int i = 0, count = array.length(); i < count; i++) {
+                try {
+                    String entity = array.getString(i);
+                    stringArray.add(entity);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return stringArray;
+    }
+
+    public static JSONObject getJsonObject(String value) {
+        try {
+            JSONObject obj = new JSONObject(value);
+            return obj;
+        } catch (JSONException e) {
+
+        }
+        return null;
+    }
+
+    public static JSONArray getJsonArray(String value) {
+        try {
+            JSONArray arr = new JSONArray(value);
+            return arr;
+        } catch (JSONException e) {
+
+        }
+        return null;
+    }
+
+    public static ArrayList<String> listFromSet(Set<String> stringSet) {
+        ArrayList<String> list = new ArrayList<String>();
+        if (stringSet != null) {
+            for (String item : stringSet) {
+                list.add(item);
+            }
+        }
+        return list;
+    }
+
 }

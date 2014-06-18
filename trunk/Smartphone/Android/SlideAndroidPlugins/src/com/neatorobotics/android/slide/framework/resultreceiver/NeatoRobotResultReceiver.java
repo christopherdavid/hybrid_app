@@ -1,6 +1,7 @@
 package com.neatorobotics.android.slide.framework.resultreceiver;
 
-import java.util.HashMap;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,11 +61,13 @@ public class NeatoRobotResultReceiver extends ResultReceiver {
                 if (mRobotDataListener != null) {
                     String robotId = resultData.getString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID);
                     int dataCode = resultData.getInt(NeatoRobotResultReceiverConstants.ROBOT_DATA_KEY_CODE);
-                    @SuppressWarnings("unchecked")
-                    HashMap<String, String> data = (HashMap<String, String>) resultData
-                            .getSerializable(NeatoRobotResultReceiverConstants.ROBOT_DATA_KEY);
+                    String data = resultData.getString(NeatoRobotResultReceiverConstants.ROBOT_DATA_KEY);
                     if (!TextUtils.isEmpty(robotId)) {
-                        mRobotDataListener.onDataReceived(robotId, dataCode, data);
+                        try {
+                            mRobotDataListener.onDataReceived(robotId, dataCode, new JSONObject(data));
+                        } catch (JSONException e) {
+                            LogHelper.log(TAG, "The data sent is not syntaxtically correct :" + data);
+                        }
                     }
                 } else {
                     LogHelper.log(TAG, "mRobotDataListener is NULL");
