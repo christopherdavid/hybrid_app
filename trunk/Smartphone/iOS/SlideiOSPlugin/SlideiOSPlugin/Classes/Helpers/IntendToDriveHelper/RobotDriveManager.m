@@ -97,6 +97,7 @@
 
 // TCPConnectionHelper callbacks.
 - (void)connectedOverTCP:(NSString*)host toRobotWithId:(NSString *)robotId {
+    debugLog(@"");
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
     [[XMPPRobotDataChangeManager sharedXmppDataChangeManager]
      notifyDataChangeForRobotId:robotId withKeyCode:[NSNumber numberWithInt:ROBOT_IS_CONNECTED] andData:data];
@@ -298,6 +299,36 @@
     NeatoRobot *robot = [NeatoRobotHelper getRobotForId:[notification.userInfo objectForKey:KEY_ROBOT_ID]];
     robot.robotId = [notification.userInfo objectForKey:KEY_ROBOT_ID];
     [self tcpConnectionDisconnectedWithError:[notification.userInfo objectForKey:KEY_DISCONNECTION_ERROR] forRobot:robot forcedDisconnected:[[notification.userInfo objectForKey:KEY_TCP_FORCED_DISCONNECTED] boolValue]];
+}
+
+// It checks if user is already connected to the same robot/other robot on TCP or not.
+// If already not connected then it can try for direct connecton.
++ (id)canRequestDirectConnectionWithRobotId:(NSString *)robotId {
+    // Check frst if TCP is connected.
+    TCPConnectionHelper *tcpConnectionHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
+    BOOL tcpConnected = [tcpConnectionHelper isConnected];
+    if (tcpConnected) {
+        NSInteger errorCode = UI_DIFFERENT_ROBOT_ALREADY_CONNECTED;
+        NSString *errorMessage = @"Different robot is currrently being driven.";
+        // Check if this robot is already connected on TCP.
+        if ([tcpConnectionHelper isRobotConnectedOverTCP:robotId]) {
+            errorCode = UI_ROBOT_ALREADY_CONNECTED;
+            errorMessage = @"Robot already connected.";
+        }
+        return [AppHelper nserrorWithDescription:errorMessage code:errorCode];
+    }
+    return [NSNumber numberWithBool:YES];
+}
+
+- (void)connectOverTCPWithRobotId:(NSString *)robotId ipAddress:(NSString *)ipAddress {
+    self.retainedSelf = self;
+    if (ipAddress) {
+        NeatoRobot *robot = [[NeatoRobot alloc] init];
+        robot.robotId = robotId;
+        robot.ipAddress = ipAddress;
+        TCPConnectionHelper *tcpHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
+        [tcpHelper connectToRobotOverTCP2:robot delegate:self];
+    }
 }
 
 - (void)dealloc {

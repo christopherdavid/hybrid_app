@@ -262,4 +262,6 @@
  * Robot already has some other user associated with it.
  */
 #define UI_ERROR_ROBOT_HAS_ASSOCIATED_USER -192
+#define UI_ERROR_TYPE_NETWORK_INFO_NOT_SET  -519
+
 

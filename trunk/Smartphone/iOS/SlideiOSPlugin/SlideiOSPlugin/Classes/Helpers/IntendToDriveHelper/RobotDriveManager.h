@@ -18,4 +18,6 @@
 - (void)cancelIntendToDriveForRobotId:(NSString *)robotId;
 - (void)stopDriveRobotForRobotId:(NSString *)robotId;
 - (id)isConnectedOverTCPWithRobotId:(NSString *)robotId;
++ (id)canRequestDirectConnectionWithRobotId:(NSString *)robotId;
+- (void)connectOverTCPWithRobotId:(NSString *)robotId ipAddress:(NSString *)ipAddress;
 @end

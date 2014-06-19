@@ -32,5 +32,11 @@
 + (NSString *)crittercismAppId;
 + (void)saveLastUsedRobotId:(NSString *)robotId;
 + (NSString *)lastUsedRobotId;
-+ (void)removeLastUsedRobotId;
++ (NSArray *)removeInternalKeysFromRobotProfileKeys:(NSArray *)profileKeys;
++ (void)saveDirectConnectionScretKey:(NSString *)secretKey;
++ (NSString *)directConnectionScretKey;
+/*
+ Clear all USER DEFAULTS data.
+ */
++ (void)clearAppDefaultsData;
 @end

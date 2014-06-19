@@ -6,5 +6,4 @@
 
 + (NSInteger)robotCurrentStateFromRobotProfile:(NSDictionary *)robotProfile;
 + (NSInteger)robotActualStateFromRobotProfile:(NSDictionary *)robotProfile;
-+ (NSInteger)robotVirtualStateFromRobotProfile:(NSDictionary *)robotProfile;
 @end

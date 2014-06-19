@@ -36,8 +36,16 @@
 - (NSData *)getRobotCommand2WithId:(NSInteger)commandId withParams:(NSDictionary *)params andRequestId:(NSString *)requestId {
     debugLog(@"");
     CommandsHelper *commandHelper = [[CommandsHelper alloc] init];
-    NSString *command = [NSString stringWithFormat:TEMP_TCP_NEW_ROBOT_COMMAND_FORMAT, [commandHelper versionForCommand], [AppHelper getAppSignature], commandId, [[NSNumber numberWithDouble:[AppHelper currentTimeStamp]] stringValue], [commandHelper generateXMLForParams:params]];
-    debugLog(@"command = %@", command);
+    
+    // Add 'secret key' in command params.
+    NSString *secretKey = [AppHelper directConnectionScretKey];
+    NSMutableDictionary *newParams = [params mutableCopy];
+    if (secretKey) {
+        [newParams setObject:secretKey forKey:KEY_SECURE_PASS_KEY];
+    }
+    
+    NSString *command = [NSString stringWithFormat:TEMP_TCP_NEW_ROBOT_COMMAND_FORMAT, [commandHelper versionForCommand], [AppHelper getAppSignature], commandId, [[NSNumber numberWithDouble:[AppHelper currentTimeStamp]] stringValue], [commandHelper generateXMLForParams:newParams]];
+    debugLog(@"TCP command = %@", command);
     return [command dataUsingEncoding:NSUTF8StringEncoding];
 }
 

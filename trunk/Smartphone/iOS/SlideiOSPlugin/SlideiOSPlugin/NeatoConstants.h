@@ -159,6 +159,14 @@
 #define KEY_ROBOT_ONLINE_STATUS_DATA @"robotOnlineStatus"
 #define KEY_FAILED_COMMAND_ID @"failedCommandId"
 
+// New Profile detail keys
+#define KEY_NET_INFO @"NetInfo"
+#define KEY_CONFIG_INFO @"ConfigInfo"
+#define KEY_STATE_DETAILS @"StateDetails"
+#define KEY_CLEANING_DETAILS @"CleaningDetails"
+#define KEY_ROBOT_DIRECT_CONNECT_SCRET @"robotDirectConnectSecret"
+#define KEY_SECURE_PASS_KEY @"securePassKey"
+
 //Key Codes for profile data changes.
 #define ROBOT_CURRENT_STATE_CHANGED_CODE 4001
 #define ROBOT_STATE_UPDATE_CODE 4003
@@ -172,6 +180,7 @@
 #define ROBOT_ERROR_CODE 4014
 #define ROBOT_ONLINE_STATUS_CHANGED_CODE 4015
 #define ROBOT_COMMAND_FAILED  4016
+#define ROBOT_PROFILE_DATA_CHANGED_CODE 4050
 
 #define KEY_ROBOT_ID @"robotId"
 #define KEY_ROBOT_DATA_ID @"robotDataKeyId"

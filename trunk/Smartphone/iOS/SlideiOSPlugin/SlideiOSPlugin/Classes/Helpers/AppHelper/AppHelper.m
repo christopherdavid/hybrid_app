@@ -256,8 +256,37 @@
     return [[NSUserDefaults standardUserDefaults] objectForKey:KEY_LAST_USED_ROBOT_ID];
 }
 
-+ (void)removeLastUsedRobotId {
++ (NSArray *)removeInternalKeysFromRobotProfileKeys:(NSArray *)profileKeys {
+    NSArray *keysToRemove = @[KEY_ROBOT_CLEANING_COMMAND,
+                              KEY_INTEND_TO_DRIVE,
+                              KEY_AVAILABLE_TO_DRIVE,
+                              KEY_ROBOT_ONLINE_STATUS_DATA,
+                              KEY_NAME,
+                              KEY_SERIAL_NUMBER,
+                              KEY_ROBOT_SCHEDULE_UPDATED];
+    
+    NSMutableArray *filteredKeys = [profileKeys mutableCopy];
+    for (NSString *key in keysToRemove) {
+        if ([filteredKeys containsObject:key]) {
+            [filteredKeys removeObject:key];
+        }
+    }
+    return filteredKeys;
+}
+
++ (void)saveDirectConnectionScretKey:(NSString *)secretKey {
+    if (secretKey) {
+        [[NSUserDefaults standardUserDefaults] setObject:secretKey forKey:KEY_ROBOT_DIRECT_CONNECT_SCRET];
+    }
+}
+
++ (NSString *)directConnectionScretKey {
+    return [[NSUserDefaults standardUserDefaults] objectForKey:KEY_ROBOT_DIRECT_CONNECT_SCRET];
+}
+
++ (void)clearAppDefaultsData {
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:KEY_LAST_USED_ROBOT_ID];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:KEY_ROBOT_DIRECT_CONNECT_SCRET];
 }
 
 @end
