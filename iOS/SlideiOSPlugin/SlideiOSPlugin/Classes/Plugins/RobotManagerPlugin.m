@@ -30,6 +30,7 @@
 
 // Helper class
 #import "TCPConnectionHelper.h"
+#import "RobotDriveManager.h"
 
 @interface RobotManagerPlugin ()
 
@@ -1229,6 +1230,104 @@
                                         [weakSelf sendSuccessResultAsDictionary:data forCallbackId:callbackId];
                                     }];
   
+}
+
+- (void)getRobotData:(CDVInvokedUrlCommand *)command {
+  debugLog(@"");
+  NSString *callbackId = command.callbackId;
+  NSDictionary *parameters = [command.arguments objectAtIndex:0];
+  debugLog(@"received parameters : %@", parameters);
+  NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+  __block NSArray *profileKeys = [parameters objectForKey:KEY_ROBOT_PROFILE_KEYS];
+
+  // Save robotId of robot, selected by the user(JS layer).
+  [AppHelper saveLastUsedRobotId:robotId];
+  __weak typeof(self) weakSelf = self;
+  [self.serverManager profileDetailsForRobot:robotId
+                                  completion:^(NSDictionary *result, NSError *error) {
+                                    if (error) {
+                                      debugLog(@"Failed to get robot profile details with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                                      [weakSelf sendError:error forCallbackId:callbackId];
+                                      return;
+                                    }
+                                    NSDictionary *profileDetails = result;
+                                    
+                                    // If profileKeys have some keys, send data for only those keys,
+                                    // Else send data for all keys of 'robot profile'.
+                                    if (!profileKeys || (profileKeys.count == 0)) {
+                                        profileKeys = [AppHelper removeInternalKeysFromRobotProfileKeys:profileDetails.allKeys];
+                                    }
+                                    
+                                    NSMutableDictionary *robotDataDict = [[NSMutableDictionary alloc] init];
+                                    XMPPRobotDataChangeManager *xmppDataChangeManager = [XMPPRobotDataChangeManager sharedXmppDataChangeManager];
+
+                                    for (NSString *key in profileKeys) {
+                                      id valueForKey = [[profileDetails valueForKey:key] valueForKey:KEY_VALUE];
+                                      if (valueForKey) {
+                                        [robotDataDict setObject:valueForKey forKey:key];
+                                          
+                                        // Update the timestamp in DB.
+                                        [xmppDataChangeManager updateDataTimestampIfChangedForKey:key withProfile:profileDetails];
+                                      }
+                                    }
+
+                                    // Send the data back to UI layer.
+                                    NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+                                    [data setValue:robotDataDict forKey:KEY_ROBOT_DATA];
+                                    [data setValue:robotId forKey:KEY_ROBOT_ID];
+                                    [weakSelf sendSuccessResultAsDictionary:data forCallbackId:callbackId];
+                                  }];
+}
+
+- (void)directConnectToRobot:(CDVInvokedUrlCommand *)command {
+    debugLog(@"");
+    NSString *callbackId = command.callbackId;
+    NSDictionary *parameters = [command.arguments objectAtIndex:0];
+    debugLog(@"received parameters : %@", parameters);
+    NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
+    
+    // Send error if robot is already connected to same robot or some other robot.
+    id canRequestDirectConnection = [RobotDriveManager canRequestDirectConnectionWithRobotId:robotId];
+    if ([canRequestDirectConnection isKindOfClass:[NSError class]]) {
+        NSError *connectionError = (NSError *)canRequestDirectConnection;
+        [self sendError:connectionError forCallbackId:callbackId];
+        return;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.serverManager profileDetailsForRobot:robotId
+                                    completion:^(NSDictionary *result, NSError *error) {
+                                        if (error) {
+                                            debugLog(@"Failed to make direct connection with error = %@, info = %@", [error localizedDescription], [error userInfo]);
+                                            [weakSelf sendError:error forCallbackId:callbackId];
+                                            return;
+                                        }
+                                        NSDictionary *profileDetails = result;
+                                        NSString *netInfoJsonString = [[profileDetails objectForKey:KEY_NET_INFO] objectForKey:KEY_VALUE];
+                                        NSDictionary *netInfoDict = [AppHelper parseJSON:[netInfoJsonString dataUsingEncoding:NSUTF8StringEncoding]];
+                                        NSString *ipAddress = [netInfoDict objectForKey:KEY_ROBOT_IP_ADDRESS];
+                                        NSString *secretKey = [netInfoDict objectForKey:KEY_ROBOT_DIRECT_CONNECT_SCRET];
+                                        
+                                        if (ipAddress && secretKey) {
+                                            // Save secret key to make direct connection(TCP).
+                                            [AppHelper saveDirectConnectionScretKey:secretKey];
+                                            
+                                            // Robot is ready to drive.
+                                            [[[RobotDriveManager alloc] init] connectOverTCPWithRobotId:robotId ipAddress:ipAddress];
+                                            
+                                            // Send the data back to UI layer.
+                                            NSMutableDictionary *robotDataDict = [[NSMutableDictionary alloc] init];
+                                            NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+                                            [data setValue:robotDataDict forKey:KEY_ROBOT_DATA];
+                                            [data setValue:robotId forKey:KEY_ROBOT_ID];
+                                            [weakSelf sendSuccessResultAsDictionary:data forCallbackId:callbackId];
+                                        }
+                                        else {
+                                            NSError *error = [AppHelper nserrorWithDescription:@"Failed to get Network info of robot." code:UI_ERROR_TYPE_NETWORK_INFO_NOT_SET];
+                                            [weakSelf sendError:error forCallbackId:callbackId];
+                                            return;
+                                        }
+                                    }];
 }
 
 @end

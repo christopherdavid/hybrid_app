@@ -18,6 +18,7 @@
 #define KEY_SERIAL_NUMBER @"serial_number"
 #define KEY_SPOT_CLEANING_AREA_LENGTH @"spotCleaningAreaLength"
 #define KEY_SPOT_CLEANING_AREA_HEIGHT @"spotCleaningAreaHeight"
+#define KEY_ROBOT_PROFILE_KEYS @"robotProfileKeys"
 //Used for error
 #define KEY_ERROR_CODE @"errorCode"
 #define KEY_ERROR_MESSAGE @"errorMessage"

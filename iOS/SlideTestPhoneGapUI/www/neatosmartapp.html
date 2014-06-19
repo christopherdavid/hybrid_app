@@ -147,10 +147,10 @@
 		<div class="defaultSectionHeader">Test APIs</div>
 		
 		<br><input type="button" id="btnClearRobotData" value="Clear Robot Data" class="gradientButton"></input>
-		<br><input type="button" id="btnOpenClosePeerConn2" value="Open Connection (New)" class="gradientButton"></input>
+		<br><input type="button" id="btnOpenClosePeerConn2" value="Open Connection (New)" class="gradientButton" aria-hidden=true></input>
 		<br><input type="button" id="btnEnableSchedule" value="Enable Schedule (New)" class="gradientButton"></input>
 		<br><input type="button" id="btnIsScheduleEnabled" value="Is Schedule Enabled (New)" class="gradientButton"></input>
-		<br><input type="button" id="btnSetRobotClock" value="Set Robot Clock (New)" class="gradientButton"></input>
+		<br><input type="button" id="btnSetRobotClock" value="Set Robot Clock (New)" class="gradientButton" aria-hidden=true></input>
 		<br><input type="button" id="btnTestDissociateRobot" value="Dissociate Robot" class="gradientButton"></input>	
 		<br><input type="button" id="btnTestAllAssociatedRobots" value="All Associated Robots" class="gradientButton"></input>
 		<br><input type="button" id="btnTestRobotDetail" value="Robot Detail" class="gradientButton"></input>
@@ -160,9 +160,10 @@
 		<br><input type="button" id="btnManageRobotWiFi" value="Manage Robot WiFi" class="gradientButton" ></input>
 		<br><input type="button" id="btnUnregisterPushMessage" value="Unregister Push Msg" class="gradientButton" ></input>
 		<br><input type="button" id="btnIsRobotOnlineVirtual" value="Is Robot Online Virtual" class="gradientButton" ></input>
-		<br><input type="button" id="btnSendStartStopCleanCommand2" value="Start Cleaning (Deprecated)" class="gradientButton"></input>
-		<br><input type="button" id="btnPauseCleaningCommand" value="Pause Cleaning (Deprecated)" class="gradientButton"></input>
+		<br><input type="button" id="btnSendStartStopCleanCommand2" value="Start Cleaning (Deprecated)" class="gradientButton" aria-hidden=true></input>
+		<br><input type="button" id="btnPauseCleaningCommand" value="Pause Cleaning (Deprecated)" class="gradientButton" aria-hidden=true></input>
 		<br><input type="button" id="btnSendStartStopCleanCommand" value="Start Cleaning (Old)" class="gradientButton" aria-hidden = true></input>
+		<br><input type="button" id="btnGetRobotProfileData" value="Get Robot Data" class="gradientButton"></input>
 	</section>
 	
 	<section id="cleaningAPIs"  aria-hidden=true>
@@ -210,6 +211,7 @@
 			<select name="NavigationControlList" id="DriveControlList">
 			</select>
 		</div>
+			<br><input type="button" id="btnDirectConnect" value="Direct Robot Connect" class="gradientButton"></input>
 			<br><input type="button" id="btnIntendToDrive" value="Intend to drive" class="gradientButton"></input>
 			<br><input type="button" id="btnCancelIntendToDrive" value="Cancel Intend to Drive" class="gradientButton"></input>
 			<br><input type="button" id="btnDriveRobot" value="Drive" class="gradientButton"></input>
@@ -232,8 +234,8 @@
 		</div>
 		<br><input type="button" id="btnSetSpotDefinition" value="Set Spot Definition" class="gradientButton"></input>
 		<br><input type="button" id="btnGetSpotDefinition" value="Get Spot Definition" class="gradientButton"></input>
-   	    <br><input type="button" id="btnGetCleaningDetails" value="Get Current Cleaning Details" class="gradientButton"></input>
-	</section>
+		<br><input type="button" id="btnGetCleaningDetails" value="Get Current Cleaning Details" class="gradientButton"></input>
+   </section>
 
 	<section id="robotCommands"  aria-hidden=true>
 		<div class="defaultSectionHeader">Robot Commands</div>
@@ -252,7 +254,7 @@
 		<div class="defaultSectionHeader">Robot Settings</div>		 		
 		<br><br><input type="button" id="btnGoToSetRobotName" value="Set Name" class="gradientButton"></input>
 		<br><input type="button" id="btnGetRobotDetail" value="Robot Detail" class="gradientButton"></input>
-		<br><input type="button" id="btnEnableNotifications" value="Notifications ON" class="gradientButton"></input>	
+		<br><input type="button" id="btnEnableNotifications" value="Notifications ON" class="gradientButton" aria-hidden=true></input>	
 		<br><input type="button" id="btnNotificationSettings" value="Notifications" class="gradientButton"></input>			
 		<br><input type="button" id="btnGoToAtlas" value="Atlas" class="gradientButton" aria-hidden=true></input>					
 	</section>
@@ -306,7 +308,7 @@
 	
 	<section id="addRobot"  aria-hidden=true>
 		<div class="defaultSectionHeader">Add Robot</div>
-		<br><br><input type="button" id="btnDiscoverRobots" value="Discover Robots" class="gradientButton"></input>		
+		<br><br><input type="button" id="btnDiscoverRobots" value="Discover Robots" class="gradientButton" aria-hidden=true></input>		
 		<br><input type="button" id="btnAssociateRobotDirect" value="Associate Manually" class="gradientButton"></input>
 		<br><input type="button" id="btnGotoLinkRobot" value="Initiate Link Robot" class="gradientButton"></input>
 		<br><input type="button" id="btnGetAllAssociated" value="All Associated" class="gradientButton"></input>

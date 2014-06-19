@@ -183,6 +183,7 @@
         [self.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
                                   authToken:[NeatoUserHelper getUsersAuthToken]
                                  completion:^(NSDictionary *result, NSError *error) {
+                                     [AppHelper clearAppDefaultsData];
                                      [weakSelf loginNativeUser:email
                                                   password:password
                                                 completion:^(NSDictionary *result, NSError *error) {
@@ -236,6 +237,7 @@
         [self.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
                                   authToken:[NeatoUserHelper getUsersAuthToken]
                                  completion:^(NSDictionary *result, NSError *error) {
+                                     [AppHelper clearAppDefaultsData];
                                      [weakSelf createNeatoUser:neatoUser
                                                     completion:^(NSDictionary *result, NSError *error) {
                                                         if (error) {
@@ -280,6 +282,7 @@
                                                  [weakSelf.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
                                                                                authToken:[NeatoUserHelper getUsersAuthToken]
                                                                               completion:^(NSDictionary *result, NSError *error) {
+                                                                                  [AppHelper clearAppDefaultsData];
                                                                                   // User not logged-in.
                                                                                   [weakSelf sendSuccessResultOKWithInt:[[NSNumber numberWithBool:NO] integerValue] forCallbackId:callbackId];
                                                                               }];
@@ -564,6 +567,7 @@
     [self.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
                               authToken:[NeatoUserHelper getUsersAuthToken]
                              completion:^(NSDictionary *result, NSError *error) {
+                                 [AppHelper clearAppDefaultsData];
                                  [weakSelf sendSuccessResultAsString:@"User logged out." forCallbackId:callbackId];
                              }];
 }

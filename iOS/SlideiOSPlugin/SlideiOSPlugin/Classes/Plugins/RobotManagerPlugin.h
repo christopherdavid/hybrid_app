@@ -60,6 +60,7 @@
 - (void)getRobotCleaningCategory:(CDVInvokedUrlCommand *)command;
 - (void)getRobotCurrentStateDetails:(CDVInvokedUrlCommand *)command;
 - (void)getRobotCurrentState:(CDVInvokedUrlCommand *)command;
-
+- (void)getRobotData:(CDVInvokedUrlCommand *)command;
+- (void)directConnectToRobot:(CDVInvokedUrlCommand *)command;
 
 @end

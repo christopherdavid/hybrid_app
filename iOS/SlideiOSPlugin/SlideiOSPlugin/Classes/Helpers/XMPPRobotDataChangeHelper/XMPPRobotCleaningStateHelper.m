@@ -30,21 +30,6 @@
     return ROBOT_STATE_INVALID;
 }
 
-// If any queued command on server is returned in robot profile details, its
-// commandId determines virtual state of robot.
-+ (NSInteger)robotVirtualStateFromRobotProfile:(NSDictionary *)robotProfile {
-    debugLog(@"");
-    NSInteger virtualState = ROBOT_STATE_INVALID;
-    if ([robotProfile objectForKey:KEY_ROBOT_CLEANING_COMMAND]) {
-        NSString *cleaningCommand = [[robotProfile objectForKey:KEY_ROBOT_CLEANING_COMMAND] objectForKey:@"value"];
-        CommandsHelper *helper = [[CommandsHelper alloc] init];
-        NSString *commandId = [helper commandIdFromXmlCommand:cleaningCommand];
-        virtualState = [self robotStateFromCommandId:[commandId integerValue]];
-        debugLog(@"Cleaning command id is %@ and virtual state is %d", commandId, virtualState);
-    }
-    return virtualState;
-}
-
 // Returns the current state from profile details.
 + (NSInteger)robotCurrentStateFromRobotProfile:(NSDictionary *)robotProfile {
     debugLog(@"");
@@ -56,36 +41,17 @@
     return currentState;
 }
 
-// Virtual state has preference over current state. So if the profile from server
-// contains a valid virtual state that will be considered as actual state.
-// Otherwise current state is returned as the actual state.
+// For now Current state is returned as the actual state.
+// (As virtual state concept is removed).
 + (NSInteger)robotActualStateFromRobotProfile:(NSDictionary *)robotProfile {
     debugLog(@"");
     NSInteger actualState = ROBOT_STATE_INVALID;
-    NSInteger virtualState = [self robotVirtualStateFromRobotProfile:robotProfile];
     NSInteger currentState = [self robotCurrentStateFromRobotProfile:robotProfile];
-    if ((virtualState != ROBOT_STATE_INVALID) && [XMPPRobotCleaningStateHelper shouldPreferVirtualStateOverCurrentStateForProfile:robotProfile]) {
-        actualState = virtualState;
-    }
-    else if (currentState != ROBOT_STATE_INVALID) {
+    if (currentState != ROBOT_STATE_INVALID) {
         actualState = currentState;
     }
     debugLog(@"Actual state of robot is %d", actualState);
     return actualState;
-}
-
-+ (BOOL)shouldPreferVirtualStateOverCurrentStateForProfile:(NSDictionary *)robotProfile {
-    debugLog(@"");
-    // To avoid inconsistency in setting robot state,
-    // notify state change only when virtual state's(cleaning command) timestamp is greater than current state timestamp.
-    NSDictionary *cleaningCommandDict = [robotProfile objectForKey:KEY_ROBOT_CLEANING_COMMAND];
-    NSDictionary *robotCurrentStateDict = [robotProfile objectForKey:KEY_ROBOT_CURRENT_STATE];
-    if (cleaningCommandDict && robotCurrentStateDict) {
-        NSString *cleaningCommandTimeStamp = [cleaningCommandDict objectForKey:KEY_TIMESTAMP];
-        NSString *robotCurrentStateTimeStamp = [robotCurrentStateDict objectForKey:KEY_TIMESTAMP];
-        return (cleaningCommandTimeStamp.longLongValue > robotCurrentStateTimeStamp.longLongValue);
-    }
-    return NO;
 }
 
 @end

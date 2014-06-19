@@ -24,10 +24,8 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 - (void)processXMPPRobotDataChangedForRobotId:(NSString *)robotId;
 - (void)notifyIfRobotProfileHasChanged:(NSDictionary *)robotProfile;
 - (BOOL)hasDataChangedForKey:(NSString *)key withRobotProfile:(NSDictionary *)robotProfile;
-- (BOOL)hasRobotCleaningStateChangedForProfile:(NSDictionary *)robotProfile;
 - (BOOL)hasRobotCurrentStateChangedForProfile:(NSDictionary *)robotProfile;
 - (void)notifyDataChangeForRobotId:(NSString *)robotId withKeyCode:(NSNumber *)key andData:(NSDictionary *)data;
-- (void)notifyCleaningStateChangedForProfile:(NSDictionary *)robotProfile;
 - (BOOL)hasRobotNameChangedForProfile:(NSDictionary *)robotProfile;
 - (void)notifyRobotNameChangeForProfile:(NSDictionary *)robotProfile;
 - (BOOL)hasRobotScheduleStateChangedForProfile:(NSDictionary *)robotProfile;
@@ -106,17 +104,21 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 // If the data has changed, local data gets updated and UI is notified of the change.
 - (void)notifyIfRobotProfileHasChanged:(NSDictionary *)robotProfile {
     debugLog(@"");
+    
+    // Notify to UI, if any data has changed for the robot profile keys.
+    [self notifyIfDataChangedForKeys:[AppHelper removeInternalKeysFromRobotProfileKeys:robotProfile.allKeys]
+                         withProfile:robotProfile];
+    
     // Check if robot name has changed.
     BOOL robotNameChanged = [self hasRobotNameChangedForProfile:robotProfile];
     if (robotNameChanged) {
         [self notifyRobotNameChangeForProfile:robotProfile];
     }
-    // If any one of virtual_state/currrent_state/current_state_details changes,
+    // If any one of currrent_state/current_state_details changes,
     // We notify UI with current_state and current_state_details data.
-    BOOL robotCleaningCommandChanged = [self hasRobotCleaningStateChangedForProfile:robotProfile];
     BOOL robotCurrentStateChanged = [self hasRobotCurrentStateChangedForProfile:robotProfile];
     BOOL robotCurrentStateDetailsChanged = [self hasRobotCurrentStateDetailsChangedForProfile:robotProfile];
-    if (robotCleaningCommandChanged || robotCurrentStateDetailsChanged || robotCurrentStateChanged) {
+    if (robotCurrentStateDetailsChanged || robotCurrentStateChanged) {
         [self notifyRobotCurrentStateDetailsChangeForProfile:robotProfile];
     }
     // Check if schedule state has changed.
@@ -154,6 +156,10 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
     if (robotOnlineStatusChanged) {
       [self notifyRobotOnlineStatusChangeForProfile:robotProfile];
     }
+    
+    // Update timestamp for remaining keys.
+    [self updateTimestampForKeys:@[KEY_NET_INFO, KEY_CONFIG_INFO, KEY_STATE_DETAILS, KEY_CLEANING_DETAILS]
+                     withProfile:robotProfile];
 }
 
 - (BOOL)hasRobotIntendToDriveStatusChangedForProfile:(NSDictionary *)robotProfile {
@@ -166,10 +172,6 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 
 - (BOOL)hasRobotNameChangedForProfile:(NSDictionary *)robotProfile {
     return [self updateDataTimestampIfChangedForKey:KEY_NAME withProfile:robotProfile];
-}
-
-- (BOOL)hasRobotCleaningStateChangedForProfile:(NSDictionary *)robotProfile {
-    return [self updateDataTimestampIfChangedForKey:KEY_ROBOT_CLEANING_COMMAND withProfile:robotProfile];
 }
 
 - (BOOL)hasRobotCurrentStateChangedForProfile:(NSDictionary *)robotProfile {
@@ -269,26 +271,6 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
     else {
         // Profile detail for this key is not there in database so return YES.
         return YES;
-    }
-}
-
-- (void)notifyCleaningStateChangedForProfile:(NSDictionary *)robotProfile {
-    debugLog(@"");
-    // Update UI for current state change notification.
-    NSInteger currentState = [XMPPRobotCleaningStateHelper robotCurrentStateFromRobotProfile:robotProfile];
-    if (currentState != ROBOT_STATE_INVALID) {
-        NSMutableDictionary *stateData = [[NSMutableDictionary alloc] init];
-        [stateData setObject:[NSString stringWithFormat:@"%d", currentState] forKey:KEY_ROBOT_CURRENT_STATE];
-        [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE] withKeyCode:[NSNumber numberWithInt:ROBOT_CURRENT_STATE_CHANGED_CODE] andData:stateData];
-    }
-    // Update UI for actual state update notification.
-    // Actual state is set to virtual state if it is valid otherwise
-    // current state is set.
-    NSInteger state = [XMPPRobotCleaningStateHelper robotActualStateFromRobotProfile:robotProfile];
-    if (state != ROBOT_STATE_INVALID) {
-        NSMutableDictionary *stateData = [[NSMutableDictionary alloc] init];
-        [stateData setObject:[NSString stringWithFormat:@"%d", state] forKey:KEY_ROBOT_STATE_UPDATE];
-        [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE] withKeyCode:[NSNumber numberWithInt:ROBOT_STATE_UPDATE_CODE] andData:stateData];
     }
 }
 
@@ -481,6 +463,34 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
     [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE]
                          withKeyCode:[NSNumber numberWithInt:ROBOT_CURRENT_STATE_CHANGED_CODE]
                              andData:dataDict];
+}
+
+// Update timestamp of data for keys(If required).
+- (void)updateTimestampForKeys:(NSArray *)keys withProfile:(NSDictionary *)robotProfile {
+    for (NSString *key in keys) {
+        [self updateDataTimestampIfChangedForKey:key withProfile:robotProfile];
+    }
+}
+
+// This method only checks whether data has changed or not,
+// and will not update the timestamp.
+- (void)notifyIfDataChangedForKeys:(NSArray *)keys withProfile:(NSDictionary *)robotProfile {
+    
+    NSMutableDictionary *dataDict = [[NSMutableDictionary alloc] init];
+    for (NSString *key in keys) {
+        BOOL didChangeData = [self hasDataChangedForKey:key withRobotProfile:robotProfile];
+        id valueForKey = [[robotProfile objectForKey:key] objectForKey:KEY_VALUE];
+        if (didChangeData && valueForKey) {
+            [dataDict setObject:valueForKey forKey:key];
+        }
+    }
+    
+    // If data changed for any interested key, notify to UI.
+    if ([dataDict allKeys].count > 0) {
+        [self notifyDataChangeForRobotId:[[robotProfile objectForKey:KEY_SERIAL_NUMBER] objectForKey:KEY_VALUE]
+                             withKeyCode:@(ROBOT_PROFILE_DATA_CHANGED_CODE)
+                                 andData:dataDict];
+    }
 }
 
 @end
