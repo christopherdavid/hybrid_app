@@ -69,6 +69,7 @@ function WorkflowNotification(parent) {
                 switch(result.robotDataKeyId) {
                         case ROBOT_CURRENT_STATE_CHANGED:
                         case ROBOT_STATE_UPDATE:
+                        case ROBOT_CURRENT_DATA_CHANGED:
                             var curState = result.robotData.robotCurrentState || result.robotData.robotStateUpdate || null;
                             // check if state really changed 
                             console.log("New Virt State :"+ curRobot().robotNewVirtualState());
@@ -84,15 +85,25 @@ function WorkflowNotification(parent) {
                             
                                 if(curState == ROBOT_STATE_CLEANING) {
                                     // getRobotCurrentStateDetails
-                                    var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotCurrentStateDetails, [curRobot().robotId()], { type: notificationType.NONE });
+                                    var keyArray = ['robotCurrentCleaningDetails','robotConfigInfo'];
+                                    var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotData, [curRobot().robotId(), keyArray], { type: notificationType.NONE });
                                     tDeffer.done(function(categoryResult) {
+                                    	 console.log("getRobotDataSuccess : " + JSON.stringify(categoryResult));
                                         // need to add a check if it's a valid category (in some cases got 0 from server)
-                                        if(categoryResult.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_MANUAL || categoryResult.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_ALL
-                                            || categoryResult.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_SPOT) {
-                                                curRobot().cleaningCategory(categoryResult.robotCurrentStateDetails.robotStateParams.robotCleaningCategory);
+                                        if(categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_MANUAL || categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_ALL
+                                            || categoryResult.robotProfileData.robotCurrentStateDetails.robotCleaningCategory == CLEANING_CATEGORY_SPOT) {
+                                                curRobot().cleaningCategory(categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory);
                                         } else {
                                             // set All as fallback
                                             curRobot().cleaningCategory(CLEANING_CATEGORY_ALL);
+                                        }
+                                        // update clock set
+                                        if(categoryResult.robotProfileData.robotConfigInfo){
+                                        	var configInfo =  $.parseJSON(categoryResult.robotProfileData.robotConfigInfo);
+                                        	console.log("Clock Set Value :"+ categoryResult.robotProfileData.robotConfigInfo);
+                                        	if(typeof configInfo.ClkIsSet != "undefined") {
+         									   robot.clockIsSet(parseInt(configInfo.ClkIsSet, 10));
+        									}
                                         }
                                         // update state
                                         parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);

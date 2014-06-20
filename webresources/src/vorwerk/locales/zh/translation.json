@@ -6,12 +6,12 @@
     "common": {
         "change": "变更",
         "no": "No",
+        "next": "下一步",
         "menu": {
             "schedule": "日程表",
             "cleaning": "清扫中",
             "settings": "设置"
         },
-        "next": "下一步",
         "edit": "编辑",
         "cancel": "取消",
         "cleaningMode": {
@@ -45,7 +45,8 @@
             "6": "周六",
             "5": "周五",
             "4": "周四"
-        }
+        },
+        "retry": "Retry"
     },
     "legalInformation": {
         "page": {
@@ -649,7 +650,7 @@
         "navi": {"title": "创建用户账号"}
     },
     "visualState": {
-        "suspend": "I'm in suspended cleaning mode untill I'm fully recharged.",
+        "suspend": "My battery is low. I will start cleaning once I'm recharged.",
         "returning": "I'm returning",
         "robot_offline": "I'm Offline",
         "inbase": "我正在基座休息中。",

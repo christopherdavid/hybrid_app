@@ -63,6 +63,8 @@ var ROBOT_ONLINE_STATUS_CHANGED = 4015;
 
 var ROBOT_COMMAND_FAILED = 4016;
 
+var ROBOT_CURRENT_DATA_CHANGED = 4050;
+
 // Received as the error code in ROBOT_NOT_CONNECTED notification when the robot is already driven manually by some other user.
 var RESPONSE_CODE_ROBOT_CONNECTED_TO_OTHER_USER = 10001;
 
@@ -82,6 +84,7 @@ var ROBOT_STATE_PAUSED 				= 5;
 var ROBOT_STATE_MANUAL_CLEANING		= 6;
 var ROBOT_STATE_RETURNING 			= 7;
 var ROBOT_STATE_DOCK_PAUSED         = 8;
+
 
 var PLUGIN_JSON_KEYS  =  (function() {
     var keys = {
@@ -178,6 +181,9 @@ var ACTION_TYPE_ENABLE_SCHEDULE				= "enableSchedule";
 
 var ACTION_TYPE_GET_ROBOT_CURRENT_STATE	= "getRobotCurrentState";
 var ACTION_TYPE_GET_ROBOT_CURRENT_STATE_DETAILS	= "getRobotCurrentStateDetails";
+
+var ACTION_TYPE_GET_ROBOT_DATA	= "getRobotData";
+var ACTION_TYPE_DIRECT_CONNECT_TO_ROBOT	= "directConnectToRobot";
 
 //List of keys to send data:
 
@@ -335,7 +341,7 @@ var ERROR_INVALID_SCHEDULE_TYPE = -133;
  * Invalid linking code.
  * - This will occur if the user enters an invalid linking code.
  */
-var ERROR_INVALID_LINKING_CODE = -154;
+ var ERROR_INVALID_LINKING_CODE = -154;
 
 /**
  * No schedule exists for given robot.
@@ -410,6 +416,12 @@ var DIFFERENT_ROBOT_CONNECTION_EXISTS = -515;
  * - robot has set the current cleaning state as empty
  */
 var ERROR_NO_CLEANING_STATE_SET = -518;
+
+/**
+ * This error code is returned when 
+ * - robot has not set any Network Information
+ */
+var ERROR_TYPE_NETWORK_INFO_NOT_SET = -519;
 
 
 if(!window.plugins) {
@@ -1731,6 +1743,13 @@ RobotMgr.prototype.getRobotCurrentStateDetails = function(robotId, callbackSucce
 			ACTION_TYPE_GET_ROBOT_CURRENT_STATE_DETAILS, [commandParams]);
 };
 
+RobotMgr.prototype.getRobotData = function(robotId, keyArray, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId, 'robotProfileKeys': keyArray};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_GET_ROBOT_DATA, [commandParams]);
+};
+
+
 /**
  * This API checks whether there  exists a direct-peer connection from the smartapp to robot.
  * If a robotId is passed, then it returns whether it is directly connected to the smartapp.
@@ -1788,6 +1807,20 @@ RobotMgr.prototype.intendToDrive = function(robotId, callbackSuccess, callbackEr
 	var commandParams = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
 			ACTION_TYPE_INTEND_TO_DRIVE_ROBOT, [commandParams]);
+};
+
+/**
+ * This API initiates a TCP connection between the SmartApp and the robot.
+ * <p>
+ * 
+ * @param robotId 				the serial number of the robot
+ * @param callbackSuccess 		success callback for the API
+ * @param callbackError 		error callback for the API
+ */
+RobotMgr.prototype.directConnectToRobot = function(robotId, callbackSuccess, callbackError) {
+	var commandParams = {'robotId':robotId};
+	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
+			ACTION_TYPE_DIRECT_CONNECT_TO_ROBOT, [commandParams]);
 };
 
 /**
@@ -2810,6 +2843,10 @@ var RobotPluginManager = (function() {
 			window.plugins.neatoPluginLayer.robotMgr.getRobotCurrentStateDetails(robotId, callbackSuccess, callbackError);
 		},
 		
+		getRobotData: function(robotId, keyArray, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.getRobotData(robotId, keyArray, callbackSuccess, callbackError);
+		},
+		
 		/**
 		 * This API sends drive command to the robot. This API calls Neato Smart App Service.
 		 * <p>
@@ -3517,6 +3554,18 @@ var RobotPluginManager = (function() {
 		},
 		
 		/**
+		 * This API initiates a TCP connection between robot and SmartApp.
+		 * <p>
+		 * 
+		 * @param robotId 				the serial number of the robot
+		 * @param callbackSuccess 		success callback for the API
+		 * @param callbackError 		error callback for the API
+		 */
+		directConnectToRobot: function(robotId, callbackSuccess, callbackError) {
+			window.plugins.neatoPluginLayer.robotMgr.directConnectToRobot(robotId, callbackSuccess, callbackError);
+		},
+		
+		/**
 		 * This API cancels the intend to robot drive.
 		 * <p>
 		 * 
@@ -3588,7 +3637,7 @@ var PluginManagerHelper =  (function() {
 		 *  - startTime
 		 *  - cleaningMode
 		 *  Returns: Basic Schedule JSON object
-		 *  {'day':day, 'startTime': startTime, 'cleaningMode':cleaningMode}
+		 *  {'day':day, 'startTime': startTime, �cleaningMode�:cleaningMode}
 		 */
 		
 		createBasicScheduleEventObject: function(day, startTime, cleaningMode) {

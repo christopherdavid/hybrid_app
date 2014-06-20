@@ -132,7 +132,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         tDeffer.done(that.successGetSpotDefinition);
         
         // getRobotCurrentStateDetails
-        var tDeffer2 = parent.communicationWrapper.exec(RobotPluginManager.getRobotCurrentStateDetails, [that.robot().robotId()]);
+        var keyArray = ['robotCurrentStateDetails', 'robotConfigInfo', 'robotCurrentCleaningDetails'];
+        var tDeffer2 = parent.communicationWrapper.exec(RobotPluginManager.getRobotData, [that.robot().robotId(), keyArray]);
         tDeffer2.done(that.successGetRobotCurrentStateDetails);
         
         // get jquery object for spotSize popup
@@ -222,16 +223,26 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     this.successGetRobotCurrentStateDetails = function(result) {
         // need to add a check if it's a valid category (in some cases got 0 from server)
-        if(result.robotCurrentStateDetails && result.robotCurrentStateDetails.robotStateParams) {
-            if(result.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_MANUAL || result.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_ALL
-                || result.robotCurrentStateDetails.robotStateParams.robotCleaningCategory == CLEANING_CATEGORY_SPOT) {
-                    that.robot().cleaningCategory(result.robotCurrentStateDetails.robotStateParams.robotCleaningCategory);
+        console.log("successGetRobotCurrentStateDetails : " + JSON.stringify(result))
+        if(result.robotProfileData.robotCurrentStateDetails && result.robotProfileData.robotCurrentStateDetails.robotStateParams) {
+            if(result.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_MANUAL || result.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_ALL
+                || result.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_SPOT) {
+                    that.robot().cleaningCategory(result.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory);
             } else {
                 // set All as fallback
                 that.robot().cleaningCategory(CLEANING_CATEGORY_ALL);
             }
             // parse robotStateParams
-            parent.communicationWrapper.parseStateParameters(that.robot(), result.robotCurrentStateDetails.robotStateParams);
+            parent.communicationWrapper.parseStateParameters(that.robot(), result.robotProfileData.robotCurrentStateDetails.robotStateParams);
+            // update clock set
+           console.log("ConfigInfo Value :"+ JSON.stringify(result.robotProfileData.robotConfigInfo));
+            if(result.robotProfileData.robotConfigInfo){
+               	var configInfo = result.robotProfileData.robotConfigInfo;
+              	console.log("Clock Set Value :"+ configInfo.ClkIsSet);
+            	if(typeof configInfo.ClkIsSet != "undefined") {
+         		    that.robot().clockIsSet(parseInt(configInfo.ClkIsSet, 10));
+        		}
+            }
             if(that.robot().visualOnline()) {
                 // refresh states
                 robotUiStateHandler.setVirtualState(that.robot().robotNewVirtualState());
@@ -427,7 +438,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         var tDeffer = null;
         // first check manual cleaning
         if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() != ROBOT_STATE_MANUAL_CLEANING) {
-            tDeffer = parent.communicationWrapper.exec(RobotPluginManager.intendToDrive, [that.robot().robotId()], 
+            tDeffer = parent.communicationWrapper.exec(RobotPluginManager.directConnectToRobot, [that.robot().robotId()], 
                       { type: notificationType.OPERATION, message: $.i18n.t('communication.intend_drive')}, false, true);
         } else if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() == ROBOT_STATE_MANUAL_CLEANING) {
             that.stopRobot();
