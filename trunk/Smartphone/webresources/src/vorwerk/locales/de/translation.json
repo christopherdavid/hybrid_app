@@ -6,12 +6,12 @@
     "common": {
         "change": "ändern",
         "no": "Nein",
+        "next": "Weiter",
         "menu": {
             "schedule": "Terminkalender",
             "cleaning": "Reinigung",
             "settings": "Einstellungen"
         },
-        "next": "Weiter",
         "edit": "Bearbeiten",
         "cancel": "Zurück",
         "cleaningMode": {
@@ -45,7 +45,8 @@
             "6": "Samstag",
             "5": "Freitag",
             "4": "Donnerstag"
-        }
+        },
+        "retry": "Retry"
     },
     "legalInformation": {
         "page": {

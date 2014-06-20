@@ -6,12 +6,12 @@
     "common": {
         "change": "Změnit",
         "no": "Ne",
+        "next": "Další",
         "menu": {
             "schedule": "Plánovací kalendář",
             "cleaning": "Úklid",
             "settings": "Nastavení"
         },
-        "next": "Další",
         "edit": "Upravit",
         "cancel": "Zrušit",
         "cleaningMode": {
@@ -45,7 +45,8 @@
             "6": "Sobota",
             "5": "Pátek",
             "4": "Čtvrtek"
-        }
+        },
+        "retry": "Retry"
     },
     "legalInformation": {
         "page": {
@@ -649,7 +650,7 @@
         "navi": {"title": "Vytvořit uživatelský účet"}
     },
     "visualState": {
-        "suspend": "I'm in suspended cleaning mode untill I'm fully recharged.",
+        "suspend": "My battery is low. I will start cleaning once I'm recharged.",
         "returning": "I'm returning",
         "robot_offline": "I'm Offline.",
         "inbase": "Odpočívám v dobíjecí základně.",

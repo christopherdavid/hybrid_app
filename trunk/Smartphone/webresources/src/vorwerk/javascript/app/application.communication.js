@@ -99,7 +99,7 @@ function WorkflowCommunication(parent) {
         // show dialog
         if(dialogHeader != "" && !hasCancel) {
             parent.notification.showDialog(dialogType.ERROR, dialogHeader, dialogText, 
-                [{"label":$.i18n.t("common.ok"), "callback":function(e){
+                [{"label":$.i18n.t("common.retry"), "callback":function(e){
                         parent.notification.closeDialog();
                         that.connectionCheck(wifiCheck, conDeffer);
                         }
@@ -344,9 +344,6 @@ function WorkflowCommunication(parent) {
         console.log("parseStateParameters for robot " + robot.robotId() + " parameters: " + JSON.stringify(parameters));
         if(typeof parameters.RobotIsDocked != "undefined") {
             robot.robotIsDocked(parseInt(parameters.RobotIsDocked, 10));
-        }
-        if(typeof parameters.ClockIsSet != "undefined") {
-            robot.clockIsSet(parseInt(parameters.ClockIsSet, 10));
         }
         if(typeof parameters.DockHasBeenSeen != "undefined") {
             robot.dockHasBeenSeen(parseInt(parameters.DockHasBeenSeen, 10));

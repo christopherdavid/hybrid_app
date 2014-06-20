@@ -6,12 +6,12 @@
     "common": {
         "change": "Change",
         "no": "No",
+        "next": "Next",
         "menu": {
             "schedule": "Schedule",
             "cleaning": "Cleaning",
             "settings": "Settings"
         },
-        "next": "Next",
         "edit": "Edit",
         "cancel": "Cancel",
         "cleaningMode": {
@@ -45,7 +45,8 @@
             "6": "Saturday",
             "5": "Friday",
             "4": "Thursday"
-        }
+        },
+        "retry": "Retry"
     },
     "legalInformation": {
         "page": {
@@ -649,7 +650,7 @@
         "navi": {"title": "Create User Account"}
     },
     "visualState": {
-        "suspend": "I'm in suspended cleaning mode untill I'm fully recharged.",
+        "suspend": "My battery is low. I will start cleaning once I'm recharged.",
         "returning": "I'm returning.",
         "robot_offline": "I'm Offline.",
         "inbase": "I\u2019m having a rest at my base.",
