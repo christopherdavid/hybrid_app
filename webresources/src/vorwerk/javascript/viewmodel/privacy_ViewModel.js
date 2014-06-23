@@ -3,7 +3,7 @@ resourceHandler.registerFunction('privacy_ViewModel.js', function(parent) {
     var that = this, privacyScroll;
     this.conditions = {};
     this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
-     this.isRobotVisible = ko.computed(function(){
+    this.isRobotVisible = ko.computed(function(){
         return (typeof(that.robot().robotName) != 'undefined');
     },this);
     
@@ -50,6 +50,7 @@ resourceHandler.registerFunction('privacy_ViewModel.js', function(parent) {
     
      this.deinit = function() {
         $(window).off(".legalPrivacy");
+        that.isRobotVisible.dispose();
         privacyScroll.destroy();
     };
     

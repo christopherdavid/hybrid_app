@@ -23,6 +23,21 @@ var robotScreenCaller = {
     DELETE : "delete"
 };
 
+var pageState = {
+    REGISTER: "register",
+    EDIT: "edit", // single view edit
+    CHANGE: "change" // flow with changes
+};
+
+var dataImage = {
+    MENU: "menu",
+    ADD: "add",
+    CANCEL: "cancel",
+    OK: "ok",
+    BACK: "back",
+    NEXT: "next"
+};
+
 /**
  * Enumeration defining the type of notifications. 
  */

@@ -14,7 +14,7 @@
         </h1>
         <div class="ui-btn-right">
             <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" class="btn-with-image"
-                data-bind="click:submitChange, jqLinkButtonEnable:nextEnabled(), attr: {'data-image':rightIcon()}"></a>
+                data-bind="click:submitChange, attr: {'data-image':rightIcon()}"></a>
         </div>
     </div>
     <div data-role="content">
@@ -24,20 +24,19 @@
             </fieldset>
         </div>
         
-        <div class="scrollWrapper" id="legalWrapper">
+        <div class="scrollWrapper" id="marketWrapper">
             <div class="scroller">
                 <div class="scrollContainer">
                      <fieldset>
-                        <span class="font_bold font_small" data-i18n="legalInformation.page.tou_pp_header" data-bind="translate: language">[information_header]</span>
-                        <p class="font_normal" data-i18n="legalInformation.page.tou_pp_agreement" data-bind="translate: language">[information]</p>
+                        <span class="font_bold font_small" data-i18n="legalInformation.page.subscribe_header" data-bind="translate: language">[information_header]</span>
+                        <p class="font_normal" data-i18n="legalInformation.page.subscribe_agreement" data-bind="translate: language">[information]</p>
                      </fieldset>
-                            
-                      <div class="line">
-                          <input type="checkbox" name="checkbox_agreement" id="checkbox_agreement" class="custom" data-bind="checked: isAgreed, jqCheckboxChecked: isAgreed" data-theme="b" />
-                          <label for="checkbox_agreement" data-inline="true" data-i18n="legalInformation.page.legal_agreement" 
-                               data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[Leagal Agreement]</label>
-                      </div>
-                </div>
+                      <div class="line ">
+                        <input type="checkbox" name="checkbox_subscribe" id="checkbox_subscribe" class="custom" data-bind="checked: selectedSubscribe, jqCheckboxChecked: selectedSubscribe" data-theme="b" />
+                        <label for="checkbox_subscribe" data-inline="true" data-i18n="legalInformation.page.legal_agreement"
+                        data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[Leagal Agreement]</label>
+                    </div>
+                 </div>
              </div>
           </div>
         

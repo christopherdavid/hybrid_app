@@ -78,12 +78,12 @@ resourceHandler.registerFunction('userSettings_ViewModel.js', function(parent) {
     
     this.changeCountry = function() {
     	that.conditions['changeCountry'] = true;
-        parent.flowNavigator.next({"userlogin":true});
+        parent.flowNavigator.next({"state":pageState.CHANGE});
     };
     
     this.changeSubscription  = function() {
         that.conditions['changeSubscription'] = true;
-        parent.flowNavigator.next({"country":that.selectedCountryCode(),"userlogin":true});
+        parent.flowNavigator.next({"country":that.selectedCountryCode(), "state": pageState.EDIT});
     };
        
     this.changePassword = function() {
