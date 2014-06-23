@@ -37,6 +37,12 @@ function WorkflowNotification(parent) {
                 $("#dialogPopup .ui-bar-buttons .ui-btn").removeClass("ui-disabled");
                 // remove event listener
                 $("#dialogPopup .ui-bar-buttons .ui-btn").off(".dialog");
+                
+                // check if there is a closeCallback registered
+                if(that.curHandledDialog.closeCallback != null && typeof that.curHandledDialog.closeCallback == "function") {
+                    that.curHandledDialog.closeCallback();
+                }
+                
                 that.curHandledDialog = null;
                 that.handleDialogStack();
             }
@@ -437,7 +443,7 @@ function WorkflowNotification(parent) {
     /**
      * buttons: [{label:"ok", callback:callbackOk}, {label:"cancel", callback:callbackCancel}] 
      */
-    this.showDialog = function(dialogType, textHeadline, textContent, buttons) {
+    this.showDialog = function(dialogType, textHeadline, textContent, buttons, closeCallback) {
         // wrap parameter in object and add type "js"
         that.dialogStack.push({
             "type":"js",
@@ -447,7 +453,8 @@ function WorkflowNotification(parent) {
             "dialogType":dialogType,
             "textHeadline":textHeadline,
             "textContent":textContent,
-            "buttons":buttons
+            "buttons":buttons,
+            "closeCallback":closeCallback||null
         });
         that.handleDialogStack();
     };

@@ -27,6 +27,25 @@ var guid = function () {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 };
 
+/**
+ *  checks if the object is defined and not null and contains the property
+ *  @param {Object} object which should be checked 
+ *  @param {String} property which should be checked against the object 
+ *  @return {Boolean} returns true if object and properties are defined 
+ */
+function isDefined(object, property) {
+    if(object != null) {
+        var props = property.split(".");
+        for(var i=0; i < props.length; i++) {
+            if(typeof object[props[i]] == "undefined") {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+};
+
 var deviceSize =  (function() {
     var size, res, orientation;
     $(window).on("resize.deviceSize", function() {

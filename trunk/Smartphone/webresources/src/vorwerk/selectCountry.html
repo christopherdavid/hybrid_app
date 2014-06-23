@@ -2,13 +2,15 @@
     
     <div data-role="header" class="headerbar" data-position="fixed" data-tap-toggle="false">
         <div class="ui-btn-left">
-            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" class="btn-with-image" data-image="back"
-                data-bind="click:back"></a>
+            <a href="#" data-role="button" data-theme="b" data-mini="false" data-inline="true" class="btn-with-image"
+                data-bind="click:back, attr: {'data-image':leftIcon()}"></a>
         </div>
         <h1>
-            <div class="screenTitle noRobot">
-               <!-- <span data-i18n="createAccount.navi.title" data-bind="translate: language">[navi title]</span>-->
+            <div class="screenTitle" data-bind="css:{noRobot:!isRobotVisible()}">
                <span data-bind="text: countryScreenTitle">[screen title]</span>
+            </div>
+            <div class="robotName" data-bind="visible: isRobotVisible()" class="robotName">
+                <span data-bind="text: robot().displayName">[robot name]</span>
             </div>
         </h1>
         <div class="ui-btn-right">
@@ -32,41 +34,6 @@
                                      data-bind="attr:{'value':value}, checked: $parent.selectedCountry" />[country]</label>
                         </fieldset>
                     </div>
-                    
-                    <!-- TODO: remove test: test if two way binding works correctly
-                    <p data-bind="text:selectedCountry"></p>
-                    <fieldset data-role="controlgroup" class="radioGroup">
-                        <input type="radio" name="radio-country" id="radio-country-1" value="DE" data-theme="a" 
-                            data-bind="checked: selectedCountry, jqRadioChecked: selectedCountry"/>
-                        <label for="radio-country-1" data-country="DE" class="with-image"
-                            data-i18n="common.countries.DE"
-                            data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[country]</label>
-                            
-                        <input type="radio" name="radio-country" id="radio-country-2" value="CH" data-theme="a" 
-                            data-bind="checked: selectedCountry, jqRadioChecked: selectedCountry"/>
-                        <label for="radio-country-2" data-country="CH" class="with-image"
-                            data-i18n="common.countries.CH"
-                            data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[country]</label>
-                            
-                        <input type="radio" name="radio-country" id="radio-country-3" value="GB" data-theme="a" 
-                            data-bind="checked: selectedCountry, jqRadioChecked: selectedCountry"/>
-                        <label for="radio-country-3" data-country="GB" class="with-image"
-                            data-i18n="common.countries.GB"
-                            data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[country]</label>
-                            
-                        <input type="radio" name="radio-country" id="radio-country-4" value="FR" data-theme="a" 
-                            data-bind="checked: selectedCountry, jqRadioChecked: selectedCountry"/>
-                        <label for="radio-country-4" data-country="FR" class="with-image"
-                            data-i18n="common.countries.FR"
-                            data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[country]</label>
-                            
-                        <input type="radio" name="radio-country" id="radio-country-5" value="IT" data-theme="a" 
-                            data-bind="checked: selectedCountry, jqRadioChecked: selectedCountry"/>
-                        <label for="radio-country-5" data-country="IT" class="with-image"
-                            data-i18n="common.countries.IT"
-                            data-bind="translate:{obs:language(),target: textTarget.jqLinkButton}">[country]</label>
-                    </fieldset>
-                    -->
                 </div>
             </div>
         

@@ -581,13 +581,11 @@ label {
   position: absolute;
   z-index: 1;
   top: 154px;
-  bottom: 27px;
+  bottom: 12px;
   left: 12px;
   right: 12px;
   overflow: auto;
   max-width: 600px;
-  padding-top: 15px;
-  padding-bottom: 15px;
 }
 #countryWrapper:before {
   content: "";
@@ -630,27 +628,25 @@ label {
   width: 100%;
   padding: 0;
 }
-#countryWrapper #countryScroller .ui-controlgroup {
+#countryWrapper #countryScroller #countrySelectionListContainer {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+#countryWrapper #countryScroller #countrySelectionListContainer .ui-controlgroup {
   margin: 0;
 }
-#legalWrapper,
-#legalWrapperPrivacy,
-#legalWrapperTerms {
+.scrollWrapper {
   position: absolute;
   z-index: 1;
   top: 202px;
   /*bottom:@radiogroup_item_line_height*2 + @button_border*2 + @content_list_space + @headerbar_border_shadow;*/
 
-  bottom: 10px;
+  bottom: 12px;
   left: 22px;
   right: 22px;
   overflow: auto;
-  padding-top: 15px;
-  padding-bottom: 15px;
 }
-#legalWrapper:before,
-#legalWrapperPrivacy:before,
-#legalWrapperTerms:before {
+.scrollWrapper:before {
   content: "";
   position: absolute;
   left: 0;
@@ -667,9 +663,7 @@ label {
   filter: progid:DXImageTransform.Microsoft.gradient('#1a1a1a', 'rgba(26, 26, 26, 0)', GradientType=0);
   z-index: 5;
 }
-#legalWrapper:after,
-#legalWrapperPrivacy:after,
-#legalWrapperTerms:after {
+.scrollWrapper:after {
   content: "";
   position: absolute;
   left: 0;
@@ -686,30 +680,17 @@ label {
   filter: progid:DXImageTransform.Microsoft.gradient('rgba(26, 26, 26, 0)', '#1a1a1a', GradientType=0);
   z-index: 5;
 }
-#legalWrapper #legalScroller,
-#legalWrapperPrivacy #legalScroller,
-#legalWrapperTerms #legalScroller,
-#legalWrapper #legalScrollerPrivacy,
-#legalWrapperPrivacy #legalScrollerPrivacy,
-#legalWrapperTerms #legalScrollerPrivacy,
-#legalWrapper #legalScrollerTerms,
-#legalWrapperPrivacy #legalScrollerTerms,
-#legalWrapperTerms #legalScrollerTerms {
+.scrollWrapper .scroller {
   position: absolute;
   z-index: 1;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   width: 100%;
   padding: 0;
 }
-#legalWrapper #legalScroller .ui-controlgroup,
-#legalWrapperPrivacy #legalScroller .ui-controlgroup,
-#legalWrapperTerms #legalScroller .ui-controlgroup,
-#legalWrapper #legalScrollerPrivacy .ui-controlgroup,
-#legalWrapperPrivacy #legalScrollerPrivacy .ui-controlgroup,
-#legalWrapperTerms #legalScrollerPrivacy .ui-controlgroup,
-#legalWrapper #legalScrollerTerms .ui-controlgroup,
-#legalWrapperPrivacy #legalScrollerTerms .ui-controlgroup,
-#legalWrapperTerms #legalScrollerTerms .ui-controlgroup {
+.scrollWrapper .scroller .scrollContainer {
+  padding-top: 15px;
+}
+.scrollWrapper .scroller .ui-controlgroup {
   margin: 0;
 }
 .fixed-bottom {
@@ -5348,6 +5329,7 @@ label {
   top: 61px;
 }
 #spotContainer #spotGridContainer #spotSizeContainer #spotResizer {
+  position: absolute;
   width: 40px;
   height: 40px;
   background-image: url(../../img/icons/ani_spot_arrow_160x40.png);

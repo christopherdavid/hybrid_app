@@ -156,6 +156,18 @@ ko.bindingHandlers.jqRadioEnable = {
 };
 
 /**
+ * binding to checked property for jquery mobile checkbox button 
+ * example: <input type="checkbox" data-bind="checked: [property bind to], jqRadioChecked: [property bind to]" /> 
+ */
+ko.bindingHandlers.jqCheckboxChecked = {
+    update : function(element, valueAccessor, allBindingsAccessor, context) {
+        var value = valueAccessor();
+        var valueUnwrapped = ko.utils.unwrapObservable(value);
+        $(element).checkboxradio("refresh");
+    }
+};
+
+/**
  * binding to class attribute of rendered jquery mobile button of a select element
  * example: <select id="[!IMPORTANT!]" data-bind="jqmButtonClass:'first-button'">
  * !IMPORTANT! the select needs to have an id otherwise the rendered button couldn't be find 

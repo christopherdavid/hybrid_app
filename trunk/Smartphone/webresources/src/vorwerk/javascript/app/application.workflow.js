@@ -2,7 +2,7 @@ Application.prototype.loadWorkflow = function() {
     return {
         "start" : {
             navrules : [{
-                targetScreenId : "createAccount",
+                targetScreenId : "selectCountry",
                 conditions : [{
                     "key" : "register",
                     "value" : true
@@ -25,32 +25,11 @@ Application.prototype.loadWorkflow = function() {
                 }]
             }]
         },
-        "createAccount" : {
-            navrules : [{
-                targetScreenId : "selectCountry",
-                conditions : [{
-                    "key" : "valid",
-                    "value" : true
-                }]
-            }]
-        },
         "legalInformation" : {
             navrules : [{
-                targetScreenId : "start",
+                targetScreenId : "marketingInformation",
                 conditions : [{
-                    "key" : "start",
-                    "value" : true
-                }]
-            }, {
-                targetScreenId : "userSettings",
-                conditions : [{
-                    "key" : "userSettings",
-                    "value" : true
-                }]
-            }, {
-                targetScreenId : "robotSelection",
-                conditions : [{
-                    "key" : "robotSelection",
+                    "key" : "valid",
                     "value" : true
                 }]
             }, {
@@ -63,6 +42,38 @@ Application.prototype.loadWorkflow = function() {
                 targetScreenId : "terms",
                 conditions : [{
                     "key" : "terms",
+                    "value" : true
+                }]
+            }]
+        },
+        "marketingInformation" : {
+            navrules : [{
+                targetScreenId : "createAccount",
+                conditions : [{
+                    "key" : "valid",
+                    "value" : true
+                }]
+            }, 
+            {
+                targetScreenId : "userSettings",
+                conditions : [{
+                    "key" : "userSettings",
+                    "value" : true
+                }]
+            }]
+        },
+        "createAccount" : {
+            navrules : [{
+                targetScreenId : "start",
+                conditions : [{
+                    "key" : "start",
+                    "value" : true
+                }]
+            },
+            {
+                targetScreenId : "robotSelection",
+                conditions : [{
+                    "key" : "robotSelection",
                     "value" : true
                 }]
             }]
@@ -219,7 +230,7 @@ Application.prototype.loadWorkflow = function() {
                     "value" : true
                 }]
             }, {
-                targetScreenId : "legalInformation",
+                targetScreenId : "marketingInformation",
                 conditions : [{
                     "key" : "changeSubscription",
                     "value" : true

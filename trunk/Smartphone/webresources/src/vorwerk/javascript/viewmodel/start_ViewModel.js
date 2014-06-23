@@ -12,7 +12,7 @@ resourceHandler.registerFunction('start_ViewModel.js', function(parent) {
 
     this.register = function() {
         that.conditions['register'] = true;
-        parent.flowNavigator.next();
+        parent.flowNavigator.next({"state": pageState.REGISTER});
     };
     
     this.reload = function() {

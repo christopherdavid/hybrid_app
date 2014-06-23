@@ -87,7 +87,7 @@ var ROBOT_MESSAGE_ERROR = 4014;
 var ROBOT_ONLINE_STATUS_CHANGED = 4015;
 var ROBOT_COMMAND_FAILED = 4016;
 
-
+var ROBOT_CURRENT_DATA_CHANGED = 4050;
 
 // Robot state codes
 var ROBOT_STATE_UNKNOWN             = 0;
@@ -506,8 +506,8 @@ var UserPluginManager = ( function() {
 			isUserValidated : function(email, callbackSuccess, callbackError) {
 				//window.plugins.neatoPluginLayer.userMgr.isUserValidated(email, callbackSuccess, callbackError);
 				window.setTimeout(function() {
-                    //callbackSuccess({validation_status:USER_STATUS_VALIDATED, message:"message"});
-					callbackSuccess({validation_status:USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD, message:"message"});
+                    callbackSuccess({validation_status:USER_STATUS_VALIDATED, message:"message"});
+					//callbackSuccess({validation_status:USER_STATUS_NOT_VALIDATED_IN_GRACE_PERIOD, message:"message"});
                 }, 1000);
 			},
             
@@ -870,7 +870,7 @@ var RobotPluginManager = ( function() {
                     "robotStateParams": {
                      "CrntErrorCode": 22000,
                      "RobotIsDocked": 0,
-                     "ClockIsSet": 0,
+                     "ClockIsSet": 1,
                      "DockHasBeenSeen": 0,
                      "IsCharging": 0,
                      "robotCleaningCategory": 0,
@@ -881,6 +881,28 @@ var RobotPluginManager = ( function() {
                      }}})
              }, 100);
         },
+        
+        getRobotData: function(robotId, keyArray, callbackSuccess, callbackError) {
+            window.setTimeout(function() {
+                callbackSuccess({"robotId":robotId,
+                "robotProfileData": {
+                    "robotCurrentStateDetails":{
+                        "robotCurrentState": "1", 
+                            "robotStateParams": {
+                             "CrntErrorCode": 22000,
+                             "RobotIsDocked": 0,
+                             "ClockIsSet": 1,
+                             "DockHasBeenSeen": 0,
+                             "IsCharging": 0,
+                             "robotCleaningCategory": 0,
+                             "robotCleaningMode": 1,
+                             "robotCleaningModifier": 0,
+                             "robotSpotCleaningAreaLength":0,
+                             "robotSpotCleaningAreaHeight":0
+                             }}}})
+             }, 100);
+        },
+        
         
         getRobotCurrentState: function(robotId, callbackSuccess, callbackError) {
             var stateCode = ROBOT_STATE_IDLE;

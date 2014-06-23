@@ -7,11 +7,6 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
     this.password_verify = ko.observable('');
     this.showPassword = ko.observable(false);
     
-    this.back = function() {
-        that.conditions['back'] = true;
-        parent.flowNavigator.previous();
-    };
-
     this.isFilledOut = ko.computed(function() {
         return (this.email() != '' && this.password() != '' && this.password().length == this.password_verify().length);
     }, this);
@@ -75,19 +70,6 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
     }, this);
     
     
-    this.next = function() {
-        that.conditions['valid'] = true;
-		
-        var userBundle = {
-			userlogin: 	false,
-            email:		that.email(),
-            password: 	that.password()
-        };
-		
-        parent.flowNavigator.next( userBundle );
-    };
-    
-    
     // viewmodel deinit, destroy objects and remove event listener
     this.deinit = function() {
         that.isFilledOut.dispose();
@@ -99,6 +81,90 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
         that.markPasswordInvalid.dispose();
         that.isValid.dispose();
     };
+    
+    this.back = function() {
+        parent.flowNavigator.previous();
+    };
+    
+    this.next = function() {
+        // create new account & submit country information
+        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.createUser3, [
+            that.email(), that.password(), "default","", 
+                {   "country_code": that.bundle.country, 
+                    "opt_in":       that.bundle.optIn
+                }]);
+        
+        tDeffer.done(that.successUserCreation);
+    };
+    
+    /*
+     * Inform user that account has been created and show e mail validation information and enable further navigation (ok button).
+     */
+    this.successUserCreation = function() {
+        var translatedTitle = $.i18n.t("createAccount.page.registration_done_title");
+        var translatedText = $.i18n.t("createAccount.page.registration_done_message", {email:that.email()});
+        
+        parent.notification.showDialog(
+            dialogType.INFO,
+            translatedTitle,
+            translatedText,
+            [],
+            that.leaveAccountCreation
+        );
+    };
+    
+    /*
+     * Navigate to next screen after user has been informed that account has been created.
+     */
+    this.leaveAccountCreation = function() {
+        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.isUserValidated, [that.email()],{});
+        tDeffer.done(function(result) {
+            if (result.validation_status == USER_STATUS_VALIDATED) {
+                that.backgroundLogin();
+            } else {
+                // go to start screen if user hasn't validated his email so far
+                that.conditions['start'] = true;
+                parent.flowNavigator.next();
+            }
+        });
+        tDeffer.fail(function(error, notificationOptions, errorHandled) {
+            errorHandled.resolve();
+            // go to start screen if there is an error in during validation check
+            that.conditions['start'] = true;
+            parent.flowNavigator.next();
+        });
+    };
+    
+    this.backgroundLogin = function(result) {
+        // TODO: add validation check for entries
+        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.login, [that.bundle.email, that.bundle.password], {});
+        tDeffer.done(that.sucessLogin);
+        
+        tDeffer.fail(function(error, notificationOptions, errorHandled) {
+            errorHandled.resolve();
+            // go to start screen if there is an error in background login
+            that.conditions['start'] = true;
+            parent.flowNavigator.next();
+        });
+    };
+
+    this.sucessLogin = function(result, notifyOptions) {
+        that.conditions['robotSelection'] = true;
+        console.log("result: " + result);
+        parent.communicationWrapper.setDataValue("user", result);
+        user = parent.communicationWrapper.getDataValue("user");
+        
+        // register for push notifications (from server)
+        parent.notification.registerForRobotMessages();
+        
+        // register for notifications from robot if app is running
+        parent.notification.registerForRobotNotifications();
+        
+        parent.communicationWrapper.saveToLocalStorage('username', user.email);
+        that.conditions['robotSelection'] = true;
+        parent.flowNavigator.next(robotScreenCaller.LOGIN);
+    };
+    
 
 });
 console.log('loaded file: createAccount_ViewModel.js');

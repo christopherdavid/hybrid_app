@@ -1,30 +1,30 @@
 resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) {
     console.log('instance created for: selectCountry_ViewModel');
-    var that = this, myScroll;
-    var user = parent.communicationWrapper.getDataValue("user");
-    
-    this.conditions = {};
-    this.isCountryEdit = ko.observable(false);
-    this.countryScreenTitle = ko.observable($.i18n.t("createAccount.page.country"));
-    
-    this.back = function() {
-        that.conditions['back'] = true;
-        parent.flowNavigator.previous();
-    };
-    this.selectedCountry = ko.observable();
-    var countryOrder = $.map($.i18n.t("pattern.countryOrder").split(","), function(value){
-        return value;
+    var that = this, myScroll,
+        user = parent.communicationWrapper.getDataValue("user"),
+        countriesRendered = false,
+        countryOrder = $.map($.i18n.t("pattern.countryOrder").split(","), function(value){
+            return value;
         });
     
-    
+    this.conditions = {};
+    this.countryScreenTitle = ko.observable($.i18n.t("createAccount.page.country"));
+    this.robot = parent.communicationWrapper.getDataValue("selectedRobot");
+    this.selectedCountry = ko.observable();
     this.countries = ko.observableArray([]);
-    var countriesRendered = false;
+    this.leftIcon = ko.observable(dataImage.BACK);
+    this.isRobotVisible = null;
+    
+    this.initComputed = function() {
+        that.isRobotVisible = ko.computed(function(){
+            return (typeof(that.robot().robotName) != 'undefined');
+        },this);
+    };
     
     this.init = function() {
-		that.isCountryEdit(that.bundle.userlogin);
-		
+        console.log("init selectCountry_ViewModel");
         // init scroll container
-        myScroll = new iScroll('countryWrapper',{
+        myScroll = new iScroll("countryWrapper",{
             hScrollbar : false,
             vScrollbar : false,
             bounce : true,
@@ -44,10 +44,15 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
                 "value" : countryOrder[i]
             });
         }
+        
+        if(isDefined(that.bundle, "state") && that.bundle.state == pageState.CHANGE) {
+            that.leftIcon(dataImage.CANCEL);
+            that.countryScreenTitle($.i18n.t("userSettings.page.country"));
+        }
+        
         // get country code of language string e.g. 'de-DE' -> 'DE,'en-GB' -> 'GB'
         var appCountry = null;
-        if(that.isCountryEdit()) {
-            this.countryScreenTitle($.i18n.t("userSettings.page.country"));
+        if(isDefined(user, "extra_param.countryCode")) {
             appCountry = user.extra_param.countryCode;
         } else {
             appCountry = parent.language().split("-")[1];
@@ -64,15 +69,25 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
         }
     };
     
+    this.deinit = function() {
+        myScroll.destroy();
+        that.countries([]);
+        that.isRobotVisible.dispose();
+        countriesRendered = false;
+    };
+    
+    this.reload = function() {
+        that.initComputed();
+    };
+    
     this.renderedCountries = function(element, data) {
-        console.log("renderedCountries");
         if(!countriesRendered) {
             // check if selected country is complete and control could be initialized
             if($(element).parent().children().length == that.countries().length) {
                 $("#countrySelectionList").controlgroup();
                 $("#countrySelectionList").attr("data-role", "controlgroup");
                 $("input[type='radio']",element.parent).checkboxradio();
-                $("#countrySelectionListContainer").data( "init", true );
+                $("#countrySelectionListContainer").data("init", true );
                 countriesRendered = true;
             }
         }
@@ -80,20 +95,17 @@ resourceHandler.registerFunction('selectCountry_ViewModel.js', function(parent) 
 
     this.next = function() {
         event.stopPropagation();
-        that.conditions['valid'] = true;
+        that.conditions["valid"] = true;
         parent.flowNavigator.next({
-			userlogin:	that.bundle.userlogin,
-			email:		that.bundle.email,
-			password:	that.bundle.password,
-			country:	that.selectedCountry()
-		});
+            "country": that.selectedCountry(),
+            "state": that.bundle.state
+        });
     };
     
-    this.deinit = function() {
-        myScroll.destroy();
-        that.countries([]);
-        countriesRendered = false;
+    this.back = function() {
+        parent.flowNavigator.previous();
     };
-
+    
+    that.initComputed();
 });
 console.log('loaded file: selectCountry_ViewModel.js');

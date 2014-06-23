@@ -45,6 +45,7 @@ resourceHandler.registerFunction('terms_ViewModel.js', function(parent) {
     
      this.deinit = function() {
         $(window).off(".legalTerms");
+        that.isRobotVisible.dispose();
         termsScroll.destroy();
     };
     
