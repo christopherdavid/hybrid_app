@@ -195,7 +195,7 @@ function resizePopupButtons(buttonGroup, maxContainer) {
 
 /**
  * helper class for robot UI state
- * handles the robotNewVirtualState and the UI state of the app (e.g. waiting, error)
+ * handles the robotCurrentState and the UI state of the app (e.g. waiting, error)
  * and stores the state according to enum visualState
  * This is more than a common state maching because it also contains logic for to switch the state
  * and also registers to other states.
@@ -210,11 +210,11 @@ var robotUiStateHandler = {
     waitDeffer:null,
     
     subscribeToRobot:function(refRobot) {
-        this.current().robot(refRobot().robotNewVirtualState());
-        this.updateStates(refRobot().robotNewVirtualState());
+        this.current().robot(refRobot().robotCurrentState());
+        this.updateStates(refRobot().robotCurrentState());
         
-        subscription = refRobot().robotNewVirtualState.subscribe(function(newValue) {
-            this.setVirtualState(newValue);
+        subscription = refRobot().robotCurrentState.subscribe(function(newValue) {
+            this.setVisualState(newValue);
         }, this);
         
         subscriptionOnline = refRobot().visualOnline.subscribe(function(newValue) {
@@ -222,8 +222,8 @@ var robotUiStateHandler = {
         }, this); 
     },
     
-    setVirtualState:function(state) {
-        console.log("setVirtualState " + state + " currentRobot state " + this.current().robot()); 
+    setVisualState:function(state) {
+        console.log("setVisualState " + state + " currentRobot state " + this.current().robot()); 
         var curRobot = app.communicationWrapper.getDataValue("selectedRobot");
         var newUiState = state;
         

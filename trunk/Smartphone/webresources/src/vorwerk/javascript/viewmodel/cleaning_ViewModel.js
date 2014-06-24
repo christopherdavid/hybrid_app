@@ -245,7 +245,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             }
             if(that.robot().visualOnline()) {
                 // refresh states
-                robotUiStateHandler.setVirtualState(that.robot().robotNewVirtualState());
+                robotUiStateHandler.setVisualState(that.robot().robotCurrentState());
             }
         } else {
             // set All as fallback
@@ -259,9 +259,9 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         // check if category has changed
         if(that.robot().cleaningCategory() != newValue) {
             // check if cleaning has already started
-            if(that.robot().robotNewVirtualState() == ROBOT_STATE_CLEANING || 
-               that.robot().robotNewVirtualState() == ROBOT_STATE_MANUAL_CLEANING ||
-               that.robot().robotNewVirtualState() == ROBOT_STATE_PAUSED ) {
+            if(that.robot().robotCurrentState() == ROBOT_STATE_CLEANING || 
+               that.robot().robotCurrentState() == ROBOT_STATE_MANUAL_CLEANING ||
+               that.robot().robotCurrentState() == ROBOT_STATE_PAUSED ) {
                 
                 parent.notification.showDialog(dialogType.WARNING, $.i18n.t("dialogs.CANCEL_CLEANING.title"), $.i18n.t("dialogs.CANCEL_CLEANING.message"), [
                     {label:$.i18n.t("dialogs.CANCEL_CLEANING.button_1"), "callback":function(e) {
@@ -301,7 +301,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                 } else {
                     that.robot().cleaningCategory(newValue);
                     // refresh states
-                    robotUiStateHandler.setVirtualState(that.robot().robotNewVirtualState());
+                    robotUiStateHandler.setVisualState(that.robot().robotCurrentState());
                 }
             }
         } else { 
@@ -419,7 +419,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
             that.spotSizeLength(that.newSpotSizeLength());
             that.spotSizeHeight(that.newSpotSizeHeight());
             // refresh states
-            robotUiStateHandler.setVirtualState(that.robot().robotNewVirtualState());
+            robotUiStateHandler.setVisualState(that.robot().robotCurrentState());
         });
     };
     
@@ -437,15 +437,15 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         navigator.notification.vibrate(500);
         var tDeffer = null;
         // first check manual cleaning
-        if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() != ROBOT_STATE_MANUAL_CLEANING) {
+        if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotCurrentState() != ROBOT_STATE_MANUAL_CLEANING) {
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.directConnectToRobot, [that.robot().robotId()], 
                       { type: notificationType.OPERATION, message: $.i18n.t('communication.intend_drive')}, false, true);
-        } else if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() == ROBOT_STATE_MANUAL_CLEANING) {
+        } else if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotCurrentState() == ROBOT_STATE_MANUAL_CLEANING) {
             that.stopRobot();
-        } else if (that.robot().robotNewVirtualState() == ROBOT_STATE_PAUSED || that.robot().robotNewVirtualState() == ROBOT_STATE_DOCK_PAUSED) {
+        } else if (that.robot().robotCurrentState() == ROBOT_STATE_PAUSED || that.robot().robotCurrentState() == ROBOT_STATE_DOCK_PAUSED) {
             // resume cleaning
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.resumeCleaning, [that.robot().robotId()]);
-        } else if (that.robot().robotNewVirtualState() == ROBOT_STATE_CLEANING || that.robot().robotNewVirtualState() == ROBOT_STATE_RETURNING) {
+        } else if (that.robot().robotCurrentState() == ROBOT_STATE_CLEANING || that.robot().robotCurrentState() == ROBOT_STATE_RETURNING) {
             // pause cleaning
             tDeffer = parent.communicationWrapper.exec(RobotPluginManager.pauseCleaning, [that.robot().robotId()]);
         } else {
@@ -464,7 +464,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         // some delay
         var tDeffer = null;
         
-        if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() != ROBOT_STATE_MANUAL_CLEANING) {
+        if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotCurrentState() != ROBOT_STATE_MANUAL_CLEANING) {
             robotUiStateHandler.setUiState(ROBOT_UI_STATE_CONNECTING);
         } else {
             // cleaning command send wait till state changed
@@ -495,7 +495,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         // need a new deferred to return a new promise object
         var stopChecked = $.Deferred();
         
-        if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotNewVirtualState() == ROBOT_STATE_MANUAL_CLEANING) {
+        if(that.visualSelectedCategory() == CLEANING_CATEGORY_MANUAL && that.robot().robotCurrentState() == ROBOT_STATE_MANUAL_CLEANING) {
             tDefer = parent.communicationWrapper.exec(RobotPluginManager.stopRobotDrive, [that.robot().robotId()], 
                       { type: notificationType.OPERATION, message: $.i18n.t('communication.stop_drive',{'robotName':that.robot().robotName()})});
         } 

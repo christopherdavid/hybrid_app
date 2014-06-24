@@ -78,10 +78,10 @@ function WorkflowNotification(parent) {
                         case ROBOT_CURRENT_DATA_CHANGED:
                             var curState = result.robotData.robotCurrentState || result.robotData.robotStateUpdate || null;
                             // check if state really changed 
-                            console.log("New Virt State :"+ curRobot().robotNewVirtualState());
+                            console.log("New Virt State :"+ curRobot().robotCurrentState());
                             console.log("Current State :"+ curState);
-                            //|| (curRobot().robotNewVirtualState() != ROBOT_STATE_IDLE)
-                            if(curState && (curState != curRobot().robotNewVirtualState())) {
+                            //|| (curRobot().robotCurrentState() != ROBOT_STATE_IDLE)
+                            if(curState && (curState != curRobot().robotCurrentState())) {
                                 // if there is a notification set robot back to online
                                 curRobot().robotOnline(true);
                                 curRobot().visualOnline(true);
@@ -130,7 +130,7 @@ function WorkflowNotification(parent) {
                             } else {
                                 // refresh states if UI is not connecting nor waiting nor offline
                                 if(curRobot().robotOnline() && robotUiStateHandler.current().ui() != ROBOT_UI_STATE_CONNECTING && robotUiStateHandler.current().ui() != ROBOT_UI_STATE_WAIT) {
-                                    robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
+                                    robotUiStateHandler.setVisualState(curRobot().robotCurrentState());
                                     robotUiStateHandler.resolveWaitDeffer();
                                     // Clear Error message if any
                                     if( curRobot().crntErrorCode() == ROBOT_UI_ERRORALERT_CLEAR)
@@ -190,7 +190,7 @@ function WorkflowNotification(parent) {
                             	else if(messageId == ROBOT_UI_ERRORALERT_CLEAR)
                             	{
                             		console.log("Clear Message ID :" + messageId);
-                            		robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
+                            		robotUiStateHandler.setVisualState(curRobot().robotCurrentState());
 	                            	robotUiStateHandler.resolveWaitDeffer();
                             		that.forceCloseDialog();
                             	}
@@ -211,7 +211,7 @@ function WorkflowNotification(parent) {
                             	that.showDialog(dialogType.ERROR, dialogHeader, dialogText, 
 	                                [{"label":$.i18n.t("common.ok"), "callback":function(e){
 	                                        that.closeDialog();
-	                                        robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
+	                                        robotUiStateHandler.setVisualState(curRobot().robotCurrentState());
                             				robotUiStateHandler.rejectWaitDeffer();
 	                                    }
 	                                }]);
@@ -222,7 +222,7 @@ function WorkflowNotification(parent) {
                             // if there is a notification set robot back to online
                             curRobot().robotOnline(true);
                             curRobot().visualOnline(true);
-                            robotUiStateHandler.setVirtualState(ROBOT_STATE_IDLE);
+                            robotUiStateHandler.setVisualState(ROBOT_STATE_IDLE);
                             break;
                         case ROBOT_NOT_CONNECTED:
                             curRobot().connectionState(result.robotDataKeyId);
@@ -234,7 +234,7 @@ function WorkflowNotification(parent) {
                                         // if there is a notification set robot back to online
                                         curRobot().robotOnline(true);
                                         curRobot().visualOnline(true);
-                                        robotUiStateHandler.setVirtualState(ROBOT_STATE_IDLE);
+                                        robotUiStateHandler.setVisualState(ROBOT_STATE_IDLE);
                                     }
                                 }]);
                             
@@ -256,7 +256,7 @@ function WorkflowNotification(parent) {
                             var dialogText =  $.i18n.t("messages.waiting_timeout.message");
                             var dialogTypeId = dialogType.WARNING;
                             // refresh states
-                            robotUiStateHandler.setVirtualState(curRobot().robotNewVirtualState());
+                            robotUiStateHandler.setVisualState(curRobot().robotCurrentState());
                             robotUiStateHandler.rejectWaitDeffer();
                             // command failed, show last error code or timeout message 
                             if(curRobot().crntErrorCode() != 0 && curRobot().crntErrorCode() != ROBOT_UI_ERRORALERT_CLEAR  && curRobot().crntErrorCode() != 21236) {
@@ -725,7 +725,7 @@ function WorkflowNotification(parent) {
                     parent.communicationWrapper.updateRobotStateWithCode(curRobot(), ROBOT_STATE_IDLE);
                     break;
                 case ROBOT_ALREADY_CONNECTED:
-                    curRobot().robotNewVirtualState(ROBOT_STATE_MANUAL_CLEANING);
+                    curRobot().robotCurrentState(ROBOT_STATE_MANUAL_CLEANING);
                     break;
                 case ERROR_NO_CLEANING_STATE_SET:
                     // don't show error message

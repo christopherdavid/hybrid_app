@@ -116,7 +116,7 @@ resourceHandler.registerFunction('robotSelection_ViewModel.js', function(parent)
         if(!that.robot().robotOnline()) {
             robotUiStateHandler.setUiState(ROBOT_UI_STATE_ROBOT_OFFLINE);
         } else {
-            parent.communicationWrapper.updateRobotStateWithCode(that.robot(), data.robotNewVirtualState());
+            parent.communicationWrapper.updateRobotStateWithCode(that.robot(), data.robotCurrentState());
         }
         
         if (that.bundle == robotScreenCaller.CHANGE) {
