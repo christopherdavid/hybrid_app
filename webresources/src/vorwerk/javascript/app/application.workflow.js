@@ -253,7 +253,8 @@ Application.prototype.loadWorkflow = function() {
                     "key" : "logout",
                     "value" : true
                 }]
-            }]
+            }],
+            clearHistoryAfter: true
         },
         "generalSettings" : {
             navrules : [{
