@@ -55,7 +55,7 @@ resourceHandler.registerFunction('robotActivationName_ViewModel.js', function(pa
         that.robots.push(tempRobot);
         that.robot(tempRobot);
         robotUiStateHandler.subscribeToRobot(parent.communicationWrapper.getDataValue("selectedRobot"));
-        parent.communicationWrapper.updateRobotStateWithCode(that.robot(), that.robot().robotNewVirtualState());
+        parent.communicationWrapper.updateRobotStateWithCode(that.robot(), that.robot().robotCurrentState());
         parent.communicationWrapper.getRobotState(that.bundle.robot.robotId);
         parent.communicationWrapper.getRobotOnline(that.bundle.robot.robotId);
         

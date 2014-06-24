@@ -228,13 +228,13 @@ function WorkflowCommunication(parent) {
     };
     
     this.successGetRobotState = function(result) {
-        if(result.robotCurrentState && result.robotId && result.robotNewVirtualState) {
+        if(result.robotCurrentState && result.robotId) {
             var tempRobots = that.getDataValue("robotList");
             // find robot with robotId in global binding object
             $.each(tempRobots(), function(index, item){
                 if(item.robotId() == result.robotId) {
                     // update state
-                    that.updateRobotStateWithCode(item, result.robotNewVirtualState, result.robotCurrentState);
+                    that.updateRobotStateWithCode(item, result.robotCurrentState);
                     return false;
                 }
             });
@@ -283,8 +283,8 @@ function WorkflowCommunication(parent) {
             } else {
                 robot.visualOnline(true);
                 // set robot state to last internal state
-                if(robot.robotNewVirtualState() != ROBOT_STATE_UNKNOWN) {
-                    that.updateRobotStateWithCode(robot, robot.robotNewVirtualState());
+                if(robot.robotCurrentState() != ROBOT_STATE_UNKNOWN) {
+                    that.updateRobotStateWithCode(robot, robot.robotCurrentState());
                 } else {
                     // robot state is unnokwn so we need to make a server request
                     that.getRobotState(robot.robotId());
@@ -293,38 +293,31 @@ function WorkflowCommunication(parent) {
         }
     };
     
-    this.updateRobotStateWithCode = function(robot, virtualState, currentState) {
-        // make sure virtualState is an integer
-        virtualState = parseInt(virtualState, 10);
+    this.updateRobotStateWithCode = function(robot, currentState) {
+        // make sure currentState is an integer
+        currentState = parseInt(currentState, 10);
         // update state, make sure it's an valid state code and robot is online
-        if(virtualState >= 1 && virtualState <= 8 && robot.robotNewVirtualState && robot.robotOnline()) {
+        if(currentState >= 1 && currentState <= 8 && robot.robotCurrentState && robot.robotOnline()) {
             var curRobot = that.getDataValue("selectedRobot");
             var state = "";
             // To fix the state discription more clear in the robot selection screen #526
-            if(virtualState == ROBOT_STATE_RETURNING) {
+            if(currentState == ROBOT_STATE_RETURNING) {
 	            if(robot.dockHasBeenSeen() == 1) {
 	                state = $.i18n.t("robotStateCodes." + visualState[ROBOT_UI_STATE_RETURNING2BASE]);
 	            } else {
 	            	state = $.i18n.t("robotStateCodes." + visualState[ROBOT_UI_STATE_RETURNING2START]);
 	            }
         	} else {
-            	state = $.i18n.t("robotStateCodes." + visualState[virtualState]);
+            	state = $.i18n.t("robotStateCodes." + visualState[currentState]);
             }
-            var stateChanged = robot.robotNewVirtualState() != virtualState;
-            console.log("updateRobotStateWithCode: "  + virtualState + " text: " + state + " for robot: " + robot.robotId());
+            var stateChanged = robot.robotCurrentState() != currentState;
+            console.log("updateRobotStateWithCode: "  + currentState + " text: " + state + " for robot: " + robot.robotId());
             // update robot object
-            robot.robotNewVirtualState(virtualState);
+            robot.robotCurrentState(currentState);
             robot.stateString(state);
-            if(typeof currentState != "undefined") {
-                // make sure currentState is an integer
-                currentState = parseInt(currentState, 10);
-                // make sure it's an valid state code
-                if(currentState >= 1 && currentState <= 8) {
-                    robot.robotCurrentState(currentState);
-                }
-            }
             
-            if(virtualState == ROBOT_STATE_MANUAL_CLEANING) {
+            
+            if(currentState == ROBOT_STATE_MANUAL_CLEANING) {
                 robot.cleaningCategory(CLEANING_CATEGORY_MANUAL);
             }
             
@@ -332,7 +325,7 @@ function WorkflowCommunication(parent) {
             if(curRobot().robotId && robot.robotId() == curRobot().robotId()) {
                 // update state handler if state hasen't changed, this is necessary to update the UI initially
                 if(!stateChanged) {
-                    robotUiStateHandler.setVirtualState(virtualState);
+                    robotUiStateHandler.setVisualState(currentState);
                 }
                 
             }
