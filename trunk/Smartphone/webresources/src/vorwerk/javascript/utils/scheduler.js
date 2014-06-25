@@ -696,8 +696,10 @@ function Scheduler($root, scheduleType, enabled) {
     }
 
     function initLayout() {
-        scroller.refresh();
-        that.updateLayout();
+        setTimeout(function () {
+            scroller.refresh();
+            that.updateLayout();
+        }, 100);
     }
     function scrollToTime(time) {
         var parsedStartTime = $.scroller.parseDate('HH:ii', time);
