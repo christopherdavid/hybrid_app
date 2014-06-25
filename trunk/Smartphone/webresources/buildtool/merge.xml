@@ -9,9 +9,6 @@
     <group name="low-res">
         <css>/low-res.less</css>
     </group>
-    <group name="jp-res">
-        <css>/jp-res.less</css>
-    </group>
     <group name="libs">
       <js>/../../../../bin/copymin/cordova.min.js</js>
       <js>/../../../../bin/copymin/plugins.js</js>
