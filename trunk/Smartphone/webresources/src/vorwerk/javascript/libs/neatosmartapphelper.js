@@ -886,6 +886,13 @@ var RobotPluginManager = ( function() {
             window.setTimeout(function() {
                 callbackSuccess({"robotId":robotId,
                 "robotProfileData": {
+                    "robotCurrentCleaningDetails":{
+                        "robotCleaningMode":1,
+                        "robotCleaningCategory":0,
+                        "robotSpotCleaningAreaLength":0,
+                        "robotSpotCleaningAreaHeight":0
+                    },
+                    "robotConfigInfo":{"BrushSpeed":12,"USHardwareRev":1,"WheelPodType":1,"WallSensorType":1800,"BatteryType":0,"ClkIsSet":0,"VacuumPwr":3,"USMode":1450,"BlowerSWRev":1,"DropSensorType":64,"MagSensorType":25,"QAState":1,"VacuumPwrEco":13398,"SWVersion":{"Minor":0,"Build":0,"Major":0},"ChassisRev":85,"USSoftwareRev":1,"BlowerType":0,"HWPlatformType":0,"BrushSpeedEco":1},
                     "robotCurrentStateDetails":{
                         "robotCurrentState": "1", 
                             "robotStateParams": {
@@ -893,13 +900,9 @@ var RobotPluginManager = ( function() {
                              "RobotIsDocked": 0,
                              "ClockIsSet": 1,
                              "DockHasBeenSeen": 0,
-                             "IsCharging": 0,
-                             "robotCleaningCategory": 0,
-                             "robotCleaningMode": 1,
-                             "robotCleaningModifier": 0,
-                             "robotSpotCleaningAreaLength":0,
-                             "robotSpotCleaningAreaHeight":0
-                             }}}})
+                             "IsCharging": 0
+                        }
+                    }}})
              }, 100);
         },
         
