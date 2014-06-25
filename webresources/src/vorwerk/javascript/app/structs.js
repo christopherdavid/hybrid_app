@@ -21,7 +21,6 @@ function getRobotStruct() {
         displayName:"",
         // has to be filled initially with RobotPluginManager.getRobotCurrentState
         robotCurrentState:defaultState,
-        robotNewVirtualState:defaultState,
         // has to be filled initially with RobotPluginManager.getSpotDefinition
         spotCleaningAreaLength:"",
         spotCleaningAreaHeight:"",

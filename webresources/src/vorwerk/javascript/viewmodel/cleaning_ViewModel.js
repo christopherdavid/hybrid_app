@@ -223,7 +223,7 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
     
     this.successGetRobotCurrentStateDetails = function(result) {
         // need to add a check if it's a valid category (in some cases got 0 from server)
-        console.log("successGetRobotCurrentStateDetails : " + JSON.stringify(result))
+        console.log("successGetRobotCurrentStateDetails : " + JSON.stringify(result));
         if(result.robotProfileData.robotCurrentStateDetails && result.robotProfileData.robotCurrentStateDetails.robotStateParams) {
             if(result.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_MANUAL || result.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_ALL
                 || result.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_SPOT) {
