@@ -18,7 +18,7 @@ function Application() {
         firstScreen : "start",
         pageTransition : "none",
         pageReverseDirection: false,
-        version:"0.7.3.3",
+        version:"0.7.3.4",
         pluginVersion:"0.6.6.04",
         serverName:"Vorwerk (Rajatogo) Staging",
         fallbackLanguage:"en",
