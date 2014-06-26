@@ -96,6 +96,7 @@ function WorkflowNotification(parent) {
                                     tDeffer.done(function(categoryResult) {
                                     	 console.log("getRobotDataSuccess : " + JSON.stringify(categoryResult));
                                         // need to add a check if it's a valid category (in some cases got 0 from server)
+                                        
                                         if(categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_MANUAL || categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_ALL
                                             || categoryResult.robotProfileData.robotCurrentStateDetails.robotCleaningCategory == CLEANING_CATEGORY_SPOT) {
                                                 curRobot().cleaningCategory(categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory);
@@ -105,10 +106,10 @@ function WorkflowNotification(parent) {
                                         }
                                         // update clock set
                                         if(categoryResult.robotProfileData.robotConfigInfo){
-                                        	var configInfo =  $.parseJSON(categoryResult.robotProfileData.robotConfigInfo);
-                                        	console.log("Clock Set Value :"+ categoryResult.robotProfileData.robotConfigInfo);
+                                        	var configInfo =  categoryResult.robotProfileData.robotConfigInfo;
+                                        	console.log("Clock Set Value :"+ JSON.stringify(categoryResult.robotProfileData.robotConfigInfo));
                                         	if(typeof configInfo.ClkIsSet != "undefined") {
-         									   robot.clockIsSet(parseInt(configInfo.ClkIsSet, 10));
+         									   curRobot().clockIsSet(parseInt(configInfo.ClkIsSet, 10));
         									}
                                         }
                                         // update state
