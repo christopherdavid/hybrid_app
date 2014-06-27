@@ -96,9 +96,9 @@ function WorkflowNotification(parent) {
                                     tDeffer.done(function(categoryResult) {
                                     	 console.log("getRobotDataSuccess : " + JSON.stringify(categoryResult));
                                         // need to add a check if it's a valid category (in some cases got 0 from server)
-                                        
+                                        console.log("Cleaning Category : " + categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory);
                                         if(categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_MANUAL || categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_ALL
-                                            || categoryResult.robotProfileData.robotCurrentStateDetails.robotCleaningCategory == CLEANING_CATEGORY_SPOT) {
+                                            || categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_SPOT) {
                                                 curRobot().cleaningCategory(categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory);
                                         } else {
                                             // set All as fallback
