@@ -19,6 +19,7 @@
 #define KEY_SPOT_CLEANING_AREA_LENGTH @"spotCleaningAreaLength"
 #define KEY_SPOT_CLEANING_AREA_HEIGHT @"spotCleaningAreaHeight"
 #define KEY_ROBOT_PROFILE_KEYS @"robotProfileKeys"
+#define KEY_ROBOT_PROFILE_DATA @"robotProfileData"
 //Used for error
 #define KEY_ERROR_CODE @"errorCode"
 #define KEY_ERROR_MESSAGE @"errorMessage"

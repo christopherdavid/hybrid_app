@@ -1273,7 +1273,7 @@
 
                                     // Send the data back to UI layer.
                                     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-                                    [data setValue:robotDataDict forKey:KEY_ROBOT_DATA];
+                                    [data setValue:robotDataDict forKey:KEY_ROBOT_PROFILE_DATA];
                                     [data setValue:robotId forKey:KEY_ROBOT_ID];
                                     [weakSelf sendSuccessResultAsDictionary:data forCallbackId:callbackId];
                                   }];
