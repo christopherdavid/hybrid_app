@@ -165,7 +165,7 @@
 #define KEY_STATE_DETAILS @"StateDetails"
 #define KEY_CLEANING_DETAILS @"CleaningDetails"
 #define KEY_ROBOT_DIRECT_CONNECT_SCRET @"robotDirectConnectSecret"
-#define KEY_SECURE_PASS_KEY @"securePassKey"
+#define KEY_SECURE_PASS_KEY @"securepasskey"
 
 //Key Codes for profile data changes.
 #define ROBOT_CURRENT_STATE_CHANGED_CODE 4001
