@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		19048CD9178AF4FC0008C7EE /* NeatoDataStore.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 19048CD8178AF4FC0008C7EE /* NeatoDataStore.bundle */; };
+		190B78D6194092F700666353 /* Orientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 190B78D5194092F700666353 /* Orientation.m */; };
 		192420E8163FCF8700479217 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 192420E7163FCF8600479217 /* Default-568h@2x.png */; };
 		1964078416C406D200C71028 /* libSlideiOSPlugin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964077F16C406A200C71028 /* libSlideiOSPlugin.a */; };
 		1964078616C4073C00C71028 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1964078516C4073C00C71028 /* Security.framework */; };
@@ -81,6 +82,8 @@
 
 /* Begin PBXFileReference section */
 		19048CD8178AF4FC0008C7EE /* NeatoDataStore.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = NeatoDataStore.bundle; path = SlideiOSPlugin/ResourceBundle/NeatoDataStore.bundle; sourceTree = "<group>"; };
+		190B78D4194092F700666353 /* Orientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Orientation.h; sourceTree = "<group>"; };
+		190B78D5194092F700666353 /* Orientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Orientation.m; sourceTree = "<group>"; };
 		192420E7163FCF8600479217 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		1964077716C406A000C71028 /* SlideiOSPlugin.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SlideiOSPlugin.xcodeproj; path = SlideiOSPlugin/SlideiOSPlugin.xcodeproj; sourceTree = "<group>"; };
 		1964078516C4073C00C71028 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -294,6 +297,8 @@
 			children = (
 				19941BE71636C943001BD6A3 /* Globalization.h */,
 				19941BE81636C943001BD6A3 /* Globalization.m */,
+				190B78D4194092F700666353 /* Orientation.h */,
+				190B78D5194092F700666353 /* Orientation.m */,
 			);
 			name = Plugins;
 			path = CleaningRobotApp/Plugins;
@@ -498,6 +503,7 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* AppDelegate.m in Sources */,
 				302D95F114D2391D003F00A1 /* MainViewController.m in Sources */,
+				190B78D6194092F700666353 /* Orientation.m in Sources */,
 				19941BE91636C943001BD6A3 /* Globalization.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
