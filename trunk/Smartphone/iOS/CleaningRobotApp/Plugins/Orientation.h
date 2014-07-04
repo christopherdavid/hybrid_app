@@ -7,15 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Cordova/CDVPlugin.h>
+#import <Cordova/CDV.h>
 
-@interface Orientation : CDVPlugin{
-    
-    NSString* callbackID;
-}
 
-@property (nonatomic, copy) NSString* callbackID;
+@interface Orientation : CDVPlugin
 
-- (void) forceOrientation:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) forceOrientation:(CDVInvokedUrlCommand*)command;
 
 @end
