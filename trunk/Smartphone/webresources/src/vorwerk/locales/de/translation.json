@@ -196,58 +196,6 @@
         "navi": {"title": "Reinigung"}
     },
     "error": {
-        "-21259": {
-            "message": "Bitte den Weg freiräumen.",
-            "title": "Fehler"
-        },
-        "-182": {
-            "message": "Der Roboter ist bereits mit diesem Nutzer registriert.",
-            "title": "Eingabefehler"
-        },
-        "-21258": {
-            "message": "Bitte den Weg freiräumen.",
-            "title": "Fehler"
-        },
-        "-21257": {
-            "message": "Akkufehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-21256": {
-            "message": "Akkufehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-21255": {
-            "message": "Akkufehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-21254": {
-            "message": "Akkufehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-21253": {
-            "message": "Akkufehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-21252": {
-            "message": "Akkufehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-21251": {
-            "message": "Akkufehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-21250": {
-            "message": "Akkufehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-515": {
-            "message": "Du bist bereits mit einem anderen Roboter verbunden.",
-            "title": "Verbindungsfehler"
-        },
-        "-511": {
-            "message": "__robotName__ ist nicht mehr verbunden.",
-            "title": "Verbindungsfehler"
-        },
         "-106": {
             "message": "Diese E-Mail-Adresse ist bereits registriert.",
             "title": "Eingabefehler"
@@ -260,241 +208,41 @@
             "message": "Der Roboter ist bereits mit einem anderen Nutzer registiert.",
             "title": "Eingabefehler"
         },
-        "-21247": {
-            "message": "Staubbehälter/Filter prüfen und ggf. säubern.",
-            "title": "Fehler"
-        },
-        "-21246": {
-            "message": "Gebläse ist blockiert.",
-            "title": "Fehler"
+        "-182": {
+            "message": "Der Roboter ist bereits mit diesem Nutzer registriert.",
+            "title": "Eingabefehler"
         },
         "-108": {
             "message": "Beim Erstellen des Nutzerkontos ist ein Fehler aufgetreten. Bitte Vorgang wiederholen.",
             "title": "Serverfehler"
         },
-        "-21249": {
-            "message": "Akkufehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-21248": {
-            "message": "Batteriefehler. Bitte den Roboter neu starten!",
-            "title": "Fehler"
-        },
-        "-21206": {
-            "message": "Batterie ist leer, aufladen nötig vor nächster Reinigung",
-            "title": "Fehler"
-        },
-        "-21243": {
-            "message": "Sensorfehler. Bitte Roboter neu booten.",
-            "title": "Fehler"
-        },
-        "-21242": {
-            "message": "Sensorfehler. Bitte Roboter neu booten.",
-            "title": "Fehler"
-        },
-        "-21245": {
-            "message": "Bürste ist überlastet. Bitte Fremdkörper entfernen.",
-            "title": "Fehler"
-        },
-        "-21244": {
-            "message": "Bürste ist blockiert. Bitte Fremdkörper entfernen.",
-            "title": "Fehler"
-        },
-        "-21241": {
-            "message": "Sensorfehler. Bitte Roboter neu booten.",
-            "title": "Fehler"
-        },
-        "-101": {
-            "message": "Eingegebener Nutzername oder Passwort ist falsch.",
-            "title": "Eingabefehler"
-        },
-        "-21240": {
-            "message": "Sensorfehler. Bitte Roboter neu booten.",
-            "title": "Fehler"
-        },
-        "-21230": {
-            "message": "Bitte Staubbehälter einsetzen.",
-            "title": "Fehler"
-        },
-        "-21279": {
-            "message": "Interner Fehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-21233": {
-            "message": "Bitte bringe mich an die Basis zurück,",
-            "title": "Fehler"
-        },
-        "-21234": {
-            "message": "Bitte Kundenservice kontaktieren (Tests nicht abgeschlossen)",
-            "title": "Fehler"
-        },
-        "-21231": {
-            "message": "Staubbehälter/Filter prüfen und ggf. säubern.",
-            "title": "Fehler"
-        },
-        "-21232": {
-            "message": "Bitte warte, mein Akku muss abkühlen.",
-            "title": "Fehler"
-        },
-        "-21274": {
-            "message": "Interner Fehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
         "-111": {
             "message": "Bitte einen Roboter Namen einfügen.",
             "title": "Eingabefehler"
-        },
-        "-21237": {
-            "message": "Ich kann nicht laden. Bitte Basis umstellen!",
-            "title": "Fehler"
-        },
-        "-21273": {
-            "message": "Ein Software Update ist verfügbar. Bitte Kundenservice kontaktieren.",
-            "title": "Fehler"
         },
         "-112": {
             "message": "E-Mail-Adresse ist nicht registriert.",
             "title": "Eingabefehler"
         },
-        "-21238": {
-            "message": "Das linke Rad ist blockiert. Bitte prüfen.",
-            "title": "Fehler"
-        },
-        "-21272": {
-            "message": "Roboter reset. Bitte aufladen!",
-            "title": "Fehler"
-        },
-        "-21235": {
-            "message": "Bumper klemmt. Bitte am Roboter prüfen.",
-            "title": "Fehler"
-        },
-        "-21271": {
-            "message": "Aussschalten nicht möglich!",
-            "title": "Fehler"
+        "-509": {
+            "message": "Diese E-Mail-Adresse wurde nicht bestätigt. Bitte die Bestätigungs-E-Mail beantworten, die an diese Adresse gesendet wurde. ",
+            "title": "Bestätigungsfehler"
         },
         "-114": {
             "message": "Diese Roboter ID ist nicht registriert.",
             "title": "Eingabefehler"
         },
-        "-21236": {
-            "message": "Bitte das Gerät auf den Boden setzen!",
-            "title": "Fehler"
-        },
-        "-21278": {
-            "message": "Interner Fehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-21277": {
-            "message": "Interner Fehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-21276": {
-            "message": "Interner Fehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-21239": {
-            "message": "Das rechte Rad ist blockiert. Bitte prüfen.",
-            "title": "Fehler"
-        },
-        "-21275": {
-            "message": "Interner Fehler. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
+        "-101": {
+            "message": "Eingegebener Nutzername oder Passwort ist falsch.",
+            "title": "Eingabefehler"
         },
         "-110": {
             "message": "Dein altes Passwort ist nicht korrekt.",
             "title": "Eingabefehler"
         },
-        "-21280": {
-            "message": "Hardwarefehler am Roboter. Bitte am Roboter bestätigen.",
-            "title": "Fehler"
-        },
-        "-154": {
-            "message": "Ungültiger Verbindungscode. Bitte gültigen Code eingeben",
-            "title": "Eingabefehler"
-        },
-        "-21281": {
-            "message": "Gerät ist verschmutzt, bitte reinigen",
-            "title": "Fehler"
-        },
-        "-21284": {
-            "message": "Sicht verdeckt!",
-            "title": "Fehler"
-        },
-        "-21285": {
-            "message": "Bitte beginne die Reinigung auf einer ebenen Fläche.",
-            "title": "Fehler"
-        },
-        "-21282": {
-            "message": "Gerät ist verschmutzt, bitte reinigen",
-            "title": "Fehler"
-        },
-        "-21283": {
-            "message": "Gerät ist verschmutzt, bitte reinigen",
-            "title": "Fehler"
-        },
-        "-21269": {
-            "message": "Bitte den Weg freiräumen.",
-            "title": "Fehler"
-        },
-        "-21268": {
-            "message": "Bitte den Weg freiräumen.",
-            "title": "Fehler"
-        },
-        "-21261": {
-            "message": "Bitte den Weg freiräumen.",
-            "title": "Fehler"
-        },
-        "-21224": {
-            "message": "Bitte schalte den Roboter ein",
-            "title": "Fehler"
-        },
-        "-21260": {
-            "message": "Bitte den Weg freiräumen.",
-            "title": "Fehler"
-        },
-        "-21225": {
-            "message": "Bitte das Ladekabel entfernen damit ich reinigen kann.",
-            "title": "Fehler"
-        },
-        "-21263": {
-            "message": "Bitte den Weg freiräumen.",
-            "title": "Fehler"
-        },
-        "-21226": {
-            "message": "Bitte das USB-Kabel entfernen damit ich reinigen kann.",
-            "title": "Fehler"
-        },
-        "-21262": {
-            "message": "Bitte den Weg freiräumen.",
-            "title": "Fehler"
-        },
-        "-21227": {
-            "message": "Bitte zuerst den Zeitplan einschalten.",
-            "title": "Fehler"
-        },
-        "-509": {
-            "message": "Diese E-Mail-Adresse wurde nicht bestätigt. Bitte die Bestätigungs-E-Mail beantworten, die an diese Adresse gesendet wurde. ",
-            "title": "Bestätigungsfehler"
-        },
-        "-21265": {
-            "message": "Bitte den Weg freiräumen.",
-            "title": "Fehler"
-        },
-        "-21228": {
-            "message": "Bitte zuerst die Uhrzeit des Roboters einstellen.",
-            "title": "Fehler"
-        },
-        "-21264": {
-            "message": "Bitte den Weg freiräumen.",
-            "title": "Fehler"
-        },
-        "-21267": {
-            "message": "Bitte den Weg freiräumen.",
-            "title": "Fehler"
-        },
-        "-21266": {
-            "message": "Bitte den Weg freiräumen.",
-            "title": "Fehler"
+        "-515": {
+            "message": "Du bist bereits mit einem anderen Roboter verbunden.",
+            "title": "Verbindungsfehler"
         },
         "-502": {
             "message": "Du benötigst eine Onlineverbindung um diese Anwendung benutzen zu können. Bitte schalte das mobile Netzwerk oder Wi-Fi in den Einstellungen an.",
@@ -504,9 +252,13 @@
             "message": "Ein unbekannter Fehler ist aufgetreten. Bitte erneut versuchen.",
             "title": "Unbekannter Fehler"
         },
-        "-21270": {
-            "message": "ERROR_WARNING",
-            "title": "Fehler"
+        "-154": {
+            "message": "Ungültiger Verbindungscode. Bitte gültigen Code eingeben",
+            "title": "Eingabefehler"
+        },
+        "-511": {
+            "message": "__robotName__ ist nicht mehr verbunden.",
+            "title": "Verbindungsfehler"
         },
         "-504": {
             "message": "Der Wochenplan konnte nicht synchronisiert werden.",
@@ -580,6 +332,70 @@
             "id_accepted": "Deine Registrierungs-ID wurde akzeptiert.<\/br><\/br>Falls gewünscht, kannst du den Namen deines Roboters personalisieren. Dies kann in den Einstellungen auch wieder geändert werden."
         },
         "navi": {"title": "Aktivierung des Roboters."}
+    },
+    "roboterror": {
+        "21249": "Akkufehler. Bitte am Roboter bestätigen.",
+        "21246": "Gebläse ist blockiert.",
+        "21285": "Bitte beginne die Reinigung auf einer ebenen Fläche.",
+        "21245": "Bürste ist überlastet. Bitte Fremdkörper entfernen.",
+        "21248": "Batteriefehler. Bitte den Roboter neu starten!",
+        "21247": "Staubbehälter/Filter prüfen und ggf. säubern.",
+        "21242": "Sensorfehler. Bitte Roboter neu booten.",
+        "21241": "Sensorfehler. Bitte Roboter neu booten.",
+        "21206": "Batterie ist leer, aufladen nötig vor nächster Reinigung",
+        "21244": "Bürste ist blockiert. Bitte Fremdkörper entfernen.",
+        "21243": "Sensorfehler. Bitte Roboter neu booten.",
+        "21280": "Hardwarefehler am Roboter. Bitte am Roboter bestätigen.",
+        "21240": "Sensorfehler. Bitte Roboter neu booten.",
+        "21281": "Gerät ist verschmutzt, bitte reinigen",
+        "21282": "Gerät ist verschmutzt, bitte reinigen",
+        "21283": "Gerät ist verschmutzt, bitte reinigen",
+        "21284": "Sicht verdeckt!",
+        "21259": "Bitte den Weg freiräumen.",
+        "21258": "Bitte den Weg freiräumen.",
+        "21257": "Akkufehler. Bitte am Roboter bestätigen.",
+        "21256": "Akkufehler. Bitte am Roboter bestätigen.",
+        "21255": "Akkufehler. Bitte am Roboter bestätigen.",
+        "21254": "Akkufehler. Bitte am Roboter bestätigen.",
+        "21253": "Akkufehler. Bitte am Roboter bestätigen.",
+        "21252": "Akkufehler. Bitte am Roboter bestätigen.",
+        "21250": "Akkufehler. Bitte am Roboter bestätigen.",
+        "21251": "Akkufehler. Bitte am Roboter bestätigen.",
+        "21224": "Bitte schalte den Roboter ein",
+        "21225": "Bitte das Ladekabel entfernen damit ich reinigen kann.",
+        "21226": "Bitte das USB-Kabel entfernen damit ich reinigen kann.",
+        "21227": "Bitte zuerst den Zeitplan einschalten.",
+        "21264": "Bitte den Weg freiräumen.",
+        "21228": "Bitte zuerst die Uhrzeit des Roboters einstellen.",
+        "21263": "Bitte den Weg freiräumen.",
+        "21266": "Bitte den Weg freiräumen.",
+        "21265": "Bitte den Weg freiräumen.",
+        "21268": "Bitte den Weg freiräumen.",
+        "21267": "Bitte den Weg freiräumen.",
+        "21269": "Bitte den Weg freiräumen.",
+        "21260": "Bitte den Weg freiräumen.",
+        "21261": "Bitte den Weg freiräumen.",
+        "21262": "Bitte den Weg freiräumen.",
+        "21232": "Bitte warte, mein Akku muss abkühlen.",
+        "21233": "Bitte bringe mich an die Basis zurück,",
+        "21230": "Bitte Staubbehälter einsetzen.",
+        "21231": "Staubbehälter/Filter prüfen und ggf. säubern.",
+        "21236": "Bitte das Gerät auf den Boden setzen!",
+        "21237": "Ich kann nicht laden. Bitte Basis umstellen!",
+        "21234": "Bitte Kundenservice kontaktieren (Tests nicht abgeschlossen)",
+        "21235": "Bumper klemmt. Bitte am Roboter prüfen.",
+        "21277": "Interner Fehler. Bitte am Roboter bestätigen.",
+        "21276": "Interner Fehler. Bitte am Roboter bestätigen.",
+        "21275": "Interner Fehler. Bitte am Roboter bestätigen.",
+        "21238": "Das linke Rad ist blockiert. Bitte prüfen.",
+        "21274": "Interner Fehler. Bitte am Roboter bestätigen.",
+        "21239": "Das rechte Rad ist blockiert. Bitte prüfen.",
+        "21279": "Interner Fehler. Bitte am Roboter bestätigen.",
+        "21278": "Interner Fehler. Bitte am Roboter bestätigen.",
+        "21272": "Roboter reset. Bitte aufladen!",
+        "21273": "Ein Software Update ist verfügbar. Bitte Kundenservice kontaktieren.",
+        "21270": "ERROR_WARNING",
+        "21271": "Aussschalten nicht möglich!"
     },
     "basicScheduler": {
         "page": {"cleaning_options": {

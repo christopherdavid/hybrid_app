@@ -62,25 +62,27 @@ function WorkflowNotification(parent) {
         if(result.robotDataKeyId && result.robotId && result.robotData) {
             var tempRobots = parent.communicationWrapper.getDataValue("robotList");
             var curRobot = parent.communicationWrapper.getDataValue("selectedRobot");
+            var curState = null;
+            if(result.robotData.robotCurrentState) {
+                curState = result.robotData.robotCurrentState;
+            } else if (result.robotData.robotCurrentStateDetails && result.robotData.robotCurrentStateDetails.robotCurrentState) {
+                curState = result.robotData.robotCurrentStateDetails.robotCurrentState;
+            }  
             
             // first check if notification is for current selected robot (due performance reason)
             if(curRobot().robotId && curRobot().robotId() == result.robotId) {
                 console.log("notification for current robot");
                 
                 // parse robotStateParams
-                if(result.robotData.robotCurrentStateDetails && result.robotData.robotCurrentStateDetails.robotStateParams) {
+                if(isDefined(result.robotData, "robotCurrentStateDetails.robotStateParams")) {
                     parent.communicationWrapper.parseStateParameters(curRobot(), result.robotData.robotCurrentStateDetails.robotStateParams);
                 }
                 
                 switch(result.robotDataKeyId) {
-                        case ROBOT_CURRENT_STATE_CHANGED:
-                        case ROBOT_STATE_UPDATE:
                         case ROBOT_CURRENT_DATA_CHANGED:
-                            var curState = result.robotData.robotCurrentState || result.robotData.robotStateUpdate || null;
                             // check if state really changed 
-                            console.log("New Virt State :"+ curRobot().robotCurrentState());
-                            console.log("Current State :"+ curState);
-                            //|| (curRobot().robotCurrentState() != ROBOT_STATE_IDLE)
+                            console.log("app robot state:"+ curRobot().robotCurrentState());
+                            console.log("notification robot state:"+ curState);
                             if(curState && (curState != curRobot().robotCurrentState())) {
                                 // if there is a notification set robot back to online
                                 curRobot().robotOnline(true);
@@ -90,13 +92,13 @@ function WorkflowNotification(parent) {
                                 robotUiStateHandler.resolveWaitDeffer();
                             
                                 if(curState == ROBOT_STATE_CLEANING) {
-                                    // getRobotCurrentStateDetails
-                                    var keyArray = ['robotCurrentCleaningDetails','robotConfigInfo'];
-                                    var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotData, [curRobot().robotId(), keyArray], { type: notificationType.NONE });
+                                    // getRobotData: robotCurrentCleaningDetails, robotConfigInfo 
+                                    var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotData, [curRobot().robotId(), ['robotCurrentCleaningDetails','robotConfigInfo']], { type: notificationType.NONE });
                                     tDeffer.done(function(categoryResult) {
-                                    	 console.log("getRobotDataSuccess : " + JSON.stringify(categoryResult));
+                                        console.log("getRobotDataSuccess : " + JSON.stringify(categoryResult));
                                         // need to add a check if it's a valid category (in some cases got 0 from server)
                                         console.log("Cleaning Category : " + categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory);
+                                        
                                         if(categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_MANUAL || categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_ALL
                                             || categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory == CLEANING_CATEGORY_SPOT) {
                                                 curRobot().cleaningCategory(categoryResult.robotProfileData.robotCurrentCleaningDetails.robotCleaningCategory);
@@ -106,11 +108,11 @@ function WorkflowNotification(parent) {
                                         }
                                         // update clock set
                                         if(categoryResult.robotProfileData.robotConfigInfo){
-                                        	var configInfo =  categoryResult.robotProfileData.robotConfigInfo;
-                                        	console.log("Clock Set Value :"+ JSON.stringify(categoryResult.robotProfileData.robotConfigInfo));
-                                        	if(typeof configInfo.ClkIsSet != "undefined") {
-         									   curRobot().clockIsSet(parseInt(configInfo.ClkIsSet, 10));
-        									}
+                                            var configInfo =  categoryResult.robotProfileData.robotConfigInfo;
+                                            console.log("Clock Set Value :"+ JSON.stringify(categoryResult.robotProfileData.robotConfigInfo));
+                                            if(typeof configInfo.ClkIsSet != "undefined") {
+                                                curRobot().clockIsSet(parseInt(configInfo.ClkIsSet, 10));
+                                            }
                                         }
                                         // update state
                                         parent.communicationWrapper.updateRobotStateWithCode(curRobot(), curState);
@@ -133,15 +135,7 @@ function WorkflowNotification(parent) {
                                 if(curRobot().robotOnline() && robotUiStateHandler.current().ui() != ROBOT_UI_STATE_CONNECTING && robotUiStateHandler.current().ui() != ROBOT_UI_STATE_WAIT) {
                                     robotUiStateHandler.setVisualState(curRobot().robotCurrentState());
                                     robotUiStateHandler.resolveWaitDeffer();
-                                    // Clear Error message if any
-                                    if( curRobot().crntErrorCode() == ROBOT_UI_ERRORALERT_CLEAR)
-		                            {
-		                            	console.log("Clear Message ID :" +  curRobot().crntErrorCode());
-		                            	that.forceCloseDialog();
-		                            }
                                 }
-                                
-                                
                             }
                             
                             break;
@@ -159,65 +153,22 @@ function WorkflowNotification(parent) {
                             }
                             break;
                         case ROBOT_CONNECTED:
-                        	// if there is a notification set robot back to online
+                            // if there is a notification set robot back to online
                             curRobot().robotOnline(true);
                             curRobot().visualOnline(true);
-                        	
+                            
                             var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.startCleaning, [curRobot().robotId(), CLEANING_CATEGORY_MANUAL, 1, 1], { type: notificationType.NONE, message: ""});
                             tDeffer.done(function(result){
                                 console.log("startManualModeSuccess" + JSON.stringify(result));
                             });
-                        	break;
+                            break;
                         case ROBOT_ONLINE_STATUS_CHANGED:
-                        	// attention: also been called periodically even if state didn't change
-                        	var onlineStatus = result.robotData.online;
-							console.log("Current Online Status data:" + JSON.stringify(result.robotData));
-							robotUiStateHandler.rejectWaitDeffer();
-                        	parent.communicationWrapper.updateRobotOnlineState(curRobot(), onlineStatus);
-                        	break;
-                        case ROBOT_MESSAGE_NOTIFICATION:
-                        	// Alerts Message Handling
-                        	var data = result.robotData;
-                        	var message = data.robotNotification;
-                        	if(message){
-                        	// TODO : Handle the same error message not shown multiple times.
-                        		message =  $.parseJSON(message);
-                        		var messageId = message.messageID;
-                        		console.log("Alert Message ID :" + messageId);
-                        		if(messageId != ROBOT_UI_ERRORALERT_CLEAR){
-                        			var notificationText   =  $.i18n.t("communication."+ messageId);
-	                        		that.showLoadingArea(true,notificationType.HINT,notificationText);
-                            	}
-                            	else if(messageId == ROBOT_UI_ERRORALERT_CLEAR)
-                            	{
-                            		console.log("Clear Message ID :" + messageId);
-                            		robotUiStateHandler.setVisualState(curRobot().robotCurrentState());
-	                            	robotUiStateHandler.resolveWaitDeffer();
-                            		that.forceCloseDialog();
-                            	}
-                            		
-                        	}
-                        break;
-                        case ROBOT_MESSAGE_ERROR:
-                        	// Error Message handling
-                        	var data = result.robotData;
-                        	var message = data.robotError;
-                        	if(message){
-                        	   // TODO : Handle the same error message not shown multiple times.	
-                        		message =  $.parseJSON(message);
-                        		var messageId = "-"+message.messageID;
-                        		console.log("Error Message ID :" + messageId);
-                        		var dialogHeader =  $.i18n.t("error." + messageId +".title");
-                            	var dialogText   =  $.i18n.t("error." + messageId +".message");
-                            	that.showDialog(dialogType.ERROR, dialogHeader, dialogText, 
-	                                [{"label":$.i18n.t("common.ok"), "callback":function(e){
-	                                        that.closeDialog();
-	                                        robotUiStateHandler.setVisualState(curRobot().robotCurrentState());
-                            				robotUiStateHandler.rejectWaitDeffer();
-	                                    }
-	                                }]);
-                        	}
-                        break;
+                            // attention: also been called periodically even if state didn't change
+                            var onlineStatus = result.robotData.online;
+                            console.log("Current Online Status data:" + JSON.stringify(result.robotData));
+                            robotUiStateHandler.rejectWaitDeffer();
+                            parent.communicationWrapper.updateRobotOnlineState(curRobot(), onlineStatus);
+                            break;
                         case ROBOT_DISCONNECTED:
                             curRobot().connectionState(result.robotDataKeyId);
                             // if there is a notification set robot back to online
@@ -243,8 +194,8 @@ function WorkflowNotification(parent) {
                         // enable or disable scheduler
                         case ROBOT_SCHEDULE_STATE_CHANGED:
                             // convert to boolean no matter if result state is a string or boolean 
-                            var curState = result.robotData.scheduleState == 'false' ? !result.robotData.scheduleState : !!result.robotData.scheduleState; 
-                            that.handleStatusListener(ROBOT_SCHEDULE_STATE_CHANGED, curState);
+                            var scheduleState = result.robotData.scheduleState == 'false' ? !result.robotData.scheduleState : !!result.robotData.scheduleState; 
+                            that.handleStatusListener(ROBOT_SCHEDULE_STATE_CHANGED, scheduleState);
                             break;
                         // schedule data updated
                         case ROBOT_SCHEDULE_UPDATED:
@@ -278,14 +229,12 @@ function WorkflowNotification(parent) {
                 $.each(tempRobots(), function(index, item){
                     if(item.robotId() == result.robotId) {
                         // parse robotStateParams
-                        if(result.robotData.robotCurrentStateDetails && result.robotData.robotCurrentStateDetails.robotStateParams) {
+                        if(isDefined(result.robotData, "robotCurrentStateDetails.robotStateParams")) {
                             parent.communicationWrapper.parseStateParameters(item, result.robotData.robotCurrentStateDetails.robotStateParams);
                         }
                           
                         switch(result.robotDataKeyId) {
-                            case ROBOT_CURRENT_STATE_CHANGED:
-                            case ROBOT_STATE_UPDATE:
-                                var curState = result.robotData.robotCurrentState || result.robotData.robotStateUpdate;
+                            case ROBOT_CURRENT_DATA_CHANGED:
                                 // if there is a notification set robot back to online
                                 item.robotOnline(true);
                                 item.visualOnline(true);
@@ -300,11 +249,11 @@ function WorkflowNotification(parent) {
                                 }
                                 break;
                             case ROBOT_ONLINE_STATUS_CHANGED:
-                            	// attention: also been called periodically even if state didn`t change
-                            	var onlineStatus = result.robotData.online;
-    							console.log("Current Online Status data:" + JSON.stringify(result.robotData));
-    							parent.communicationWrapper.updateRobotOnlineState(item, onlineStatus);
-                            	break;
+                                // attention: also been called periodically even if state didn`t change
+                                var onlineStatus = result.robotData.online;
+                                console.log("Current Online Status data:" + JSON.stringify(result.robotData));
+                                parent.communicationWrapper.updateRobotOnlineState(item, onlineStatus);
+                                break;
                             case ROBOT_CONNECTED:
                             case ROBOT_DISCONNECTED:
                             case ROBOT_NOT_CONNECTED:

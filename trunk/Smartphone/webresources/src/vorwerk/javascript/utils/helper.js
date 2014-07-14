@@ -36,9 +36,12 @@ var guid = function () {
 function isDefined(object, property) {
     if(object != null) {
         var props = property.split(".");
+        var testObject = object;
         for(var i=0; i < props.length; i++) {
-            if(typeof object[props[i]] == "undefined") {
+            if(typeof testObject[props[i]] == "undefined") {
                 return false;
+            } else {
+                testObject = testObject[props[i]];
             }
         }
         return true;
@@ -251,6 +254,10 @@ var robotUiStateHandler = {
         if(state == ROBOT_STATE_DOCK_PAUSED) {
             newUiState = ROBOT_UI_STATE_DOCK_PAUSED;
         }        
+        // check if there is an error
+        if(curRobot().crntErrorCode() != ROBOT_UI_ERRORALERT_CLEAR) {
+            newUiState = ROBOT_UI_STATE_ERROR;
+        }
         
         console.log("newUiState " + newUiState + ": " + visualState[newUiState]);
         this.current().robot(state);
@@ -284,7 +291,6 @@ var robotUiStateHandler = {
             curRobot().displayName(curRobot().robotName() + " (" + $.i18n.t("robotStateCodes." + visualState[state]) + ")");
             curRobot().visualOnline(false);
             // show notification
-            //TODO: add check if current view cleaning and don't show notification there
             var translatedText = $.i18n.t("communication." + visualState[state], {robotName:curRobot().robotName()});
             app.notification.showLoadingArea(true,notificationType.HINT,translatedText);
         } else if(state == ROBOT_USER_MENU_STATE) {
@@ -296,6 +302,9 @@ var robotUiStateHandler = {
             //TODO: add check if current view cleaning and don't show notification there 
             var translatedText = $.i18n.t("communication." + visualState[state], {robotName:curRobot().robotName()});
             app.notification.showLoadingArea(true,notificationType.HINT,translatedText);
+        } else if (state == ROBOT_UI_STATE_ERROR) {
+            // update message text
+            this.current().messageText($.i18n.t("roboterror." + curRobot().crntErrorCode()));
         } else {
             this.current().messageText($.i18n.t("visualState." + visualState[state]));
         }

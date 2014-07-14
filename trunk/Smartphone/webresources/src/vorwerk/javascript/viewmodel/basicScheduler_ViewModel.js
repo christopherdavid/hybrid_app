@@ -127,7 +127,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         that.scheduler.clear();
         console.log("getScheduleEvents for robot with id: " + that.robot().robotId());
         //RobotPluginManager.getScheduleEvents(robotId, scheduleType, callbackSuccess, callbackError)
-        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getScheduleEvents, [that.robot().robotId(), 0]);
+        var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getScheduleEvents, [that.robot().robotId(), SCHEDULE_TYPE_BASIC]);
         tDeffer.done(that.getScheduleEventsSuccess);
         tDeffer.fail(that.getScheduleEventsError);
     };
@@ -138,7 +138,7 @@ resourceHandler.registerFunction('basicScheduler_ViewModel.js', function(parent)
         parent.communicationWrapper.setDataValue("scheduleId", result.scheduleId);
         // catch result with an empty scheduleId
         if(result.scheduleId == "") {
-            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.createSchedule, [that.robot().robotId(), 0]);
+            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.createSchedule, [that.robot().robotId(), SCHEDULE_TYPE_BASIC]);
             tDeffer.done(that.createScheduleEventsSuccess);
             tDeffer.fail(that.createScheduleEventsError);
         } else {
