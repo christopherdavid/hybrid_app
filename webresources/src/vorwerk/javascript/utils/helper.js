@@ -255,7 +255,7 @@ var robotUiStateHandler = {
             newUiState = ROBOT_UI_STATE_DOCK_PAUSED;
         }        
         // check if there is an error
-        if(curRobot().crntErrorCode() != ROBOT_UI_ERRORALERT_CLEAR) {
+        if((curRobot().crntErrorCode() >= ROBOT_UI_ERRORCODE_START) && (curRobot().crntErrorCode() != ROBOT_UI_ERRORALERT_CLEAR)) {
             newUiState = ROBOT_UI_STATE_ERROR;
         }
         

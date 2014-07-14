@@ -8,7 +8,7 @@
         "no": "Nein",
         "next": "Weiter",
         "menu": {
-            "schedule": "Terminkalender",
+            "schedule": "Zeitplan",
             "cleaning": "Reinigung",
             "settings": "Einstellungen"
         },
@@ -290,7 +290,7 @@
         "20203": "Fertig! Ich fahre zur Startposition zurück.",
         "20200": "Fehler",
         "20201": "Fertig! Ich fahre zur Basisstation zurück.",
-        "update_scheduler": "Terminkalender wird synchronisiert.",
+        "update_scheduler": "Zeitplan wird synchronisiert.",
         "20222": "Bitte den Zeitplan aktivieren.",
         "20223": "Akkufehler. Bitte Roboter neu starten.",
         "stop_drive": "Stoppe __robotName__",
