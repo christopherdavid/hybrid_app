@@ -196,58 +196,6 @@
         "navi": {"title": "Pulizia"}
     },
     "error": {
-        "-21259": {
-            "message": "Please clear my path.",
-            "title": "Error"
-        },
-        "-182": {
-            "message": "Questo robot è già stato registrato con questa user.",
-            "title": "Errore"
-        },
-        "-21258": {
-            "message": "Please clear my path.",
-            "title": "Error"
-        },
-        "-21257": {
-            "message": "Battery error. Please confirm on the robot.",
-            "title": "Error"
-        },
-        "-21256": {
-            "message": "Battery error. Please confirm on the robot.",
-            "title": "Error"
-        },
-        "-21255": {
-            "message": "Battery error. Please confirm on the robot.",
-            "title": "Error"
-        },
-        "-21254": {
-            "message": "Battery error. Please confirm on the robot.",
-            "title": "Error"
-        },
-        "-21253": {
-            "message": "Battery error. Please confirm on the robot.",
-            "title": "Error"
-        },
-        "-21252": {
-            "message": "Battery error. Please confirm on the robot.",
-            "title": "Error"
-        },
-        "-21251": {
-            "message": "Battery error. Please confirm on the robot.",
-            "title": "Error"
-        },
-        "-21250": {
-            "message": "Battery error. Please confirm on the robot.",
-            "title": "Error"
-        },
-        "-515": {
-            "message": "Sei già connesso con un altro robot",
-            "title": "Errore di connessione"
-        },
-        "-511": {
-            "message": "__robotName__ non è più connesso.",
-            "title": "Errore di connessione"
-        },
         "-106": {
             "message": "L'indirizzo email è già registrato con il server",
             "title": "Errore"
@@ -260,241 +208,41 @@
             "message": "Questo robot è già stato registrato con un'altra user.",
             "title": "Errore"
         },
-        "-21247": {
-            "message": "Please check my Filter and Dirt Bin.",
-            "title": "Error"
-        },
-        "-21246": {
-            "message": "My vacuum is stuck. ",
-            "title": "Error"
+        "-182": {
+            "message": "Questo robot è già stato registrato con questa user.",
+            "title": "Errore"
         },
         "-108": {
             "message": "Creazione Account non riuscita. Per favore prova ancora.",
             "title": "Errore Server"
         },
-        "-21249": {
-            "message": "Battery error. Please confirm on the robot.",
-            "title": "Error"
-        },
-        "-21248": {
-            "message": "Please press OKAY to continue. Battery issue xxxx.",
-            "title": "Error"
-        },
-        "-21206": {
-            "message": "My battery is low. I need to charge my battery before I can clean.",
-            "title": "Error"
-        },
-        "-21243": {
-            "message": "Sensor error. Please reboot robot.",
-            "title": "Error"
-        },
-        "-21242": {
-            "message": "Sensor error. Please reboot robot.",
-            "title": "Error"
-        },
-        "-21245": {
-            "message": "My Brush needs to be cleaned.",
-            "title": "Error"
-        },
-        "-21244": {
-            "message": "Please clean my brush.",
-            "title": "Error"
-        },
-        "-21241": {
-            "message": "Sensor error. Please reboot robot.",
-            "title": "Error"
-        },
-        "-101": {
-            "message": "Username e password inseriti non sono corretti.",
-            "title": "Errore"
-        },
-        "-21240": {
-            "message": "Sensor error. Please reboot robot.",
-            "title": "Error"
-        },
-        "-21230": {
-            "message": "Please put my Dirt Bin back in.",
-            "title": "Error"
-        },
-        "-21279": {
-            "message": "Internal error. Please confirm on robot.",
-            "title": "Error"
-        },
-        "-21233": {
-            "message": "Please return me to my base.",
-            "title": "Error"
-        },
-        "-21234": {
-            "message": "Please contact Customer Support. Tests not complete.",
-            "title": "Error"
-        },
-        "-21231": {
-            "message": "Please empty my Dirt Bin and Filter if needed.",
-            "title": "Error"
-        },
-        "-21232": {
-            "message": "Please wait while I cool down my battery.",
-            "title": "Error"
-        },
-        "-21274": {
-            "message": "Internal error. Please confirm on robot.",
-            "title": "Error"
-        },
         "-111": {
             "message": "Devi inserire il nome del Robot.",
             "title": "Errore"
-        },
-        "-21237": {
-            "message": "I can't charge. Try moving the base station to a new location.",
-            "title": "Error"
-        },
-        "-21273": {
-            "message": "A software update is available. Please visit web support.",
-            "title": "Error"
         },
         "-112": {
             "message": "Il tuo indirizzo email non è registrato.",
             "title": "Errore"
         },
-        "-21238": {
-            "message": "My Left Wheel is stuck. Please free it from debris.",
-            "title": "Error"
-        },
-        "-21272": {
-            "message": "Roboter reset. Please recharge it.",
-            "title": "Error"
-        },
-        "-21235": {
-            "message": "My Bumper is stuck. Please free it.",
-            "title": "Error"
-        },
-        "-21271": {
-            "message": "I can't shut down while I'm connected to power.",
-            "title": "Error"
+        "-509": {
+            "message": "Questo account non è stato confermato. Si prega di rispondere alla email di conferma inviata a questo indirizzo email.",
+            "title": "Errore di conferma"
         },
         "-114": {
             "message": "Questo robot non è registrato.",
             "title": "Errore"
         },
-        "-21236": {
-            "message": "Please put me down on the floor.",
-            "title": "Error"
-        },
-        "-21278": {
-            "message": "Internal error. Please confirm on robot.",
-            "title": "Error"
-        },
-        "-21277": {
-            "message": "Internal error. Please confirm on robot.",
-            "title": "Error"
-        },
-        "-21276": {
-            "message": "Internal error. Please confirm on robot.",
-            "title": "Error"
-        },
-        "-21239": {
-            "message": "My Right Wheel is stuck. Please free it from debris.",
-            "title": "Error"
-        },
-        "-21275": {
-            "message": "Internal error. Please confirm on robot.",
-            "title": "Error"
+        "-101": {
+            "message": "Username e password inseriti non sono corretti.",
+            "title": "Errore"
         },
         "-110": {
             "message": "La vecchia password non corrisponde.",
             "title": "Errore"
         },
-        "-21280": {
-            "message": "Hardware error. Please conform on robot.",
-            "title": "Error"
-        },
-        "-154": {
-            "message": "Codice di collegamento non valido. Inserisci codice di collegamento valido.",
-            "title": "Errore"
-        },
-        "-21281": {
-            "message": "Please dust me off so that I can see.",
-            "title": "Error"
-        },
-        "-21284": {
-            "message": "I can't see!",
-            "title": "Error"
-        },
-        "-21285": {
-            "message": "TILTED_ON_CLEANING_STARTUP",
-            "title": "Error"
-        },
-        "-21282": {
-            "message": "Please clean my right drop sensor window.",
-            "title": "Error"
-        },
-        "-21283": {
-            "message": "Please clean my left drop sensor window.",
-            "title": "Error"
-        },
-        "-21269": {
-            "message": "Please clear my path.",
-            "title": "Error"
-        },
-        "-21268": {
-            "message": "Please clear my path.",
-            "title": "Error"
-        },
-        "-21261": {
-            "message": "Please clear my path.",
-            "title": "Error"
-        },
-        "-21224": {
-            "message": "Please turn on the robot's power switch.",
-            "title": "Error"
-        },
-        "-21260": {
-            "message": "Please clear my path.",
-            "title": "Error"
-        },
-        "-21225": {
-            "message": "Please unplug my Power Cable when you want me to clean.",
-            "title": "Error"
-        },
-        "-21263": {
-            "message": "Please clear my path.",
-            "title": "Error"
-        },
-        "-21226": {
-            "message": "Please unplug my USB Cable when you want me to clean.",
-            "title": "Error"
-        },
-        "-21262": {
-            "message": "Please clear my path.",
-            "title": "Error"
-        },
-        "-21227": {
-            "message": "Please set schedule to on first",
-            "title": "Error"
-        },
-        "-509": {
-            "message": "Questo account non è stato confermato. Si prega di rispondere alla email di conferma inviata a questo indirizzo email.",
-            "title": "Errore di conferma"
-        },
-        "-21265": {
-            "message": "Please clear my path.",
-            "title": "Error"
-        },
-        "-21228": {
-            "message": "Please set my clock first.",
-            "title": "Error"
-        },
-        "-21264": {
-            "message": "Please clear my path.",
-            "title": "Error"
-        },
-        "-21267": {
-            "message": "Please clear my path.",
-            "title": "Error"
-        },
-        "-21266": {
-            "message": "Please clear my path.",
-            "title": "Error"
+        "-515": {
+            "message": "Sei già connesso con un altro robot",
+            "title": "Errore di connessione"
         },
         "-502": {
             "message": "Avete bisogno di una connessione di rete per utilizzare questa applicazione. Perfavore attiva una rete mobile o Wi-Fi in impostazioni.",
@@ -504,9 +252,13 @@
             "message": "Si è verificato un errore sconosciuto. Per favore prova ancora.",
             "title": "Errore sconosciuto"
         },
-        "-21270": {
-            "message": "ERROR_WARNING",
-            "title": "Error"
+        "-154": {
+            "message": "Codice di collegamento non valido. Inserisci codice di collegamento valido.",
+            "title": "Errore"
+        },
+        "-511": {
+            "message": "__robotName__ non è più connesso.",
+            "title": "Errore di connessione"
         },
         "-504": {
             "message": "La tua programmazione potrebbe non essere sincronizzata.",
@@ -580,6 +332,70 @@
             "id_accepted": "Il tuo codice di connessione Robot è stato registrato, se vuoi puoi personalizzare il nome del robot.<\/br><\/br>Puoi modificarlo in qualsiasi momento nelle impostazioni del menu."
         },
         "navi": {"title": "Attivazione Robot"}
+    },
+    "roboterror": {
+        "21249": "Battery error. Please confirm on the robot.",
+        "21246": "My vacuum is stuck. ",
+        "21285": "TILTED_ON_CLEANING_STARTUP",
+        "21245": "My Brush needs to be cleaned.",
+        "21248": "Please press OKAY to continue. Battery issue xxxx.",
+        "21247": "Please check my Filter and Dirt Bin.",
+        "21242": "Sensor error. Please reboot robot.",
+        "21241": "Sensor error. Please reboot robot.",
+        "21206": "My battery is low. I need to charge my battery before I can clean.",
+        "21244": "Please clean my brush.",
+        "21243": "Sensor error. Please reboot robot.",
+        "21280": "Hardware error. Please conform on robot.",
+        "21240": "Sensor error. Please reboot robot.",
+        "21281": "Please dust me off so that I can see.",
+        "21282": "Please clean my right drop sensor window.",
+        "21283": "Please clean my left drop sensor window.",
+        "21284": "I can't see!",
+        "21259": "Please clear my path.",
+        "21258": "Please clear my path.",
+        "21257": "Battery error. Please confirm on the robot.",
+        "21256": "Battery error. Please confirm on the robot.",
+        "21255": "Battery error. Please confirm on the robot.",
+        "21254": "Battery error. Please confirm on the robot.",
+        "21253": "Battery error. Please confirm on the robot.",
+        "21252": "Battery error. Please confirm on the robot.",
+        "21250": "Battery error. Please confirm on the robot.",
+        "21251": "Battery error. Please confirm on the robot.",
+        "21224": "Please turn on the robot's power switch.",
+        "21225": "Please unplug my Power Cable when you want me to clean.",
+        "21226": "Please unplug my USB Cable when you want me to clean.",
+        "21227": "Please set schedule to on first",
+        "21264": "Please clear my path.",
+        "21228": "Please set my clock first.",
+        "21263": "Please clear my path.",
+        "21266": "Please clear my path.",
+        "21265": "Please clear my path.",
+        "21268": "Please clear my path.",
+        "21267": "Please clear my path.",
+        "21269": "Please clear my path.",
+        "21260": "Please clear my path.",
+        "21261": "Please clear my path.",
+        "21262": "Please clear my path.",
+        "21232": "Please wait while I cool down my battery.",
+        "21233": "Please return me to my base.",
+        "21230": "Please put my Dirt Bin back in.",
+        "21231": "Please empty my Dirt Bin and Filter if needed.",
+        "21236": "Please put me down on the floor.",
+        "21237": "I can't charge. Try moving the base station to a new location.",
+        "21234": "Please contact Customer Support. Tests not complete.",
+        "21235": "My Bumper is stuck. Please free it.",
+        "21277": "Internal error. Please confirm on robot.",
+        "21276": "Internal error. Please confirm on robot.",
+        "21275": "Internal error. Please confirm on robot.",
+        "21238": "My Left Wheel is stuck. Please free it from debris.",
+        "21274": "Internal error. Please confirm on robot.",
+        "21239": "My Right Wheel is stuck. Please free it from debris.",
+        "21279": "Internal error. Please confirm on robot.",
+        "21278": "Internal error. Please confirm on robot.",
+        "21272": "Roboter reset. Please recharge it.",
+        "21273": "A software update is available. Please visit web support.",
+        "21270": "ERROR_WARNING",
+        "21271": "I can't shut down while I'm connected to power."
     },
     "basicScheduler": {
         "page": {"cleaning_options": {

@@ -171,14 +171,45 @@
             </ul>
         </div>
     </div>
-    <!-- TODO: remove testdata
+    <!-- TODO: remove testdata 
     <div id="testPopup" data-history="false" data-role="popup" data-dismissible="true" data-corners="false" data-theme="none" data-shadow="false" data-overlay-theme="a" class="dialog ui-mobile-viewport dialogType_1">
         <div data-role="header" data-theme="b" class="ui-header ui-bar-b">
              <h1 class="ui-title dialogPopupTitle" role="heading" aria-level="1">State tests</h1>
         </div>
         <div class="popupHeaderLine"></div>
         <div data-role="content" class="ui-content"> 
-            <ul data-role="listview" data-theme="a" data-inset="true" class="single"> 
+            <ul data-role="listview" data-theme="a" data-inset="true" class="single">
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, 11)">
+                        <h3>Online</h3>
+                    </a>
+                </li>
+                <li data-role="list-divider">getRobotData</li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, 50)">
+                        <h3>robotConfigInfo</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, 51)">
+                        <h3>robotCurrentStateDetails</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, 52)">
+                        <h3>robotCurrentCleaningDetails</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, 53)">
+                        <h3>empty</h3>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, 54)">
+                        <h3>getScheduleEvents</h3>
+                    </a>
+                </li>
                 <li data-role="list-divider">robot states from API</li>
                 <li>
                     <a href="javascript:void(0);" data-bind="click: stateTest.bind($data, ROBOT_STATE_IDLE)">
@@ -273,9 +304,9 @@
                         <h3>ROBOT_UI_STATE_STUCKED</h3>
                     </a>
                 </li>
+                -->
             </ul>
         </div>
     </div>
-    -->
 
 </div><!-- /page -->

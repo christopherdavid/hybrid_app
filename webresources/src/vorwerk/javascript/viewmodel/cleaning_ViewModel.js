@@ -131,9 +131,8 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
         var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getSpotDefinition, [that.robot().robotId()]);
         tDeffer.done(that.successGetSpotDefinition);
         
-        // getRobotCurrentStateDetails
-        var keyArray = ['robotCurrentStateDetails', 'robotConfigInfo', 'robotCurrentCleaningDetails'];
-        var tDeffer2 = parent.communicationWrapper.exec(RobotPluginManager.getRobotData, [that.robot().robotId(), keyArray]);
+        // getRobotData
+        var tDeffer2 = parent.communicationWrapper.exec(RobotPluginManager.getRobotData, [that.robot().robotId(), ['robotCurrentStateDetails', 'robotConfigInfo', 'robotCurrentCleaningDetails']]);
         tDeffer2.done(that.successGetRobotCurrentStateDetails);
         
         // get jquery object for spotSize popup
@@ -565,6 +564,21 @@ resourceHandler.registerFunction('cleaning_ViewModel.js', function(parent) {
                 "robotId":that.robot().robotId(),
                 "robotData":{"online":0}
             });    
+        } else if (newState == 50) {
+            console.log("getRobotData ['robotConfigInfo']");
+            var tDeffer = parent.communicationWrapper.exec(RobotPluginManager.getRobotData, [that.robot().robotId(), ['robotConfigInfo']]);
+        } else if (newState == 51) {
+            console.log("getScheduleEvents ['robotCurrentStateDetails']");
+            var tDeffer2 = parent.communicationWrapper.exec(RobotPluginManager.getRobotData, [that.robot().robotId(), ['robotCurrentStateDetails']]);
+        } else if (newState == 52) {
+            console.log("getScheduleEvents ['robotCurrentCleaningDetails']");
+            var tDeffer3 = parent.communicationWrapper.exec(RobotPluginManager.getRobotData, [that.robot().robotId(), ['robotCurrentCleaningDetails']]);
+        } else if (newState == 53) {
+            console.log("getScheduleEvents []");
+            var tDeffer4 = parent.communicationWrapper.exec(RobotPluginManager.getRobotData, [that.robot().robotId(), []]);
+        } else if (newState == 54) {
+            console.log("getScheduleEvents");
+            var tDeffer5 = parent.communicationWrapper.exec(RobotPluginManager.getScheduleEvents, [that.robot().robotId(), SCHEDULE_TYPE_BASIC]);
         } else if (newState >= 20001 && newState <= 20100) {
             // UI states
             robotUiStateHandler.setUiState(newState);
