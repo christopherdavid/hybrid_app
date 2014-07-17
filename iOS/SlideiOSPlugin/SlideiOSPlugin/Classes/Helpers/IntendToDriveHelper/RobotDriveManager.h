@@ -2,7 +2,6 @@
 
 
 @protocol RobotDriveManagerProtocol <NSObject>
-- (void)driveRobotSent;
 - (void)driveRobotFailedWithError:(NSError *)error;
 - (void)cancelIntendToDriveSucceded;
 - (void)cancelIntendToDriveFailedWithError:(NSError *)error;

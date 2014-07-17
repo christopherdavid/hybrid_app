@@ -39,4 +39,5 @@
  Clear all USER DEFAULTS data.
  */
 + (void)clearAppDefaultsData;
++ (BOOL)isValidJSONString:(id)value;
 @end

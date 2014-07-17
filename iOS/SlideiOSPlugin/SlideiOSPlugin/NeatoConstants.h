@@ -389,7 +389,6 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 #define NEATO_REGISTER_FOR_PUSH_NOTIFICATION_URL @"method=message.notification_registration"
 #define NEATO_UNREGISTER_FOR_PUSH_NOTIFICATION_URL @"method=message.notification_unregistration"
 #define NEATO_IS_USER_VALIDATED_URL @"method=user.IsUserValidated"
-#define NEATO_GET_ROBOT_PROFILE_DETAILS_URL @"method=robot.get_profile_details"
 #define NEATO_GET_ROBOT_PROFILE_DETAILS_2_URL @"method=robot.get_profile_details2"
 // TODO: These APIs have not been added to prod server.
 #define NEATO_CREATE_USER2_URL @"method=user.create2"

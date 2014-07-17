@@ -50,6 +50,7 @@ static NeatoErrorCodesHelper *sharedInstance  = nil;
     [self.errorMap setObject:[NSNumber numberWithInteger:UI_ERROR_INVALID_LINKING_CODE] forKey:[NSNumber numberWithInteger:SERVER_ERROR_INVALID_LINKING_CODE]];
     [self.errorMap setObject:[NSNumber numberWithInteger:UI_ERROR_LINKING_CODE_EXPIRED] forKey:[NSNumber numberWithInteger:SERVER_ERROR_LINKING_CODE_EXPIRED]];
     [self.errorMap setObject:[NSNumber numberWithInteger:UI_ERROR_LINKING_CODE_IN_USE] forKey:[NSNumber numberWithInteger:SERVER_ERROR_LINKING_CODE_IN_USE]];
+    [self.errorMap setObject:[NSNumber numberWithInteger:UI_ERROR_TYPE_USER_UNAUTHORIZED] forKey:[NSNumber numberWithInteger:SERVER_ERROR_TYPE_USER_UNAUTHORIZED]];
 
 }
 

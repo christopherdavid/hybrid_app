@@ -517,7 +517,7 @@
     NSString *callbackId = command.callbackId;
     NSDictionary *parameters = [command.arguments objectAtIndex:0];
     debugLog(@"parameters = %@", parameters);
-    NSString *email = [parameters objectForKey:@"email"];
+    NSString *email = [parameters objectForKey:KEY_EMAIL];
     NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
     
     __weak typeof(self) weakSelf = self;

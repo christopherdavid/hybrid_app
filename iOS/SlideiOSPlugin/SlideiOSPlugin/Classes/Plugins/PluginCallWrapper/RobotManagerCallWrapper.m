@@ -251,96 +251,6 @@
     self.delegate = nil;
 }
 
-- (void)setRobotName2:(NSString *)robotName forRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    self.retained_self = self;
-    self.callbackId = callbackId;
-    NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
-    serverManager.delegate = self;
-    [serverManager setRobotName2:robotName forRobotWithId:robotId];
-}
-
-- (void)robotName:(NSString *)name updatedForRobotWithId:(NSString *)robotId {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(robotName:updatedForRobotWithId:callbackId:)])
-    {
-        [self.delegate robotName:name updatedForRobotWithId:robotId callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
-- (void)failedToUpdateRobotNameWithError:(NSError *)error {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(failedToUpdateRobotNameWithError:callbackId:)])
-    {
-        [self.delegate failedToUpdateRobotNameWithError:error callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
-- (void)getDetailsForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    self.retained_self = self;
-    self.callbackId = callbackId;
-    
-    NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
-    serverManager.delegate = self;
-    [serverManager getRobotDetails:robotId];
-}
-
--(void) failedToGetRobotDetailsWihError:(NSError *)error
-{
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(failedToGetRobotDetailsWihError:callbackId:)])
-    {
-        [self.delegate failedToGetRobotDetailsWihError:error callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
--(void) gotRobotDetails:(NeatoRobot *)neatoRobot
-{
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(gotRobotDetails:callbackId:)])
-    {
-        [self.delegate gotRobotDetails:neatoRobot callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
-- (void)onlineStatusForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    self.retained_self = self;
-    self.callbackId = callbackId;
-    
-    NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
-    serverManager.delegate = self;
-    [serverManager onlineStatusForRobotWithId:robotId];
-}
-
-- (void)onlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(onlineStatus:forRobotWithId:callbackId:)])
-    {
-        [self.delegate onlineStatus:status forRobotWithId:robotId callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
-- (void)failedToGetRobotOnlineStatusWithError:(NSError *)error {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(failedToGetRobotOnlineStatusWithError:callbackId:)]) {
-        [self.delegate failedToGetRobotOnlineStatusWithError:error callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
 - (void)tryDirectConnection2:(NSString *)robotId callbackId:(NSString *)callbackId {
     debugLog(@"");
     self.retained_self = self;
@@ -450,31 +360,6 @@
     return [scheduleManager scheduleDataForScheduleId:scheduleId];
 }
 
-- (void)scheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType callbackId:(NSString *)callbackId {
-    self.retained_self = self;
-    self.callbackId = callbackId;
-    RobotScheduleManager *scheduleManager = [[RobotScheduleManager alloc] init];
-    [scheduleManager scheduleEventsForRobotWithId:robotId ofScheduleType:scheduleType delegate:self];
-}
-
-- (void)failedToGetScheduleEventsWithError:(NSError *)error {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(failedToGetScheduleEventsWithError:callbackId:)]) {
-        [self.delegate performSelector:@selector(failedToGetScheduleEventsWithError:callbackId:) withObject:error withObject:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
-- (void)gotScheduleEventsForSchedule:(Schedule *)schedule ofType:(NSInteger)scheduleType forRobotWithId:(NSString *)robotId {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(gotScheduleEventsForSchedule:ofType:forRobotWithId:callbackId:)]) {
-        [self.delegate gotScheduleEventsForSchedule:schedule ofType:scheduleType forRobotWithId:robotId callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
 - (void)updateScheduleForScheduleId:(NSString *)scheduleId callbackId:(NSString *)callbackId {
     debugLog(@"");
     self.retained_self = self;
@@ -571,32 +456,6 @@
     self.delegate = nil;
 }
 
-- (void)enabledDisable:(BOOL)enable schedule:(int)scheduleType forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    self.retained_self = self;
-    self.callbackId = callbackId;
-    
-    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
-    manager.delegate = self;
-    [manager enabledDisable:enable schedule:scheduleType forRobotWithId:robotId withUserEmail:email];
-}
-
-- (void)enabledDisabledScheduleWithResult:(NSDictionary *)resultData {
-    if ([self.delegate respondsToSelector:@selector(deleteScheduleSuccess:callbackId:)]) {
-        [self.delegate enabledDisabledScheduleWithResult:resultData callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
-- (void)failedToEnableDisableScheduleWithError:(NSError *)error {
-    if ([self.delegate respondsToSelector:@selector(failedToEnableDisableScheduleWithError:callbackId:)]) {
-        [self.delegate failedToEnableDisableScheduleWithError:error callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
 - (void)turnVacuumOnOff:(int)on forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email withParams:(NSDictionary *)params commandId:(NSString *)commandId callbackId:(NSString *)callbackId {
     debugLog(@"");
     
@@ -608,7 +467,7 @@
     [manager turnVacuumOnOff:on forRobotWithId:robotId withUserEmail:email withParams:params commandId:commandId];
 }
 
-- (id)setSpotDefinitionForRobotWithId:(NSString *)robotId cleaningAreaLength:(int)cleaningAreaLength cleaningAreaHeight:(int)cleaningAreaHeight {
+- (id)setSpotDefinitionForRobotWithId:(NSString *)robotId cleaningAreaLength:(NSInteger)cleaningAreaLength cleaningAreaHeight:(NSInteger)cleaningAreaHeight {
     return [NeatoRobotHelper setSpotDefinitionForRobotWithId:robotId cleaningAreaLength:cleaningAreaLength cleaningAreaHeight:cleaningAreaHeight];
 }
 
@@ -639,35 +498,6 @@
     debugLog(@"");
     if ([self.delegate respondsToSelector:@selector(failedToGetRobotVirtualOnlineStatusWithError:callbackId:)]) {
         [self.delegate failedToGetRobotVirtualOnlineStatusWithError:error callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
-
-- (void)isScheduleType:(NSString *)scheduleType enabledForRobotWithId:(NSString *)robotId callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    self.retained_self = self;
-    self.callbackId = callbackId;
-    
-    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
-    manager.delegate = self;
-    [manager isScheduleType:scheduleType enabledForRobotWithId:robotId];
-}
-
-- (void)gotScheduleStatus:(NSDictionary *)status {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(gotScheduleStatus:callbackId:)]) {
-        [self.delegate gotScheduleStatus:status callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-}
-
-- (void)failedToGetScheduleStatusWithError:(NSError *)error {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(failedToGetScheduleStatusWithError:callbackId:)]) {
-        [self.delegate failedToEnableDisableScheduleWithError:error callbackId:self.callbackId];
     }
     self.retained_self = nil;
     self.delegate = nil;
@@ -753,16 +583,6 @@
     [driveManager driveRobotWithRobotId:robotId navigationControlId:navigationControlId];
 }
 
-- (void)driveRobotSent {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(driveRobotSentforCallBackId:)]) {
-        [self.delegate performSelector:@selector(driveRobotSentforCallBackId:) withObject:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
-    
-}
-
 - (void)driveRobotFailedWithError:(NSError *)error {
     debugLog(@"");
     if ([self.delegate respondsToSelector:@selector(driveRobotFailedWithError:callbackId:)]) {
@@ -840,34 +660,6 @@
     self.callbackId = callbackId;
     RobotCommandHelper *commandHelper = [[RobotCommandHelper alloc] init];
     [commandHelper sendCommandOverTCPToRobotWithId:robotId commandId:commandId params:params delegate:self];
-}
-
-- (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email callbackId:(NSString *)callbackId {
-    debugLog(@"");
-    self.retained_self = self;
-    self.callbackId = callbackId;
-    
-    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
-    manager.delegate = self;
-    [manager clearDataForRobotId:robotId email:email];
-}
-
-- (void)clearRobotDataSucceededWithMessage:(NSString *)message  {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(clearRobotDataSucceededWithMessage:callbackId:)]) {
-        [self.delegate clearRobotDataSucceededWithMessage:message callbackId:self.callbackId];
-        self.delegate = nil;
-        self.retained_self = nil;
-    }
-}
-
-- (void)failedToClearRobotDataWithError:(NSError *)error {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(failedToClearRobotDataWithError:callbackId:)]) {
-        [self.delegate failedToClearRobotDataWithError:error callbackId:self.callbackId];
-    }
-    self.retained_self = nil;
-    self.delegate = nil;
 }
 
 - (void)failedToFormTCPConnectionForRobotId:(NSString *)robotId {

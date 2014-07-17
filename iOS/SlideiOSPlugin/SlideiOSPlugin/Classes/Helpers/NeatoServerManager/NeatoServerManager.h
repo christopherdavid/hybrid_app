@@ -36,14 +36,10 @@
 - (void)failedToChangePasswordWithError:(NSError *)error;
 - (void)userCreated2:(NeatoUser *)neatoUser;
 - (void)failedToCreateUser2WithError:(NSError *)error;
-- (void)failedToEnableDisableScheduleWithError:(NSError *)error;
-- (void)enabledDisabledScheduleWithResult:(NSDictionary *)resultData;
 - (void)notificationsTurnedOnOffWithResult:(NSDictionary *)notification;
 - (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error;
 - (void)userNotificationSettingsData:(NSDictionary *)notification;
 - (void)failedToGetUserPushNotificationSettingsWithError:(NSError *)error;
-- (void)gotScheduleStatus:(NSDictionary *)status;
-- (void)failedToGetScheduleStatusWithError:(NSError *)error;
 
 - (void)virtualOnlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId;
 - (void)failedToGetRobotVirtualOnlineStatusWithError:(NSError *)error;
@@ -54,8 +50,6 @@
 - (void)failedtoSendCommandWithError:(NSError *)error;
 - (void)deleteProfileDetailKeySuccededforRobotId:(NSString *)robotId;
 - (void)failedToDeleteProfileDetailKeyWithError:(NSError *)error;
-- (void)clearRobotDataSucceededWithMessage:(NSString *)message;
-- (void)failedToClearRobotDataWithError:(NSError *)error;
 
 @end
 
@@ -95,14 +89,11 @@
 - (void)getUserDetailsForEmail:(NSString *)email authToken:(NSString *)authToken;
 - (void)createUser:(NeatoUser *)neatoUser;
 - (void)createRobot:(NeatoRobot *)neatoRobot;
-- (void)getRobotDetails:(NSString *)serialNumber;
 - (void)setRobotUserEmail:(NSString *)email serialNumber:(NSString *)serial_number;
 - (void)logoutUserEmail:(NSString *)email authToken:(NSString *)auth_token;
 - (void)associatedRobotsForUserWithEmail:(NSString *)email authToken:(NSString *)authToken;
 - (void)updateUserAuthToken:(NSString *)authToken;
-- (void)setRobotName2:(NSString *)robotName forRobotWithId:(NSString *)robotId;
 - (void)setRobotUserEmail2:(NSString *)userEmail forRobotId:(NSString *)robotId;
-- (void)onlineStatusForRobotWithId:(NSString *)robotId;
 - (void)dissociateAllRobotsForUserWithEmail:(NSString *)email;
 - (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)emailId;
 - (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken;
@@ -112,16 +103,20 @@
 - (void)forgetPasswordForEmail:(NSString *)email;
 - (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword;
 - (void)createUser2:(NeatoUser *)neatoUser;
-- (void)enabledDisable:(BOOL)enable schedule:(int)scheduleType forRobotWithId:(NSString *)robotId withUserEmail:(NSString *)email;
 - (void)turnNotification:(NeatoNotification *)notification onOffForUserWithEmail:(NSString *)email;
 - (void)notificationSettingsForUserWithEmail:(NSString *)email;
-- (void)isScheduleType:(NSString *)scheduleType enabledForRobotWithId:(NSString *)robotId;
 - (void)virtualOnlineStatusForRobotWithId:(NSString *)robotId;
 - (void)profileDetails2ForRobotWithId:(NSString *)robotId;
 - (void)sendCommand:(NeatoRobotCommand *)command;
 - (void)deleteProfileDetailKey:(NSString *)key forRobotWithId:(NSString *)robotId notfify:(BOOL)notify;
 - (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode completion:(RequestCompletionBlockDictionary)completion;
-- (void)clearDataForRobotId:(NSString *)robotId email:(NSString *)email;
 - (void)createUser3:(NeatoUser *)neatoUser;
 - (void)setUserAccountDetails:(NeatoUser *)neatoUser authToken:(NSString *)authToken;
+
+// Block based APIs.
+- (void)robotDetailForRobot:(NSString *)robotId completion:(RequestCompletionBlockDictionary)completion;
+- (void)clearRobotAssociationWithRobotId:(NSString *)robotId email:(NSString *)email completion:(RequestCompletionBlockDictionary)completion;
+- (void)onlineStatusForRobotWithId:(NSString *)robotId completion:(RequestCompletionBlockDictionary)completion;
+- (void)setEnableStatus:(BOOL)enable withRobotId:(NSString *)robotId scheduleType:(NSInteger)scheduleType userEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion;
+- (void)setRobotName2:(NSString *)robotName forRobotWithId:(NSString *)robotId completion:(RequestCompletionBlockDictionary)completion;
 @end

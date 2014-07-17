@@ -64,7 +64,7 @@
 - (void)notifyCannotDriveForRobotWIthRobotId:(NSString *)robotId withErrorResponseCode:(NSInteger)errorCode {
     debugLog(@"");
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-    [data setObject:[NSString stringWithFormat:@"%d", errorCode] forKey:ERROR_DRIVE_RESPONSE_CODE];
+    [data setObject:[NSString stringWithFormat:@"%ld", (long)errorCode] forKey:ERROR_DRIVE_RESPONSE_CODE];
     [[XMPPRobotDataChangeManager sharedXmppDataChangeManager] notifyDataChangeForRobotId:robotId withKeyCode:[NSNumber numberWithInt:ROBOT_ERROR_IN_CONNECTING] andData:data];
 }
 
@@ -175,13 +175,8 @@
 
 - (void)commandSentOverTCP2 {
     debugLog(@"Drive command sent over TCP.");
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.delegate respondsToSelector:@selector(driveRobotSent)]) {
-            [self.delegate performSelector:@selector(driveRobotSent)];
-        }
-        self.delegate = nil;
-        self.retainedSelf = nil;
-    });
+    // No need to send success callback for 'drive robot' command to UI.
+    // Only send callback in case of failure.
 }
 
 - (void)failedToSendCommandOverTCPWithError:(NSError *)error {

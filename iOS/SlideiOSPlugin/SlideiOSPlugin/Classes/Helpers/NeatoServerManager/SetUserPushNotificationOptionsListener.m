@@ -12,7 +12,6 @@
 @property(nonatomic, weak) id delegate;
 @property(nonatomic, strong) SetUserPushNotificationOptionsListener *retained_self;
 @property (nonatomic, strong) RequestCompletionBlockDictionary completion;
-@property (nonatomic, strong) NSDictionary *response;
 
 @end
 

@@ -18,10 +18,6 @@
 
 - (void)deletedScheduleData:(NSString *)message;
 - (void)deleteScheduleDataError:(NSError *)error;
-
-- (void)gotScheduleWithData:(id)data;
-- (void)failedToGetScheduleWithError:(NSError *)error;
-
 @end
 
 @interface ScheduleServerHelper : NSObject
@@ -34,5 +30,5 @@
 - (void)postScheduleForRobotId:(NSString *)robotId withScheduleData:(NSString *)xmlData ofScheduleType:(NSString *)scheduleType;
 - (void)updateScheduleDataForScheduleId:(NSString *)scheduleId withScheduleVersion:(NSString *)scheduleVersion withScheduleData:(NSString *)data ofScheduleType:(NSString *)scheduleType;
 - (void)deleteScheduleDataForScheduleId:(NSString *)scheduleId;
-- (void)scheduleBasedOnType:(NSString *)scheduleType forRobotId:(NSString *)robotId;
+- (void)dataForRequest:(NSURLRequest *)request completionBlock:(ServerHelperCompletionBlock)completionBlock;
 @end

@@ -9,9 +9,6 @@
 #import "AppHelper.h"
 #import "NeatoErrorCodes.h"
 
-#define GET_AUTH_TOKEN_NATIVE_POST_STRING @"api_key=%@&account_type=%@&email=%@&password=%@"
-#define GET_USER_DETAILS_POST_STRING @"api_key=%@&email=%@&auth_token=%@"
-
 @interface LoginListener2()
 
 @property (nonatomic, weak) id delegate;
@@ -58,8 +55,9 @@
                          completion ? completion(nil, error) : nil;
                          return;
                      }
-                     NSString *authToken = response;
-                     // NOTE: If auth token value is NULL then validation status would
+                   
+                     NSString *authToken = [response valueForKey:NEATO_RESPONSE_RESULT];
+                     // NOTE: If auth token value is nil then validation status would
                      // be -2 and we have to send back error message in extra params
                      // to caller.
                      if ([AppHelper isStringNilOrEmpty:authToken]) {
@@ -79,12 +77,14 @@
                      [serverHelper dataForRequest:request
                                   completionBlock:^(id response, NSError *error) {
                                       if (error) {
-                                          completion ? completion(response, error) : nil;
+                                          completion ? completion(nil, error) : nil;
                                           return;
                                       };
-                                      weakSelf.response = response;
+                                    
+                                      NSDictionary *responseResultDict = [response valueForKey:NEATO_RESPONSE_RESULT];
+                                      weakSelf.response = responseResultDict;
                                       // Get user from dictionary
-                                      NeatoUser *neatoUser = [[NeatoUser alloc] initWithDictionary:response];
+                                      NeatoUser *neatoUser = [[NeatoUser alloc] initWithDictionary:responseResultDict];
                                       [NeatoUserHelper saveNeatoUser:neatoUser];
                                       
                                       XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
