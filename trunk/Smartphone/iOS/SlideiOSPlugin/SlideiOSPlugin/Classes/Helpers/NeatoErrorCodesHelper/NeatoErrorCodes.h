@@ -121,6 +121,7 @@
  * Robot already has some other user associated with it.
  */
 #define SERVER_ERROR_ROBOT_HAS_ASSOCIATED_USER -192
+#define SERVER_ERROR_TYPE_USER_UNAUTHORIZED 401
 
 
 /*************************UI ERROR CODES**********************/

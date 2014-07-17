@@ -2,8 +2,6 @@
 #import "AppSettings.h"
 #import "NeatoConstants.h"
 
-#define GET_ROBOT_DETAILS_POST_STRING @"api_key=%@&serial_number=%@"
-
 @interface GetRobotDetailsHelper()
 
 @property (nonatomic , strong) NSString *robotId;

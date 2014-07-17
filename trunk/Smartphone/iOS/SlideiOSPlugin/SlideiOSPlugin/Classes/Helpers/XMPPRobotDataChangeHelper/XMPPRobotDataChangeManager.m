@@ -481,7 +481,18 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
         BOOL didChangeData = [self hasDataChangedForKey:key withRobotProfile:robotProfile];
         id valueForKey = [[robotProfile objectForKey:key] objectForKey:KEY_VALUE];
         if (didChangeData && valueForKey) {
-            [dataDict setObject:valueForKey forKey:key];
+            
+            // As the value could be JSON string or any other value,
+            // So parse to JSON object(Dict) if it is valid JSON string,
+            // Else use the original un-parsed value.
+            if ([AppHelper isValidJSONString:valueForKey]) {
+                NSString *jsonString = (NSString *)valueForKey;
+                NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+                [dataDict setValue:[AppHelper parseJSON:jsonData] forKey:key];
+            }
+            else {
+                [dataDict setValue:valueForKey forKey:key];
+            }
         }
     }
     

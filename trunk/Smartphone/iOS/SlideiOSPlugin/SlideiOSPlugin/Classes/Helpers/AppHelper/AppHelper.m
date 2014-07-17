@@ -289,4 +289,23 @@
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:KEY_ROBOT_DIRECT_CONNECT_SCRET];
 }
 
++ (BOOL)isValidJSONString:(id)value {
+  // Check if it is string and is parsable.
+  if ([value isKindOfClass:[NSString class]]) {
+    NSString *jsonString = (NSString *)value;
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    if (!jsonData) {
+      return NO;
+    }
+    NSError* error = nil;
+    [NSJSONSerialization JSONObjectWithData:jsonData
+                                    options:kNilOptions
+                                      error:&error];
+    return error ? NO : YES;
+  }
+  else {
+    return NO;
+  }
+}
+
 @end

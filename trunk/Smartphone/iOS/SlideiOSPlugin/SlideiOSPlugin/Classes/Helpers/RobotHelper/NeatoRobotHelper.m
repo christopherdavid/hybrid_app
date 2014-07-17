@@ -45,7 +45,7 @@
     }
 }
 
-+ (id)setSpotDefinitionForRobotWithId:(NSString *)robotId cleaningAreaLength:(int)cleaningAreaLength cleaningAreaHeight:(int)cleaningAreaHeight {
++ (id)setSpotDefinitionForRobotWithId:(NSString *)robotId cleaningAreaLength:(NSInteger)cleaningAreaLength cleaningAreaHeight:(NSInteger)cleaningAreaHeight {
     debugLog(@"");
     CleaningArea *cleaningArea = [[CleaningArea alloc] init];
     cleaningArea.height = cleaningAreaHeight;

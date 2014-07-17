@@ -1,7 +1,6 @@
 #import "GetAdvancedScheduleListener.h"
 #import "ScheduleServerhelper.h"
 #import "NeatoConstants.h"
-#import "FileDownloadManager.h"
 #import "ScheduleXMLHelper.h"
 #import "SchedulerConstants.h"
 #import "LogHelper.h"
@@ -74,8 +73,8 @@
 }
 
 - (void)getXmlDataFileFromUrl:(NSString *)xml_data_url {
-    FileDownloadManager *downloadManager = [[FileDownloadManager alloc]init];
-    [downloadManager downloadFileFromURL:xml_data_url getFromCache:NO delegate:self];
+  // TODO-CleanUp : Remove the whole class, as 'Advanced schedule' is not supported.
+  // So this code will never get called.
 }
 
 - (void)failedToGetScheduleDataForScheduleId:(NSString *)scheduleId withError:(NSError *)error {

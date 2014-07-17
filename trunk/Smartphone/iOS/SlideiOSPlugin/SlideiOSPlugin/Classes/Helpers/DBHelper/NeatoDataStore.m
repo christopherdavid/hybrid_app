@@ -183,7 +183,7 @@ static NeatoDataStore *sharedInstance;
     if (self.managedObjectContext) {
         
         NSArray *objects = [self getCommandsOlderThanMins:TIME_BEFORE_AUTO_REMOVAL];
-        debugLog(@"Older commands to delete : %d", [objects count]);
+        debugLog(@"Older commands to delete : %lu", (unsigned long)[objects count]);
         for (NSManagedObject *entity in objects) {
             [self.managedObjectContext deleteObject:entity];
         }
@@ -1343,15 +1343,15 @@ static NeatoDataStore *sharedInstance;
         NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:cleaningArea.robotId];
         if (robotEntity) {
             if(robotEntity.hasCleaningArea) {
-                robotEntity.hasCleaningArea.length = [NSNumber numberWithInt:cleaningArea.length];
-                robotEntity.hasCleaningArea.height = [NSNumber numberWithInt:cleaningArea.height];
+                robotEntity.hasCleaningArea.length = [NSNumber numberWithInteger:cleaningArea.length];
+                robotEntity.hasCleaningArea.height = [NSNumber numberWithInteger:cleaningArea.height];
                 [self saveDatabase];
                 return [NSNumber numberWithBool:YES];
             } else {
                 CleaningAreaEntity *cleaningAreaEntity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_CLEANING_AREA inManagedObjectContext:self.managedObjectContext];
                 cleaningAreaEntity.ofRobot = robotEntity;
-                cleaningAreaEntity.length = [NSNumber numberWithInt:cleaningArea.length];
-                cleaningAreaEntity.height = [NSNumber numberWithInt:cleaningArea.height];
+                cleaningAreaEntity.length = [NSNumber numberWithInteger:cleaningArea.length];
+                cleaningAreaEntity.height = [NSNumber numberWithInteger:cleaningArea.height];
                 [self saveDatabase];
                 return [NSNumber numberWithBool:YES];
             }

@@ -9,7 +9,6 @@
 #import "GetScheduleDataPluginResult.h"
 #import "Schedule.h"
 #import "ScheduleServerHelper.h"
-#import "GetScheduleEventsListener.h"
 #import "SetAdvancedScheduleListener.h"
 #import "GetAdvancedScheduleListener.h"
 #import "DeleteAdvancedScheduleListener.h"
@@ -22,8 +21,12 @@
 #import "CreateSchedulePluginResult.h"
 #import "CreateScheduleEventPluginResult.h"
 #import "UpdateBasicScheduleListener.h"
+#import "PluginConstants.h"
 
-@interface RobotScheduleManager() <GetScheduleEventsListenerProtocol>
+// Helpers
+#import "AppSettings.h"
+
+@interface RobotScheduleManager()
 @property(nonatomic, strong) RobotScheduleManager *retained_self;
 @property(nonatomic, weak) id<RobotScheduleManagerProtocol> scheduleDelegate;
 @property(nonatomic, strong) SetAdvancedScheduleListener *setScheduleListener;
@@ -32,12 +35,6 @@
 @end
 
 @implementation RobotScheduleManager
-
-@synthesize retained_self = _retained_self;
-@synthesize scheduleDelegate = _scheduleDelegate;
-@synthesize setScheduleListener = _setScheduleListener;
-@synthesize getScheduleListener = _getScheduleListener;
-@synthesize deleteScheduleListener = _deleteScheduleListener;
 
 - (id)createScheduleForRobotId:(NSString *)robotId forScheduleType:(NSString *)scheduleType {
     debugLog(@"");
@@ -214,44 +211,6 @@
         pluginResult.schedule = schedule;
         return pluginResult;
     }
-}
-
-- (void)scheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType delegate:(id<RobotScheduleManagerProtocol>)delgate {
-    self.retained_self = self;
-    self.scheduleDelegate = delgate;
-    
-    debugLog(@"");
-    NSString *scheduleTypeStr = [ScheduleUtils scheduleTypeString:scheduleType];
-    if (!scheduleTypeStr) {
-        [self.scheduleDelegate failedToGetScheduleEventsWithError:[AppHelper nserrorWithDescription:@"Invalid schedule type." code:UI_ERROR_INVALID_SCHEDULE_TYPE]];
-        return;
-    }
-    GetScheduleEventsListener *eventsListener = [[GetScheduleEventsListener alloc]initWithDelegate:self];
-    eventsListener.robotId = robotId;
-    eventsListener.scheduleType = scheduleTypeStr;
-    [eventsListener start];
-}
-
-- (void)failedToGetScheduleEventsWithError:(NSError *)error {
-    debugLog(@"");
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.scheduleDelegate respondsToSelector:@selector(failedToGetScheduleEventsWithError:)]) {
-            [self.scheduleDelegate performSelector:@selector(failedToGetScheduleEventsWithError:) withObject:error];
-            self.scheduleDelegate = nil;
-            self.retained_self = nil;    
-        }
-    });
-}
-
-- (void)gotScheduleEventsForSchedule:(Schedule *)schedule ofType:(NSInteger)scheduleType forRobotWithId:(NSString *)robotId {
-    debugLog(@"");
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.scheduleDelegate respondsToSelector:@selector(gotScheduleEventsForSchedule:ofType:forRobotWithId:)]) {
-            [self.scheduleDelegate gotScheduleEventsForSchedule:schedule ofType:scheduleType forRobotWithId:robotId];
-            self.scheduleDelegate = nil;
-            self.retained_self = nil;     
-        }
-    });
 }
 
 - (void)updateScheduleForScheduleId:(NSString *)scheduleId delegate:(id)delegate {
@@ -434,5 +393,70 @@
     });
 }
 
+- (void)scheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType completion:(RequestCompletionBlockDictionary)completion {
+  debugLog(@"");
+  NSString *scheduleTypeString = [ScheduleUtils scheduleTypeString:scheduleType];
+  // Check if it is other than Basic or Advanced,
+  // else send error.
+  if (!scheduleTypeString) {
+    NSError *invalidScheduleError = [AppHelper nserrorWithDescription:@"Invalid schedule type." code:UI_ERROR_INVALID_SCHEDULE_TYPE];
+    completion(nil, invalidScheduleError);
+    return;
+  }
+  
+  // Advanced schedule is not supported, send error.
+  if ([scheduleTypeString isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
+    NSError *notSupportedError = [AppHelper nserrorWithDescription:@"Advance schedule type is not supported" code:UI_ERROR_NOT_SUPPORTED];
+    completion(nil, notSupportedError);
+    return;
+  }
+  
+  // Get schedule from server.
+  // At server '1' means Basic and '2' means Advanced.
+  // So convert those strings.
+  NSString *serverScheduleType = [NSString stringWithFormat:@"%ld", (long)[ScheduleUtils serverScheduleIntFromString:scheduleTypeString]];
+  NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_SCHEDULE_BASED_ON_TYPE]];
+  [request setHTTPMethod:@"POST"];
+  [request setHTTPBody:[[NSString stringWithFormat:GET_SCHEDULE_BASED_ON_TYPE_POST_STRING, API_KEY, robotId, serverScheduleType] dataUsingEncoding:NSUTF8StringEncoding]];
+  
+  ScheduleServerHelper *serverHelper = [[ScheduleServerHelper alloc] init];
+  [serverHelper dataForRequest:request
+               completionBlock:^(id response, NSError *error) {
+                 if (error) {
+                   completion ? completion(nil, error) : nil;
+                   return;
+                 }
+                 
+                 id responseResult = [response valueForKey:NEATO_RESPONSE_RESULT];
+                 if (![responseResult isKindOfClass:[NSArray class]]) {
+                   NSError *parsingError = [AppHelper nserrorWithDescription:@"Failed to parse server response!" code:UI_JSON_PARSING_ERROR];
+                   completion ? completion(nil, parsingError) : nil;
+                   return;
+                 }
+                 
+                 NSArray *resultArray = (NSArray *)responseResult;
+                 NSDictionary *serverSchedule = [resultArray objectAtIndex:0];
+                 Schedule *schedule = [ScheduleJsonHelper scheduleFromDictionary:serverSchedule];
+                 
+                 // Check if schedule is nil or not, as there could be a parsing error.
+                 if (schedule) {
+                   // Save schedule in DB.
+                   [ScheduleDBHelper saveSchedule:schedule ofType:scheduleTypeString forRobotWithId:robotId];
+                   // Prepare data, to send to JS layer.
+                   NSInteger scheduleTypeInteger = [ScheduleUtils scheduleIntFromString:scheduleTypeString];
+                   NSMutableDictionary *pluginResultDictionary = [[NSMutableDictionary alloc] init];
+                   [pluginResultDictionary setValue:schedule.scheduleId forKey:KEY_SCHEDULE_ID];
+                   [pluginResultDictionary setValue:robotId forKey:KEY_ROBOT_ID];
+                   [pluginResultDictionary setValue:[NSNumber numberWithInteger:scheduleTypeInteger] forKey:KEY_SCHEDULE_TYPE];
+                   [pluginResultDictionary setValue:[schedule arrayOfScheduleEventIdsForType:scheduleTypeInteger] forKey:KEY_SCHEDULE_EVENTS_LIST];
+                   completion ? completion(pluginResultDictionary, nil) : nil;
+                 }
+                 else {
+                   NSError *parsingError = [AppHelper nserrorWithDescription:@"Failed to parse server response!" code:UI_JSON_PARSING_ERROR];
+                   completion ? completion(nil, parsingError) : nil;
+                   return;
+                 }
+               }];
+}
 
 @end

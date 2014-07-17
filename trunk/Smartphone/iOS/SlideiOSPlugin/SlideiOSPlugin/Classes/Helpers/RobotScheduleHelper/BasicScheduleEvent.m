@@ -18,7 +18,7 @@
             self.startTime =[[ScheduleTimeObject alloc] initWithString:[dictionary objectForKey:KEY_START_TIME]];
         }
         if(!self.day) {
-            self.day = [ScheduleUtils dayEnumValue:[[dictionary objectForKey:KEY_DAY] integerValue]];
+            self.day = [ScheduleUtils dayEnumValue:[[dictionary objectForKey:KEY_DAY] intValue]];
         }
         if(!self.scheduleEventId) {
             self.scheduleEventId = eventId;

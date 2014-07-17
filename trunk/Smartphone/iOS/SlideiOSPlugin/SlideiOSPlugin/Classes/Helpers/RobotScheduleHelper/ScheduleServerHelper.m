@@ -9,32 +9,11 @@
 #import "NeatoErrorCodes.h"
 #import "NeatoErrorCodesHelper.h"
 
-#define GET_SCHEDULE_DATA_POST_STRING @"api_key=%@&robot_schedule_id=%@"
-#define GET_SCHEDULE_DATA_RESPONSE_HANDLER @"gotScheduleResponseData:forScheduleId:"
-
-#define GET_SCHEDULES_POST_STRING @"api_key=%@&serial_number=%@"
-#define GET_SCHEDULES_RESPONSE_HANDLER @"gotSchedulesResponse:forRobotWithId:"
-#define SERVER_REPONSE_HANDLER_KEY @"getSchedulesForRobotWithId:"
-#define ROBOT_ID_SERVER_KEY @"robot_id_header_key"
-#define SCHEDULE_ID_SERVER_KEY @"schedule_id_header_key"
-
-#define GET_POST_ROBOT_SCHEDULE_STRING @"api_key=%@&serial_number=%@&schedule_type=%@&xml_data=%@"
-#define GET_UPDATE_ROBOT_SCHEDULE_DATA_POST_STRING @"api_key=%@&robot_schedule_id=%@&schedule_type=%@&xml_data_version=%@&xml_data=%@"
-#define GET_DELETE_SCHEDULE_POST_STRING @"api_key=%@&robot_schedule_id=%@"
-#define GET_POST_ROBOT_SCHEDULE_RESPONSE_HANDLER @"postRobotScheduleHandler:"
-#define GET_UPDATE_ROBOT_SCHEDULE_RESPONSE_HANDLER @"upadateRobotScheduleHandler:"
-#define GET_DELETE_SCHEDULE_RESPONSE_HANDLER @"deleteScheduleDataResponseHandler:"
-#define GET_SCHEDULE_BASED_ON_TYPE_POST_STRING @"api_key=%@&robot_serial_number=%@&schedule_type=%@"
-#define GET_SCHEDULE_BASED_ON_TYPE_RESPONSE_HANDLER @"getScheduleBasedOnTypeResponseHandler:"
-
-@interface ScheduleServerHelper()
-
+@interface ScheduleServerHelper() <NSURLConnectionHelperProtocol>
 @property(nonatomic, strong) ScheduleServerHelper *retainedSelf;
 @end
 
 @implementation ScheduleServerHelper
-@synthesize retainedSelf = _retainedSelf;
-@synthesize delegate = _delegate;
 
 - (void)getSchedulesForRobotWithId:(NSString *)robotId {
     debugLog(@"");
@@ -66,7 +45,7 @@
     }
     
     NSDictionary *jsonData = [AppHelper parseJSON:value];
-    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    NSNumber *status = [NSNumber numberWithInteger:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
     if ([status intValue] == NEATO_STATUS_SUCCESS) {
         id schedules = [jsonData objectForKey:NEATO_RESPONSE_RESULT];
@@ -81,15 +60,14 @@
     }
 }
 
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection responseData:(NSData *)responseData {
+- (void)didLoadData:(NSData *)responseData forRequest:(NSURLRequest *)request {
     debugLog(@"");
     id serverResponse = responseData;
     if ([AppHelper hasServerRequestFailedForResponse:[AppHelper parseJSON:responseData]]) {
         NSDictionary *errorDict = [[AppHelper parseJSON:serverResponse] objectForKey:KEY_NEATO_SERVER_ERROR];
         serverResponse = [AppHelper nserrorWithDescription:[errorDict objectForKey:NEATO_RESPONSE_MESSAGE] code:[[NeatoErrorCodesHelper sharedErrorCodesHelper] uiErrorCodeForServerErrorCode:[[errorDict objectForKey:KEY_NEATO_SERVER_ERROR_CODE] integerValue]]];
     }
-    NSURLRequest *request = [connection originalRequest];
+
     NSString *selectorStr = [request valueForHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     SEL selector = NSSelectorFromString(selectorStr);
     if ([selectorStr isEqualToString:GET_SCHEDULES_RESPONSE_HANDLER]) {
@@ -105,34 +83,22 @@
     [self performSelector:selector withObject:serverResponse];
 }
 
-// This gets called when the connection fails for any reason.
-// We are sending 'user unauthorized' error code if that error is
-// returned otherwise we send 'network error' code.
-- (void)requestFailedForConnection:(NSURLConnection *)connection error:(NSError *) error {
+// This gets called when the request fails for any reason.
+- (void)didFailToLoadWithError:(NSError *)error forRequest:(NSURLRequest *)request {
     debugLog(@"");
-  
-    NSError *neatoError = nil;
-    if (error.code == 401) {
-        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:UI_ERROR_TYPE_USER_UNAUTHORIZED];
-    }
-    else {
-        neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:UI_ERROR_NETWORK_ERROR];
-    }
-  
-    NSURLRequest *request = [connection originalRequest];
     NSString *selectorStr = [request valueForHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
     SEL selector = NSSelectorFromString(selectorStr);
     if ([selectorStr isEqualToString:GET_SCHEDULES_RESPONSE_HANDLER]) {
         NSString *robotId = [request valueForHTTPHeaderField:ROBOT_ID_SERVER_KEY];
-        [self performSelector:selector withObject:neatoError withObject:robotId];
+        [self performSelector:selector withObject:error withObject:robotId];
         return;
     }
     else if ([selectorStr isEqualToString:GET_SCHEDULE_DATA_RESPONSE_HANDLER]) {
         NSString *scheduleId = [request valueForHTTPHeaderField:SCHEDULE_ID_SERVER_KEY];
-        [self performSelector:selector withObject:neatoError withObject:scheduleId];
+        [self performSelector:selector withObject:error withObject:scheduleId];
         return;
     }
-    [self performSelector:selector withObject:neatoError];
+    [self performSelector:selector withObject:error];
 }
 
 - (void)getDataForScheduleWithId:(NSString *)scheduleId {
@@ -165,7 +131,7 @@
     }
     
     NSDictionary *jsonData = [AppHelper parseJSON:value];
-    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    NSNumber *status = [NSNumber numberWithInteger:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
     if ([status intValue] == NEATO_STATUS_SUCCESS) {
         id scheduleData = [jsonData objectForKey:NEATO_RESPONSE_RESULT];
@@ -207,7 +173,7 @@
         return;
     }
     NSDictionary *jsonData = [AppHelper parseJSON:value];
-    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    NSNumber *status = [NSNumber numberWithInteger:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
     if ([status intValue] == NEATO_STATUS_SUCCESS) {
         PostScheduleResult *postScheduleResult = [[PostScheduleResult alloc] initWithDictionary:[jsonData valueForKey:NEATO_RESPONSE_RESULT]];
@@ -251,7 +217,7 @@
         return;
     }
     NSDictionary *jsonData = [AppHelper parseJSON:value];
-    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    NSNumber *status = [NSNumber numberWithInteger:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     debugLog(@"status = %d", [status intValue]);
     NSDictionary *result = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
     if ([status intValue] == NEATO_STATUS_SUCCESS) {
@@ -295,7 +261,7 @@
         return;
     }
     NSDictionary *jsonData = [AppHelper parseJSON:value];
-    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
+    NSNumber *status = [NSNumber numberWithInteger:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
     NSDictionary *data = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
     NSString *message = [data valueForKey:NEATO_RESPONSE_MESSAGE];
     debugLog(@"status = %d", [status intValue]);
@@ -326,49 +292,16 @@
     });
 }
 
-- (void)scheduleBasedOnType:(NSString *)scheduleType forRobotId:(NSString *)robotId {
-    debugLog(@"");
-    self.retainedSelf = self;
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_SCHEDULE_BASED_ON_TYPE]];
-    [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:[[NSString stringWithFormat:GET_SCHEDULE_BASED_ON_TYPE_POST_STRING, API_KEY, robotId, scheduleType] dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setValue:GET_SCHEDULE_BASED_ON_TYPE_RESPONSE_HANDLER forHTTPHeaderField:SERVER_REPONSE_HANDLER_KEY];
-    NSURLConnectionHelper *helper = [[NSURLConnectionHelper alloc] init];
-    helper.delegate = self;
-    [helper getDataForRequest:request];
-}
-
-- (void)getScheduleBasedOnTypeResponseHandler:(id)value {
-    debugLog(@"");
-    if (value == nil) {
-        NSError *error = [AppHelper nserrorWithDescription:@"Server did not respond with any data!" code:UI_ERROR_TYPE_UNKNOWN];
-        debugLog(@"Get schedule based on type failed!");
-        [self notifyRequestFailed:@selector(failedToGetScheduleWithError:) withError:error];
-        return;
-    }
-    if ([value isKindOfClass:[NSError class]]) {
-        debugLog(@"Get schedule based on type failed!");
-        [self notifyRequestFailed:@selector(failedToGetScheduleWithError:) withError:value];
-        return;
-    }
-    NSDictionary *jsonData = [AppHelper parseJSON:value];
-    NSNumber *status = [NSNumber numberWithInt:[[jsonData valueForKey:NEATO_RESPONSE_STATUS] integerValue]];
-    NSArray *data = [jsonData valueForKey:NEATO_RESPONSE_RESULT];
-    debugLog(@"status = %d", [status intValue]);
-    if ([status intValue] == NEATO_STATUS_SUCCESS) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:@selector(gotScheduleWithData:)]) {
-                [self.delegate performSelector:@selector(gotScheduleWithData:) withObject:data];
-            }
-            self.delegate = nil;
-            self.retainedSelf = nil;
-        });
-    }
-    else {
-        NSError *error = [AppHelper nserrorWithDescription:[jsonData valueForKey:NEATO_RESPONSE_MESSAGE] code:UI_ERROR_TYPE_UNKNOWN];
-        debugLog(@"error reason : %@",[error localizedDescription]);
-        [self notifyRequestFailed:@selector(failedToGetScheduleWithError:) withError:error];
-    }
+- (void)dataForRequest:(NSURLRequest *)request completionBlock:(ServerHelperCompletionBlock)completionBlock {
+  [[[NSURLConnectionHelper alloc] init] getDataForRequest:request
+                                          completionBlock:^(id response, NSError *error) {
+                                              if (error) {
+                                                  completionBlock ? completionBlock(nil, error) : nil;
+                                                  return;
+                                              }
+                                              NSDictionary *completeServerResponseDict = [AppHelper parseJSON:response];
+                                              completionBlock ? completionBlock(completeServerResponseDict, nil) : nil;
+                                          }];
 }
 
 @end
