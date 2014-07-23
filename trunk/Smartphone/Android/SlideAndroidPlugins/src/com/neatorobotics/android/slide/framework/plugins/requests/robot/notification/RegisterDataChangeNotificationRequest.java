@@ -25,14 +25,19 @@ public class RegisterDataChangeNotificationRequest extends RobotManagerRequest {
 
         RobotNotificationUtil.addRobotDataChangedListener(context, new RobotDataListener() {
             @Override
-            public void onDataReceived(String robotId, int dataCode, JSONObject data) {
-                JSONObject robotData = RobotNotificationUtil.getNotificationObject(robotId, dataCode, data);
-                if (robotData != null) {
-                    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, robotData);
-                    pluginResult.setKeepCallback(true);
-                    sendSuccessPluginResult(pluginResult, callbackId);
-                }
-
+            public void onDataReceived(final String robotId, final int dataCode, final JSONObject data) {
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject robotData = RobotNotificationUtil.getNotificationObject(robotId, dataCode, data);
+                        if (robotData != null) {
+                            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, robotData);
+                            pluginResult.setKeepCallback(true);
+                            sendSuccessPluginResult(pluginResult, callbackId);
+                        }
+                    }
+                });
+                t.start();
             }
         });
     }
