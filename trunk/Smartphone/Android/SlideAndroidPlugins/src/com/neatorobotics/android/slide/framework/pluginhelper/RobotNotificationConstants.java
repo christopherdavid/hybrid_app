@@ -14,11 +14,6 @@ public class RobotNotificationConstants {
     public static final int ROBOT_IS_DISCONNECTED = 4008;
     public static final int ROBOT_ERROR_IN_CONNECTING = 4009;
 
-    // Key codes for linking changes
-    public static final int ROBOT_LINKING_SUCCESS = 4010;
-    public static final int ROBOT_LINKING_FAILURE = 4011;
-    public static final int ROBOT_NEW_LINKING_FORMED = 4012;
-
     // Key codes for error and notification from robot
     public static final int ROBOT_NOTIFICATION = 4013;
     public static final int ROBOT_ERROR = 4014;

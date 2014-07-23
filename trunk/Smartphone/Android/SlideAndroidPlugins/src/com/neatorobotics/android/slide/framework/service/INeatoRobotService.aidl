@@ -13,4 +13,5 @@ interface INeatoRobotService
 	void loginToXmppIfRequired();
 	boolean isRobotDirectConnected(String robotId);
 	boolean isAnyPeerConnectionExists();
+	void logoutXmpp();
 }

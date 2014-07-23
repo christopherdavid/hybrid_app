@@ -8,6 +8,7 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
+import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileDataUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotManager;
@@ -25,6 +26,7 @@ public class GetRobotCurrentStateRequest extends RobotManagerRequest {
 
         LogHelper.logD(TAG, "getRobotCurrentState is called");
         final String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
+        NeatoPrefs.saveLastConnectedNeatoRobotId(context, robotId);
         RobotManager.getInstance(context).getRobotCleaningState(context, robotId,
                 new RobotRequestListenerWrapper(callbackId) {
                     @Override

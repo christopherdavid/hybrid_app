@@ -113,7 +113,7 @@ public class NeatoSmartAppService extends Service {
                 mRobotPeerConnection.closeExistingPeerConnection();
             }
             if (mXMPPConnectionHelper != null) {
-                mXMPPConnectionHelper.close();
+                mXMPPConnectionHelper.logout();
             }
         }
 
@@ -175,6 +175,21 @@ public class NeatoSmartAppService extends Service {
             TaskUtils.scheduleTask(task, 0);
         }
 
+        @Override
+        public void logoutXmpp() throws RemoteException {
+            Thread t = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    synchronized (mXmppConnectionLock) {
+                        if (mXMPPConnectionHelper != null) {
+                            mXMPPConnectionHelper.logout();
+                        }
+                    }
+                }
+            });
+            t.start();
+        }
     };
 
     private BroadcastReceiver mWifiStateChange = new BroadcastReceiver() {
@@ -270,7 +285,7 @@ public class NeatoSmartAppService extends Service {
                     try {
                         LogHelper.log(TAG, "**********************Start*******************************");
                         LogHelper.log(TAG, "trying to connect over XMPP. Retry count = " + (retryCount + 1));
-                        mXMPPConnectionHelper.close();
+                        mXMPPConnectionHelper.logout();
                         LogHelper.logD(TAG, "closed existing connection. Now retring to connect");
                         mXMPPConnectionHelper.connect();
                         LogHelper.logD(TAG, "connected. Now loging in");
@@ -301,8 +316,7 @@ public class NeatoSmartAppService extends Service {
             if (!mXMPPConnectionHelper.isConnected()) {
                 LogHelper.log(TAG, "XMPP is not connected, trying now");
                 loginToXmppServer();
-            }
-            else {
+            } else {
                 LogHelper.log(TAG, "XMPP is already connected");
             }
         }

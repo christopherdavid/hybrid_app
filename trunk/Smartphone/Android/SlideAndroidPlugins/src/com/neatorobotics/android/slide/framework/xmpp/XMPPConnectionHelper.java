@@ -116,7 +116,7 @@ public class XMPPConnectionHelper {
         mConnection.addPacketListener(mPacketListener, filter);
     }
 
-    private void logout() {
+    private void removepacketListener() {
         LogHelper.logD(TAG, "xmpp logout called");
         synchronized (mConnectionObjectLock) {
             if (mConnection != null) {
@@ -145,11 +145,11 @@ public class XMPPConnectionHelper {
         }
     }
 
-    public void close() {
+    public void logout() {
         LogHelper.logD(TAG, "close called");
         synchronized (mConnectionObjectLock) {
             if (mConnection != null) {
-                logout();
+                removepacketListener();
                 mConnection.disconnect();
                 mConnection = null;
             }
@@ -216,7 +216,7 @@ public class XMPPConnectionHelper {
         }
         for (int i = 0; i < MAX_RETRY_CONNECT_COUNT; i++) {
             try {
-                close();
+                logout();
                 connection = getConnection();
                 isConnected = connection.isConnected();
                 if (!isConnected) {
