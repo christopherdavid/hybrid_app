@@ -11,7 +11,6 @@ import android.text.TextUtils;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
-import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
@@ -37,27 +36,12 @@ public class RobotHelper {
         return result;
     }
 
-    public static RobotItem getManagedRobot(Context context) {
-        RobotItem robotItem = null;
-        String serialId = NeatoPrefs.getManagedRobotSerialId(context);
-        if (!TextUtils.isEmpty(serialId)) {
-            robotItem = DBHelper.getInstance(context).getRobotBySerialId(serialId);
-        }
-        return robotItem;
-    }
-
     public static RobotItem getRobotItem(Context context, String robotId) {
         RobotItem robotItem = null;
         if (!TextUtils.isEmpty(robotId)) {
             robotItem = DBHelper.getInstance(context).getRobotBySerialId(robotId);
         }
         return robotItem;
-    }
-
-    public static void setRobotToManage(Context context, RobotItem robotItem) {
-        if (robotItem != null) {
-            NeatoPrefs.saveManagedRobotSerialId(context, robotItem.serial_number);
-        }
     }
 
     public static boolean clearRobotDetails(Context context, String serialId) {
@@ -69,29 +53,17 @@ public class RobotHelper {
         }
 
         result = DBHelper.getInstance(context).deleteRobotBySerialId(serialId);
-
-        // If it is managed robot serialId then clear it
-        String managedSerialId = NeatoPrefs.getManagedRobotSerialId(context);
-        if (managedSerialId.equalsIgnoreCase(serialId)) {
-            NeatoPrefs.clearManagedRobotSerialId(context);
-        }
-
         return result;
     }
 
     public static void clearAllUserAssociatedRobots(Context context) {
         DBHelper.getInstance(context).clearAllAssociatedRobots();
-        NeatoPrefs.clearManagedRobotSerialId(context);
     }
 
     public static void saveRobotDetails(Context context, List<RobotItem> robotList) {
         if (robotList != null) {
             DBHelper.getInstance(context).saveRobot(robotList);
         }
-    }
-
-    public static List<RobotItem> getAllAssociatedRobots(Context context) {
-        return DBHelper.getInstance(context).getAllAssociatedRobots();
     }
 
     public static RobotItem updateRobotName(Context context, String robotSerialNo, String name) {

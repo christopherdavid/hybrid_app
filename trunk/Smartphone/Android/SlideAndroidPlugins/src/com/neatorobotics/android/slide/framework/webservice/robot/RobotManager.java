@@ -83,7 +83,6 @@ public class RobotManager {
             RobotDetailResult result = NeatoRobotWebservicesHelper.getRobotDetail(mContext, serialId);
             robotItem = result.result;
             RobotHelper.saveRobotDetails(mContext, robotItem);
-            RobotHelper.setRobotToManage(mContext, robotItem);
             LogHelper.log(TAG, "Saving robot information");
         } catch (UserUnauthorizedException ex) {
             LogHelper.log(TAG, "UserUnauthorizedException in getRobotDetailAndSave - " + ex.getErrorMessage());
@@ -147,29 +146,6 @@ public class RobotManager {
         TaskUtils.scheduleTask(task, 0);
     }
 
-    public void getRobotVirtualOnlineStatus(final String robotId, final WebServiceBaseRequestListener listener) {
-        LogHelper.logD(TAG, "getRobotVirtualOnlineStatus called for RobotID = " + robotId);
-
-        Runnable task = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    RobotVirtualOnlineStatusResult result = NeatoRobotWebservicesHelper.getRobotVirtualOnlineStatus(
-                            mContext, robotId);
-                    listener.onReceived(result);
-                } catch (UserUnauthorizedException ex) {
-                    listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
-                } catch (NeatoServerException ex) {
-                    listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
-                } catch (IOException ex) {
-                    listener.onNetworkError(ex.getMessage());
-                }
-            }
-        };
-
-        TaskUtils.scheduleTask(task, 0);
-    }
-
     public void getRobotCleaningState(final Context context, final String robotId,
             final WebServiceBaseRequestListener listener) {
         LogHelper.logD(TAG, "getRobotCleaningState called for RobotID = " + robotId);
@@ -183,32 +159,6 @@ public class RobotManager {
 
                     RobotProfileDataUtils.updateDataTimestampIfChanged(context, result, robotId,
                             ProfileAttributeKeys.ROBOT_CURRENT_STATE);
-                    listener.onReceived(result);
-                } catch (UserUnauthorizedException ex) {
-                    listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
-                } catch (NeatoServerException ex) {
-                    listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
-                } catch (IOException ex) {
-                    listener.onNetworkError(ex.getMessage());
-                }
-            }
-        };
-
-        TaskUtils.scheduleTask(task, 0);
-    }
-
-    public void getRobotCleaningStateDetails(final Context context, final String robotId,
-            final WebServiceBaseRequestListener listener) {
-        LogHelper.logD(TAG, "getRobotCleaningStateDetails called for RobotID = " + robotId);
-
-        Runnable task = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    GetRobotProfileDetailsResult2 result = NeatoRobotDataWebservicesHelper
-                            .getRobotProfileDetailsRequest2(mContext, robotId, "");
-                    RobotProfileDataUtils.updateDataTimestampIfChanged(context, result, robotId,
-                            ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
                     listener.onReceived(result);
                 } catch (UserUnauthorizedException ex) {
                     listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());

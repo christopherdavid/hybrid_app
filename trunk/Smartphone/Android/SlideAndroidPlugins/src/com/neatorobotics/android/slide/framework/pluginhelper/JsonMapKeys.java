@@ -13,7 +13,6 @@ public class JsonMapKeys {
     public static final String KEY_USER_ID = "userId";
     public static final String KEY_CURRENT_PASSWORD = "currentPassword";
     public static final String KEY_NEW_PASSWORD = "newPassword";
-    public static final String KEY_IS_VALIDATED_USER = "isValidated";
     public static final String KEY_ALTERNATE_EMAIL = "alternate_email";
     public static final String KEY_EXTRA_PARAMS = "extra_param";
     public static final String KEY_VALIDATION_STATUS = "validation_status";
@@ -52,19 +51,10 @@ public class JsonMapKeys {
 
     // Used by scheduler
     public static final String KEY_DAY = "day";
-    public static final String KEY_START_TIME_HRS = "startTimeHrs";
-    public static final String KEY_END_TIME_HRS = "endTimeHrs";
-    public static final String KEY_START_TIME_MINS = "startTimeMins";
-    public static final String KEY_END_TIME_MINS = "endTimeMins";
-    public static final String KEY_EVENT_TYPE = "eventType";
-    public static final String KEY_AREA = "area";
-
     public static final String KEY_SCHEDULE_GROUP = "scheduleGroup";
     public static final String KEY_SCHEDULE_UUID = "scheduleUUID";
     public static final String KEY_EVENTS = "events";
-
     public static final String KEY_START_TIME = "startTime";
-    public static final String KEY_END_TIME = "endTime";
 
     public static final String KEY_IS_SCHEDULE_ENABLED = "isScheduleEnabled";
     public static final String KEY_ENABLE_SCHEDULE = "enableSchedule";
@@ -77,24 +67,11 @@ public class JsonMapKeys {
     public static final String KEY_SCHEDULE_EVENT_DATA = "scheduleEventData";
     public static final String KEY_CLEANING_MODE = "cleaningMode";
 
-    // Robot status notification events constants
-    private static final int EVENT_ID_BASE = 20000;
-    public static final int EVENT_ID_REGISTER = EVENT_ID_BASE;
-    public static final int EVENT_ID_UNREGISTER = EVENT_ID_BASE + 1;
-    public static final int EVENT_ID_STATUS = EVENT_ID_BASE + 2;
-
-    public static final String KEY_EVENT_NOTIFICATION_ID = "eventId";
-    public static final String KEY_EVENT_NOTIFICATION_PARAMS = "params";
     public static final String KEY_NOTIFICATION_ID = "notificationId";
-
-    public static final String KEY_REGISTER_RESULT = "register";
-    public static final String KEY_UNREGISTER_RESULT = "unregister";
 
     // Used by navigation APIs
     public static final String KEY_NAVIGATION_CONTROL_ID = "navigationControlId";
     public static final String KEY_FLAG_ON = "on";
-    public static final String KEY_MOTOR_TYPE = "motorType";
-    public static final String KEY_WIFI_TURN_ON_DURATION_INSEC = "wiFiTurnOnDurationInSec";
     public static final String KEY_IS_PEER_CONNECTED = "isConnected";
 
     // Used by notifications APIs
@@ -103,14 +80,6 @@ public class JsonMapKeys {
     public static final String KEY_NOTIFICATION_KEY = "key";
     public static final String KEY_NOTIFICATION_VALUE = "value";
 
-    // Used by push notification APIs
-    public static final String KEY_REGISTER_PUSH_NOTIFICATION = "registerPushNotification";
-    public static final String KEY_PUSH_NOTIFICATION_TYPES = "pushNotificationTypes";
-    public static final String KEY_FLAG_ON_OFF = "flagOnOff";
-
-    // Used for robot error and notification
-    public static final String KEY_ROBOT_NOTIFICATION = "robotNotification";
-    public static final String KEY_ROBOT_ERROR = "robotError";
 
     // Timed Mode
     public static final String KEY_EXPECTED_TIME_TO_EXECUTE = "expectedTimeToExecute";

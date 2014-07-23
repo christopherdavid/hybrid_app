@@ -4,7 +4,6 @@ import android.content.Context;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.schedule.ScheduleInfo;
 import com.neatorobotics.android.slide.framework.robot.schedule.ScheduleJsonHelper;
-import com.neatorobotics.android.slide.framework.robot.schedule.SchedulerConstants;
 import com.neatorobotics.android.slide.framework.robot.schedule.Schedules;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes;
 
@@ -29,16 +28,8 @@ public class ScheduleHelper {
         return null;
     }
 
-    public static String getScheduleIdFromDB(Context context, String robotId, int type) {
-        String scheduleId = null;
-        if (type == SchedulerConstants.SCHEDULE_TYPE_BASIC) {
-            scheduleId = DBHelper.getInstance(context).getBasicScheduleIdForRobot(robotId);
-        }
-        return scheduleId;
-    }
-
     public static void saveScheduleId(Context context, String robotId, String id, int type) {
-    	DBHelper.getInstance(context).saveBasicScheduleId(robotId, id);
+        DBHelper.getInstance(context).saveBasicScheduleId(robotId, id);
     }
 
     public static void saveScheduleInfo(Context context, String id, String serverId, String scheduleVersion,
@@ -80,33 +71,4 @@ public class ScheduleHelper {
         return scheduleInfo.getScheduleType();
     }
 
-    public static String getScheduleVersion(Context context, String id) {
-        LogHelper.logD(TAG, "getScheduleVersion:" + id);
-        ScheduleInfo scheduleInfo = DBHelper.getInstance(context).getScheduleInfoById(id);
-        return scheduleInfo.getDataVersion();
-    }
-
-    public static String getScheduleData(Context context, String id) {
-        LogHelper.logD(TAG, "getScheduleData:" + id);
-        ScheduleInfo scheduleInfo = DBHelper.getInstance(context).getScheduleInfoById(id);
-        return scheduleInfo.getScheduleData();
-
-    }
-
-    public static boolean setServerScheduleIdAndVersion(Context context, String id, String serverId, String version) {
-        LogHelper.logD(TAG, "getScheduleServerId:" + id);
-        ScheduleInfo scheduleInfo = DBHelper.getInstance(context).getScheduleInfoById(id);
-        if (scheduleInfo != null) {
-            scheduleInfo.setServerId(serverId);
-            scheduleInfo.setDataVersion(version);
-            DBHelper.getInstance(context).updateScheduleInfo(scheduleInfo);
-        }
-        return false;
-    }
-
-    public static String getScheduleServerId(Context context, String id) {
-        LogHelper.logD(TAG, "getScheduleServerId:" + id);
-        ScheduleInfo scheduleInfo = DBHelper.getInstance(context).getScheduleInfoById(id);
-        return scheduleInfo.getServerId();
-    }
 }

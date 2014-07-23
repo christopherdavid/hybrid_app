@@ -11,7 +11,6 @@ import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.UserJsonData;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
-import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper;
 import com.neatorobotics.android.slide.framework.timedmode.RobotCommandTimerHelper;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
@@ -46,7 +45,6 @@ public class LogoutUserRequest extends UserManagerRequest {
                 PushNotificationMessageHandler.getInstance(context).removePushNotificationListener();
                 PushNotificationUtils.unregisterPushNotification(context);
                 RobotCommandTimerHelper.getInstance(context).stopAllCommandTimers();
-                RobotDriveHelper.getInstance(context).untrackAllRobotDriveRequest();
                 AppUtils.clearNeatoUserDeviceId(context);
             }
         };

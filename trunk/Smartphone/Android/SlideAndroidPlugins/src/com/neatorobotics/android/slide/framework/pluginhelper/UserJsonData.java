@@ -20,28 +20,6 @@ public class UserJsonData {
         extractJsonObject();
     }
 
-    public JSONArray getJsonArray(String key) {
-        JSONArray jsonArray = null;
-        try {
-            jsonArray = mDataObject.getJSONArray(key);
-        } catch (JSONException e) {
-            LogHelper.log(TAG, "JSON value doesn't exist for key :" + key);
-        }
-        return jsonArray;
-
-    }
-
-    public JSONObject getJsonObject(String key) {
-
-        JSONObject jsonobj = null;
-        try {
-            jsonobj = mDataObject.getJSONObject(key);
-        } catch (JSONException e) {
-            LogHelper.log(TAG, "JSON value doesn't exist for key :" + key);
-        }
-        return jsonobj;
-    }
-
     private void extractJsonObject() {
         try {
             mDataObject = mData.getJSONObject(0);
@@ -78,11 +56,6 @@ public class UserJsonData {
         }
 
         return value;
-    }
-
-    // Assume default value as 0
-    public int getInt(String key) {
-        return getInt(key, 0);
     }
 
     public int getInt(String key, int defaultValue) {

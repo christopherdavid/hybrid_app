@@ -378,20 +378,6 @@ public class RobotSchedulerManager {
         TaskUtils.scheduleTask(task, 0);
     }
 
-    public void syncSchedulesFromServer(final String robotId, final ScheduleRequestListener listener) {
-        Runnable task = new Runnable() {
-            @Override
-            public void run() {
-                // getRobotScheduleFromRobot(robotId,
-                // SchedulerConstants2.SCHEDULE_TYPE_ADVANCED, listener);
-                // getRobotScheduleFromRobot(robotId,
-                // SchedulerConstants2.SCHEDULE_TYPE_BASIC, listener);
-                getScheduleByType(robotId, SchedulerConstants.SCHEDULE_TYPE_BASIC, listener);
-            }
-        };
-        TaskUtils.scheduleTask(task, 0);
-    }
-
     public void getScheduleByType(final String robotId, final int scheduleType, final ScheduleRequestListener listener) {
         Runnable task = new Runnable() {
             @Override
@@ -456,9 +442,6 @@ public class RobotSchedulerManager {
                             listener.onServerError(ErrorTypes.ERROR_TYPE_UNKNOWN,
                                     "Result is not of type set profile details result");
                         }
-                    } else if (scheduleType == SchedulerConstants.SERVER_SCHEDULE_TYPE_ADVANCED) {
-                        listener.onServerError(ErrorTypes.ERROR_INVALID_SCHEDULE_TYPE,
-                                "Advanced Schedule Type not supported yet");
                     }
                 } catch (UserUnauthorizedException e) {
                     listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());

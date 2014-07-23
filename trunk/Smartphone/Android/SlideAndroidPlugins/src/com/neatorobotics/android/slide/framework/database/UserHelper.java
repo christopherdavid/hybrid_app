@@ -58,14 +58,6 @@ public class UserHelper {
         return null;
     }
 
-    public static String getUserId(Context context) {
-        UserItem userDetails = getLoggedInUserDetails(context);
-        if (userDetails != null) {
-            return userDetails.id;
-        }
-        return null;
-    }
-
     public static void logout(Context context) {
         String email = NeatoPrefs.getUserEmailId(context);
         DBHelper dbHelper = DBHelper.getInstance(context);

@@ -127,7 +127,7 @@ public class RobotDataManager {
                     // TODO: Reset other values too when support added.
                     // TODO: Remove
                     NeatoRobotDataWebservicesHelper.resetRobotProfileValue(context, robotId,
-                            ProfileAttributeKeys.ROBOT_CLEANING_COMMAND, ProfileAttributeKeys.INTEND_TO_DRIVE);
+                            ProfileAttributeKeys.ROBOT_CLEANING_COMMAND);
 
                     // Get the current profile parameters to reflect in the UI
                     GetRobotProfileDetailsResult2 details = NeatoRobotDataWebservicesHelper

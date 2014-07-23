@@ -12,7 +12,6 @@ import com.neatorobotics.android.slide.framework.webservice.MobileWebServiceClie
 import com.neatorobotics.android.slide.framework.webservice.NeatoServerException;
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.DeleteRobotProfileKey;
-import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.GetRobotPresenceStatus;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.GetRobotProfileDetails2;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebServicesAttributes.SetRobotProfileDetails3;
 
@@ -36,15 +35,6 @@ public class NeatoRobotDataWebservicesHelper {
         String response = MobileWebServiceClient.executeHttpPost(context, SetRobotProfileDetails3.METHOD_NAME,
                 robotSetDetailParams);
         return AppUtils.checkResponseResult(response, SetRobotProfileDetailsResult3.class);
-    }
-
-    public static GetRobotPresenceStatusResult getRobotPresenceStatus(Context context, String robotId)
-            throws UserUnauthorizedException, NeatoServerException, IOException {
-        Map<String, String> robotGetRobotPresenceStatusParams = new HashMap<String, String>();
-        robotGetRobotPresenceStatusParams.put(GetRobotPresenceStatus.Attribute.SERIAL_NUMBER, robotId);
-        String response = MobileWebServiceClient.executeHttpPost(context, GetRobotPresenceStatus.METHOD_NAME,
-                robotGetRobotPresenceStatusParams);
-        return AppUtils.checkResponseResult(response, GetRobotPresenceStatusResult.class);
     }
 
     public static GetRobotProfileDetailsResult2 getRobotProfileDetailsRequest2(Context context, String robotId,

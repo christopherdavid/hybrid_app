@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.ResultReceiver;
-import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiverConstants;
@@ -43,7 +42,7 @@ public class NeatoSmartAppService extends Service {
 
     private Handler mHandler;
     private ResultReceiver mResultReceiver;
-
+    public static final int JABBER_SERVER_PORT = 5222;
     private XMPPConnectionHelper mXMPPConnectionHelper;
     private RobotPeerConnection mRobotPeerConnection;
 
@@ -59,7 +58,7 @@ public class NeatoSmartAppService extends Service {
     private void initXmppHelperIfRequired() {
         mXMPPConnectionHelper = XMPPConnectionHelper.getInstance(this);
         String xmppDomain = NeatoWebConstants.getXmppServerDomain(this);
-        mXMPPConnectionHelper.setServerInformation(xmppDomain, AppConstants.JABBER_SERVER_PORT,
+        mXMPPConnectionHelper.setServerInformation(xmppDomain, JABBER_SERVER_PORT,
                 NeatoWebConstants.getXmppWebServer(this));
         mXMPPConnectionHelper.setXmppNotificationListener(mXmppNotificationListener, mHandler);
     }
@@ -345,7 +344,6 @@ public class NeatoSmartAppService extends Service {
 
         @Override
         public void onDataReceived(String from, RobotCommandPacket packet) {
-            LogHelper.log(TAG, "XMPP onDataReceived. New Packet Data = " + packet);
             // If data changed command recevied, retrieve the changed data from
             // server.
             if (packet.isRequest()) {
@@ -388,25 +386,6 @@ public class NeatoSmartAppService extends Service {
         @Override
         public void onDataReceived(String robotId, RobotCommandPacket robotPacket) {
             LogHelper.log(TAG, "onDataReceived. Packet = " + robotPacket);
-
-            if (mResultReceiver == null) {
-                return;
-            }
-
-            Bundle bundle = new Bundle();
-            bundle.putString(NeatoRobotResultReceiverConstants.KEY_ROBOT_ID, robotId);
-            bundle.putBoolean(NeatoRobotResultReceiverConstants.KEY_IS_REQUEST_PACKET, robotPacket.isRequest());
-
-            if (robotPacket.isResponse()) {
-                LogHelper.log(TAG, "Command Response from Remote Control = " + robotPacket);
-                bundle.putParcelable(NeatoRobotResultReceiverConstants.KEY_REMOTE_RESPONSE_PACKET,
-                        robotPacket.getCommandResponse());
-            } else {
-                LogHelper.log(TAG, "Command Requests from Remote Control = " + robotPacket);
-                bundle.putParcelable(NeatoRobotResultReceiverConstants.KEY_REMOTE_REQUEST_PACKET,
-                        robotPacket.getRobotCommands());
-            }
-            mResultReceiver.send(NeatoSmartAppsEventConstants.ROBOT_PACKET_RECEIVED_ON_PEER_CONNETION, bundle);
         }
     };
 

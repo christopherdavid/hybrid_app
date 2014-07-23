@@ -46,9 +46,6 @@ public class NeatoRobotResultReceiver extends ResultReceiver {
                 }
                 break;
 
-            case NeatoSmartAppsEventConstants.ROBOT_DATA_RECEIVED:
-                break;
-
             case NeatoSmartAppsEventConstants.ROBOT_CONNECTION_ERROR:
                 if (mRobotPeerConnectionListener != null) {
                     String robotId = resultData.getString(RobotCommandPacketConstants.KEY_ROBOT_ID);

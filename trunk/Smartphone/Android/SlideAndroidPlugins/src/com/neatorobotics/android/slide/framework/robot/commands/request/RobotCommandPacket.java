@@ -22,14 +22,6 @@ public class RobotCommandPacket {
         return robotCommandPacket;
     }
 
-    public static RobotCommandPacket createRobotCommandPacket(RobotCommandPacketHeader header,
-            RequestPacket robotCommand) {
-        RobotRequests robotCommands = new RobotRequests();
-        robotCommands.addCommand(robotCommand);
-        RobotCommandPacket robotCommandPacket = new RobotCommandPacket(header, robotCommands);
-        return robotCommandPacket;
-    }
-
     public static RobotCommandPacket createRobotPacketWithResponseData(RobotCommandPacketHeader header,
             ResponsePacket commandResonse) {
         RobotCommandPacket robotCommandPacket = new RobotCommandPacket(header, commandResonse);

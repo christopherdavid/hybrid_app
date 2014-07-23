@@ -17,8 +17,6 @@ import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebS
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.InitiateLinkToRobot;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotAssociationDisassociationResult;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.ChangePassword;
-import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.CreateNeatoUser;
-import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.CreateNeatoUser2;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.CreateNeatoUser3;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.ForgetPassword;
 import com.neatorobotics.android.slide.framework.webservice.user.NeatoUserWebServicesAttributes.GetNeatoUserDetails;
@@ -72,39 +70,6 @@ public class NeatoUserWebservicesHelper {
             throw new NeatoServerException(loginResult.getErrorCode(), loginResult.getErrorMessage());
         }
 
-    }
-
-    public static CreateNeatoUserResult createNeatoUserRequestNative(Context context, String name, String email,
-            String password) throws UserUnauthorizedException, NeatoServerException, IOException {
-
-        Map<String, String> createUserReqParams = new HashMap<String, String>();
-        createUserReqParams.put(CreateNeatoUser.Attribute.ACCOUNT_TYPE,
-                NeatoUserWebServicesAttributes.ACCOUNT_TYPE_NATIVE);
-        createUserReqParams.put(CreateNeatoUser.Attribute.NAME, name);
-        createUserReqParams.put(CreateNeatoUser.Attribute.EMAIL, email);
-        createUserReqParams.put(CreateNeatoUser.Attribute.PASSWORD, password);
-
-        String createUserResponse = MobileWebServiceClient.executeHttpPost(context, CreateNeatoUser.METHOD_NAME,
-                createUserReqParams);
-        return AppUtils.checkResponseResult(createUserResponse, CreateNeatoUserResult.class);
-    }
-
-    public static CreateNeatoUserResult createNeatoUser2RequestNative(Context context, String name, String email,
-            String alternateEmail, String password) throws UserUnauthorizedException, NeatoServerException, IOException {
-
-        Map<String, String> createUser2ReqParams = new HashMap<String, String>();
-        createUser2ReqParams.put(CreateNeatoUser2.Attribute.ACCOUNT_TYPE,
-                NeatoUserWebServicesAttributes.ACCOUNT_TYPE_NATIVE);
-        createUser2ReqParams.put(CreateNeatoUser2.Attribute.NAME, name);
-        createUser2ReqParams.put(CreateNeatoUser2.Attribute.EMAIL, email);
-        createUser2ReqParams.put(CreateNeatoUser2.Attribute.PASSWORD, password);
-        if (!TextUtils.isEmpty(alternateEmail)) {
-            createUser2ReqParams.put(CreateNeatoUser2.Attribute.ALTERNATE_EMAIL, alternateEmail);
-        }
-
-        String response = MobileWebServiceClient.executeHttpPost(context, CreateNeatoUser2.METHOD_NAME,
-                createUser2ReqParams);
-        return AppUtils.checkResponseResult(response, CreateNeatoUserResult.class);
     }
 
     public static CreateNeatoUserResult createNeatoUser3RequestNative(Context context, String name, String email,

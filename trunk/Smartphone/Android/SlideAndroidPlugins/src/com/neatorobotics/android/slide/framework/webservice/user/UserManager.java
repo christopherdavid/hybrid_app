@@ -153,62 +153,6 @@ public class UserManager extends Observable {
         notifyObservers();
     }
 
-    public void createUser(final String username, final String email, final String password,
-            final WebServiceBaseRequestListener listener) {
-        Runnable task = new Runnable() {
-            public void run() {
-                try {
-                    CreateNeatoUserResult createUserResult = NeatoUserWebservicesHelper.createNeatoUserRequestNative(
-                            mContext, username, email, password);
-                    LogHelper.logD(TAG, "user validation status is " + createUserResult.result.validation_status);
-                    GetNeatoUserDetailsResult userDetailsResult = NeatoUserWebservicesHelper.getNeatoUserDetails(
-                            mContext, email, createUserResult.result.user_handle);
-                    UserHelper.saveLoggedInUserDetails(mContext, userDetailsResult.result,
-                            createUserResult.result.user_handle);
-                    setUserAttributesOnServer(createUserResult.result.user_handle,
-                            DeviceUtils.getUserAttributes(mContext));
-                    listener.onReceived(userDetailsResult);
-                } catch (UserUnauthorizedException ex) {
-                    listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
-                } catch (NeatoServerException ex) {
-                    listener.onServerError(ex.getStatusCode(), ex.getErrorMessage());
-                } catch (IOException ex) {
-                    listener.onNetworkError(ex.getMessage());
-                }
-            }
-        };
-        TaskUtils.scheduleTask(task, 0);
-    }
-
-    public void createUser2(final String username, final String email, final String alternateEmail,
-            final String password, final WebServiceBaseRequestListener listener) {
-        Runnable task = new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    CreateNeatoUserResult createUserResult = NeatoUserWebservicesHelper.createNeatoUser2RequestNative(
-                            mContext, username, email, alternateEmail, password);
-                    LogHelper.logD(TAG, "user validation status is " + createUserResult.result.validation_status);
-                    GetNeatoUserDetailsResult userDetailsResult = NeatoUserWebservicesHelper.getNeatoUserDetails(
-                            mContext, email, createUserResult.result.user_handle);
-                    UserHelper.saveLoggedInUserDetails(mContext, userDetailsResult.result,
-                            createUserResult.result.user_handle);
-                    setUserAttributesOnServer(createUserResult.result.user_handle,
-                            DeviceUtils.getUserAttributes(mContext));
-                    listener.onReceived(userDetailsResult);
-                } catch (UserUnauthorizedException e) {
-                    listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
-                } catch (NeatoServerException e) {
-                    listener.onServerError(e.getStatusCode(), e.getErrorMessage());
-                } catch (IOException e) {
-                    listener.onNetworkError(e.getMessage());
-                }
-            }
-        };
-        TaskUtils.scheduleTask(task, 0);
-    }
-
     public void createUser3(final String username, final String email, final String alternateEmail,
             final String password, final String userParams, final WebServiceBaseRequestListener listener) {
         Runnable task = new Runnable() {
@@ -248,7 +192,6 @@ public class UserManager extends Observable {
                     LogHelper.log(TAG, "RobotItem = " + robotItem);
                     if (robotItem != null) {
                         RobotHelper.saveRobotDetails(mContext, robotItem);
-                        RobotHelper.setRobotToManage(mContext, robotItem);
                         LogHelper.log(TAG, "Saving robot information");
 
                         listener.onReceived(result);

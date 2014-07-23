@@ -9,7 +9,6 @@ import org.json.JSONArray;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotClearDataRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
-import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetRobotCurrentStateDetailsRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetRobotDataRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.GetSpotDefinationRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.PauseCleaningRequest;
@@ -18,14 +17,10 @@ import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.SetSpotDefinationRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.StartCleaningRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.StopCleaningRequest;
-import com.neatorobotics.android.slide.framework.plugins.requests.robot.command.TurnWifiOnOffRequest;
-import com.neatorobotics.android.slide.framework.plugins.requests.robot.manual.CancelIntendToDriveRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.manual.ConnectRobotRequest;
-import com.neatorobotics.android.slide.framework.plugins.requests.robot.manual.IntendToDriveRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.manual.IsRobotPeerConnectedRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.manual.RobotDriveRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.manual.StopRobotDriveRequest;
-import com.neatorobotics.android.slide.framework.plugins.requests.robot.manual.TurnMotorOnOffRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.notification.RegisterDataChangeNotificationRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.notification.RegisterForPushMessagesRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.notification.UnRegisterDataChangeNotificationRequest;
@@ -35,7 +30,6 @@ import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.GetRobotDetailRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.IsRobotScheduleEnabledRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.RobotGetOnlineStatusRequest;
-import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.RobotGetVirtualOnlineStatusRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.profile.SetRobotNameRequest;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.schedule.RobotScheduleRequest;
 
@@ -51,7 +45,6 @@ public class RobotManagerPlugin extends Plugin {
     private RobotManagerRequest mSetRobotNameRequest = new SetRobotNameRequest();
     private RobotManagerRequest mGetRobotDetailRequest = new GetRobotDetailRequest();
     private RobotManagerRequest mRobotGetOnlineStatusRequest = new RobotGetOnlineStatusRequest();
-    private RobotManagerRequest mRobotGetVirtualOnlineStatusRequest = new RobotGetVirtualOnlineStatusRequest();
     private RobotManagerRequest mIsRobotScheduleEnabledRequest = new IsRobotScheduleEnabledRequest();
     private RobotManagerRequest mEnabledScheduleRequest = new EnableScheduleRequest();
     
@@ -72,23 +65,17 @@ public class RobotManagerPlugin extends Plugin {
     private RobotManagerRequest mSendRobotCommandRequest = new SendRobotCommandRequest();
     private RobotManagerRequest mSetSpotDefinationRequest = new SetSpotDefinationRequest();
     private RobotManagerRequest mGetSpotDefinationRequest = new GetSpotDefinationRequest();
-    private RobotManagerRequest mGetRobotCurrentStateDetails = new GetRobotCurrentStateDetailsRequest();
     private RobotManagerRequest mGetRobotDataRequest = new GetRobotDataRequest();
     // Manual Commands
-    private RobotManagerRequest mCancelIntendToDriveRequest = new CancelIntendToDriveRequest();
-    private RobotManagerRequest mIntendToDriveRequest = new IntendToDriveRequest();
     private RobotManagerRequest mConnectRobotRequest = new ConnectRobotRequest();
     private RobotManagerRequest mIsRobotPeerConnectedRequest = new IsRobotPeerConnectedRequest();
     private RobotManagerRequest mRobotDriveRequest = new RobotDriveRequest();
     private RobotManagerRequest mStopRobotDriveRequest = new StopRobotDriveRequest();
-    private RobotManagerRequest mTurnMotorOnOffRequest = new TurnMotorOnOffRequest();
+    
     private RobotManagerRequest mRobotClearDataRequest = new RobotClearDataRequest();
 
     // Schedule
     private RobotManagerRequest mRobotScheduleRequest = new RobotScheduleRequest();
-
-    // Unused
-    private RobotManagerRequest mTurnWifiOnOff = new TurnWifiOnOffRequest();
 
     void initializeIfRequired() {
         // If we add more action type, please ensure to add it into the
@@ -97,7 +84,6 @@ public class RobotManagerPlugin extends Plugin {
             ACTION_COMMAND_MAP.put(ActionTypes.SET_ROBOT_NAME_2, mSetRobotNameRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_DETAIL, mGetRobotDetailRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_ONLINE_STATUS, mRobotGetOnlineStatusRequest);
-            ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_VIRTUAL_ONLINE_STATUS, mRobotGetVirtualOnlineStatusRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.IS_SCHEDULE_ENABLED, mIsRobotScheduleEnabledRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.ENABLE_SCHEDULE, mEnabledScheduleRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.SET_SPOT_DEFINITION, mSetSpotDefinationRequest);
@@ -113,14 +99,9 @@ public class RobotManagerPlugin extends Plugin {
             ACTION_COMMAND_MAP.put(ActionTypes.STOP_CLEANING, mStopCleaningRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.PAUSE_CLEANING, mPauseCleaningRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.RESUME_CLEANING, mResumeCleaningRequest);
-            ACTION_COMMAND_MAP.put(ActionTypes.TURN_WIFI_ON_OFF, mTurnWifiOnOff);
 
             ACTION_COMMAND_MAP.put(ActionTypes.DRIVE_ROBOT, mRobotDriveRequest);
-            ACTION_COMMAND_MAP.put(ActionTypes.TURN_MOTOR_ON_OFF, mTurnMotorOnOffRequest);
-            ACTION_COMMAND_MAP.put(ActionTypes.TURN_MOTOR_ON_OFF2, mTurnMotorOnOffRequest);
-            ACTION_COMMAND_MAP.put(ActionTypes.INTEND_TO_DRIVE, mIntendToDriveRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.DIRECT_CONNECT_TO_ROBOT, mConnectRobotRequest);
-            ACTION_COMMAND_MAP.put(ActionTypes.CANCEL_INTEND_TO_DRIVE, mCancelIntendToDriveRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.STOP_ROBOT_DRIVE, mStopRobotDriveRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.IS_ROBOT_PEER_CONNECTED, mIsRobotPeerConnectedRequest);
 
@@ -135,7 +116,6 @@ public class RobotManagerPlugin extends Plugin {
             ACTION_COMMAND_MAP.put(ActionTypes.UPDATE_SCHEDULE, mRobotScheduleRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.CREATE_SCHEDULE, mRobotScheduleRequest);
             ACTION_COMMAND_MAP.put(ActionTypes.CLEAR_ROBOT_DATA, mRobotClearDataRequest);
-            ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_CURRENT_STATE_DETAILS, mGetRobotCurrentStateDetails);
             ACTION_COMMAND_MAP.put(ActionTypes.GET_ROBOT_DATA, mGetRobotDataRequest);
 
             Set<String> keys = ACTION_COMMAND_MAP.keySet();
@@ -186,7 +166,6 @@ public class RobotManagerPlugin extends Plugin {
         public static final String GET_ROBOT_DETAIL = "getRobotDetail";
         public static final String SET_ROBOT_NAME_2 = "setRobotName2";
         public static final String GET_ROBOT_ONLINE_STATUS = "getRobotOnlineStatus";
-        public static final String GET_ROBOT_VIRTUAL_ONLINE_STATUS = "getRobotVirtualOnlineStatus";
         public static final String UPDATE_SCHEDULE = "updateSchedule";
         public static final String DELETE_ROBOT_SCHEDULE_EVENT = "deleteScheduleEvent";
         public static final String UPDATE_ROBOT_SCHEDULE_EVENT = "updateScheduleEvent";
@@ -202,23 +181,17 @@ public class RobotManagerPlugin extends Plugin {
         public static final String PAUSE_CLEANING = "pauseCleaning";
         public static final String RESUME_CLEANING = "resumeCleaning";
         public static final String DRIVE_ROBOT = "driveRobot";
-        public static final String TURN_MOTOR_ON_OFF = "turnMotorOnOff";
-        public static final String TURN_MOTOR_ON_OFF2 = "turnMotorOnOff2";
-        public static final String TURN_WIFI_ON_OFF = "turnWiFiOnOff";
         public static final String IS_SCHEDULE_ENABLED = "isScheduleEnabled";
         public static final String ENABLE_SCHEDULE = "enableSchedule";
         public static final String REGISTER_FOR_ROBOT_MESSAGES = "registerForRobotMessges";
         public static final String UNREGISTER_FOR_ROBOT_MESSAGES = "unregisterForRobotMessages";
         public static final String REGISTER_ROBOT_NOTIFICATIONS2 = "registerRobotNotifications2";
         public static final String UNREGISTER_ROBOT_NOTIFICATIONS2 = "unregisterRobotNotifications2";
-        public static final String INTEND_TO_DRIVE = "intendToDrive";
         public static final String DIRECT_CONNECT_TO_ROBOT = "directConnectToRobot";
         public static final String STOP_ROBOT_DRIVE = "stopRobotDrive";
-        public static final String CANCEL_INTEND_TO_DRIVE = "cancelIntendToDrive";
         public static final String IS_ROBOT_PEER_CONNECTED = "isRobotPeerConnected";
         public static final String CLEAR_ROBOT_DATA = "clearRobotData";
         public static final String GET_ROBOT_CURRENT_STATE = "getRobotCurrentState";
-        public static final String GET_ROBOT_CURRENT_STATE_DETAILS = "getRobotCurrentStateDetails";
         public static final String GET_ROBOT_DATA = "getRobotData";
 
     }

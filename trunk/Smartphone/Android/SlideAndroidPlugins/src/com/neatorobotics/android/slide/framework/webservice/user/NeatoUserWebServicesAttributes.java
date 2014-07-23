@@ -3,33 +3,6 @@ package com.neatorobotics.android.slide.framework.webservice.user;
 public class NeatoUserWebServicesAttributes {
 
     public static final String ACCOUNT_TYPE_NATIVE = "Native";
-    public static final String ACCOUNT_TYPE_FACEBOOK = "Facebook";
-    public static final String ACCOUNT_TYPE_GOOGLE = "Google";
-
-    public static class CreateNeatoUser {
-        public static final String METHOD_NAME = "user.create";
-
-        public static class Attribute {
-            public static final String ACCOUNT_TYPE = "account_type";
-            public static final String NAME = "name";
-            public static final String EMAIL = "email";
-            public static final String PASSWORD = "password";
-            public static final String EXTERNAL_SOCIAL_ID = "external_social_id";
-        }
-    }
-
-    public static class CreateNeatoUser2 {
-        public static final String METHOD_NAME = "user.create2";
-
-        public static class Attribute {
-            public static final String ACCOUNT_TYPE = "account_type";
-            public static final String NAME = "name";
-            public static final String EMAIL = "email";
-            public static final String PASSWORD = "password";
-            public static final String ALTERNATE_EMAIL = "alternate_email";
-            public static final String EXTERNAL_SOCIAL_ID = "external_social_id";
-        }
-    }
 
     public static class CreateNeatoUser3 {
         public static final String METHOD_NAME = "user.create3";
@@ -111,16 +84,6 @@ public class NeatoUserWebServicesAttributes {
 
         public static class Attribute {
             public static final String EMAIL = "email";
-        }
-    }
-
-    public static class SendMessageToRobot {
-        public static final String METHOD_NAME = "message.send_xmpp_message_to_robot";
-
-        public static class Attribute {
-            public static final String USER_ID = "user_id";
-            public static final String SERIAL_NUMBER = "serial_number";
-            public static final String MESSAGE = "message";
         }
     }
 

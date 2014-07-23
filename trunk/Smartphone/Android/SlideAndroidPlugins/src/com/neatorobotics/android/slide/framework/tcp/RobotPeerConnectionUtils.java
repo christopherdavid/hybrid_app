@@ -6,17 +6,11 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-
-import android.content.Context;
 
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandBuilder;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacket;
-import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacketUtils;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandParser;
-import com.neatorobotics.android.slide.framework.robot.commands.request.RobotPacketConstants;
 import com.neatorobotics.android.slide.framework.transport.Transport;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 
@@ -109,17 +103,4 @@ public class RobotPeerConnectionUtils {
         }
     }
 
-    protected static RobotCommandPacket getConnectionBreakPacket(Context context) {
-        int commandId = RobotCommandPacketConstants.COMMAND_ROBOT_CONNECTION_BREAK;
-        HashMap<String, String> commandParams = new HashMap<String, String>();
-        int distributionMode = RobotPacketConstants.DISTRIBUTION_MODE_TYPE_PEER;
-        return RobotCommandPacketUtils.getRobotCommandPacket(context, commandId, commandParams, distributionMode);
-    }
-
-    protected static RobotCommandPacket getConnectionPingPacket(Context context) {
-        int commandId = RobotCommandPacketConstants.COMMAND_ROBOT_CONNECTION_PING;
-        HashMap<String, String> commandParams = new HashMap<String, String>();
-        int distributionMode = RobotPacketConstants.DISTRIBUTION_MODE_TYPE_PEER;
-        return RobotCommandPacketUtils.getRobotCommandPacket(context, commandId, commandParams, distributionMode);
-    }
 }

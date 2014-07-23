@@ -23,16 +23,6 @@ public class RobotRequests implements Parcelable {
         commands.add(command);
     }
 
-    public void clearAll() {
-        commands.clear();
-    }
-
-    public void removeCommand(int index) {
-        if (isValidIndex(index)) {
-            commands.remove(index);
-        }
-    }
-
     private boolean isValidIndex(int index) {
         int size = commands.size();
         if (index >= 0 && index < size) {

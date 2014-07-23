@@ -8,8 +8,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 
 public class TcpIpTransport implements Transport {
 
@@ -81,7 +81,7 @@ public class TcpIpTransport implements Transport {
     }
 
     public int getVersion() {
-        return AppConstants.TCP_PACKET_VERSION;
+        return RobotCommandPacketConstants.COMMAND_PACKET_VERSION;
     }
 
     public boolean isConnected() {

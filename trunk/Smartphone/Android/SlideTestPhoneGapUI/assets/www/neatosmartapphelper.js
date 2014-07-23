@@ -30,9 +30,16 @@ var MOTOR_TYPE_BRUSH  = 102;
 
 //robotNotifications2 keyCodes
 
+/**
+ * @deprecated
+ */
 // The current state of the robot
 var ROBOT_CURRENT_STATE_CHANGED 	= 4001;
 // The keyCode for the state update of the robot.
+
+/**
+ * @deprecated
+ */
 var ROBOT_STATE_UPDATE				= 4003;
 // The keyCode for the name update of the robot.
 var ROBOT_NAME_UPDATE  				= 4004;
@@ -56,7 +63,13 @@ var ROBOT_LINKING_FAILURE			= 4011
 // then all associate users with that robot gets the notification
 var ROBOT_NEW_LINKING_FORMED		= 4012
 
+/**
+ * @deprecated
+ */
 var ROBOT_MESSAGE_NOTIFICATION = 4013;
+/**
+ * @deprecated
+ */
 var ROBOT_MESSAGE_ERROR = 4014;
 
 var ROBOT_ONLINE_STATUS_CHANGED = 4015;
@@ -1734,7 +1747,9 @@ RobotMgr.prototype.getSpotDefinition = function(robotId, callbackSuccess, callba
 };
 
 
-
+/**
+ * @deprecated
+ */
 RobotMgr.prototype.getRobotCurrentStateDetails = function(robotId, callbackSuccess, callbackError) {
 	var commandParams = {'robotId':robotId};
 	cordova.exec(callbackSuccess, callbackError, ROBOT_MANAGEMENT_PLUGIN,
@@ -2836,7 +2851,9 @@ var RobotPluginManager = (function() {
 		},
 
 		
-		
+		/**
+		 * @deprecated
+		 */
 		getRobotCurrentStateDetails: function(robotId, callbackSuccess, callbackError) {
 			window.plugins.neatoPluginLayer.robotMgr.getRobotCurrentStateDetails(robotId, callbackSuccess, callbackError);
 		},

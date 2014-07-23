@@ -25,29 +25,4 @@ public class RobotCommandPacketUtils {
         return robotPacketInXmlFormat;
     }
 
-    // One step method to create RobotCommandPacket Object.
-    public static RobotCommandPacket getRobotCommandPacket(Context context, int commandId,
-            HashMap<String, String> commandParams, int distributionMode) {
-        RequestPacket request = RequestPacket.createRequestPacket(context, commandId, commandParams);
-        RobotRequests requests = new RobotRequests();
-        requests.addCommand(request);
-        request.setDistributionMode(distributionMode);
-        RobotCommandPacketHeader header = RobotCommandPacketHeader.getRobotCommandHeader(
-                RobotCommandPacketConstants.COMMAND_PACKET_SIGNATURE,
-                RobotCommandPacketConstants.COMMAND_PACKET_VERSION);
-
-        RobotCommandPacket robotCommandPacket = RobotCommandPacket.createRobotCommandPacket(header, requests);
-        return robotCommandPacket;
-    }
-
-    // Method to get commandId from command.
-    public static int getRobotIdFromCommand(String cleaningCommand) {
-        RobotCommandParser parser = new RobotCommandParser();
-        RobotCommandPacket packet = parser.convertStringToRobotCommands(cleaningCommand);
-        if (packet != null && packet.isRequest()) {
-            int commandId = packet.getRobotCommands().getCommand(0).getCommand();
-            return commandId;
-        }
-        return -1;
-    }
 }

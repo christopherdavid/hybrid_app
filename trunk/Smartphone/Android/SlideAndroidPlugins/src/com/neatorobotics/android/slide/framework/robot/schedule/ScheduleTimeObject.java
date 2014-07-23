@@ -9,11 +9,6 @@ public class ScheduleTimeObject {
     private int mHrs;
     private int mMins;
 
-    public ScheduleTimeObject(int hrs, int min) {
-        mMins = min;
-        mHrs = hrs;
-    }
-
     public ScheduleTimeObject(String time) {
         int index = time.indexOf(':');
         if (index == -1) {
