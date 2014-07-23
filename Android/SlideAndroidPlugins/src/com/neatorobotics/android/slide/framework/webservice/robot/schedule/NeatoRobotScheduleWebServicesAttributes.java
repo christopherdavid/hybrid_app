@@ -2,25 +2,7 @@ package com.neatorobotics.android.slide.framework.webservice.robot.schedule;
 
 public class NeatoRobotScheduleWebServicesAttributes {
 
-    public static final String SCHEDULE_TYPE_ADVANCED = "Advanced";
     public static final String SCHEDULE_TYPE_BASIC = "Basic";
-
-    public static class GetNeatoRobotSchedules {
-        public static final String METHOD_NAME = "robotschedule.get_schedules";
-
-        public static class Attribute {
-            public static final String SERIAL_NUMBER = "serial_number";
-        }
-
-    }
-
-    public static class GetNeatoRobotScheduleData {
-        public static final String METHOD_NAME = "robotschedule.get_data";
-
-        public static class Attribute {
-            public static final String ROBOT_SCHEDULE_ID = "robot_schedule_id";
-        }
-    }
 
     public static class PostNeatoRobotScheduleData {
         public static final String METHOD_NAME = "robotschedule.post_data";
@@ -46,28 +28,12 @@ public class NeatoRobotScheduleWebServicesAttributes {
         }
     }
 
-    public static class DeleteNeatoRobotScheduleData {
-        public static final String METHOD_NAME = "robotschedule.delete_data";
-
-        public static class Attribute {
-            public static final String ROBOT_SCHEDULE_ID = "robot_schedule_id";
-        }
-    }
-
     public static class GetScheduleBasedOnType {
         public static final String METHOD_NAME = "robotschedule.get_schedule_based_on_type";
 
         public static class Attribute {
             public static final String ROBOT_SERIAL_NUMBER = "robot_serial_number";
             public static final String SCHEDULE_TYPE = "schedule_type";
-        }
-    }
-
-    public static class IsScheduleEnabled {
-        public static final String METHOD_NAME = "robot.get_profile_details";
-
-        public static class Attribute {
-            public static final String ROBOT_SERIAL_NUMBER = "serial_number";
         }
     }
 

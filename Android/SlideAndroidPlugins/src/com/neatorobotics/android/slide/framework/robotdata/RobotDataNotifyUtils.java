@@ -11,13 +11,9 @@ import android.text.TextUtils;
 
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
-import com.neatorobotics.android.slide.framework.model.RobotNetworkInfo;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotNotificationConstants;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotNotificationUtil;
-import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
-import com.neatorobotics.android.slide.framework.robot.drive.RobotAvailabilityToDriveStatus;
-import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper;
 import com.neatorobotics.android.slide.framework.robot.schedule.SchedulerConstants;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants.RobotProfileValueChangedStatus;
 import com.neatorobotics.android.slide.framework.webservice.robot.RobotItem;
@@ -61,54 +57,12 @@ public class RobotDataNotifyUtils {
         // Ensure we have the robot information in our database for which change
         // event is fired
         fetchRobotInformationIfRequired(context, robotId);
-        if (key.equals(ProfileAttributeKeys.ROBOT_CURRENT_STATE)
-                || key.equals(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS)) {
-            notifyStateChange(context, robotId, details);
-        } else if (key.equals(ProfileAttributeKeys.ROBOT_NAME)) {
+        if (key.equals(ProfileAttributeKeys.ROBOT_NAME)) {
             notifyRobotNameChange(context, robotId, details);
         } else if (key.equals(ProfileAttributeKeys.ROBOT_ENABLE_BASIC_SCHEDULE)) {
             notifyBasicScheduleStateChange(context, robotId, details);
         } else if (key.equals(ProfileAttributeKeys.ROBOT_SCHEDULE_UPDATED)) {
             notifyScheduleUpdated(context, robotId, details);
-        } else if (key.equals(ProfileAttributeKeys.AVAILABLE_TO_DRIVE)) {
-            // Notify if the available for drive robot is changed.
-            if (changedStatus == RobotProfileValueChangedStatus.ROBOT_VALUE_CHANGED) {
-                RobotAvailabilityToDriveStatus availabiltyReponse = RobotProfileDataUtils.getRobotAvailableResponse(
-                        context, details);
-                if (availabiltyReponse != null) {
-                    if (availabiltyReponse.isRobotAvailableToDrive()) {
-                        String robotDriveIp = availabiltyReponse.getRobotDriveIp();
-                        RobotDriveHelper.getInstance(context).robotReadyToDrive(robotId, robotDriveIp);
-                        // Currently sending secret pass key in this flow also
-                        // to enable testing of robot with secure key.
-                        RobotNetworkInfo info = details.getProfileParameterValue(RobotNetworkInfo.class,
-                                ProfileAttributeKeys.ROBOT_NETWORK_INFO);
-                        if ((info != null) && (info.isValid())) {
-                            NeatoPrefs.saveDriveSecureKey(context, info.robotDirectConnectSecret);
-                        }
-                    } else {
-                        int responseCode = availabiltyReponse.getDriveErrorCode();
-                        RobotDriveHelper.getInstance(context).notifyRobotNotAvailableForDrive(robotId, responseCode);
-                    }
-                }
-            }
-        } else if (key.equals(ProfileAttributeKeys.INTEND_TO_DRIVE)) {
-            // Notify if intend to drive is set for the robot
-            // TODO: What if the request is empty. Would it notify?
-            if (changedStatus == RobotProfileValueChangedStatus.ROBOT_VALUE_CHANGED) {
-                String intendToDrive = RobotProfileDataUtils.getRobotDriveRequest(context, details);
-                RobotDriveHelper.getInstance(context).robotDriveRequestInitiated(robotId, intendToDrive);
-            }
-        } else if (key.equals(ProfileAttributeKeys.ROBOT_NOTIFICATION)) {
-            if (changedStatus == RobotProfileValueChangedStatus.ROBOT_VALUE_CHANGED) {
-                String notification = RobotProfileDataUtils.getRobotNotification(context, details);
-                notifyRobotNotification(context, robotId, notification);
-            }
-        } else if (key.equals(ProfileAttributeKeys.ROBOT_ERROR)) {
-            if (changedStatus == RobotProfileValueChangedStatus.ROBOT_VALUE_CHANGED) {
-                String error = RobotProfileDataUtils.getRobotNotificationError(context, details);
-                notifyRobotError(context, robotId, error);
-            }
         } else if (key.equals(ProfileAttributeKeys.ROBOT_ONLINE_STATUS)) {
             if (changedStatus == RobotProfileValueChangedStatus.ROBOT_VALUE_CHANGED) {
                 notifyRobotIsOnlineStatusChanged(context, robotId, details);
@@ -129,24 +83,6 @@ public class RobotDataNotifyUtils {
             RobotNotificationUtil.notifyDataChanged(context, robotId,
                     RobotNotificationConstants.ROBOT_SCHEDULE_STATE_CHANGED, stateData);
         }
-    }
-
-    private static void notifyRobotNotification(Context context, String robotId, String notification) {
-        if (TextUtils.isEmpty(notification)) {
-            return;
-        }
-        HashMap<String, String> data = new HashMap<String, String>();
-        data.put(JsonMapKeys.KEY_ROBOT_NOTIFICATION, notification);
-        RobotNotificationUtil.notifyDataChanged(context, robotId, RobotNotificationConstants.ROBOT_NOTIFICATION, data);
-    }
-
-    private static void notifyRobotError(Context context, String robotId, String error) {
-        if (TextUtils.isEmpty(error)) {
-            return;
-        }
-        HashMap<String, String> data = new HashMap<String, String>();
-        data.put(JsonMapKeys.KEY_ROBOT_ERROR, error);
-        RobotNotificationUtil.notifyDataChanged(context, robotId, RobotNotificationConstants.ROBOT_ERROR, data);
     }
 
     private static void notifyScheduleUpdated(Context context, String robotId, GetRobotProfileDetailsResult2 details) {
@@ -182,32 +118,6 @@ public class RobotDataNotifyUtils {
         HashMap<String, String> data = new HashMap<String, String>();
         data.put(JsonMapKeys.KEY_ROBOT_NAME, robotName);
         RobotNotificationUtil.notifyDataChanged(context, robotId, RobotNotificationConstants.ROBOT_NAME_UPDATE, data);
-    }
-
-    private static void notifyStateChange(Context context, String robotId, GetRobotProfileDetailsResult2 details) {
-
-        String currentState = RobotProfileDataUtils.getRobotCurrentState(context, details);
-        String currentStateDetails = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
-
-        HashMap<String, String> stateData = new HashMap<String, String>();
-        stateData.put(ProfileAttributeKeys.ROBOT_CURRENT_STATE, currentState);
-        stateData.put(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS, currentStateDetails);
-
-        RobotNotificationUtil.notifyDataChanged(context, robotId,
-                RobotNotificationConstants.ROBOT_CURRENT_STATE_CHANGED, stateData);
-
-        String state = RobotProfileDataUtils.getState(context, details);
-        if (!TextUtils.isEmpty(state)) {
-            HashMap<String, String> virtualStateData = new HashMap<String, String>();
-            stateData.put(JsonMapKeys.KEY_ROBOT_STATE_UPDATE, String.valueOf(state));
-            RobotNotificationUtil.notifyDataChanged(context, robotId, RobotNotificationConstants.ROBOT_STATE_UPDATE,
-                    virtualStateData);
-        } else {
-            LogHelper.logD(TAG, "No State for robotId: " + robotId);
-        }
-
-        LogHelper.log(TAG, "Current state Received from Web server: " + currentStateDetails);
-
     }
 
     private static void notifyRobotDataChanged(Context context, String robotId, GetRobotProfileDetailsResult2 details,

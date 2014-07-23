@@ -31,7 +31,7 @@ public class StopRobotDriveRequest extends RobotManagerRequest {
             return;
         }
         // Disconnect the robot connection and send success plugin result.
-        RobotDriveHelper.getInstance(context).stopRobotDrive(robotId);
+        RobotDriveHelper.stopRobotDrive(context, robotId);
         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
         pluginResult.setKeepCallback(false);
         sendSuccessPluginResult(pluginResult, callbackId);

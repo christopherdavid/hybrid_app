@@ -10,8 +10,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import android.content.Context;
 import android.os.Handler;
 
-import com.neatorobotics.android.slide.framework.AppConstants;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandPacket;
 import com.neatorobotics.android.slide.framework.transport.Transport;
 import com.neatorobotics.android.slide.framework.transport.TransportFactory;
@@ -21,7 +21,7 @@ public class RobotPeerConnection {
 
     private static final String TAG = RobotPeerConnection.class.getSimpleName();
 
-    private static final int TCP_ROBOT_SERVER_PORT = AppConstants.TCP_ROBOT_SERVER_SOCKET_PORT;
+    private static final int TCP_ROBOT_SERVER_PORT = 49001;
     private static final int TCP_RECONNECT_RETRY_COUNT = 2;
     private static final int TCP_RETRY_TIME_GAP = 300; // 300 milli seconds.
 
@@ -190,9 +190,9 @@ public class RobotPeerConnection {
                         if (mTransport != null && mTransport.isConnected()) {
                             int signature = readInt(din);
                             LogHelper.log(TAG, "received signature:" + signature + " expected signature : "
-                                    + AppConstants.APP_SIGNATURE);
+                                    + RobotCommandPacketConstants.COMMAND_PACKET_SIGNATURE);
 
-                            if (signature != AppConstants.APP_SIGNATURE) {
+                            if (signature != RobotCommandPacketConstants.COMMAND_PACKET_SIGNATURE) {
                                 LogHelper.log(TAG, "****ERROR***** - Signature mismatch");
                                 mTransport.close();
                                 break;
@@ -200,9 +200,9 @@ public class RobotPeerConnection {
 
                             int version = readInt(din);
                             LogHelper.log(TAG, "received version:" + version + " expected version : "
-                                    + AppConstants.COMMAND_PACKET_VERSION);
+                                    + RobotCommandPacketConstants.COMMAND_PACKET_VERSION);
 
-                            if (version != AppConstants.COMMAND_PACKET_VERSION) {
+                            if (version != RobotCommandPacketConstants.COMMAND_PACKET_VERSION) {
                                 LogHelper.log(TAG, "****ERROR***** - version mismatch");
                                 mTransport.close();
                                 break;

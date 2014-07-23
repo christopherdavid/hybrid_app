@@ -13,11 +13,6 @@ public class BasicScheduleEvent implements ScheduleEvent {
     private ScheduleTimeObject mStartTime;
     private String mCleaningMode;
 
-    public BasicScheduleEvent(String eventId) {
-        mEventId = eventId;
-        mCleaningMode = String.valueOf(SchedulerConstants.CLEANING_MODE_NORMAL);
-    }
-
     public BasicScheduleEvent(String eventId, Day day, ScheduleTimeObject startTime, String cleaningMode) {
         mEventId = eventId;
         mDay = day;

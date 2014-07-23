@@ -11,7 +11,6 @@ import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedExce
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.ClearRobotData;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotDetails;
 import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotOnlineStatus;
-import com.neatorobotics.android.slide.framework.webservice.robot.NeatoRobotWebServicesAttributes.GetRobotVirtualOnlineStatus;
 
 public class NeatoRobotWebservicesHelper {
 
@@ -33,16 +32,6 @@ public class NeatoRobotWebservicesHelper {
         String response = MobileWebServiceClient.executeHttpPost(context, GetRobotOnlineStatus.METHOD_NAME,
                 robotGetOnlineStatusParams);
         return AppUtils.checkResponseResult(response, RobotOnlineStatusResult.class);
-    }
-
-    public static RobotVirtualOnlineStatusResult getRobotVirtualOnlineStatus(Context context, String robotId)
-            throws UserUnauthorizedException, NeatoServerException, IOException {
-
-        Map<String, String> robotGetOnlineStatusParams = new HashMap<String, String>();
-        robotGetOnlineStatusParams.put(GetRobotVirtualOnlineStatus.Attribute.SERIAL_NUMBER, robotId);
-        String response = MobileWebServiceClient.executeHttpPost(context, GetRobotVirtualOnlineStatus.METHOD_NAME,
-                robotGetOnlineStatusParams);
-        return AppUtils.checkResponseResult(response, RobotVirtualOnlineStatusResult.class);
     }
 
     public static RobotClearDataResult clearRobotDataRequest(Context context, String email, String robotId)

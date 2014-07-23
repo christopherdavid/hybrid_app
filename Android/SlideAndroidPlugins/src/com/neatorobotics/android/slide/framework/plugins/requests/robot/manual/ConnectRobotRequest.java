@@ -13,6 +13,7 @@ import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper;
+import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper.ConnectionAllowedStatus;
 import com.neatorobotics.android.slide.framework.utils.NetworkConnectionUtils;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
@@ -36,33 +37,34 @@ public class ConnectRobotRequest extends RobotManagerRequest {
             return;
         }
 
-        RobotDriveHelper.getInstance(context).getRobotNetworkInfo(robotId,
-                new RobotSetProfileDataRequestListener(callbackId) {
-                    @Override
-                    public void onReceived(NeatoWebserviceResult responseResult) {
-                        if ((responseResult != null) && (responseResult instanceof GetRobotProfileDetailsResult2)) {
-                            GetRobotProfileDetailsResult2 result = (GetRobotProfileDetailsResult2) responseResult;
-                            RobotNetworkInfo info = result.getProfileParameterValue(RobotNetworkInfo.class,
-                                    ProfileAttributeKeys.ROBOT_NETWORK_INFO);
+        ConnectionAllowedStatus driveStatus = RobotDriveHelper.getConnectionAllowedStatus(context, robotId);
+        if (!driveStatus.isConnectionAllowed()) {
+            LogHelper.logD(TAG, "setRobotDriveRequest - denied" + driveStatus.getErrorMessage());
+            sendError(callbackId, driveStatus.getErrorCode(), driveStatus.getErrorMessage());
+            return;
+        }
 
-                            if ((info != null) && (info.isValid())) {
-                                LogHelper.log(TAG, "Network Information is valid, trying connection");
-                                NeatoPrefs.saveDriveSecureKey(mContext, info.robotDirectConnectSecret);
+        RobotDriveHelper.getRobotNetworkInfo(context, robotId, new RobotSetProfileDataRequestListener(callbackId) {
+            @Override
+            public void onReceived(NeatoWebserviceResult responseResult) {
+                if ((responseResult != null) && (responseResult instanceof GetRobotProfileDetailsResult2)) {
+                    GetRobotProfileDetailsResult2 result = (GetRobotProfileDetailsResult2) responseResult;
+                    RobotNetworkInfo info = result.getProfileParameterValue(RobotNetworkInfo.class,
+                            ProfileAttributeKeys.ROBOT_NETWORK_INFO);
 
-                                // TODO: This can be removed once we remove the
-                                // support for intend to drive
-                                // all together.
-                                RobotDriveHelper.getInstance(mContext).trackRobotDriveRequest(robotId);
-                                RobotDriveHelper.getInstance(mContext).robotReadyToDrive(robotId, info.robotIpAddress);
-                                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
-                                sendSuccessPluginResult(pluginResult, callbackId);
-                            } else {
-                                LogHelper.log(TAG, "Network Information is not valid, returning error");
-                                sendError(callbackId, ErrorTypes.ERROR_TYPE_NETWORK_INFO_NOT_SET,
-                                        "Network information is not set ny the robot");
-                            }
-                        }
+                    if ((info != null) && (info.isValid())) {
+                        LogHelper.log(TAG, "Network Information is valid, trying connection");
+                        NeatoPrefs.saveDriveSecureKey(mContext, info.robotDirectConnectSecret);
+                        RobotDriveHelper.robotReadyToDrive(context, robotId, info.robotIpAddress);
+                        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+                        sendSuccessPluginResult(pluginResult, callbackId);
+                    } else {
+                        LogHelper.log(TAG, "Network Information is not valid, returning error");
+                        sendError(callbackId, ErrorTypes.ERROR_TYPE_NETWORK_INFO_NOT_SET,
+                                "Network information is not set ny the robot");
                     }
-                });
+                }
+            }
+        });
     }
 }

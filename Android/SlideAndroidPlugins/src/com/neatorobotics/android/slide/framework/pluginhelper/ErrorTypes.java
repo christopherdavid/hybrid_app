@@ -11,17 +11,10 @@ public class ErrorTypes {
     public static final int JSON_CREATION_ERROR = -507;
     public static final int INVALID_PARAMETER = -508;
     public static final int ERROR_TYPE_USER_UNAUTHORIZED = -509;
-    public static final int ERROR_NOT_SUPPORTED = -510;
     public static final int ROBOT_NOT_CONNECTED = -511;
     public static final int ROBOT_ALREADY_CONNECTED = -512;
-    public static final int ROBOT_UNABLE_TO_CANCEL_INTEND_TO_DRIVE = -513;
-    public static final int ROBOT_NO_DRIVE_REQUEST_FOUND = -514;
     public static final int DIFFERENT_ROBOT_ALREADY_CONNECTED = -515;
-
     public static final int ERROR_TYPE_WIFI_NOT_CONNECTED = -516;
-    public static final int ERROR_TYPE_NO_INTERNET_CONNECTION = -517;
-
-    public static final int ERROR_TYPE_NO_CLEANING_STATE_SET = -518;
     public static final int ERROR_TYPE_NETWORK_INFO_NOT_SET = -519;
 
     /**

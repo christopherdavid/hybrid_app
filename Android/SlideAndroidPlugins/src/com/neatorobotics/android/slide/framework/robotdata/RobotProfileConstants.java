@@ -14,7 +14,6 @@ public class RobotProfileConstants {
 
     static {
         PROFILE_KEY_TIMER_EXPIRY_MAP.put(ProfileAttributeKeys.ROBOT_CLEANING_COMMAND, true);
-        PROFILE_KEY_TIMER_EXPIRY_MAP.put(ProfileAttributeKeys.INTEND_TO_DRIVE, true);
     }
 
     public static String getProfileKeyTypeForCommand(int commandId) {
@@ -27,8 +26,6 @@ public class RobotProfileConstants {
             case RobotCommandPacketConstants.COMMAND_RESUME_CLEANING:
             case RobotCommandPacketConstants.COMMAND_SEND_BASE:
                 return ProfileAttributeKeys.ROBOT_CLEANING_COMMAND;
-            case RobotCommandPacketConstants.COMMAND_INTEND_TO_DRIVE:
-                return ProfileAttributeKeys.INTEND_TO_DRIVE;
             case RobotCommandPacketConstants.COMMAND_SCHEDULE_UPDATED:
                 return ProfileAttributeKeys.ROBOT_SCHEDULE_UPDATED;
             default:
@@ -53,16 +50,10 @@ public class RobotProfileConstants {
             case RobotCommandPacketConstants.COMMAND_PAUSE_CLEANING:
             case RobotCommandPacketConstants.COMMAND_RESUME_CLEANING:
             case RobotCommandPacketConstants.COMMAND_SEND_BASE:
-            case RobotCommandPacketConstants.COMMAND_TURN_MOTOR_ONOFF:
-            case RobotCommandPacketConstants.COMMAND_TURN_WIFI_ONOFF:
                 return true;
             default:
                 return false;
         }
-    }
-
-    public static String getProfileKeyType(String key) {
-        return key;
     }
 
     public static enum RobotProfileValueChangedStatus {

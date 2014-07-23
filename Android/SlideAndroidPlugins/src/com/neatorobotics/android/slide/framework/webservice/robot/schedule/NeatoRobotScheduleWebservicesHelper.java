@@ -13,15 +13,11 @@ import com.neatorobotics.android.slide.framework.webservice.NeatoServerException
 import com.neatorobotics.android.slide.framework.webservice.UserUnauthorizedException;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.NeatoRobotDataWebservicesHelper;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult3;
-import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.DeleteNeatoRobotScheduleData;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.GetScheduleBasedOnType;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.PostNeatoRobotScheduleData;
 import com.neatorobotics.android.slide.framework.webservice.robot.schedule.NeatoRobotScheduleWebServicesAttributes.UpdateNeatoRobotScheduleData;
 
 public class NeatoRobotScheduleWebservicesHelper {
-
-    @SuppressWarnings("unused")
-    private static final String TAG = NeatoRobotScheduleWebservicesHelper.class.getSimpleName();
 
     public static AddNeatoRobotScheduleDataResult addNeatoRobotScheduleDataRequest(Context context,
             String serial_number, String schedule_type, String xml_data, String blob_data)
@@ -50,16 +46,6 @@ public class NeatoRobotScheduleWebservicesHelper {
         String response = MobileWebServiceClient.executeHttpPost(context, UpdateNeatoRobotScheduleData.METHOD_NAME,
                 updateNeatoRobotScheduleDataReqParams);
         return AppUtils.checkResponseResult(response, UpdateNeatoRobotScheduleResult.class);
-    }
-
-    public static DeleteNeatoRobotScheduleResult deleteNeatoRobotSchedule(Context context, String scheduleId)
-            throws UserUnauthorizedException, NeatoServerException, IOException {
-        Map<String, String> deleteNeatoRobotScheduleReqParams = new HashMap<String, String>();
-        deleteNeatoRobotScheduleReqParams.put(DeleteNeatoRobotScheduleData.Attribute.ROBOT_SCHEDULE_ID, scheduleId);
-
-        String response = MobileWebServiceClient.executeHttpPost(context, DeleteNeatoRobotScheduleData.METHOD_NAME,
-                deleteNeatoRobotScheduleReqParams);
-        return AppUtils.checkResponseResult(response, DeleteNeatoRobotScheduleResult.class);
     }
 
     public static GetRobotScheduleByTypeResult getScheduleBasedOnType(Context context, String robotSerialNumber,

@@ -11,14 +11,9 @@ public class SchedulerConstants {
     public static final int CLEANING_MODE_NORMAL = 2;
 
     public static final int SERVER_SCHEDULE_TYPE_BASIC = 1;
-    public static final int SERVER_SCHEDULE_TYPE_ADVANCED = 2;
 
     public static enum Day {
         SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
-    };
-
-    public static enum SchedularEvent {
-        QUIET, CLEAN, NONE
     };
 
     public static Day determineDay(int day) {
@@ -39,15 +34,6 @@ public class SchedulerConstants {
             return Day.SATURDAY;
 
         return null;
-    }
-
-    public static SchedularEvent determineEvent(int eventType) {
-        if (eventType == SchedularEvent.QUIET.ordinal())
-            return SchedularEvent.QUIET;
-        if (eventType == SchedularEvent.CLEAN.ordinal())
-            return SchedularEvent.CLEAN;
-        return null;
-
     }
 
     public static String getScheduleType(int scheduleVal) {

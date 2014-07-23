@@ -93,27 +93,6 @@ public class RobotCommandServiceManager {
 
     }
 
-    public static void disconnectDirectConnection(Context context, String robotId, RobotPeerConnectionListener listener) {
-        LogHelper.logD(TAG, "disconnect peer connection action initiated");
-        INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
-        NeatoRobotResultReceiver receiver = ApplicationConfig.getInstance(context).getRobotResultReceiver();
-
-        if (receiver != null) {
-            receiver.addPeerConnectionListener(listener);
-        }
-
-        if (neatoService != null) {
-            try {
-                LogHelper.logD(TAG, "Service exists. close peer connection: " + robotId);
-                neatoService.closePeerConnection(robotId);
-            } catch (RemoteException e) {
-                LogHelper.logD(TAG, "Could not disconnect peer conneciton action");
-            }
-        } else {
-            LogHelper.logD(TAG, "Service is not started!");
-        }
-    }
-
     // TODO: Need to implement Listener.
     public static void disconnectDirectConnection(Context context, String robotId) {
         LogHelper.logD(TAG, "disconnect peer connection action initiated");

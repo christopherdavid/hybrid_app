@@ -29,10 +29,6 @@ public class BasicScheduleGroup implements Schedules {
         return false;
     }
 
-    public BasicScheduleEvent getSchedule(int index) {
-        return mScheduleList.get(index);
-    }
-
     public int getSize() {
         return mScheduleList.size();
     }

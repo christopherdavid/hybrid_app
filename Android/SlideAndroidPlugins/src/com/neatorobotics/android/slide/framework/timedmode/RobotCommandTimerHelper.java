@@ -10,7 +10,6 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotNotificationConstants;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotNotificationUtil;
-import com.neatorobotics.android.slide.framework.robot.drive.RobotDriveHelper;
 import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
@@ -139,7 +138,6 @@ public class RobotCommandTimerHelper {
 
                 @Override
                 public void onReceived(NeatoWebserviceResult responseResult) {
-                    RobotDriveHelper.getInstance(mContext).notifyDriveFailedAsRobotOffline(mRobotId);
                     for (Integer commandId : trackCommandList) {
                         notifyFailure(commandId);
                     }

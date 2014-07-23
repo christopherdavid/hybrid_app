@@ -16,13 +16,12 @@ public class NeatoPrefs {
     private static final String KEY_NEATO_USER_AUTH_TOKEN = "neato_user_auth_token";
     private static final String USER_VALIDATION_STATUS = "user_validation_status";
 
-    private static final String MANAGED_ROBOT_SERIAL_ID = "managed_robot_serial_id";
     private static final String NEATO_USER_DEVICE_ID = "cause_agent_id";
     private static final String LAST_CONNECTED_NEATO_ROBOT_ID = "last_connected_robot_id";
 
     private static final String ROBOT_SECURE_DRIVE_KEY = "robot_secure_drive_key";
 
-    public static boolean savePreferenceIntValue(Context context, String preferenceName, int preferance) {
+    private static boolean savePreferenceIntValue(Context context, String preferenceName, int preferance) {
         SharedPreferences preferences = context.getSharedPreferences(NeatoPrefs.PREFERANCE_NAME, 0);
         Editor preferencesEditor = preferences.edit();
         preferencesEditor.putInt(preferenceName, preferance);
@@ -92,18 +91,6 @@ public class NeatoPrefs {
         return getPreferenceIntValue(context, NeatoPrefs.USER_VALIDATION_STATUS, defaultValue);
     }
 
-    public static boolean saveManagedRobotSerialId(Context context, String serialId) {
-        return savePreference(context, NeatoPrefs.MANAGED_ROBOT_SERIAL_ID, serialId);
-    }
-
-    public static String getManagedRobotSerialId(Context context) {
-        return getPreferenceStrValue(context, NeatoPrefs.MANAGED_ROBOT_SERIAL_ID);
-    }
-
-    public static boolean clearManagedRobotSerialId(Context context) {
-        return savePreference(context, NeatoPrefs.MANAGED_ROBOT_SERIAL_ID, "");
-    }
-
     public static String getNeatoUserDeviceId(Context context) {
         return getPreferenceStrValue(context, NEATO_USER_DEVICE_ID);
     }
@@ -135,10 +122,6 @@ public class NeatoPrefs {
 
     public static void saveDriveSecureKey(Context context, String secureKey) {
         savePreference(context, ROBOT_SECURE_DRIVE_KEY, secureKey);
-    }
-
-    public static void clearDriveSecureKey(Context context) {
-        savePreference(context, ROBOT_SECURE_DRIVE_KEY, "");
     }
 
 }

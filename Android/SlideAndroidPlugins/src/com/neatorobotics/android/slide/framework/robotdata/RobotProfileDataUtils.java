@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
-import com.neatorobotics.android.slide.framework.robot.drive.RobotAvailabilityToDriveStatus;
 import com.neatorobotics.android.slide.framework.robot.schedule.SchedulerConstants;
 import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants.RobotProfileValueChangedStatus;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.GetRobotProfileDetailsResult2;
@@ -22,10 +21,6 @@ import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.Ne
 public class RobotProfileDataUtils {
 
     private static final String TAG = RobotProfileDataUtils.class.getSimpleName();
-
-    public static boolean contains(GetRobotProfileDetailsResult2 details, String key) {
-        return details.contains(key);
-    }
 
     public static String getRobotName(GetRobotProfileDetailsResult2 details) {
         String robotName = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_NAME);
@@ -70,22 +65,6 @@ public class RobotProfileDataUtils {
         return "";
     }
 
-    public static int getRobotCurrentCleaningCategoryFromStateDetails(Context context,
-            GetRobotProfileDetailsResult2 details) {
-        String currentStateDetails = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_CURRENT_STATE_DETAILS);
-        LogHelper.logD(TAG, "getServerData, retrieved ROBOT_CURRENT_STATE_DETAILS ======>>>> " + currentStateDetails);
-        if (TextUtils.isEmpty(currentStateDetails)) {
-            return RobotCommandPacketConstants.CLEANING_CATEGORY_INVALID;
-        }
-        try {
-            JSONObject currentStateDetailsJson = new JSONObject(currentStateDetails);
-            return currentStateDetailsJson.getInt(ProfileAttributeValueKeys.ROBOT_CLEANING_CATEGORY);
-        } catch (JSONException e) {
-            // ignore
-        }
-        return RobotCommandPacketConstants.CLEANING_CATEGORY_INVALID;
-    }
-
     public static String getScheduleState(Context context, int scheduleType, GetRobotProfileDetailsResult2 details) {
         String scheduleState = null;
         if (scheduleType == SchedulerConstants.SCHEDULE_TYPE_BASIC) {
@@ -99,44 +78,6 @@ public class RobotProfileDataUtils {
         String isScheduleUpdated = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_SCHEDULE_UPDATED);
         LogHelper.logD(TAG, "isScheduleUpdated, retrived ROBOT_SCHEDULE");
         return Boolean.valueOf(isScheduleUpdated);
-    }
-
-    public static RobotAvailabilityToDriveStatus getRobotAvailableResponse(Context context,
-            GetRobotProfileDetailsResult2 details) {
-        String isAvailableForDrive = details.getProfileParameterValue(ProfileAttributeKeys.AVAILABLE_TO_DRIVE);
-        if (!TextUtils.isEmpty(isAvailableForDrive)) {
-            return RobotAvailabilityToDriveStatus.getAvailabilityStatus(isAvailableForDrive);
-        }
-        return null;
-    }
-
-    public static String getRobotDriveRequest(Context context, GetRobotProfileDetailsResult2 details) {
-        String getRobotDriveRequest = details.getProfileParameterValue(ProfileAttributeKeys.INTEND_TO_DRIVE);
-        if (!TextUtils.isEmpty(getRobotDriveRequest)) {
-            LogHelper.logD(TAG, "getRobotDriveRequest retrieved");
-            return getRobotDriveRequest;
-        }
-        LogHelper.logD(TAG, "No robot drive request found");
-        return null;
-    }
-
-    public static String getRobotNotification(Context context, GetRobotProfileDetailsResult2 details) {
-        String robotNotification = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_NOTIFICATION);
-
-        if (!TextUtils.isEmpty(robotNotification)) {
-            return robotNotification;
-        }
-        LogHelper.logD(TAG, "No robot notification available");
-        return null;
-    }
-
-    public static String getRobotNotificationError(Context context, GetRobotProfileDetailsResult2 details) {
-        String robotError = details.getProfileParameterValue(ProfileAttributeKeys.ROBOT_ERROR);
-        if (!TextUtils.isEmpty(robotError)) {
-            return robotError;
-        }
-        LogHelper.logD(TAG, "No robot error available");
-        return null;
     }
 
     public static String getState(Context context, GetRobotProfileDetailsResult2 details) {

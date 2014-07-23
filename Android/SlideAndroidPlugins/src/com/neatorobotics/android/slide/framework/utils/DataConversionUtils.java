@@ -19,38 +19,6 @@ public class DataConversionUtils {
 
     private static final String TAG = DataConversionUtils.class.getSimpleName();
 
-    public static String convertIntToString(int value) {
-        String valueStr = String.valueOf(value);
-        return valueStr;
-    }
-
-    public static String convertHexToString(int value) {
-        String valueStr = String.format("0x%x", value);
-        return valueStr;
-    }
-
-    public static int convertStringToInt(String value) {
-        // If received string is hex.
-        if (value.startsWith("0x")) {
-            String hexString = value.substring(2);
-            try {
-                long valueLong = Long.valueOf(hexString, 16);
-                return (int) valueLong;
-            } catch (NumberFormatException e) {
-                LogHelper.log(TAG, "Exception in convertStringToInt", e);
-                return 0;
-            }
-        } else {
-            int valueInt = Integer.parseInt(value);
-            return valueInt;
-        }
-    }
-
-    public static String convertHexIntToString(int value) {
-        String valueStr = String.valueOf(value);
-        return valueStr;
-    }
-
     // Public helper method to convert from JSONObject to HashMap
     // We are assuming both keys and values are in string format
     public static HashMap<String, String> jsonObjectToHashMap(JSONObject jObject) {
@@ -108,16 +76,6 @@ public class DataConversionUtils {
             }
         }
         return jObject;
-    }
-
-    public static JSONArray toJsonArray(ArrayList<String> arrayList) {
-        JSONArray array = new JSONArray();
-        if (arrayList != null) {
-            for (int i = 0; i < arrayList.size(); i++) {
-                array.put(arrayList.get(i));
-            }
-        }
-        return array;
     }
 
     public static ArrayList<String> toStringArray(JSONArray array) {
