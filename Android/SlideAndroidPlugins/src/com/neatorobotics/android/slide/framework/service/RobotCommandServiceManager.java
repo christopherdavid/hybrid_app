@@ -199,6 +199,19 @@ public class RobotCommandServiceManager {
             LogHelper.logD(TAG, "Service is not started!");
         }
     }
+    
+    public static void logoutXmpp(Context context) {
+        INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
+        if (neatoService != null) {
+            try {
+                neatoService.logoutXmpp();
+            } catch (RemoteException e) {
+                LogHelper.logD(TAG, "Could not logout XMPP");
+            }
+        } else {
+            LogHelper.logD(TAG, "Service is not started!");
+        }
+    }
 
     public static void cleanUpServiceConnections(Context context) {
         LogHelper.logD(TAG, "cleanUp called");

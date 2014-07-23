@@ -1,6 +1,5 @@
 package com.neatorobotics.android.slide.framework.plugins.requests.robot.manual;
 
-import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 
 import android.content.Context;

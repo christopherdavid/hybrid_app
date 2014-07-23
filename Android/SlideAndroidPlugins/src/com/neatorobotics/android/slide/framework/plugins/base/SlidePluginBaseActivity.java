@@ -6,6 +6,7 @@ import java.util.Observer;
 import org.apache.cordova.DroidGap;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.NeatoServiceManager;
@@ -15,6 +16,7 @@ import com.neatorobotics.android.slide.framework.gcm.PushNotificationMessageHand
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
+import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
@@ -32,7 +34,7 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
     // issues which
     // which can happen. Need to look into it. For now we will keep this boolean
     // flag as-is.
-    private static boolean mIsActivityResumedFromSleep = false;
+    private boolean mIsActivityResumedFromSleep = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
         CrittercismHelper.initializeCrittercism(this);
         NeatoServiceManager serviceManager = NeatoServiceManager.getInstance(getApplicationContext());
         serviceManager.bindNeatoService();
-        
+
         if (UserHelper.isUserLoggedIn(this)) {
             String authToken = NeatoPrefs.getNeatoUserAuthToken(this);
             UserManager.getInstance(this).setUserAttributesOnServer(authToken, DeviceUtils.getUserAttributes(this));
@@ -91,6 +93,10 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
         RobotCommandServiceManager.loginXmppIfRequired(getApplicationContext());
         String robotId = NeatoPrefs.getLastConnectedNeatoRobotId(this);
         LogHelper.logD(TAG, "RobotId of last connected robot: " + robotId);
+		if (!TextUtils.isEmpty(robotId)) {
+			RobotDataManager.getServerData(this, robotId);
+		}
+
     }
 
     /**
@@ -116,6 +122,12 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
         super.onPause();
     }
 
+    public void onStop() {
+        RobotCommandServiceManager.logoutXmpp(this);
+        super.onStop();
+    }
+
+    // onUserLeaveHint
     @Override
     public void update(Observable observable, Object data) {
         NeatoServiceManager serviceManager = NeatoServiceManager.getInstance(getApplicationContext());

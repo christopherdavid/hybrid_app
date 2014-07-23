@@ -1,10 +1,15 @@
 package com.neatorobotics.android.slide.framework.prefs;
 
+import com.neatorobotics.android.slide.framework.logger.LogHelper;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 public class NeatoPrefs {
+
+    private static final String TAG = NeatoPrefs.class.getSimpleName();
+
     private static final String PREFERANCE_NAME = "NeatoPref";
 
     private static final String USER_EMAIL_ID_KEY = "user_email_id";
@@ -14,7 +19,7 @@ public class NeatoPrefs {
     private static final String MANAGED_ROBOT_SERIAL_ID = "managed_robot_serial_id";
     private static final String NEATO_USER_DEVICE_ID = "cause_agent_id";
     private static final String LAST_CONNECTED_NEATO_ROBOT_ID = "last_connected_robot_id";
-    
+
     private static final String ROBOT_SECURE_DRIVE_KEY = "robot_secure_drive_key";
 
     public static boolean savePreferenceIntValue(Context context, String preferenceName, int preferance) {
@@ -112,6 +117,7 @@ public class NeatoPrefs {
     }
 
     public static void saveLastConnectedNeatoRobotId(Context context, String robotId) {
+        LogHelper.log(TAG, "Saving last Used Robot Id " + robotId);
         savePreference(context, LAST_CONNECTED_NEATO_ROBOT_ID, robotId);
     }
 
@@ -122,7 +128,7 @@ public class NeatoPrefs {
     public static void clearLastConnectedNeatoRobotId(Context context) {
         savePreference(context, LAST_CONNECTED_NEATO_ROBOT_ID, "");
     }
-    
+
     public static String getDriveSecureKey(Context context) {
         return getPreferenceStrValue(context, ROBOT_SECURE_DRIVE_KEY);
     }
@@ -134,5 +140,5 @@ public class NeatoPrefs {
     public static void clearDriveSecureKey(Context context) {
         savePreference(context, ROBOT_SECURE_DRIVE_KEY, "");
     }
-    
+
 }
