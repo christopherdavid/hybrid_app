@@ -35,10 +35,6 @@ public class RobotDriveRequest extends RobotManagerRequest {
             sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, errMessage);
             return;
         }
-
         RobotDriveHelper.getInstance(context).driveRobot(robotId, navigationControlId);
-        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
-        pluginResult.setKeepCallback(false);
-        sendSuccessPluginResult(pluginResult, callbackId);
     }
 }
