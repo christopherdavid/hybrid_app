@@ -8,7 +8,9 @@ import android.os.RemoteException;
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
+import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiver;
+import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.commands.listeners.RobotPeerConnectionListener;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RequestPacket;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotPacketConstants;
@@ -20,8 +22,16 @@ public class RobotCommandServiceManager {
     public static void sendCommandToPeer(Context context, String robotId, int commandId,
             HashMap<String, String> commandParams) {
         LogHelper.logD(TAG, "sendCommandToPeer called - RobotId = " + robotId);
+
+        if (commandParams == null) {
+            commandParams = new HashMap<String, String>();
+        }
+        LogHelper.log(TAG, "Adding secure pass key for communication");
+        commandParams.put(RobotCommandPacketConstants.KEY_SECURE_PASS_KEY, NeatoPrefs.getDriveSecureKey(context));
+        
         INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
         RequestPacket request = RequestPacket.createRequestPacket(context, commandId, commandParams);
+        LogHelper.log(TAG, "Request Sending : " + request);
         RobotRequests requests = new RobotRequests();
         requests.addCommand(request);
 
@@ -156,7 +166,7 @@ public class RobotCommandServiceManager {
 
     public static void initiateXmppConnection(Context context) {
         if (!UserHelper.isUserLoggedIn(context)) {
-        	LogHelper.logD(TAG, "Not initiating xmpp login, user is not logged in.");
+            LogHelper.logD(TAG, "Not initiating xmpp login, user is not logged in.");
             return;
         }
         INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();
@@ -174,7 +184,7 @@ public class RobotCommandServiceManager {
 
     public static void loginXmppIfRequired(Context context) {
         if (!UserHelper.isUserLoggedIn(context)) {
-			LogHelper.logD(TAG, "Not initiating xmpp login, user is not logged in.");
+            LogHelper.logD(TAG, "Not initiating xmpp login, user is not logged in.");
             return;
         }
         INeatoRobotService neatoService = ApplicationConfig.getInstance(context).getRobotService();

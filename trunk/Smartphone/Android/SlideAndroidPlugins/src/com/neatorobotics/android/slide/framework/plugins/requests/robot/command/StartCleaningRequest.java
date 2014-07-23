@@ -2,6 +2,7 @@ package com.neatorobotics.android.slide.framework.plugins.requests.robot.command
 
 import java.util.HashMap;
 
+import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -44,6 +45,14 @@ public class StartCleaningRequest extends RobotManagerRequest {
             if (!isDirectConnected) {
                 LogHelper.log(TAG, "Manual cleaning cannot be started as direct connection does not exist");
                 sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, "Robot is not connected");
+                return;
+            }
+            else {
+				LogHelper.log(TAG, "Sending Peer to peer manual start cleaning");
+                RobotCommandServiceManager.sendCommandToPeer(mContext, robotId, RobotCommandPacketConstants.COMMAND_ROBOT_START, commadParamsMap);
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+                pluginResult.setKeepCallback(false);
+                sendSuccessPluginResult(pluginResult, callbackId);
                 return;
             }
         }

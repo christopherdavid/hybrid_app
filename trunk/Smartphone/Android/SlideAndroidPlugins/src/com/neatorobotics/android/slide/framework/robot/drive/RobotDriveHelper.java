@@ -102,7 +102,6 @@ public class RobotDriveHelper {
     public void driveRobot(String robotId, String navigationControlId) {
         HashMap<String, String> commandParams = new HashMap<String, String>();
         commandParams.put(RobotCommandPacketConstants.KEY_NAVIGATION_CONTROL_ID, navigationControlId);
-        commandParams.put(RobotCommandPacketConstants.KEY_SECURE_PASS_KEY, NeatoPrefs.getDriveSecureKey(mContext));
         LogHelper.logD(TAG, "Direct connection exists. Send drive command.");
         RobotCommandServiceManager.sendCommandToPeer(mContext, robotId,
                 RobotCommandPacketConstants.COMMAND_DRIVE_ROBOT, commandParams);
