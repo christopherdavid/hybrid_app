@@ -128,11 +128,9 @@ static TCPConnectionHelper *sharedInstance = nil;
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     debugLog(@"");
     @synchronized(self) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:@selector(connectedOverTCP:toRobotWithId:)]) {
-                [self.delegate performSelector:@selector(connectedOverTCP:toRobotWithId:) withObject:host withObject:[[TCPSocket getSharedTCPSocket] connectedRobotId]];
-            }
-        });
+        if ([self.delegate respondsToSelector:@selector(connectedOverTCP:toRobotWithId:)]) {
+            [self.delegate performSelector:@selector(connectedOverTCP:toRobotWithId:) withObject:host withObject:[[TCPSocket getSharedTCPSocket] connectedRobotId]];
+        }
     }
 }
 
@@ -144,11 +142,9 @@ static TCPConnectionHelper *sharedInstance = nil;
 {
     debugLog(@"");
     @synchronized(self) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:@selector(receivedDataOverTCP:toRobotWithId:)]) {
-                [self.delegate performSelector:@selector(receivedDataOverTCP:) withObject:data];
-            }
-        });
+        if ([self.delegate respondsToSelector:@selector(receivedDataOverTCP:toRobotWithId:)]) {
+            [self.delegate performSelector:@selector(receivedDataOverTCP:) withObject:data];
+        }
     }
 }
 
@@ -159,11 +155,9 @@ static TCPConnectionHelper *sharedInstance = nil;
 {
     debugLog(@"");
     @synchronized(self) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:@selector(commandSentOverTCP)]) {
-                [self.delegate performSelector:@selector(commandSentOverTCP)];
-            }
-        });
+        if ([self.delegate respondsToSelector:@selector(commandSentOverTCP)]) {
+            [self.delegate performSelector:@selector(commandSentOverTCP)];
+        }
     }
 }
 
@@ -195,18 +189,16 @@ static TCPConnectionHelper *sharedInstance = nil;
     @synchronized(self) {
         NeatoRobot *connectedRobot = [NeatoRobotHelper getRobotForId:[[TCPSocket getSharedTCPSocket] connectedRobotId]];
         connectedRobot.robotId = [[TCPSocket getSharedTCPSocket] connectedRobotId];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            debugLog(@"Post robot disconnection notification.");
-            NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-            [userInfo setObject:connectedRobot.robotId forKey:KEY_ROBOT_ID];
-            if (err) {
-                [userInfo setObject:err forKey:KEY_DISCONNECTION_ERROR];
-            }
-            [userInfo setObject:[NSNumber numberWithBool:self.isForcedDisconnecting] forKey:KEY_TCP_FORCED_DISCONNECTED];
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_TCP_DISCONNECTION object:nil userInfo:userInfo];
-            self.delegate = nil;
-            self.isForcedDisconnecting = NO;
-        });
+        debugLog(@"Post robot disconnection notification.");
+        NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+        [userInfo setObject:connectedRobot.robotId forKey:KEY_ROBOT_ID];
+        if (err) {
+            [userInfo setObject:err forKey:KEY_DISCONNECTION_ERROR];
+        }
+        [userInfo setObject:[NSNumber numberWithBool:self.isForcedDisconnecting] forKey:KEY_TCP_FORCED_DISCONNECTED];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_TCP_DISCONNECTION object:nil userInfo:userInfo];
+        self.delegate = nil;
+        self.isForcedDisconnecting = NO;
     }
 }
 

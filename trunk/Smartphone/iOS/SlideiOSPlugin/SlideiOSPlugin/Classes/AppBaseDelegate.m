@@ -27,18 +27,18 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     debugLog(@"didFinishLaunchingWithOptions called");
-  
-  debugLog(@"Server Type ====>>> %@", SERVER_TYPE);
-  debugLog(@"XMPP Server %@", XMPP_SERVER_ADDRESS);
-    // Create core data stack from main thread
+    
+    debugLog(@"Server Type ====>>> %@", SERVER_TYPE);
+    debugLog(@"XMPP Server %@", XMPP_SERVER_ADDRESS);
+    // Core data stack must be initialized on main thread.
     [NeatoDataStore sharedNeatoDataStore];
     [self enableCrittercism];
-
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleApplicationWillEnterForegroundNotification) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleApplicationWillEnterForegroundNotification) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disconnectXMPPConnection) name:UIApplicationDidEnterBackgroundNotification object:nil];
-
-  [self connectOverXMPPIfRequired];
-  
+    
+    [self connectOverXMPPIfRequired];
+    
     bool loggedIn = [self.userManager isUserLoggedIn];
     if (loggedIn) {
         // Let the device know we want to receive push notifications

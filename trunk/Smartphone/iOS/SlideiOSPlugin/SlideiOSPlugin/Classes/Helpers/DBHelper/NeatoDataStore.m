@@ -39,63 +39,56 @@
 #define ENTITY_SCHEDULE_EVENTS @"ScheduleEventsEntity"
 #define ENTITY_BASIC_SCHEDULE_EVENT @"BasicScheduleEventEntity"
 
-
 #define TIME_BEFORE_AUTO_REMOVAL 1800
-
 
 #define PREDICATE_COMMAND_FOR_REQUEST @"(requestId = %@)"
 #define PREDICATE_COMMAND_OLDER_THAN @"(creationTime < %@)"
 
-static NeatoDataStore *sharedInstance;
+
 @interface NeatoDataStore()
-{
 
-}
-
-@property (nonatomic, retain) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, retain) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
--(void) createManagedContext;
--(NSManagedObjectModel *) createManagedObjectModel;
--(NSPersistentStoreCoordinator *) createPersistenceStoreCoordinator;
--(CommandTrackerEntity *) getCommandTrackerEntityForRequestId:(NSString *) requestId;
--(void) deleteOlderCommands;
--(NSArray *) getCommandsOlderThanMins:(int) limit;
-- (void)insertOrUpdateXMPPCallbackId:(NSString *)xmppCallbackId;
+@property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @end
 
 @implementation NeatoDataStore
-@synthesize managedObjectModel = _managedObjectModel;
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
-
-
 
 + (NeatoDataStore *)sharedNeatoDataStore {
     debugLog(@"");
-    @synchronized(self) {
-        if(sharedInstance == nil) {
-            sharedInstance =  [[self alloc] init];
-        }
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
     }
-    
+    static NeatoDataStore *sharedInstance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance =  [[self alloc] init];
+    });
     return sharedInstance;
 }
 
 - (id)init {
-    @synchronized(self) {
-        if(self = [super init]) {
-            // Initialization code here.
-            [self createManagedContext];
-        }
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
     }
-    
+    if(self = [super init]) {
+        // Initialization code here.
+        [self createManagedContext];
+    }
     return self;
 }
 
 - (NSManagedObjectModel *)createManagedObjectModel {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     debugLog(@"");
     if (self.managedObjectModel != nil) {
         return self.managedObjectModel;
@@ -108,6 +101,11 @@ static NeatoDataStore *sharedInstance;
 
 - (NSPersistentStoreCoordinator *)createPersistenceStoreCoordinator {
     debugLog(@"");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if (self.persistentStoreCoordinator != nil) {
         return self.persistentStoreCoordinator;
     }
@@ -118,7 +116,7 @@ static NeatoDataStore *sharedInstance;
     self.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self createManagedObjectModel]];
     
     // TODO: Migrating older entities to newer MOM file.
-    // http://stackoverflow.com/questions/1091228/i-keep-on-getting-save-operation-failure-after-any-change-on-my-xcode-data-mod 
+    // http://stackoverflow.com/questions/1091228/i-keep-on-getting-save-operation-failure-after-any-change-on-my-xcode-data-mod
     
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
     						 [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
@@ -133,6 +131,12 @@ static NeatoDataStore *sharedInstance;
 
 - (void)createManagedContext {
     debugLog(@"");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
+    
     if (self.managedObjectContext != nil) {
         return;
     }
@@ -150,6 +154,12 @@ static NeatoDataStore *sharedInstance;
 
 - (NSArray *)getCommandsOlderThanMins:(int)limit {
     debugLog(@"");
+    
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if (self.managedObjectContext) {
         NSEntityDescription *entityDesc = [NSEntityDescription entityForName:ENTITY_COMMAND_TRACKER
                                                       inManagedObjectContext:self.managedObjectContext];
@@ -180,6 +190,11 @@ static NeatoDataStore *sharedInstance;
 // only when the robot responds to them.
 - (void)deleteOlderCommands {
     debugLog(@"");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     if (self.managedObjectContext) {
         
         NSArray *objects = [self getCommandsOlderThanMins:TIME_BEFORE_AUTO_REMOVAL];
@@ -197,84 +212,95 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (BOOL)addCommandToTracker:(NSString *)xmlCommand withRequestId:(NSString *)requestId {
-    @synchronized(self)  {
-        if ([AppHelper isStringNilOrEmpty:xmlCommand] || [AppHelper isStringNilOrEmpty:requestId]) {
-            debugLog(@"xmlCommand or requestId cannot be nil!. Will not add command to tracker.");
-            return NO;
-        }
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return NO;
+    }
+    if ([AppHelper isStringNilOrEmpty:xmlCommand] || [AppHelper isStringNilOrEmpty:requestId]) {
+        debugLog(@"xmlCommand or requestId cannot be nil!. Will not add command to tracker.");
+        return NO;
+    }
+    
+    if (self.managedObjectContext) {
+        // We should remove older commands for which we never receved any response from
+        // robot. Calling the method to remove older commands from here for now.
+        // This may change later. This seems logical place for now, otherwise we would
+        // have to write a timer and repeat it.
+        [self deleteOlderCommands];
         
-        if (self.managedObjectContext) {
-            // We should remove older commands for which we never receved any response from
-            // robot. Calling the method to remove older commands from here for now.
-            // This may change later. This seems logical place for now, otherwise we would
-            // have to write a timer and repeat it.
-            [self deleteOlderCommands];
-            
-            /*
-             //Debuging code:
-             NSLog(@"Context: %@",self.managedObjectContext);
-             NSLog(@"PS Coord : %@",self.persistentStoreCoordinator);
-             NSLog(@"MOM : %@", self.managedObjectModel);
-             NSLog(@"Entities : %@",[[self.managedObjectModel entities] valueForKey:@"name"]);
-             */
-            
-            CommandTrackerEntity *entity = [self getCommandTrackerEntityForRequestId:requestId];
-            if (entity == nil) {
-                entity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_COMMAND_TRACKER inManagedObjectContext:self.managedObjectContext];
-                entity.requestId = requestId;
-            }
-            else {
-                debugLog(@"Command entity exists for requestId = %@. Will overwrite command data!", requestId);
-            }
-            entity.xmlCommand = xmlCommand;
-            entity.creationTime = [NSDate date];
-            
-            NSError *saveError = nil;
-            [self.managedObjectContext save:&saveError];
-            if (saveError) {
-                debugLog(@"Could not persist CommandTrackerEntity for requestId = %@!!. Error = %@", requestId, saveError);
-                return NO;
-            }
-            return YES;
+        /*
+         //Debuging code:
+         NSLog(@"Context: %@",self.managedObjectContext);
+         NSLog(@"PS Coord : %@",self.persistentStoreCoordinator);
+         NSLog(@"MOM : %@", self.managedObjectModel);
+         NSLog(@"Entities : %@",[[self.managedObjectModel entities] valueForKey:@"name"]);
+         */
+        
+        CommandTrackerEntity *entity = [self getCommandTrackerEntityForRequestId:requestId];
+        if (entity == nil) {
+            entity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_COMMAND_TRACKER inManagedObjectContext:self.managedObjectContext];
+            entity.requestId = requestId;
         }
         else {
-            debugLog(@"managedObjectContext not created. addCommandToTracker failed!");
+            debugLog(@"Command entity exists for requestId = %@. Will overwrite command data!", requestId);
+        }
+        entity.xmlCommand = xmlCommand;
+        entity.creationTime = [NSDate date];
+        
+        NSError *saveError = nil;
+        [self.managedObjectContext save:&saveError];
+        if (saveError) {
+            debugLog(@"Could not persist CommandTrackerEntity for requestId = %@!!. Error = %@", requestId, saveError);
             return NO;
         }
+        return YES;
+    }
+    else {
+        debugLog(@"managedObjectContext not created. addCommandToTracker failed!");
+        return NO;
     }
 }
 
 - (BOOL)removeCommandForRequestId:(NSString *)requestId {
-    @synchronized(self) {
-        if ([AppHelper isStringNilOrEmpty:requestId]) {
-            debugLog(@"requestId cannot be nil! Will not remove command!");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return NO;
+    }
+    if ([AppHelper isStringNilOrEmpty:requestId]) {
+        debugLog(@"requestId cannot be nil! Will not remove command!");
+        return NO;
+    }
+    
+    if (self.managedObjectContext) {
+        CommandTrackerEntity *entity = [self getCommandTrackerEntityForRequestId:requestId];
+        if (entity == nil) {
             return NO;
         }
-        
-        if (self.managedObjectContext) {
-            CommandTrackerEntity *entity = [self getCommandTrackerEntityForRequestId:requestId];
-            if (entity == nil) {
-                return NO;
-            }
-            [self.managedObjectContext deleteObject:entity];
-            NSError *saveError = nil;
-            [self.managedObjectContext save:&saveError];
-            if (saveError) {
-                debugLog(@"Could not delete CommandTrackerEntity for requestId = %@!!. Error = %@", requestId, saveError);
-                return NO;
-            }
-            debugLog(@"Command entity for requestId = [%@] DELETED from data store!", requestId);
-            return YES;
-        }
-        else {
-            debugLog(@"managedObjectContext not created. removeCommandForRequestId failed!");
+        [self.managedObjectContext deleteObject:entity];
+        NSError *saveError = nil;
+        [self.managedObjectContext save:&saveError];
+        if (saveError) {
+            debugLog(@"Could not delete CommandTrackerEntity for requestId = %@!!. Error = %@", requestId, saveError);
             return NO;
         }
+        debugLog(@"Command entity for requestId = [%@] DELETED from data store!", requestId);
+        return YES;
+    }
+    else {
+        debugLog(@"managedObjectContext not created. removeCommandForRequestId failed!");
+        return NO;
     }
 }
 
 - (CommandTrackerEntity *)getCommandTrackerEntityForRequestId:(NSString *)requestId {
     debugLog(@"");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if (self.managedObjectContext) {
         NSEntityDescription *entityDesc = [NSEntityDescription entityForName:ENTITY_COMMAND_TRACKER
                                                       inManagedObjectContext:self.managedObjectContext];
@@ -306,29 +332,37 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (NSString *)getCommandForRequestId:(NSString *)requestId {
-    @synchronized(self) {
-        if ([AppHelper isStringNilOrEmpty:requestId]) {
-            debugLog(@"requestId cannot be nil!");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
+    if ([AppHelper isStringNilOrEmpty:requestId]) {
+        debugLog(@"requestId cannot be nil!");
+        return nil;
+    }
+    
+    if (self.managedObjectContext) {
+        CommandTrackerEntity *tracker = [self getCommandTrackerEntityForRequestId:requestId];
+        if (tracker == nil) {
             return nil;
         }
-        
-        if (self.managedObjectContext) {
-            CommandTrackerEntity *tracker = [self getCommandTrackerEntityForRequestId:requestId];
-            if (tracker == nil) {
-                return nil;
-            }
-            debugLog(@"Found command = %@", tracker.xmlCommand);
-            return tracker.xmlCommand;
-        }
-        else {
-            debugLog(@"managedObjectContext not created. DB operation failed!");
-            return nil;
-        }
+        debugLog(@"Found command = %@", tracker.xmlCommand);
+        return tracker.xmlCommand;
+    }
+    else {
+        debugLog(@"managedObjectContext not created. DB operation failed!");
+        return nil;
     }
 }
 
 - (void)saveNeatoUser:(NeatoUser *)neatoUser {
     debugLog(@"");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     if(!neatoUser) {
         debugLog(@"NeatoUser object is nil won't insert");
         return;
@@ -339,6 +373,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (void)removeNeatoUser {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     if (self.managedObjectContext) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
         NSError *error = nil;
@@ -352,6 +391,11 @@ static NeatoDataStore *sharedInstance;
 
 - (NeatoUser *)getNeatoUser {
     debugLog(@"");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if(self.managedObjectContext) {
         NeatoUserEntity *userEntity;
         NeatoUser *user;
@@ -403,82 +447,93 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (void)saveNeatoRobot:(NeatoRobot * )robot forUser:(NSString *)userId {
-    @synchronized(self) {
-        if(self.managedObjectContext) {
-            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
-            request.predicate = [NSPredicate predicateWithFormat:@"userId= [c]%@",userId];
-            NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-            request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-            
-            NSError *error = nil;
-            NSArray *users = [self.managedObjectContext executeFetchRequest:request error:&error];
-            if(error) {
-                debugLog(@"Error while fetching users");
-                return;
-            }
-            if([users count] > 1) {
-                debugLog(@"!!!ERROR!!! there cant be more than one user with same userId");
-                return;
-            }
-            if([users count] == 0) {
-                debugLog(@"user with this userId doesnt exist");
-                return;
-            }
-            else {
-                NeatoUserEntity *neatoUserEntity=[users lastObject];
-                NeatoRobotEntity *neatoRobotEntity = [self insertOrUpdateRobot:robot];
-                if(neatoRobotEntity) {
-                    [neatoUserEntity addHasRobotsObject:neatoRobotEntity];
-                }
-                
-            }
-            [self saveDatabase];
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
+    if(self.managedObjectContext) {
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
+        request.predicate = [NSPredicate predicateWithFormat:@"userId= [c]%@",userId];
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+        request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+        
+        NSError *error = nil;
+        NSArray *users = [self.managedObjectContext executeFetchRequest:request error:&error];
+        if(error) {
+            debugLog(@"Error while fetching users");
+            return;
+        }
+        if([users count] > 1) {
+            debugLog(@"!!!ERROR!!! there cant be more than one user with same userId");
+            return;
+        }
+        if([users count] == 0) {
+            debugLog(@"user with this userId doesnt exist");
+            return;
         }
         else {
-            debugLog(@"Managed object context is nil");
+            NeatoUserEntity *neatoUserEntity=[users lastObject];
+            NeatoRobotEntity *neatoRobotEntity = [self insertOrUpdateRobot:robot];
+            if(neatoRobotEntity) {
+                [neatoUserEntity addHasRobotsObject:neatoRobotEntity];
+            }
+            
         }
+        [self saveDatabase];
+    }
+    else {
+        debugLog(@"Managed object context is nil");
     }
 }
 
 - (void)saveSocialNetwork:(NeatoSocialNetworks *)network forUser:(NSString *)userId {
-    @synchronized(self) {
-        if(self.managedObjectContext) {
-            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
-            request.predicate = [NSPredicate predicateWithFormat:@"userId= [c]%@",userId];
-            NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-            request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-            
-            NSError *error = nil;
-            NSArray *users = [self.managedObjectContext executeFetchRequest:request error:&error];
-            if(error) {
-                debugLog(@"Error while fetching users");
-                return;
-            }
-            if([users count] > 1) {
-                debugLog(@"!!!ERROR!!! there cant be more than one user with same userId");
-                return;
-            }
-            if([users count] == 0) {
-                debugLog(@"User with this userId doesnt exist");
-                return;
-            }
-            else {
-                NeatoUserEntity *neatoUserEntity = [users lastObject];
-                NeatoSocialNetworksEntity *socialNetworkEntity = [self insertOrUpdateSocialNetworks:network];
-                if(socialNetworkEntity) {
-                    [neatoUserEntity addHasSocialNetowrksObject:socialNetworkEntity];
-                }
-                
-            }
-            [self saveDatabase];     
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
+    if(self.managedObjectContext) {
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
+        request.predicate = [NSPredicate predicateWithFormat:@"userId= [c]%@",userId];
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+        request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+        
+        NSError *error = nil;
+        NSArray *users = [self.managedObjectContext executeFetchRequest:request error:&error];
+        if(error) {
+            debugLog(@"Error while fetching users");
+            return;
+        }
+        if([users count] > 1) {
+            debugLog(@"!!!ERROR!!! there cant be more than one user with same userId");
+            return;
+        }
+        if([users count] == 0) {
+            debugLog(@"User with this userId doesnt exist");
+            return;
         }
         else {
-            debugLog(@"Managed object context is nil");
+            NeatoUserEntity *neatoUserEntity = [users lastObject];
+            NeatoSocialNetworksEntity *socialNetworkEntity = [self insertOrUpdateSocialNetworks:network];
+            if(socialNetworkEntity) {
+                [neatoUserEntity addHasSocialNetowrksObject:socialNetworkEntity];
+            }
+            
         }
+        [self saveDatabase];
+    }
+    else {
+        debugLog(@"Managed object context is nil");
     }
 }
 
 - (NSMutableArray *)getAllRobotsForUser:(NSString *)userId {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if(self.managedObjectContext) {
         NSMutableArray *robots = [[NSMutableArray alloc]init];
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
@@ -522,6 +577,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (NSMutableArray *)getAllSocialNetworksForUser:(NSString *)userId {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if(self.managedObjectContext) {
         NSMutableArray *socialNetworks = [[NSMutableArray alloc]init];
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
@@ -564,6 +624,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (NeatoRobot *)getRobotForId:(NSString *)serialNumber {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if(self.managedObjectContext) {
         NeatoRobot *robot = [[NeatoRobot alloc] init];
         NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:serialNumber];
@@ -588,6 +653,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (NeatoRobotEntity *)getRobotEntityForSerialNumber:(NSString *)serialNumber {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if(self.managedObjectContext) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_ROBOT];
         request.predicate = [NSPredicate predicateWithFormat:@"serialNumber= [c]%@", serialNumber];
@@ -615,10 +685,15 @@ static NeatoDataStore *sharedInstance;
     else {
         debugLog(@"Managed object context is nil");
         return nil;
-    }  
+    }
 }
 
 - (void)updateRobotForRobotId:(NSString *)serialNumber andForName:(NSString *)robotName {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     if(self.managedObjectContext) {
         NeatoRobotEntity *robotEntity;
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_ROBOT];
@@ -643,7 +718,7 @@ static NeatoDataStore *sharedInstance;
         else {
             debugLog(@"Robot does not Exist");
             return ;
-        }  
+        }
         [self saveDatabase];
     }
     else {
@@ -652,6 +727,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (void)deleteUserDetails {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     if(self.managedObjectContext) {
         NSError * error;
         // First retrieve store URL
@@ -674,6 +754,11 @@ static NeatoDataStore *sharedInstance;
     }
 }
 - (void)deleteAllRobots:(NSSet *)robotSet {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     NSArray *robots = [robotSet allObjects];
     for(int i=0 ; i < [robots count] ; i++) {
         NeatoRobotEntity *robotEntity = [robots objectAtIndex:i];
@@ -683,6 +768,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (void)dissociateAllRobotsForUserWithEmail:(NSString *)email {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     if(self.managedObjectContext) {
         NeatoUserEntity *userEntity;
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
@@ -719,63 +809,71 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (void)insertOrUpdateNeatoUser:(NeatoUser *)user {
-    @synchronized(self) {
-        if(self.managedObjectContext) {
-            // Find or create the user
-            NeatoUserEntity *userEntity;
-            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
-            request.predicate = [NSPredicate predicateWithFormat:@"userId= %@", user.userId];
-            NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-            request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-            
-            NSError *error = nil;
-            NSArray *users = [self.managedObjectContext executeFetchRequest:request error:&error];
-            if(error) {
-                debugLog(@"Error while fetching users.");
-                return;
-            }
-            if([users count] > 1) {
-                debugLog(@"!!!!ERROR!!!!! there cannot be more than one userEntity with same userId");
-                return;
-            }
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
+    if(self.managedObjectContext) {
+        // Find or create the user
+        NeatoUserEntity *userEntity;
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
+        request.predicate = [NSPredicate predicateWithFormat:@"userId= %@", user.userId];
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+        request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+        
+        NSError *error = nil;
+        NSArray *users = [self.managedObjectContext executeFetchRequest:request error:&error];
+        if(error) {
+            debugLog(@"Error while fetching users.");
+            return;
+        }
+        if([users count] > 1) {
+            debugLog(@"!!!!ERROR!!!!! there cannot be more than one userEntity with same userId");
+            return;
+        }
 	    
-            if([users count] == 1) {
-                userEntity = [users lastObject];
-            }
-            else {
-                userEntity=[NSEntityDescription insertNewObjectForEntityForName:ENTITY_NEATO_USER inManagedObjectContext:self.managedObjectContext];
-                userEntity.userId = user.userId;
-            }
-            
-            userEntity.name = user.name;
-            userEntity.email = user.email;
-            userEntity.chatId = user.chatId;
-            userEntity.chatPassword = user.chatPassword;
-            userEntity.account_type = user.account_type;
-            userEntity.password = user.password;
-            userEntity.external_social_id = user.external_social_id;
-            userEntity.alternateEmail = user.alternateEmail;
-            userEntity.validationStatus = user.validationStatus;
-            userEntity.userCountryCode = [user.userCountryCode isEqual:[NSNull null]] ? nil : user.userCountryCode;
-            userEntity.optIn = [NSNumber numberWithBool:user.optIn];
-            
-            for(int i = 0; i<[user.robots count]; i++) {
-                [userEntity addHasRobotsObject:[self insertOrUpdateRobot:[user.robots objectAtIndex:i]]];
-            }
-            for(int i=0;i<[user.socialNetworks count];i++) {
-                [userEntity addHasSocialNetowrksObject:[self insertOrUpdateSocialNetworks:[user.socialNetworks objectAtIndex:i]]];
-            }
-            [self saveDatabase];
+        if([users count] == 1) {
+            userEntity = [users lastObject];
         }
         else {
-            debugLog(@"Managed object context is nil");
+            userEntity=[NSEntityDescription insertNewObjectForEntityForName:ENTITY_NEATO_USER inManagedObjectContext:self.managedObjectContext];
+            userEntity.userId = user.userId;
         }
+        
+        userEntity.name = user.name;
+        userEntity.email = user.email;
+        userEntity.chatId = user.chatId;
+        userEntity.chatPassword = user.chatPassword;
+        userEntity.account_type = user.account_type;
+        userEntity.password = user.password;
+        userEntity.external_social_id = user.external_social_id;
+        userEntity.alternateEmail = user.alternateEmail;
+        userEntity.validationStatus = user.validationStatus;
+        userEntity.userCountryCode = [user.userCountryCode isEqual:[NSNull null]] ? nil : user.userCountryCode;
+        userEntity.optIn = [NSNumber numberWithBool:user.optIn];
+        
+        for(int i = 0; i<[user.robots count]; i++) {
+            [userEntity addHasRobotsObject:[self insertOrUpdateRobot:[user.robots objectAtIndex:i]]];
+        }
+        for(int i=0;i<[user.socialNetworks count];i++) {
+            [userEntity addHasSocialNetowrksObject:[self insertOrUpdateSocialNetworks:[user.socialNetworks objectAtIndex:i]]];
+        }
+        [self saveDatabase];
+    }
+    else {
+        debugLog(@"Managed object context is nil");
     }
 }
 
 
 
 - (void)saveDatabase {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     NSError *saveError = nil;
     if(self.managedObjectContext) {
         [self.managedObjectContext save:&saveError];
@@ -793,6 +891,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (NeatoRobotEntity *)insertOrUpdateRobot:(NeatoRobot *)robot {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     NeatoRobotEntity *robotEntity;
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_ROBOT];
     request.predicate = [NSPredicate predicateWithFormat:@"serialNumber= [c]%@", robot.serialNumber];
@@ -828,6 +931,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (NeatoSocialNetworksEntity *)insertOrUpdateSocialNetworks:(NeatoSocialNetworks *)socialNetwork {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     NeatoSocialNetworksEntity *socialNetworksEntity;
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_SOCIALNETWORKS];
     request.predicate = [NSPredicate predicateWithFormat:@"externalSocialId= %@", socialNetwork.externalSocialId];
@@ -856,17 +964,27 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (void)deleteRobotForSerialNumber:(NSString *)serialNumber forUserId:(NSString *)userId {
-  if(self.managedObjectContext) {
-    NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:serialNumber];
-    [self.managedObjectContext deleteObject:robotEntity];
-    [self saveDatabase];
-  }
-  else {
-    debugLog(@"ManagedObjectContext is nil");
-  }
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
+    if(self.managedObjectContext) {
+        NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:serialNumber];
+        [self.managedObjectContext deleteObject:robotEntity];
+        [self saveDatabase];
+    }
+    else {
+        debugLog(@"ManagedObjectContext is nil");
+    }
 }
 
 - (id)createScheduleForRobotId:(NSString *)serialNumber forScheduleType:(NSString *)scheduleType withScheduleId:(NSString *)scheduleId {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if(self.managedObjectContext) {
         NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:serialNumber];
         if(robotEntity) {
@@ -900,7 +1018,12 @@ static NeatoDataStore *sharedInstance;
     }
 }
 
-- (ScheduleEntity *)findScheduleEntityForRobotEntiy:(NeatoRobotEntity *)robotEntity ofScheduleType:(NSString *)scheduleType { 
+- (ScheduleEntity *)findScheduleEntityForRobotEntiy:(NeatoRobotEntity *)robotEntity ofScheduleType:(NSString *)scheduleType {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     NSArray *scheduleEntities = [robotEntity.hasSchedule allObjects];
     for(int i=0 ; i < [scheduleEntities count] ; i++) {
         ScheduleEntity *scheduleEntity = [scheduleEntities objectAtIndex:i];
@@ -912,10 +1035,20 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (void)deleteScheduleEntity:(ScheduleEntity *)scheduleEntity {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     [self.managedObjectContext deleteObject:scheduleEntity];
 }
 
 - (ScheduleEntity *)insertNewScheduleWithScheduleId:(NSString *)scheduleId ofType:(NSString *)scheduleType {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     ScheduleEntity *scheduleEntity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_SCHEDULE inManagedObjectContext:self.managedObjectContext];
     scheduleEntity.scheduleId = scheduleId;
     scheduleEntity.scheduleType = scheduleType;
@@ -925,237 +1058,290 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (ScheduleEntity *)getScheduleEntityForScheduleId:(NSString *)scheduleId {
-  NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_SCHEDULE];
-  request.predicate = [NSPredicate predicateWithFormat:@"scheduleId= %@",scheduleId];
-  NSError *error = nil;
-  NSArray *scheduleEntities = [self.managedObjectContext executeFetchRequest:request error:&error];
-  if(error) {
-    debugLog(@"Failed to retrive schedule entity with error : %@",[error description]);
-    return nil;
-  }
-  if([scheduleEntities count] > 1) {
-    debugLog(@"!!ERROR!!! there cannot be more than one scheduleEntity for a scheduleId");
-    return nil;
-  }
-  if([scheduleEntities count] == 0) {
-    debugLog(@"There is no schedule with this scheduleId");
-    return nil;
-  }
-  else {
-    return [scheduleEntities lastObject];
-  }
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_SCHEDULE];
+    request.predicate = [NSPredicate predicateWithFormat:@"scheduleId= %@",scheduleId];
+    NSError *error = nil;
+    NSArray *scheduleEntities = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if(error) {
+        debugLog(@"Failed to retrive schedule entity with error : %@",[error description]);
+        return nil;
+    }
+    if([scheduleEntities count] > 1) {
+        debugLog(@"!!ERROR!!! there cannot be more than one scheduleEntity for a scheduleId");
+        return nil;
+    }
+    if([scheduleEntities count] == 0) {
+        debugLog(@"There is no schedule with this scheduleId");
+        return nil;
+    }
+    else {
+        return [scheduleEntities lastObject];
+    }
 }
 
 - (id)scheduleTypeForScheduleId:(NSString *)scheduleId {
-  if(self.managedObjectContext) {
-    ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
-    if(scheduleEntity) {
-      return scheduleEntity.scheduleType;
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
+    if(self.managedObjectContext) {
+        ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
+        if(scheduleEntity) {
+            return scheduleEntity.scheduleType;
+        }
+        else {
+            return [AppHelper nserrorWithDescription:@"Could not get scheduleEventType" code:UI_ERROR_DB_ERROR];
+        }
     }
     else {
-      return [AppHelper nserrorWithDescription:@"Could not get scheduleEventType" code:UI_ERROR_DB_ERROR];
+        debugLog(@"Managed object context is nil");
+        // Create NSError
+        return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
     }
-  }
-  else {
-    debugLog(@"Managed object context is nil");
-    // Create NSError
-    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
-  }
 }
 
 - (id)addBasicScheduleEventData:(NSString *)data withScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
-  if(self.managedObjectContext) {
-    ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
-    if(scheduleEntity) {
-      BasicScheduleEventEntity *basicScheduleEventEntity = [self createBasicScheduleEventWithData:data withScheduleEventId:scheduleEventId];
-      ScheduleEventsEntity *scheduleEvent = scheduleEntity.hasScheduleEvent;
-      [scheduleEvent addHasBasicScheduleEventsObject:basicScheduleEventEntity];
-      [self saveDatabase];
-      return [NSNumber numberWithBool:YES];
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
+    if(self.managedObjectContext) {
+        ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
+        if(scheduleEntity) {
+            BasicScheduleEventEntity *basicScheduleEventEntity = [self createBasicScheduleEventWithData:data withScheduleEventId:scheduleEventId];
+            ScheduleEventsEntity *scheduleEvent = scheduleEntity.hasScheduleEvent;
+            [scheduleEvent addHasBasicScheduleEventsObject:basicScheduleEventEntity];
+            [self saveDatabase];
+            return [NSNumber numberWithBool:YES];
+        }
+        else {
+            return [AppHelper nserrorWithDescription:@"Could not get ScheduleEvent for this ScheduleId" code:UI_ERROR_DB_ERROR];
+        }
     }
     else {
-      return [AppHelper nserrorWithDescription:@"Could not get ScheduleEvent for this ScheduleId" code:UI_ERROR_DB_ERROR];
+        return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
     }
-  }
-  else {
-    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
-  }
 }
 
 - (BasicScheduleEventEntity *)createBasicScheduleEventWithData:(NSString *)data withScheduleEventId:(NSString *)scheduleEventId {
-  BasicScheduleEventEntity *basicScheduleEventsEntity;
-  id response = [self basicScheduleEventEntityWithId:scheduleEventId];
-  if (!response || [response isKindOfClass:[NSError class]]) {
-    basicScheduleEventsEntity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_BASIC_SCHEDULE_EVENT inManagedObjectContext:self.managedObjectContext];
-  }
-  else {
-    basicScheduleEventsEntity = (BasicScheduleEventEntity *)response;
-  }
-
-  basicScheduleEventsEntity.scheduleEventId = scheduleEventId;
-  basicScheduleEventsEntity.parameterStr = data;
-  return basicScheduleEventsEntity;
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
+    BasicScheduleEventEntity *basicScheduleEventsEntity;
+    id response = [self basicScheduleEventEntityWithId:scheduleEventId];
+    if (!response || [response isKindOfClass:[NSError class]]) {
+        basicScheduleEventsEntity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_BASIC_SCHEDULE_EVENT inManagedObjectContext:self.managedObjectContext];
+    }
+    else {
+        basicScheduleEventsEntity = (BasicScheduleEventEntity *)response;
+    }
+    
+    basicScheduleEventsEntity.scheduleEventId = scheduleEventId;
+    basicScheduleEventsEntity.parameterStr = data;
+    return basicScheduleEventsEntity;
 }
 
 - (id)basicScheduleEventEntityWithId:(NSString *)scheduleEventId {
-  NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_BASIC_SCHEDULE_EVENT];
-  request.predicate = [NSPredicate predicateWithFormat:@"scheduleEventId= %@",scheduleEventId];
-  NSError *error = nil;
-  NSArray *basicScheduleEventEntities = [self.managedObjectContext executeFetchRequest:request error:&error];
-  if(error) {
-    debugLog(@"Failed to retrive basic schedule with error: %@",[error description]);
-    return nil;
-  }
-  if([basicScheduleEventEntities count] > 1) {
-    debugLog(@"!!ERROR!!! there cannot be more than one BasicScheduleEventEntity for a scheduleId");
-    return nil;
-  }
-  if([basicScheduleEventEntities count] == 0) {
-    return [AppHelper nserrorWithDescription:@"No BasicScheduleEventEntity with this id" code:UI_ERROR_DB_ERROR];
-  }
-  else {
-    return [basicScheduleEventEntities lastObject];
-  }
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_BASIC_SCHEDULE_EVENT];
+    request.predicate = [NSPredicate predicateWithFormat:@"scheduleEventId= %@",scheduleEventId];
+    NSError *error = nil;
+    NSArray *basicScheduleEventEntities = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if(error) {
+        debugLog(@"Failed to retrive basic schedule with error: %@",[error description]);
+        return nil;
+    }
+    if([basicScheduleEventEntities count] > 1) {
+        debugLog(@"!!ERROR!!! there cannot be more than one BasicScheduleEventEntity for a scheduleId");
+        return nil;
+    }
+    if([basicScheduleEventEntities count] == 0) {
+        return [AppHelper nserrorWithDescription:@"No BasicScheduleEventEntity with this id" code:UI_ERROR_DB_ERROR];
+    }
+    else {
+        return [basicScheduleEventEntities lastObject];
+    }
 }
 
 - (id)updateBasicScheduleEventWithId:(NSString *)scheduleEventId withData:(NSString *)data {
-  if(self.managedObjectContext) {
-    id result = [self basicScheduleEventEntityWithId:scheduleEventId];
-    if([result isKindOfClass:[NSError class]]) {
-      return result;
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
     }
-    if(result) {
-      BasicScheduleEventEntity *basicScheduleEventEntity = (BasicScheduleEventEntity *)result;
-      basicScheduleEventEntity.parameterStr = data;
-      [self saveDatabase];
-      return [NSNumber numberWithBool:YES];
+    if(self.managedObjectContext) {
+        id result = [self basicScheduleEventEntityWithId:scheduleEventId];
+        if([result isKindOfClass:[NSError class]]) {
+            return result;
+        }
+        if(result) {
+            BasicScheduleEventEntity *basicScheduleEventEntity = (BasicScheduleEventEntity *)result;
+            basicScheduleEventEntity.parameterStr = data;
+            [self saveDatabase];
+            return [NSNumber numberWithBool:YES];
+        }
+        return [AppHelper nserrorWithDescription:@"Could not update schedule." code:UI_ERROR_DB_ERROR];
     }
-    return [AppHelper nserrorWithDescription:@"Could not update schedule." code:UI_ERROR_DB_ERROR];    
-  }
-  else {
-   return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
-  }
+    else {
+        return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
+    }
 }
 
 - (id)deleteBasicScheduleEventWithId:(NSString *)scheduleEventId {
-  if(self.managedObjectContext) {
-    id result = [self basicScheduleEventEntityWithId:scheduleEventId];
-    if([result isKindOfClass:[NSError class]]) {
-      return result;
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
     }
-    if(result) {
-      [self.managedObjectContext deleteObject:(BasicScheduleEventEntity *)result];
-      [self saveDatabase];
-      return [NSNumber numberWithBool:YES];
+    if(self.managedObjectContext) {
+        id result = [self basicScheduleEventEntityWithId:scheduleEventId];
+        if([result isKindOfClass:[NSError class]]) {
+            return result;
+        }
+        if(result) {
+            [self.managedObjectContext deleteObject:(BasicScheduleEventEntity *)result];
+            [self saveDatabase];
+            return [NSNumber numberWithBool:YES];
+        }
     }
-  }
-  else {
-    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
-  }
-  return [AppHelper nserrorWithDescription:@"Error in Database" code:UI_ERROR_DB_ERROR];
+    else {
+        return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
+    }
+    return [AppHelper nserrorWithDescription:@"Error in Database" code:UI_ERROR_DB_ERROR];
 }
 
 - (id)basicScheduleEventWithId:(NSString *)scheduleEventId {
-  if(self.managedObjectContext) {
-    id result = [self basicScheduleEventEntityWithId:scheduleEventId];
-    if([result isKindOfClass:[NSError class]]) {
-      return result;
-    }if(result) {
-      BasicScheduleEventEntity *basicScheduleEventEntity = (BasicScheduleEventEntity *)result;
-      BasicScheduleEvent *basicScheduleEvent = [[BasicScheduleEvent alloc] init];
-      basicScheduleEvent.scheduleEventId = basicScheduleEventEntity.scheduleEventId;
-      basicScheduleEvent.parameterStr = basicScheduleEventEntity.parameterStr;
-      return basicScheduleEvent;
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
     }
-  }
-  else {
-    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
-  }
-  return [AppHelper nserrorWithDescription:@"Error in Database" code:UI_ERROR_DB_ERROR];
+    if(self.managedObjectContext) {
+        id result = [self basicScheduleEventEntityWithId:scheduleEventId];
+        if([result isKindOfClass:[NSError class]]) {
+            return result;
+        }if(result) {
+            BasicScheduleEventEntity *basicScheduleEventEntity = (BasicScheduleEventEntity *)result;
+            BasicScheduleEvent *basicScheduleEvent = [[BasicScheduleEvent alloc] init];
+            basicScheduleEvent.scheduleEventId = basicScheduleEventEntity.scheduleEventId;
+            basicScheduleEvent.parameterStr = basicScheduleEventEntity.parameterStr;
+            return basicScheduleEvent;
+        }
+    }
+    else {
+        return [AppHelper nserrorWithDescription:@"Database did not start properly" code:UI_ERROR_DB_ERROR];
+    }
+    return [AppHelper nserrorWithDescription:@"Error in Database" code:UI_ERROR_DB_ERROR];
 }
 
 - (id)basicScheduleForScheduleId:(NSString *)scheduleId {
-  debugLog(@"");
-  if(self.managedObjectContext) {
-    Schedule *schedule = [[Schedule alloc] init];
-    schedule.scheduleEvent = [[ScheduleEvent alloc] init];
-    ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
-    if(scheduleEntity) {
-      schedule.scheduleId = scheduleEntity.scheduleId;
-      schedule.serverScheduleId = scheduleEntity.server_scheduleId;
-      schedule.scheduleType = scheduleEntity.scheduleType;
-      schedule.scheduleVersion = scheduleEntity.schedule_version;
-      NSArray *basicScheduleEventsEntities = [scheduleEntity.hasScheduleEvent.hasBasicScheduleEvents allObjects];
-      NSMutableArray *basicScheduleEvents = [[NSMutableArray alloc] init];
-      for(int i=0; i< [basicScheduleEventsEntities count]; i++) {
-        BasicScheduleEvent *basicScheduleEvent = [[BasicScheduleEvent alloc] init];
-        basicScheduleEvent.scheduleEventId = [[basicScheduleEventsEntities objectAtIndex:i] scheduleEventId];
-        basicScheduleEvent.parameterStr = [[basicScheduleEventsEntities objectAtIndex:i] parameterStr];
-        [basicScheduleEvents addObject:basicScheduleEvent];
-      }
-      [schedule.scheduleEvent addBasicScheduleEvents:basicScheduleEvents];
-      return schedule;
+    debugLog(@"");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
+    if(self.managedObjectContext) {
+        Schedule *schedule = [[Schedule alloc] init];
+        schedule.scheduleEvent = [[ScheduleEvent alloc] init];
+        ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
+        if(scheduleEntity) {
+            schedule.scheduleId = scheduleEntity.scheduleId;
+            schedule.serverScheduleId = scheduleEntity.server_scheduleId;
+            schedule.scheduleType = scheduleEntity.scheduleType;
+            schedule.scheduleVersion = scheduleEntity.schedule_version;
+            NSArray *basicScheduleEventsEntities = [scheduleEntity.hasScheduleEvent.hasBasicScheduleEvents allObjects];
+            NSMutableArray *basicScheduleEvents = [[NSMutableArray alloc] init];
+            for(int i=0; i< [basicScheduleEventsEntities count]; i++) {
+                BasicScheduleEvent *basicScheduleEvent = [[BasicScheduleEvent alloc] init];
+                basicScheduleEvent.scheduleEventId = [[basicScheduleEventsEntities objectAtIndex:i] scheduleEventId];
+                basicScheduleEvent.parameterStr = [[basicScheduleEventsEntities objectAtIndex:i] parameterStr];
+                [basicScheduleEvents addObject:basicScheduleEvent];
+            }
+            [schedule.scheduleEvent addBasicScheduleEvents:basicScheduleEvents];
+            return schedule;
+        }
+        else {
+            return [AppHelper nserrorWithDescription:@"Error in Database" code:UI_ERROR_DB_ERROR];
+        }
     }
     else {
-      return [AppHelper nserrorWithDescription:@"Error in Database" code:UI_ERROR_DB_ERROR];
+        return [AppHelper nserrorWithDescription:@"Database did not start properly" code:200];
     }
-  }
-  else {
-    return [AppHelper nserrorWithDescription:@"Database did not start properly" code:200];
-  }
 }
 
 - (void)saveSchedule:(Schedule *)schedule ofType:(NSString *)scheduleType forRobotWithId:(NSString *)robotId {
     debugLog(@"");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     if(!schedule) {
         debugLog(@"Schedule object is nil won't insert");
         return;
     }
-    @synchronized(self) {
-        if(self.managedObjectContext) {
-            NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
-            if (!robotEntity) {
-                debugLog(@"Cound'nt find robot with Id = %@, will not insert schedule", robotId);
-                return;
-            }
-            ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:schedule.scheduleId];
-            if(scheduleEntity) {
-                [robotEntity removeHasScheduleObject:scheduleEntity];
-                [self deleteScheduleEntity:scheduleEntity];
-                [self saveDatabase];
-            }
-            // Now insert new entity
-            scheduleEntity = [self insertNewScheduleWithScheduleId:schedule.scheduleId ofType:scheduleType];
-            scheduleEntity.server_scheduleId = schedule.serverScheduleId;
-            scheduleEntity.schedule_version = schedule.scheduleVersion;
-            [robotEntity addHasScheduleObject:scheduleEntity];
-            
-            if ([scheduleType isEqualToString:NEATO_SCHEDULE_BASIC]) {
-                for (BasicScheduleEvent *basicScheduleEvent in schedule.scheduleEvent.basicScheduleEvents) {
-                    BasicScheduleEventEntity *basicScheduleEventEntity = [self createBasicScheduleEventWithData:basicScheduleEvent.parameterStr withScheduleEventId:basicScheduleEvent.scheduleEventId];
-                    [scheduleEntity.hasScheduleEvent addHasBasicScheduleEventsObject:basicScheduleEventEntity];
-                }
-            }
-            else if ([scheduleType isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
-                // TODO: Needs implementation
-            }
+    if(self.managedObjectContext) {
+        NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
+        if (!robotEntity) {
+            debugLog(@"Cound'nt find robot with Id = %@, will not insert schedule", robotId);
+            return;
+        }
+        ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:schedule.scheduleId];
+        if(scheduleEntity) {
+            [robotEntity removeHasScheduleObject:scheduleEntity];
+            [self deleteScheduleEntity:scheduleEntity];
             [self saveDatabase];
-            
         }
-        else {
-            debugLog(@"Managed object context is nil");
+        // Now insert new entity
+        scheduleEntity = [self insertNewScheduleWithScheduleId:schedule.scheduleId ofType:scheduleType];
+        scheduleEntity.server_scheduleId = schedule.serverScheduleId;
+        scheduleEntity.schedule_version = schedule.scheduleVersion;
+        [robotEntity addHasScheduleObject:scheduleEntity];
+        
+        if ([scheduleType isEqualToString:NEATO_SCHEDULE_BASIC]) {
+            for (BasicScheduleEvent *basicScheduleEvent in schedule.scheduleEvent.basicScheduleEvents) {
+                BasicScheduleEventEntity *basicScheduleEventEntity = [self createBasicScheduleEventWithData:basicScheduleEvent.parameterStr withScheduleEventId:basicScheduleEvent.scheduleEventId];
+                [scheduleEntity.hasScheduleEvent addHasBasicScheduleEventsObject:basicScheduleEventEntity];
+            }
         }
+        else if ([scheduleType isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
+            // TODO: Needs implementation
+        }
+        [self saveDatabase];
+        
+    }
+    else {
+        debugLog(@"Managed object context is nil");
     }
 }
 
 - (id)robotIdForScheduleId:(NSString *)scheduleId {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if(self.managedObjectContext) {
         ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
         if(scheduleEntity) {
             return scheduleEntity.ofRobot.serialNumber;
         }
         else {
-           return [AppHelper nserrorWithDescription:@"No Schedule with this ScheduleId." code:200];
+            return [AppHelper nserrorWithDescription:@"No Schedule with this ScheduleId." code:200];
         }
     }
     else {
@@ -1164,6 +1350,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (id)updateServerScheduleId:(NSString *)serverScheduleId andScheduleVersion:(NSString *)scheduleVersion forScheduleWithScheduleId:(NSString *)scheduleId {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if(self.managedObjectContext) {
         ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
         if(scheduleEntity) {
@@ -1182,6 +1373,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (id)updateScheduleVersion:(NSString *)scheduleVersion forScheduleWithScheduleId:(NSString *)scheduleId {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if(self.managedObjectContext) {
         ScheduleEntity *scheduleEntity = [self getScheduleEntityForScheduleId:scheduleId];
         if(scheduleEntity) {
@@ -1199,6 +1395,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (void)updatePassword:(NSString *)newPassword {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     if (self.managedObjectContext) {
         NeatoUserEntity *userEntity;
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
@@ -1219,6 +1420,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (void)insertOrUpdateNotificaton:(NeatoNotification *)notification forEmail:(NSString *)email {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     if (self.managedObjectContext) {
         NeatoUserEntity * userEntity = [self neatoUserEntityForEmail:email];
         if (userEntity) {
@@ -1235,6 +1441,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (NeatoUserEntity *)neatoUserEntityForEmail:(NSString *)email {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     NeatoUserEntity *userEntity;
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_USER];
     request.predicate = [NSPredicate predicateWithFormat:@"email= [c]%@", email];
@@ -1256,6 +1467,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (NeatoNotificationEntity *)insertOrUpdateNeatoNotificaton:(NeatoNotification *)notification {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     NeatoNotificationEntity *notificationsEntity;
     if(self.managedObjectContext) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_NOTIFICATION];
@@ -1288,6 +1504,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (BOOL)notificationsExistForUserWithEmail:(NSString *)email {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return NO;
+    }
     if (self.managedObjectContext) {
         NeatoUserEntity * userEntity = [self neatoUserEntityForEmail:email];
         if (userEntity) {
@@ -1311,13 +1532,23 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (void)setNotificationsFromNotificationsArray:(NSArray *)notificationOptionsArray forEmail:(NSString *)email {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     for (int i = 0; i < [notificationOptionsArray count]; i++) {
         NeatoNotification *neatoNotification = [notificationOptionsArray objectAtIndex:i];
         [self insertOrUpdateNotificaton:neatoNotification forEmail:email];
-    } 
+    }
 }
 
 - (NSArray *)notificationsForUserWithEmail:(NSString *)email {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     NSMutableArray *notifications = [[NSMutableArray alloc] init];
     if (self.managedObjectContext) {
         NeatoUserEntity * userEntity = [self neatoUserEntityForEmail:email];
@@ -1335,10 +1566,15 @@ static NeatoDataStore *sharedInstance;
             debugLog(@"User with email = %@ does not exist",email);
         }
     }
-    return notifications; 
+    return notifications;
 }
 - (id)setCleaningArea:(CleaningArea *)cleaningArea {
     debugLog(@"");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if (self.managedObjectContext) {
         NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:cleaningArea.robotId];
         if (robotEntity) {
@@ -1367,6 +1603,11 @@ static NeatoDataStore *sharedInstance;
 
 - (id)cleaningAreaForRobotWithId:(NSString *)robotId {
     debugLog(@"");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if(self.managedObjectContext) {
         CleaningArea *cleaningArea = [[CleaningArea alloc] init];
         cleaningArea.robotId = robotId;
@@ -1392,6 +1633,11 @@ static NeatoDataStore *sharedInstance;
 
 - (void)saveXMPPCallbackId:(NSString *)xmppCallbackId {
     debugLog(@"");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
     if(!xmppCallbackId) {
         debugLog(@"xmppCallbackId is nil won't insert");
         return;
@@ -1400,54 +1646,68 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (void)insertOrUpdateXMPPCallbackId:(NSString *)xmppCallbackId {
-    @synchronized(self) {
-        if(self.managedObjectContext) {
-            // Find or create the callbackid
-            XMPPCallbackEntity *callbackEntity = [self xmppCallbackEntityFromStore];
-            
-            if (!callbackEntity) {
-                callbackEntity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_NEATO_CALLBACKID inManagedObjectContext:self.managedObjectContext];
-                callbackEntity.callbackId = xmppCallbackId;
-            }
-            else {
-                callbackEntity.callbackId = xmppCallbackId;
-            }
-            [self saveDatabase];
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
+    if(self.managedObjectContext) {
+        // Find or create the callbackid
+        XMPPCallbackEntity *callbackEntity = [self xmppCallbackEntityFromStore];
+        
+        if (!callbackEntity) {
+            callbackEntity = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_NEATO_CALLBACKID inManagedObjectContext:self.managedObjectContext];
+            callbackEntity.callbackId = xmppCallbackId;
         }
         else {
-            debugLog(@"Managed object context is nil");
+            callbackEntity.callbackId = xmppCallbackId;
         }
+        [self saveDatabase];
+    }
+    else {
+        debugLog(@"Managed object context is nil");
     }
 }
 
 - (NSString *)xmppCallbackId {
     debugLog(@"");
-    @synchronized(self) {
-        if (self.managedObjectContext) {
-            return [self xmppCallbackEntityFromStore].callbackId;
-        }
-        else {
-            debugLog(@"Managed object context is nil!");
-            return nil;
-        }
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
+    if (self.managedObjectContext) {
+        return [self xmppCallbackEntityFromStore].callbackId;
+    }
+    else {
+        debugLog(@"Managed object context is nil!");
+        return nil;
     }
 }
 
 - (void)removeXMPPCallbackId {
-    @synchronized(self) {
-        XMPPCallbackEntity *neatoCallbackEntity = [self xmppCallbackEntityFromStore];
-        if(neatoCallbackEntity && self.managedObjectContext) {
-            [self.managedObjectContext deleteObject:neatoCallbackEntity];
-            [self saveDatabase];
-            debugLog(@"xmpp callbackid deleted successfully from db");
-        }
-        else {
-            debugLog(@"Failed to remove XMPP callbackId");
-        }
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return;
+    }
+    XMPPCallbackEntity *neatoCallbackEntity = [self xmppCallbackEntityFromStore];
+    if(neatoCallbackEntity && self.managedObjectContext) {
+        [self.managedObjectContext deleteObject:neatoCallbackEntity];
+        [self saveDatabase];
+        debugLog(@"xmpp callbackid deleted successfully from db");
+    }
+    else {
+        debugLog(@"Failed to remove XMPP callbackId");
     }
 }
 
 - (XMPPCallbackEntity *)xmppCallbackEntityFromStore {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NEATO_CALLBACKID];
     
     NSError *error = nil;
@@ -1470,26 +1730,34 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (id)updateProfileDetail:(ProfileDetail *)profileDetail forRobotWithId:(NSString *)robotId {
-    @synchronized(self) {
-        if (self.managedObjectContext) {
-            NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
-            if (robotEntity) {
-                ProfileDetailEntity *profileDetailEntity = [self insertOrUpdateProfileDetailEntity:profileDetail forRobotEntity:robotEntity];
-                [robotEntity addHasProfileDetailsObject:profileDetailEntity];
-                [self saveDatabase];
-                return [NSNumber numberWithBool:YES];
-            }
-            else {
-                return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:UI_ERROR_DB_ERROR];
-            }
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
+    if (self.managedObjectContext) {
+        NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
+        if (robotEntity) {
+            ProfileDetailEntity *profileDetailEntity = [self insertOrUpdateProfileDetailEntity:profileDetail forRobotEntity:robotEntity];
+            [robotEntity addHasProfileDetailsObject:profileDetailEntity];
+            [self saveDatabase];
+            return [NSNumber numberWithBool:YES];
         }
         else {
-            return [AppHelper nserrorWithDescription:@"Database could not start properly." code:UI_ERROR_DB_ERROR];
+            return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:UI_ERROR_DB_ERROR];
         }
+    }
+    else {
+        return [AppHelper nserrorWithDescription:@"Database could not start properly." code:UI_ERROR_DB_ERROR];
     }
 }
 
 - (ProfileDetailEntity *)insertOrUpdateProfileDetailEntity:(ProfileDetail *)profileDetail forRobotEntity:(NeatoRobotEntity *)robotEntity {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     ProfileDetailEntity *profileDetailEntity = [self profileDetailEntityWithKey:profileDetail.key forRobotEntity:robotEntity];
     if (profileDetailEntity) {
         debugLog(@"Updating Profile detail entity.");
@@ -1506,7 +1774,12 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (ProfileDetailEntity *)profileDetailEntityWithKey:(NSString *)key forRobotEntity:(NeatoRobotEntity *)robotEntity {
-   debugLog(@"");
+    debugLog(@"");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     for (ProfileDetailEntity *profileDetailEntity in robotEntity.hasProfileDetails) {
         if ([profileDetailEntity.key isEqualToString:key]) {
             return profileDetailEntity;
@@ -1516,6 +1789,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (id)timestampForRobotProfileKey:(NSString *)key forRobotWithId:(NSString *)robotId {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if (self.managedObjectContext) {
         NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
         if (robotEntity) {
@@ -1531,11 +1809,16 @@ static NeatoDataStore *sharedInstance;
         }
     }
     else {
-      return [AppHelper nserrorWithDescription:@"Database could not start properly" code:UI_ERROR_DB_ERROR];  
+        return [AppHelper nserrorWithDescription:@"Database could not start properly" code:UI_ERROR_DB_ERROR];
     }
 }
 
 - (id)profileDetailForKey:(NSString *)key robotWithId:(NSString *)robotId {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if (self.managedObjectContext) {
         ProfileDetail *robotProfileDetail = [[ProfileDetail alloc] init];
         NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
@@ -1552,7 +1835,7 @@ static NeatoDataStore *sharedInstance;
         }
         else {
             return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:UI_ERROR_DB_ERROR];
-        }  
+        }
     }
     else {
         return [AppHelper nserrorWithDescription:@"Database could not start properly" code:UI_ERROR_DB_ERROR];
@@ -1561,6 +1844,11 @@ static NeatoDataStore *sharedInstance;
 
 - (id)deleteProfileDetail:(ProfileDetail *)profileDetail forRobot:(NSString *)robotId {
     debugLog(@"");
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if (self.managedObjectContext) {
         NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
         if (robotEntity) {
@@ -1572,12 +1860,17 @@ static NeatoDataStore *sharedInstance;
             }
             return [AppHelper nserrorWithDescription:[NSString stringWithFormat:@"No profile detail with key : %@", profileDetail.key] code:UI_ERROR_DB_ERROR];
         }
-        return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:UI_ERROR_DB_ERROR]; 
+        return [AppHelper nserrorWithDescription:@"Could not find robot with this robotId." code:UI_ERROR_DB_ERROR];
     }
     return [AppHelper nserrorWithDescription:@"Database could not start properly" code:UI_ERROR_DB_ERROR];
 }
 
 - (id)setDriveRequestForRobotWithId:(NSString *)robotId {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if (self.managedObjectContext) {
         NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
         robotEntity.driveRequestSent = [NSNumber numberWithBool:YES];
@@ -1585,11 +1878,16 @@ static NeatoDataStore *sharedInstance;
         return [NSNumber numberWithBool:YES];
     }
     else {
-       return [AppHelper nserrorWithDescription:@"Database could not start properly" code:UI_ERROR_DB_ERROR];
+        return [AppHelper nserrorWithDescription:@"Database could not start properly" code:UI_ERROR_DB_ERROR];
     }
 }
 
 - (id)driveRequestForRobotWithId:(NSString *)robotId {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if (self.managedObjectContext) {
         NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
         return robotEntity.driveRequestSent;
@@ -1600,6 +1898,11 @@ static NeatoDataStore *sharedInstance;
 }
 
 - (id)removeDriveRequestForRobotWihId:(NSString *)robotId {
+    if (![NSThread isMainThread]) {
+        // This should be called only from main thread.
+        NSAssert(NO, @"This should be called only from main thread.");
+        return nil;
+    }
     if (self.managedObjectContext) {
         NeatoRobotEntity *robotEntity = [self getRobotEntityForSerialNumber:robotId];
         robotEntity.driveRequestSent = [NSNumber numberWithBool:NO];

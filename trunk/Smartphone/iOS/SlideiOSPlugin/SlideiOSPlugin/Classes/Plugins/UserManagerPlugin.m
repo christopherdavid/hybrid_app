@@ -9,7 +9,6 @@
 #import "AppHelper.h"
 #import "LogHelper.h"
 #import "NeatoUserHelper.h"
-#import "NeatoDBHelper.h"
 #import "PluginConstants.h"
 #import "NeatoRobotHelper.h"
 #import "NeatoNotification.h"

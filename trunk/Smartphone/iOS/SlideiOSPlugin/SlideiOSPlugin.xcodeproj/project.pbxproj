@@ -66,7 +66,6 @@
 		E15FC47316A9B68F0000AB67 /* NSURLConnectionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC46516A9B68F0000AB67 /* NSURLConnectionHelper.m */; };
 		E1639FDC16D4EC1B0016C236 /* DeviceConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E1639FDB16D4EC1B0016C236 /* DeviceConnectionManager.m */; };
 		E1639FE016D4F0AA0016C236 /* RobotCommandHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1639FDF16D4F0AA0016C236 /* RobotCommandHelper.m */; };
-		E168BBD0169D461800BA6AD3 /* NeatoDBHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBC2169D461800BA6AD3 /* NeatoDBHelper.m */; };
 		E168BBD1169D461800BA6AD3 /* NeatoRobotHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBC5169D461800BA6AD3 /* NeatoRobotHelper.m */; };
 		E168BBD2169D461800BA6AD3 /* NeatoUserHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBC8169D461800BA6AD3 /* NeatoUserHelper.m */; };
 		E168BBD3169D461800BA6AD3 /* XMPPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBCB169D461800BA6AD3 /* XMPPConnection.m */; };
@@ -318,8 +317,6 @@
 		E1639FDB16D4EC1B0016C236 /* DeviceConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceConnectionManager.m; sourceTree = "<group>"; };
 		E1639FDE16D4F0AA0016C236 /* RobotCommandHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotCommandHelper.h; sourceTree = "<group>"; };
 		E1639FDF16D4F0AA0016C236 /* RobotCommandHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotCommandHelper.m; sourceTree = "<group>"; };
-		E168BBC1169D461800BA6AD3 /* NeatoDBHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoDBHelper.h; sourceTree = "<group>"; };
-		E168BBC2169D461800BA6AD3 /* NeatoDBHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoDBHelper.m; sourceTree = "<group>"; };
 		E168BBC4169D461800BA6AD3 /* NeatoRobotHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoRobotHelper.h; sourceTree = "<group>"; };
 		E168BBC5169D461800BA6AD3 /* NeatoRobotHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoRobotHelper.m; sourceTree = "<group>"; };
 		E168BBC7169D461800BA6AD3 /* NeatoUserHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoUserHelper.h; sourceTree = "<group>"; };
@@ -873,8 +870,6 @@
 			children = (
 				E198854216B2FB6400ED1AD8 /* NeatoDataStore.h */,
 				E198854316B2FB6400ED1AD8 /* NeatoDataStore.m */,
-				E168BBC1169D461800BA6AD3 /* NeatoDBHelper.h */,
-				E168BBC2169D461800BA6AD3 /* NeatoDBHelper.m */,
 				E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */,
 				E1A5007317A170CD00D80307 /* NeatoRobotEntity.h */,
 				E1A5007417A170CD00D80307 /* NeatoRobotEntity.m */,
@@ -1695,7 +1690,6 @@
 				E1A06588169563B6009C22F7 /* XMPPSRVResolver.m in Sources */,
 				E1A065B316956556009C22F7 /* RobotManagerCallWrapper.m in Sources */,
 				E1A065B416956556009C22F7 /* UserManagerCallWrapper.m in Sources */,
-				E168BBD0169D461800BA6AD3 /* NeatoDBHelper.m in Sources */,
 				E168BBD1169D461800BA6AD3 /* NeatoRobotHelper.m in Sources */,
 				E168BBD2169D461800BA6AD3 /* NeatoUserHelper.m in Sources */,
 				E168BBD3169D461800BA6AD3 /* XMPPConnection.m in Sources */,
