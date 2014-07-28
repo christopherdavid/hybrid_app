@@ -167,13 +167,11 @@
         debugLog(@"Failed to connect to XMPP server.Command could not be sent.");
         [self notifyCaller:@selector(failedToSendCommandOverXMPP)];
     }
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.delegate respondsToSelector:@selector(xmppLoginfailedWithError:)])
-        {
-            [self.delegate performSelector:@selector(xmppLoginfailedWithError:)
-                                withObject:[AppHelper nserrorWithDescription:(error.debugDescription ? error.debugDescription : @"") code:1001]];
-        }
-    });
+    if ([self.delegate respondsToSelector:@selector(xmppLoginfailedWithError:)])
+    {
+        [self.delegate performSelector:@selector(xmppLoginfailedWithError:)
+                            withObject:[AppHelper nserrorWithDescription:(error.debugDescription ? error.debugDescription : @"") code:1001]];
+    }
     self.needToSendACommand = NO;
     self.retained_self = nil;
 }

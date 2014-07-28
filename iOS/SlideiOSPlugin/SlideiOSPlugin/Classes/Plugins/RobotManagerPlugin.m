@@ -652,21 +652,17 @@
     NSInteger cleaningAreaLength = [[parameters objectForKey:KEY_SPOT_CLEANING_AREA_LENGTH] integerValue];
     NSInteger cleaningAreaHeight = [[parameters objectForKey:KEY_SPOT_CLEANING_AREA_HEIGHT] integerValue];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
-        id result = [callWrapper setSpotDefinitionForRobotWithId:robotId cleaningAreaLength:cleaningAreaLength cleaningAreaHeight:cleaningAreaHeight];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([result isKindOfClass:[NSError class]]) {
-                // Error callback.
-                NSError *error = (NSError *)result;
-                [self sendError:error forCallbackId:callbackId];
-            }
-            else {
-                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-                [self writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
-            }
-        });
-    });
+    RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
+    id result = [callWrapper setSpotDefinitionForRobotWithId:robotId cleaningAreaLength:cleaningAreaLength cleaningAreaHeight:cleaningAreaHeight];
+    if ([result isKindOfClass:[NSError class]]) {
+        // Error callback.
+        NSError *error = (NSError *)result;
+        [self sendError:error forCallbackId:callbackId];
+    }
+    else {
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self writeJavascript:[pluginResult toSuccessCallbackString:callbackId]];
+    }
 }
 
 - (void)getSpotDefinition:(CDVInvokedUrlCommand *)command {
@@ -674,30 +670,26 @@
     NSDictionary *parameters = [command.arguments objectAtIndex:0];
     debugLog(@"received parameters %@",parameters);
     NSString *robotId = [parameters objectForKey:KEY_ROBOT_ID];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
-        id result = [callWrapper spotDefinitionForRobotWithId:robotId];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([result isKindOfClass:[NSError class]]) {
-                // Error callback.
-                NSError *error = (NSError *)result;
-                [self sendError:error forCallbackId:callbackId];
-            }
-            else {
-                NSMutableDictionary *resultData = [[NSMutableDictionary alloc] init];
-                CleaningArea *cleaningArea = (CleaningArea *)result;
-                if(cleaningArea.height || cleaningArea.length) {
-                    [resultData setValue:[NSNumber numberWithInteger:cleaningArea.length] forKey:KEY_SPOT_CLEANING_AREA_LENGTH];
-                    [resultData setValue:[NSNumber numberWithInteger:cleaningArea.height] forKey:KEY_SPOT_CLEANING_AREA_HEIGHT];
-                } else {
-                    [resultData setValue:[NSNumber numberWithInt:DEFAULT_SPOT_CLEANING_LENGTH] forKey:KEY_SPOT_CLEANING_AREA_LENGTH];
-                    [resultData setValue:[NSNumber numberWithInt:DEFAULT_SPOT_CLEANING_HEIGHT] forKey:KEY_SPOT_CLEANING_AREA_HEIGHT];
-                }
-                CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultData];
-                [self writeJavascript:[result toSuccessCallbackString:callbackId]];
-            }
-        });
-    });
+    RobotManagerCallWrapper *callWrapper = [[RobotManagerCallWrapper alloc] init];
+    id result = [callWrapper spotDefinitionForRobotWithId:robotId];
+    if ([result isKindOfClass:[NSError class]]) {
+        // Error callback.
+        NSError *error = (NSError *)result;
+        [self sendError:error forCallbackId:callbackId];
+    }
+    else {
+        NSMutableDictionary *resultData = [[NSMutableDictionary alloc] init];
+        CleaningArea *cleaningArea = (CleaningArea *)result;
+        if(cleaningArea.height || cleaningArea.length) {
+            [resultData setValue:[NSNumber numberWithInteger:cleaningArea.length] forKey:KEY_SPOT_CLEANING_AREA_LENGTH];
+            [resultData setValue:[NSNumber numberWithInteger:cleaningArea.height] forKey:KEY_SPOT_CLEANING_AREA_HEIGHT];
+        } else {
+            [resultData setValue:[NSNumber numberWithInt:DEFAULT_SPOT_CLEANING_LENGTH] forKey:KEY_SPOT_CLEANING_AREA_LENGTH];
+            [resultData setValue:[NSNumber numberWithInt:DEFAULT_SPOT_CLEANING_HEIGHT] forKey:KEY_SPOT_CLEANING_AREA_HEIGHT];
+        }
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultData];
+        [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    }
 }
 
 - (void)registerForRobotMessges:(CDVInvokedUrlCommand *)command {

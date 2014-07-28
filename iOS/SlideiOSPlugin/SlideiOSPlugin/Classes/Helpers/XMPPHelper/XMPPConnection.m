@@ -106,7 +106,9 @@ static XMPPConnection *sharedInstance;
 - (void)xmppStream:(XMPPStream *)sender socketDidConnect:(GCDAsyncSocket *)socket
 {
     debugLog(@"socketDidConnect called");
-    [self.delegate xmppStream:sender socketDidConnect:socket];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate xmppStream:sender socketDidConnect:socket];
+    });
 }
 
 - (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings
@@ -134,7 +136,9 @@ static XMPPConnection *sharedInstance;
 - (void)xmppStream:(XMPPStream *)sender didSendMessage:(XMPPMessage *)message
 {
     debugLog(@"");
-    [self.delegate xmppStream:sender didSendMessage:message];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate xmppStream:sender didSendMessage:message];
+    });
 }
 
 - (void)xmppStreamDidSecure:(XMPPStream *)sender
@@ -161,13 +165,18 @@ static XMPPConnection *sharedInstance;
     XMPPPresence *presence = [XMPPPresence presence];
     // Set the status as 'online'.
     [[self xmppStream] sendElement:presence];
-    [self.delegate xmppStreamDidAuthenticate:sender];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate xmppStreamDidAuthenticate:sender];
+    });
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
 	debugLog(@"didNotAuthenticate called");
-    [self.delegate xmppStream:sender didNotAuthenticate:error];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate xmppStream:sender didNotAuthenticate:error];
+    });
+
 }
 
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
@@ -180,9 +189,11 @@ static XMPPConnection *sharedInstance;
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message {
     debugLog(@"Sender : %@", sender);
     debugLog(@"didReceiveMessage called. message = %@", [message stringValue]);
-    [self.delegate xmppStream:sender didReceiveMessage:message];
-    // Notify if we have recevied 'data changed' from remote.
-    [self performSelectorOnMainThread:@selector(postNotificationIfRobotDataChangedWithMessage:) withObject:message waitUntilDone:NO];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate xmppStream:sender didReceiveMessage:message];
+        // Notify if we have recevied 'data changed' from remote.
+        [self postNotificationIfRobotDataChangedWithMessage:message];
+    });
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
@@ -194,13 +205,17 @@ static XMPPConnection *sharedInstance;
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
 {
 	debugLog(@"didReceiveError called. error = %@", error);
-    [self.delegate xmppStream:sender didReceiveError:error];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate xmppStream:sender didReceiveError:error];
+    });
 }
 
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
 {
 	debugLog(@"xmppStreamDidDisconnect called. error = %@", error);
-    [self.delegate xmppStreamDidDisconnect:sender withError:error];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate xmppStreamDidDisconnect:sender withError:error];
+    });
 }
 
 - (void)postNotificationIfRobotDataChangedWithMessage:(XMPPMessage *)message {

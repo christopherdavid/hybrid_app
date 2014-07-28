@@ -75,7 +75,9 @@ static TCPSocket *sharedInstance = nil;
  **/
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     debugLog(@"");
-    [self.delegate socket:sock didConnectToHost:host port:port];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate socket:sock didConnectToHost:host port:port];
+    });
     // Always keep a read in the queue.
     [self beginReadingData];
 }
@@ -86,7 +88,9 @@ static TCPSocket *sharedInstance = nil;
  **/
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
     debugLog(@"");
-    [self.delegate socket:sock didReadData:data withTag:tag];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate socket:sock didReadData:data withTag:tag];
+    });
     // Always keep a read in the queue.
     [self beginReadingData];
 }
@@ -96,7 +100,9 @@ static TCPSocket *sharedInstance = nil;
  **/
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {
     debugLog(@"");
-    [self.delegate socket:sock didWriteDataWithTag:tag];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate socket:sock didWriteDataWithTag:tag];
+    });
 }
 
 /**
@@ -107,9 +113,11 @@ static TCPSocket *sharedInstance = nil;
  **/
 - (void)socketDidCloseReadStream:(GCDAsyncSocket *)sock {
     debugLog(@"");
-    [self.delegate socketDidCloseReadStream:sock];
-    [self.tcpScoket disconnect];
-    sharedInstance = nil;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate socketDidCloseReadStream:sock];
+        [self.tcpScoket disconnect];
+        sharedInstance = nil;
+    });
 }
 
 -(BOOL) isConnected {
@@ -138,8 +146,10 @@ static TCPSocket *sharedInstance = nil;
  **/
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
     debugLog(@"");
-    [self.delegate socketDidDisconnect:sock withError:err];
-    sharedInstance = nil;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate socketDidDisconnect:sock withError:err];
+        sharedInstance = nil;
+    });
 }
 
 - (BOOL)isConnectedToRobotWithId:(NSString *)robotId {
