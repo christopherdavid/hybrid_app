@@ -137,7 +137,7 @@ resourceHandler.registerFunction('createAccount_ViewModel.js', function(parent) 
     
     this.backgroundLogin = function(result) {
         // TODO: add validation check for entries
-        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.login, [that.bundle.email, that.bundle.password], {});
+        var tDeffer = parent.communicationWrapper.exec(UserPluginManager.login, [that.email(), that.password()], {});
         tDeffer.done(that.sucessLogin);
         
         tDeffer.fail(function(error, notificationOptions, errorHandled) {
