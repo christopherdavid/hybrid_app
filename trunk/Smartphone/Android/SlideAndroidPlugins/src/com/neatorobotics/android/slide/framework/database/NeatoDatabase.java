@@ -9,8 +9,9 @@ import com.neatorobotics.android.slide.framework.logger.LogHelper;
 public class NeatoDatabase extends SQLiteOpenHelper {
     private static final String TAG = NeatoDatabase.class.getSimpleName();
 
-    private static final int DB_VERSION = 7;
+    private static final int DB_VERSION = 8;
     private static final String DB_NAME = "neato_plugin_smart_apps.db";
+    public Context mContext;
 
     // Table names
     public interface Tables {
@@ -18,8 +19,6 @@ public class NeatoDatabase extends SQLiteOpenHelper {
         public static final String TABLE_NAME_ROBOT_INFO = "robot_info";
         public static final String TABLE_NAME_CLEANING_SETTINGS = "cleaning_settings";
         public static final String TABLE_NAME_NOTIFICATION_SETTINGS = "notification_settings";
-        public static final String TABLE_NAME_ATLAS_INFO = "atlas_info";
-        public static final String TABLE_NAME_GRID_INFO = "grid_info";
         public static final String TABLE_NAME_ROBOT_SCHEDULE_IDS = "robot_schedule_ids";
         public static final String TABLE_NAME_SCHEDULE_INFO = "schedule_info";
         public static final String TABLE_NAME_ROBOT_PROFILE_PARAMS = "robot_profile_params";
@@ -58,20 +57,6 @@ public class NeatoDatabase extends SQLiteOpenHelper {
         public static final String COL_NAME_NOTIFICATION_JSON = "notificationsJson";
     }
 
-    // atlas_info table column names
-    public interface AtlasInfoColumns {
-        public static final String COL_NAME_ATLAS_ID = "atlasId";
-        public static final String COL_NAME_ATLAS_XML_VERSION = "xmlVersion";
-        public static final String COL_NAME_ATLAS_XML_FILE_PATH = "xmlFilePath";
-    }
-
-    // grid_info table column names
-    public interface GridInfoColumns {
-        public static final String COL_NAME_GRID_ID = "gridId";
-        public static final String COL_NAME_GRID_DATA_VERSION = "dataVersion";
-        public static final String COL_NAME_GRID_DATA_FILE_PATH = "dataFilePath";
-    }
-
     // robot schedule table
     public interface ScheduleIdsColumns {
         public static final String COL_NAME_ROBOT_ID = "robotId";
@@ -97,6 +82,7 @@ public class NeatoDatabase extends SQLiteOpenHelper {
 
     public NeatoDatabase(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+        mContext = context;
         LogHelper.log(TAG, "Neato DBOpenHelper - DB Version = " + DB_VERSION);
     }
 
@@ -109,10 +95,12 @@ public class NeatoDatabase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         LogHelper.log(TAG, "The Neato database code expects a newer version of the database. Old db version - "
                 + oldVersion + ", New db version - " + newVersion
-                + ". The old database will be dropped and a new database will be created");
+                + ". Some of the old database tables will be dropped and a new tables will be created");
+        alterDatabaseOnUpgrade(db, oldVersion, newVersion);
+    }
 
+    private void alterDatabaseOnUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         dropTables(db);
-
         onCreate(db);
     }
 
@@ -137,21 +125,6 @@ public class NeatoDatabase extends SQLiteOpenHelper {
 				+ RobotInfoColumns.COL_NAME_ROBOT_SERIAL_ID		+ " TEXT, "
 				+ RobotInfoColumns.COL_NAME_ROBOT_NAME			+ " TEXT, "	
 				+ RobotInfoColumns.COL_NAME_ROBOT_CHAT_ID		+ " TEXT )");
-			
-			
-			db.execSQL("CREATE TABLE IF NOT EXISTS " +
-				Tables.TABLE_NAME_ATLAS_INFO 
-				+ "(" 
-				+ AtlasInfoColumns.COL_NAME_ATLAS_ID			+ " TEXT PRIMARY KEY, "
-				+ AtlasInfoColumns.COL_NAME_ATLAS_XML_VERSION	+ " TEXT, "		
-				+ AtlasInfoColumns.COL_NAME_ATLAS_XML_FILE_PATH		+ " TEXT ) ");
-			
-			db.execSQL("CREATE TABLE IF NOT EXISTS " +
-				Tables.TABLE_NAME_GRID_INFO 
-				+ "(" 
-				+ GridInfoColumns.COL_NAME_GRID_ID				+ " TEXT PRIMARY KEY, "
-				+ GridInfoColumns.COL_NAME_GRID_DATA_VERSION	+ " TEXT, "		
-				+ GridInfoColumns.COL_NAME_GRID_DATA_FILE_PATH	+ " TEXT ) ");
 			
 			db.execSQL("CREATE TABLE IF NOT EXISTS " +
 				Tables.TABLE_NAME_SCHEDULE_INFO 
@@ -200,14 +173,12 @@ public class NeatoDatabase extends SQLiteOpenHelper {
     private void dropTables(SQLiteDatabase db) {
         db.beginTransaction();
         try {
-            db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_USER_INFO);
+            // db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_USER_INFO);
             db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_ROBOT_INFO);
-            db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_ATLAS_INFO);
-            db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_GRID_INFO);
             db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_SCHEDULE_INFO);
             db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_ROBOT_SCHEDULE_IDS);
-            db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_CLEANING_SETTINGS);
-            db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_NOTIFICATION_SETTINGS);
+            // db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_CLEANING_SETTINGS);
+            // db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_NOTIFICATION_SETTINGS);
             db.execSQL("DROP TABLE IF EXISTS " + Tables.TABLE_NAME_ROBOT_PROFILE_PARAMS);
             db.setTransactionSuccessful();
         } finally {
