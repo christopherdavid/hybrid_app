@@ -10,7 +10,6 @@ import com.neatorobotics.android.slide.framework.database.RobotHelper;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
-import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
 import com.neatorobotics.android.slide.framework.utils.TaskUtils;
 import com.neatorobotics.android.slide.framework.utils.UserAttributes;
@@ -54,19 +53,8 @@ public class UserManager extends Observable {
                 try {
                     IsUserValidatedResult validateUserResult = NeatoUserWebservicesHelper.isUserValidatedRequest(
                             mContext, email);
-
                     int validationStatus = validateUserResult.result.validation_status;
                     LogHelper.logD(TAG, "validation status value is " + validationStatus);
-					// Login to neato if this passes.
-					// Currently this API is called just after create user call.
-                    String currentUser = NeatoPrefs.getUserEmailId(mContext);
-                    if (currentUser.equalsIgnoreCase(email)) {
-                        NeatoPrefs.saveNeatoUserValidationStatus(mContext, validationStatus);
-                        if (UserHelper.isUserLoggedIn(mContext)) {
-                            LogHelper.log(TAG, "The user is validated. So login to XMPP");
-                            notifyUserState();
-                        }
-                    }
                     listener.onReceived(validateUserResult);
                 } catch (UserUnauthorizedException e) {
                     listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());
@@ -129,11 +117,15 @@ public class UserManager extends Observable {
                     LogHelper.logD(TAG, "user validation status is " + loginResult.extra_params.validation_status);
                     GetNeatoUserDetailsResult userDetailsResult = NeatoUserWebservicesHelper.getNeatoUserDetails(
                             mContext, email, loginResult.getAuthToken());
+                    
                     UserHelper.saveLoggedInUserDetails(mContext, userDetailsResult.result, loginResult.getAuthToken());
                     setUserAttributesOnServer(loginResult.getAuthToken(), DeviceUtils.getUserAttributes(mContext));
+                    
                     listener.onReceived(userDetailsResult);
-
-                    notifyUserState();
+                    if (UserHelper.isUserLoggedIn(mContext)) {
+                        LogHelper.log(TAG, "The user is validated. So login to XMPP");
+                        notifyUserState();
+                    }
                 } catch (UserUnauthorizedException ex) {
                     listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, ex.getErrorMessage());
                 } catch (NeatoServerException ex) {
@@ -142,10 +134,8 @@ public class UserManager extends Observable {
                     listener.onNetworkError(ex.getMessage());
                 }
             }
-
         };
         TaskUtils.scheduleTask(task, 0);
-
     }
 
     private void notifyUserState() {
@@ -165,10 +155,6 @@ public class UserManager extends Observable {
                     LogHelper.logD(TAG, "user validation status is " + createUserResult.result.validation_status);
                     GetNeatoUserDetailsResult userDetailsResult = NeatoUserWebservicesHelper.getNeatoUserDetails(
                             mContext, email, createUserResult.result.user_handle);
-                    UserHelper.saveLoggedInUserDetails(mContext, userDetailsResult.result,
-                            createUserResult.result.user_handle);
-                    setUserAttributesOnServer(createUserResult.result.user_handle,
-                            DeviceUtils.getUserAttributes(mContext));
                     listener.onReceived(userDetailsResult);
                 } catch (UserUnauthorizedException e) {
                     listener.onServerError(ErrorTypes.ERROR_TYPE_USER_UNAUTHORIZED, e.getErrorMessage());

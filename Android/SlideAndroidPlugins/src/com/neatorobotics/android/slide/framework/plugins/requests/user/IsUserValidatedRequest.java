@@ -40,7 +40,6 @@ public class IsUserValidatedRequest extends UserManagerRequest {
                     resultObj.put(JsonMapKeys.KEY_VALIDATION_STATUS, userValidationCode);
                     resultObj.put(JsonMapKeys.KEY_MESSAGE, validationResult.result.message);
                 }
-
                 return resultObj;
             }
         });
