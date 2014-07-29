@@ -9,7 +9,6 @@
 #import "ProfileDetail.h"
 #import "LogHelper.h"
 #import "NeatoCommandExpiryHelper.h"
-#import "DeviceConnectionManager.h"
 #import "XMPPRobotDataChangeManager.h"
 #import "RobotCommandHelper.h"
 #import "ProfileDetail.h"
@@ -18,20 +17,9 @@
 
 @interface RobotDriveManager()
 @property(nonatomic, strong) RobotDriveManager *retainedSelf;
-- (void)robotWithRobotId:(NSString *)robotId isReadyToDriveWithIP:(NSString *)robotIp;
-- (void)robotWithRobotId:(NSString *)robotId isNotAvailableToDriveWithErrorCode:(NSInteger)errorCode;
-- (void)notifyCannotDriveForRobotWIthRobotId:(NSString *)robotId withErrorResponseCode:(NSInteger)errorCode;
-- (BOOL)isRobotDriveRequestedForRobotId:(NSString *)robotId;
-- (void)tryTCPConnectionToRobotId:(NSString *)robotId withIpAddress:(NSString *)ipAddress;
-- (void)driveRobotWithRobotId:(NSString *)robotId navigationControlId:(NSString *)navigationControlId;
-- (void)cancelIntendToDriveForRobotId:(NSString *)robotId;
-- (void)stopDriveRobotForRobotId:(NSString *)robotId;
 @end
 
 @implementation RobotDriveManager
-
-@synthesize delegate = _delegate, retainedSelf = _retainedSelf;
-
 - (id)init {
     if (self = [super init]) {
         // Listen for TCP disconnection notification.
@@ -79,8 +67,7 @@
     return NO;
 }
 
-// If ipAddress is not nil then it tries to connect to robot otherwise it does a
-// UDP broadcast to get IP and then tries to connect to robot.
+// If ipAddress is nil, it does nothing.
 - (void)tryTCPConnectionToRobotId:(NSString *)robotId withIpAddress:(NSString *)ipAddress {
     if (ipAddress) {
         NeatoRobot *robot = [[NeatoRobot alloc] init];
@@ -88,10 +75,6 @@
         robot.ipAddress = ipAddress;
         TCPConnectionHelper *tcpHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
         [tcpHelper connectToRobotOverTCP2:robot delegate:self];
-    }
-    else {
-        DeviceConnectionManager *connectionManager = [[DeviceConnectionManager alloc] init];
-        [connectionManager tryDirectConnection2:robotId delegate:self];
     }
 }
 
@@ -184,69 +167,6 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([self.delegate respondsToSelector:@selector(driveRobotFailedWithError:)]) {
             [self.delegate performSelector:@selector(driveRobotFailedWithError:) withObject:error];
-        }
-        self.delegate = nil;
-        self.retainedSelf = nil;
-    });
-}
-
-- (void)cancelIntendToDriveForRobotId:(NSString *)robotId {
-    // If the user is already connected to the robot via direct connection, return with a error that cannot cancel drive robot.
-    self.retainedSelf = self;
-    TCPConnectionHelper *tcpConnectionHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
-    if ([tcpConnectionHelper isRobotConnectedOverTCP:robotId]) {
-        // Send error back.
-        NSError *error = [AppHelper nserrorWithDescription:@"Robot already connected cannot cancel intend to drive." code:UI_ROBOT_ALREADY_CONNECTED];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:@selector(cancelIntendToDriveFailedWithError:)]) {
-                [self.delegate performSelector:@selector(cancelIntendToDriveFailedWithError:) withObject:error];
-            }
-            self.retainedSelf = nil;
-            self.delegate = nil;
-        });
-        return;
-    }
-    if ([self isRobotDriveRequestedForRobotId:robotId]) {
-        NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
-        serverManager.delegate = self;
-        [serverManager deleteProfileDetailKey:KEY_INTEND_TO_DRIVE forRobotWithId:robotId notfify:YES];
-    }
-    else {
-        // Send error back.
-        NSError *error = [AppHelper nserrorWithDescription:@"No robot drive request found" code:UI_ROBOT_NO_DRIVE_REQUEST_FOUND];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:@selector(cancelIntendToDriveFailedWithError:)]) {
-                [self.delegate performSelector:@selector(cancelIntendToDriveFailedWithError:) withObject:error];
-            }
-            self.delegate = nil;
-            self.retainedSelf = nil;
-        });
-    }
-}
-
-- (void)deleteProfileDetailKeySuccededforRobotId:(NSString *)robotId {
-    debugLog(@"Delete profile detail key succeded on server.");
-    // Untrack robot.
-    [NeatoRobotHelper removeDriveRequestForRobotWihId:robotId];
-    // Delete profile key from database.
-    ProfileDetail *profile = [[ProfileDetail alloc] init];
-    profile.key = KEY_INTEND_TO_DRIVE;
-    [NeatoRobotHelper deleteProfileDetail:profile forRobot:robotId];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.delegate respondsToSelector:@selector(cancelIntendToDriveSucceded)]) {
-            [self.delegate performSelector:@selector(cancelIntendToDriveSucceded)];
-        }
-        self.delegate = nil;
-        self.retainedSelf = nil;
-    });
-}
-
-- (void)failedToDeleteProfileDetailKeyWithError:(NSError *)error {
-    debugLog(@"Delete profile detail key failed.");
-    NSError *localError = [AppHelper nserrorWithDescription:@"Unable to cancel intend to drive" code:[[NeatoErrorCodesHelper sharedErrorCodesHelper] uiErrorCodeForServerErrorCode:error.code]];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.delegate respondsToSelector:@selector(cancelIntendToDriveFailedWithError:)]) {
-            [self.delegate performSelector:@selector(cancelIntendToDriveFailedWithError:) withObject:localError];
         }
         self.delegate = nil;
         self.retainedSelf = nil;

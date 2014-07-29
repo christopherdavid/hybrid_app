@@ -399,7 +399,7 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 #define NEATO_GET_PUSH_NOTIFICATION_OPTIONS_URL @"method=message.get_user_push_notification_options"
 #define NEATO_GET_ROBOT_VIRTUAL_ONLINE_STATUS_URL @"method=robot.is_robot_online_virtual"
 #define NEATO_SET_ROBOT_PROFILE_DETAILS_3 @"method=robot.set_profile_details3"
-#define NEATO_DELETE_ROBOT_PROFILE_KEY_2 @"method=robot.delete_robot_profile_key2"
+
 //Schedule URL Constants
 #define NEATO_GET_SCHEDULES_URL @"method=robotschedule.get_schedules"
 #define NEATO_GET_SCHEDULE_DATA_URL @"method=robotschedule.get_data"

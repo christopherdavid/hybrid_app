@@ -2,10 +2,9 @@
 #import "NeatoUser.h"
 
 
-@interface CreateUserListener2 : NSObject
+@interface CreateUserManager : NSObject
 @property (nonatomic, strong) NeatoUser *user;
-- (id)initWithDelegate:(id)delegate;
-- (void)start;
+- (id)init;
 - (void)startWithCompletion:(RequestCompletionBlockDictionary)completion;
 
 @end

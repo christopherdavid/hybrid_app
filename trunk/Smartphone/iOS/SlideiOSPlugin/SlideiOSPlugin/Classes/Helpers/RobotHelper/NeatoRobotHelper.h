@@ -8,7 +8,6 @@
 + (void)saveNeatoRobot:(NeatoRobot *) neatoRobot;
 + (void)clearAllRobotData;
 + (NeatoRobot *)getRobotForId:(NSString *) robotId;
-+ (void)updateUserAssociatedRobots;
 + (void)updateName:(NSString *)name forRobotwithId:(NSString *)robotId;
 + (id)setSpotDefinitionForRobotWithId:(NSString *)robotId cleaningAreaLength:(NSInteger)cleaningAreaLength cleaningAreaHeight:(NSInteger)cleaningAreaHeight;
 + (id)spotDefinitionForRobotWithId:(NSString *)robotId;

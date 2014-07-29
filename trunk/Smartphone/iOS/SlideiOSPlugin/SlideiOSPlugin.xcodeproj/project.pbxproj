@@ -55,22 +55,15 @@
 		B22BDAFB168D7F3B00FFCB76 /* UserManagerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B22BDAFA168D7F3B00FFCB76 /* UserManagerPlugin.m */; };
 		B22BDAFE168D7F5500FFCB76 /* RobotManagerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B22BDAFD168D7F5500FFCB76 /* RobotManagerPlugin.m */; };
 		E121001216B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */; };
-		E13214A0174E3DD5004F2A0E /* GetUserPushNotificationsListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E132149B174E3DD4004F2A0E /* GetUserPushNotificationsListener.m */; };
 		E13214A1174E3DD5004F2A0E /* NeatoNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = E132149D174E3DD4004F2A0E /* NeatoNotification.m */; };
-		E13214A2174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E132149F174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.m */; };
 		E13214A5174E3E5C004F2A0E /* NeatoUserEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E13214A4174E3E5C004F2A0E /* NeatoUserEntity.m */; };
 		E13214A8174E3E74004F2A0E /* NeatoNotificationEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E13214A7174E3E73004F2A0E /* NeatoNotificationEntity.m */; };
-		E13DF3881802D97B00792C0E /* GetRobotDetailsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E13DF3831802D97B00792C0E /* GetRobotDetailsHelper.m */; };
-		E13DF3891802D97B00792C0E /* LinkRobotHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E13DF3851802D97B00792C0E /* LinkRobotHelper.m */; };
-		E13DF38A1802D97B00792C0E /* ServerRequestResponseHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E13DF3871802D97B00792C0E /* ServerRequestResponseHelper.m */; };
 		E15FC47316A9B68F0000AB67 /* NSURLConnectionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E15FC46516A9B68F0000AB67 /* NSURLConnectionHelper.m */; };
-		E1639FDC16D4EC1B0016C236 /* DeviceConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E1639FDB16D4EC1B0016C236 /* DeviceConnectionManager.m */; };
 		E1639FE016D4F0AA0016C236 /* RobotCommandHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1639FDF16D4F0AA0016C236 /* RobotCommandHelper.m */; };
 		E168BBD1169D461800BA6AD3 /* NeatoRobotHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBC5169D461800BA6AD3 /* NeatoRobotHelper.m */; };
 		E168BBD2169D461800BA6AD3 /* NeatoUserHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBC8169D461800BA6AD3 /* NeatoUserHelper.m */; };
 		E168BBD3169D461800BA6AD3 /* XMPPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBCB169D461800BA6AD3 /* XMPPConnection.m */; };
 		E168BBD4169D461800BA6AD3 /* XMPPConnectionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBCD169D461800BA6AD3 /* XMPPConnectionHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
-		E168BBD5169D461800BA6AD3 /* XMPPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E168BBCF169D461800BA6AD3 /* XMPPHelper.m */; };
 		E16FBA5D176226AF00FC2856 /* XMPPCallbackEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E16FBA5C176226AF00FC2856 /* XMPPCallbackEntity.m */; };
 		E177F3E7177879CE00589638 /* XMPPRobotCleaningStateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E177F3E6177879CE00589638 /* XMPPRobotCleaningStateHelper.m */; };
 		E177F3EA177879EE00589638 /* ProfileDetailEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E177F3E9177879EE00589638 /* ProfileDetailEntity.m */; };
@@ -79,10 +72,9 @@
 		E189F08A1771AC96004BA38C /* NeatoCommandExpiryHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E189F0871771AC96004BA38C /* NeatoCommandExpiryHelper.m */; };
 		E189F08B1771AC96004BA38C /* NeatoRobotCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = E189F0891771AC96004BA38C /* NeatoRobotCommand.m */; };
 		E189F0941771BAF2004BA38C /* NeatoUserAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = E189F0931771BAF2004BA38C /* NeatoUserAttributes.m */; };
-		E189F0A01771C8DE004BA38C /* LoginListener2.m in Sources */ = {isa = PBXBuildFile; fileRef = E189F09F1771C8DE004BA38C /* LoginListener2.m */; };
+		E189F0A01771C8DE004BA38C /* LoginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E189F09F1771C8DE004BA38C /* LoginManager.m */; };
 		E1938E34175F399100149F30 /* AppSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = E1938E33175F399100149F30 /* AppSettings.m */; };
-		E193AE7A174B694E00AE0B4E /* ChangePasswordListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E193AE79174B694E00AE0B4E /* ChangePasswordListener.m */; };
-		E193AE87174B916500AE0B4E /* CreateUserListener2.m in Sources */ = {isa = PBXBuildFile; fileRef = E193AE86174B916500AE0B4E /* CreateUserListener2.m */; };
+		E193AE87174B916500AE0B4E /* CreateUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E193AE86174B916500AE0B4E /* CreateUserManager.m */; };
 		E195EA1516B6B56A00E4D9C6 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E195EA1416B6B56A00E4D9C6 /* CoreFoundation.framework */; };
 		E195EA1B16B6B56A00E4D9C6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E195EA1916B6B56A00E4D9C6 /* InfoPlist.strings */; };
 		E195EA2216B6B65F00E4D9C6 /* NeatoDatastoreModel.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = E121001016B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld */; };
@@ -90,14 +82,12 @@
 		E199354616EE1433008BB353 /* NeatoSocialNetworksEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354516EE1433008BB353 /* NeatoSocialNetworksEntity.m */; };
 		E199354C16EE1433008BB353 /* CommandTrackerEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199354B16EE1433008BB353 /* CommandTrackerEntity.m */; };
 		E199355216EE1442008BB353 /* ScheduleEventsEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355116EE1441008BB353 /* ScheduleEventsEntity.m */; };
-		E199357516EE14A4008BB353 /* AdvanceScheduleEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355816EE14A1008BB353 /* AdvanceScheduleEvent.m */; };
 		E199357616EE14A4008BB353 /* BasicScheduleEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355A16EE14A1008BB353 /* BasicScheduleEvent.m */; };
 		E199357816EE14A4008BB353 /* Schedule.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355E16EE14A1008BB353 /* Schedule.m */; };
 		E199357916EE14A4008BB353 /* ScheduleEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = E199356016EE14A1008BB353 /* ScheduleEvent.m */; };
 		E199357A16EE14A4008BB353 /* ScheduleTimeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = E199356316EE14A1008BB353 /* ScheduleTimeObject.m */; };
 		E199357B16EE14A4008BB353 /* ScheduleUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E199356516EE14A1008BB353 /* ScheduleUtils.m */; };
 		E199357C16EE14A4008BB353 /* ScheduleXMLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E199356716EE14A1008BB353 /* ScheduleXMLHelper.m */; };
-		E199357D16EE14A4008BB353 /* ScheduleDBHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E199356B16EE14A2008BB353 /* ScheduleDBHelper.m */; };
 		E199357E16EE14A4008BB353 /* CreateScheduleEventPluginResult.m in Sources */ = {isa = PBXBuildFile; fileRef = E199356E16EE14A4008BB353 /* CreateScheduleEventPluginResult.m */; };
 		E199357F16EE14A4008BB353 /* CreateSchedulePluginResult.m in Sources */ = {isa = PBXBuildFile; fileRef = E199357016EE14A4008BB353 /* CreateSchedulePluginResult.m */; };
 		E199358016EE14A4008BB353 /* GetScheduleDataPluginResult.m in Sources */ = {isa = PBXBuildFile; fileRef = E199357216EE14A4008BB353 /* GetScheduleDataPluginResult.m */; };
@@ -106,21 +96,14 @@
 		E1A064EB1695639D009C22F7 /* AppHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064BF1695639D009C22F7 /* AppHelper.m */; };
 		E1A064EC1695639D009C22F7 /* CommandsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064C31695639D009C22F7 /* CommandsHelper.m */; };
 		E1A064ED1695639D009C22F7 /* TCPCommandHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064C51695639D009C22F7 /* TCPCommandHelper.m */; };
-		E1A064EE1695639D009C22F7 /* UDPCommandHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064C71695639D009C22F7 /* UDPCommandHelper.m */; };
 		E1A064EF1695639D009C22F7 /* XMPPCommandHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064C91695639D009C22F7 /* XMPPCommandHelper.m */; };
 		E1A064F01695639D009C22F7 /* LogHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064CC1695639D009C22F7 /* LogHelper.m */; };
-		E1A064F11695639D009C22F7 /* NeatoRobotManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064CF1695639D009C22F7 /* NeatoRobotManager.m */; };
 		E1A064F21695639D009C22F7 /* NeatoRobot.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064D31695639D009C22F7 /* NeatoRobot.m */; };
 		E1A064F31695639D009C22F7 /* NeatoServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064D51695639D009C22F7 /* NeatoServerManager.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
 		E1A064F41695639D009C22F7 /* NeatoSocialNetworks.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064D71695639D009C22F7 /* NeatoSocialNetworks.m */; };
 		E1A064F51695639D009C22F7 /* NeatoUser.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064D91695639D009C22F7 /* NeatoUser.m */; };
-		E1A064F61695639D009C22F7 /* NetworkUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064DC1695639D009C22F7 /* NetworkUtils.m */; };
 		E1A064F71695639D009C22F7 /* TCPConnectionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064DF1695639D009C22F7 /* TCPConnectionHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
-		E1A064F81695639D009C22F7 /* TCPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064E11695639D009C22F7 /* TCPHelper.m */; };
 		E1A064F91695639D009C22F7 /* TCPSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064E31695639D009C22F7 /* TCPSocket.m */; };
-		E1A064FA1695639D009C22F7 /* FindNearByRobotsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064E61695639D009C22F7 /* FindNearByRobotsHelper.m */; };
-		E1A064FB1695639D009C22F7 /* GetRobotIPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064E81695639D009C22F7 /* GetRobotIPHelper.m */; };
-		E1A064FC1695639D009C22F7 /* UDPSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A064EA1695639D009C22F7 /* UDPSocket.m */; };
 		E1A06564169563B6009C22F7 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A06500169563B5009C22F7 /* GCDAsyncSocket.m */; };
 		E1A06565169563B6009C22F7 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A06503169563B5009C22F7 /* GCDAsyncUdpSocket.m */; };
 		E1A06566169563B6009C22F7 /* XMPPAnonymousAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A06508169563B5009C22F7 /* XMPPAnonymousAuthentication.m */; };
@@ -159,31 +142,21 @@
 		E1A06588169563B6009C22F7 /* XMPPSRVResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A06563169563B5009C22F7 /* XMPPSRVResolver.m */; };
 		E1A065B316956556009C22F7 /* RobotManagerCallWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A065B016956556009C22F7 /* RobotManagerCallWrapper.m */; };
 		E1A065B416956556009C22F7 /* UserManagerCallWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A065B216956556009C22F7 /* UserManagerCallWrapper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
-		E1A2B7BD16DA52BE003DC9C8 /* RobotDissociationListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A2B7BC16DA52BE003DC9C8 /* RobotDissociationListener.m */; };
-		E1A44BEF16D3BDC900898959 /* RobotAssociationListener2.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A44BEE16D3BDC900898959 /* RobotAssociationListener2.m */; };
 		E1A5007517A170CD00D80307 /* NeatoRobotEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5007417A170CD00D80307 /* NeatoRobotEntity.m */; };
-		E1A5007B17A170EE00D80307 /* IntendToDriveHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5007817A170EE00D80307 /* IntendToDriveHelper.m */; };
 		E1A5007C17A170EE00D80307 /* RobotDriveManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5007A17A170EE00D80307 /* RobotDriveManager.m */; };
 		E1A5D39017523AB300E01DCF /* ScheduleEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5D38F17523AB300E01DCF /* ScheduleEntity.m */; };
 		E1A5D39317523AC300E01DCF /* BasicScheduleEventEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5D39217523AC300E01DCF /* BasicScheduleEventEntity.m */; };
 		E1A5D39717523B7200E01DCF /* ScheduleJsonHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1A5D39617523B7200E01DCF /* ScheduleJsonHelper.m */; };
 		E1AC0E921695BE19005601EE /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A06555169563B5009C22F7 /* libidn.a */; };
 		E1B0CF4D16EF6FF9001E3360 /* ScheduleServerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF4C16EF6FF9001E3360 /* ScheduleServerHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
-		E1B0CF5B16EF9C42001E3360 /* DeleteAdvancedScheduleListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF5216EF9C40001E3360 /* DeleteAdvancedScheduleListener.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
-		E1B0CF5C16EF9C42001E3360 /* GetAdvancedScheduleListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF5416EF9C41001E3360 /* GetAdvancedScheduleListener.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
 		E1B0CF5D16EF9C42001E3360 /* PostScheduleResult.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF5616EF9C41001E3360 /* PostScheduleResult.m */; };
-		E1B0CF5E16EF9C42001E3360 /* SetAdvancedScheduleListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF5816EF9C42001E3360 /* SetAdvancedScheduleListener.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
-		E1B0CF5F16EF9C42001E3360 /* UpdateBasicScheduleListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF5A16EF9C42001E3360 /* UpdateBasicScheduleListener.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
+		E1B0CF5F16EF9C42001E3360 /* BasicScheduleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B0CF5A16EF9C42001E3360 /* BasicScheduleManager.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
 		E1B0CF6016EF9CF8001E3360 /* RobotScheduleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E199355C16EE14A1008BB353 /* RobotScheduleManager.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
-		E1B60E0916B0400300342422 /* CreateUserListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0216B0400300342422 /* CreateUserListener.m */; };
-		E1B60E0A16B0400300342422 /* LoginListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0416B0400300342422 /* LoginListener.m */; };
 		E1B60E0B16B0400300342422 /* NeatoServerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0616B0400300342422 /* NeatoServerHelper.m */; settings = {COMPILER_FLAGS = "-Wno-arc-performSelector-leaks"; }; };
-		E1B60E0C16B0400300342422 /* RobotAssociationListener.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B60E0816B0400300342422 /* RobotAssociationListener.m */; };
 		E1B6A6A616AEA49E0077DB08 /* CommandTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B6A6A516AEA49E0077DB08 /* CommandTracker.m */; };
 		E1C1BE5C17A8DA0A004B2365 /* NeatoErrorCodesHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E1C1BE5B17A8DA0A004B2365 /* NeatoErrorCodesHelper.m */; };
 		E1D40FC61754832A00EBCD62 /* CleaningAreaEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D40FC51754832A00EBCD62 /* CleaningAreaEntity.m */; };
 		E1D40FCF17548F3900EBCD62 /* CleaningArea.m in Sources */ = {isa = PBXBuildFile; fileRef = E1D40FCE17548F3900EBCD62 /* CleaningArea.m */; };
-		E1EC9CE6174F96FD0016FF47 /* RobotCommandManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E1EC9CE5174F96FD0016FF47 /* RobotCommandManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -295,26 +268,14 @@
 		B29F92F21694659A001A70B7 /* CordovaLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CordovaLib.xcodeproj; path = "../../PhoneGap/phonegap-phonegap-26d211b/lib/ios/CordovaLib/CordovaLib.xcodeproj"; sourceTree = "<group>"; };
 		B29F930616946E81001A70B7 /* Build.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Build.h; sourceTree = "<group>"; };
 		E121001116B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NeatoDatastoreModel.xcdatamodel; sourceTree = "<group>"; };
-		E132149A174E3DD4004F2A0E /* GetUserPushNotificationsListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetUserPushNotificationsListener.h; sourceTree = "<group>"; };
-		E132149B174E3DD4004F2A0E /* GetUserPushNotificationsListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetUserPushNotificationsListener.m; sourceTree = "<group>"; };
 		E132149C174E3DD4004F2A0E /* NeatoNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoNotification.h; sourceTree = "<group>"; };
 		E132149D174E3DD4004F2A0E /* NeatoNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoNotification.m; sourceTree = "<group>"; };
-		E132149E174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetUserPushNotificationOptionsListener.h; sourceTree = "<group>"; };
-		E132149F174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetUserPushNotificationOptionsListener.m; sourceTree = "<group>"; };
 		E13214A3174E3E5C004F2A0E /* NeatoUserEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoUserEntity.h; sourceTree = "<group>"; };
 		E13214A4174E3E5C004F2A0E /* NeatoUserEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoUserEntity.m; sourceTree = "<group>"; };
 		E13214A6174E3E73004F2A0E /* NeatoNotificationEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoNotificationEntity.h; sourceTree = "<group>"; };
 		E13214A7174E3E73004F2A0E /* NeatoNotificationEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoNotificationEntity.m; sourceTree = "<group>"; };
-		E13DF3821802D97B00792C0E /* GetRobotDetailsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetRobotDetailsHelper.h; sourceTree = "<group>"; };
-		E13DF3831802D97B00792C0E /* GetRobotDetailsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetRobotDetailsHelper.m; sourceTree = "<group>"; };
-		E13DF3841802D97B00792C0E /* LinkRobotHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkRobotHelper.h; sourceTree = "<group>"; };
-		E13DF3851802D97B00792C0E /* LinkRobotHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkRobotHelper.m; sourceTree = "<group>"; };
-		E13DF3861802D97B00792C0E /* ServerRequestResponseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerRequestResponseHelper.h; sourceTree = "<group>"; };
-		E13DF3871802D97B00792C0E /* ServerRequestResponseHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerRequestResponseHelper.m; sourceTree = "<group>"; };
 		E15FC46416A9B68F0000AB67 /* NSURLConnectionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLConnectionHelper.h; sourceTree = "<group>"; };
 		E15FC46516A9B68F0000AB67 /* NSURLConnectionHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLConnectionHelper.m; sourceTree = "<group>"; };
-		E1639FDA16D4EC1B0016C236 /* DeviceConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceConnectionManager.h; sourceTree = "<group>"; };
-		E1639FDB16D4EC1B0016C236 /* DeviceConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceConnectionManager.m; sourceTree = "<group>"; };
 		E1639FDE16D4F0AA0016C236 /* RobotCommandHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotCommandHelper.h; sourceTree = "<group>"; };
 		E1639FDF16D4F0AA0016C236 /* RobotCommandHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotCommandHelper.m; sourceTree = "<group>"; };
 		E168BBC4169D461800BA6AD3 /* NeatoRobotHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoRobotHelper.h; sourceTree = "<group>"; };
@@ -325,8 +286,6 @@
 		E168BBCB169D461800BA6AD3 /* XMPPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPConnection.m; sourceTree = "<group>"; };
 		E168BBCC169D461800BA6AD3 /* XMPPConnectionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPConnectionHelper.h; sourceTree = "<group>"; };
 		E168BBCD169D461800BA6AD3 /* XMPPConnectionHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPConnectionHelper.m; sourceTree = "<group>"; };
-		E168BBCE169D461800BA6AD3 /* XMPPHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPHelper.h; sourceTree = "<group>"; };
-		E168BBCF169D461800BA6AD3 /* XMPPHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPHelper.m; sourceTree = "<group>"; };
 		E168BBD6169D46C400BA6AD3 /* PluginConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PluginConstants.h; sourceTree = "<group>"; };
 		E168BBD7169D471300BA6AD3 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		E16FBA5B176226AF00FC2856 /* XMPPCallbackEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPCallbackEntity.h; sourceTree = "<group>"; };
@@ -345,14 +304,12 @@
 		E189F0891771AC96004BA38C /* NeatoRobotCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoRobotCommand.m; sourceTree = "<group>"; };
 		E189F0921771BAF2004BA38C /* NeatoUserAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoUserAttributes.h; sourceTree = "<group>"; };
 		E189F0931771BAF2004BA38C /* NeatoUserAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoUserAttributes.m; sourceTree = "<group>"; };
-		E189F09E1771C8DE004BA38C /* LoginListener2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginListener2.h; sourceTree = "<group>"; };
-		E189F09F1771C8DE004BA38C /* LoginListener2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginListener2.m; sourceTree = "<group>"; };
+		E189F09E1771C8DE004BA38C /* LoginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginManager.h; sourceTree = "<group>"; };
+		E189F09F1771C8DE004BA38C /* LoginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginManager.m; sourceTree = "<group>"; };
 		E1938E32175F399100149F30 /* AppSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppSettings.h; sourceTree = "<group>"; };
 		E1938E33175F399100149F30 /* AppSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppSettings.m; sourceTree = "<group>"; };
-		E193AE78174B694E00AE0B4E /* ChangePasswordListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangePasswordListener.h; sourceTree = "<group>"; };
-		E193AE79174B694E00AE0B4E /* ChangePasswordListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangePasswordListener.m; sourceTree = "<group>"; };
-		E193AE85174B916500AE0B4E /* CreateUserListener2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateUserListener2.h; sourceTree = "<group>"; };
-		E193AE86174B916500AE0B4E /* CreateUserListener2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateUserListener2.m; sourceTree = "<group>"; };
+		E193AE85174B916500AE0B4E /* CreateUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateUserManager.h; sourceTree = "<group>"; };
+		E193AE86174B916500AE0B4E /* CreateUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateUserManager.m; sourceTree = "<group>"; };
 		E195EA1316B6B56A00E4D9C6 /* NeatoDataStore.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NeatoDataStore.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		E195EA1416B6B56A00E4D9C6 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		E195EA1816B6B56A00E4D9C6 /* NeatoDataStore-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NeatoDataStore-Info.plist"; sourceTree = "<group>"; };
@@ -370,8 +327,6 @@
 		E199354B16EE1433008BB353 /* CommandTrackerEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandTrackerEntity.m; sourceTree = "<group>"; };
 		E199355016EE1441008BB353 /* ScheduleEventsEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleEventsEntity.h; sourceTree = "<group>"; };
 		E199355116EE1441008BB353 /* ScheduleEventsEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleEventsEntity.m; sourceTree = "<group>"; };
-		E199355716EE14A1008BB353 /* AdvanceScheduleEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvanceScheduleEvent.h; sourceTree = "<group>"; };
-		E199355816EE14A1008BB353 /* AdvanceScheduleEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdvanceScheduleEvent.m; sourceTree = "<group>"; };
 		E199355916EE14A1008BB353 /* BasicScheduleEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicScheduleEvent.h; sourceTree = "<group>"; };
 		E199355A16EE14A1008BB353 /* BasicScheduleEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicScheduleEvent.m; sourceTree = "<group>"; };
 		E199355B16EE14A1008BB353 /* RobotScheduleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotScheduleManager.h; sourceTree = "<group>"; };
@@ -387,8 +342,6 @@
 		E199356516EE14A1008BB353 /* ScheduleUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleUtils.m; sourceTree = "<group>"; };
 		E199356616EE14A1008BB353 /* ScheduleXMLHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleXMLHelper.h; sourceTree = "<group>"; };
 		E199356716EE14A1008BB353 /* ScheduleXMLHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleXMLHelper.m; sourceTree = "<group>"; };
-		E199356A16EE14A2008BB353 /* ScheduleDBHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleDBHelper.h; sourceTree = "<group>"; };
-		E199356B16EE14A2008BB353 /* ScheduleDBHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleDBHelper.m; sourceTree = "<group>"; };
 		E199356D16EE14A4008BB353 /* CreateScheduleEventPluginResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateScheduleEventPluginResult.h; sourceTree = "<group>"; };
 		E199356E16EE14A4008BB353 /* CreateScheduleEventPluginResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateScheduleEventPluginResult.m; sourceTree = "<group>"; };
 		E199356F16EE14A4008BB353 /* CreateSchedulePluginResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateSchedulePluginResult.h; sourceTree = "<group>"; };
@@ -406,14 +359,10 @@
 		E1A064C31695639D009C22F7 /* CommandsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandsHelper.m; sourceTree = "<group>"; };
 		E1A064C41695639D009C22F7 /* TCPCommandHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPCommandHelper.h; sourceTree = "<group>"; };
 		E1A064C51695639D009C22F7 /* TCPCommandHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCPCommandHelper.m; sourceTree = "<group>"; };
-		E1A064C61695639D009C22F7 /* UDPCommandHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPCommandHelper.h; sourceTree = "<group>"; };
-		E1A064C71695639D009C22F7 /* UDPCommandHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPCommandHelper.m; sourceTree = "<group>"; };
 		E1A064C81695639D009C22F7 /* XMPPCommandHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPCommandHelper.h; sourceTree = "<group>"; };
 		E1A064C91695639D009C22F7 /* XMPPCommandHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPCommandHelper.m; sourceTree = "<group>"; };
 		E1A064CB1695639D009C22F7 /* LogHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogHelper.h; sourceTree = "<group>"; };
 		E1A064CC1695639D009C22F7 /* LogHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogHelper.m; sourceTree = "<group>"; };
-		E1A064CE1695639D009C22F7 /* NeatoRobotManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoRobotManager.h; sourceTree = "<group>"; };
-		E1A064CF1695639D009C22F7 /* NeatoRobotManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoRobotManager.m; sourceTree = "<group>"; };
 		E1A064D21695639D009C22F7 /* NeatoRobot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoRobot.h; sourceTree = "<group>"; };
 		E1A064D31695639D009C22F7 /* NeatoRobot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoRobot.m; sourceTree = "<group>"; };
 		E1A064D41695639D009C22F7 /* NeatoServerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoServerManager.h; sourceTree = "<group>"; };
@@ -422,20 +371,10 @@
 		E1A064D71695639D009C22F7 /* NeatoSocialNetworks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoSocialNetworks.m; sourceTree = "<group>"; };
 		E1A064D81695639D009C22F7 /* NeatoUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoUser.h; sourceTree = "<group>"; };
 		E1A064D91695639D009C22F7 /* NeatoUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoUser.m; sourceTree = "<group>"; };
-		E1A064DB1695639D009C22F7 /* NetworkUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkUtils.h; sourceTree = "<group>"; };
-		E1A064DC1695639D009C22F7 /* NetworkUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkUtils.m; sourceTree = "<group>"; };
 		E1A064DE1695639D009C22F7 /* TCPConnectionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPConnectionHelper.h; sourceTree = "<group>"; };
 		E1A064DF1695639D009C22F7 /* TCPConnectionHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCPConnectionHelper.m; sourceTree = "<group>"; };
-		E1A064E01695639D009C22F7 /* TCPHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPHelper.h; sourceTree = "<group>"; };
-		E1A064E11695639D009C22F7 /* TCPHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCPHelper.m; sourceTree = "<group>"; };
 		E1A064E21695639D009C22F7 /* TCPSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPSocket.h; sourceTree = "<group>"; };
 		E1A064E31695639D009C22F7 /* TCPSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCPSocket.m; sourceTree = "<group>"; };
-		E1A064E51695639D009C22F7 /* FindNearByRobotsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindNearByRobotsHelper.h; sourceTree = "<group>"; };
-		E1A064E61695639D009C22F7 /* FindNearByRobotsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindNearByRobotsHelper.m; sourceTree = "<group>"; };
-		E1A064E71695639D009C22F7 /* GetRobotIPHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetRobotIPHelper.h; sourceTree = "<group>"; };
-		E1A064E81695639D009C22F7 /* GetRobotIPHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetRobotIPHelper.m; sourceTree = "<group>"; };
-		E1A064E91695639D009C22F7 /* UDPSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPSocket.h; sourceTree = "<group>"; };
-		E1A064EA1695639D009C22F7 /* UDPSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPSocket.m; sourceTree = "<group>"; };
 		E1A064FF169563B5009C22F7 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
 		E1A06500169563B5009C22F7 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 		E1A06502169563B5009C22F7 /* GCDAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncUdpSocket.h; sourceTree = "<group>"; };
@@ -524,14 +463,8 @@
 		E1A065B016956556009C22F7 /* RobotManagerCallWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotManagerCallWrapper.m; sourceTree = "<group>"; };
 		E1A065B116956556009C22F7 /* UserManagerCallWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserManagerCallWrapper.h; sourceTree = "<group>"; };
 		E1A065B216956556009C22F7 /* UserManagerCallWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserManagerCallWrapper.m; sourceTree = "<group>"; };
-		E1A2B7BB16DA52BE003DC9C8 /* RobotDissociationListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotDissociationListener.h; sourceTree = "<group>"; };
-		E1A2B7BC16DA52BE003DC9C8 /* RobotDissociationListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotDissociationListener.m; sourceTree = "<group>"; };
-		E1A44BED16D3BDC900898959 /* RobotAssociationListener2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotAssociationListener2.h; sourceTree = "<group>"; };
-		E1A44BEE16D3BDC900898959 /* RobotAssociationListener2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotAssociationListener2.m; sourceTree = "<group>"; };
 		E1A5007317A170CD00D80307 /* NeatoRobotEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoRobotEntity.h; sourceTree = "<group>"; };
 		E1A5007417A170CD00D80307 /* NeatoRobotEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoRobotEntity.m; sourceTree = "<group>"; };
-		E1A5007717A170EE00D80307 /* IntendToDriveHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntendToDriveHelper.h; sourceTree = "<group>"; };
-		E1A5007817A170EE00D80307 /* IntendToDriveHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntendToDriveHelper.m; sourceTree = "<group>"; };
 		E1A5007917A170EE00D80307 /* RobotDriveManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotDriveManager.h; sourceTree = "<group>"; };
 		E1A5007A17A170EE00D80307 /* RobotDriveManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotDriveManager.m; sourceTree = "<group>"; };
 		E1A5D38E17523AB300E01DCF /* ScheduleEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleEntity.h; sourceTree = "<group>"; };
@@ -542,24 +475,12 @@
 		E1A5D39617523B7200E01DCF /* ScheduleJsonHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleJsonHelper.m; sourceTree = "<group>"; };
 		E1B0CF4B16EF6FF9001E3360 /* ScheduleServerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleServerHelper.h; sourceTree = "<group>"; };
 		E1B0CF4C16EF6FF9001E3360 /* ScheduleServerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleServerHelper.m; sourceTree = "<group>"; };
-		E1B0CF5116EF9C40001E3360 /* DeleteAdvancedScheduleListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteAdvancedScheduleListener.h; sourceTree = "<group>"; };
-		E1B0CF5216EF9C40001E3360 /* DeleteAdvancedScheduleListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteAdvancedScheduleListener.m; sourceTree = "<group>"; };
-		E1B0CF5316EF9C40001E3360 /* GetAdvancedScheduleListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetAdvancedScheduleListener.h; sourceTree = "<group>"; };
-		E1B0CF5416EF9C41001E3360 /* GetAdvancedScheduleListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAdvancedScheduleListener.m; sourceTree = "<group>"; };
 		E1B0CF5516EF9C41001E3360 /* PostScheduleResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostScheduleResult.h; sourceTree = "<group>"; };
 		E1B0CF5616EF9C41001E3360 /* PostScheduleResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostScheduleResult.m; sourceTree = "<group>"; };
-		E1B0CF5716EF9C42001E3360 /* SetAdvancedScheduleListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetAdvancedScheduleListener.h; sourceTree = "<group>"; };
-		E1B0CF5816EF9C42001E3360 /* SetAdvancedScheduleListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetAdvancedScheduleListener.m; sourceTree = "<group>"; };
-		E1B0CF5916EF9C42001E3360 /* UpdateBasicScheduleListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateBasicScheduleListener.h; sourceTree = "<group>"; };
-		E1B0CF5A16EF9C42001E3360 /* UpdateBasicScheduleListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateBasicScheduleListener.m; sourceTree = "<group>"; };
-		E1B60E0116B0400300342422 /* CreateUserListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateUserListener.h; sourceTree = "<group>"; };
-		E1B60E0216B0400300342422 /* CreateUserListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateUserListener.m; sourceTree = "<group>"; };
-		E1B60E0316B0400300342422 /* LoginListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginListener.h; sourceTree = "<group>"; };
-		E1B60E0416B0400300342422 /* LoginListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginListener.m; sourceTree = "<group>"; };
+		E1B0CF5916EF9C42001E3360 /* BasicScheduleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicScheduleManager.h; sourceTree = "<group>"; };
+		E1B0CF5A16EF9C42001E3360 /* BasicScheduleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicScheduleManager.m; sourceTree = "<group>"; };
 		E1B60E0516B0400300342422 /* NeatoServerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoServerHelper.h; sourceTree = "<group>"; };
 		E1B60E0616B0400300342422 /* NeatoServerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeatoServerHelper.m; sourceTree = "<group>"; };
-		E1B60E0716B0400300342422 /* RobotAssociationListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotAssociationListener.h; sourceTree = "<group>"; };
-		E1B60E0816B0400300342422 /* RobotAssociationListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotAssociationListener.m; sourceTree = "<group>"; };
 		E1B6A6A416AEA49E0077DB08 /* CommandTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandTracker.h; sourceTree = "<group>"; };
 		E1B6A6A516AEA49E0077DB08 /* CommandTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandTracker.m; sourceTree = "<group>"; };
 		E1C1BE5917A8DA0A004B2365 /* NeatoErrorCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeatoErrorCodes.h; sourceTree = "<group>"; };
@@ -569,8 +490,6 @@
 		E1D40FC51754832A00EBCD62 /* CleaningAreaEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CleaningAreaEntity.m; sourceTree = "<group>"; };
 		E1D40FCD17548F3900EBCD62 /* CleaningArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CleaningArea.h; sourceTree = "<group>"; };
 		E1D40FCE17548F3900EBCD62 /* CleaningArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CleaningArea.m; sourceTree = "<group>"; };
-		E1EC9CE4174F96FD0016FF47 /* RobotCommandManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotCommandManager.h; sourceTree = "<group>"; };
-		E1EC9CE5174F96FD0016FF47 /* RobotCommandManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotCommandManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -806,9 +725,7 @@
 				2838B97C17549B2C00145B6C /* PushNotification */,
 				E199358216EE14CA008BB353 /* Categories */,
 				E199355616EE149F008BB353 /* RobotScheduleHelper */,
-				E199356816EE14A1008BB353 /* ScheduleDBHelper */,
 				E199356C16EE14A2008BB353 /* SchedulePluginResults */,
-				E1639FD916D4EC1B0016C236 /* ConnectionManager */,
 				E15FC46316A9B68F0000AB67 /* NSURLConnectionHelper */,
 				E168BBC0169D461800BA6AD3 /* DBHelper */,
 				E168BBC3169D461800BA6AD3 /* RobotHelper */,
@@ -817,11 +734,8 @@
 				E1A064BD1695639D009C22F7 /* AppHelper */,
 				E1A064C01695639D009C22F7 /* CommandHelper */,
 				E1A064CA1695639D009C22F7 /* LogHelper */,
-				E1A064CD1695639D009C22F7 /* NeatoRobotManager */,
 				E1A064D01695639D009C22F7 /* NeatoServerManager */,
-				E1A064DA1695639D009C22F7 /* NetworkUtils */,
 				E1A064DD1695639D009C22F7 /* TCPHelper */,
-				E1A064E41695639D009C22F7 /* UDPHelper */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -834,19 +748,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E13DF3811802D97B00792C0E /* ServerRequestHelpers */ = {
-			isa = PBXGroup;
-			children = (
-				E13DF3821802D97B00792C0E /* GetRobotDetailsHelper.h */,
-				E13DF3831802D97B00792C0E /* GetRobotDetailsHelper.m */,
-				E13DF3841802D97B00792C0E /* LinkRobotHelper.h */,
-				E13DF3851802D97B00792C0E /* LinkRobotHelper.m */,
-				E13DF3861802D97B00792C0E /* ServerRequestResponseHelper.h */,
-				E13DF3871802D97B00792C0E /* ServerRequestResponseHelper.m */,
-			);
-			path = ServerRequestHelpers;
-			sourceTree = "<group>";
-		};
 		E15FC46316A9B68F0000AB67 /* NSURLConnectionHelper */ = {
 			isa = PBXGroup;
 			children = (
@@ -854,15 +755,6 @@
 				E15FC46516A9B68F0000AB67 /* NSURLConnectionHelper.m */,
 			);
 			path = NSURLConnectionHelper;
-			sourceTree = "<group>";
-		};
-		E1639FD916D4EC1B0016C236 /* ConnectionManager */ = {
-			isa = PBXGroup;
-			children = (
-				E1639FDA16D4EC1B0016C236 /* DeviceConnectionManager.h */,
-				E1639FDB16D4EC1B0016C236 /* DeviceConnectionManager.m */,
-			);
-			path = ConnectionManager;
 			sourceTree = "<group>";
 		};
 		E168BBC0169D461800BA6AD3 /* DBHelper */ = {
@@ -922,8 +814,6 @@
 				E168BBCB169D461800BA6AD3 /* XMPPConnection.m */,
 				E168BBCC169D461800BA6AD3 /* XMPPConnectionHelper.h */,
 				E168BBCD169D461800BA6AD3 /* XMPPConnectionHelper.m */,
-				E168BBCE169D461800BA6AD3 /* XMPPHelper.h */,
-				E168BBCF169D461800BA6AD3 /* XMPPHelper.m */,
 			);
 			path = XMPPHelper;
 			sourceTree = "<group>";
@@ -983,20 +873,12 @@
 			children = (
 				E1A5D39517523B7200E01DCF /* ScheduleJsonHelper.h */,
 				E1A5D39617523B7200E01DCF /* ScheduleJsonHelper.m */,
-				E1B0CF5116EF9C40001E3360 /* DeleteAdvancedScheduleListener.h */,
-				E1B0CF5216EF9C40001E3360 /* DeleteAdvancedScheduleListener.m */,
-				E1B0CF5316EF9C40001E3360 /* GetAdvancedScheduleListener.h */,
-				E1B0CF5416EF9C41001E3360 /* GetAdvancedScheduleListener.m */,
 				E1B0CF5516EF9C41001E3360 /* PostScheduleResult.h */,
 				E1B0CF5616EF9C41001E3360 /* PostScheduleResult.m */,
-				E1B0CF5716EF9C42001E3360 /* SetAdvancedScheduleListener.h */,
-				E1B0CF5816EF9C42001E3360 /* SetAdvancedScheduleListener.m */,
-				E1B0CF5916EF9C42001E3360 /* UpdateBasicScheduleListener.h */,
-				E1B0CF5A16EF9C42001E3360 /* UpdateBasicScheduleListener.m */,
+				E1B0CF5916EF9C42001E3360 /* BasicScheduleManager.h */,
+				E1B0CF5A16EF9C42001E3360 /* BasicScheduleManager.m */,
 				E1B0CF4B16EF6FF9001E3360 /* ScheduleServerHelper.h */,
 				E1B0CF4C16EF6FF9001E3360 /* ScheduleServerHelper.m */,
-				E199355716EE14A1008BB353 /* AdvanceScheduleEvent.h */,
-				E199355816EE14A1008BB353 /* AdvanceScheduleEvent.m */,
 				E199355916EE14A1008BB353 /* BasicScheduleEvent.h */,
 				E199355A16EE14A1008BB353 /* BasicScheduleEvent.m */,
 				E199355B16EE14A1008BB353 /* RobotScheduleManager.h */,
@@ -1014,15 +896,6 @@
 				E199356716EE14A1008BB353 /* ScheduleXMLHelper.m */,
 			);
 			path = RobotScheduleHelper;
-			sourceTree = "<group>";
-		};
-		E199356816EE14A1008BB353 /* ScheduleDBHelper */ = {
-			isa = PBXGroup;
-			children = (
-				E199356A16EE14A2008BB353 /* ScheduleDBHelper.h */,
-				E199356B16EE14A2008BB353 /* ScheduleDBHelper.m */,
-			);
-			path = ScheduleDBHelper;
 			sourceTree = "<group>";
 		};
 		E199356C16EE14A2008BB353 /* SchedulePluginResults */ = {
@@ -1065,8 +938,6 @@
 				E189F0871771AC96004BA38C /* NeatoCommandExpiryHelper.m */,
 				E189F0881771AC96004BA38C /* NeatoRobotCommand.h */,
 				E189F0891771AC96004BA38C /* NeatoRobotCommand.m */,
-				E1EC9CE4174F96FD0016FF47 /* RobotCommandManager.h */,
-				E1EC9CE5174F96FD0016FF47 /* RobotCommandManager.m */,
 				E1639FDE16D4F0AA0016C236 /* RobotCommandHelper.h */,
 				E1639FDF16D4F0AA0016C236 /* RobotCommandHelper.m */,
 				E1B6A6A416AEA49E0077DB08 /* CommandTracker.h */,
@@ -1076,8 +947,6 @@
 				E1A064C31695639D009C22F7 /* CommandsHelper.m */,
 				E1A064C41695639D009C22F7 /* TCPCommandHelper.h */,
 				E1A064C51695639D009C22F7 /* TCPCommandHelper.m */,
-				E1A064C61695639D009C22F7 /* UDPCommandHelper.h */,
-				E1A064C71695639D009C22F7 /* UDPCommandHelper.m */,
 				E1A064C81695639D009C22F7 /* XMPPCommandHelper.h */,
 				E1A064C91695639D009C22F7 /* XMPPCommandHelper.m */,
 			);
@@ -1093,48 +962,22 @@
 			path = LogHelper;
 			sourceTree = "<group>";
 		};
-		E1A064CD1695639D009C22F7 /* NeatoRobotManager */ = {
-			isa = PBXGroup;
-			children = (
-				E1A064CE1695639D009C22F7 /* NeatoRobotManager.h */,
-				E1A064CF1695639D009C22F7 /* NeatoRobotManager.m */,
-			);
-			path = NeatoRobotManager;
-			sourceTree = "<group>";
-		};
 		E1A064D01695639D009C22F7 /* NeatoServerManager */ = {
 			isa = PBXGroup;
 			children = (
-				E13DF3811802D97B00792C0E /* ServerRequestHelpers */,
 				84F3D1BB196ED177009510F3 /* WebConstants.h */,
-				E189F09E1771C8DE004BA38C /* LoginListener2.h */,
-				E189F09F1771C8DE004BA38C /* LoginListener2.m */,
+				E189F09E1771C8DE004BA38C /* LoginManager.h */,
+				E189F09F1771C8DE004BA38C /* LoginManager.m */,
 				E189F0921771BAF2004BA38C /* NeatoUserAttributes.h */,
 				E189F0931771BAF2004BA38C /* NeatoUserAttributes.m */,
 				E1D40FCD17548F3900EBCD62 /* CleaningArea.h */,
 				E1D40FCE17548F3900EBCD62 /* CleaningArea.m */,
-				E132149A174E3DD4004F2A0E /* GetUserPushNotificationsListener.h */,
-				E132149B174E3DD4004F2A0E /* GetUserPushNotificationsListener.m */,
 				E132149C174E3DD4004F2A0E /* NeatoNotification.h */,
 				E132149D174E3DD4004F2A0E /* NeatoNotification.m */,
-				E132149E174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.h */,
-				E132149F174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.m */,
-				E193AE85174B916500AE0B4E /* CreateUserListener2.h */,
-				E193AE86174B916500AE0B4E /* CreateUserListener2.m */,
-				E193AE78174B694E00AE0B4E /* ChangePasswordListener.h */,
-				E193AE79174B694E00AE0B4E /* ChangePasswordListener.m */,
-				E1A2B7BB16DA52BE003DC9C8 /* RobotDissociationListener.h */,
-				E1A2B7BC16DA52BE003DC9C8 /* RobotDissociationListener.m */,
-				E1A44BED16D3BDC900898959 /* RobotAssociationListener2.h */,
-				E1A44BEE16D3BDC900898959 /* RobotAssociationListener2.m */,
-				E1B60E0116B0400300342422 /* CreateUserListener.h */,
-				E1B60E0216B0400300342422 /* CreateUserListener.m */,
-				E1B60E0316B0400300342422 /* LoginListener.h */,
-				E1B60E0416B0400300342422 /* LoginListener.m */,
+				E193AE85174B916500AE0B4E /* CreateUserManager.h */,
+				E193AE86174B916500AE0B4E /* CreateUserManager.m */,
 				E1B60E0516B0400300342422 /* NeatoServerHelper.h */,
 				E1B60E0616B0400300342422 /* NeatoServerHelper.m */,
-				E1B60E0716B0400300342422 /* RobotAssociationListener.h */,
-				E1B60E0816B0400300342422 /* RobotAssociationListener.m */,
 				E1A064D21695639D009C22F7 /* NeatoRobot.h */,
 				E1A064D31695639D009C22F7 /* NeatoRobot.m */,
 				E1A064D41695639D009C22F7 /* NeatoServerManager.h */,
@@ -1147,39 +990,15 @@
 			path = NeatoServerManager;
 			sourceTree = "<group>";
 		};
-		E1A064DA1695639D009C22F7 /* NetworkUtils */ = {
-			isa = PBXGroup;
-			children = (
-				E1A064DB1695639D009C22F7 /* NetworkUtils.h */,
-				E1A064DC1695639D009C22F7 /* NetworkUtils.m */,
-			);
-			path = NetworkUtils;
-			sourceTree = "<group>";
-		};
 		E1A064DD1695639D009C22F7 /* TCPHelper */ = {
 			isa = PBXGroup;
 			children = (
 				E1A064DE1695639D009C22F7 /* TCPConnectionHelper.h */,
 				E1A064DF1695639D009C22F7 /* TCPConnectionHelper.m */,
-				E1A064E01695639D009C22F7 /* TCPHelper.h */,
-				E1A064E11695639D009C22F7 /* TCPHelper.m */,
 				E1A064E21695639D009C22F7 /* TCPSocket.h */,
 				E1A064E31695639D009C22F7 /* TCPSocket.m */,
 			);
 			path = TCPHelper;
-			sourceTree = "<group>";
-		};
-		E1A064E41695639D009C22F7 /* UDPHelper */ = {
-			isa = PBXGroup;
-			children = (
-				E1A064E51695639D009C22F7 /* FindNearByRobotsHelper.h */,
-				E1A064E61695639D009C22F7 /* FindNearByRobotsHelper.m */,
-				E1A064E71695639D009C22F7 /* GetRobotIPHelper.h */,
-				E1A064E81695639D009C22F7 /* GetRobotIPHelper.m */,
-				E1A064E91695639D009C22F7 /* UDPSocket.h */,
-				E1A064EA1695639D009C22F7 /* UDPSocket.m */,
-			);
-			path = UDPHelper;
 			sourceTree = "<group>";
 		};
 		E1A064FD169563B5009C22F7 /* CocoaAsyncSocket */ = {
@@ -1437,8 +1256,6 @@
 		E1A5007617A170EE00D80307 /* IntendToDriveHelper */ = {
 			isa = PBXGroup;
 			children = (
-				E1A5007717A170EE00D80307 /* IntendToDriveHelper.h */,
-				E1A5007817A170EE00D80307 /* IntendToDriveHelper.m */,
 				E1A5007917A170EE00D80307 /* RobotDriveManager.h */,
 				E1A5007A17A170EE00D80307 /* RobotDriveManager.m */,
 			);
@@ -1636,22 +1453,14 @@
 				E1A064EB1695639D009C22F7 /* AppHelper.m in Sources */,
 				E1A064EC1695639D009C22F7 /* CommandsHelper.m in Sources */,
 				E1A064ED1695639D009C22F7 /* TCPCommandHelper.m in Sources */,
-				E1A064EE1695639D009C22F7 /* UDPCommandHelper.m in Sources */,
-				E13DF3881802D97B00792C0E /* GetRobotDetailsHelper.m in Sources */,
 				E1A064EF1695639D009C22F7 /* XMPPCommandHelper.m in Sources */,
 				E1A064F01695639D009C22F7 /* LogHelper.m in Sources */,
-				E1A064F11695639D009C22F7 /* NeatoRobotManager.m in Sources */,
 				E1A064F21695639D009C22F7 /* NeatoRobot.m in Sources */,
 				E1A064F31695639D009C22F7 /* NeatoServerManager.m in Sources */,
 				E1A064F41695639D009C22F7 /* NeatoSocialNetworks.m in Sources */,
 				E1A064F51695639D009C22F7 /* NeatoUser.m in Sources */,
-				E1A064F61695639D009C22F7 /* NetworkUtils.m in Sources */,
 				E1A064F71695639D009C22F7 /* TCPConnectionHelper.m in Sources */,
-				E1A064F81695639D009C22F7 /* TCPHelper.m in Sources */,
 				E1A064F91695639D009C22F7 /* TCPSocket.m in Sources */,
-				E1A064FA1695639D009C22F7 /* FindNearByRobotsHelper.m in Sources */,
-				E1A064FB1695639D009C22F7 /* GetRobotIPHelper.m in Sources */,
-				E1A064FC1695639D009C22F7 /* UDPSocket.m in Sources */,
 				E1A06564169563B6009C22F7 /* GCDAsyncSocket.m in Sources */,
 				E1A06565169563B6009C22F7 /* GCDAsyncUdpSocket.m in Sources */,
 				E1A06566169563B6009C22F7 /* XMPPAnonymousAuthentication.m in Sources */,
@@ -1694,52 +1503,34 @@
 				E168BBD2169D461800BA6AD3 /* NeatoUserHelper.m in Sources */,
 				E168BBD3169D461800BA6AD3 /* XMPPConnection.m in Sources */,
 				E168BBD4169D461800BA6AD3 /* XMPPConnectionHelper.m in Sources */,
-				E168BBD5169D461800BA6AD3 /* XMPPHelper.m in Sources */,
-				E13DF3891802D97B00792C0E /* LinkRobotHelper.m in Sources */,
-				E13DF38A1802D97B00792C0E /* ServerRequestResponseHelper.m in Sources */,
 				E15FC47316A9B68F0000AB67 /* NSURLConnectionHelper.m in Sources */,
 				E1B6A6A616AEA49E0077DB08 /* CommandTracker.m in Sources */,
-				E1B60E0916B0400300342422 /* CreateUserListener.m in Sources */,
-				E1B60E0A16B0400300342422 /* LoginListener.m in Sources */,
 				E1B60E0B16B0400300342422 /* NeatoServerHelper.m in Sources */,
-				E1B60E0C16B0400300342422 /* RobotAssociationListener.m in Sources */,
 				E198854616B2FB6400ED1AD8 /* NeatoDataStore.m in Sources */,
 				E121001216B5A4220029B8C1 /* NeatoDatastoreModel.xcdatamodeld in Sources */,
-				E1A44BEF16D3BDC900898959 /* RobotAssociationListener2.m in Sources */,
-				E1639FDC16D4EC1B0016C236 /* DeviceConnectionManager.m in Sources */,
 				E1639FE016D4F0AA0016C236 /* RobotCommandHelper.m in Sources */,
-				E1A2B7BD16DA52BE003DC9C8 /* RobotDissociationListener.m in Sources */,
 				E199354616EE1433008BB353 /* NeatoSocialNetworksEntity.m in Sources */,
 				E199354C16EE1433008BB353 /* CommandTrackerEntity.m in Sources */,
 				E199355216EE1442008BB353 /* ScheduleEventsEntity.m in Sources */,
-				E199357516EE14A4008BB353 /* AdvanceScheduleEvent.m in Sources */,
 				E199357616EE14A4008BB353 /* BasicScheduleEvent.m in Sources */,
 				E199357816EE14A4008BB353 /* Schedule.m in Sources */,
 				E199357916EE14A4008BB353 /* ScheduleEvent.m in Sources */,
 				E199357A16EE14A4008BB353 /* ScheduleTimeObject.m in Sources */,
 				E199357B16EE14A4008BB353 /* ScheduleUtils.m in Sources */,
 				E199357C16EE14A4008BB353 /* ScheduleXMLHelper.m in Sources */,
-				E199357D16EE14A4008BB353 /* ScheduleDBHelper.m in Sources */,
 				E199357E16EE14A4008BB353 /* CreateScheduleEventPluginResult.m in Sources */,
 				E199357F16EE14A4008BB353 /* CreateSchedulePluginResult.m in Sources */,
 				E199358016EE14A4008BB353 /* GetScheduleDataPluginResult.m in Sources */,
 				E199358116EE14A4008BB353 /* GetScheduleEventDataPluginResult.m in Sources */,
 				E199358516EE14CB008BB353 /* NSDictionary+StringValueForKey.m in Sources */,
 				E1B0CF4D16EF6FF9001E3360 /* ScheduleServerHelper.m in Sources */,
-				E1B0CF5B16EF9C42001E3360 /* DeleteAdvancedScheduleListener.m in Sources */,
-				E1B0CF5C16EF9C42001E3360 /* GetAdvancedScheduleListener.m in Sources */,
 				E1B0CF5D16EF9C42001E3360 /* PostScheduleResult.m in Sources */,
-				E1B0CF5E16EF9C42001E3360 /* SetAdvancedScheduleListener.m in Sources */,
-				E1B0CF5F16EF9C42001E3360 /* UpdateBasicScheduleListener.m in Sources */,
+				E1B0CF5F16EF9C42001E3360 /* BasicScheduleManager.m in Sources */,
 				28B4A9F9173786D30017702D /* AppBaseDelegate.m in Sources */,
-				E193AE7A174B694E00AE0B4E /* ChangePasswordListener.m in Sources */,
-				E193AE87174B916500AE0B4E /* CreateUserListener2.m in Sources */,
-				E13214A0174E3DD5004F2A0E /* GetUserPushNotificationsListener.m in Sources */,
+				E193AE87174B916500AE0B4E /* CreateUserManager.m in Sources */,
 				E13214A1174E3DD5004F2A0E /* NeatoNotification.m in Sources */,
-				E13214A2174E3DD5004F2A0E /* SetUserPushNotificationOptionsListener.m in Sources */,
 				E13214A5174E3E5C004F2A0E /* NeatoUserEntity.m in Sources */,
 				E13214A8174E3E74004F2A0E /* NeatoNotificationEntity.m in Sources */,
-				E1EC9CE6174F96FD0016FF47 /* RobotCommandManager.m in Sources */,
 				E1A5D39017523AB300E01DCF /* ScheduleEntity.m in Sources */,
 				E1A5D39317523AC300E01DCF /* BasicScheduleEventEntity.m in Sources */,
 				E1A5D39717523B7200E01DCF /* ScheduleJsonHelper.m in Sources */,
@@ -1753,11 +1544,10 @@
 				E189F08A1771AC96004BA38C /* NeatoCommandExpiryHelper.m in Sources */,
 				E189F08B1771AC96004BA38C /* NeatoRobotCommand.m in Sources */,
 				E189F0941771BAF2004BA38C /* NeatoUserAttributes.m in Sources */,
-				E189F0A01771C8DE004BA38C /* LoginListener2.m in Sources */,
+				E189F0A01771C8DE004BA38C /* LoginManager.m in Sources */,
 				E177F3E7177879CE00589638 /* XMPPRobotCleaningStateHelper.m in Sources */,
 				E177F3EA177879EE00589638 /* ProfileDetailEntity.m in Sources */,
 				E1A5007517A170CD00D80307 /* NeatoRobotEntity.m in Sources */,
-				E1A5007B17A170EE00D80307 /* IntendToDriveHelper.m in Sources */,
 				E1A5007C17A170EE00D80307 /* RobotDriveManager.m in Sources */,
 				E1C1BE5C17A8DA0A004B2365 /* NeatoErrorCodesHelper.m in Sources */,
 			);

@@ -2,8 +2,6 @@
 #import "LogHelper.h"
 #import "CommandsHelper.h"
 #import "TCPConnectionHelper.h"
-#import "TCPHelper.h"
-#import "XMPPHelper.h"
 #import "NeatoRobotHelper.h"
 #import "AppHelper.h"
 #import "TCPCommandHelper.h"

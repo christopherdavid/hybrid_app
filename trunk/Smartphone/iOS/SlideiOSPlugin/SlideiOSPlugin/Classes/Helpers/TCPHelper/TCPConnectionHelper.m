@@ -46,43 +46,6 @@ static TCPConnectionHelper *sharedInstance = nil;
     return [[TCPSocket getSharedTCPSocket] isConnected];
 }
 
--(void) connectToRobotOverTCP:(NeatoRobot *) robot delegate:(id<TCPConnectionHelperProtocol>) delegate
-{
-    debugLog(@"");
-    if (robot == nil)
-    {
-        debugLog(@"NeatoRobot is nil. Quiting!");
-        return;
-    }
-    self.delegate = delegate;
-    self.neatoRobot = robot;
-    
-    debugLog(@"Will try to associate the robot with the logged-in user.");
-    /*[TCPSocket getSharedTCPSocket].delegate = self;
-     
-     [[TCPSocket getSharedTCPSocket] connectHost:robot.ipAddress overPort:TCP_ROBOT_SERVER_SOCKET_PORT];*/
-    
-    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
-    manager.delegate = self;
-    [manager setRobotUserEmail:[NeatoUserHelper getLoggedInUserEmail] serialNumber:robot.robotId];
-    
-}
-
--(void) robotAssociationFailedWithError:(NSError *)error
-{
-    debugLog(@"Robot association failed with user. Will not connect over TCP.");
-    if ([self.delegate respondsToSelector:@selector(tcpConnectionDisconnectedWithError:forRobot:forcedDisconnected:)])
-    {
-        NeatoRobot *connectedRobot = [NeatoRobotHelper getRobotForId:[[TCPSocket getSharedTCPSocket] connectedRobotId]];
-        connectedRobot.robotId = [[TCPSocket getSharedTCPSocket] connectedRobotId];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate tcpConnectionDisconnectedWithError:error forRobot:connectedRobot forcedDisconnected:self.isForcedDisconnecting];
-        });
-        self.delegate = nil;
-        self.isForcedDisconnecting = NO;
-    }
-}
-
 -(void) robotAssociatedWithUser:(NSString *)message robotId:(NSString *)robotId
 {
     debugLog(@"");
