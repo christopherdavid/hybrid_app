@@ -3,6 +3,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "Build.h"
 #import <UIKit/UIDevice.h>
+#import "NeatoNotification.h"
 
 // We need to identify the UID app and RSL test application
 // because we need to tell server which certificate to use for the push notification
@@ -306,6 +307,24 @@
   else {
     return NO;
   }
+}
+
++ (NSString *)jsonStringFromNotificationsArray:(NSArray *)notificationsArray {
+    NSMutableDictionary *notificationData = [[NSMutableDictionary alloc] init];
+    NSMutableArray *notifications = [[NSMutableArray alloc] init];
+    for (int i = 0 ; i < [notificationsArray count] ; i++) {
+        NeatoNotification *neatoNotifications = [notificationsArray objectAtIndex:i];
+        if ([neatoNotifications.notificationId  isEqualToString:NOTIFICATION_ID_GLOBAL]) {
+            [notificationData setValue:neatoNotifications.notificationValue forKey:neatoNotifications.notificationId];
+        }
+        else {
+            [notifications addObject:[neatoNotifications toDictionary]];
+        }
+    }
+    [notificationData setValue:notifications forKey:KEY_NOTIFICATIONS];
+    NSString *notificationJson = [AppHelper jsonStringFromNSDictionary:notificationData];
+    debugLog(@"NotificationJson %@", notificationJson);
+    return notificationJson;
 }
 
 @end

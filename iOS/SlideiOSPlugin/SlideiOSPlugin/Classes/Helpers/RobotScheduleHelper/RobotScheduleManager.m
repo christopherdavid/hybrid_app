@@ -1,6 +1,5 @@
 #import "RobotScheduleManager.h"
 #import "LogHelper.h"
-#import "ScheduleDBHelper.h"
 #import "AppHelper.h"
 #import "ScheduleUtils.h"
 #import "ScheduleXMLHelper.h"
@@ -9,18 +8,16 @@
 #import "GetScheduleDataPluginResult.h"
 #import "Schedule.h"
 #import "ScheduleServerHelper.h"
-#import "SetAdvancedScheduleListener.h"
-#import "GetAdvancedScheduleListener.h"
-#import "DeleteAdvancedScheduleListener.h"
 #import "ScheduleJsonHelper.h"
 #import "NeatoErrorCodes.h"
+#import "NeatoDataStore.h"
 
 // PluginResult Classes
 #import "CreateSchedulePluginResult.h"
 #import "CreateScheduleEventPluginResult.h"
 #import "CreateSchedulePluginResult.h"
 #import "CreateScheduleEventPluginResult.h"
-#import "UpdateBasicScheduleListener.h"
+#import "BasicScheduleManager.h"
 #import "PluginConstants.h"
 
 // Helpers
@@ -29,9 +26,6 @@
 @interface RobotScheduleManager()
 @property(nonatomic, strong) RobotScheduleManager *retained_self;
 @property(nonatomic, weak) id<RobotScheduleManagerProtocol> scheduleDelegate;
-@property(nonatomic, strong) SetAdvancedScheduleListener *setScheduleListener;
-@property(nonatomic, strong) GetAdvancedScheduleListener *getScheduleListener;
-@property(nonatomic, strong) DeleteAdvancedScheduleListener *deleteScheduleListener;
 @end
 
 @implementation RobotScheduleManager
@@ -43,7 +37,8 @@
         return error;
     }
     NSString *scheduleId = [AppHelper generateUniqueString];
-    id result = [ScheduleDBHelper createScheduleForRobotId:robotId ofScheduleType:[ScheduleUtils scheduleTypeString:scheduleType] withScheduleId:scheduleId];
+    NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
+    id result = [database createScheduleForRobotId:robotId forScheduleType:[ScheduleUtils scheduleTypeString:scheduleType] withScheduleId:scheduleId];
     if([result isKindOfClass:[NSError class]]) {
         return result;
     }
@@ -57,7 +52,8 @@
 }
 
 - (id)addScheduleEventData:(NSDictionary *)scheduleEventData forScheduleWithScheduleId:(NSString *)scheduleId {
-    id dbResult = [ScheduleDBHelper scheduleTypeForScheduleId:scheduleId];
+    NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
+    id dbResult = [database scheduleTypeForScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
@@ -76,7 +72,8 @@
 - (id)addBasicScheduleEventData:(NSDictionary *)scheduleEventData forscheduleWithScheduleId:(NSString *)scheduleId {
     NSString *scheduleEventId = [AppHelper generateUniqueString];
     BasicScheduleEvent *basicScheduleEvent = [[BasicScheduleEvent alloc] initWithDictionary:scheduleEventData andEventId:scheduleEventId];
-    id dbResult = [ScheduleDBHelper addBasicScheduleEventData:basicScheduleEvent.parameterStr withScheduleEventId:scheduleEventId forScheduleId:scheduleId];
+    NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
+    id dbResult = [database addBasicScheduleEventData:basicScheduleEvent.parameterStr withScheduleEventId:scheduleEventId forScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
@@ -90,7 +87,7 @@
 }
 
 - (id)updateScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId withScheduleEventdata:(NSDictionary *)scheduleEventData {
-    id dbResult = [ScheduleDBHelper scheduleTypeForScheduleId:scheduleId];
+    id dbResult =  [[NeatoDataStore sharedNeatoDataStore] scheduleTypeForScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
@@ -108,7 +105,8 @@
 
 - (id)updateBasicScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId withScheduleEventdata:(NSDictionary *)scheduleEventData {
     BasicScheduleEvent *basicScheduleEvent = [[BasicScheduleEvent alloc] initWithDictionary:scheduleEventData andEventId:scheduleEventId];
-    id dbResult = [ScheduleDBHelper updateBasicScheduleEventWithId:scheduleEventId withData:basicScheduleEvent.parameterStr];
+    NeatoDataStore *database = [NeatoDataStore sharedNeatoDataStore];
+    id dbResult = [database updateBasicScheduleEventWithId:scheduleEventId withData:basicScheduleEvent.parameterStr];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
@@ -121,7 +119,7 @@
 }
 
 - (id)deleteScheduleEventWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
-    id dbResult = [ScheduleDBHelper scheduleTypeForScheduleId:scheduleId];
+    id dbResult = [[NeatoDataStore sharedNeatoDataStore] scheduleTypeForScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
@@ -138,7 +136,7 @@
 }
 
 - (id)deleteBasicScheduleWithScheduleEventId:(NSString *)scheduleEventId forScheduleId:(NSString *)scheduleId {
-    id dbResult = [ScheduleDBHelper deleteBasicSchedleEventWithId:scheduleEventId];
+    id dbResult = [[NeatoDataStore sharedNeatoDataStore] deleteBasicScheduleEventWithId:scheduleEventId];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
@@ -151,7 +149,7 @@
 }
 
 - (id)scheduleEventDataWithScheduleEventId:(NSString *)scheduleEventId withScheduleId:(NSString *)scheduleId {
-    id dbResult = [ScheduleDBHelper scheduleTypeForScheduleId:scheduleId];
+    id dbResult = [[NeatoDataStore sharedNeatoDataStore] scheduleTypeForScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
@@ -168,7 +166,7 @@
 }
 
 - (id)basicScheduleWithScheduleEventId:(NSString *)scheduleEventId withScheduleId:(NSString *)scheduleId{
-    id result = [ScheduleDBHelper basicScheduleEventDataWithId:scheduleEventId];
+    id result = [[NeatoDataStore sharedNeatoDataStore] basicScheduleEventWithId:scheduleEventId];
     if([result isKindOfClass:[NSError class]]) {
         return result;
     }
@@ -182,7 +180,7 @@
 }
 
 - (id)scheduleDataForScheduleId:(NSString *)scheduleId {
-    id dbResult = [ScheduleDBHelper scheduleTypeForScheduleId:scheduleId];
+    id dbResult = [[NeatoDataStore sharedNeatoDataStore] scheduleTypeForScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         return dbResult;
     }
@@ -199,7 +197,7 @@
 }
 
 - (id)basicScheduleWithScheduleId:(NSString *)scheduleId {
-    id result = [ScheduleDBHelper basicScheduleForScheduleId:scheduleId];
+    id result = [[NeatoDataStore sharedNeatoDataStore] basicScheduleForScheduleId:scheduleId];
     if([result isKindOfClass:[NSError class]]) {
         return result;
     }
@@ -217,7 +215,7 @@
     debugLog(@"");
     self.retained_self = self;
     self.scheduleDelegate = delegate;
-    id dbResult = [ScheduleDBHelper scheduleTypeForScheduleId:scheduleId];
+    id dbResult = [[NeatoDataStore sharedNeatoDataStore] scheduleTypeForScheduleId:scheduleId];
     if([dbResult isKindOfClass:[NSError class]]) {
         debugLog(@"Error in database.");
         NSError *error = [AppHelper nserrorWithDescription:@"Could not get schedule type from database." code:UI_ERROR_DB_ERROR];
@@ -248,9 +246,9 @@
 
 - (void)updateBasicScheduleForScheduleId:(NSString *)scheduleId {
     debugLog(@"");
-    UpdateBasicScheduleListener *updateBasicScheduleListener = [[UpdateBasicScheduleListener alloc] initWithDelegate:self];
-    updateBasicScheduleListener.scheduleId = scheduleId;
-    [updateBasicScheduleListener start];
+    BasicScheduleManager *basicScheduleManager = [[BasicScheduleManager alloc] initWithDelegate:self];
+    basicScheduleManager.scheduleId = scheduleId;
+    [basicScheduleManager start];
 }
 
 - (void)updatedSchedule:(NSString *)scheduleId {
@@ -274,114 +272,7 @@
     });
 }
 
-- (void)setRobotSchedule:(NSArray *)schedulesArray forRobotId:(NSString *)robotId ofType:(NSString *)scheduleType delegate:(id)delegate {
-    debugLog(@"");
-    self.retained_self = self;
-    self.scheduleDelegate = delegate;
-    if([[ScheduleUtils scheduleTypeString:scheduleType] isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
-        [self setRobotAdvancedSchedule:schedulesArray forRobotId:robotId];
-    }
-    else {
-        // TODO: Basic Schedule.
-        NSError *error = [AppHelper nserrorWithDescription:@"Basic Schedule type not implemented" code:200];
-        [self notifyRequestFailed:@selector(setScheduleError:) withError:error];
-    }
-}
-
-- (void)setRobotAdvancedSchedule:(NSArray *)scheduleGroup forRobotId:(NSString *)robotId {
-    debugLog(@"");
-    // Create appropriate listener and start
-    self.setScheduleListener = [[SetAdvancedScheduleListener alloc] initWithDelegate:self];
-    self.setScheduleListener.robotId = robotId;
-    self.setScheduleListener.scheduleGroup = [[NSArray alloc] init];
-    self.setScheduleListener.scheduleGroup = scheduleGroup;
-    [self.setScheduleListener start]; 
-}
-
-- (void)getSchedulesForRobotId:(NSString *)robotId OfType:(NSString *)scheduleType delegate:(id)delegate {
-    debugLog(@"");
-    self.retained_self = self;
-    self.scheduleDelegate = delegate;
-    if([[ScheduleUtils scheduleTypeString:scheduleType] isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
-        [self getAdvancedSchedulesForRobotId:robotId];
-    }
-    else {
-        // TODO: Basic Schedule.
-        NSError *error = [AppHelper nserrorWithDescription:@"Basic Schedule type not implemented" code:200];
-        [self notifyRequestFailed:@selector(getScheduleError:) withError:error];
-    }  
-}
-
-- (void)getAdvancedSchedulesForRobotId:(NSString *)robotId {
-    self.getScheduleListener = [[GetAdvancedScheduleListener alloc] initWithDelegate:self];
-    self.getScheduleListener.robotId = robotId;
-    [self.getScheduleListener start];
-}
-
-- (void)deleteScheduleForRobotId:(NSString *)robotId OfType:(NSString *)scheduleType delegate:(id)delegate {
-    debugLog(@"");
-    self.retained_self = self;
-    self.scheduleDelegate = delegate;
-    if([[ScheduleUtils scheduleTypeString:scheduleType] isEqualToString:NEATO_SCHEDULE_ADVANCE]) {
-        // Schedule Type is Advanced
-        [self deleteAdvancedScheduleForRobotId:robotId];
-    }
-    else {
-        // TODO: Basic Schedule.
-        NSError *error = [AppHelper nserrorWithDescription:@"Basic Schedule type not implemented" code:200];
-        [self notifyRequestFailed:@selector(deleteScheduleError:) withError:error];
-    }  
-}
-
-- (void)deleteAdvancedScheduleForRobotId:(NSString *)robotId {
-    self.deleteScheduleListener = [[DeleteAdvancedScheduleListener alloc] initWithDelegate:self];
-    self.deleteScheduleListener.robotId = robotId;
-    [self.deleteScheduleListener start];
-}
-
-- (void)setScheduleSuccess:(NSString *)message {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.scheduleDelegate respondsToSelector:@selector(setScheduleSuccess:)]) {
-            [self.scheduleDelegate performSelector:@selector(setScheduleSuccess:) withObject:message];
-        }
-        self.scheduleDelegate = nil;
-        self.retained_self = nil;
-    });  
-}
-
-- (void)getScheduleSuccess:(NSDictionary *)jsonObject {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.scheduleDelegate respondsToSelector:@selector(getScheduleSuccess:)]) {
-            [self.scheduleDelegate performSelector:@selector(getScheduleSuccess:) withObject:jsonObject];
-        }
-        self.scheduleDelegate = nil;
-        self.retained_self = nil;
-    });
-}
-
-- (void)deleteScheduleSuccess:(NSString *)message {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.scheduleDelegate respondsToSelector:@selector(deleteScheduleSuccess:)]) {
-            [self.scheduleDelegate performSelector:@selector(deleteScheduleSuccess:) withObject:message];
-        }
-        self.scheduleDelegate = nil;
-        self.retained_self = nil;
-    });
-}
-
 // Error callbacks
-- (void)setScheduleError:(NSError *)error {
-    [self notifyRequestFailed:@selector(setScheduleError:) withError:error];
-}
-
-- (void)getScheduleError:(NSError *)error {
-    [self notifyRequestFailed:@selector(getScheduleError:) withError:error];
-}
-
-- (void)deleteScheduleError:(NSError *)error {
-    [self notifyRequestFailed:@selector(deleteScheduleError:) withError:error];
-}
-
 - (void)notifyRequestFailed:(SEL) selector withError:(NSError *) error {
     debugLog(@"");
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -441,7 +332,7 @@
                  // Check if schedule is nil or not, as there could be a parsing error.
                  if (schedule) {
                    // Save schedule in DB.
-                   [ScheduleDBHelper saveSchedule:schedule ofType:scheduleTypeString forRobotWithId:robotId];
+                   [[NeatoDataStore sharedNeatoDataStore] saveSchedule:schedule ofType:scheduleTypeString forRobotWithId:robotId];
                    // Prepare data, to send to JS layer.
                    NSInteger scheduleTypeInteger = [ScheduleUtils scheduleIntFromString:scheduleTypeString];
                    NSMutableDictionary *pluginResultDictionary = [[NSMutableDictionary alloc] init];

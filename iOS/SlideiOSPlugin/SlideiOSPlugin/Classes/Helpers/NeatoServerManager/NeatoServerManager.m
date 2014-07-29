@@ -1,22 +1,12 @@
 #import "NeatoServerManager.h"
 #import "LogHelper.h"
 #import "NeatoUserHelper.h"
-#import "LoginListener.h"
-#import "CreateUserListener.h"
 #import "NeatoRobotHelper.h"
-#import "RobotAssociationListener.h"
-#import "RobotAssociationListener2.h"
-#import "RobotDissociationListener.h"
-#import "CreateUserListener2.h"
-#import "ChangePasswordListener.h"
+#import "CreateUserManager.h"
 #import "NeatoNotification.h"
-#import "SetUserPushNotificationOptionsListener.h"
-#import "GetUserPushNotificationsListener.h"
 #import "AppHelper.h"
 #import "ProfileDetail.h"
-#import "LoginListener2.h"
-#import "GetRobotDetailsHelper.h"
-#import "LinkRobotHelper.h"
+#import "LoginManager.h"
 #import "NeatoRobotCommand.h"
 
 // Helpers
@@ -28,57 +18,13 @@
 #import "PluginConstants.h"
 
 @interface NeatoServerManager()
-
 @property (nonatomic, retain) NeatoServerManager *retained_self;
-@property (nonatomic, retain) LoginListener *loginListener;
-@property (nonatomic, retain) CreateUserListener *createUserListener;
-@property (nonatomic, strong) CreateUserListener2 *createUserListener2;
-@property (nonatomic, retain) RobotAssociationListener *associationListener;
-@property (nonatomic, strong) ChangePasswordListener *changePasswordListener;
-@property (nonatomic, strong) SetUserPushNotificationOptionsListener *setPushNotificationsListener;
-@property (nonatomic, strong) GetUserPushNotificationsListener *getPushNotificationsListener;
-@property (nonatomic, retain) LoginListener2 *loginListener2;
+@property (nonatomic, strong) CreateUserManager *createUserManager;
+@property (nonatomic, retain) LoginManager *loginManager;
 @property (nonatomic, retain) NSString *userEmail;
-
--(void) notifyRequestFailed:(SEL) selector withError:(NSError *) error;
 @end
 
-
 @implementation NeatoServerManager
-@synthesize retained_self = _retained_self;
-@synthesize delegate = _delegate;
-@synthesize loginListener = _loginListener;
-@synthesize createUserListener = _createUserListener;
-@synthesize associationListener = _associationListener;
-@synthesize userEmail = _userEmail;
-@synthesize createUserListener2 = _createUserListener2;
-@synthesize changePasswordListener = _changePasswordListener;
-@synthesize setPushNotificationsListener = _setPushNotificationsListener;
-@synthesize getPushNotificationsListener = _getPushNotificationsListener;
-@synthesize loginListener2 = _loginListener2;
-
-- (void)loginNativeUser:(NSString *)email password:(NSString *)password {
-    debugLog(@"");
-    self.retained_self = self;
-    self.loginListener2 = [[LoginListener2 alloc] initWithDelegate:self];
-    self.loginListener2.email = email;
-    self.loginListener2.password = password;
-    [self.loginListener2 start];
-}
-
-// Gets called from LoginListener
-- (void)loginFailedWithError:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(loginFailedWithError:) withError:error];
-}
-
-// Gets called from LoginListener
-- (void)loginSuccess:(NeatoUser *)user {
-    debugLog(@"");
-    [self.delegate performSelectorOnMainThread:@selector(loginSuccess:) withObject:user waitUntilDone:NO];
-    self.delegate = nil;
-    self.retained_self = nil;
-}
 
 - (void)notifyRequestFailed:(SEL) selector withError:(NSError *) error {
     debugLog(@"");
@@ -89,215 +35,9 @@
     });
 }
 
-// Gets called from NeatoServerHelper
-- (void)failedToGetLoginHandle:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(loginFailedWithError:) withError:error];
-}
-
-// Gets called from NeatoServerHelper
-- (void)gotUserHandleForLogin:(NSString *) userHandle; {
-    debugLog(@"");
-    // save auth token to local storage
-    [NeatoUserHelper saveUserAuthToken:userHandle];
-    // Get user details from server
-    
-    self.loginListener = [[LoginListener alloc] initWithDelegate:self];
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc]init];
-    helper.delegate = self.loginListener;
-    
-    [helper getUserAccountDetails:userHandle email:nil];
-    
-}
-
-
 - (void)loginFacebookUser:(NSString *) externalSocialId {
     debugLog(@"");
     self.retained_self = self;
-}
-
-
-- (void)getUserDetailsForEmail:(NSString *)email authToken:(NSString *)authToken
-{
-    debugLog(@"");
-    self.retained_self = self;
-    
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper getUserAccountDetails:authToken email:email];
-}
-
-- (void)failedToGetUserDetailsWithError:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(failedToGetUserDetailsWithError:) withError:error];
-}
-
-- (void)gotUserDetails:(NeatoUser *)neatoUser {
-    debugLog(@"");
-    [NeatoUserHelper saveNeatoUser:neatoUser];
-    if ([self.delegate respondsToSelector:@selector(gotUserDetails:)])
-    {
-        [self.delegate performSelectorOnMainThread:@selector(gotUserDetails:) withObject:neatoUser waitUntilDone:NO];
-        self.delegate = nil;
-        self.retained_self = nil;
-    }
-}
-
-- (void)createUser:(NeatoUser *)neatoUser {
-    debugLog(@"");
-    self.retained_self = self;
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper createUser:neatoUser];
-}
-
-- (void)userCreated:(NeatoUser *) user {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(userCreated:)]) {
-        [self.delegate performSelectorOnMainThread:@selector(userCreated:) withObject:user waitUntilDone:NO];
-        self.delegate = nil;
-        self.retained_self = nil;
-    }
-}
-
-- (void)failedToCreateUserWithError:(NSError *) error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(failedToCreateUserWithError:) withError:error];
-}
-
-- (void)failedToGetCreateUserHandle:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(failedToCreateUserWithError:) withError:error];
-}
-
-- (void)gotHandleForCreateUser:(NSString *) authToken {
-    debugLog(@"");
-    // save users auth token to local storage
-    [NeatoUserHelper saveUserAuthToken:authToken];
-    
-    self.createUserListener = [[CreateUserListener alloc] initWithDelegate:self];
-    // Get the user details now
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self.createUserListener;
-    [helper getUserAccountDetails:authToken email:nil];
-}
-
-- (void)createRobot:(NeatoRobot *)neatoRobot {
-    debugLog(@"");
-    self.retained_self = self;
-    
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper createRobot:neatoRobot];
-}
-
-- (void)robotCreationFailedWithError:(NSError *) error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(robotCreationFailedWithError:) withError:error];
-}
-
-- (void)robotCreated {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(robotCreated)])
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(robotCreated)];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
-    
-}
-
-- (void)setRobotUserEmail:(NSString *)email serialNumber:(NSString *)serial_number {
-    debugLog(@"");
-    self.retained_self = self;
-    
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper setRobotUserEmail:email serialNumber:serial_number];
-}
-
-- (void)robotAssociatedWithUser:(NSString *)message robotId:(NSString *)robotId {
-    debugLog(@"");
-    // Fetch all robots for user and update the DB
-    // Then notify the caller
-    self.associationListener = [[RobotAssociationListener alloc] initWithDelegate:self];
-    self.associationListener.associatedRobotId = robotId;
-    
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self.associationListener;
-    [helper associatedRobotsForUserWithEmail:[NeatoUserHelper getLoggedInUserEmail] authToken:[NeatoUserHelper getUsersAuthToken]];
-}
-
-- (void)robotAssociationCompletedSuccessfully:(NSString *) robotId {
-    // Notify the caller
-    if ([self.delegate respondsToSelector:@selector(robotAssociatedWithUser:robotId:)])
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(robotAssociatedWithUser:robotId:) withObject:[NeatoUserHelper getLoggedInUserEmail] withObject:robotId];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
-}
-
-- (void)robotAssociationFailedWithError:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(robotAssociationFailedWithError:) withError:error];
-}
-
-- (void)logoutUserEmail:(NSString *)email authToken:(NSString *)auth_token {
-    debugLog(@"");
-    self.retained_self = self;
-    
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper logoutUserEmail:email authToken:auth_token];
-}
-
-- (void)logoutRequestFailedWithEror:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(logoutRequestFailedWithEror:) withError:error];
-}
-
-- (void)userLoggedOut {
-    debugLog(@"");
-    [NeatoUserHelper deleteUniqueDeviceIdForUser];
-    if ([self.delegate respondsToSelector:@selector(userLoggedOut)])
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(userLoggedOut)];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
-}
-
-- (void)associatedRobotsForUserWithEmail:(NSString *)email authToken:(NSString *)authToken {
-    debugLog(@"");
-    self.retained_self = self;
-    
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper associatedRobotsForUserWithEmail:email authToken:authToken];
-}
-
-- (void)failedToGetAssociatedRobotsWithError:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(failedToGetAssociatedRobotsWithError:) withError:error];
-}
-
-- (void)gotUserAssociatedRobots:(NSMutableArray *)robots {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(gotUserAssociatedRobots:)])
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(gotUserAssociatedRobots:) withObject:robots];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
 }
 
 - (void)updateUserAuthToken:(NSString *)authToken {
@@ -307,87 +47,6 @@
     NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
     helper.delegate = self;
     [helper updateUserAuthToken:authToken];
-}
-
-- (void)setRobotUserEmail2:(NSString *)userEmail forRobotId:(NSString *)robotId {
-    debugLog(@"");
-    self.retained_self = self;
-    
-    RobotAssociationListener2 *associationListener = [[RobotAssociationListener2 alloc]initWithDelegate:self];
-    associationListener.userEmail = userEmail;
-    associationListener.robotId = robotId;
-    [associationListener start];
-}
-
-- (void)robotAssociation2FailedWithError:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(robotAssociation2FailedWithError:) withError:error];
-}
-
-- (void)userAssociateWithRobot:(NeatoRobot *)neatoRobot {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(userAssociateWithRobot:)])
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(userAssociateWithRobot:) withObject:neatoRobot];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
-}
-
-- (void)dissociateAllRobotsForUserWithEmail:(NSString *)email {
-    debugLog(@"");
-    self.retained_self = self;
-    self.userEmail = email;
-    
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper dissociateAllRobotsForUserWithEmail:email];
-}
-
-- (void)dissociatedAllRobots:(NSString *)message {
-    debugLog(@"");
-    //Update the database.
-    [NeatoUserHelper dissociateAllRobotsForUserWithEmail:self.userEmail];
-    if ([self.delegate respondsToSelector:@selector(dissociatedAllRobots:)])
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(dissociatedAllRobots:) withObject:message];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
-}
-
-- (void)failedToDissociateAllRobots:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(failedToDissociateAllRobots:) withError:error];
-}
-
-- (void)dissociateRobotWithId:(NSString *)robotId fromUserWithEmail:(NSString *)emailId {
-    self.retained_self = self;
-    RobotDissociationListener *dissociationlistener = [[RobotDissociationListener alloc] initWithDelegate:self];
-    dissociationlistener.robotId = robotId;
-    dissociationlistener.userEmail = emailId;
-    [dissociationlistener start];
-}
-
-- (void)robotDissociatedWithMessage:(NSString *)message {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(robotDissociatedWithMessage:)])
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(robotDissociatedWithMessage:) withObject:message];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
-}
-- (void)failedToDissociateRobotWithError:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(failedToDissociateRobotWithError:) withError:error];
-    
 }
 
 - (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken {
@@ -448,200 +107,6 @@
     }
 }
 
--(void)isUserValidatedForEmail:(NSString *)email {
-    debugLog(@"");
-    self.retained_self = self;
-    
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper isUserValidatedForEmail:email];
-}
-
-- (void)userValidationFailedWithError:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(userValidationFailedWithError:) withError:error];
-}
-
-- (void)validatedUserWithResult:(NSDictionary *)resultData {
-    debugLog(@"");
-    [self.delegate performSelectorOnMainThread:@selector(validatedUserWithResult:) withObject:resultData waitUntilDone:NO];
-    self.delegate = nil;
-    self.retained_self = nil;
-}
-
-- (void)resendValidationEmail:(NSString *)email  {
-    debugLog(@"");
-    self.retained_self = self;
-    
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper resendValidationEmail:email];
-}
-
-- (void)resendValidationEmailSucceededWithMessage:(NSString *)message {
-    debugLog(@"");
-    [self.delegate performSelectorOnMainThread:@selector(resendValidationEmailSucceededWithMessage:) withObject:message waitUntilDone:NO];
-    self.delegate = nil;
-    self.retained_self = nil;
-}
-
-- (void)failedToResendValidationEmailWithError:(NSError *)error{
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(failedToResendValidationEmailWithError:) withError:error];
-}
-
-- (void)forgetPasswordForEmail:(NSString *)email {
-    debugLog(@"");
-    self.retained_self = self;
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper forgetPasswordForEmail:email];
-}
-
-- (void)forgetPasswordSuccess {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(forgetPasswordSuccess)]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(forgetPasswordSuccess)];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
-}
-
-- (void)failedToForgetPasswordWithError:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(failedToForgetPasswordWithError:) withError:error];
-}
-
-- (void)changePasswordFromOldPassword:(NSString *)oldPassword toNewPassword:(NSString *)newPassword {
-    debugLog(@"");
-    self.retained_self = self;
-    self.changePasswordListener = [[ChangePasswordListener alloc] initWithDelegate:self];
-    self.changePasswordListener.changedPassword = newPassword;
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self.changePasswordListener;
-    [helper changePasswordFromOldPassword:oldPassword toNewPassword:newPassword authToken:[NeatoUserHelper getUsersAuthToken]];
-}
-
-- (void)changePasswordSuccess {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(changePasswordSuccess)]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(changePasswordSuccess)];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
-}
-
-- (void)failedToChangePasswordWithError:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(failedToChangePasswordWithError:) withError:error];
-}
-
-- (void)createUser2:(NeatoUser *)neatoUser {
-    debugLog(@"");
-    self.retained_self = self;
-    self.createUserListener2 = [[CreateUserListener2 alloc] initWithDelegate:self];
-    self.createUserListener2.user = neatoUser;
-    
-    // There is no differencce in the data handling for createUser2 and createUser3, so using CreateUserListener2 with
-    // override for new url. This saves code copy-paste.
-    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
-    serverHelper.delegate = self.createUserListener2;
-    [serverHelper createUser2:neatoUser];
-}
-
-- (void)userCreated2:(NeatoUser *)user {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(userCreated2:)]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(userCreated2:) withObject:user];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
-}
-
-- (void)failedToCreateUser2WithError:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(failedToCreateUser2WithError:) withError:error];
-}
-
-- (void)turnNotification:(NeatoNotification *)notification onOffForUserWithEmail:(NSString *)email {
-    debugLog(@"");
-    self.retained_self = self;
-    self.setPushNotificationsListener = [[SetUserPushNotificationOptionsListener alloc] initWithDelegate:self];
-    self.setPushNotificationsListener.notification = notification;
-    self.setPushNotificationsListener.email = email;
-    [self.setPushNotificationsListener start];
-}
-
-- (void)notificationsTurnedOnOffWithResult:(NSDictionary *)notification {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(notificationsTurnedOnOffWithResult:)]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(notificationsTurnedOnOffWithResult:) withObject:notification];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
-    
-}
-
-- (void)failedToSetUserPushNotificationOptionsWithError:(NSError *)error {
-    [self notifyRequestFailed:@selector(failedToSetUserPushNotificationOptionsWithError:) withError:error];
-}
-
-- (void)notificationSettingsForUserWithEmail:(NSString *)email {
-    debugLog(@"");
-    self.retained_self = self;
-    self.getPushNotificationsListener = [[GetUserPushNotificationsListener alloc] initWithDelegate:self];
-    self.getPushNotificationsListener.email = email;
-    [self.getPushNotificationsListener start];
-}
-
-- (void)userNotificationSettingsData:(NSDictionary *)notificationJson {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(userNotificationSettingsData:)]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(userNotificationSettingsData:) withObject:notificationJson];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
-}
-
-- (void)failedToGetUserPushNotificationSettingsWithError:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(failedToGetUserPushNotificationSettingsWithError:) withError:error];
-}
-
-- (void)virtualOnlineStatusForRobotWithId:(NSString *)robotId {
-    debugLog(@"");
-    self.retained_self = self;
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper virtualOnlineStatusForRobotWithId:robotId];
-}
-
-- (void)virtualOnlineStatus:(NSString *)status forRobotWithId:(NSString *)robotId {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(virtualOnlineStatus:forRobotWithId:)]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(virtualOnlineStatus:forRobotWithId:) withObject:status withObject:robotId];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
-}
-
-- (void)failedToGetRobotVirtualOnlineStatusWithError:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(failedToGetRobotVirtualOnlineStatusWithError:) withError:error];
-}
-
 - (void)sendCommand:(NeatoRobotCommand *)command {
     debugLog(@"");
     self.retained_self = self;
@@ -667,57 +132,15 @@
     });
 }
 
-- (void)profileDetails2ForRobotWithId:(NSString *)robotId {
-    debugLog(@"");
-    self.retained_self = self;
-    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
-    serverHelper.delegate = self;
-    [serverHelper getProfileDetails2ForRobotWithId:robotId];
-}
-
-- (void)gotRobotProfileDetails2WithResult:(NSDictionary *)result {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(gotRobotProfileDetails2WithResult:)]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate performSelector:@selector(gotRobotProfileDetails2WithResult:) withObject:result];
-            self.delegate = nil;
-            self.retained_self = nil;
-        });
-    }
-}
-
-- (void)failedToGetRobotProfileDetails2WithError:(NSError *)error {
-    debugLog(@"");
-    [self notifyRequestFailed:@selector(failedToGetRobotProfileDetails2WithError:) withError:error];
-}
-
-- (void)deleteProfileDetailKey:(NSString *)key forRobotWithId:(NSString *)robotId notfify:(BOOL)notify {
-    debugLog(@"");
-    self.retained_self = self;
-    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
-    serverHelper.delegate = self;
-    NSInteger notifyInteger = notify ? NOTIFICATION_FLAG_TRUE:NOTIFICATION_FLAG_FALSE;
-    [serverHelper deleteProfileDetailKey:key forRobotWithId:robotId notfify:notifyInteger];
-}
-
-- (void)deleteProfileDetailKeySuccededforRobotId:(NSString *)robotId {
-    debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(deleteProfileDetailKeySuccededforRobotId:)]) {
-        [self.delegate performSelector:@selector(deleteProfileDetailKeySuccededforRobotId:) withObject:robotId];
-        self.delegate = nil;
-        self.retained_self = nil;
-    }
-}
-
-- (void)failedToDeleteProfileDetailKeyWithError:(NSError *)error {
-    [self notifyRequestFailed:@selector(failedToDeleteProfileDetailKeyWithError:) withError:error];
-}
-
 - (void)linkEmail:(NSString *)email toLinkCode:(NSString *)linkCode completion:(RequestCompletionBlockDictionary)completion {
     debugLog(@"");
-    LinkRobotHelper *linkHelper = [[LinkRobotHelper alloc] initWithEmail:email linkCode:linkCode];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_LINK_ROBOT_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:LINK_ROBOT_POST_STRING, API_KEY, email, linkCode] dataUsingEncoding:NSUTF8StringEncoding]];
+    
     NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
-    [serverHelper dataForRequest:[linkHelper request]
+    [serverHelper dataForRequest:request
            completionBlock:^(id response, NSError *error) {
                if (error) {
                    // Failure
@@ -727,13 +150,15 @@
                }
              
                NSDictionary *responseResultDict = [response valueForKey:NEATO_RESPONSE_RESULT];
-             
                NSString *robotId = [responseResultDict objectForKey:NEATO_RESPONSE_SERIAL_NUMBER];
+               
                // Get robot  details
-               GetRobotDetailsHelper *getRobotDetailsHelper = [[GetRobotDetailsHelper alloc] initWithRobotId:robotId];
+               NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ROBOT_DETAILS_URL]];
+               [request setHTTPMethod:@"POST"];
+               [request setHTTPBody:[[NSString stringWithFormat:GET_ROBOT_DETAILS_POST_STRING, API_KEY, robotId] dataUsingEncoding:NSUTF8StringEncoding]];
              
                 NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
-               [serverHelper dataForRequest:[getRobotDetailsHelper request]
+               [serverHelper dataForRequest:request
                       completionBlock:^(id robotDetailsResponse, NSError *robotDetailsError) {
                           if (error) {
                               // Failure
@@ -747,25 +172,6 @@
                           completion ? completion(responseResultDict, nil) : nil;
                       }];
            }];
-}
-
-- (void)createUser3:(NeatoUser *)neatoUser {
-    debugLog(@"");
-    self.retained_self = self;
-    // There is no differencce in the data handling for createUser2 and createUser3, so using CreateUserListener2 with
-    // override for new url. This saves code copy-paste.
-    CreateUserListener2 *createUserListener2 = [[CreateUserListener2 alloc] initWithDelegate:self];
-    createUserListener2.user = neatoUser;
-    [createUserListener2 start];
-}
-
-- (void)setUserAccountDetails:(NeatoUser *)neatoUser authToken:(NSString *)authToken {
-    debugLog(@"");
-    self.retained_self = self;
-    
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper setUserAccountDetails:authToken user:neatoUser];
 }
 
 - (void)cleaningCategoryForRobot:(NSString *)serialNumber completion:(RequestCompletionBlockDictionary)completion {
@@ -800,19 +206,19 @@
 
 - (void)loginNativeUser:(NSString *)email password:(NSString *)password completion:(RequestCompletionBlockDictionary)completion {
     debugLog(@"");
-    self.loginListener2 = [[LoginListener2 alloc] initWithDelegate:self];
-    self.loginListener2.email = email;
-    self.loginListener2.password = password;
-    [self.loginListener2 startWithCompletion:completion];
+    self.loginManager = [[LoginManager alloc] init];
+    self.loginManager.email = email;
+    self.loginManager.password = password;
+    [self.loginManager startWithCompletion:completion];
 }
 
 - (void)createUser3:(NeatoUser *)neatoUser completion:(RequestCompletionBlockDictionary)completion {
     debugLog(@"");
     // There is no differencce in the data handling for createUser2 and createUser3, so using CreateUserListener2 with
     // override for new url. This saves code copy-paste.
-    CreateUserListener2 *createUserListener2 = [[CreateUserListener2 alloc] initWithDelegate:self];
-    createUserListener2.user = neatoUser;
-    [createUserListener2 startWithCompletion:completion];
+    self.createUserManager = [[CreateUserManager alloc] init];
+    self.createUserManager.user = neatoUser;
+    [self.createUserManager startWithCompletion:completion];
 }
 
 - (void)notificationSettingsForUserWithEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion {
@@ -1014,10 +420,34 @@
 
 - (void)turnNotification:(NeatoNotification *)notification onOffForUserWithEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion {
     debugLog(@"");
-    self.setPushNotificationsListener = [[SetUserPushNotificationOptionsListener alloc] initWithDelegate:self];
-    self.setPushNotificationsListener.notification = notification;
-    self.setPushNotificationsListener.email = email;
-    [self.setPushNotificationsListener startWithCompletion:completion];
+    
+    // When first time user tries to update default values are set
+    // and then database is updated with user value.
+    if (![NeatoUserHelper notificationsExistForUserWithEmail:email]) {
+        // No notification exists in database. Set a default one.
+        [self setDefaultNotificationOptionsForEmail:email];
+    }
+    [NeatoUserHelper insertOrUpdateNotificaton:notification forEmail:email];
+    // Get all notificationOptions from database and form JSON.
+    NSArray *notificationsArray = [NeatoUserHelper notificationsForUserWithEmail:email];
+    NSString *notificationJson = [AppHelper jsonStringFromNotificationsArray:notificationsArray];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_SET_PUSH_NOTIFICATION_OPTIONS_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:SET_USER_PUSH_NOTIFICATION_OPTION_POST_STRING, API_KEY, email, notificationJson] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     if (error) {
+                         completion ? completion(nil, error) : nil;
+                         return;
+                     }
+                     NSMutableDictionary *notificationJson = [[NSMutableDictionary alloc] init];
+                     [notificationJson setValue:notification.notificationId forKey:KEY_NOTIFICATION_KEY];
+                     [notificationJson setValue:[NSNumber numberWithBool:[AppHelper boolValueFromString:notification.notificationValue]] forKey:KEY_NOTIFICATION_VALUE];
+                     completion ? completion(notificationJson, nil) : nil;
+                 }];
 }
 
 - (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken completion:(RequestCompletionBlockDictionary)completion {
@@ -1072,9 +502,10 @@
 #pragma mark - Robot APIs
 - (void)associatedRobotsForUserWithEmail:(NSString *)email authToken:(NSString *)authToken completion:(RequestCompletionBlockDictionary)completion {
     debugLog(@"");
-    if (authToken == nil || email == nil) {
-        debugLog(@"authToken or email is NIL. Will not fetch associated robots.");
-        [self notifyRequestFailed:@selector(failedToGetAssociatedRobotsWithError:) withError:[AppHelper nserrorWithDescription:@"authToken or Email is NIL. Will not fetch associated robots." code:200]];
+    if (!authToken || !email) {
+        debugLog(@"AuthToken or email is NIL. Will not fetch associated robots.");
+        NSError *inValidParamError = [AppHelper nserrorWithDescription:@"AuthToken or Email is NIL. Will not fetch associated robots." code:200];
+        completion ? completion(nil, inValidParamError) : nil;
         return;
     }
     
@@ -1277,6 +708,53 @@
                }];
 }
 
+- (void)associateRobot:(NSString *)robotId withEmail:(NSString *)email completion:(RequestCompletionBlockDictionary)completion {
+    debugLog(@"");
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_SET_ROBOT_URL]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[[NSString stringWithFormat:SET_ROBOT_USER_POST_STRING, API_KEY, email, robotId] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+    [serverHelper dataForRequest:request
+                 completionBlock:^(id response, NSError *error) {
+                     if (error) {
+                         completion ? completion(nil, error) : nil;
+                         return;
+                     }
+                     
+                     // Fetch all associated robots for a logged user.
+                     NSString *authToken = [NeatoUserHelper getUsersAuthToken];
+                     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_ASSOCIATED_ROBOTS_URL]];
+                     [request setHTTPMethod:@"POST"];
+                     [request setHTTPBody:[[NSString stringWithFormat:GET_ASSOCIATED_ROBOTS_POST_STRING,API_KEY, authToken, email] dataUsingEncoding:NSUTF8StringEncoding]];
+                     
+                     NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
+                     [serverHelper dataForRequest:request
+                                  completionBlock:^(id response, NSError *error) {
+                                      if (error) {
+                                          completion ? completion(nil, error) : nil;
+                                          return;
+                                      }
+                                      
+                                      NSArray *allAssociatedRobots = [response objectForKey:NEATO_RESPONSE_RESULT];
+                                      // We have some robots at the server
+                                      for (NSDictionary *robotDict in allAssociatedRobots) {
+                                          // Update the DB with latest robot info.
+                                          NeatoRobot *robot = [[NeatoRobot alloc] initWithDictionary:robotDict];
+                                          [NeatoRobotHelper saveNeatoRobot:robot];
+                                      }
+                                      
+                                      // Get interested robot info and return to plugin.
+                                      NeatoRobot *associatedRobot = [NeatoRobotHelper getRobotForId:robotId];
+                                      NSMutableDictionary *pluginDataDict = [[NSMutableDictionary alloc] init];
+                                      [pluginDataDict setValue:associatedRobot.serialNumber forKey:KEY_ROBOT_ID];
+                                      [pluginDataDict setValue:associatedRobot.name forKey:KEY_NAME];
+                                      completion ? completion(pluginDataDict, nil) : nil;
+                                  }];
+                 }];
+}
+
 #pragma mark - Private
 - (NSString *)getProfileDataFromKey:(NSString *)key value:(NSString *)value {
     return [NSString stringWithFormat:PROFILE_DATA_FORMAT, key, value];
@@ -1300,4 +778,31 @@
     }
     return request;
 }
+
+- (void)setDefaultNotificationOptionsForEmail:(NSString *)email {
+    NSMutableArray *notificationsArray = [[NSMutableArray alloc] init];
+    for (int i = 0 ; i < TOTAL_NOTIFICATION_OPTIONS ; i++ ) {
+        NeatoNotification *notification = [[NeatoNotification alloc] init];
+        switch (i) {
+            case 0:
+                notification.notificationId = NOTIFICATION_ID_GLOBAL;
+                break;
+            case 1:
+                notification.notificationId = NOTIFICATION_ID_ROBOT_STUCK;
+                break;
+            case 2:
+                notification.notificationId = NOTIFICATION_ID_NEEDS_CLEAN;
+                break;
+            case 3:
+                notification.notificationId = NOTIFICATON_ID_CLEANING_DONE;
+                break;
+            default:
+                break;
+        }
+        notification.notificationValue = STRING_FALSE;
+        [notificationsArray addObject:notification];
+    }
+    [NeatoUserHelper setNotificationsFromNotificationsArray:notificationsArray forEmail:email];
+}
+
 @end

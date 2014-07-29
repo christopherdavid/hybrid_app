@@ -3,16 +3,8 @@
 @class Schedule;
 
 @protocol RobotScheduleManagerProtocol <NSObject>
-
 @optional
-
-- (void)setScheduleSuccess:(NSString *)message;
-- (void)getScheduleSuccess:(NSDictionary *)jsonObject;
--( void)deleteScheduleSuccess:(NSString *)message;
 - (void)updatedSchedule:(NSString *)scheduleId;
-- (void)setScheduleError:(NSError *)error;
-- (void)getScheduleError:(NSError *)error;
-- (void)deleteScheduleError:(NSError *)error;
 - (void)updateScheduleError:(NSError *)error;
 @end
 
@@ -25,8 +17,5 @@
 - (id)scheduleEventDataWithScheduleEventId:(NSString *)scheduleEventId withScheduleId:(NSString *)scheduleId;
 - (id)scheduleDataForScheduleId:(NSString *)scheduleId;
 - (void)updateScheduleForScheduleId:(NSString *)scheduleId delegate:(id)delegate;
-- (void)setRobotSchedule:(NSArray *)schedulesArray forRobotId:(NSString *)robotId ofType:(NSString *)scheduleType delegate:(id)delegate;
-- (void)getSchedulesForRobotId:(NSString *)robotId OfType:(NSString *)scheduleType delegate:(id)delegate;
-- (void)deleteScheduleForRobotId:(NSString *)robotId OfType:(NSString *)scheduleType delegate:(id)delegate;
 - (void)scheduleEventsForRobotWithId:(NSString *)robotId ofScheduleType:(NSString *)scheduleType completion:(RequestCompletionBlockDictionary)completion;
 @end

@@ -40,4 +40,5 @@
  */
 + (void)clearAppDefaultsData;
 + (BOOL)isValidJSONString:(id)value;
++ (NSString *)jsonStringFromNotificationsArray:(NSArray *)notificationsArray;
 @end

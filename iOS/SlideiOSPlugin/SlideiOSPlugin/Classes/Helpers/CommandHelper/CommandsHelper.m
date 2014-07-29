@@ -1,6 +1,5 @@
 #import "CommandsHelper.h"
 #import "LogHelper.h"
-#import "NetworkUtils.h"
 #import "CommandTracker.h"
 #import "XMPP.h"
 #import "AppHelper.h"

@@ -1,4 +1,4 @@
-#import "UpdateBasicScheduleListener.h"
+#import "BasicScheduleManager.h"
 #import "Schedule.h"
 #import "ScheduleServerhelper.h"
 #import "AppHelper.h"
@@ -17,15 +17,17 @@
 #import "NeatoErrorCodes.h"
 #import "NeatoDataStore.h"
 
-@interface UpdateBasicScheduleListener()
-@property(nonatomic, strong) UpdateBasicScheduleListener *retained_self;
+@interface BasicScheduleManager()
+
+@property(nonatomic, strong) BasicScheduleManager *retained_self;
 @property(nonatomic, strong) NSString *robotId;
 @property(nonatomic, strong) Schedule *schedule;
 @property(nonatomic, strong) NSString *scheduleData;
 @property(nonatomic, weak) id delegate;
+
 @end
 
-@implementation UpdateBasicScheduleListener
+@implementation BasicScheduleManager
 
 - (id)initWithDelegate:(id)delegate {
     if ((self = [super init])) {

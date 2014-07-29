@@ -27,13 +27,6 @@
     debugLog(@"");
   return [[NeatoDataStore sharedNeatoDataStore] getRobotForId:robotId];
 }
-
-+ (void)updateUserAssociatedRobots
-{
-    debugLog(@"");
-    NeatoServerManager *serverMan = [[NeatoServerManager alloc] init];
-    [serverMan associatedRobotsForUserWithEmail:[NeatoUserHelper getLoggedInUserEmail] authToken:[NeatoUserHelper getUsersAuthToken]];
-}
      
 + (void)updateName:(NSString *)name forRobotwithId:(NSString *)robotId {
     debugLog(@"");

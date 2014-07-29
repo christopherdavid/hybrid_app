@@ -13,28 +13,26 @@
 - (void)registerRobotNotifications2:(CDVInvokedUrlCommand *)command;
 - (void)unregisterRobotNotifications2:(CDVInvokedUrlCommand *)command;
 - (void)unregisterForRobotMessages:(CDVInvokedUrlCommand *)command;
-- (void)tryDirectConnection:(CDVInvokedUrlCommand *)command;
-- (void)tryDirectConnection2:(CDVInvokedUrlCommand *)command;
-- (void)disconnectDirectConnection:(CDVInvokedUrlCommand *)command;
 - (void)registerForRobotMessges:(CDVInvokedUrlCommand *)command;
 - (void)setSpotDefinition:(CDVInvokedUrlCommand *)command;
 - (void)getSpotDefinition:(CDVInvokedUrlCommand *)command;
 - (void)isRobotPeerConnected:(CDVInvokedUrlCommand *)command;
-- (void)driveRobot:(CDVInvokedUrlCommand *)command;
-- (void)stopRobotDrive:(CDVInvokedUrlCommand *)command;
 - (void)createSchedule:(CDVInvokedUrlCommand *)command;
 - (void)addScheduleEventData:(CDVInvokedUrlCommand *)command;
 - (void)updateScheduleEvent:(CDVInvokedUrlCommand *)command;
 - (void)deleteScheduleEvent:(CDVInvokedUrlCommand *)command;
 - (void)getScheduleEventData:(CDVInvokedUrlCommand *)command;
 - (void)getScheduleData:(CDVInvokedUrlCommand *)command;
+
+// Using RobotManagerCallWrapper
+- (void)driveRobot:(CDVInvokedUrlCommand *)command;
+- (void)stopRobotDrive:(CDVInvokedUrlCommand *)command;
 - (void)sendCommandToRobot2:(CDVInvokedUrlCommand *)command;
 - (void)startCleaning:(CDVInvokedUrlCommand *)command;
 - (void)stopCleaning:(CDVInvokedUrlCommand *)command;
 - (void)pauseCleaning:(CDVInvokedUrlCommand *)command;
 - (void)resumeCleaning:(CDVInvokedUrlCommand *)command;
-- (void)turnWiFiOnOff:(CDVInvokedUrlCommand *)command;
-- (void)turnMotorOnOff2:(CDVInvokedUrlCommand *)command;
+- (void)updateSchedule:(CDVInvokedUrlCommand *)command;
 
 // Block based APIs
 - (void)getRobotCleaningCategory:(CDVInvokedUrlCommand *)command;
@@ -49,9 +47,12 @@
 - (void)isScheduleEnabled:(CDVInvokedUrlCommand *)command;
 - (void)enableSchedule:(CDVInvokedUrlCommand *)command;
 
-- (void)updateSchedule:(CDVInvokedUrlCommand *)command;
-
 // Deprecated
+- (void)tryDirectConnection:(CDVInvokedUrlCommand *)command;
+- (void)tryDirectConnection2:(CDVInvokedUrlCommand *)command;
+- (void)disconnectDirectConnection:(CDVInvokedUrlCommand *)command;
+- (void)turnWiFiOnOff:(CDVInvokedUrlCommand *)command;
+- (void)turnMotorOnOff2:(CDVInvokedUrlCommand *)command;
 - (void)robotSetSchedule2:(CDVInvokedUrlCommand *)command;
 - (void)getSchedule2:(CDVInvokedUrlCommand *)command;
 - (void)deleteScheduleData:(CDVInvokedUrlCommand *)command;

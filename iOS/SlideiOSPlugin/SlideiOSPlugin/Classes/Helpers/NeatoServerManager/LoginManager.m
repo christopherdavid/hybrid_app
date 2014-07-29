@@ -1,4 +1,4 @@
-#import "LoginListener2.h"
+#import "LoginManager.h"
 #import "LogHelper.h"
 #import "NeatoUser.h"
 #import "NeatoServerHelper.h"
@@ -9,38 +9,24 @@
 #import "AppHelper.h"
 #import "NeatoErrorCodes.h"
 
-@interface LoginListener2()
-
-@property (nonatomic, weak) id delegate;
-@property (nonatomic, retain) LoginListener2 *retained_self;
+@interface LoginManager()
+@property (nonatomic, retain) LoginManager *retained_self;
 @property (nonatomic, strong) RequestCompletionBlockDictionary completion;
 @property (nonatomic, strong) NSDictionary *response;
-
 @end
 
-@implementation LoginListener2
-
-@synthesize email = _email;
-@synthesize password = _password;
+@implementation LoginManager
 
 #pragma mark - Init API
-- (id)initWithDelegate:(id)delegate {
+- (id)init {
     debugLog(@"");
     if ((self = [super init])) {
-        self.delegate = delegate;
         self.retained_self = self;
     }
     return self;
 }
 
 #pragma mark - Public
-- (void)start {
-    self.retained_self = self;
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
-    helper.delegate = self;
-    [helper loginNativeUser:self.email password:self.password];
-}
-
 - (void)startWithCompletion:(RequestCompletionBlockDictionary)completion {
     self.completion = completion;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_USER_AUTH_TOKEN_URL]];
@@ -103,84 +89,25 @@
                  }];
 }
 
-#pragma mark - NeatoServerHelperProtocol
-- (void)gotUserHandleForLogin:(NSString *)userHandle {
-    debugLog(@"");
-    self.retained_self = self;
-    // save auth token to local storage
-    [NeatoUserHelper saveUserAuthToken:userHandle];
-    
-    // Get user details from server
-    NeatoServerHelper *helper = [[NeatoServerHelper alloc]init];
-    helper.delegate = self;
-    [helper getUserAccountDetails:userHandle email:nil];
-}
-
-- (void)failedToGetLoginHandle:(NSError *)error {
-    debugLog(@"");
-    [self.delegate performSelector:@selector(loginFailedWithError:) withObject:error];
-    self.delegate = nil;
-    self.retained_self = nil;
-}
-
-- (void)gotUserDetails:(NeatoUser *)user {
-    debugLog(@"");
-    [NeatoUserHelper saveNeatoUser:user];
-    
-    XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
-	// If XMPP is already connected then we need to tell
-	// the upper layer that login succeeded
-	// Because of some issue on the CleaningRobotApp UI, PhoneGap UI assumes that
-	// user is not logged in. XMPP Login succeed but CleaningRobotApp shows login UI
-    if (![helper isConnected]) {
-        helper.delegate = self;
-        [helper connectJID:user.chatId password:user.chatPassword host:XMPP_SERVER_ADDRESS];
-    }
-    else {
-        [self alreadyConnectedToXMPP];
-    }
-}
-
-- (void)failedToGetUserDetailsWithError:(NSError *)error {
-    debugLog(@"");
-    [self.delegate performSelector:@selector(loginFailedWithError:) withObject:error];
-    self.delegate = nil;
-    self.retained_self = nil;
-}
-
 #pragma mark - XMPPConnectionHelperProtocol
 - (void)didConnectOverXMPP {
     debugLog(@"didConnectOverXMPP called");
     self.completion ? self.completion(self.response, nil) : nil;
-    NeatoUser *user = [NeatoUserHelper getNeatoUser];
-    [self.delegate performSelectorOnMainThread:@selector(loginSuccess:) withObject:user waitUntilDone:NO];
-    self.delegate = nil;
-    self.retained_self = nil;
 }
 
 - (void)xmppLoginfailedWithError:(NSError *)error {
 	debugLog(@"xmpp Login failed");
     self.completion ? self.completion(nil, error) : nil;
-    [self.delegate performSelector:@selector(loginFailedWithError:) withObject:error];
-    self.delegate = nil;
-    self.retained_self = nil;
 }
 
 - (void)didDisConnectFromXMPP {
   NSError *error = [AppHelper nserrorWithDescription:@"Failed to connect over XMPP" code:UI_ERROR_TYPE_UNKNOWN];
   self.completion ? self.completion(nil, error) : nil;
-  [self.delegate performSelector:@selector(loginFailedWithError:) withObject:error];
-  self.delegate = nil;
-  self.retained_self = nil;
 }
 
 #pragma mark - Private
 - (void)alreadyConnectedToXMPP {
     debugLog(@"XMPP connection already exists");
     self.completion ? self.completion(self.response, nil) : nil;
-    NeatoUser *user = [NeatoUserHelper getNeatoUser];
-    [self.delegate performSelectorOnMainThread:@selector(loginSuccess:) withObject:user waitUntilDone:NO];
-    self.delegate = nil;
-    self.retained_self = nil;
 }
 @end

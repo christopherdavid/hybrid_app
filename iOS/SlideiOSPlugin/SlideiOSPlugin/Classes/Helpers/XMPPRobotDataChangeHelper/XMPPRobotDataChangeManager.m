@@ -19,22 +19,9 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 @interface XMPPRobotDataChangeManager()
 // UI update notification observer.
 @property (nonatomic, weak) id robotStateChangeObserver;
-
-- (BOOL)isNotificationLocal:(NSDictionary *)notificationData;
-- (void)processXMPPRobotDataChangedForRobotId:(NSString *)robotId;
-- (void)notifyIfRobotProfileHasChanged:(NSDictionary *)robotProfile;
-- (BOOL)hasDataChangedForKey:(NSString *)key withRobotProfile:(NSDictionary *)robotProfile;
-- (BOOL)hasRobotCurrentStateChangedForProfile:(NSDictionary *)robotProfile;
-- (void)notifyDataChangeForRobotId:(NSString *)robotId withKeyCode:(NSNumber *)key andData:(NSDictionary *)data;
-- (BOOL)hasRobotNameChangedForProfile:(NSDictionary *)robotProfile;
-- (void)notifyRobotNameChangeForProfile:(NSDictionary *)robotProfile;
-- (BOOL)hasRobotScheduleStateChangedForProfile:(NSDictionary *)robotProfile;
-- (void)notifyScheduleStateChangeForProfile:(NSDictionary *)robotProfile;
-- (BOOL)hasRobotScheduleUpdatedForProfile:(NSDictionary *)robotProfile;
-- (void)notifyScheduleUpdatedForProfile:(NSDictionary *)robotProfile;
 @end
+
 @implementation XMPPRobotDataChangeManager
-@synthesize robotStateChangeObserver = _robotStateChangeObserver;
 
 + (id)sharedXmppDataChangeManager {
     static dispatch_once_t pred = 0;
@@ -84,20 +71,18 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 - (void)processXMPPRobotDataChangedForRobotId:(NSString *)robotId {
     // Server call to get robot profile details.
     NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
-    serverManager.delegate = self;
-    [serverManager profileDetails2ForRobotWithId:robotId];
-}
-
-- (void)gotRobotProfileDetails2WithResult:(NSDictionary *)result {
-    NSDictionary *neatoResult = [result valueForKeyPath:NEATO_RESPONSE_RESULT];
-    NSDictionary *robotProfileDetails = [neatoResult valueForKeyPath:NEATO_PROFILE_DETAILS];
-    debugLog(@"RobotProfileDetails received from server : %@", robotProfileDetails);
-    [self notifyIfRobotProfileHasChanged:robotProfileDetails];
-}
-
-- (void)failedToGetRobotProfileDetails2WithError:(NSError *)error {
-    debugLog(@"");
-    // TODO: Retry atleast once
+    __weak typeof(self) weakSelf = self;
+    [serverManager profileDetailsForRobot:robotId
+                               completion:^(NSDictionary *result, NSError *error) {
+                                   
+                                   // If got profile details, notify UI about data change.
+                                   // No need to process in case of error.
+                                   if (!error) {
+                                       NSDictionary *robotProfileDetails = (NSDictionary *)result;
+                                       debugLog(@"Robot profile details from server = %@", robotProfileDetails);
+                                       [weakSelf notifyIfRobotProfileHasChanged:robotProfileDetails];
+                                   }
+                               }];
 }
 
 // Checks if the downloaded data is different than what we have locally.
@@ -440,8 +425,18 @@ static XMPPRobotDataChangeManager *sharedInstance  = nil;
 - (void)robotStateAtServerForRobotId:(NSString *)robotId {
     // Get robot profile details and notify UI if needed.
     NeatoServerManager *serverManager = [[NeatoServerManager alloc] init];
-    serverManager.delegate = self;
-    [serverManager profileDetails2ForRobotWithId:robotId];
+    __weak typeof(self) weakSelf = self;
+    [serverManager profileDetailsForRobot:robotId
+                               completion:^(NSDictionary *result, NSError *error) {
+                                   
+                                   // If got profile details, notify UI about data change.
+                                   // No need to process in case of error.
+                                   if (!error) {
+                                       NSDictionary *robotProfileDetails = (NSDictionary *)result;
+                                       debugLog(@"Robot profile details from server = %@", robotProfileDetails);
+                                       [weakSelf notifyIfRobotProfileHasChanged:robotProfileDetails];
+                                   }
+                               }];
 }
 
 - (void)notifyRobotCurrentStateDetailsChangeForProfile:(NSDictionary *)robotProfile {
