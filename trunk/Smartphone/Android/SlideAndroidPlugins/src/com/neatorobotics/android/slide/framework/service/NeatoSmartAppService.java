@@ -14,6 +14,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.ResultReceiver;
+
+import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.resultreceiver.NeatoRobotResultReceiverConstants;
@@ -204,11 +206,13 @@ public class NeatoSmartAppService extends Service {
                     // network is connected
                     LogHelper.logD(TAG, "Connected to a network");
                     Runnable task = new Runnable() {
-
                         @Override
                         public void run() {
-                            initXmppHelperIfRequired();
-                            loginToXmppServer();
+                            if (ApplicationConfig.getInstance(getApplicationContext()).isApplicationForeground()) {
+                                LogHelper.log(TAG, "Network connected and application is in foreground. Log into XMPP");
+                                initXmppHelperIfRequired();
+                                loginToXmppServer();
+                            }
                         }
                     };
                     TaskUtils.scheduleTask(task, 0);
