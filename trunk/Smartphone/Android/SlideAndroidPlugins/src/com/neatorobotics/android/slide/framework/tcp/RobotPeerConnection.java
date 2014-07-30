@@ -28,7 +28,8 @@ public class RobotPeerConnection {
     private static final int TCP_BREAK_CONNECTION_WAIT_TIME = 200; // 100 milli
                                                                    // seconds.
 
-    private Context mContext;
+    @SuppressWarnings("unused")
+	private Context mContext;
     private Handler mHandler;
 
     private RobotPeerDataListener mRobotPeerDataListener;
