@@ -398,22 +398,25 @@
                      
                      // Delete current user
                      [NeatoUserHelper deleteUniqueDeviceIdForUser];
+                     
+                     // Disconect TCP and XMPP connection
+                     TCPConnectionHelper *tcpHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
+                     [tcpHelper disconnectFromRobot:@"" delegate:self];
+                     XMPPConnectionHelper *xmppHelper = [[XMPPConnectionHelper alloc] init];
+                     [xmppHelper disconnectFromRobot];
+
+                     // Clear all 'user defaults' and DB data.
+                     [NeatoUserHelper clearUserData];
+                     
                      NSString *deviceToken = [NeatoUserHelper getDevicePushAuthToken];
                      if (deviceToken && deviceToken.length > 0) {
                          [weakSelf unregisterPushNotificationForDeviceToken:deviceToken
                                                                  completion:^(NSDictionary *result, NSError *error) {
-                                                                     // Disconect TCP and XMPP connection
-                                                                     TCPConnectionHelper *tcpHelper = [TCPConnectionHelper sharedTCPConnectionHelper];
-                                                                     [tcpHelper disconnectFromRobot:@"" delegate:self];
-                                                                     XMPPConnectionHelper *xmppHelper = [[XMPPConnectionHelper alloc] init];
-                                                                     [xmppHelper disconnectFromRobot];
-                                                                     // Clear robot data
-                                                                     [NeatoUserHelper clearUserData];
                                                                      completion ? completion(responseResultDict, nil) : nil;
                                                                  }];
                      }
                      else {
-                       completion ? completion(nil, nil) : nil;
+                         completion ? completion(responseResultDict, nil) : nil;
                      }
                  }];
 }

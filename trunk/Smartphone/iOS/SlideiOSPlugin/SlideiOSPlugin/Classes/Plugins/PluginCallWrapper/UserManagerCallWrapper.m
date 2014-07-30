@@ -15,24 +15,6 @@
 
 @implementation UserManagerCallWrapper
 
-- (BOOL)isUserLoggedIn {
-    debugLog(@"");
-    if ([NeatoUserHelper getNeatoUser])
-    {
-        // User is logged in, lets extend the auth key expiry
-        // When the Auth key is extended we do not notify the caller, so we dont need
-        // to retain 'self' here
-        NeatoServerManager *manager = [[NeatoServerManager alloc] init];
-        manager.delegate = self;
-        [manager updateUserAuthToken:[NeatoUserHelper getUsersAuthToken]];
-        return YES;
-    }
-    else
-    {
-        return NO;
-    }
-}
-
 - (void)notifyCallback:(SEL)action {
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([self.delegate respondsToSelector:action])

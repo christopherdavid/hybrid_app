@@ -104,7 +104,6 @@
         [self.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
                                   authToken:[NeatoUserHelper getUsersAuthToken]
                                  completion:^(NSDictionary *result, NSError *error) {
-                                     [AppHelper clearAppDefaultsData];
                                      [weakSelf loginNativeUser:email
                                                   password:password
                                                 completion:^(NSDictionary *result, NSError *error) {
@@ -158,7 +157,6 @@
         [self.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
                                   authToken:[NeatoUserHelper getUsersAuthToken]
                                  completion:^(NSDictionary *result, NSError *error) {
-                                     [AppHelper clearAppDefaultsData];
                                      [weakSelf createNeatoUser:neatoUser
                                                     completion:^(NSDictionary *result, NSError *error) {
                                                         if (error) {
@@ -203,7 +201,6 @@
                                                  [weakSelf.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
                                                                                authToken:[NeatoUserHelper getUsersAuthToken]
                                                                               completion:^(NSDictionary *result, NSError *error) {
-                                                                                  [AppHelper clearAppDefaultsData];
                                                                                   // User not logged-in.
                                                                                   [weakSelf sendSuccessResultOKWithInt:[[NSNumber numberWithBool:NO] integerValue] forCallbackId:callbackId];
                                                                               }];
@@ -485,7 +482,6 @@
     [self.serverManager logoutUserEmail:[NeatoUserHelper getLoggedInUserEmail]
                               authToken:[NeatoUserHelper getUsersAuthToken]
                              completion:^(NSDictionary *result, NSError *error) {
-                                 [AppHelper clearAppDefaultsData];
                                  [weakSelf sendSuccessResultAsString:@"User logged out." forCallbackId:callbackId];
                              }];
 }
@@ -622,17 +618,19 @@
                                  completion ? completion(nil, error) : nil;
                                  return;
                              }
-                             NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-                             NeatoUser *user = [NeatoUserHelper getNeatoUser];
-                             [data setValue:user.name forKey:KEY_USER_NAME];
-                             [data setValue:user.userId forKey:KEY_USER_ID];
-                             [data setValue:user.email forKey:KEY_EMAIL];
-                             [data setValue:user.alternateEmail forKey:KEY_ALTERNATE_EMAIL];
-                             [data setValue:[user userValidationStatus] forKey:NEATO_VALIDATION_STATUS];
-                             if ([result valueForKey:KEY_EXTRA_PARAM]) {
-                                 [data setValue:[result valueForKey:KEY_EXTRA_PARAM] forKey:KEY_EXTRA_PARAM];
+                             NSDictionary *responseResultDict = result;
+                             NSMutableDictionary *pluginDataDict = [[NSMutableDictionary alloc] init];
+                             // Get user from dictionary
+                             NeatoUser *neatoUser = [[NeatoUser alloc] initWithDictionary:responseResultDict];
+                             [pluginDataDict setValue:neatoUser.name forKey:KEY_USER_NAME];
+                             [pluginDataDict setValue:neatoUser.userId forKey:KEY_USER_ID];
+                             [pluginDataDict setValue:neatoUser.email forKey:KEY_EMAIL];
+                             [pluginDataDict setValue:neatoUser.alternateEmail forKey:KEY_ALTERNATE_EMAIL];
+                             [pluginDataDict setValue:[neatoUser userValidationStatus] forKey:NEATO_VALIDATION_STATUS];
+                             if ([responseResultDict valueForKey:KEY_EXTRA_PARAM]) {
+                                 [pluginDataDict setValue:[responseResultDict valueForKey:KEY_EXTRA_PARAM] forKey:KEY_EXTRA_PARAM];
                              }
-                             completion ? completion(data, nil) : nil;
+                             completion ? completion(pluginDataDict, nil) : nil;
                          }];
 }
 
@@ -645,20 +643,21 @@
                                      completion ? completion(nil, error) : nil;
                                      return;
                                  }
-                                 NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-                                 NeatoUser *user = [NeatoUserHelper getNeatoUser];
-                                 [data setValue:user.name forKey:KEY_USER_NAME];
-                                 [data setValue:user.userId forKey:KEY_USER_ID];
-                                 [data setValue:user.email forKey:KEY_EMAIL];
-                                 [data setValue:user.alternateEmail forKey:KEY_ALTERNATE_EMAIL];
-                                 [data setValue:[user userValidationStatus] forKey:NEATO_VALIDATION_STATUS];
+                                 NSDictionary *responseResultDict = result;
+                                 NSMutableDictionary *pluginDataDict = [[NSMutableDictionary alloc] init];
+                                 NeatoUser *neatoUser = [[NeatoUser alloc] initWithDictionary:responseResultDict];
+                                 [pluginDataDict setValue:neatoUser.name forKey:KEY_USER_NAME];
+                                 [pluginDataDict setValue:neatoUser.userId forKey:KEY_USER_ID];
+                                 [pluginDataDict setValue:neatoUser.email forKey:KEY_EMAIL];
+                                 [pluginDataDict setValue:neatoUser.alternateEmail forKey:KEY_ALTERNATE_EMAIL];
+                                 [pluginDataDict setValue:[neatoUser userValidationStatus] forKey:NEATO_VALIDATION_STATUS];
                                  
                                  // Params
                                  NSMutableDictionary *extraParams = [[NSMutableDictionary alloc] init];
-                                 [extraParams setObject:user.userCountryCode ? user.userCountryCode : @"" forKey:KEY_COUNTRY_CODE];
-                                 [extraParams setObject:[AppHelper stringFromBool:user.optIn] forKey:KEY_OPT_IN];
-                                 [data setValue:extraParams forKey:KEY_EXTRA_PARAM];
-                                 completion ? completion(data, nil) : nil;
+                                 [extraParams setObject:neatoUser.userCountryCode ? neatoUser.userCountryCode : @"" forKey:KEY_COUNTRY_CODE];
+                                 [extraParams setObject:[AppHelper stringFromBool:neatoUser.optIn] forKey:KEY_OPT_IN];
+                                 [pluginDataDict setValue:extraParams forKey:KEY_EXTRA_PARAM];
+                                 completion ? completion(pluginDataDict, nil) : nil;
                              }];
 }
 

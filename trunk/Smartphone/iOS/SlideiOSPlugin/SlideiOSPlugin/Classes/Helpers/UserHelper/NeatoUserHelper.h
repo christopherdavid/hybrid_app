@@ -25,4 +25,5 @@
 // set on server was initiated by this device or others.
 + (NSString *)uniqueDeviceIdForUser;
 + (void)deleteUniqueDeviceIdForUser;
++ (BOOL)isUserLoggedIn;
 @end

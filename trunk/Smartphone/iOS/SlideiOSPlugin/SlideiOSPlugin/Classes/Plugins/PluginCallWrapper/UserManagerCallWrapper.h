@@ -19,7 +19,6 @@
 @interface UserManagerCallWrapper : CDVPlugin 
 
 @property(nonatomic, weak) id<UserManagerProtocol> delegate;
-- (BOOL)isUserLoggedIn;
 - (void)registerPushNotificationForEmail:(NSString *)email deviceType:(NSInteger)deviceType deviceToken:(NSString *)deviceToken;
 - (void)unregisterPushNotificationForDeviceToken:(NSString *)deviceToken;
 @end

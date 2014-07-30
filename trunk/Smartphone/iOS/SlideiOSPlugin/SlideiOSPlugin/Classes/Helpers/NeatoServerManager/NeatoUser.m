@@ -9,13 +9,6 @@
 #define USER_VALIDATION_STATUS_VALIDATION_IN_GRACEPERIOD -1
 #define USER_VALIDATION_STATUS_NOT_VALIDATED -2
 
-
-// We convert the user validation server status code to internal status code
-#define VALIDATION_STATUS_UNKNOWN -99
-#define VALIDATION_STATUS_VALIDATED 0
-#define VALIDATION_STATUS_PENDING -1
-#define VALIDATION_STATUS_NOT_VALIDATED -2
-
 @implementation NeatoUser
 
 - (id)initWithDictionary:(NSDictionary *)dictionary {

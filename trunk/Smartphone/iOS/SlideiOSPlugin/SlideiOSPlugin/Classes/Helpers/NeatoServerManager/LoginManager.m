@@ -8,6 +8,7 @@
 #import "AppSettings.h"
 #import "AppHelper.h"
 #import "NeatoErrorCodes.h"
+#import "NeatoUserAttributes.h"
 
 @interface LoginManager()
 @property (nonatomic, retain) LoginManager *retained_self;
@@ -51,9 +52,7 @@
                          completion ? completion(nil, error) : nil;
                          return;
                      }
-                     
-                     [NeatoUserHelper saveUserAuthToken:authToken];
-                     
+
                      NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[[AppSettings appSettings] urlWithBasePathForMethod:NEATO_GET_USER_DETAILS_URL]];
                      [request setHTTPMethod:@"POST"];
                      NSString *email =  @"";
@@ -71,19 +70,31 @@
                                       weakSelf.response = responseResultDict;
                                       // Get user from dictionary
                                       NeatoUser *neatoUser = [[NeatoUser alloc] initWithDictionary:responseResultDict];
-                                      [NeatoUserHelper saveNeatoUser:neatoUser];
                                       
-                                      XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
-                                      // If XMPP is already connected then we need to tell
-                                      // the upper layer that login succeeded
-                                      // Because of some issue on the CleaningRobotApp UI, PhoneGap UI assumes that
-                                      // user is not logged in. XMPP Login succeed but CleaningRobotApp shows login UI
-                                      if (![helper isConnected]) {
-                                          helper.delegate = weakSelf;
-                                          [helper connectJID:neatoUser.chatId password:neatoUser.chatPassword host:XMPP_SERVER_ADDRESS];
+                                      // Login Over XMPP only if user validation status is VALID.
+                                      if ([[neatoUser userValidationStatus] integerValue] == VALIDATION_STATUS_VALIDATED) {
+                                          // Save authtoken and User details only if 'Validation status' is VALID.
+                                          [NeatoUserHelper saveUserAuthToken:authToken];
+                                          [NeatoUserHelper saveNeatoUser:neatoUser];
+                                          
+                                          // Set user attributes.
+                                          [weakSelf setUserAttributesOnServer];
+                                          
+                                          XMPPConnectionHelper *helper = [[XMPPConnectionHelper alloc] init];
+                                          // If XMPP is already connected then we need to tell
+                                          // the upper layer that login succeeded
+                                          // Because of some issue on the CleaningRobotApp UI, PhoneGap UI assumes that
+                                          // user is not logged in. XMPP Login succeed but CleaningRobotApp shows login UI
+                                          if (![helper isConnected]) {
+                                              helper.delegate = weakSelf;
+                                              [helper connectJID:neatoUser.chatId password:neatoUser.chatPassword host:XMPP_SERVER_ADDRESS];
+                                          }
+                                          else {
+                                              [weakSelf alreadyConnectedToXMPP];
+                                          }
                                       }
                                       else {
-                                          [weakSelf alreadyConnectedToXMPP];
+                                          completion ? completion(responseResultDict, nil) : nil;
                                       }
                                   }];
                  }];
@@ -93,21 +104,50 @@
 - (void)didConnectOverXMPP {
     debugLog(@"didConnectOverXMPP called");
     self.completion ? self.completion(self.response, nil) : nil;
+    self.retained_self = nil;
 }
 
 - (void)xmppLoginfailedWithError:(NSError *)error {
 	debugLog(@"xmpp Login failed");
     self.completion ? self.completion(nil, error) : nil;
+    self.retained_self = nil;
 }
 
 - (void)didDisConnectFromXMPP {
   NSError *error = [AppHelper nserrorWithDescription:@"Failed to connect over XMPP" code:UI_ERROR_TYPE_UNKNOWN];
   self.completion ? self.completion(nil, error) : nil;
+    self.retained_self = nil;
 }
 
 #pragma mark - Private
 - (void)alreadyConnectedToXMPP {
     debugLog(@"XMPP connection already exists");
     self.completion ? self.completion(self.response, nil) : nil;
+    self.retained_self = nil;
 }
+
+#pragma mark - NeatoServerHelperProtocol
+- (void)failedToSetUserAttributesWithError:(NSError *)error {
+    debugLog(@"Failed to set user attribute.");
+}
+
+- (void)setUserAttributesSucceeded {
+    debugLog(@"Set user attributes succeeded.");
+}
+
+#pragma mark - Private Helper
+- (void)setUserAttributesOnServer {
+    // Set user attributes.
+    NSString *authToken = [NeatoUserHelper getUsersAuthToken];
+    NeatoUserAttributes *attributes = [[NeatoUserAttributes alloc] init];
+    attributes.systemName = [AppHelper deviceSystemName];
+    attributes.systemVersion = [AppHelper deviceSystemVersion];
+    attributes.deviceModelName = [AppHelper deviceModelName];
+    
+    // Setting user attributes
+    NeatoServerHelper *helper = [[NeatoServerHelper alloc] init];
+    helper.delegate = self;
+    [helper setUserAttributes:attributes forAuthToken:authToken];
+}
+
 @end
