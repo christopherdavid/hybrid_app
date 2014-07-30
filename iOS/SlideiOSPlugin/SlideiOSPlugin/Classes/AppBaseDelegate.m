@@ -39,7 +39,7 @@
     
     [self connectOverXMPPIfRequired];
     
-    bool loggedIn = [self.userManager isUserLoggedIn];
+    bool loggedIn = [NeatoUserHelper isUserLoggedIn];
     if (loggedIn) {
         // Let the device know we want to receive push notifications
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
@@ -62,7 +62,7 @@
     
     self.userManager.delegate = self;
     debugLog(@"Registration Id  after parsing: %@", token);
-    bool loggedIn = [self.userManager isUserLoggedIn];
+    bool loggedIn = [NeatoUserHelper isUserLoggedIn];
     if (loggedIn) {
         NSString *email = [NeatoUserHelper getLoggedInUserEmail];
         debugLog(@"email in register push notification: %@", email);
@@ -124,7 +124,7 @@
 
 - (void)connectOverXMPPIfRequired {
     debugLog(@"connectOverXMPPIfRequired called.");
-    bool loggedIn = [self.userManager isUserLoggedIn];
+    bool loggedIn = [NeatoUserHelper isUserLoggedIn];
     if (loggedIn) {
         NeatoUser *user = [NeatoUserHelper getNeatoUser];
         if (!user) {
@@ -162,7 +162,7 @@
     }
 }
 
-- (void)xmppLoginfailedWithError:(NSError *)error; {
+- (void)xmppLoginfailedWithError:(NSError *)error {
     debugLog(@"xmppLoginfailedWithError called. error = %@", error);
 }
 
@@ -192,7 +192,7 @@
 #pragma mark - Notification handler
 
 - (void)handleApplicationWillEnterForegroundNotification {
-  if ([self.userManager isUserLoggedIn]) {
+  if ([NeatoUserHelper isUserLoggedIn]) {
     self.shouldFetchRobotStateFromServer = YES;
     [self connectOverXMPPIfRequired];
   }

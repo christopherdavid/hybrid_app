@@ -285,11 +285,6 @@
     return [[NSUserDefaults standardUserDefaults] objectForKey:KEY_ROBOT_DIRECT_CONNECT_SCRET];
 }
 
-+ (void)clearAppDefaultsData {
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:KEY_LAST_USED_ROBOT_ID];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:KEY_ROBOT_DIRECT_CONNECT_SCRET];
-}
-
 + (BOOL)isValidJSONString:(id)value {
   // Check if it is string and is parsable.
   if ([value isKindOfClass:[NSString class]]) {

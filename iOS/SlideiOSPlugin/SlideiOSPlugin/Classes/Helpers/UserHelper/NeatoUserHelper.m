@@ -141,10 +141,21 @@
 + (void)resetUserDefaults {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSDictionary *dict = [userDefaults dictionaryRepresentation];
-    for (id key in dict) {
+    for (id key in [dict allKeys]) {
         [userDefaults removeObjectForKey:key];
     }
     [userDefaults synchronize];
+}
+
++ (BOOL)isUserLoggedIn {
+    debugLog(@"");
+    // Logic for considering user as logged-in(For internal purposes),
+    // Check if user email, authtoken and validation status are VALID.
+    NeatoUser *user = [NeatoUserHelper getNeatoUser];
+    NSString *authToken = [NeatoUserHelper getUsersAuthToken];
+    return (user.email.length > 0
+        && ([[user userValidationStatus] integerValue] == VALIDATION_STATUS_VALIDATED)
+            && authToken.length > 0);
 }
 
 @end

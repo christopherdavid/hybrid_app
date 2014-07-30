@@ -429,3 +429,9 @@ typedef void (^RequestCompletionBlockDictionary)(NSDictionary *result, NSError *
 #define ROBOT_STATE_PAUSED                  5
 #define ROBOT_STATE_MANUAL_CLEANING         6
 #define ROBOT_STATE_RETURNING               7
+
+// We convert the 'user validation server status code' to 'internal status code'.
+#define VALIDATION_STATUS_UNKNOWN -99
+#define VALIDATION_STATUS_VALIDATED 0
+#define VALIDATION_STATUS_PENDING -1
+#define VALIDATION_STATUS_NOT_VALIDATED -2

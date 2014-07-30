@@ -35,10 +35,6 @@
 + (NSArray *)removeInternalKeysFromRobotProfileKeys:(NSArray *)profileKeys;
 + (void)saveDirectConnectionScretKey:(NSString *)secretKey;
 + (NSString *)directConnectionScretKey;
-/*
- Clear all USER DEFAULTS data.
- */
-+ (void)clearAppDefaultsData;
 + (BOOL)isValidJSONString:(id)value;
 + (NSString *)jsonStringFromNotificationsArray:(NSArray *)notificationsArray;
 @end
