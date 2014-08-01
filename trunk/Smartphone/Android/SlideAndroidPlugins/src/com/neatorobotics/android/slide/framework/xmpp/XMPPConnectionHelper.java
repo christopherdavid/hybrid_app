@@ -42,7 +42,7 @@ public class XMPPConnectionHelper {
         @Override
         public void processPacket(Packet packet) {
             Message message = (Message) packet;
-            LogHelper.log(TAG, "XMPP message received from robot");
+            LogHelper.log(TAG, "CommandTrip: XMPP message received from " + packet.getFrom());
             processMessageFromRobot(message);
         }
     };
@@ -188,7 +188,7 @@ public class XMPPConnectionHelper {
         message.setBody(packetXml);
         message.setTo(to);
         connection.sendPacket(message);
-        LogHelper.logD(TAG, "Command is sent to :" + to);
+        LogHelper.logD(TAG, "CommandTrip: Command is sent to :" + to);
     }
 
     private void sendRobotPacketAsync(final String to, final String packetData) {

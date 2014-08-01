@@ -17,7 +17,6 @@ import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
 import com.neatorobotics.android.slide.framework.robot.settings.CleaningSettings;
-import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 
 public class StartCleaningRequest extends RobotManagerRequest {
@@ -33,7 +32,7 @@ public class StartCleaningRequest extends RobotManagerRequest {
         String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
         JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
         HashMap<String, String> commadParamsMap = CommandRequestUtils.getCommandParams(commandParams);
-        LogHelper.logD(TAG, "sendCommand2 - COMMAND_ROBOT_START");
+        LogHelper.logD(TAG, "CommandTrip: sendCommand2 - COMMAND_ROBOT_START");
         int cleaningCategory = 0;
 
         if (!TextUtils.isEmpty(commadParamsMap.get(JsonMapKeys.KEY_CLEANING_CATEGORY))) {
@@ -46,10 +45,10 @@ public class StartCleaningRequest extends RobotManagerRequest {
                 LogHelper.log(TAG, "Manual cleaning cannot be started as direct connection does not exist");
                 sendError(callbackId, ErrorTypes.ROBOT_NOT_CONNECTED, "Robot is not connected");
                 return;
-            }
-            else {
-				LogHelper.log(TAG, "Sending Peer to peer manual start cleaning");
-                RobotCommandServiceManager.sendCommandToPeer(mContext, robotId, RobotCommandPacketConstants.COMMAND_ROBOT_START, commadParamsMap);
+            } else {
+                LogHelper.log(TAG, "Sending Peer to peer manual start cleaning");
+                RobotCommandServiceManager.sendCommandToPeer(mContext, robotId,
+                        RobotCommandPacketConstants.COMMAND_ROBOT_START, commadParamsMap);
                 PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
                 pluginResult.setKeepCallback(false);
                 sendSuccessPluginResult(pluginResult, callbackId);
@@ -69,7 +68,7 @@ public class StartCleaningRequest extends RobotManagerRequest {
             commadParamsMap.put(JsonMapKeys.KEY_SPOT_CLEANING_AREA_LENGTH, spotAreaLength);
             commadParamsMap.put(JsonMapKeys.KEY_SPOT_CLEANING_AREA_HEIGHT, spotAreaHeight);
         }
-        RobotDataManager.sendRobotCommand(context, robotId, RobotCommandPacketConstants.COMMAND_ROBOT_START,
-                commadParamsMap, new RobotSetProfileDataRequestListener(callbackId));
+        int commandId = RobotCommandPacketConstants.COMMAND_ROBOT_START;
+        sendCommand(context, callbackId, robotId, commadParamsMap, commandId);
     }
 }

@@ -12,7 +12,6 @@ import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
 import com.neatorobotics.android.slide.framework.pluginhelper.RobotJsonData;
 import com.neatorobotics.android.slide.framework.plugins.requests.robot.RobotManagerRequest;
 import com.neatorobotics.android.slide.framework.robot.commands.RobotCommandPacketConstants;
-import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
 
 public class StopCleaningRequest extends RobotManagerRequest {
 
@@ -26,9 +25,9 @@ public class StopCleaningRequest extends RobotManagerRequest {
         String robotId = jsonData.getString(JsonMapKeys.KEY_ROBOT_ID);
         JSONObject commandParams = jsonData.getJsonObject(JsonMapKeys.KEY_COMMAND_PARAMETERS);
         HashMap<String, String> commadParamsMap = CommandRequestUtils.getCommandParams(commandParams);
-        LogHelper.logD(TAG, "sendCommand2 - COMMAND_STOP");
-        RobotDataManager.sendRobotCommand(context, robotId, RobotCommandPacketConstants.COMMAND_ROBOT_STOP,
-                commadParamsMap, new RobotSetProfileDataRequestListener(callbackId));
+        LogHelper.logD(TAG, "CommandTrip: sendCommand2 - COMMAND_STOP");
+        int commandId = RobotCommandPacketConstants.COMMAND_ROBOT_STOP;
+        sendCommand(context, callbackId, robotId, commadParamsMap, commandId);
     }
 
 }

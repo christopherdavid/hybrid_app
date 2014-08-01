@@ -12,6 +12,15 @@ public class RobotProfileConstants {
     private static final String TAG = RobotProfileConstants.class.getSimpleName();
     private static final HashMap<String, Boolean> PROFILE_KEY_TIMER_EXPIRY_MAP = new HashMap<String, Boolean>();
 
+    /**
+     * This boolean will decide whether to send the cleaning command VIA Server
+     * or VIA XMPP. <br>
+     * If set to true, the cleaning commands which include
+     * (Start/Stop/Pause/Resume/Base) will be sent VIA XMPP to the robot
+     * chat-id.
+     */
+    public static final boolean SEND_CLEANING_VIA_DIRECT_XMPP_MESSAGE = true;
+
     static {
         PROFILE_KEY_TIMER_EXPIRY_MAP.put(ProfileAttributeKeys.ROBOT_CLEANING_COMMAND, true);
     }
@@ -40,18 +49,24 @@ public class RobotProfileConstants {
         return false;
     }
 
-    // Used to see if the command should be sent VIA timedmode or XMPP.
+    // Used to see if the command should be sent VIA server or XMPP.
     // Add profileattribute key whenever a support for command is added here.
     public static boolean isCommandSendViaServer(int commandId) {
-        LogHelper.logD(TAG, "isTimedModeSupportedForCommand called for commandId:" + commandId);
         switch (commandId) {
             case RobotCommandPacketConstants.COMMAND_ROBOT_START:
             case RobotCommandPacketConstants.COMMAND_ROBOT_STOP:
             case RobotCommandPacketConstants.COMMAND_PAUSE_CLEANING:
             case RobotCommandPacketConstants.COMMAND_RESUME_CLEANING:
             case RobotCommandPacketConstants.COMMAND_SEND_BASE:
-                return true;
+                if (!SEND_CLEANING_VIA_DIRECT_XMPP_MESSAGE) {
+                    LogHelper.logD(TAG, "Send command VIA Server called for commandId:" + commandId);
+                    return true;
+                } else {
+                    LogHelper.logD(TAG, "Send command VIA XMPP called for commandId:" + commandId);
+                    return false;
+                }
             default:
+                LogHelper.logD(TAG, "Send command VIA XMPP called for commandId:" + commandId);
                 return false;
         }
     }
