@@ -22,7 +22,7 @@
 - (void)failedToSendCommandOverTCPWithError:(NSError *)error callbackId:(NSString *)callbackId;
 - (void)failedToSendCommandOverXMPP2:(NSString *)callbackId;
 - (void)commandSentOverTCP2:(NSString *)callbackId;
-- (void)commandSentOverXMPP2:(NSString *)callbackId;
+- (void)commandSentOverXMPP2WithResult:(NSDictionary *)resultDict callbackId:(NSString *)callbackId;
 - (void)updatedSchedule:(NSString *)scheduleId callbackId:(NSString *)callbackId;
 - (void)updateScheduleError:(NSError *)error callbackId:(NSString *)callbackId;
 - (void)failedtoSendCommandWithError:(NSError *)error callbackId:(NSString *)callbackId;

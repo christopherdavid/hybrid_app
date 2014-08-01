@@ -77,7 +77,7 @@
 -(void)xmppStream:(XMPPStream *)sender didSendMessage:(XMPPMessage *)message
 {
     debugLog(@"");
-    [self notifyCaller:@selector(commandSentOverXMPP)];
+    [self notifyCaller:@selector(commandSentOverXMPP:) withObject:self.robotCommand];
     if(self.needToSendACommand)
     {
         debugLog(@"Pending XMPP command sent to server.");
@@ -100,7 +100,7 @@
 - (void)xmppStream:(XMPPStream *)sender didSendElementWithTag:(id)tag
 {
     debugLog(@"didSendElementWithTag called. IM sent!");
-    [self notifyCaller:@selector(commandSentOverXMPP)];
+    [self notifyCaller:@selector(commandSentOverXMPP:) withObject:self.robotCommand];
     if(self.needToSendACommand)
     {
         debugLog(@"Pending XMPP command sent to server.");
@@ -144,6 +144,14 @@
         if ([self.delegate respondsToSelector:selector])
         {
             [self.delegate performSelector:selector];
+        }
+    });
+}
+
+- (void)notifyCaller:(SEL)selector withObject:(id)object {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.delegate respondsToSelector:selector]) {
+            [self.delegate performSelector:selector withObject:object];
         }
     });
 }
