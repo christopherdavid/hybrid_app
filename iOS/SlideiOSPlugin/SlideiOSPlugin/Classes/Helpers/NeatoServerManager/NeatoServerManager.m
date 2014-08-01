@@ -259,10 +259,14 @@
     NeatoServerHelper *serverHelper = [[NeatoServerHelper alloc] init];
     [serverHelper dataForRequest:request
                  completionBlock:^(id response, NSError *error) {
+                     if (error) {
+                         completion ? completion(nil, error) : nil;
+                         return;
+                     }
                      // Update the database.
                      [NeatoUserHelper updatePassword:newPassword];
                      NSDictionary *responseResultDict = [response valueForKey:NEATO_RESPONSE_RESULT];
-                     completion ? completion(responseResultDict, error) : nil;
+                     completion ? completion(responseResultDict, nil) : nil;
                  }];
 }
 
@@ -480,7 +484,7 @@
                      }
                      [NeatoUserHelper saveDevicePushAuthToken:deviceToken];
                      NSDictionary *responseResultDict = [response valueForKey:NEATO_RESPONSE_RESULT];
-                     completion ? completion(responseResultDict, error) : nil;
+                     completion ? completion(responseResultDict, nil) : nil;
                  }];
 }
 

@@ -87,7 +87,7 @@
   NSError *neatoError = nil;
   // Check if it is HTTP status code is 401(Authentication Error), then send UI_ERROR_TYPE_USER_UNAUTHORIZED,
   // Else send Generic Networking Error UI_ERROR_NETWORK_ERROR.
-  if (operation.response.statusCode == SERVER_ERROR_TYPE_USER_UNAUTHORIZED) {
+  if (operation.response.statusCode == HTTP_STATUS_CODE_USER_UNAUTHORIZED) {
     neatoError = [AppHelper nserrorWithDescription:[error.userInfo objectForKey:NSLocalizedDescriptionKey] code:UI_ERROR_TYPE_USER_UNAUTHORIZED];
   }
   else {
