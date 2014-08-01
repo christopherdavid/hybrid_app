@@ -1,6 +1,8 @@
 
 typedef void (^ServerHelperCompletionBlock)(id response, NSError *error);
 
+#define HTTP_STATUS_CODE_USER_UNAUTHORIZED 401
+
 #define SERVER_REPONSE_HANDLER_KEY @"key_server_response_handler"
 #define UPDATE_AUTH_TOKEN_RESPONSE_HANDLER @"updateAuthTokenHandler:"
 #define PUSH_NOTIFICATION_REGISTRATION_REPOSNE_HANDLER @"pushNotificationRegistrationHandler:request:"
