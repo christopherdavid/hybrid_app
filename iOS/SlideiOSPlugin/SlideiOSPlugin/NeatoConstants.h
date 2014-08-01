@@ -105,13 +105,15 @@
 #define DEFAULT_SPOT_CLEANING_LENGTH 100
 #define DEFAULT_SPOT_CLEANING_HEIGHT 100
 
-// Timed Mode
-#define TIMED_MODE_ENABLED 1
+// If SHOULD_SEND_COMMAND_DIRECTLY_VIA_XMPP is set,
+// command would be sent directly via XMPP.
+#define SHOULD_SEND_COMMAND_DIRECTLY_VIA_XMPP 1
 #define NOTIFICATION_FLAG_FALSE 0
 #define NOTIFICATION_FLAG_TRUE 1
 
 // Command expiry constants
 #define COMMAND_EXPIRY_TIME 60
+#define EXPECTED_SUCCESS_TIME_FOR_XMPP_COMMAND 1
 
 // Notification constants
 #define NOTIFICATION_XMPP_DATA_CHANGE @"com.neato.plugin.xmppchange.robotDataChanged"

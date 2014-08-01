@@ -166,10 +166,9 @@
     [self writeJavascript:[result toSuccessCallbackString:callbackId]];
 }
 
-- (void)commandSentOverXMPP2:(NSString *)callbackId {
+- (void)commandSentOverXMPP2WithResult:(NSDictionary *)resultDict callbackId:(NSString *)callbackId {
     debugLog(@"");
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:COMMAND_SENT_SUCCESS];
-    [self writeJavascript:[result toSuccessCallbackString:callbackId]];
+    [self sendSuccessResultAsDictionary:resultDict forCallbackId:callbackId];
 }
 
 - (void)failedToSendCommandOverTCPWithError:(NSError *)error callbackId:(NSString *)callbackId {

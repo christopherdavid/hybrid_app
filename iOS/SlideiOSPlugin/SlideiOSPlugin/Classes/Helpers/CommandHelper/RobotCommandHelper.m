@@ -16,34 +16,9 @@
 
 @property(nonatomic, weak) id delegate;
 @property(nonatomic, retain) RobotCommandHelper *retainedSelf;
-
-- (void)sendCommandWithId:(int)commandId toRobot2:(NSString *)robotId withCommandTag:(long)commandTag withParams:(NSDictionary *)params delegate:(id)delegate overTCP:(BOOL)overTCP;
-- (NSMutableData *)tcpCommandHeaderForCommand:(NSData *)command;
-- (NSData *)formattedTCPCommandFromCommand:(NSData *)command;
-- (BOOL)isTimedModeSupportedForCommand:(NSString *)commandId;
-- (void)sendCommandOverTCPXMPPToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate overTCP:(BOOL)overTCP;
-- (void)sendCommandOverServerToRobot:(NSString *)robotId commandId:(NSString *)commandId params:(NSDictionary *)params delegate:(id)delegate;
-- (BOOL)isExpirableCommand:(NSInteger)commandId;
-- (NSString *)profileKeyForCommandId:(NSInteger)commandId;
 @end
 
 @implementation RobotCommandHelper
-@synthesize delegate = _delegate;
-@synthesize retainedSelf = _retainedSelf;
-
-- (BOOL)isTimedModeSupportedForCommand:(NSString *)commandId {
-    switch([commandId intValue]) {
-        case COMMAND_START_ROBOT:
-        case COMMAND_STOP_ROBOT:
-        case COMMAND_PAUSE_CLEANING:
-        case COMMAND_SEND_TO_BASE:
-        case COMMAND_RESUME_CLEANING:
-        case COMMAND_TURN_WIFI_ONOFF:
-            return YES;
-        default:
-            return NO;
-    }
-}
 
 - (BOOL)isExpirableCommand:(NSInteger)commandId {
     switch(commandId) {
@@ -82,13 +57,33 @@
         params = [self updatedSpotParametersInParams:params forRobotWithId:robotId];
     }
     
-    if(TIMED_MODE_ENABLED && [self isTimedModeSupportedForCommand:commandId]) {
-        [self sendCommandOverServerToRobot:robotId commandId:commandId params:params delegate:delegate];
-                
-    }
-    else {
+    // For now we send start/stop/resume/pause/sendToBase commands via XMPP.
+    if([self shouldSendCommandDirectlyViaXMPP:commandId]) {
         [self sendCommandOverXMPPToRobotWithId:robotId commandId:commandId params:params delegate:delegate];
     }
+    else {
+        [self sendCommandOverServerToRobot:robotId commandId:commandId params:params delegate:delegate];
+    }
+}
+
+- (BOOL)shouldSendCommandDirectlyViaXMPP:(NSString *)commandId {
+    
+    // Check if following commands are valid to be sent directly via XMPP.
+    // As these commands should be sent via XMPP, if command category is not manual.
+    BOOL isCommandValid = NO;
+    switch ([commandId integerValue]) {
+        case COMMAND_START_ROBOT:
+        case COMMAND_STOP_ROBOT:
+        case COMMAND_PAUSE_CLEANING:
+        case COMMAND_RESUME_CLEANING:
+        case COMMAND_SEND_TO_BASE:
+            isCommandValid = YES;
+            break;
+        default:
+            isCommandValid = NO;
+            break;
+    }
+    return (isCommandValid && SHOULD_SEND_COMMAND_DIRECTLY_VIA_XMPP);
 }
 
 - (NSMutableData *)tcpCommandHeaderForCommand:(NSData *)command {
@@ -121,7 +116,7 @@
     return finalCommand;
 }
 
-- (void)sendCommandWithId:(int)commandId toRobot2:(NSString *)robotId withCommandTag:(long)commandTag withParams:(NSDictionary *)params delegate:(id)delegate overTCP:(BOOL)overTCP {
+- (void)sendCommandWithId:(NSInteger)commandId toRobot2:(NSString *)robotId withCommandTag:(long)commandTag withParams:(NSDictionary *)params delegate:(id)delegate overTCP:(BOOL)overTCP {
     debugLog(@"");
     NSString *requestId = [AppHelper generateUniqueString];
     if (overTCP) {
@@ -147,8 +142,19 @@
             [self failedToSendCommandOverTCPWithError:[AppHelper nserrorWithDescription:[NSString stringWithFormat:@"No robot found with id = %@ in the local storage", robotId] code:200]];
             return;
         }
+        
+        // Set command
+        NSString *requestId = [AppHelper generateUniqueString];
+        NeatoRobotCommand *robotCommand = [[NeatoRobotCommand alloc] init];
+        robotCommand.xmlCommand = [[[XMPPCommandHelper alloc] init] getRobotCommand2WithId:commandId withParams:params andRequestId:requestId];
+        robotCommand.commandId = [NSString stringWithFormat:@"%ld", (long)commandId];
+        robotCommand.robotId = robotId;
+        robotCommand.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
+        [robotCommand.profileDict setValue:robotCommand.xmlCommand forKey:[self profileKeyForCommandId:commandId]];
+        
         XMPPConnectionHelper *xmppHelper = [[XMPPConnectionHelper alloc] init];
         xmppHelper.delegate = self;
+        xmppHelper.robotCommand = robotCommand;
         [xmppHelper sendCommandToRobot:robot.chatId command:[[[XMPPCommandHelper alloc] init] getRobotCommand2WithId:commandId withParams:params andRequestId:requestId] withTag:commandTag];
     }
 }
@@ -171,10 +177,19 @@
     });
 }
 
-- (void)commandSentOverXMPP {
+- (void)commandSentOverXMPP:(NeatoRobotCommand *)robotCommand {
     debugLog(@"");
+    // Start a timer if the command is expirable and if a timer is not already in progress
+    if ([self isExpirableCommand:[robotCommand.commandId integerValue]] && ![[NeatoCommandExpiryHelper expirableCommandHelper] isTimerRunningForRobotId:robotCommand.robotId]) {
+ 		[[NeatoCommandExpiryHelper expirableCommandHelper] startCommandTimerForRobotId:robotCommand.robotId withCommandId:robotCommand.commandId];
+    }
+
+    // Set expected time of success for XMPP command as 1 sec.
+    NSMutableDictionary *resultDict = [[NSMutableDictionary alloc] init];
+    [resultDict setValue:@(EXPECTED_SUCCESS_TIME_FOR_XMPP_COMMAND) forKey:NEATO_RESPONSE_EXPECTED_TIME];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate performSelector:@selector(commandSentOverXMPP2)];
+        [self.delegate performSelector:@selector(commandSentOverXMPP2WithResult:) withObject:resultDict];
         self.delegate = nil;
         self.retainedSelf = nil;
     });

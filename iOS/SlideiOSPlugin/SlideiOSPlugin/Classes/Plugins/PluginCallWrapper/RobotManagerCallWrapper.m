@@ -4,7 +4,7 @@
 #import "RobotScheduleManager.h"
 #import "RobotDriveManager.h"
 
-@interface RobotManagerCallWrapper() <RobotScheduleManagerProtocol, RobotDriveManagerProtocol>
+@interface RobotManagerCallWrapper() <RobotScheduleManagerProtocol, RobotDriveManagerProtocol, RobotCommandHelperProtocol>
 @property(nonatomic, retain) RobotManagerCallWrapper *retained_self;
 @property(nonatomic, retain) NSString *callbackId;
 @property(nonatomic, readwrite) bool isForCommandSend;
@@ -170,11 +170,11 @@
     self.delegate = nil;
 }
 
-- (void)commandSentOverXMPP2 {
+- (void)commandSentOverXMPP2WithResult:(NSDictionary *)resultDict {
     debugLog(@"");
-    if ([self.delegate respondsToSelector:@selector(commandSentOverXMPP2:)])
+    if ([self.delegate respondsToSelector:@selector(commandSentOverXMPP2WithResult:callbackId:)])
     {
-        [self.delegate commandSentOverXMPP2:self.callbackId];
+        [self.delegate commandSentOverXMPP2WithResult:resultDict callbackId:self.callbackId];
     }
     self.retained_self = nil;
     self.delegate = nil;

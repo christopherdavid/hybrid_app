@@ -4,7 +4,7 @@
 
 - (void)failedToSendCommandOverTCPWithError:(NSError *)error;
 - (void)commandSentOverTCP2;
-- (void)commandSentOverXMPP2;
+- (void)commandSentOverXMPP2WithResult:(NSDictionary *)resultDict;
 - (void)failedToSendCommandOverXMPP2;
 - (void)cleaningCommandSentWithResult:(NSDictionary *)result;
 - (void)failedtoSendCleaningCommandWithError:(NSError *)error;
