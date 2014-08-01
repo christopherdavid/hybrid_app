@@ -37,9 +37,7 @@ public class RobotDataManager {
 
         String robotPacketInXmlFormat = RobotCommandPacketUtils.getRobotCommandPacketXml(context, commandId,
                 commandParams, RobotPacketConstants.DISTRIBUTION_MODE_TYPE_TIME_MODE_SERVER);
-
         setRobotProfileParam(context, robotId, commandId, robotPacketInXmlFormat, listener);
-
         // TODO: Find another place for this.
         // Ideally should be retrieved from the server.
         if (commandParams.get(JsonMapKeys.KEY_CLEANING_CATEGORY) != null) {
@@ -64,14 +62,14 @@ public class RobotDataManager {
                 try {
 
                     String key = RobotProfileConstants.getProfileKeyTypeForCommand(keyUniqueId);
-
                     LogHelper.logD(TAG, "SetRobotProfileParam called for Robot Id = " + robotId + " Key: " + key
                             + "Value: " + value);
                     HashMap<String, String> profileParams = new HashMap<String, String>();
                     profileParams.put(key, value);
+                    LogHelper.logD(TAG, "CommandTrip: SetRobotProfileParam for the command");
                     SetRobotProfileDetailsResult3 result = NeatoRobotDataWebservicesHelper
                             .setRobotProfileDetailsRequest3(context, robotId, profileParams);
-
+                    LogHelper.logD(TAG, "CommandTrip: Done setting profile parameters ");
                     long timestamp = result.extra_params.timestamp;
                     RobotHelper.saveProfileParam(context, robotId, key, timestamp);
 
@@ -99,9 +97,10 @@ public class RobotDataManager {
         Runnable task = new Runnable() {
             public void run() {
                 try {
+                    LogHelper.log(TAG, "CommandTrip: Trying to get the server details ");
                     GetRobotProfileDetailsResult2 details = NeatoRobotDataWebservicesHelper
                             .getRobotProfileDetailsRequest2(context, robotId, EMPTY_STRING);
-                    LogHelper.logD(TAG, "getServerData, retrieved profileDetails");
+                    LogHelper.logD(TAG, "CommandTrip: getServerData, retrieved profileDetails");
                     if (details.success()) {
                         RobotDataNotifyUtils.notifyProfileDataIfChanged(context, robotId, details);
                     }
@@ -122,12 +121,13 @@ public class RobotDataManager {
         Runnable task = new Runnable() {
             public void run() {
                 try {
-                    // Reset cleaningCommand so that robot does not fetch it.
-                    // Also to update the UI of other smartapps.
-                    // TODO: Reset other values too when support added.
-                    // TODO: Remove
-                    NeatoRobotDataWebservicesHelper.resetRobotProfileValue(context, robotId,
-                            ProfileAttributeKeys.ROBOT_CLEANING_COMMAND);
+
+                    if (!RobotProfileConstants.SEND_CLEANING_VIA_DIRECT_XMPP_MESSAGE) {
+                        // Reset cleaningCommand so that robot does not fetch
+                        // it.
+                        NeatoRobotDataWebservicesHelper.resetRobotProfileValue(context, robotId,
+                                ProfileAttributeKeys.ROBOT_CLEANING_COMMAND);
+                    }
 
                     // Get the current profile parameters to reflect in the UI
                     GetRobotProfileDetailsResult2 details = NeatoRobotDataWebservicesHelper

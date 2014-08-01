@@ -1,6 +1,7 @@
 package com.neatorobotics.android.slide.framework.plugins.requests.robot;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 
 import org.apache.cordova.api.Plugin;
 import org.apache.cordova.api.PluginResult;
@@ -11,6 +12,10 @@ import org.json.JSONObject;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.pluginhelper.ErrorTypes;
 import com.neatorobotics.android.slide.framework.pluginhelper.JsonMapKeys;
+import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
+import com.neatorobotics.android.slide.framework.robotdata.RobotProfileConstants;
+import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
+import com.neatorobotics.android.slide.framework.timedmode.RobotCommandTimerHelper;
 import com.neatorobotics.android.slide.framework.webservice.NeatoWebserviceResult;
 import com.neatorobotics.android.slide.framework.webservice.robot.datamanager.SetRobotProfileDetailsResult3;
 import com.neatorobotics.android.slide.framework.webservice.user.WebServiceBaseRequestListener;
@@ -82,19 +87,19 @@ public abstract class RobotManagerRequest {
                     PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, resultObj);
                     sendSuccessPluginResult(pluginResult, mCallbackId);
                 } else {
-                	if (shouldNotifyUnknownErrorIfResultIsNull()) {
-	                    LogHelper.logD(TAG, "Unknown Error");
-	                    sendError(mCallbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
-                	}
+                    if (shouldNotifyUnknownErrorIfResultIsNull()) {
+                        LogHelper.logD(TAG, "Unknown Error");
+                        sendError(mCallbackId, ErrorTypes.ERROR_TYPE_UNKNOWN, "Unknown Error");
+                    }
                 }
             } catch (JSONException ex) {
                 LogHelper.logD(TAG, "JSON Error");
                 sendError(mCallbackId, ErrorTypes.JSON_PARSING_ERROR, ex.getMessage());
             }
         }
-        
+
         protected boolean shouldNotifyUnknownErrorIfResultIsNull() {
-        	return true;
+            return true;
         }
 
         public JSONObject getResultObject(NeatoWebserviceResult responseResult) throws JSONException {
@@ -141,6 +146,29 @@ public abstract class RobotManagerRequest {
                 object.put(JsonMapKeys.KEY_EXPECTED_TIME_TO_EXECUTE, profileResult.extra_params.expected_time);
             }
             return object;
+        }
+    }
+
+    protected void sendCommand(final Context context, final String callbackId, String robotId,
+            HashMap<String, String> commadParamsMap, int commandId) {
+        if (RobotProfileConstants.isCommandSendViaServer(commandId)) {
+            RobotDataManager.sendRobotCommand(context, robotId, commandId, commadParamsMap,
+                    new RobotSetProfileDataRequestListener(callbackId));
+        } else {
+            RobotCommandServiceManager.sendCommandThroughXmpp(context, robotId, commandId, commadParamsMap);
+            JSONObject object = new JSONObject();
+            try {
+                object.put(JsonMapKeys.KEY_EXPECTED_TIME_TO_EXECUTE, 1);
+                PluginResult pluginStartResult = new PluginResult(PluginResult.Status.OK, object);
+                pluginStartResult.setKeepCallback(false);
+                sendSuccessPluginResult(pluginStartResult, callbackId);
+            } catch (JSONException e) {
+                LogHelper.log(TAG, "Error in forming JSON plugin result " + e.getMessage());
+            }
+            String key = RobotProfileConstants.getProfileKeyTypeForCommand(commandId);
+            if (RobotProfileConstants.isTimerExpirableForProfileKey(key)) {
+                RobotCommandTimerHelper.getInstance(context).startCommandExpiryTimer(robotId, commandId);
+            }
         }
     }
 

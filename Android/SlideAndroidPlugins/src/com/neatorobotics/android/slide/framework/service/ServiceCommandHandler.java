@@ -20,23 +20,23 @@ public class ServiceCommandHandler {
     }
 
     static void processDataChangedRequest(Context context, String from, RequestPacket request) {
-        LogHelper.log(TAG, "Data changed on server for robot");
+        LogHelper.log(TAG, "CommandTrip: Data changed on server for robot");
         String robotId = request.getCommandParam(RobotCommandPacketConstants.KEY_ROBOT_ID);
 
         String causeAgentId = request.getCommandParam(RobotCommandPacketConstants.KEY_CAUSE_AGENT_ID);
         if (!TextUtils.isEmpty(causeAgentId)) {
             if (causeAgentId.equals(NeatoPrefs.getNeatoUserDeviceId(context))) {
-                LogHelper.log(TAG, "Causing Agent Matched. Ignore Data changed notification");
+                LogHelper.log(TAG, "CommandTrip: Causing Agent Matched. Ignore Data changed notification");
                 return;
             }
         }
 
         if (causeAgentId.equalsIgnoreCase(robotId)) {
             LogHelper.logD(TAG,
-                    "packet is received from robot cause agent id. Stop the command expiry timer if running.");
+                    "CommandTrip: packet is received from robot cause agent id. Stop the command expiry timer if running.");
             RobotCommandTimerHelper.getInstance(context).stopCommandTimerIfRunning(robotId);
         } else {
-            LogHelper.logD(TAG, "packet is not received from robot chat id.");
+            LogHelper.logD(TAG, "CommandTrip: packet is not received from robot chat id.");
         }
 
         RobotDataManager.getServerData(context, robotId);
