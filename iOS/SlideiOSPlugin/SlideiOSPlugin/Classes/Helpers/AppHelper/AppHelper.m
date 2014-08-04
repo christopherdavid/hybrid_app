@@ -322,4 +322,24 @@
     return notificationJson;
 }
 
++ (BOOL)shouldSendCommandDirectlyViaXMPP:(NSString *)commandId {
+    debugLog(@"");
+    // Check if following commands are valid to be sent directly via XMPP.
+    // As these commands should be sent via XMPP, if command category is not manual.
+    BOOL isCommandValid = NO;
+    switch ([commandId integerValue]) {
+        case COMMAND_START_ROBOT:
+        case COMMAND_STOP_ROBOT:
+        case COMMAND_PAUSE_CLEANING:
+        case COMMAND_RESUME_CLEANING:
+        case COMMAND_SEND_TO_BASE:
+            isCommandValid = YES;
+            break;
+        default:
+            isCommandValid = NO;
+            break;
+    }
+    return (isCommandValid && SHOULD_SEND_COMMAND_DIRECTLY_VIA_XMPP);
+}
+
 @end

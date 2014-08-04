@@ -4,6 +4,7 @@
 #import "NeatoUserHelper.h"
 #import "NeatoUser.h"
 #import "AppHelper.h"
+#import "NeatoRobotCommand.h"
 
 @interface XMPPConnectionHelper()
 
@@ -11,17 +12,10 @@
 @property(nonatomic, readwrite) bool needToSendACommand;
 @property(nonatomic, retain) NSString *commandToSend;
 @property(nonatomic, retain) NSString *sendTo;
-
--(void) notifyCaller:(SEL) selector;
--(void) notifyCaller:(SEL) selector withObject:(id) object withObject:(id) object1;
+@property (nonatomic, strong) NeatoRobotCommand *neatoRobotCommand;
 @end
 
 @implementation XMPPConnectionHelper
-@synthesize retained_self = _retained_self;
-@synthesize delegate  = _delegate;
-@synthesize needToSendACommand = _needToSendACommand;
-@synthesize commandToSend = _commandToSend;
-@synthesize sendTo = _sendTo;
 
 // Wrapper to login to XMPP server
 -(BOOL) connectJID:(NSString *) jid password:(NSString *) password host:(NSString *) host
@@ -44,20 +38,17 @@
     return [[XMPPConnection getSharedXMPPConnection] isConnected];
 }
 
--(void) sendCommandToRobot:(NSString *) to command:(NSString *) command withTag:(long) tag
-{
+- (void)sendXMPPCommandToRobotChatId:(NSString *)chatId withNeatoRobotCommand:(NeatoRobotCommand *)neatoRobotCommand {
     debugLog(@"");
+    self.neatoRobotCommand = neatoRobotCommand;
     self.retained_self = self;
     [XMPPConnection getSharedXMPPConnection].delegate = self;
-    if ([self isConnected])
-    {
-        [[XMPPConnection getSharedXMPPConnection] sendData:command to:to];
+    if ([self isConnected]) {
+        [[XMPPConnection getSharedXMPPConnection] sendData:neatoRobotCommand.xmlCommand to:chatId];
     }
-    else
-    {
+    else {
         NeatoUser *user = [NeatoUserHelper getNeatoUser];
-        if (!user)
-        {
+        if (!user) {
             self.needToSendACommand = NO;
             self.retained_self = nil;
             debugLog(@"User not logged in. Will not connect over XMPP!");
@@ -65,11 +56,10 @@
             return;
         }
         self.needToSendACommand = YES;
-        self.commandToSend = command;
-        self.sendTo = to;
-     
-        debugLog(@"User not connected over XMPP. Will first connect over XMPP and then try to send the command");
+        self.commandToSend = neatoRobotCommand.xmlCommand;
+        self.sendTo = chatId;
         
+        debugLog(@"User not connected over XMPP. Will first connect over XMPP and then try to send the command");
         [self connectJID:user.chatId password:user.chatPassword host:XMPP_SERVER_ADDRESS];
     }
 }
@@ -77,7 +67,7 @@
 -(void)xmppStream:(XMPPStream *)sender didSendMessage:(XMPPMessage *)message
 {
     debugLog(@"");
-    [self notifyCaller:@selector(commandSentOverXMPP:) withObject:self.robotCommand];
+    [self notifyCaller:@selector(commandSentOverXMPP:) withObject:self.neatoRobotCommand];
     if(self.needToSendACommand)
     {
         debugLog(@"Pending XMPP command sent to server.");
@@ -100,7 +90,7 @@
 - (void)xmppStream:(XMPPStream *)sender didSendElementWithTag:(id)tag
 {
     debugLog(@"didSendElementWithTag called. IM sent!");
-    [self notifyCaller:@selector(commandSentOverXMPP:) withObject:self.robotCommand];
+    [self notifyCaller:@selector(commandSentOverXMPP:) withObject:self.neatoRobotCommand];
     if(self.needToSendACommand)
     {
         debugLog(@"Pending XMPP command sent to server.");
