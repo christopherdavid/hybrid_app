@@ -31,7 +31,7 @@ public class RegisterDataChangeNotificationRequest extends RobotManagerRequest {
                     public void run() {
                         JSONObject robotData = RobotNotificationUtil.getNotificationObject(robotId, dataCode, data);
                         if (robotData != null) {
-                            LogHelper.log(TAG, "CommandTrip: Sending notificaiton to JS layer " + robotData);
+                            LogHelper.log(TAG, "CommandTrip: Sending notification to JS layer " + robotData);
                             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, robotData);
                             pluginResult.setKeepCallback(true);
                             sendSuccessPluginResult(pluginResult, callbackId);

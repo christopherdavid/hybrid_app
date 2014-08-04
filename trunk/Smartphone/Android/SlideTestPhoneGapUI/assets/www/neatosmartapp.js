@@ -6,20 +6,11 @@
 
 var neatoSmartApp = (function() {
 	
-	// Robot notification events constants
-	var EVENT_ID_BASE 	 		= 20000; 
-	var EVENT_ID_REGISTER 		= EVENT_ID_BASE;
-	var EVENT_ID_UNREGISTER 	= EVENT_ID_BASE + 1;
-	var EVENT_ID_STATUS		 	= EVENT_ID_BASE + 2;
-	
 	var WELCOME_PAGE = 101;
 	var USER_LOGIN_PAGE = 102;
 	var REGISTER_USER_PAGE = 103;
 	var USER_HOME_PAGE = 104;
 	var ROBOT_ASSOCIATION_PAGE = 105;
-	var ROBOT_SCHEDULE_PAGE = 106;
-	var ROBOT_MAP_PAGE = 107;
-	var ROBOT_ATLAS_PAGE = 108;
 	var ROBOT_COMMAND_PAGE = 109;
 	var DEBUG_OPTIONS_PAGE = 110;
 	var ROBOT_MANAGE_PAGE = 111;
@@ -35,7 +26,6 @@ var neatoSmartApp = (function() {
 	var ROBOT_NEW_SCHEDULE_PAGE = 121;
 	var TEST_CLEANING_PAGE = 122;
 	var SPOT_DEFINITION_PAGE = 123;
-	var MANAGE_ROBOT_WIFI_PAGE = 124;
 	var NOTIFICATION_SETTINGS_PAGE = 125;
 	var TEST_DRIVE_PAGE = 126;
 	var LINK_ROBOT_PAGE = 127;
@@ -50,14 +40,14 @@ var neatoSmartApp = (function() {
 	var CLEANING_CATEGORY_MANUAL_TEXT = "Manual";
 	
 	// List of fixed spot area-length
-	var SPOT_AREA_LENGTH_5 = "5";
-	var SPOT_AREA_LENGTH_2 = "2";
-	var SPOT_AREA_LENGTH_1 = "1";
+	var SPOT_AREA_LENGTH_5 = "500";
+	var SPOT_AREA_LENGTH_2 = "200";
+	var SPOT_AREA_LENGTH_1 = "100";
 
 	// List of fixed spot area-width
-	var SPOT_AREA_HEIGHT_3 = "3";
-	var SPOT_AREA_HEIGHT_4 = "4";
-	var SPOT_AREA_HEIGHT_1 = "1";
+	var SPOT_AREA_HEIGHT_3 = "300";
+	var SPOT_AREA_HEIGHT_4 = "400";
+	var SPOT_AREA_HEIGHT_1 = "100";
 	
 	// List of fixed cleaning modifiers
 	var CLEANING_MODIFIER_1x = "1";
@@ -90,30 +80,6 @@ var neatoSmartApp = (function() {
 			document.querySelector('#responseText').innerHTML += "<br /> Response: "+JSON.stringify(result, null, 4);
 		}, 
 		
-		// Click listeners with success and error callbacks.
-		loginWithDemo: function() {
-			var email = "demo1@demo.com";
-			var password = "demo123";
-			neatoSmartApp.showProgressBar();
-
-			UserPluginManager.login(email, password, neatoSmartApp.successLoginDemo, neatoSmartApp.errorLoginDemo);
-
-		},
-
-		successLoginDemo: function(result) {	
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(result);
-			localStorage.setItem('email', result.email);
-			neatoSmartApp.registerForRobotMessages();
-			neatoSmartApp.registerRobotNotification2();
-			neatoSmartApp.hideWelcomeShowHomePage();
-		},
-
-		errorLoginDemo: function(error) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(error);
-		},
-
 		login: function() {
 
 			var email = document.querySelector('#mailid').value;
@@ -198,30 +164,6 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(error);
 		},
 		
-		register: function() {
-			var email = document.querySelector('#regmailid').value;
-			var password = document.querySelector('#regpasskey').value;
-			var name = document.querySelector('#regname').value;
-			
-			localStorage.setItem('email', email);
-			neatoSmartApp.showProgressBar();
-			//TODO: Put validation of 2 passwords and email id
-			var passwordconfirm = document.querySelector('#regpasskeyconfirm').value;
-			UserPluginManager.createUser(email, password, name, neatoSmartApp.successRegister, neatoSmartApp.errorRegister);
-		},
-		
-		registerEmailValidation: function() {
-			var email = document.querySelector('#regmailid').value;
-			var password = document.querySelector('#regpasskey').value;
-			var name = document.querySelector('#regname').value;
-			
-			localStorage.setItem('email', email);
-			neatoSmartApp.showProgressBar();
-			
-			var passwordConfirm = document.querySelector('#regpasskeyconfirm').value;
-			UserPluginManager.createUser2(email, password, name, "", neatoSmartApp.successRegister, neatoSmartApp.errorRegister);
-		},
-		
 		registerExtraParams: function() {
 			var email = document.querySelector('#regmailid').value;
 			var password = document.querySelector('#regpasskey').value;
@@ -291,134 +233,10 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(error);
 		},
 
-		discoverRobots: function() {
-			RobotPluginManager.discoverNearbyRobots(neatoSmartApp.discoverRobotSuccess, neatoSmartApp.discoverRobotError);
-			neatoSmartApp.showProgressBar();
-		},
-
-		discoverRobotSuccess: function(result) {
-			neatoSmartApp.setResponseText(result);
-			neatoSmartApp.hideProgressBar();
-			var showList = false;
-			for (var i in result) {
-				showList = true;
-				var robot = result[i];
-				neatoSmartApp.addRobotToList(robot.robotName, robot.robotId);
-			}
-
-			if(showList) {
-				neatoSmartApp.displayRobotList();
-			} else {
-				alert("No Neato Robots found! Try again");
-			}
-		}, 
-
-		addRobotToList: function(name, robotId) {
-			 $('#robotsFound').append('<input type="button" id= "'+robotId +'" value="'+ name+'" class="robotItemButton"></input>');
-		//	 document.querySelector('#'+robotId).addEventListener('click', neatoSmartApp.clickRobot, true);
-		},
-		
-		clickRobot: function(robotId) {
-			localStorage.setItem('robotId', robotId);
-			var emailId = localStorage.getItem('email');
-			UserPluginManager.associateRobot(emailId, robotId, neatoSmartApp.associateFoundRobotSuccess, neatoSmartApp.associateFoundRobotError);
-			 
-			
-			neatoSmartApp.hideDisplayList();
-		},
-		
-		associateFoundRobotSuccess: function(result) {
-			neatoSmartApp.setResponseText(result);
-			neatoSmartApp.hideProgressBar();			
-			neatoSmartApp.hideAddRobotShowCommandsPage();
-			eventIdList = [];
-			localStorage.setItem('scheduleId', null);
-			localStorage.setItem('isRobotStarted', "false");
-			localStorage.setItem('isCleaningPaused', "false");
-			localStorage.setItem('isPeerConnection', "false");
-			
-			neatoSmartApp.refreshUI();
-		},
-
-		associateFoundRobotError: function(error) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(error);
-			
-			localStorage.setItem('isRobotStarted', "false");
-			localStorage.setItem('isCleaningPaused', "false");			
-			localStorage.setItem('robotId', '');
-			localStorage.setItem('isPeerConnection', "false");
-		},
-		
-		openClosePeerConn2: function() {
-			var robotId = localStorage.getItem('robotId');
-			
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
-			}
-			
-			neatoSmartApp.showProgressBar();
-			var directConn = localStorage.getItem('isPeerConnection');			
-			if ((directConn == null) || (directConn == "false")) {
-				localStorage.setItem('isPeerConnection', "false");
-				RobotPluginManager.tryDirectConnection2(robotId, neatoSmartApp.successPeerConnect2, neatoSmartApp.errorPeerConnect2);
-			} 
-			else {
-				RobotPluginManager.disconnectDirectConnection(robotId, neatoSmartApp.successPeerConnect2, neatoSmartApp.errorPeerConnect2);				
-			}			
-		},
-		
-		successPeerConnect2: function(result) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(result);
-			var directConn = localStorage.getItem('isPeerConnection');			
-			if (directConn == "true") {			
-				localStorage.setItem('isPeerConnection', "false");
-				document.querySelector('#btnOpenClosePeerConn2').value = "Open Connection (New)";
-			}
-			else {				
-				localStorage.setItem('isPeerConnection', "true");
-				document.querySelector('#btnOpenClosePeerConn2').value = "Close Connection (New)";
-			}
-			
-			directConn = localStorage.getItem('isPeerConnection');			
-		},
-		
-		errorPeerConnect2: function(error) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(error);
-		},
-		
-		
-		displayRobotList: function() {
-			document.querySelector('#robotsFound').setAttribute('aria-hidden', 'false');
-			document.querySelector('#robotoverlay').setAttribute('aria-hidden', 'false');
-			document.querySelector('#robotoverlay').addEventListener('click', neatoSmartApp.hideDisplayList, false);
-			$('.robotItemButton').click(function() {
-				
-				neatoSmartApp.clickRobot(this.id); 
-			});
-		},
-	
-		hideDisplayList: function() {
-			document.querySelector('#robotsFound').setAttribute('aria-hidden', 'true');
-			var myNode = document.getElementById("robotsFound");
-			while (myNode.firstChild) {
-			    myNode.removeChild(myNode.firstChild);
-			}
-			document.querySelector('#robotoverlay').setAttribute('aria-hidden', 'true');
-			document.querySelector('#robotoverlay').removeEventListener('click', neatoSmartApp.hideDisplayList, false);
-
-		},
-		discoverRobotError: function(error) {
-			neatoSmartApp.setResponseText(error);
-		},
-
 		associateRobot: function() {
 			var robotId = document.querySelector('#robotId').value;			
 			localStorage.setItem('robotId', robotId);
-			var email = localStorage.getItem('email')
+			var email = localStorage.getItem('email');
 			UserPluginManager.associateRobot(email, robotId, neatoSmartApp.associateRobotSuccess, neatoSmartApp.associateRobotError);
 			neatoSmartApp.showProgressBar();
 		},
@@ -573,185 +391,6 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(error);
 		},
 		
-		startStopCleaningPeer: function() {
-			
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
-			}
-			
-			// TODO: Temp variable. Later the robot status will be sent by the robot. Store in local storage as of now.
-			var robotStarted = localStorage.getItem('isRobotStarted');
-			
-			if (robotStarted == null) {
-				robotStarted = "false";
-				localStorage.setItem('isRobotStarted', "false");
-			}
-			
-			var isRobotStarted =  ((robotStarted == "true") ? true : false);
-			
-			neatoSmartApp.showProgressBar();
-			if (isRobotStarted) {
-				RobotPluginManager.sendCommandToRobot(robotId, COMMAND_ROBOT_STOP, [], neatoSmartApp.startStopRobotSuccess, neatoSmartApp.startStopRobotError);
-				// localStorage.setItem('isRobotStarted', "false");
-				// set the text as Stop
-				// document.querySelector('#btnStartStopCleaningServer').value = "Start Cleaning";
-				// document.querySelector('#btnStartStopCleaningPeer').value = "Start Cleaning";
-				// document.querySelector('#btnStartStopCleaning').value = "Start Cleaning";
-
-			} else {
-				RobotPluginManager.sendCommandToRobot(robotId, COMMAND_ROBOT_START, [], neatoSmartApp.startStopRobotSuccess, neatoSmartApp.startStopRobotError);
-				// localStorage.setItem('isRobotStarted', "true");
-				// set the text as Start
-				// document.querySelector('#btnStartStopCleaningServer').value = "Stop Cleaning";
-				// document.querySelector('#btnStartStopCleaningPeer').value = "Stop Cleaning";
-				// document.querySelector('#btnStartStopCleaning').value = "Stop Cleaning";
-			}
-		},
-
-		startStopRobotSuccess: function(result) {
-			neatoSmartApp.hideProgressBar();
-			
-			var robotStarted = localStorage.getItem('isRobotStarted');
-			if (robotStarted == "true") {
-				localStorage.setItem('isRobotStarted', "false");
-				document.querySelector('#btnStartStopCleaning').value = "Start Cleaning";
-			}
-			else {
-				localStorage.setItem('isRobotStarted', "true");
-				document.querySelector('#btnStartStopCleaning').value = "Stop Cleaning";
-			}
-		},
-		
-		startStopRobotError: function(error) {
-			neatoSmartApp.hideProgressBar();
-		},
-		
-		
-		startStopCleaning: function() {
-			
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
-			}
-			
-			// TODO: Temp variable. Later the robot status will be sent by the robot. Store in local storage as of now.
-			var robotStarted = localStorage.getItem('isRobotStarted');
-			
-			if (robotStarted == null) {
-				robotStarted = "false";
-				localStorage.setItem('isRobotStarted', "false");
-			}
-			
-			var isRobotStarted =  ((robotStarted == "true") ? true : false);
-			
-			neatoSmartApp.showProgressBar();
-			if (isRobotStarted) {
-				RobotPluginManager.sendCommandToRobot(robotId, COMMAND_ROBOT_STOP, [], neatoSmartApp.startStopCleaningSuccess, neatoSmartApp.startStopCleaningError);
-
-			} else {
-				RobotPluginManager.sendCommandToRobot(robotId, COMMAND_ROBOT_START, [], neatoSmartApp.startStopCleaningSuccess, neatoSmartApp.startStopCleaningError);
-			}
-		},
-
-		startStopCleaningSuccess: function(result) {
-			neatoSmartApp.hideProgressBar();
-			var robotStarted = localStorage.getItem('isRobotStarted');
-			if (robotStarted == "true") {
-				localStorage.setItem('isRobotStarted', "false");
-				document.querySelector('#btnSendStartStopCleanCommand').value = "Start Cleaning";
-			}
-			else {
-				localStorage.setItem('isRobotStarted', "true");
-				document.querySelector('#btnSendStartStopCleanCommand').value = "Stop Cleaning";
-			}
-		},
-		
-		startStopCleaningError: function(error) {
-			neatoSmartApp.hideProgressBar();
-		},
-		
-		startStopCleaning2: function() {
-			
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
-			}
-			
-			// TODO: Temp variable. Later the robot status will be sent by the robot. Store in local storage as of now.
-			var robotStarted = localStorage.getItem('isRobotStarted');
-			
-			if (robotStarted == null) {
-				robotStarted = "false";
-				localStorage.setItem('isRobotStarted', "false");
-			}
-			
-			var isRobotStarted =  ((robotStarted == "true") ? true : false);
-			
-			neatoSmartApp.showProgressBar();
-			if (isRobotStarted) {
-				RobotPluginManager.sendCommandToRobot2(robotId, COMMAND_ROBOT_STOP, {}, neatoSmartApp.startStopCleaningSuccess2, neatoSmartApp.startStopCleaningError2);
-
-			} else {
-				RobotPluginManager.sendCommandToRobot2(robotId, COMMAND_ROBOT_START, {'cleanMode':START_CLEAN_TYPE_NORMAL}, neatoSmartApp.startStopCleaningSuccess2, neatoSmartApp.startStopCleaningError2);
-			}
-		},
-
-		startStopCleaningSuccess2: function(result) {
-			neatoSmartApp.hideProgressBar();
-			
-			var robotStarted = localStorage.getItem('isRobotStarted');
-
-			if (robotStarted == "true") {
-				localStorage.setItem('isRobotStarted', "false");
-				document.querySelector('#btnSendStartStopCleanCommand2').value = "Start Cleaning (Deprecated)";
-			}
-			else {
-				localStorage.setItem('isRobotStarted', "true");
-				document.querySelector('#btnSendStartStopCleanCommand2').value = "Stop Cleaning (Deprecated)";
-			}
-		},
-		
-		startStopCleaningError2: function(error) {
-			
-			neatoSmartApp.hideProgressBar();
-		},
-		
-		pauseCleaning: function() {
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
-			}
-			
-			var robotStarted = localStorage.getItem('isRobotStarted');
-			if (robotStarted == null) {
-				robotStarted = "false";
-				localStorage.setItem('isRobotStarted', "false");
-			}
-			var isRobotStarted =  ((robotStarted == "true") ? true : false);
-			if (isRobotStarted) {
-				neatoSmartApp.showProgressBar();
-				RobotPluginManager.sendCommandToRobot2(robotId, COMMAND_PAUSE_CLEANING, {}, neatoSmartApp.pauseCleaningSuccess, neatoSmartApp.pauseCleaningError);
-			} else {
-				alert("Robot is already stopped.");
-			}
-		},
-		
-		pauseCleaningSuccess: function(result) {
-			neatoSmartApp.hideProgressBar();
-			var robotStarted = localStorage.getItem('isRobotStarted');
-			localStorage.setItem('isRobotStarted', "false");
-			document.querySelector('#btnSendStartStopCleanCommand2').value = "Start Cleaning (Deprecated)";
-		},
-		
-		pauseCleaningError: function(error) {
-			neatoSmartApp.hideProgressBar();
-		},
-
 		startStopCleaning3: function() {
 			var cleaningCategoryList = document.querySelector('#CleaningCategoryList');
 			var cleaningModeList = document.querySelector('#CleaningModeList');
@@ -955,16 +594,6 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.hideProgressBar();
 		},
 		
-		getRobotCurrentStateDetails : function(){
-			var robotId = localStorage.getItem('robotId');
-				if ((robotId == null) || (robotId.length == 0)) {
-					alert("Please associate a Robot");
-					return;
-				}
-				RobotPluginManager.getRobotCurrentStateDetails(robotId, neatoSmartApp.getCurrentStateDetailsSuccess, 
-						neatoSmartApp.getCurrentStateDetailsError);
-			},
-			
 			getCurrentStateDetailsSuccess: function(result) {
 				neatoSmartApp.setResponseText(result);
 				neatoSmartApp.hideProgressBar();
@@ -1023,37 +652,11 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(error);
 		},
 		
-		setRobotClock: function() {
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
-			}
-			alert("Not supported");
-			//var time=Date.UTC(2012,03,20, 11, 30, 00);
-			//RobotPluginManager.sendCommandToRobot2(robotId, COMMAND_SET_ROBOT_TIME, {'time':time}, neatoSmartApp.setRobotClockSuccess, neatoSmartApp.setRobotClockErr);
-		},
-		
-		setRobotClockSuccess: function(result) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(result);
-		},
-		
-		setRobotClockErr: function(error) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(error);
-		},
-		
 		logoutUser: function() {
 			localStorage.setItem('isNotificationsON', false);
 			neatoSmartApp.showProgressBar();
 			UserPluginManager.logout(neatoSmartApp.successLogout, neatoSmartApp.errorLogout);
 			
-		},
-		
-		test: function() {
-			neatoSmartApp.showProgressBar();
-			RobotPluginManager.tryDirectConnection('Robot_1001', neatoSmartApp.successTest, neatoSmartApp.errorTest);
 		},
 		
 		successTest: function(result) {
@@ -1075,130 +678,8 @@ var neatoSmartApp = (function() {
 			alert(JSON.stringify(error));
 		},
 		
-		useBasicScheduleNew: function() {
-			 var chkBox = document.getElementById('newUseBasicSchedule');
-			 return chkBox.checked;
-		},
-		
 		useBasicScheduleNewOnClick: function() {
 			neatoSmartApp.getScheduleEvents();
-		},
-		
-		successScheduleDelete: function(result) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(result);
-		},
-		errorScheduleDelete: function(error) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(error);
-		},
-				
-		//Note: Here the value signifies the key corresponding to the variable.
-		// The necessary keys are defined in neatosmartapphelper.js.
-		//Example:var DAY_SUNDAY = 0;
-		//		  var DAY_MONDAY = 1;
-		// These values are used here to signify day. These shouldbe used while
-		//passing on to the pluginmanager.
-		// Mins attribute is also supported by the plugin. Here its sending default 0.
-
-		//		addToAdvancedSchedule: function(scheduleJsonArray, day, startTimeHrs, startTimeMins, 
-		//      endTimeHrs, endTimeMins, eventType, area) {
-
-		scheduleRobotAlternateWeekdays: function() {
-			var scheduleJsonArray = [];
-			var days = [1,2,5];
-			var event = 1;
-			
-			scheduleJsonArray = PluginManagerHelper.addToAdvancedSchedule(scheduleJsonArray, days, "10:30", "12:30", event, "Kitchen");
-			neatoSmartApp.scheduleEvent(scheduleJsonArray);
-		},
-		
-		scheduleRobotBabyNap: function() {
-			var scheduleJsonArray = [];
-			var days = [1,2,3];
-			var event = 0;
-			scheduleJsonArray = PluginManagerHelper.addToAdvancedSchedule(scheduleJsonArray, days, "13:00", "16:00" , event, "");
-			
-			var days2 = [4,5];
-			var event2 = 0;
-			scheduleJsonArray = PluginManagerHelper.addToAdvancedSchedule(scheduleJsonArray, days2, "14:00", "17:00", event2, "");
-			
-			var days3 = [1,2,3,4,5];
-			var event3 = 1;
-			scheduleJsonArray = PluginManagerHelper.addToAdvancedSchedule(scheduleJsonArray, days3, "9:00", "11:00", event3, "Bedroom");
-			neatoSmartApp.scheduleEvent(scheduleJsonArray);
-		},
-		scheduleRobotOnlyWeekends: function() {
-			var scheduleJsonArray = [];
-			var days = [6,0];
-			var event = 1;
-			scheduleJsonArray = PluginManagerHelper.addToAdvancedSchedule(scheduleJsonArray, days, "12:00", "14:00", event, "Kitchen");
-			
-			var days2 = [6,0];
-			var event2 = 1;
-			scheduleJsonArray = PluginManagerHelper.addToAdvancedSchedule(scheduleJsonArray, days2, "15:00", "18:00", event2, "Garage");
-			neatoSmartApp.scheduleEvent(scheduleJsonArray);
-
-		},
-		scheduleRobotWorkingCouples: function() {
-			var scheduleJsonArray = [];
-			var days = [1,2,3,4];
-			var event = 1;
-			scheduleJsonArray = PluginManagerHelper.addToAdvancedSchedule(scheduleJsonArray, days, "10:30", "12:30", event, "Kitchen");
-			
-			var days2 = [1,2,3,4];
-			var event2 = 1;
-			scheduleJsonArray = PluginManagerHelper.addToAdvancedSchedule(scheduleJsonArray, days2, "18:30", "22:30", event2, "Garage");
-			
-			var days3 = [6,0];
-			var event3 = 0;
-			scheduleJsonArray = PluginManagerHelper.addToAdvancedSchedule(scheduleJsonArray, days3, "8:30", "12:30", event3, "");
-
-			neatoSmartApp.scheduleEvent(scheduleJsonArray);
-		},
-		scheduleClear:function() {
-			neatoSmartApp.showProgressBar();
-			var robotId = localStorage.getItem('robotId');			
-			if (robotId == null) {
-				alert("Robot is not associated. Cannot delete schedule.");
-				neatoSmartApp.hideProgressBar();
-				return;
-			}
-			RobotPluginManager.deleteSchedule(robotId, 1, neatoSmartApp.successScheduleDelete, neatoSmartApp.errorScheduleDelete);
-		},
-		
-
-		scheduleEvent: function(scheduleJsonArray) {			
-			neatoSmartApp.showProgressBar();
-			var robotId = localStorage.getItem('robotId');
-			if (robotId == null) {
-				robotId = "Robot_1001";
-			}
-			RobotPluginManager.setSchedule(robotId, 1, scheduleJsonArray, neatoSmartApp.scheduleEventSuccess, neatoSmartApp.scheduleEventErr);
-		},
-		
-		scheduleEventSuccess: function(result) {
-			neatoSmartApp.hideProgressBar();
-			alert("Schedule updated successfully");
-			neatoSmartApp.setResponseText(result);
-		}, 
-		
-		scheduleEventErr: function(error) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(error);
-			alert("Updating schedule failed");
-		},
-		
-		getSchedule: function () {
-			neatoSmartApp.showProgressBar();
-			var robotId = localStorage.getItem('robotId');
-			//TODO:Add advanced schedule type.
-			if (robotId == null) {
-				alert("Robot is not associated. Cannot retrieve schedule.");
-				neatoSmartApp.hideProgressBar();
-				return;
-			}
-			RobotPluginManager.getSchedule(robotId, "", neatoSmartApp.successTest, neatoSmartApp.errorTest);
 		},
 		
 		createSchedule: function() {
@@ -1209,11 +690,7 @@ var neatoSmartApp = (function() {
 				neatoSmartApp.hideProgressBar();
 				return;
 			}
-			if (neatoSmartApp.useBasicScheduleNew()) {
-				RobotPluginManager.createSchedule(robotId, 0, neatoSmartApp.createScheduleSuccess, neatoSmartApp.createScheduleError);
-			} else {
-				RobotPluginManager.createSchedule(robotId, 1, neatoSmartApp.createScheduleSuccess, neatoSmartApp.createScheduleError);
-			}
+			RobotPluginManager.createSchedule(robotId, 0, neatoSmartApp.createScheduleSuccess, neatoSmartApp.createScheduleError);
 		},
 		createScheduleSuccess: function(result) {
 			neatoSmartApp.hideProgressBar();
@@ -1235,11 +712,7 @@ var neatoSmartApp = (function() {
 				neatoSmartApp.hideProgressBar();
 				return;
 			}
-			if (neatoSmartApp.useBasicScheduleNew()) {
 				RobotPluginManager.getScheduleEvents(robotId, 0, neatoSmartApp.getScheduleEventsSuccess, neatoSmartApp.getScheduleEventsError);
-			} else {
-				RobotPluginManager.getScheduleEvents(robotId, 1, neatoSmartApp.getScheduleEventsSuccess, neatoSmartApp.getScheduleEventsError);
-			}
 		},
 		getScheduleEventsSuccess: function(result) {
 			neatoSmartApp.hideProgressBar();
@@ -1254,29 +727,6 @@ var neatoSmartApp = (function() {
 		getScheduleEventsError: function(error) {
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.setResponseText(error);
-		},
-		
-		addScheduleEvent: function() {
-			neatoSmartApp.showProgressBar();
-			var robotId = localStorage.getItem('robotId');
-			if (robotId == null) {
-				alert("Robot is not associated. Cannot retrieve schedule.");
-				neatoSmartApp.hideProgressBar();
-				return;
-			}
-			var scheduleId = localStorage.getItem('scheduleId');
-			if (scheduleId == null || (scheduleId.length == 0)) {
-				alert("Get Schedule Details");
-				neatoSmartApp.hideProgressBar();
-				return;
-			}
-			if (neatoSmartApp.useBasicScheduleNew()) {
-				var	scheduleJson = PluginManagerHelper.getBasicScheduleEvent(1, "10:30");
-				RobotPluginManager.addScheduleEvent(scheduleId, scheduleJson, neatoSmartApp.addScheduleEventSuccess, neatoSmartApp.addScheduleEventError);
-			} else {
-				var	scheduleJson = PluginManagerHelper.getAdvancedScheduleEvent(2, "02:30", "4:30", 0, "Kitchen");
-				RobotPluginManager.addScheduleEvent(scheduleId, scheduleJson, neatoSmartApp.addScheduleEventSuccess, neatoSmartApp.addScheduleEventError);
-			}
 		},
 		
 		// TODO: We should have separate buttons to add event items
@@ -1294,7 +744,6 @@ var neatoSmartApp = (function() {
 				neatoSmartApp.hideProgressBar();
 				return;
 			}
-			if (neatoSmartApp.useBasicScheduleNew()) {
 				var	scheduleJson = PluginManagerHelper.createBasicScheduleEventObject(1, "10:30", cleaningModeForBasicSchedule);
 				RobotPluginManager.addScheduleEvent(scheduleId, scheduleJson, neatoSmartApp.addScheduleEventSuccess, neatoSmartApp.addScheduleEventError);
 				cleaningModeForBasicSchedule++;
@@ -1302,10 +751,6 @@ var neatoSmartApp = (function() {
 					// reset the value
 					cleaningModeForBasicSchedule = CLEANING_MODE_ECO;
 				}
-			} else {
-				var	scheduleJson = PluginManagerHelper.getAdvancedScheduleEvent(2, "02:30", "4:30", 0, "Kitchen");
-				RobotPluginManager.addScheduleEvent(scheduleId, scheduleJson, neatoSmartApp.addScheduleEventSuccess, neatoSmartApp.addScheduleEventError);
-			}
 		},
 		
 		addScheduleEventSuccess: function(result) {
@@ -1318,37 +763,6 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(error);
 		},
 		
-		updateScheduleEvent: function() {
-
-			neatoSmartApp.showProgressBar();
-			var robotId = localStorage.getItem('robotId');
-			if (robotId == null) {
-				alert("Robot is not associated. Cannot retrieve schedule.");
-				neatoSmartApp.hideProgressBar();
-				return;
-			}
-			var scheduleId = localStorage.getItem('scheduleId');
-			if (scheduleId == null) {
-				alert("Get Schedule Details");
-				neatoSmartApp.hideProgressBar();
-				return;
-			}
-			
-			//var scheduleEventId = localStorage.getItem('scheduleEventId');
-			var scheduleEventId = scheduleEventHelper.getEventId(eventIdList, 0);
-			if (scheduleEventId == null || (scheduleEventId.length == 0) || (typeof scheduleEventId === 'undefined')) {
-				alert("No schedule events");
-				neatoSmartApp.hideProgressBar();
-				return;
-			}
-			if (neatoSmartApp.useBasicScheduleNew()) {
-				var	scheduleJson = PluginManagerHelper.getBasicScheduleEvent(2, "12:30");
-				RobotPluginManager.updateScheduleEvent(scheduleId, scheduleEventId, scheduleJson, neatoSmartApp.updateScheduleEventSuccess, neatoSmartApp.updateScheduleEventError);
-			} else {
-				var	scheduleJson = PluginManagerHelper.getAdvancedScheduleEvent(2, "04:30", "6:30", 0, "Kitchen");
-				RobotPluginManager.updateScheduleEvent(scheduleId, scheduleEventId, scheduleJson, neatoSmartApp.updateScheduleEventSuccess, neatoSmartApp.updateScheduleEventError);
-			}
-		},
 		updateScheduleEventNew: function() {
 			neatoSmartApp.showProgressBar();
 			var robotId = localStorage.getItem('robotId');
@@ -1371,13 +785,8 @@ var neatoSmartApp = (function() {
 				neatoSmartApp.hideProgressBar();
 				return;
 			}
-			if (neatoSmartApp.useBasicScheduleNew()) {
 				var	scheduleJson = PluginManagerHelper.createBasicScheduleEventObject(2, "12:30", CLEANING_MODE_NORMAL);
 				RobotPluginManager.updateScheduleEvent(scheduleId, scheduleEventId, scheduleJson, neatoSmartApp.updateScheduleEventSuccess, neatoSmartApp.updateScheduleEventError);
-			} else {
-				var	scheduleJson = PluginManagerHelper.getAdvancedScheduleEvent(2, "04:30", "6:30", 0, "Kitchen");
-				RobotPluginManager.updateScheduleEvent(scheduleId, scheduleEventId, scheduleJson, neatoSmartApp.updateScheduleEventSuccess, neatoSmartApp.updateScheduleEventError);
-			}
 		},		
 		updateScheduleEventSuccess: function(result) {
 			neatoSmartApp.hideProgressBar();
@@ -1412,11 +821,7 @@ var neatoSmartApp = (function() {
 				neatoSmartApp.hideProgressBar();
 				return;
 			}
-			if (neatoSmartApp.useBasicScheduleNew()) {
 				RobotPluginManager.getScheduleEventData(scheduleId, scheduleEventId, neatoSmartApp.getScheduleEventDataSuccess, neatoSmartApp.getScheduleEventDataError);
-			} else {
-				RobotPluginManager.getScheduleEventData(scheduleId, scheduleEventId, neatoSmartApp.getScheduleEventDataSuccess, neatoSmartApp.getScheduleEventDataError);
-			}
 		},
 		
 		getScheduleEventDataSuccess: function(result) {
@@ -1451,11 +856,7 @@ var neatoSmartApp = (function() {
 				neatoSmartApp.hideProgressBar();
 				return;
 			}
-			if (neatoSmartApp.useBasicScheduleNew()) {
 				RobotPluginManager.deleteScheduleEvent(scheduleId, scheduleEventId, neatoSmartApp.deleteScheduleEventSuccess, neatoSmartApp.deleteScheduleEventError);
-			} else {
-				RobotPluginManager.deleteScheduleEvent(scheduleId, scheduleEventId, neatoSmartApp.deleteScheduleEventSuccess, neatoSmartApp.deleteScheduleEventError);
-			}
 		},
 		
 		deleteScheduleEventSuccess: function(result) {
@@ -1477,11 +878,7 @@ var neatoSmartApp = (function() {
 				neatoSmartApp.hideProgressBar();
 				return;
 			}
-			if (neatoSmartApp.useBasicScheduleNew()) {
 				RobotPluginManager.updateSchedule(scheduleId, neatoSmartApp.updateScheduleSuccess, neatoSmartApp.updateScheduleError);
-			} else {
-				RobotPluginManager.updateSchedule(scheduleId, neatoSmartApp.updateScheduleSuccess, neatoSmartApp.updateScheduleError);
-			}
 		},
 		updateScheduleSuccess: function(result) {
 			neatoSmartApp.hideProgressBar();
@@ -1500,11 +897,7 @@ var neatoSmartApp = (function() {
 				neatoSmartApp.hideProgressBar();
 				return;
 			}
-			if (neatoSmartApp.useBasicScheduleNew()) {
 				RobotPluginManager.getScheduleData(scheduleId, neatoSmartApp.getScheduleDataSuccess, neatoSmartApp.getScheduleDataError);
-			} else {
-				RobotPluginManager.getScheduleData(scheduleId, neatoSmartApp.getScheduleDataSuccess, neatoSmartApp.getScheduleDataError);
-			}
 		},
 		
 		getScheduleDataSuccess: function(result) {
@@ -1512,290 +905,6 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(result);
 		},
 		getScheduleDataError: function(error) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(error);
-		},
-		
-		// ****************** Map ****************
-		getRobotMap: function() {			
-			$('#robotMapImage').replaceWith('<img src="" id="robotMapImage"/>');
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Robot is not associated. Can't fetch map.");				
-				return;
-			}
-			
-			neatoSmartApp.showProgressBar();
-			RobotPluginManager.getMaps(robotId, neatoSmartApp.getRobotMapSuccess, neatoSmartApp.getRobotMapError);
-		},
-		
-		turnMotorOnOff: function() {
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
-			}
-
-			neatoSmartApp.showProgressBar();
-
-			var motorON = localStorage.getItem('isMotorON');			
-			if (motorON == "true") {
-				RobotPluginManager.turnMotorOnOff(robotId, FLAG_OFF, neatoSmartApp.turnMotorOnOffSuccess, 
-							neatoSmartApp.turnMotorOnOffError);
-				
-			} else {
-				RobotPluginManager.turnMotorOnOff(robotId, FLAG_ON, neatoSmartApp.turnMotorOnOffSuccess, 
-						neatoSmartApp.turnMotorOnOffError);
-			}
-		},
-
-		turnMotorOnOffSuccess: function(result) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(result);
-			
-			var motorON = localStorage.getItem('isMotorON');
-			if (motorON == "true") {
-				localStorage.setItem('isMotorON', "false");
-				document.querySelector('#btnTurnMotorOnOff').value = "Turn Robot Vacuum ON";
-			}
-			else {
-				localStorage.setItem('isMotorON', "true");
-				document.querySelector('#btnTurnMotorOnOff').value = "Turn Robot Vacuum OFF";
-			}
-		},
-		
-		turnMotorOnOffError: function(error) {
-			neatoSmartApp.setResponseText(error);
-			neatoSmartApp.hideProgressBar();
-		},
-		
-		turnBrushOnOff: function() {
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
-			}
-
-			neatoSmartApp.showProgressBar();
-
-			var brushON = localStorage.getItem('isBrushON');			
-			if (brushON == "true") {
-				RobotPluginManager.turnMotorOnOff2(robotId, MOTOR_TYPE_BRUSH, FLAG_OFF, neatoSmartApp.turnBrushOnOffSuccess, 
-							neatoSmartApp.turnBrushOnOffError);
-				
-			} else {
-				RobotPluginManager.turnMotorOnOff2(robotId, MOTOR_TYPE_BRUSH, FLAG_ON, neatoSmartApp.turnBrushOnOffSuccess, 
-						neatoSmartApp.turnBrushOnOffError);
-			}
-		},
-
-		turnBrushOnOffSuccess: function(result) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(result);
-			
-			var motorON = localStorage.getItem('isBrushON');
-			if (motorON == "true") {
-				localStorage.setItem('isBrushON', "false");
-				document.querySelector('#btnTurnBrushOnOff').value = "Turn Robot Brush ON";
-			}
-			else {
-				localStorage.setItem('isBrushON', "true");
-				document.querySelector('#btnTurnBrushOnOff').value = "Turn Robot Brush OFF";
-			}
-		},
-		
-		turnBrushOnOffError: function(error) {
-			neatoSmartApp.setResponseText(error);
-			neatoSmartApp.hideProgressBar();
-		},
-				
-		showManageRobotWiFiPage: function() {
-			CURRENT_PAGE = MANAGE_ROBOT_WIFI_PAGE;
-			neatoSmartApp.hideDebugOptionsPage();
-			document.getElementById('time_5mins').checked = true;
-			document.querySelector('#manageRobotWiFi').setAttribute('aria-hidden', 'false');
-			document.querySelector('#btnTurnWiFiOnOff').addEventListener('click', neatoSmartApp.turnWiFiOnOff, true);
-			
-			// Initialize "Turn WiFi On/Off" button text
-			var wiFiON = localStorage.getItem('isWiFiON');
-			if (wiFiON == null) {
-				wiFiON = "false";
-				localStorage.setItem('isWiFiON', "false");
-			}
-			
-			if (wiFiON == "false") {
-				document.querySelector('#btnTurnWiFiOnOff').value = "Turn Robot WiFi ON";
-			}
-			else {
-				document.querySelector('#btnTurnWiFiOnOff').value = "Turn Robot WiFi OFF";
-			}
-		},
-
-		turnWiFiOnOff: function() {
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
-			}
-
-			neatoSmartApp.showProgressBar();
-
-			// Get WiFi turn off duration
-			var wiFiTurnOnDurationInSec = WIFI_TURN_OFF_DURATION_5MIN;	// default duration
-			if(document.getElementById('time_10mins').checked) {
-				wiFiTurnOnDurationInSec = WIFI_TURN_OFF_DURATION_10MIN;
-			}
-			else if (document.getElementById('time_15mins').checked) {
-				wiFiTurnOnDurationInSec = WIFI_TURN_OFF_DURATION_15MIN;
-			}
-			
-			// Based on current status, turn WiFi On/Off 
-			var wiFiON = localStorage.getItem('isWiFiON');
-			if (wiFiON == "true") {
-				RobotPluginManager.turnWiFiOnOff(robotId, FLAG_OFF, wiFiTurnOnDurationInSec, 
-						neatoSmartApp.turnWiFiOnOffSuccess, neatoSmartApp.turnWiFiOnOffError);
-				
-			} else {
-				RobotPluginManager.turnWiFiOnOff(robotId, FLAG_ON, wiFiTurnOnDurationInSec, 
-						neatoSmartApp.turnWiFiOnOffSuccess, neatoSmartApp.turnWiFiOnOffError);
-			}
-		},
-		
-		turnWiFiOnOffSuccess: function(result) {
-			var wiFiON = localStorage.getItem('isWiFiON');
-			if (wiFiON == "true") {
-				localStorage.setItem('isWiFiON', "false");
-				document.querySelector('#btnTurnWiFiOnOff').value = "Turn Robot WiFi ON";
-			}
-			else {
-				localStorage.setItem('isWiFiON', "true");
-				document.querySelector('#btnTurnWiFiOnOff').value = "Turn Robot WiFi OFF";
-			}
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(result);
-		},
-		
-		turnWiFiOnOffError: function(error) {
-			neatoSmartApp.setResponseText(error);
-			neatoSmartApp.hideProgressBar();
-		},
-				
-		//These constants are defined in jshelper.
-		//TODO: have a struture like discovery. Is in place, yet to test.
-		getRobotMapSuccess: function(result) {
-			neatoSmartApp.hideProgressBar();
-			// Map will be array of mapObjects. Right now we are assuming that its 1 element only.
-			for (var i in result) {
-				localStorage.setItem('mapId', result[i].mapId);
-				localStorage.setItem('mapOverlayInfo', JSON.stringify(result[i].mapOverlayInfo));				
-				document.getElementById('robotMapImage').src=result[i].mapImage;
-			}
-		},
-		
-		
-		getRobotMapError: function(error) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(error);
-		},
-
-		setMapOverlayData: function() {
-			neatoSmartApp.showProgressBar();
-			var robotId = localStorage.getItem('robotId');
-			if (robotId == null) {
-				robotId = "Robot_1001";
-			}
-			
-			var mapId = localStorage.getItem('mapId');
-			
-			if (mapId == null) {
-				mapId = "12";
-			}
-			
-			var mapOverlayInfoStr = localStorage.getItem('mapOverlayInfo');
-			
-			if (mapOverlayInfoStr == null) {
-				mapOverlayInfoStr = "{\"geographies\":[{\"id\":\"floor1\",\"noGo\":[[120,30,150,45],[65,110,85,140]],\"base\":[[20,5,25,10]]}]}";
-			}
-			
-			var mapOverlayInfo = JSON.parse(mapOverlayInfoStr);
-			
-			if (robotId == null) {
-				alert("Robot is not associated. Cannot retrieve map.");
-				return;
-			}
-			RobotPluginManager.setMapOverlayData(robotId, mapId, mapOverlayInfo, neatoSmartApp.setMapOverlayDataSuccess, neatoSmartApp.setMapOverlayDataError);
-		},
-		
-		setMapOverlayDataSuccess: function(result) {
-			neatoSmartApp.hideProgressBar();
-		},
-		
-		setMapOverlayDataError: function(error) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(error);
-		},
-	
-		//ATLAS test buttons
-		
-		getRobotAtlasMetadata: function() {			
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Robot is not associated.");				
-				return;
-			}
-			
-			neatoSmartApp.showProgressBar();
-			RobotPluginManager.getRobotAtlasMetadata(robotId, neatoSmartApp.atlasSuccess, neatoSmartApp.atlasErr);
-		}, 
-		
-			
-		updateRobotAtlasMetadata: function() {
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot.");				
-				return;
-			}
-			
-			neatoSmartApp.showProgressBar();
-			atlasMetadataInfoStr = "{\"geographies\":[{\"id\":\"floor1\",\"noGo\":[[120,30,150,45],[65,110,85,140]],\"base\":[[20,5,25,10]]}]}";
-			var atlasMetadataInfo = JSON.parse(atlasMetadataInfoStr);
-			RobotPluginManager.updateAtlasMetaData(robotId, atlasMetadataInfo, neatoSmartApp.atlasUpdateSuccess, neatoSmartApp.atlasErr);
-		},
-		
-		getAtlasGridData: function() {
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot.");				
-				return;
-			}
-			neatoSmartApp.showProgressBar();			
-			var gridId = "";
-			RobotPluginManager.getAtlasGridData(robotId, gridId, neatoSmartApp.gridSuccess, neatoSmartApp.gridErr);
-		},
-		
-		gridSuccess: function(result) {
-			neatoSmartApp.hideProgressBar();
-			document.getElementById('robotAtlasGridImage').src=result[0].gridData;
-		},
-		
-		gridErr: function(error) {
-			neatoSmartApp.hideProgressBar();
-			neatoSmartApp.setResponseText(result);
-			alert("Error in retrieving grid data");
-		},
-		
-		atlasUpdateSuccess: function(result) {
-			alert("Updated atlas metadata successfully");
-			neatoSmartApp.hideProgressBar();
-		},
-		
-		atlasSuccess: function(result) {
-			alert("Retrieved atlas metadata successfully");
-			neatoSmartApp.hideProgressBar();
-		},
-		
-		atlasErr: function(error) {
-			alert("Error in retrieving atlas metadata");
 			neatoSmartApp.hideProgressBar();
 			neatoSmartApp.setResponseText(error);
 		},
@@ -1832,16 +941,6 @@ var neatoSmartApp = (function() {
 		},
 		getRobotDataErr: function(error) {
 			neatoSmartApp.hideProgressBar();
-		},
-		
-		setRobotName: function() {
-			neatoSmartApp.showProgressBar();
-			var robotName = document.querySelector('#robotName').value;
-			var robotId = localStorage.getItem('robotId');
-			if (robotId == null) {
-				robotId = "Robot_1001";
-			}
-			RobotPluginManager.setRobotName(robotId, robotName, neatoSmartApp.setRobotNameSuccess, neatoSmartApp.setRobotNameErr);
 		},
 		
 		setRobotName2: function() {			
@@ -1891,34 +990,6 @@ var neatoSmartApp = (function() {
 			}
 		},
 		
-		getRobotVirtualOnlineStatus: function() {
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotName.length == 0)) {
-				alert("Please associate a robot");
-			}			
-			else {
-				neatoSmartApp.showProgressBar();
-				RobotPluginManager.getRobotVirtualOnlineStatus(robotId, neatoSmartApp.getRobotOnlineStatusSuccess, neatoSmartApp.getRobotOnlineStatusError);
-			}
-		},
-		
-		setNotifications: function() {			
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotName.length == 0)) {
-				alert("Please associate a robot");
-			}			
-			else {
-				neatoSmartApp.showProgressBar();				
-				var isNotificationsON = localStorage.getItem('isNotificationsON');				
-				if (isNotificationsON == "false") {					
-					RobotPluginManager.registerNotifications(robotId, neatoSmartApp.notificationStatusSuccess, neatoSmartApp.notificationStatusError);					
-				}
-				else {					
-					RobotPluginManager.unregisterNotifications(robotId, neatoSmartApp.notificationStatusSuccess, neatoSmartApp.notificationStatusError);					
-				}
-			}
-		},
-		
 		setGlobalNotifications: function() {			
 			var email = localStorage.getItem('email');
 			if ((email == null) || (email.length == 0)) {
@@ -1954,29 +1025,6 @@ var neatoSmartApp = (function() {
 		},
 		
 		setGlobalNotificationsEror: function(error) {
-			neatoSmartApp.hideProgressBar();			
-			neatoSmartApp.setResponseText(error);
-		},
-		
-		notificationStatusSuccess: function(result) {
-			var eventId = result['eventId'];
-			if ((eventId == EVENT_ID_REGISTER) || (eventId == EVENT_ID_UNREGISTER)) {
-				var isNotificationsON = localStorage.getItem('isNotificationsON');				
-				if (isNotificationsON == "false") {
-					localStorage.setItem('isNotificationsON', "true");
-					document.querySelector('#btnEnableNotifications').value = "OFF Notifications";
-				}
-				else {
-					document.querySelector('#btnEnableNotifications').value = "ON Notifications";
-					localStorage.setItem('isNotificationsON', "false");
-				}
-			}
-			
-			neatoSmartApp.hideProgressBar();			
-			neatoSmartApp.setResponseText(result);
-		},
-		
-		notificationStatusError: function(error) {
 			neatoSmartApp.hideProgressBar();			
 			neatoSmartApp.setResponseText(error);
 		},
@@ -2248,22 +1296,6 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseTextAppend(error);
 		},
 		
-		intendToDrive: function() {
-			neatoSmartApp.setResponseText(null);
-			var robotId = localStorage.getItem('robotId');
-			
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
-			}
-			
-			neatoSmartApp.showProgressBar();
-
-			// TODO: add appropriate success callbacks.
-			RobotPluginManager.intendToDrive(robotId, neatoSmartApp.driveRobotSuccess, 
-					neatoSmartApp.driveRobotError);	
-		},
-		
 		directConnect: function() {
 			neatoSmartApp.setResponseText(null);
 			var robotId = localStorage.getItem('robotId');
@@ -2305,18 +1337,6 @@ var neatoSmartApp = (function() {
 					neatoSmartApp.driveRobotError);	
 		},
 		
-		cancelIntendToDrive: function() {
-			neatoSmartApp.setResponseText(null);
-			var robotId = localStorage.getItem('robotId');
-			
-			if ((robotId == null) || (robotId.length == 0)) {
-				alert("Please associate a Robot");
-				return;
-			}
-			neatoSmartApp.showProgressBar();
-			RobotPluginManager.cancelIntendToDrive(robotId, neatoSmartApp.driveRobotSuccess, 
-					neatoSmartApp.driveRobotError);	
-		},
 		//##################FUNCTIONS RELATED TO HIDE-SHOW SECTIONS ON HTML#####################################
 		
 		showWelcomePage: function() {
@@ -2326,7 +1346,6 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnGoToLogin').addEventListener('click', neatoSmartApp.hideWelcomeShowLogin , true);
 			document.querySelector('#btnGoToRegister').addEventListener('click', neatoSmartApp.hideWelcomeShowRegister , true);
 			document.querySelector('#btnForgetPassword').addEventListener('click', neatoSmartApp.hideWelcomeShowForgetPassword , true);
-			document.querySelector('#btnDemoLogin').addEventListener('click', neatoSmartApp.loginWithDemo , true);			
 		},
 
 		hideWelcomePage: function() {
@@ -2335,21 +1354,17 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnGoToLogin').removeEventListener('click', neatoSmartApp.hideWelcomeShowLogin , true);
 			document.querySelector('#btnGoToRegister').removeEventListener('click', neatoSmartApp.hideWelcomeShowRegister , true);
 			document.querySelector('#btnForgetPassword').removeEventListener('click', neatoSmartApp.hideWelcomeShowForgetPassword , true);
-			document.querySelector('#btnDemoLogin').removeEventListener('click', neatoSmartApp.loginWithDemo , true);
 		},
 
 		hideWelcomeShowLogin: function() {
 			neatoSmartApp.hideWelcomePage();
 			neatoSmartApp.showLoginPage();
 		},
-		
-		
 
 		hideWelcomeShowRegister: function() {
 			neatoSmartApp.hideWelcomePage();
 			neatoSmartApp.showRegisterPage();
 		},
-
 
 		hideWelcomeShowHomePage : function() {
 			neatoSmartApp.hideWelcomePage();
@@ -2385,8 +1400,6 @@ var neatoSmartApp = (function() {
 		showRegisterPage: function() {
 			CURRENT_PAGE = REGISTER_USER_PAGE;
 			document.querySelector('#registerUserPage').setAttribute('aria-hidden', 'false');
-			document.querySelector('#registerUserButton').addEventListener('click', neatoSmartApp.register , true);
-			document.querySelector('#registerUserEmailValidationButton').addEventListener('click', neatoSmartApp.registerEmailValidation, true);
 			document.querySelector('#registerUserExtraParamsButton').addEventListener('click', neatoSmartApp.registerExtraParams, true);
 			document.querySelector('#resendValidationMailButton').addEventListener('click', neatoSmartApp.resendValidationMail, true);
 		},
@@ -2394,8 +1407,6 @@ var neatoSmartApp = (function() {
 		hideRegisterPage: function() {
 			neatoSmartApp.setResponseText(null);
 			document.querySelector('#registerUserPage').setAttribute('aria-hidden', 'true');
-			document.querySelector('#registerUserButton').removeEventListener('click', neatoSmartApp.register, true);
-			document.querySelector('#registerUserEmailValidationButton').removeEventListener('click', neatoSmartApp.registerEmailValidation, true);
 			document.querySelector('#registerUserExtraParamsButton').removeEventListener('click', neatoSmartApp.registerExtraParams, true);
 			document.querySelector('#resendValidationMailButton').removeEventListener('click', neatoSmartApp.resendValidationMail, true);
 		},
@@ -2449,12 +1460,6 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.showRobotCommandPage();
 		},
 		
-		hideManageRobotWiFiPage: function() {
-			document.querySelector('#manageRobotWiFi').setAttribute('aria-hidden', 'true');
-			neatoSmartApp.showDebugOptionsPage();
-			document.querySelector('#btnTurnWiFiOnOff').removeEventListener('click', neatoSmartApp.turnWiFiOnOff, true);
-		},
-		
 		showUserHomepage: function() {
 			CURRENT_PAGE = USER_HOME_PAGE;
 			document.querySelector('#userHomePage').setAttribute('aria-hidden', 'false');
@@ -2496,15 +1501,12 @@ var neatoSmartApp = (function() {
 			document.querySelector('#newScheduleRobot').setAttribute('aria-hidden', 'false');
 			document.querySelector('#btnCreateSchedue').addEventListener('click', neatoSmartApp.createSchedule , true);
 			document.querySelector('#btnGetScheduleEvents').addEventListener('click', neatoSmartApp.getScheduleEvents , true);
-			document.querySelector('#btnAddScheduleEvent').addEventListener('click', neatoSmartApp.addScheduleEvent , true);
 			document.querySelector('#btnAddScheduleEventNew').addEventListener('click', neatoSmartApp.addScheduleEventNew, true);
-			document.querySelector('#btnUpdateScheduleEvent').addEventListener('click', neatoSmartApp.updateScheduleEvent , true);
 			document.querySelector('#btnUpdateScheduleEventNew').addEventListener('click', neatoSmartApp.updateScheduleEventNew , true);
 			document.querySelector('#getScheduleEventData').addEventListener('click', neatoSmartApp.getScheduleEventData , true);			
 			document.querySelector('#btnDeleteScheduleEvent').addEventListener('click', neatoSmartApp.deleteScheduleEvent , true);
 			document.querySelector('#updateSchedule').addEventListener('click', neatoSmartApp.updateSchedule , true);
 			document.querySelector('#btnGetScheduleData').addEventListener('click', neatoSmartApp.getScheduleData, true);
-			document.querySelector('#newUseBasicSchedule').addEventListener('click', neatoSmartApp.useBasicScheduleNewOnClick, true);
 			neatoSmartApp.getScheduleEvents();
 		},
 		
@@ -2513,15 +1515,12 @@ var neatoSmartApp = (function() {
 			document.querySelector('#newScheduleRobot').setAttribute('aria-hidden', 'true');
 			document.querySelector('#btnCreateSchedue').removeEventListener('click', neatoSmartApp.createSchedule , true);
 			document.querySelector('#btnGetScheduleEvents').removeEventListener('click', neatoSmartApp.getScheduleEvents , true);
-			document.querySelector('#btnAddScheduleEvent').removeEventListener('click', neatoSmartApp.addScheduleEvent , true);
 			document.querySelector('#btnAddScheduleEventNew').removeEventListener('click', neatoSmartApp.addScheduleEventNew , true);
-			document.querySelector('#btnUpdateScheduleEvent').removeEventListener('click', neatoSmartApp.updateScheduleEvent , true);
 			document.querySelector('#btnUpdateScheduleEventNew').removeEventListener('click', neatoSmartApp.updateScheduleEventNew , true);
 			document.querySelector('#getScheduleEventData').removeEventListener('click', neatoSmartApp.getScheduleEventData , true);			
 			document.querySelector('#btnDeleteScheduleEvent').removeEventListener('click', neatoSmartApp.deleteScheduleEvent , true);
 			document.querySelector('#updateSchedule').removeEventListener('click', neatoSmartApp.updateSchedule , true);
 			document.querySelector('#btnGetScheduleData').removeEventListener('click', neatoSmartApp.useBasicScheduleNewOnClick, true);
-			document.querySelector('#newUseBasicSchedule').removeEventListener('click', neatoSmartApp.useBasicScheduleNewOnClick, true);
 		},
 		
 		hideNewScheduleShowHome: function() {
@@ -2530,11 +1529,6 @@ var neatoSmartApp = (function() {
 		},
 		
 		
-		goToSchedule: function() {
-			neatoSmartApp.hideUserHomePage();
-			neatoSmartApp.showSchedulePage();
-		},
-
 		goToRobotCommandsPage: function() {
 			neatoSmartApp.hideUserHomePage();
 			neatoSmartApp.showRobotCommandPage();
@@ -2585,53 +1579,15 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.showUserSettingsPage();
 		},
 		
-		goToRobotAtlas: function() {
-			neatoSmartApp.hideRobotSettingsPage();
-			neatoSmartApp.showRobotAtlasPage();
-		},
-		
 		goToRobotSetName: function() {
 			neatoSmartApp.hideRobotSettingsPage();
 			neatoSmartApp.showRobotSetNamePage();
-		},
-		
-		goToRobotMap: function() {
-			neatoSmartApp.hideDebugOptionsPage();
-			neatoSmartApp.showRobotMapPage();
 		},
 		
 		gotoNotificationSettingsPage:function() {
 			if (neatoSmartApp.showNotificationSettingsPage() == true) {
 				neatoSmartApp.hideRobotSettingsPage();				
 			}			
-		},
-		
-		showSchedulePage: function() {
-			CURRENT_PAGE = ROBOT_SCHEDULE_PAGE;
-			document.querySelector('#scheduleRobot').setAttribute('aria-hidden', 'false');
-			document.querySelector('#btnScheduleAlternateWeekdays').addEventListener('click', neatoSmartApp.scheduleRobotAlternateWeekdays , true);
-			document.querySelector('#btnScheduleBabyNap').addEventListener('click', neatoSmartApp.scheduleRobotBabyNap , true);
-			document.querySelector('#btnScheduleOnlyWeekends').addEventListener('click', neatoSmartApp.scheduleRobotOnlyWeekends , true);
-			document.querySelector('#btnScheduleWorkingCouple').addEventListener('click', neatoSmartApp.scheduleRobotWorkingCouples , true);
-			document.querySelector('#btnScheduleClear').addEventListener('click', neatoSmartApp.scheduleClear , true);
-			document.querySelector('#btnGetSchedule').addEventListener('click', neatoSmartApp.getSchedule , true);
-		},
-		
-		
-		hideScheduleShowHome: function() {
-			neatoSmartApp.hideSchedulePage();
-			neatoSmartApp.showUserHomepage();
-		},
-		
-		hideSchedulePage: function() {
-			neatoSmartApp.setResponseText(null);
-			document.querySelector('#scheduleRobot').setAttribute('aria-hidden', 'true');
-			document.querySelector('#btnScheduleAlternateWeekdays').removeEventListener('click', neatoSmartApp.scheduleRobotAlternateWeekdays , true);
-			document.querySelector('#btnScheduleBabyNap').removeEventListener('click', neatoSmartApp.scheduleRobotBabyNap , true);
-			document.querySelector('#btnScheduleOnlyWeekends').removeEventListener('click', neatoSmartApp.scheduleRobotOnlyWeekends , true);
-			document.querySelector('#btnScheduleWorkingCouple').removeEventListener('click', neatoSmartApp.scheduleRobotWorkingCouples , true);
-			document.querySelector('#btnScheduleClear').removeEventListener('click', neatoSmartApp.scheduleClear , true);
-			document.querySelector('#btnGetSchedule').removeEventListener('click', neatoSmartApp.getSchedule , true);
 		},
 		
 		goAssociateRobotPage: function() {
@@ -2699,10 +1655,6 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.showSettingsPage();
 		},
 		
-		hideAtlasShowRobotSettingsPage: function() {
-			neatoSmartApp.hideRobotAtlasPage();
-			neatoSmartApp.showRobotSettingsPage();
-		},
 		
 		hideSetRobotNameShowRobotSettingsPage: function() {
 			neatoSmartApp.hideRobotSetNamePage();
@@ -2719,11 +1671,6 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.showRobotCommandPage();
 		},
 		
-		hideRobotMapShowDebugOptionsPage: function() {
-			neatoSmartApp.hideRobotMapPage();
-			neatoSmartApp.showDebugOptionsPage();
-		},
-		
 		hideNotificationSettingsPage: function() {
 			neatoSmartApp.hideRobotNotificationSettingsPage();
 			neatoSmartApp.showRobotSettingsPage();
@@ -2737,7 +1684,6 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnDisassociateRobot').addEventListener('click', neatoSmartApp.disassociateRobot , true);
 			document.querySelector('#btnClearRobotData').addEventListener('click', neatoSmartApp.clearRobotData , true);
 			document.querySelector('#btnGetAssociatedRobots').addEventListener('click', neatoSmartApp.getAssociatedRobots , true);
-			document.querySelector('#btnSetRobotName').addEventListener('click', neatoSmartApp.setRobotName , true);
 			document.querySelector('#btnSetRobotName2').addEventListener('click', neatoSmartApp.setRobotName2 , true);
 			document.querySelector('#btnGetAssociatedRobotDetail').addEventListener('click', neatoSmartApp.getAssociatedRobotDetail , true);
 		},
@@ -2748,7 +1694,6 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnDisassociateRobot').removeEventListener('click', neatoSmartApp.disassociateRobot , true);
 			document.querySelector('#btnClearRobotData').removeEventListener('click', neatoSmartApp.clearRobotData , true);
 			document.querySelector('#btnGetAssociatedRobots').removeEventListener('click', neatoSmartApp.getAssociatedRobots , true);
-			document.querySelector('#btnSetRobotName').removeEventListener('click', neatoSmartApp.setRobotName , true);
 			document.querySelector('#btnSetRobotName2').removeEventListener('click', neatoSmartApp.setRobotName2 , true);			
 			document.querySelector('#btnGetAssociatedRobotDetail').removeEventListener('click', neatoSmartApp.getAssociatedRobotDetail , true);
 		},
@@ -2762,34 +1707,13 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnTestAllAssociatedRobots').addEventListener('click', neatoSmartApp.getAssociatedRobots , true);
 			document.querySelector('#btnTestRobotDetail').addEventListener('click', neatoSmartApp.getAssociatedRobotDetail , true);
 			document.querySelector('#btnTestUserDetail').addEventListener('click', neatoSmartApp.getUserDetails , true);
-			document.querySelector('#btnManageRobotWiFi').addEventListener('click', neatoSmartApp.showManageRobotWiFiPage, true);
 			
-			document.querySelector('#btnOpenClosePeerConn2').addEventListener('click', neatoSmartApp.openClosePeerConn2 , true);
-			document.querySelector('#btnSendStartStopCleanCommand').addEventListener('click', neatoSmartApp.startStopCleaning , true);
-			document.querySelector('#btnSendStartStopCleanCommand2').addEventListener('click', neatoSmartApp.startStopCleaning2 , true);
-			document.querySelector('#btnPauseCleaningCommand').addEventListener('click', neatoSmartApp.pauseCleaning , true);
 			document.querySelector('#btnEnableSchedule').addEventListener('click', neatoSmartApp.enableSchedule , true);
 			document.querySelector('#btnIsScheduleEnabled').addEventListener('click', neatoSmartApp.isScheduleEnabled , true);
-			document.querySelector('#btnSetRobotClock').addEventListener('click', neatoSmartApp.setRobotClock , true);
 			document.querySelector('#btnRefreshUI').addEventListener('click', neatoSmartApp.refreshUIByState, true);
 			document.querySelector('#btnValidateUser').addEventListener('click', neatoSmartApp.isUserValidated, true);
 			document.querySelector('#btnUnregisterPushMessage').addEventListener('click', neatoSmartApp.unregisterForRobotMessages, true);
-			document.querySelector('#btnIsRobotOnlineVirtual').addEventListener('click', neatoSmartApp.getRobotVirtualOnlineStatus, true);
 			document.querySelector('#btnGetRobotProfileData').addEventListener('click', neatoSmartApp.getRobotData , true);
-			var directConn = localStorage.getItem('isPeerConnection');
-			// Initialize "Turn Motor On/Off" button text 
-			var motorON = localStorage.getItem('isMotorON');
-			if (motorON == null) {
-				motorON = "false";
-				localStorage.setItem('isMotorON', "false");
-			}
-			
-			if (MotorON == "false") {
-				document.querySelector('#btnTurnMotorOnOff').value = "Turn Robot Vacuum ON";
-			}
-			else {
-				document.querySelector('#btnTurnMotorOnOff').value = "Turn Robot Vacuum OFF";
-			}
 		},
 			
 		hideDebugOptionsPage: function() {
@@ -2801,19 +1725,12 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnTestAllAssociatedRobots').removeEventListener('click', neatoSmartApp.getAssociatedRobots , true);
 			document.querySelector('#btnTestRobotDetail').removeEventListener('click', neatoSmartApp.getAssociatedRobotDetail , true);
 			document.querySelector('#btnTestUserDetail').removeEventListener('click', neatoSmartApp.getUserDetails , true);
-			document.querySelector('#btnManageRobotWiFi').removeEventListener('click', neatoSmartApp.showManageRobotWiFiPage, true);
 
-			document.querySelector('#btnOpenClosePeerConn2').removeEventListener('click', neatoSmartApp.openClosePeerConn2 , true);
-			document.querySelector('#btnSendStartStopCleanCommand').removeEventListener('click', neatoSmartApp.startStopCleaning , true);
-			document.querySelector('#btnSendStartStopCleanCommand2').removeEventListener('click', neatoSmartApp.startStopCleaning2 , true);
-			document.querySelector('#btnPauseCleaningCommand').removeEventListener('click', neatoSmartApp.pauseCleaning , true);
 			document.querySelector('#btnEnableSchedule').removeEventListener('click', neatoSmartApp.enableSchedule , true);
 			document.querySelector('#btnIsScheduleEnabled').removeEventListener('click', neatoSmartApp.isScheduleEnabled , true);
-			document.querySelector('#btnSetRobotClock').removeEventListener('click', neatoSmartApp.setRobotClock , true);
 			document.querySelector('#btnRefreshUI').removeEventListener('click', neatoSmartApp.refreshUIByState, true);
 			document.querySelector('#btnValidateUser').removeEventListener('click', neatoSmartApp.isUserValidated, true);
 			document.querySelector('#btnUnregisterPushMessage').removeEventListener('click', neatoSmartApp.unregisterForRobotMessages, true);
-			document.querySelector('#btnIsRobotOnlineVirtual').removeEventListener('click', neatoSmartApp.getRobotVirtualOnlineStatus, true);
 			document.querySelector('#btnGetRobotProfileData').removeEventListener('click', neatoSmartApp.getRobotData , true);
 		},
 		
@@ -2859,7 +1776,6 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnPauseResumeCleaningCommand3').addEventListener('click', neatoSmartApp.pauseResumeCleaning3, true);
 			document.querySelector('#btnGoToSpotDefinitionAPIPage').addEventListener('click', neatoSmartApp.goToSpotDefinitionPage , true);
 			document.querySelector('#btnNavigateRobot').addEventListener('click', neatoSmartApp.navigateRobot, true);
-			document.querySelector('#btnCleaningCategoryAPIPage').addEventListener('click', neatoSmartApp.getRobotCurrentStateDetails, true);
 			neatoSmartApp.populateCleaningCategoryList();
 			neatoSmartApp.populateCleaningModeList();
 			neatoSmartApp.populateNavigationControlList();
@@ -2890,7 +1806,6 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnPauseResumeCleaningCommand3').removeEventListener('click', neatoSmartApp.pauseResumeCleaning3, true);
 			document.querySelector('#btnGoToSpotDefinitionAPIPage').removeEventListener('click', neatoSmartApp.goToSpotDefinitionPage , true);
 			document.querySelector('#btnNavigateRobot').removeEventListener('click', neatoSmartApp.navigateRobot, true);
-			document.querySelector('#btnCleaningCategoryAPIPage').removeEventListener('click', neatoSmartApp.getRobotCurrentStateDetails, true);
 
 			// remove click handlers for the radio buttons
 			var radioCtrlCleaningModifier1x = document.querySelector('input[type="radio"][id="radioCleaningModifier1x"]');
@@ -2934,13 +1849,9 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(null);
 
 			document.querySelector('#btnDriveRobot').addEventListener('click', neatoSmartApp.driveRobot, true);
-			document.querySelector('#btnIntendToDrive').addEventListener('click', neatoSmartApp.intendToDrive, true);
 			document.querySelector('#btnDirectConnect').addEventListener('click', neatoSmartApp.directConnect, true);
 			document.querySelector('#btnIsPeerConnected').addEventListener('click', neatoSmartApp.validatePeerConnection, true);
 			document.querySelector('#btnStopRobotDrive').addEventListener('click', neatoSmartApp.stopRobotDrive, true);
-			document.querySelector('#btnCancelIntendToDrive').addEventListener('click', neatoSmartApp.cancelIntendToDrive, true);
-			document.querySelector('#btnTurnMotorOnOff').addEventListener('click',neatoSmartApp.turnMotorOnOff, true);
-			document.querySelector('#btnTurnBrushOnOff').addEventListener('click',neatoSmartApp.turnBrushOnOff, true);
 			neatoSmartApp.populateDriveControlList();
 	
 			// set the page as the current page and make it visible
@@ -2956,12 +1867,8 @@ var neatoSmartApp = (function() {
 			
 			document.querySelector('#btnDriveRobot').removeEventListener('click', neatoSmartApp.driveRobot, true);
 			document.querySelector('#btnDirectConnect').removeEventListener('click', neatoSmartApp.directConnect, true);
-			document.querySelector('#btnIntendToDrive').removeEventListener('click', neatoSmartApp.intendToDrive, true);
 			document.querySelector('#btnIsPeerConnected').removeEventListener('click', neatoSmartApp.validatePeerConnection, true);
 			document.querySelector('#btnStopRobotDrive').removeEventListener('click', neatoSmartApp.stopRobotDrive, true);
-			document.querySelector('#btnCancelIntendToDrive').removeEventListener('click', neatoSmartApp.cancelIntendToDrive, true);
-			document.querySelector('#btnTurnMotorOnOff').removeEventListener('click',neatoSmartApp.turnMotorOnOff, true);
-			document.querySelector('#btnTurnBrushOnOff').removeEventListener('click',neatoSmartApp.turnBrushOnOff, true);
 		},
 		
 		populateDriveControlList: function () {
@@ -3044,7 +1951,6 @@ var neatoSmartApp = (function() {
 
 			document.querySelector('#btnSetSpotDefinition').addEventListener('click', neatoSmartApp.setSpotDefinition, true);
 			document.querySelector('#btnGetSpotDefinition').addEventListener('click', neatoSmartApp.getSpotDefinition, true);
-			document.querySelector('#btnGetCleaningDetails').addEventListener('click', neatoSmartApp.getRobotCurrentStateDetails, true);
 			
 			neatoSmartApp.populateSpotAreaLists();
 			
@@ -3061,7 +1967,6 @@ var neatoSmartApp = (function() {
 
 			document.querySelector('#btnSetSpotDefinition').removeEventListener('click', neatoSmartApp.setSpotDefinition, true);
 			document.querySelector('#btnGetSpotDefinition').removeEventListener('click', neatoSmartApp.getSpotDefinition, true);
-			document.querySelector('#btnGetCleaningDetails').removeEventListener('click', neatoSmartApp.getRobotCurrentStateDetails, true);
 		},
 		
 		onClickCleaningModifier1x:function() {
@@ -3079,20 +1984,11 @@ var neatoSmartApp = (function() {
 			document.querySelector('#btnSendToBase').addEventListener('click', neatoSmartApp.sendToBaseCommand, true);
 			document.querySelector('#btnGetState').addEventListener('click', neatoSmartApp.getRobotState, true);
 			
-			document.querySelector('#btnStartStopCleaning').addEventListener('click', neatoSmartApp.startStopCleaningPeer, true);			
-			var robotStarted = localStorage.getItem('isRobotStarted');
-			if ((robotStarted == null) || (robotStarted == "false")) {
-				document.querySelector('#btnStartStopCleaning').value = "Start Cleaning";
-			} 
-			else {
-				document.querySelector('#btnStartStopCleaning').value = "Stop Cleaning";
-			}
 		},
 		
 		hideRobotCommandPage: function() {
 			neatoSmartApp.setResponseText(null);			
 			document.querySelector('#robotCommands').setAttribute('aria-hidden', 'true');			
-			document.querySelector('#btnStartStopCleaning').removeEventListener('click', neatoSmartApp.startStopCleaningPeer, true);
 			document.querySelector('#btnSendToBase').removeEventListener('click', neatoSmartApp.sendToBaseCommand, true);
 			document.querySelector('#btnGetState').removeEventListener('click', neatoSmartApp.getRobotState, true);
 		},
@@ -3116,7 +2012,6 @@ var neatoSmartApp = (function() {
 			neatoSmartApp.setResponseText(null);	
 			CURRENT_PAGE = ADD_ROBOT_PAGE;
 			document.querySelector('#addRobot').setAttribute('aria-hidden', 'false');
-			document.querySelector('#btnDiscoverRobots').addEventListener('click', neatoSmartApp.discoverRobots , true);
 			document.querySelector('#btnAssociateRobotDirect').addEventListener('click', neatoSmartApp.goToAssociateDirect , true);
 			document.querySelector('#btnGotoLinkRobot').addEventListener('click', neatoSmartApp.goToLinkRobot , true);
 			document.querySelector('#btnGetAllAssociated').addEventListener('click', neatoSmartApp.getAssociatedRobots , true);
@@ -3125,7 +2020,6 @@ var neatoSmartApp = (function() {
 		hideAddRobotPage: function() {
 			neatoSmartApp.setResponseText(null);			
 			document.querySelector('#addRobot').setAttribute('aria-hidden', 'true');				
-			document.querySelector('#btnDiscoverRobots').removeEventListener('click', neatoSmartApp.discoverRobots , true);
 			document.querySelector('#btnAssociateRobotDirect').removeEventListener('click', neatoSmartApp.goToAssociateDirect , true);
 			document.querySelector('#btnGotoLinkRobot').removeEventListener('click', neatoSmartApp.goToLinkRobot , true);
 			document.querySelector('#btnGetAllAssociated').removeEventListener('click', neatoSmartApp.getAssociatedRobots , true);
@@ -3163,32 +2057,16 @@ var neatoSmartApp = (function() {
 			CURRENT_PAGE = ROBOT_SETTINGS_PAGE;
 			document.querySelector('#robotSettings').setAttribute('aria-hidden', 'false');				
 			document.querySelector('#btnGoToSetRobotName').addEventListener('click', neatoSmartApp.goToRobotSetName , true);			
-			document.querySelector('#btnGoToAtlas').addEventListener('click', neatoSmartApp.goToRobotAtlas, true);
 			document.querySelector('#btnGetRobotDetail').addEventListener('click', neatoSmartApp.getAssociatedRobotDetail, true);			
-			document.querySelector('#btnEnableNotifications').addEventListener('click', neatoSmartApp.setNotifications, true);
 			document.querySelector('#btnNotificationSettings').addEventListener('click', neatoSmartApp.gotoNotificationSettingsPage, true);
-			
-			var isNotificationsON = localStorage.getItem('isNotificationsON');			
-			if ((isNotificationsON == null) || (isNotificationsON == "false")) {
-				localStorage.setItem('isNotificationsON', "false");
-				document.querySelector('#btnEnableNotifications').value = "ON Notifications";				
-			}
-			else {
-				document.querySelector('#btnEnableNotifications').value = "OFF Notifications";
-			}
-			
-			// document.querySelector('#btnGetRobotOnlineStatus').addEventListener('click', neatoSmartApp.getAssociatedRobotOnlineStatus, true);
 		},
 		
 		hideRobotSettingsPage: function() {
 			neatoSmartApp.setResponseText(null);
 			document.querySelector('#robotSettings').setAttribute('aria-hidden', 'true');
 			document.querySelector('#btnGoToSetRobotName').removeEventListener('click', neatoSmartApp.goToRobotSetName , true);
-			document.querySelector('#btnGoToAtlas').removeEventListener('click', neatoSmartApp.goToRobotAtlas , true);
 			document.querySelector('#btnGetRobotDetail').removeEventListener('click', neatoSmartApp.getAssociatedRobotDetail, true);
-			document.querySelector('#btnEnableNotifications').removeEventListener('click', neatoSmartApp.setNotifications, true);
 			document.querySelector('#btnNotificationSettings').removeEventListener('click', neatoSmartApp.gotoNotificationSettingsPage, true);
-			// document.querySelector('#btnGetRobotOnlineStatus').removeEventListener('click', neatoSmartApp.getAssociatedRobotOnlineStatus, true);
 		},
 		
 		showRobotSetNamePage: function() {
@@ -3222,63 +2100,6 @@ var neatoSmartApp = (function() {
 		hideAssociateShowHome: function() {
 			neatoSmartApp.hideAssociateRobotPage();
 			neatoSmartApp.showUserHomepage();
-		},
-		
-		showRobotMapPage: function() {
-			CURRENT_PAGE = ROBOT_MAP_PAGE;
-			document.querySelector('#robotMapSection').setAttribute('aria-hidden', 'false');
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				$('#robotSectionHeader').text("Robot Map");
-			}
-			else {
-				$('#robotSectionHeader').text("Map of "+robotId);
-			}
-			
-			//document.querySelector('#robotSectionHeader')
-			document.querySelector('#btnGetRobotMap').addEventListener('click', neatoSmartApp.getRobotMap , true);
-		},
-		
-		hideRobotMapPage: function() {
-			neatoSmartApp.setResponseText(null);
-			document.querySelector('#robotMapSection').setAttribute('aria-hidden', 'true');
-			document.querySelector('#btnGetRobotMap').removeEventListener('click', neatoSmartApp.getRobotMap , true);
-			$('#robotMapImage').replaceWith('<img src="" id="robotMapImage"/>');
-		},
-
-		hideHomeShowMap: function() {
-			neatoSmartApp.hideUserHomePage();
-			neatoSmartApp.showRobotMapPage();
-		},
-		hideMapShowHomePage: function() {
-			neatoSmartApp.hideRobotMapPage();
-			neatoSmartApp.showUserHomepage();
-		},
-		
-		//Atlas
-		showRobotAtlasPage: function() {
-			CURRENT_PAGE = ROBOT_ATLAS_PAGE;
-			document.querySelector('#robotAtlasSection').setAttribute('aria-hidden', 'false');
-			
-			var robotId = localStorage.getItem('robotId');
-			if ((robotId == null) || (robotId.length == 0)) {
-				$('#robotAtlasHeader').text("Robot Atlas");
-			}
-			else {
-				$('#robotAtlasHeader').text("Atlas of "+robotId);
-			}
-		
-			document.querySelector('#btnGetRobotAtlasMetadata').addEventListener('click', neatoSmartApp.getRobotAtlasMetadata , true);
-			document.querySelector('#btnUpdateRobotAtlasMetadata').addEventListener('click', neatoSmartApp.updateRobotAtlasMetadata , true);
-			document.querySelector('#btnGetGridData').addEventListener('click', neatoSmartApp.getAtlasGridData , true);
-		},
-		
-		hideRobotAtlasPage: function() {
-			neatoSmartApp.setResponseText(null);
-			document.querySelector('#robotAtlasSection').setAttribute('aria-hidden', 'true');
-			document.querySelector('#btnGetRobotAtlasMetadata').removeEventListener('click', neatoSmartApp.getRobotAtlasMetadata , true);
-			document.querySelector('#btnUpdateRobotAtlasMetadata').removeEventListener('click', neatoSmartApp.updateRobotAtlasMetadata , true);
-			document.querySelector('#btnGetGridData').removeEventListener('click', neatoSmartApp.getAtlasGridData , true);
 		},
 		
 		showNotificationSettingsPage: function() {
@@ -3436,14 +2257,6 @@ var neatoSmartApp = (function() {
 			radioCtrlRSNotificationOFF.removeEventListener('click', neatoSmartApp.onClickRSNotificationOFF, true);
 		},
 		
-		hideHomeShowAtlas: function() {
-			neatoSmartApp.hideUserHomePage();
-			neatoSmartApp.showRobotAtlasPage();
-		},
-		hideAtlasShowHomePage: function() {
-			neatoSmartApp.hideRobotAtlasPage();
-			neatoSmartApp.showUserHomepage();
-		},
 		backButtonPressed: function() {  
 			/*e.preventDefault();*/
 		 	if (CURRENT_PAGE == ROBOT_ASSOCIATION_PAGE) {
@@ -3454,15 +2267,6 @@ var neatoSmartApp = (function() {
 		 	} 
 		 	else if (CURRENT_PAGE == REGISTER_USER_PAGE) {
 		 		neatoSmartApp.hideRegisterShowWelcome();
-		 	} 
-		 	else if(CURRENT_PAGE == ROBOT_SCHEDULE_PAGE) {
-		 		neatoSmartApp.hideScheduleShowHome();
-		 	} 
-		 	else if(CURRENT_PAGE == ROBOT_MAP_PAGE) {
-		 		neatoSmartApp.hideRobotMapShowDebugOptionsPage();
-		 	} 
-		 	else if (CURRENT_PAGE == ROBOT_ATLAS_PAGE) {
-		 		neatoSmartApp.hideAtlasShowRobotSettingsPage();
 		 	} 
 		 	else if (CURRENT_PAGE == ROBOT_COMMAND_PAGE) {
 		 		neatoSmartApp.hideRobotCommandShowHomePage();		 	
@@ -3506,9 +2310,6 @@ var neatoSmartApp = (function() {
 		 	else if(CURRENT_PAGE == SPOT_DEFINITION_PAGE) {
 		 		neatoSmartApp.hideSpotDefinitionShowTestCleaning();
 		 	}
-			else if (CURRENT_PAGE == MANAGE_ROBOT_WIFI_PAGE) {
-				neatoSmartApp.hideManageRobotWiFiPage();				
-			}
 			else if (CURRENT_PAGE == NOTIFICATION_SETTINGS_PAGE) {
 		 		neatoSmartApp.hideNotificationSettingsPage();
 		 	} 		
@@ -3539,26 +2340,6 @@ var neatoSmartApp = (function() {
 			var email = localStorage.getItem('email');
 			UserPluginManager.isUserLoggedIn(email, neatoSmartApp.isUserLoggedInSuccess, neatoSmartApp.isUserLoggedInError);
 			
-			var robotStarted = localStorage.getItem('isRobotStarted');
-			if (robotStarted == null) {
-				robotStarted = "false";
-			}
-			
-			var isRobotStarted =  ((robotStarted == "true") ? true : false);
-			
-			if(isRobotStarted) {
-				// set the text as Stop
-				// document.querySelector('#btnStartStopCleaningServer').value = "Stop Cleaning";
-				// document.querySelector('#btnStartStopCleaningPeer').value = "Stop Cleaning";
-				document.querySelector('#btnStartStopCleaning').value = "Stop Cleaning";
-
-			} else if(!isRobotStarted) {
-				// set the text as Start
-				// document.querySelector('#btnStartStopCleaningServer').value = "Start Cleaning";
-				// document.querySelector('#btnStartStopCleaningPeer').value = "Start Cleaning";
-				document.querySelector('#btnStartStopCleaning').value = "Start Cleaning";
-
-			}
 			document.addEventListener("backbutton", neatoSmartApp.backButtonPressed, false);
 			document.addEventListener("menubutton", neatoSmartApp.menuButtonPressed, false);
 		},

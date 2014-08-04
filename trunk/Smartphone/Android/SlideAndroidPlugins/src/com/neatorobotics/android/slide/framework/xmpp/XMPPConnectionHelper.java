@@ -194,56 +194,11 @@ public class XMPPConnectionHelper {
     private void sendRobotPacketAsync(final String to, final String packetData) {
         Runnable task = new Runnable() {
             public void run() {
-                boolean isConnected = tryXmppConnection();
-                if (isConnected) {
-                    sendRobotPacket(to, packetData);
-                } else {
-                    LogHelper.log(TAG, "Not connected over XMPP. Will not be sending packet");
-                }
+                sendRobotPacket(to, packetData);
             }
         };
         Thread t = new Thread(task);
         t.start();
-    }
-
-    private boolean tryXmppConnection() {
-        Connection connection = getConnection();
-        boolean isConnected = connection.isConnected();
-        boolean isAuthenticated = connection.isAuthenticated();
-        if (isConnected && isAuthenticated) {
-            // already connected return true from here
-            return true;
-        }
-        for (int i = 0; i < MAX_RETRY_CONNECT_COUNT; i++) {
-            try {
-                logout();
-                connection = getConnection();
-                isConnected = connection.isConnected();
-                if (!isConnected) {
-                    connect();
-                }
-                isAuthenticated = connection.isAuthenticated();
-                if (!isAuthenticated) {
-                    String userId = getUserChatId();
-                    String password = getUserChatPassword();
-                    if (isValidUserIdAndPassword(userId, password)) {
-                        try {
-                            String resourceId = getResourceId();
-                            connection.login(userId, password, resourceId);
-                        } catch (Exception e) {
-
-                        }
-
-                    }
-                } else {
-                    LogHelper.log(TAG, "XMPP login");
-                    break;
-                }
-            } catch (XMPPException e) {
-
-            }
-        }
-        return isConnected;
     }
 
     private String getResourceId() {

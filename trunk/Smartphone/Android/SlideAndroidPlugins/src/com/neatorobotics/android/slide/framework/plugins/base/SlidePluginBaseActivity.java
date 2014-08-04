@@ -91,12 +91,6 @@ public class SlidePluginBaseActivity extends DroidGap implements Observer {
             return;
         }
         RobotCommandServiceManager.loginXmppIfRequired(getApplicationContext());
-        String robotId = NeatoPrefs.getLastConnectedNeatoRobotId(this);
-        LogHelper.logD(TAG, "RobotId of last connected robot: " + robotId);
-		if (!TextUtils.isEmpty(robotId)) {
-			RobotDataManager.getServerData(this, robotId);
-		}
-
     }
 
     /**
