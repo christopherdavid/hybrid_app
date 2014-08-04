@@ -3,6 +3,7 @@
 #import "NeatoServerManager.h"
 #import "NeatoUserHelper.h"
 #import "XMPPRobotDataChangeManager.h"
+#import "AppHelper.h"
 
 static NeatoCommandExpiryHelper *sharedInstance = nil;
 
@@ -90,16 +91,23 @@ static NeatoCommandExpiryHelper *sharedInstance = nil;
 // Clears cleaning and intend to drive commands at server.
 - (void)resetStateForRobotWithId:(NSString *)robotId {
     debugLog(@"");
-    NeatoRobotCommand *robotCommand = [[NeatoRobotCommand alloc] init];
-    robotCommand.xmlCommand = @"";
-    robotCommand.commandId = @"";
-    robotCommand.robotId = robotId;
-    robotCommand.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
-    [robotCommand.profileDict setValue:robotCommand.xmlCommand forKey:KEY_ROBOT_CLEANING_COMMAND];
-    [robotCommand.profileDict setValue:@"" forKey:KEY_INTEND_TO_DRIVE];
-    NeatoServerManager *manager = [[NeatoServerManager alloc] init];
-    manager.delegate = self;
-    [manager sendCommand:robotCommand];
+    
+    // As command might me sent via XMPP,
+    // So no need to reset 'empty command' over server.
+    // We need to set empty command on failure, only when we send command by setting 'robot profile details' on server.
+    NSString *commandId = [self.expirableCommandIds objectForKey:[robotId lowercaseString]];
+    BOOL isCommandSentOverServer = ![AppHelper shouldSendCommandDirectlyViaXMPP:commandId];
+    if (isCommandSentOverServer) {
+        NeatoRobotCommand *robotCommand = [[NeatoRobotCommand alloc] init];
+        robotCommand.xmlCommand = @"";
+        robotCommand.commandId = @"";
+        robotCommand.robotId = robotId;
+        robotCommand.profileDict = [[NSMutableDictionary alloc] initWithCapacity:1];
+        [robotCommand.profileDict setValue:robotCommand.xmlCommand forKey:KEY_ROBOT_CLEANING_COMMAND];
+        NeatoServerManager *manager = [[NeatoServerManager alloc] init];
+        manager.delegate = self;
+        [manager sendCommand:robotCommand];
+    }
 }
 
 

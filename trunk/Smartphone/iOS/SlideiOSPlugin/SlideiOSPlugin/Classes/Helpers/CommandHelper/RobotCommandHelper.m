@@ -58,32 +58,12 @@
     }
     
     // For now we send start/stop/resume/pause/sendToBase commands via XMPP.
-    if([self shouldSendCommandDirectlyViaXMPP:commandId]) {
+    if([AppHelper shouldSendCommandDirectlyViaXMPP:commandId]) {
         [self sendCommandOverXMPPToRobotWithId:robotId commandId:commandId params:params delegate:delegate];
     }
     else {
         [self sendCommandOverServerToRobot:robotId commandId:commandId params:params delegate:delegate];
     }
-}
-
-- (BOOL)shouldSendCommandDirectlyViaXMPP:(NSString *)commandId {
-    
-    // Check if following commands are valid to be sent directly via XMPP.
-    // As these commands should be sent via XMPP, if command category is not manual.
-    BOOL isCommandValid = NO;
-    switch ([commandId integerValue]) {
-        case COMMAND_START_ROBOT:
-        case COMMAND_STOP_ROBOT:
-        case COMMAND_PAUSE_CLEANING:
-        case COMMAND_RESUME_CLEANING:
-        case COMMAND_SEND_TO_BASE:
-            isCommandValid = YES;
-            break;
-        default:
-            isCommandValid = NO;
-            break;
-    }
-    return (isCommandValid && SHOULD_SEND_COMMAND_DIRECTLY_VIA_XMPP);
 }
 
 - (NSMutableData *)tcpCommandHeaderForCommand:(NSData *)command {
@@ -154,8 +134,7 @@
         
         XMPPConnectionHelper *xmppHelper = [[XMPPConnectionHelper alloc] init];
         xmppHelper.delegate = self;
-        xmppHelper.robotCommand = robotCommand;
-        [xmppHelper sendCommandToRobot:robot.chatId command:[[[XMPPCommandHelper alloc] init] getRobotCommand2WithId:commandId withParams:params andRequestId:requestId] withTag:commandTag];
+        [xmppHelper sendXMPPCommandToRobotChatId:robot.chatId withNeatoRobotCommand:robotCommand];
     }
 }
 

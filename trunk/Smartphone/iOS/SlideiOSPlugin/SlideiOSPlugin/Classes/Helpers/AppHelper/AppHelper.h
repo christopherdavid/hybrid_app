@@ -37,4 +37,5 @@
 + (NSString *)directConnectionScretKey;
 + (BOOL)isValidJSONString:(id)value;
 + (NSString *)jsonStringFromNotificationsArray:(NSArray *)notificationsArray;
++ (BOOL)shouldSendCommandDirectlyViaXMPP:(NSString *)commandId;
 @end

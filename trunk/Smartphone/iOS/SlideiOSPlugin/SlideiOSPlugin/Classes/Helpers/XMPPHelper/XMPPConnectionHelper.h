@@ -16,11 +16,9 @@
 
 @interface XMPPConnectionHelper : NSObject
 @property (nonatomic, weak) id delegate;
-@property (nonatomic, strong) NeatoRobotCommand *robotCommand;
 
 -(BOOL) connectJID:(NSString *) jid password:(NSString *) password host:(NSString *) host;
 -(void) disconnectFromRobot;
 -(BOOL) isConnected;
--(void) sendCommandToRobot:(NSString *) to command:(NSString *) command withTag:(long) tag;
-
+- (void)sendXMPPCommandToRobotChatId:(NSString *)chatId withNeatoRobotCommand:(NeatoRobotCommand *)neatoRobotCommand;
 @end
