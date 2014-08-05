@@ -6,7 +6,6 @@ import java.util.Observer;
 import org.apache.cordova.DroidGap;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import com.neatorobotics.android.slide.framework.ApplicationConfig;
 import com.neatorobotics.android.slide.framework.NeatoServiceManager;
@@ -16,7 +15,6 @@ import com.neatorobotics.android.slide.framework.gcm.PushNotificationMessageHand
 import com.neatorobotics.android.slide.framework.gcm.PushNotificationUtils;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
-import com.neatorobotics.android.slide.framework.robotdata.RobotDataManager;
 import com.neatorobotics.android.slide.framework.service.RobotCommandServiceManager;
 import com.neatorobotics.android.slide.framework.utils.AppUtils;
 import com.neatorobotics.android.slide.framework.utils.DeviceUtils;
