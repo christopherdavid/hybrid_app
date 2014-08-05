@@ -12,7 +12,6 @@ import org.jivesoftware.smack.packet.Packet;
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
-import com.neatorobotics.android.slide.framework.database.UserHelper;
 import com.neatorobotics.android.slide.framework.logger.LogHelper;
 import com.neatorobotics.android.slide.framework.prefs.NeatoPrefs;
 import com.neatorobotics.android.slide.framework.robot.commands.request.RobotCommandBuilder;
@@ -23,7 +22,6 @@ public class XMPPConnectionHelper {
 
     private static final String TAG = XMPPConnectionHelper.class.getSimpleName();
 
-    private static final int MAX_RETRY_CONNECT_COUNT = 3;
 
     private String serverIpAddress;
     private String webServiceName;
@@ -262,17 +260,6 @@ public class XMPPConnectionHelper {
                 }
             });
         }
-    }
-
-    private String getUserChatId() {
-        String jabberUserId = UserHelper.getChatId(mContext);
-        jabberUserId = XMPPUtils.removeJabberDomain(jabberUserId);
-        return jabberUserId;
-    }
-
-    private String getUserChatPassword() {
-        String jabberUserPwd = UserHelper.getChatPwd(mContext);
-        return jabberUserPwd;
     }
 
 }
