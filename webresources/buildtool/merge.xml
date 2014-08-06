@@ -12,7 +12,7 @@
     <group name="libs">
       <js>/../../../../bin/copymin/cordova.min.js</js>
       <js>/../../../../bin/copymin/plugins.js</js>
-      <js>/../../../../bin/copymin/jquery-1.11.1.min.js</js>
+      <js>/../../../../bin/copymin/jquery-1.9.1.min.js</js>
       <js>/../../../../bin/copymin/handler.js</js>
       <js>/../../../../bin/copymin/i18next-1.6.0.min.js</js>
       <js>/../../../../bin/copymin/knockout-2.2.1.min.js</js>
