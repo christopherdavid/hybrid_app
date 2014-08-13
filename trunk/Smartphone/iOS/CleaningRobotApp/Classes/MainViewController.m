@@ -32,32 +32,14 @@
 - (id) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     
-    //check if the test version is still valid or not, if not, stop launching
-    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"yyyyMMdd"];
-    NSDate *eDate = [dateFormat dateFromString:@"20140901"];
-    //NSDate *eDate = [dateFormat dateFromString:@"20140420"];
-    NSDate *now = [[NSDate alloc] init];
     
-    if ([now compare:eDate] == NSOrderedDescending)
-    {
-        NSString* msg = @"Lieber User, \n die von Dir verwendete Test-Version der VR200 App ist nicht mehr aktuell. Bitte downloade Dir die neue und offizielle Version der Kobold VR200 App im Android bzw. App Store.\n\nBeste Grüße\nDein Vorwerk-Team";
-        UIAlertView *alert= [[UIAlertView alloc]initWithTitle:nil message:msg delegate:self cancelButtonTitle:@"Beenden" otherButtonTitles:nil, nil];
-        [alert show];
-        
-        // Return nil to avoid further processing.
-        return nil;
-        
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
     }
-    else
-    {
-        self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-        if (self) {
-            // Custom initialization
-        }
     
-        return self;
-    }
+    return self;
+    
     
 }
 
